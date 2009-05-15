@@ -67,7 +67,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 //================================================================= WIN32 ===
 
-/*#ifdef _WIN32
+#ifdef __MINGW32__
 
 #undef QDECL
 #define QDECL __cdecl
@@ -91,7 +91,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #define DLL_EXT ".dll"
 
-#endif*/
+#endif
 
 //============================================================== MAC OS X ===
 
