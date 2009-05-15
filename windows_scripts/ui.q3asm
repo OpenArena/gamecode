@@ -1,0 +1,11 @@
+-o "../../missionpack/vm/ui"
+ui_main
+..\ui_syscalls
+ui_gameinfo
+ui_atoms
+ui_players
+ui_shared
+bg_misc
+bg_lib
+q_math
+q_shared
