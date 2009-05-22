@@ -212,7 +212,7 @@ typedef struct servernode_s {
 } servernode_t; 
 
 typedef struct {
-	char			buff[MAX_LISTBOXWIDTH+62]; //	+60 gives room for color codes... Sago: I need two more
+	char			buff[MAX_LISTBOXWIDTH+64]; //	+60 gives room for color codes... Sago: I need four more
 	servernode_t*	servernode;
 } table_t;
 
@@ -681,11 +681,13 @@ static void ArenaServers_UpdateMenu( void ) {
 			netnames[servernodeptr->nettype], pingColor, servernodeptr->pingtime ); //, servernodeptr->bPB ? "Yes" : "No"
                  */
                 b = buff;
+                *b++ = '^';
+                *b++ = '8';
 		bufAddr = Q_strcpyColor( servernodeptr->hostname, b, 30 );
 		b += bufAddr; 
 		*b++ = ' ';
-                //*b++ = '^';
-                //*b++ = '7';
+                *b++ = '^';
+                *b++ = '8';
 	
 		bufAddr = Q_strcpyColor( servernodeptr->mapname, b, 16 );
 		b += bufAddr;
