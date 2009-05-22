@@ -284,6 +284,31 @@ static int				g_onlyhumans;
 static int                              g_hideprivate;
 
 /*
+ *Removes illigal chars but keeps colors
+ */
+char *Q_CleanStrWithColor( char *string ) {
+	char*	d;
+	char*	s;
+	int		c;
+
+	s = string;
+	d = string;
+	while ((c = *s) != 0 ) {
+		if ( Q_IsColorString( s ) ) {
+			*d++ = c;
+		}
+		else if ( c >= 0x20 && c <= 0x7E ) {
+			*d++ = c;
+		}
+		s++;
+	}
+	*d = '\0';
+
+	return string;
+}
+
+
+/*
 =================
 ArenaServers_MaxPing
 =================
@@ -810,7 +835,7 @@ static void ArenaServers_Insert( char* adrstr, char* info, int pingtime )
 	Q_strncpyz( servernodeptr->adrstr, adrstr, MAX_ADDRESSLENGTH );
 
 	Q_strncpyz( servernodeptr->hostname, Info_ValueForKey( info, "hostname"), MAX_HOSTNAMELENGTH );
-	//Q_CleanStr( servernodeptr->hostname );
+	Q_CleanStrWithColor( servernodeptr->hostname );
 	Q_strupr( servernodeptr->hostname );
 
 	Q_strncpyz( servernodeptr->mapname, Info_ValueForKey( info, "mapname"), MAX_MAPNAMELENGTH );

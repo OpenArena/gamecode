@@ -904,27 +904,25 @@ char *Q_CleanStr( char *string ) {
 	char*	d;
 	char*	s;
 	int		c;
-        int     escaped = 0;
+        qboolean hadColor = qfalse;
 
 	s = string;
 	d = string;
 	while ((c = *s) != 0 ) {
-		/*Rewrote the escape string - Sago */
-                if (c == Q_COLOR_ESCAPE) {
-                    //Escape the next:
-                    escaped++;
-                }
-                else if (escaped) {
-                    escaped--;
-                }
+		if ( Q_IsColorString( s ) ) {
+			s++;
+                        hadColor = qtrue;
+		}
 		else if ( c >= 0x20 && c <= 0x7E ) {
 			*d++ = c;
 		}
 		s++;
 	}
 	*d = '\0';
-
-	return string;
+        if(hadColor)
+            return Q_CleanStr( string );
+        else
+            return string;
 }
 
 int Q_CountChar(const char *string, char tocount)
