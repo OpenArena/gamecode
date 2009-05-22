@@ -163,9 +163,9 @@ extern vmCvar_t ui_browserOnlyHumans;
 #define QMF_HASMOUSEFOCUS		0x00000200
 #define QMF_NOONOFFTEXT			0x00000400
 #define QMF_MOUSEONLY			0x00000800	// only mouse input allowed
-#define QMF_HIDDEN				0x00001000	// skips drawing
-#define QMF_GRAYED				0x00002000	// grays and disables
-#define QMF_INACTIVE			0x00004000	// disables any input
+#define QMF_HIDDEN				(unsigned int)0x00001000	// skips drawing
+#define QMF_GRAYED				(unsigned int)0x00002000	// grays and disables
+#define QMF_INACTIVE			(unsigned int)0x00004000	// disables any input
 #define QMF_NODEFAULTINIT		0x00008000	// skip default initialization
 #define QMF_OWNERDRAW			0x00010000
 #define QMF_PULSE				0x00020000

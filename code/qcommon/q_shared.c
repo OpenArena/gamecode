@@ -904,13 +904,19 @@ char *Q_CleanStr( char *string ) {
 	char*	d;
 	char*	s;
 	int		c;
+        int     escaped = 0;
 
 	s = string;
 	d = string;
 	while ((c = *s) != 0 ) {
-		if ( Q_IsColorString( s ) ) {
-			s++;
-		}		
+		/*Rewrote the escape string - Sago */
+                if (c == Q_COLOR_ESCAPE) {
+                    //Escape the next:
+                    escaped++;
+                }
+                else if (escaped) {
+                    escaped--;
+                }
 		else if ( c >= 0x20 && c <= 0x7E ) {
 			*d++ = c;
 		}
