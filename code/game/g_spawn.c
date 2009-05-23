@@ -336,8 +336,8 @@ char *G_NewString( const char *string ) {
 	int		i,l;
 	
 	l = strlen(string) + 1;
-
-	newb = G_Alloc( l );
+    //KK-OAX Changed to Tremulous's BG_Alloc
+	newb = BG_Alloc( l );
 
 	new_p = newb;
 

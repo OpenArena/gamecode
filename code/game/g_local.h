@@ -790,11 +790,15 @@ qboolean OnSameTeam( gentity_t *ent1, gentity_t *ent2 );
 void Team_CheckDroppedItem( gentity_t *dropped );
 qboolean CheckObeliskAttack( gentity_t *obelisk, gentity_t *attacker );
 
-//
+//KK-OAX Removed these in Code in favor of bg_alloc.c from Tremulous
 // g_mem.c
 //
-void *G_Alloc( int size );
-void G_InitMemory( void );
+//void *G_Alloc( int size );
+//void G_InitMemory( void );
+
+//KK-OAX This was moved
+// bg_alloc.c
+//
 void Svcmd_GameMem_f( void );
 
 //

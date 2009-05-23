@@ -739,6 +739,13 @@ typedef enum {
 							// this avoids having to set eFlags and eventNum
 } entityType_t;
 
+//KK-OAX Using this now instead of g_mem.c
+// bg_alloc.c
+//
+void    *BG_Alloc( int size );
+void    BG_InitMemory( void );
+void    BG_Free( void *ptr );
+void    BG_DefragmentMemory( void );
 
 
 void	BG_EvaluateTrajectory( const trajectory_t *tr, int atTime, vec3_t result );

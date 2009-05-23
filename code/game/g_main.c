@@ -583,8 +583,9 @@ void G_InitGame( int levelTime, int randomSeed, int restart ) {
         }
 
 	G_ProcessIPBans();
-
-	G_InitMemory();
+    
+    //KK-OAX Changed to Tremulous's BG_InitMemory
+	BG_InitMemory();
 
 	// set some level globals
 	memset( &level, 0, sizeof( level ) );
