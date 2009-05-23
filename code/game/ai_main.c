@@ -1176,8 +1176,8 @@ int BotAISetupClient(int client, struct bot_settings_s *settings, qboolean resta
 	char filename[MAX_PATH], name[MAX_PATH], gender[MAX_PATH];
 	bot_state_t *bs;
 	int errnum;
-
-	if (!botstates[client]) botstates[client] = G_Alloc(sizeof(bot_state_t));
+    //KK-OAX Changed to Tremulous's BG_Alloc
+	if (!botstates[client]) botstates[client] = BG_Alloc(sizeof(bot_state_t));
 	bs = botstates[client];
 
 	if (bs && bs->inuse) {
