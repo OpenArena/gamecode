@@ -36,7 +36,7 @@ cd windows\build\game
 %cc%  ../../../code/game/g_combat.c
 %cc%  ../../../code/game/g_items.c
 %cc%  ../../../code/game/g_main.c
-%cc%  ../../../code/game/g_mem.c
+%cc%  ../../../code/game/bg_alloc.c
 %cc%  ../../../code/game/g_misc.c
 %cc%  ../../../code/game/g_missile.c
 %cc%  ../../../code/game/g_mover.c

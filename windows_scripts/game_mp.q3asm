@@ -21,7 +21,7 @@ g_client
 g_cmds
 g_combat
 g_items
-g_mem
+bg_alloc
 g_misc
 g_missile
 g_mover
