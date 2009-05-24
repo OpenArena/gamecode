@@ -742,7 +742,7 @@ typedef enum {
 //KK-OAX Using this now instead of g_mem.c
 // bg_alloc.c
 //
-void    *BG_Alloc( int size );
+void    *BG_Alloc( unsigned int size );
 void    BG_InitMemory( void );
 void    BG_Free( void *ptr );
 void    BG_DefragmentMemory( void );

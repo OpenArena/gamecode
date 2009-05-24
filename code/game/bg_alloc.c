@@ -4,20 +4,21 @@
 Copyright (C) 1999-2005 Id Software, Inc.
 Copyright (C) 2000-2006 Tim Angus
 
-This file is part of Tremulous.  It is reused in OAX per the GPL V2 License.
+This file is part of the Open Arena source code.
+Copied from Tremulous under GPL version 2 including any later version.
 
-Tremulous is free software; you can redistribute it
+Open Arena source code is free software; you can redistribute it
 and/or modify it under the terms of the GNU General Public License as
 published by the Free Software Foundation; either version 2 of the License,
 or (at your option) any later version.
 
-Tremulous is distributed in the hope that it will be
+Open Arena source code is distributed in the hope that it will be
 useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with Tremulous; if not, write to the Free Software
+along with Open Arena source code; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ===========================================================================
 */
@@ -33,7 +34,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #endif
 
 #define  FREEMEMCOOKIE  ((int)0xDEADBE3F)  // Any unlikely to be used value
-#define  ROUNDBITS    31          // Round to 32 bytes
+#define  ROUNDBITS    (unsigned int)31          // Round to 32 bytes
 
 typedef struct freeMemNode_s
 {
@@ -47,7 +48,7 @@ static freeMemNode_t  *freeHead;
 static int            freeMem;
 
 
-void *BG_Alloc( int size )
+void *BG_Alloc( unsigned int size )
 {
   // Find a free block and allocate.
   // Does two passes, attempts to fill same-sized free slot first.
