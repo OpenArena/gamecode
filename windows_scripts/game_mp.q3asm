@@ -29,6 +29,7 @@ g_playerstore
 g_session
 g_spawn
 g_svcmds
+g_svcmds_ext
 g_target
 g_team
 g_trigger

@@ -45,6 +45,7 @@ rem %cc%  ../../../code/game/g_rankings.c
 %cc%  ../../../code/game/g_session.c
 %cc%  ../../../code/game/g_spawn.c
 %cc%  ../../../code/game/g_svcmds.c
+%cc%  ../../../code/game/g_svcmds_ext.c
 rem %cc%  ../../../code/game/g_syscalls.c
 copy  ..\..\..\code\game\g_syscalls.asm ..
 %cc%  ../../../code/game/g_target.c
