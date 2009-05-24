@@ -2,20 +2,21 @@
 ===========================================================================
 Copyright (C) 1999-2005 Id Software, Inc.
 
-This file is part of Quake III Arena source code.
+This file is part of Open Arena source code.
+Portions copied from Tremulous under GPL version 2 including any later version.
 
-Quake III Arena source code is free software; you can redistribute it
+Open Arena source code is free software; you can redistribute it
 and/or modify it under the terms of the GNU General Public License as
 published by the Free Software Foundation; either version 2 of the License,
 or (at your option) any later version.
 
-Quake III Arena source code is distributed in the hope that it will be
+Open Arena source code is distributed in the hope that it will be
 useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with Quake III Arena source code; if not, write to the Free Software
+along with Open Arena source code; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ===========================================================================
 */
@@ -133,6 +134,25 @@ void QDECL PrintMsg( gentity_t *ent, const char *fmt, ... ) {
 		*p = '\'';
 
 	trap_SendServerCommand ( ( (ent == NULL) ? -1 : ent-g_entities ), va("print \"%s\"", msg ));
+}
+
+/*
+================
+KK-OAX From Tremulous
+G_TeamFromString
+Return the team referenced by a string
+================
+*/
+team_t G_TeamFromString( char *str )
+{
+  switch( tolower( *str ) )
+  {
+    case '0': case 's': return TEAM_NONE;
+    case '1': case 'f': return TEAM_FREE;
+    case '2': case 'r': return TEAM_RED;
+    case '3': case 'b': return TEAM_BLUE;
+    default: return TEAM_NUM_TEAMS;
+  }
 }
 
 /*

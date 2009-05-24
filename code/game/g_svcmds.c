@@ -444,7 +444,46 @@ void	Svcmd_ForceTeam_f( void ) {
 	SetTeam( &g_entities[cl - level.clients], str );
 }
 
-char	*ConcatArgs( int start );
+//KK-OAX Moved this Declaration to g_local.h
+//char	*ConcatArgs( int start );
+
+/*KK-OAX
+===============
+Server Command Table
+Not Worth Listing Elsewhere
+================
+*/
+struct
+{
+  char      *cmd;
+  qboolean  dedicated; //if it has to be entered from a dedicated server or RCON
+  void      ( *function )( void );
+} svcmds[ ] = {
+
+  { "entityList", qfalse, Svcmd_EntityList_f },
+  { "forceTeam", qfalse, Svcmd_ForceTeam_f },
+  { "game_memory", qfalse, Svcmd_GameMem_f },
+  { "addbot", qfalse, Svcmd_AddBot_f },
+  { "botlist", qfalse, Svcmd_BotList_f }, 
+  { "abort_podium", qfalse, Svcmd_AbortPodium_f },
+  { "addip", qfalse, Svcmd_AddIP_f },
+  { "removeip", qfalse, Svcmd_RemoveIP_f },
+  
+  //KK-OAX Uses wrapper in g_svccmds_ext.c
+  { "listip", qfalse, Svcmd_ListIP_f }, 
+  //KK-OAX New
+  { "status", qfalse, Svcmd_Status_f },
+  { "eject", qfalse, Svcmd_EjectClient_f },
+  { "dumpuser", qfalse, Svcmd_DumpUser_f },
+  // don't handle communication commands unless dedicated
+  { "cp", qtrue, Svcmd_CenterPrint_f },
+  { "say_team", qtrue, Svcmd_TeamMessage_f },
+  { "say", qtrue, Svcmd_MessageWrapper },
+  { "chat", qtrue, Svcmd_Chat_f },
+  /*{ "m", qtrue, Svcmd_MessageWrapper },
+  { "a", qtrue, Svcmd_MessageWrapper },
+  { "bp", qtrue, Svcmd_BannerPrint_f }, */
+};
 
 /*
 =================
@@ -452,66 +491,31 @@ ConsoleCommand
 
 =================
 */
-qboolean	ConsoleCommand( void ) {
-	char	cmd[MAX_TOKEN_CHARS];
+qboolean  ConsoleCommand( void )
+{
+  char cmd[ MAX_TOKEN_CHARS ];
+  int  i;
 
-	trap_Argv( 0, cmd, sizeof( cmd ) );
+  trap_Argv( 0, cmd, sizeof( cmd ) );
 
-	if ( Q_stricmp (cmd, "entitylist") == 0 ) {
-		Svcmd_EntityList_f();
-		return qtrue;
-	}
+  for( i = 0; i < sizeof( svcmds ) / sizeof( svcmds[ 0 ] ); i++ )
+  {
+    if( !Q_stricmp( cmd, svcmds[ i ].cmd ) )
+    {
+      if( svcmds[ i ].dedicated && !g_dedicated.integer )
+        return qfalse;
+      svcmds[ i ].function( );
+      return qtrue;
+    }
+  }
+  // KK-OAX Will be enabled when admin is added. 
+  // see if this is an admin command
+  //if( G_admin_cmd_check( NULL, qfalse ) )
+  //  return qtrue;
 
-	if ( Q_stricmp (cmd, "forceteam") == 0 ) {
-		Svcmd_ForceTeam_f();
-		return qtrue;
-	}
+  if( g_dedicated.integer )
+    G_Printf( "unknown command: %s\n", cmd );
 
-	if (Q_stricmp (cmd, "game_memory") == 0) {
-		Svcmd_GameMem_f();
-		return qtrue;
-	}
-
-	if (Q_stricmp (cmd, "addbot") == 0) {
-		Svcmd_AddBot_f();
-		return qtrue;
-	}
-
-	if (Q_stricmp (cmd, "botlist") == 0) {
-		Svcmd_BotList_f();
-		return qtrue;
-	}
-
-	if (Q_stricmp (cmd, "abort_podium") == 0) {
-		Svcmd_AbortPodium_f();
-		return qtrue;
-	}
-
-	if (Q_stricmp (cmd, "addip") == 0) {
-		Svcmd_AddIP_f();
-		return qtrue;
-	}
-
-	if (Q_stricmp (cmd, "removeip") == 0) {
-		Svcmd_RemoveIP_f();
-		return qtrue;
-	}
-
-	if (Q_stricmp (cmd, "listip") == 0) {
-		trap_SendConsoleCommand( EXEC_NOW, "g_banIPs\n" );
-		return qtrue;
-	}
-
-	if (g_dedicated.integer) {
-		if (Q_stricmp (cmd, "say") == 0) {
-			trap_SendServerCommand( -1, va("print \"server: %s\"", ConcatArgs(1) ) );
-			return qtrue;
-		}
-		// everything else will also be printed as a say command
-		trap_SendServerCommand( -1, va("print \"server: %s\"", ConcatArgs(0) ) );
-		return qtrue;
-	}
-
-	return qfalse;
+  return qfalse;
 }
 

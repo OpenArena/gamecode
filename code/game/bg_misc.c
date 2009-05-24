@@ -2,20 +2,21 @@
 ===========================================================================
 Copyright (C) 1999-2005 Id Software, Inc.
 
-This file is part of Quake III Arena source code.
+This file is part of Open Arena source code.
+Portions copied from Tremulous under GPL version 2 including any later version.
 
-Quake III Arena source code is free software; you can redistribute it
+Open Arena source code is free software; you can redistribute it
 and/or modify it under the terms of the GNU General Public License as
 published by the Free Software Foundation; either version 2 of the License,
 or (at your option) any later version.
 
-Quake III Arena source code is distributed in the hope that it will be
+Open Arena source code is distributed in the hope that it will be
 useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with Quake III Arena source code; if not, write to the Free Software
+along with Open Arena source code; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ===========================================================================
 */
@@ -1783,4 +1784,23 @@ void BG_PlayerStateToEntityStateExtraPolate( playerState_t *ps, entityState_t *s
 
 	s->loopSound = ps->loopSound;
 	s->generic1 = ps->generic1;
+}
+
+/*
+============
+BG_TeamName
+KK-OAX Copied from Tremulous
+============
+*/
+char *BG_TeamName( team_t team )
+{
+  if( team == TEAM_NONE )
+    return "spectator";
+  if( team == TEAM_RED )
+    return "Red";
+  if( team == TEAM_BLUE )
+    return "Blue";
+  if( team == TEAM_FREE )
+    return "Free For All";
+  return "<team>";
 }

@@ -537,7 +537,18 @@ void Cmd_Score_f (gentity_t *ent);
 void StopFollowing( gentity_t *ent );
 void BroadcastTeamChange( gclient_t *client, int oldTeam );
 void SetTeam( gentity_t *ent, char *s );
-void Cmd_FollowCycle_f( gentity_t *ent, int dir );
+void Cmd_FollowCycle_f( gentity_t *ent );  //KK-OAX Changed to match definition
+char *ConcatArgs( int start );  //KK-OAX This declaration moved from g_svccmds.c
+//KK-OAX Added this to make accessible from g_svcmds_ext.c
+void G_Say( gentity_t *ent, gentity_t *target, int mode, const char *chatText ); 
+
+
+// KK-OAX Added these in a seperate file to keep g_cmds.c familiar. 
+// g_cmds_ext.c
+// These aren't used yet so they are commented out!
+/*int G_SayArgc( void );
+qboolean G_SayArgv( int n, char *buffer, int bufferLength );
+char *G_SayConcatArgs( int start );*/
 
 //
 // g_items.c
@@ -718,6 +729,9 @@ qboolean	ConsoleCommand( void );
 void G_ProcessIPBans(void);
 qboolean G_FilterPacket (char *from);
 
+//KK-OAX Added this to make accessible from g_svcmds_ext.c
+gclient_t	*ClientForString( const char *s );
+
 //
 // g_weapon.c
 //
@@ -789,6 +803,8 @@ void G_RunClient( gentity_t *ent );
 qboolean OnSameTeam( gentity_t *ent1, gentity_t *ent2 );
 void Team_CheckDroppedItem( gentity_t *dropped );
 qboolean CheckObeliskAttack( gentity_t *obelisk, gentity_t *attacker );
+//KK-OAX Added
+team_t G_TeamFromString( char *str );
 
 //KK-OAX Removed these in Code in favor of bg_alloc.c from Tremulous
 // g_mem.c
@@ -1232,4 +1248,38 @@ void	trap_BotResetWeaponState(int weaponstate);
 int		trap_GeneticParentsAndChildSelection(int numranks, float *ranks, int *parent1, int *parent2, int *child);
 
 void	trap_SnapVector( float *v );
+
+//KK-OAX
+//These enable the simplified command handling. 
+
+#define CMD_CHEAT           0x0001
+#define CMD_CHEAT_TEAM      0x0002 // is a cheat when used on a team
+#define CMD_MESSAGE         0x0004 // sends message to others (skip when muted)
+#define CMD_TEAM            0x0008 // must be on a team
+#define CMD_NOTEAM          0x0010 // must not be on a team
+#define CMD_RED             0x0020 // must be on the red team (useless right now)
+#define CMD_BLUE            0x0040 // must be on the blue team (useless right now)
+#define CMD_LIVING          0x0080
+#define CMD_INTERMISSION    0x0100 // valid during intermission
+
+
+typedef struct
+{
+    char    *cmdName;
+    int     cmdFlags;
+    void    ( *cmdHandler )( gentity_t *ent );
+} commands_t;
+
+//
+// g_svcmds_ext.c
+// These were added to a seperate file to keep g_svcmds.c navigable. 
+void Svcmd_Status_f( void );
+void Svcmd_TeamMessage_f( void );
+void Svcmd_CenterPrint_f( void );
+void Svcmd_BannerPrint_f( void );
+void Svcmd_EjectClient_f( void );
+void Svcmd_DumpUser_f( void );
+void Svcmd_Chat_f( void );
+void Svcmd_ListIP_f( void );
+void Svcmd_MessageWrapper( void );
 

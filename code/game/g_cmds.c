@@ -934,13 +934,29 @@ void Cmd_Follow_f( gentity_t *ent ) {
 /*
 =================
 Cmd_FollowCycle_f
+KK-OAX Modified to trap arguments.
 =================
 */
-void Cmd_FollowCycle_f( gentity_t *ent, int dir ) {
+void Cmd_FollowCycle_f( gentity_t *ent ) {
 	int		clientnum;
 	int		original;
-        int             count;
+    int     count;
+    char    args[11];
+    int     dir;
 
+    if( ent->client->sess.sessionTeam == TEAM_NONE ) {
+        dir = 1;
+    }
+    
+    trap_Argv( 0, args, sizeof( args ) );
+    if( Q_stricmp( args, "followprev" ) == 0 ) {
+        dir = -1;
+    } else if( Q_stricmp( args, "follownext" ) == 0 ) {
+        dir = 1;
+    } else {
+        dir = 1;
+    }
+    
 	// if they are playing a tournement game, count as a loss
 	if ( (g_gametype.integer == GT_TOURNAMENT )
 		&& ent->client->sess.sessionTeam == TEAM_FREE ) {
@@ -1097,25 +1113,43 @@ void G_Say( gentity_t *ent, gentity_t *target, int mode, const char *chatText ) 
 /*
 ==================
 Cmd_Say_f
+KK-OAX Modified this to trap the additional arguments from console.
 ==================
 */
-static void Cmd_Say_f( gentity_t *ent, int mode, qboolean arg0 ) {
+static void Cmd_Say_f( gentity_t *ent ){
 	char		*p;
+	char        arg[MAX_TOKEN_CHARS];
+	int         mode = SAY_ALL;
 
-	if ( trap_Argc () < 2 && !arg0 ) {
-		return;
-	}
+    trap_Argv( 0, arg, sizeof( arg ) );
+    if( Q_stricmp ( arg, "say_team" ) == 0 )
+        mode = SAY_TEAM ;
+    // KK-OAX Disabled until PM'ing is added
+    // support parsing /m out of say text since some people have a hard
+    // time figuring out what the console is.
+    /*if( !Q_stricmpn( args, "say /m ", 7 ) ||
+      !Q_stricmpn( args, "say_team /m ", 12 ) ||
+      !Q_stricmpn( args, "say /mt ", 8 ) ||
+      !Q_stricmpn( args, "say_team /mt ", 13 ) )
+    {
+        Cmd_PrivateMessage_f( ent );
+        return;
+    }
 
-	if (arg0)
-	{
-		p = ConcatArgs( 0 );
-	}
-	else
-	{
-		p = ConcatArgs( 1 );
-	}
+    // support parsing /a out of say text for the same reason
+    if( !Q_stricmpn( args, "say /a ", 7 ) ||
+    !Q_stricmpn( args, "say_team /a ", 12 ) )
+    {
+        Cmd_AdminMessage_f( ent );
+        return;
+    }*/
 
-	G_Say( ent, NULL, mode, p );
+    if( trap_Argc( ) < 2 )
+        return;
+
+    p = ConcatArgs( 1 );
+
+    G_Say( ent, NULL, mode, p );
 }
 
 /*
@@ -1222,23 +1256,42 @@ void G_Voice( gentity_t *ent, gentity_t *target, int mode, const char *id, qbool
 /*
 ==================
 Cmd_Voice_f
+KK-OAX Modified this to trap args.
+
+In the original, every call to this function would always set "arg0" to false, and it was
+never passed along to other functions, so I removed/commented it out. 
 ==================
 */
-static void Cmd_Voice_f( gentity_t *ent, int mode, qboolean arg0, qboolean voiceonly ) {
+static void Cmd_Voice_f( gentity_t *ent ) {
 	char		*p;
-
-	if ( trap_Argc () < 2 && !arg0 ) {
+    char        arg[MAX_TOKEN_CHARS];
+    int         mode = SAY_ALL;
+    qboolean    voiceonly = qfalse;
+    
+	trap_Argv( 1, arg, sizeof( arg ) );
+	if((Q_stricmp ( arg, "vsay_team" ) == 0 ) ||
+	    Q_stricmp ( arg, "vosay_team" ) == 0 )
+	    mode = SAY_TEAM;
+	
+	if((Q_stricmp ( arg, "vosay" ) == 0 ) ||
+	    Q_stricmp ( arg, "vosay_team" ) == 0 )
+	    voiceonly = qtrue;
+    
+    //KK-OAX Removed "arg0" since it will always be set to qfalse.          
+	if ( trap_Argc () < 2  ) {
 		return;
 	}
-
-	if (arg0)
+    //KK-OAX This was tricky to figure out, but since none of the original command handlings
+    //set it to "qtrue"...
+    
+	/*if (arg0)
 	{
 		p = ConcatArgs( 0 );
 	}
 	else
-	{
-		p = ConcatArgs( 1 );
-	}
+	{*/
+	p = ConcatArgs( 1 );
+	//}
 
 	G_Voice( ent, NULL, mode, p, voiceonly );
 }
@@ -1246,18 +1299,24 @@ static void Cmd_Voice_f( gentity_t *ent, int mode, qboolean arg0, qboolean voice
 /*
 ==================
 Cmd_VoiceTell_f
+KK-OAX Modified this to trap args. 
 ==================
 */
-static void Cmd_VoiceTell_f( gentity_t *ent, qboolean voiceonly ) {
+static void Cmd_VoiceTell_f( gentity_t *ent ) {
 	int			targetNum;
 	gentity_t	*target;
 	char		*id;
 	char		arg[MAX_TOKEN_CHARS];
+	qboolean    voiceonly = qfalse;
 
 	if ( trap_Argc () < 2 ) {
 		return;
 	}
-
+	
+	trap_Argv( 0, arg, sizeof( arg ) );
+	if( Q_stricmp ( arg, "votell" ) == 0 )
+	    voiceonly = qtrue;
+        
 	trap_Argv( 1, arg, sizeof( arg ) );
 	targetNum = atoi( arg );
 	if ( targetNum < 0 || targetNum >= level.maxclients ) {
@@ -1985,116 +2044,156 @@ void Cmd_GetMappage_f( gentity_t *ent ) {
 	trap_SendServerCommand( ent-g_entities, string );
 }
 
+//KK-OAX This is the table that ClientCommands runs the console entry against. 
+commands_t cmds[ ] = 
+{
+  // normal commands
+  { "team", 0, Cmd_Team_f },
+  { "vote", 0, Cmd_Vote_f },
+  /*{ "ignore", 0, Cmd_Ignore_f },
+  { "unignore", 0, Cmd_Ignore_f },*/
+
+  // communication commands
+  { "tell", CMD_MESSAGE, Cmd_Tell_f },
+  { "callvote", CMD_MESSAGE, Cmd_CallVote_f },
+  { "callteamvote", CMD_MESSAGE|CMD_TEAM, Cmd_CallTeamVote_f },
+  // can be used even during intermission
+  { "say", CMD_MESSAGE|CMD_INTERMISSION, Cmd_Say_f },
+  { "say_team", CMD_MESSAGE|CMD_INTERMISSION, Cmd_Say_f },
+  { "vsay", CMD_MESSAGE|CMD_INTERMISSION, Cmd_Voice_f },
+  { "vsay_team", CMD_MESSAGE|CMD_INTERMISSION, Cmd_Voice_f },
+  { "vsay_local", CMD_MESSAGE|CMD_INTERMISSION, Cmd_Voice_f },
+  { "vtell", CMD_MESSAGE|CMD_INTERMISSION, Cmd_VoiceTell_f },
+  { "vosay", CMD_MESSAGE|CMD_INTERMISSION, Cmd_Voice_f },
+  { "vosay_team", CMD_MESSAGE|CMD_INTERMISSION, Cmd_Voice_f },
+  { "vosay_local", CMD_MESSAGE|CMD_INTERMISSION, Cmd_Voice_f },
+  { "votell", CMD_MESSAGE|CMD_INTERMISSION, Cmd_VoiceTell_f },
+  { "vtaunt", CMD_MESSAGE|CMD_INTERMISSION, Cmd_VoiceTaunt_f },
+  /*{ "m", CMD_MESSAGE|CMD_INTERMISSION, Cmd_PrivateMessage_f },
+  { "mt", CMD_MESSAGE|CMD_INTERMISSION, Cmd_PrivateMessage_f },
+  { "a", CMD_MESSAGE|CMD_INTERMISSION, Cmd_AdminMessage_f },*/
+
+  { "score", CMD_INTERMISSION, Cmd_Score_f },
+
+  // cheats
+  { "give", CMD_CHEAT|CMD_LIVING, Cmd_Give_f },
+  { "god", CMD_CHEAT|CMD_LIVING, Cmd_God_f },
+  { "notarget", CMD_CHEAT|CMD_LIVING, Cmd_Notarget_f },
+  { "levelshot", CMD_CHEAT, Cmd_LevelShot_f },
+  { "setviewpos", CMD_CHEAT, Cmd_SetViewpos_f },
+  { "noclip", CMD_CHEAT, Cmd_Noclip_f },
+
+  { "kill", CMD_TEAM|CMD_LIVING, Cmd_Kill_f },
+  { "where", 0, Cmd_Where_f },
+
+  // game commands
+
+  { "follow", CMD_NOTEAM, Cmd_Follow_f },
+  { "follownext", CMD_NOTEAM, Cmd_FollowCycle_f },
+  { "followprev", CMD_NOTEAM, Cmd_FollowCycle_f },
+
+  { "teamvote", CMD_TEAM, Cmd_TeamVote_f },
+  { "teamtask", CMD_TEAM, Cmd_TeamTask_f },
+  //KK-OAPub
+  { "freespectator", CMD_NOTEAM, StopFollowing },
+  { "getmappage", 0, Cmd_GetMappage_f },
+  { "gc", 0, Cmd_GameCommand_f }
+  
+};
+
+static int numCmds = sizeof( cmds ) / sizeof( cmds[ 0 ] );
+
 /*
 =================
 ClientCommand
+KK-OAX, Takes the client command and runs it through a loop which matches
+it against the table. 
 =================
 */
-void ClientCommand( int clientNum ) {
-	gentity_t *ent;
-	char	cmd[MAX_TOKEN_CHARS];
+void ClientCommand( int clientNum )
+{
+    gentity_t *ent;
+    char      cmd[ MAX_TOKEN_CHARS ];
+    int       i;
 
-	ent = g_entities + clientNum;
-	if ( !ent->client ) {
-		return;		// not fully in game yet
-	}
+    ent = g_entities + clientNum;
+    if( !ent->client )
+        return;   // not fully in game yet
 
+    trap_Argv( 0, cmd, sizeof( cmd ) );
 
-	trap_Argv( 0, cmd, sizeof( cmd ) );
+    for( i = 0; i < numCmds; i++ )
+    {
+        if( Q_stricmp( cmd, cmds[ i ].cmdName ) == 0 )
+            break;
+    }
+    
+    if( i == numCmds )
+    {   /* KK-OAX Will Enable this when integrating Admin
+        if( !G_admin_cmd_check( ent, qfalse ) )
+            trap_SendServerCommand( clientNum,
+                va( "print \"Unknown command %s\n\"", cmd ) );
+            return; */
+        
+        //KK-OAX Delete this when admin is integrated
+        trap_SendServerCommand( clientNum, va( "print \"Unknown command %s\n\"", cmd ) );
+        return;
+    }
 
-	if (Q_stricmp (cmd, "say") == 0) {
-		Cmd_Say_f (ent, SAY_ALL, qfalse);
-		return;
-	}
-	if (Q_stricmp (cmd, "say_team") == 0) {
-		Cmd_Say_f (ent, SAY_TEAM, qfalse);
-		return;
-	}
-	if (Q_stricmp (cmd, "tell") == 0) {
-		Cmd_Tell_f ( ent );
-		return;
-	}
-	if (Q_stricmp (cmd, "vsay") == 0) {
-		Cmd_Voice_f (ent, SAY_ALL, qfalse, qfalse);
-		return;
-	}
-	if (Q_stricmp (cmd, "vsay_team") == 0) {
-		Cmd_Voice_f (ent, SAY_TEAM, qfalse, qfalse);
-		return;
-	}
-	if (Q_stricmp (cmd, "vtell") == 0) {
-		Cmd_VoiceTell_f ( ent, qfalse );
-		return;
-	}
-	if (Q_stricmp (cmd, "vosay") == 0) {
-		Cmd_Voice_f (ent, SAY_ALL, qfalse, qtrue);
-		return;
-	}
-	if (Q_stricmp (cmd, "vosay_team") == 0) {
-		Cmd_Voice_f (ent, SAY_TEAM, qfalse, qtrue);
-		return;
-	}
-	if (Q_stricmp (cmd, "votell") == 0) {
-		Cmd_VoiceTell_f ( ent, qtrue );
-		return;
-	}
-	if (Q_stricmp (cmd, "vtaunt") == 0) {
-		Cmd_VoiceTaunt_f ( ent );
-		return;
-	}
-	if (Q_stricmp (cmd, "score") == 0) {
-		Cmd_Score_f (ent);
-		return;
-	}
+  // do tests here to reduce the amount of repeated code
+    if( !( cmds[ i ].cmdFlags & CMD_INTERMISSION ) && level.intermissiontime )
+        return;
 
-	// ignore all other commands when at intermission
-	if (level.intermissiontime) {
-		Cmd_Say_f (ent, qfalse, qtrue);
-		return;
-	}
+    if( cmds[ i ].cmdFlags & CMD_CHEAT && !g_cheats.integer )
+    {
+        trap_SendServerCommand( clientNum,
+            "print \"Cheats are not enabled on this server\n\"" );
+        return;
+    }
+    //KK-OAX When the corresponding code is integrated, I will activate these. 
+    //if( cmds[ i ].cmdFlags & CMD_MESSAGE && 
+    //    ( ent->client->pers.muted || G_FloodLimited( ent ) ) )
+    //    return;
+    
+    //KK-OAX Do I need to change this for FFA gametype?
+    if( cmds[ i ].cmdFlags & CMD_TEAM &&
+        ent->client->sess.sessionTeam == TEAM_SPECTATOR )
+    {
+        trap_SendServerCommand( clientNum, "print \"Join a team first\n\"" );
+        return;
+    }
 
-	if (Q_stricmp (cmd, "give") == 0)
-		Cmd_Give_f (ent);
-	else if (Q_stricmp (cmd, "god") == 0)
-		Cmd_God_f (ent);
-	else if (Q_stricmp (cmd, "notarget") == 0)
-		Cmd_Notarget_f (ent);
-	else if (Q_stricmp (cmd, "noclip") == 0)
-		Cmd_Noclip_f (ent);
-	else if (Q_stricmp (cmd, "kill") == 0)
-		Cmd_Kill_f (ent);
-	else if (Q_stricmp (cmd, "teamtask") == 0)
-		Cmd_TeamTask_f (ent);
-	else if (Q_stricmp (cmd, "levelshot") == 0)
-		Cmd_LevelShot_f (ent);
-	else if (Q_stricmp (cmd, "follow") == 0)
-		Cmd_Follow_f (ent);
-	else if (Q_stricmp (cmd, "follownext") == 0)
-		Cmd_FollowCycle_f (ent, 1);
-	else if (Q_stricmp (cmd, "followprev") == 0)
-		Cmd_FollowCycle_f (ent, -1);
-	else if (Q_stricmp (cmd, "team") == 0)
-		Cmd_Team_f (ent);
-	else if (Q_stricmp (cmd, "where") == 0)
-		Cmd_Where_f (ent);
-	else if (Q_stricmp (cmd, "callvote") == 0)
-		Cmd_CallVote_f (ent);
-	else if (Q_stricmp (cmd, "vote") == 0)
-		Cmd_Vote_f (ent);
-	else if (Q_stricmp (cmd, "callteamvote") == 0)
-		Cmd_CallTeamVote_f (ent);
-	else if (Q_stricmp (cmd, "teamvote") == 0)
-		Cmd_TeamVote_f (ent);
-	else if (Q_stricmp (cmd, "gc") == 0)
-		Cmd_GameCommand_f( ent );
-	else if (Q_stricmp (cmd, "setviewpos") == 0)
-		Cmd_SetViewpos_f( ent );
-	else if (Q_stricmp (cmd, "stats") == 0)
-		Cmd_Stats_f( ent );
-	else if (Q_stricmp (cmd, "getmappage") == 0)
-		Cmd_GetMappage_f( ent );
-	else if (Q_stricmp (cmd, "free_spectator") == 0)
-		StopFollowing( ent );
-	else
-		trap_SendServerCommand( clientNum, va("print \"unknown cmd %s\n\"", cmd ) );
+    if( ( cmds[ i ].cmdFlags & CMD_NOTEAM ||
+        ( cmds[ i ].cmdFlags & CMD_CHEAT_TEAM && !g_cheats.integer ) ) &&
+        ent->client->sess.sessionTeam != TEAM_NONE )
+    {
+        trap_SendServerCommand( clientNum,
+            "print \"Cannot use this command when on a team\n\"" );
+        return;
+    }
+
+    if( cmds[ i ].cmdFlags & CMD_RED &&
+        ent->client->sess.sessionTeam != TEAM_RED )
+    {
+        trap_SendServerCommand( clientNum,
+            "print \"Must be on the Red Team to use this command\n\"" );
+        return;
+    }
+
+    if( cmds[ i ].cmdFlags & CMD_BLUE &&
+        ent->client->sess.sessionTeam != TEAM_BLUE )
+    {
+        trap_SendServerCommand( clientNum,
+            "print \"Must be on the Blue Team to use this command\n\"" );
+        return;
+    }
+
+    if( ( ent->client->ps.pm_type == PM_DEAD ) && ( cmds[ i ].cmdFlags & CMD_LIVING ) )
+    {
+        trap_SendServerCommand( clientNum,
+            "print \"Must be alive to use this command\n\"" );
+        return;
+    }
+
+    cmds[ i ].cmdHandler( ent );
 }
