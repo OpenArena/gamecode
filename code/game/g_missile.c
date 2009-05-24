@@ -171,32 +171,28 @@ static void ProximityMine_Activate( gentity_t *ent ) {
         char            *c;
         qboolean        nearFlag = qfalse;
 
-        if(g_gametype.integer > GT_TEAM || !g_ffa_gt)
-        {
-            // find the flag
-            switch (ent->s.generic1) {
-            case TEAM_RED:
-                    c = "team_CTF_redflag";
-                    break;
-            case TEAM_BLUE:
-                    c = "team_CTF_blueflag";
-                    break;
-            default:
-                c = NULL;
+        // find the flag
+        switch (ent->s.generic1) {
+        case TEAM_RED:
+                c = "team_CTF_redflag";
+                break;
+        case TEAM_BLUE:
+                c = "team_CTF_blueflag";
+                break;
+        default:
+            c = NULL;
+        }
+
+        if(c) {
+            flag = NULL;
+            while ((flag = G_Find (flag, FOFS(classname), c)) != NULL) {
+                    if (!(flag->flags & FL_DROPPED_ITEM))
+                            break;
             }
 
-            if(c)
-            {
-                flag = NULL;
-                while ((flag = G_Find (flag, FOFS(classname), c)) != NULL) {
-                        if (!(flag->flags & FL_DROPPED_ITEM))
-                                break;
-                }
-
-                VectorSubtract(ent->r.currentOrigin,flag->r.currentOrigin , v1);
-                if(VectorLength(v1) < 500)
-                    nearFlag = qtrue;
-            }
+            VectorSubtract(ent->r.currentOrigin,flag->r.currentOrigin , v1);
+            if(VectorLength(v1) < 500)
+                nearFlag = qtrue;
         }
 
 	ent->think = ProximityMine_Explode;
