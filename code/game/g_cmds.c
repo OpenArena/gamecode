@@ -2197,3 +2197,4 @@ void ClientCommand( int clientNum )
 
     cmds[ i ].cmdHandler( ent );
 }
+

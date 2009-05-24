@@ -1799,7 +1799,7 @@ MPGOBJ_ = \
   $(B)/missionpack/game/g_session.o \
   $(B)/missionpack/game/g_spawn.o \
   $(B)/missionpack/game/g_svcmds.o \
-  $(B)/missionpack/game/g_svcmds_ext.o
+  $(B)/missionpack/game/g_svcmds_ext.o \
   $(B)/missionpack/game/g_target.o \
   $(B)/missionpack/game/g_team.o \
   $(B)/missionpack/game/g_trigger.o \
