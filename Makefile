@@ -1736,7 +1736,7 @@ Q3GOBJ_ = \
   $(B)/baseq3/game/g_cmds.o \
   $(B)/baseq3/game/g_combat.o \
   $(B)/baseq3/game/g_items.o \
-  $(B)/baseq3/game/g_mem.o \
+  $(B)/baseq3/game/bg_alloc.o \
   $(B)/baseq3/game/g_misc.o \
   $(B)/baseq3/game/g_missile.o \
   $(B)/baseq3/game/g_mover.o \
@@ -1790,7 +1790,7 @@ MPGOBJ_ = \
   $(B)/missionpack/game/g_cmds.o \
   $(B)/missionpack/game/g_combat.o \
   $(B)/missionpack/game/g_items.o \
-  $(B)/missionpack/game/g_mem.o \
+  $(B)/missionpack/game/bg_alloc.o \
   $(B)/missionpack/game/g_misc.o \
   $(B)/missionpack/game/g_missile.o \
   $(B)/missionpack/game/g_mover.o \
