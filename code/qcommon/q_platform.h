@@ -93,6 +93,33 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #endif
 
+//KK-OAX, This is a little hack to be able to build dll's for debugging under Visual Studio
+//Simple copy/paste/rename of the #ifdef __MINGW32__
+#ifdef VSTUDIO
+
+#undef QDECL
+#define QDECL __cdecl
+
+#if defined( _MSC_VER )
+#define OS_STRING "win_msvc"
+#elif defined __MINGW32__
+#define OS_STRING "win_mingw"
+#endif
+
+#define ID_INLINE __inline
+#define PATH_SEP '\\'
+
+#if defined( _M_IX86 ) || defined( __i386__ )
+#define ARCH_STRING "x86"
+#elif defined _M_ALPHA
+#define ARCH_STRING "AXP"
+#endif
+
+#define Q3_LITTLE_ENDIAN
+
+#define DLL_EXT ".dll"
+
+#endif
 //============================================================== MAC OS X ===
 
 #if defined(MACOS_X) || defined(__APPLE_CC__)
