@@ -190,9 +190,11 @@ static void ProximityMine_Activate( gentity_t *ent ) {
                             break;
             }
 
-            VectorSubtract(ent->r.currentOrigin,flag->r.currentOrigin , v1);
-            if(VectorLength(v1) < 500)
-                nearFlag = qtrue;
+            if(flag) {
+                VectorSubtract(ent->r.currentOrigin,flag->r.currentOrigin , v1);
+                if(VectorLength(v1) < 500)
+                    nearFlag = qtrue;
+            }
         }
 
 	ent->think = ProximityMine_Explode;
