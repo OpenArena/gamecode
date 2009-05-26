@@ -614,6 +614,30 @@ void G_Sound( gentity_t *ent, int channel, int soundIndex ) {
 	te->s.eventParm = soundIndex;
 }
 
+/*
+=============
+G_GlobalSound
+KK-OAX G_SoundIndex must first be called. 
+=============
+*/
+void G_GlobalSound( int soundIndex )
+{
+    gentity_t  *te;    
+    //Let's avoid the S_FindName error if soundIndex is null or 0. 
+	if( ( soundIndex == 0 ) || ( !soundIndex ) ) {
+	    //Display this message when debugging
+	    #ifdef DEBUG
+            G_Printf( "GlobalSound: Error, no soundIndex specified. Check your code!\n" );	
+	    #endif
+	    return;
+	}    
+	//Spawn a Temporary Entity at the origin point for Intermission with the event EV_GLOBAL_SOUND
+	te = G_TempEntity( level.intermission_origin, EV_GLOBAL_SOUND );
+	//Add the soundIndex to the parameters for the EV_GLOBAL_SOUND event we are calling
+	te->s.eventParm = soundIndex;
+	//Broadcast the sound event.
+	te->r.svFlags |= SVF_BROADCAST;
+}
 
 //==============================================================================
 
