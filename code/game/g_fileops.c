@@ -116,3 +116,4 @@ void writeFile_string( char *s, fileHandle_t f )
   }
   trap_FS_Write( "\n", 1, f );
 }
+
