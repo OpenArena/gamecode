@@ -22,6 +22,8 @@ g_cmds
 g_combat
 g_items
 bg_alloc
+g_fileops
+g_killspree
 g_misc
 g_missile
 g_mover

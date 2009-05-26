@@ -550,6 +550,14 @@ void G_Say( gentity_t *ent, gentity_t *target, int mode, const char *chatText );
 qboolean G_SayArgv( int n, char *buffer, int bufferLength );
 char *G_SayConcatArgs( int start );*/
 
+// KK-OAX Added this for common file stuff between Admin and Sprees.
+// g_fileops.c
+//
+void readFile_int( char **cnf, int *v );
+void readFile_string( char **cnf, char *s, int size );
+void writeFile_int( int v, fileHandle_t f );
+void writeFile_string( char *s, fileHandle_t f );
+
 //
 // g_items.c
 //
@@ -589,6 +597,10 @@ void	G_InitGentity( gentity_t *e );
 gentity_t	*G_Spawn (void);
 gentity_t *G_TempEntity( vec3_t origin, int event );
 void	G_Sound( gentity_t *ent, int channel, int soundIndex );
+
+//KK-OAX For Playing Sounds Globally
+void    G_GlobalSound( int soundIndex );
+
 void	G_FreeEntity( gentity_t *e );
 qboolean	G_EntitiesFree( void );
 
@@ -803,7 +815,7 @@ void G_RunClient( gentity_t *ent );
 qboolean OnSameTeam( gentity_t *ent1, gentity_t *ent2 );
 void Team_CheckDroppedItem( gentity_t *dropped );
 qboolean CheckObeliskAttack( gentity_t *obelisk, gentity_t *attacker );
-//KK-OAX Added
+//KK-OAX Added for Command Handling Changes (r24)
 team_t G_TeamFromString( char *str );
 
 //KK-OAX Removed these in Code in favor of bg_alloc.c from Tremulous
@@ -1282,4 +1294,6 @@ void Svcmd_DumpUser_f( void );
 void Svcmd_Chat_f( void );
 void Svcmd_ListIP_f( void );
 void Svcmd_MessageWrapper( void );
+
+#include "g_killspree.h"
 

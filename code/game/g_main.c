@@ -171,6 +171,10 @@ vmCvar_t	sv_fps;
 //From beta 29
 vmCvar_t        g_lagLightning; //Adds a little lag to the lightninggun to make it less powerfull
 //unlagged - server options
+//KK-OAX
+vmCvar_t        g_sprees;
+vmCvar_t        g_altExcellent;
+vmCvar_t        g_spreeDiv;
 
 // bk001129 - made static to avoid aliasing
 static cvarTable_t		gameCvarTable[] = {
@@ -328,6 +332,10 @@ static cvarTable_t		gameCvarTable[] = {
 //used for voIP
         { &g_redTeamClientNumbers, "g_redTeamClientNumbers", "0",CVAR_ROM, 0, qfalse },
         { &g_blueTeamClientNumbers, "g_blueTeamClientNumbers", "0",CVAR_ROM, 0, qfalse },
+        //KK-OAX
+        { &g_sprees, "g_sprees", "sprees.dat", 0, 0 },
+        { &g_altExcellent, "g_altExcellent", "0", 0 },
+        { &g_spreeDiv, "g_spreeDiv", "5", 0 }
 };
 
 // bk001129 - made static to avoid aliasing
@@ -621,6 +629,9 @@ void G_InitGame( int levelTime, int randomSeed, int restart ) {
         VoteParseCustomVotes();
 
 	G_InitWorldSession();
+	
+	//KK-OAX Let's Load up any killing sprees/multikills
+	readAltKillSettings( NULL, 0 );
 
 	// initialize all entities for this game
 	memset( g_entities, 0, MAX_GENTITIES * sizeof(g_entities[0]) );
