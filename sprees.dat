@@ -1,0 +1,12 @@
+[kspree]
+level = 1
+printpos = 2
+message = [n] is on a killing spree!!! ( [k] kills!!! )
+sound = sound/misc/killingspree.wav
+
+[dspree]
+level = 1
+printpos = 2
+message = [n] suffers a humiliating defeat!!!! ( [k] straight deaths!!! )
+sound = sound/misc/humiliation.wav
+
