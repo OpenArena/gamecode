@@ -27,23 +27,7 @@ extern  vmCvar_t    g_spreeDiv; // Interval of a "streak" that form the spree tr
 
 //definitions
 //These are the levels of the killing sprees, naming conventions are popular ones.
-//Their sounds and print messages are game server defined!! 
-//Killing Sprees
-#define KILLING_SPREE   1
-#define RAMPAGE         2
-#define DOMINATING      3
-#define UNSTOPPABLE     4
-#define GOD_LIKE        5
-#define WICKED_SICK     6
-#define SLAUGHTER       7
-#define HOLY_SHIT       8
-
-//Death Sprees
-#define HUMILIATING_DEFEAT  1
-#define UNCOORDINATED       2
-#define TOTALLY_WORTHLESS   3
-#define VILLAGE_LOST        4
-
+// I'd say 32 sprees is a lot!!! 
 #define MAX_KSPREE      32
 #define MAX_DSPREE      32
 
@@ -71,5 +55,8 @@ typedef struct deathspree
 } deathspree_t;
 
 //function declarations
-qboolean readAltKillSettings( gentity_t *ent, int skiparg );
+qboolean    G_ReadAltKillSettings( gentity_t *ent, int skiparg );
+void        G_RunStreakLogic( gentity_t *attacker, gentity_t *victim );
+void        G_CheckForSpree( gentity_t *ent, int streak2Test, qboolean checkKillSpree );
+
 

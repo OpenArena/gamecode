@@ -631,7 +631,7 @@ void G_InitGame( int levelTime, int randomSeed, int restart ) {
 	G_InitWorldSession();
 	
 	//KK-OAX Let's Load up any killing sprees/multikills
-	readAltKillSettings( NULL, 0 );
+	G_ReadAltKillSettings( NULL, 0 );
 
 	// initialize all entities for this game
 	memset( g_entities, 0, MAX_GENTITIES * sizeof(g_entities[0]) );

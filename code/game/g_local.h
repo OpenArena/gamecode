@@ -285,6 +285,10 @@ typedef struct {
 	int			pingsamples[NUM_PING_SAMPLES];
 	int			samplehead;
 //unlagged - true ping
+//KK-OAX Killing Sprees/Multikills
+    int         killstreak;
+    int         deathstreak;
+    qboolean    onSpree;
 } clientPersistant_t;
 
 //unlagged - backward reconciliation #1
@@ -518,6 +522,9 @@ typedef struct {
 //unlagged - backward reconciliation #4
 } level_locals_t;
 
+//KK-OAX These are some Print Shortcuts for KillingSprees and Admin
+//Prints to All when using "va()" in conjunction.
+#define AP(x)   trap_SendServerCommand(-1, x) 
 
 //
 // g_spawn.c
