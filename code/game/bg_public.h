@@ -80,6 +80,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define CS_TEAMVOTE_STRING		14
 #define	CS_TEAMVOTE_YES			16
 #define	CS_TEAMVOTE_NO			18
+//KK-OAX Added to Communicate if Multikills are Enabled
+#define CS_MULTIKILLS           19
 
 #define	CS_GAME_VERSION			20
 #define	CS_LEVEL_START_TIME		21		// so the timer only shows the current level

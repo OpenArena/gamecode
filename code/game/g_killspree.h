@@ -26,14 +26,19 @@ extern  vmCvar_t    g_altExcellent; //Turns on Multikills instead of Excellent
 extern  vmCvar_t    g_spreeDiv; // Interval of a "streak" that form the spree triggers
 
 //definitions
-//These are the levels of the killing sprees, naming conventions are popular ones.
 // I'd say 32 sprees is a lot!!! 
 #define MAX_KSPREE      32
 #define MAX_DSPREE      32
+#define MAX_MULTIKILLS  32
 
 #define CENTER_PRINT    1
 #define CHAT            2
 
+//Used to pass parameter to calculate the upper-most level of
+// the spree/multikill arrays. 
+#define LARGEST_KILLSPREE   1
+#define LARGEST_DEATHSPREE  2
+#define LARGEST_MULTIKILL   3
 
 typedef struct killspree
 {
@@ -54,9 +59,17 @@ typedef struct deathspree
     int                 position;
 } deathspree_t;
 
+typedef struct multikill
+{
+    char                killMsg[ MAX_STRING_CHARS ];
+    char                sound2Play[ MAX_STRING_CHARS ];
+    int                 kills;
+} multikill_t;
+
 //function declarations
 qboolean    G_ReadAltKillSettings( gentity_t *ent, int skiparg );
 void        G_RunStreakLogic( gentity_t *attacker, gentity_t *victim );
 void        G_CheckForSpree( gentity_t *ent, int streak2Test, qboolean checkKillSpree );
-
+void        G_checkForMultiKill( gentity_t *ent );
+void        G_ConfigClientExcellent( qboolean levelStart );
 

@@ -602,7 +602,13 @@ void SP_worldspawn( void ) {
 		G_SpawnString( "music", "", &s );   
 		trap_SetConfigstring( CS_MUSIC, s );
 	}
-
+    //KK-OAX For Enabling MultiKills
+    if( g_altExcellent.integer == 1 ) {
+        trap_SetConfigstring( CS_MULTIKILLS, "1" );
+    } else {
+        trap_SetConfigstring( CS_MULTIKILLS, "0" );
+    }
+    
 	G_SpawnString( "message", "", &s );
 	trap_SetConfigstring( CS_MESSAGE, s );				// map specific message
 

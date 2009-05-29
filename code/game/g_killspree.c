@@ -28,14 +28,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 killspree_t *killSprees[ MAX_KSPREE ];
 deathspree_t *deathSprees[ MAX_DSPREE ];
+multikill_t *multiKills[ MAX_MULTIKILLS ];
 
-//This function is called to revert to stock excellent behavior if there are configuration errors. 
-static void disableMultiKills( void )
-{  
-    if(g_altExcellent.integer) {
-        g_altExcellent.integer = 0;
-    }
-}
+
 /*
 =================
 G_ReadAltKillSettings
@@ -47,8 +42,9 @@ qboolean G_ReadAltKillSettings( gentity_t *ent, int skiparg )
     //Let's Initialize some Spree structs/objects
     killspree_t     *k = NULL;
     deathspree_t    *d = NULL;
+    multikill_t     *m = NULL;
     //spree counters
-    int             ksc = 0, dsc = 0;
+    int             ksc = 0, dsc = 0, mc = 0;
     int             spreeDivisor;
     
     //Give us an int to use in "for" loops
@@ -59,24 +55,30 @@ qboolean G_ReadAltKillSettings( gentity_t *ent, int skiparg )
     int             length;
     qboolean        kspree_read;
     qboolean        dspree_read;
+    qboolean        mkill_read;
     char            *cnf, *cnf2;
     char            *t;
 
     //Let's clear out any existing killing sprees/death sprees. YAYY BG_FREE!!!!!
     for( loopStep = 0; loopStep < MAX_KSPREE && killSprees[ loopStep ]; loopStep++ ) {
         BG_Free( killSprees[ loopStep ] );
-            killSprees[ loopStep ] = NULL;
+        killSprees[ loopStep ] = NULL;
     }
         
     for( loopStep = 0; loopStep < MAX_KSPREE && deathSprees[ loopStep ]; loopStep++ ) {
         BG_Free( deathSprees[ loopStep ] );
-            deathSprees[ loopStep ] = NULL;
+        deathSprees[ loopStep ] = NULL;
     }
+    
+    for( loopStep = 0; loopStep < MAX_MULTIKILLS && multiKills[ loopStep ]; loopStep++ ) {
+        BG_Free( multiKills[ loopStep ] );
+        multiKills[ loopStep ] = NULL;
+    }    
     
     // If the config file is not defined...forget reading/loading
     if( !g_sprees.string[0] ) {
         //Let's disable multikills to keep stock excellent sound
-        disableMultiKills();
+        g_altExcellent.integer = 0;
         return qfalse;
     }
     /* 
@@ -90,10 +92,9 @@ qboolean G_ReadAltKillSettings( gentity_t *ent, int skiparg )
     if( g_spreeDiv.integer >= 2 ) {
         spreeDivisor = g_spreeDiv.integer;
     } else {
-        disableMultiKills();
-        //Give them a message they can google and find the documentation. 
-        G_Printf( "Error: cvar g_spreeDiv must not be set to 0 or 1, restoring stock kill settings!\n" );
-        return qfalse;
+        g_spreeDiv.integer = 5;
+        spreeDivisor = 5; 
+        G_Printf( "Error: cvar g_spreeDiv must not be set to 0 or 1, reverting to default!\n" );
     } 
     
     length = trap_FS_FOpenFile( g_sprees.string, &file, FS_READ );
@@ -101,7 +102,7 @@ qboolean G_ReadAltKillSettings( gentity_t *ent, int skiparg )
     //If the file can't be accessed/opened. 
     if( length < 0 ) {
         G_Printf( "Could not open configuration file for Sprees and Multikills %s\n", g_sprees.string );
-        disableMultiKills();
+        g_altExcellent.integer = 0;
         return qfalse;
     }
     //Allocate some memory.
@@ -113,7 +114,7 @@ qboolean G_ReadAltKillSettings( gentity_t *ent, int skiparg )
     *( cnf + length ) = '\0';
     trap_FS_FCloseFile( file );
     
-    kspree_read = dspree_read = qfalse;
+    kspree_read = dspree_read = mkill_read = qfalse;
     
     //Let's start parsing em. 
     COM_BeginParseSession( g_sprees.string );
@@ -130,6 +131,7 @@ qboolean G_ReadAltKillSettings( gentity_t *ent, int skiparg )
             killSprees[ ksc++ ] = k;
             kspree_read = qtrue;
             dspree_read = qfalse;
+            mkill_read = qfalse;
             
         } else if ( !Q_stricmp( t, "[dspree]" ) ) {
         
@@ -139,6 +141,16 @@ qboolean G_ReadAltKillSettings( gentity_t *ent, int skiparg )
             deathSprees[ dsc++ ] = d;
             dspree_read = qtrue;
             kspree_read = qfalse;
+            mkill_read = qfalse;
+        } else if ( !Q_stricmp( t, "[mkill]" ) ) {
+            
+            if( mc >= MAX_MULTIKILLS )
+                return qfalse;
+            m = BG_Alloc( sizeof( multikill_t ) );
+            multiKills[ mc++ ] = m;
+            mkill_read = qtrue;
+            kspree_read = qfalse;
+            dspree_read = qfalse; 
         //Parse a killing spree    
         } else if ( kspree_read ) {
             if( !Q_stricmp( t, "level" ) ) {
@@ -168,14 +180,39 @@ qboolean G_ReadAltKillSettings( gentity_t *ent, int skiparg )
             } else {
                 COM_ParseError( "Death Spree unrecognized token \"%s\"", t );
             }
+        } else if ( mkill_read ) {
+            if ( !Q_stricmp( t, "kills" ) ) {
+                readFile_int( &cnf, &m->kills );
+            } else if ( !Q_stricmp( t, "message" ) ) {
+                readFile_string( &cnf, m->killMsg, sizeof( m->killMsg ) );
+            } else if ( !Q_stricmp( t, "sound" ) ) {
+                readFile_string( &cnf, m->sound2Play, sizeof( m->sound2Play ) );
+            } else {
+                COM_ParseError( "Multikill unrecognized token \"%s\"", t );
+            }
         } else {
             COM_ParseError( "unexpected token \"%s\"", t );
         }
     }
     //Let's "free" some memory now.
     BG_Free( cnf2 );
-    G_Printf("Sprees/Kills: loaded %d killing sprees and %d death sprees\n", ksc, dsc );
-    
+    G_Printf("Sprees/Kills: loaded %d killing sprees, %d death sprees, and %d multikills.\n", ksc, dsc, mc );
+    //Mark the Upper Bounds of the Arrays (Since they start numbering at 0, We subtract 1 )
+    if( ksc > 0 ) {
+        level.kSpreeUBound = ( ksc - 1 );        
+    } else {
+        level.kSpreeUBound = -1;
+    }
+    if( dsc > 0 ) {
+        level.dSpreeUBound = ( dsc - 1 );
+    } else {
+        level.dSpreeUBound = -1;
+    }
+    if( mc > 0 ) {
+        level.mKillUBound = ( dsc - 1 );
+    } else {
+        level.mKillUBound = -1;
+    }
     return qtrue;
 }
 
@@ -213,11 +250,11 @@ static char *CreateMessage( gentity_t *ent, char *message, char *spreeNumber )
     //Get the player name.
     Q_strncpyz( name, ent->client->pers.netname, sizeof( name ) );
     //Do Our Replacements
-    Q_strncpyz( output, fillPlaceHolder( message, "[n]", name ), sizeof( output ) );
+    Q_strncpyz( output, fillPlaceHolder( message, "[n]", name ), sizeof( output ) ); 
     Q_strncpyz( output, fillPlaceHolder( output, "[k]", spreeNumber ), sizeof( output ) );
-    
     return output; 
 }
+
 
 /*
 ================
@@ -265,6 +302,27 @@ void G_RunStreakLogic( gentity_t *attacker, gentity_t *victim )
     }     
 }
 
+//This is basically a hackjob...but I don't care
+static qboolean TestSpreeWhole( int streak2Test ) {
+    float   float2Test;
+    float   spreeFDiv;
+    float   resultf;
+    int     spreeDiv;
+    int     result;
+
+    float2Test = streak2Test;
+    spreeFDiv = g_spreeDiv.integer;
+    spreeDiv = g_spreeDiv.integer;
+    result = ( streak2Test / spreeDiv );
+    resultf = ( float2Test / spreeFDiv );
+    
+    if( result == resultf ) {  
+        return qtrue;
+    } else {
+        return qfalse;
+    }
+}
+
 /*
 ==================
 G_CheckForSpree
@@ -275,56 +333,102 @@ void G_CheckForSpree( gentity_t *ent, int streak2Test, qboolean checkKillSpree )
     int     loopStep;
     char    *returnedString;
     //If somebody want's to award killing sprees above 99 kills he/she can mod this his/herself!!! :)
-    char    streakcount[ 2 ];
+    char    streakcount[ 3 ];
     char    *sound;
     int     position;
     int     soundIndex;
     
+    qboolean    isSpree = qfalse;
+    int         divisionHolder;
+    
+    //Probably Not Needed, but to protect Server Ops from Crashing their Stuff MidMatch
+    if( g_spreeDiv.integer == 0 ) {
+                return;
+    }
+    divisionHolder = ( streak2Test / g_spreeDiv.integer );
     //if it's a deathspree
     if( checkKillSpree == qfalse ) {
-        for( loopStep = 0; deathSprees[ loopStep ]; loopStep++ ) {            
-            //If the deathSpree is equal to the streak to test
-            if( deathSprees[ loopStep ]->streakCount == streak2Test ) {
-                //Using Q_snprintf to change the int into a char for replacement. 
-                Q_snprintf( streakcount, sizeof( streakcount ), "%i", deathSprees[ loopStep ]->streakCount );
-                //Let's grab the message to show, fill up the placeholders and concatenate it. 
-                returnedString = CreateMessage ( ent, deathSprees[ loopStep ]->spreeMsg, streakcount ); 
-                //Grab the Print Position ( 1 for Center Printing, 2 for Chat ) 
-                position = deathSprees[ loopStep ]->position;
-                //Grab the Sound
-                sound = deathSprees[ loopStep ]->sound2Play;
-                //Index the Sound
-                soundIndex = G_SoundIndex( sound );
-                //Play the Sound
-                G_GlobalSound( soundIndex );
-                //Print the Message
-                if( position == CENTER_PRINT ) {
-                    AP( va("cp \"%s\"", returnedString ) );
-                } else {
-                    AP( va("chat \"%s\"", returnedString ) );
-                }    
-                break;
+        //Is the streak higher than the largest level defined?
+        if( divisionHolder > level.dSpreeUBound ) {
+            //Let's make sure it's a whole number to mimic the other sprees
+            isSpree = TestSpreeWhole( streak2Test );
+            if( !isSpree ) {
+                return;
             }
-        }
+            //We've made it this far...now do the largest spree defined.
+            Q_snprintf( streakcount, sizeof( streakcount ), "%i", streak2Test );
+            returnedString = CreateMessage( ent, deathSprees[ level.dSpreeUBound ]->spreeMsg, streakcount ); 
+            position = deathSprees[ level.dSpreeUBound ]->position;
+            sound = deathSprees[ level.dSpreeUBound ]->sound2Play;
+            soundIndex = G_SoundIndex( sound );
+            G_GlobalSound( soundIndex );
+            if( position == CENTER_PRINT ) {
+                AP( va("cp \"%s\"", returnedString ) );
+            } else {
+                AP( va("chat \"%s\"", returnedString ) );
+            } 
+        } else {
+            for( loopStep = 0; deathSprees[ loopStep ]; loopStep++ ) {            
+                //If the deathSpree is equal to the streak to test
+                if( deathSprees[ loopStep ]->streakCount == streak2Test ) {
+                    //Using Q_snprintf to change the int into a char for replacement. 
+                    Q_snprintf( streakcount, sizeof( streakcount ), "%i", deathSprees[ loopStep ]->streakCount );
+                    //Let's grab the message to show, fill up the placeholders and concatenate it. 
+                    returnedString = CreateMessage ( ent, deathSprees[ loopStep ]->spreeMsg, streakcount ); 
+                    //Grab the Print Position ( 1 for Center Printing, 2 for Chat ) 
+                    position = deathSprees[ loopStep ]->position;
+                    //Grab the Sound
+                    sound = deathSprees[ loopStep ]->sound2Play;
+                    //Index the Sound
+                    soundIndex = G_SoundIndex( sound );
+                    //Play the Sound
+                    G_GlobalSound( soundIndex );
+                    //Print the Message
+                    if( position == CENTER_PRINT ) {
+                        AP( va("cp \"%s\"", returnedString ) );
+                    } else {
+                        AP( va("chat \"%s\"", returnedString ) );
+                    }    
+                    break;
+                }
+            }
+        }   
     } else if( checkKillSpree == qtrue ) {
-        //The killing spree is identical to the death spree, just with the killing spree structs instead. 
-        
-        for( loopStep = 0; killSprees[ loopStep ]; loopStep++ ) {
-            
-            if( killSprees[ loopStep ]->streakCount == streak2Test ) {
-                
-                Q_snprintf( streakcount, sizeof( streakcount ), "%i", killSprees[ loopStep ]->streakCount );
-                returnedString = CreateMessage ( ent, killSprees[ loopStep ]->spreeMsg, streakcount );                 
-                position = killSprees[ loopStep ]->position;
-                sound = killSprees[ loopStep ]->sound2Play;                
-                soundIndex = G_SoundIndex( sound );                
-                G_GlobalSound( soundIndex );
-                if( position == CENTER_PRINT ) {
-                    AP( va("cp \"%s\"", returnedString ) );
-                } else {
-                    AP( va("chat \"%s\"", returnedString ) );
-                }  
-                break;
+        //Is the streak higher than the largest level defined?
+        if( divisionHolder > level.kSpreeUBound ) {
+            //Let's make sure it's a whole number to mimic the other sprees
+            isSpree = TestSpreeWhole( streak2Test );
+            if( !isSpree ) {
+                return;
+            }
+            //We've made it this far...now do the largest spree defined.
+            Q_snprintf( streakcount, sizeof( streakcount ), "%i", streak2Test );
+            returnedString = CreateMessage( ent, killSprees[ level.kSpreeUBound ]->spreeMsg, streakcount ); 
+            position = killSprees[ level.kSpreeUBound ]->position;
+            sound = killSprees[ level.kSpreeUBound ]->sound2Play;
+            soundIndex = G_SoundIndex( sound );
+            G_GlobalSound( soundIndex );
+            if( position == CENTER_PRINT ) {
+                AP( va("cp \"%s\"", returnedString ) );
+            } else {
+                AP( va("chat \"%s\"", returnedString ) );
+            }
+        } else { 
+            for( loopStep = 0; killSprees[ loopStep ]; loopStep++ ) {
+                if( killSprees[ loopStep ]->streakCount == streak2Test ) {
+                    Q_snprintf( streakcount, sizeof( streakcount ), "%i", killSprees[ loopStep ]->streakCount );
+                    returnedString = CreateMessage ( ent, killSprees[ loopStep ]->spreeMsg, streakcount );                 
+                    position = killSprees[ loopStep ]->position;
+                    sound = killSprees[ loopStep ]->sound2Play;                
+                    soundIndex = G_SoundIndex( sound );                
+                    G_GlobalSound( soundIndex );
+                    if( position == CENTER_PRINT ) {
+                        AP( va("cp \"%s\"", returnedString ) );
+                    } else {
+                        AP( va("chat \"%s\"", returnedString ) );
+                    }  
+                    break;
+                }
             }
         }    
     } else {
@@ -333,6 +437,57 @@ void G_CheckForSpree( gentity_t *ent, int streak2Test, qboolean checkKillSpree )
     }
 }
 
+/*
+===============
+G_checkForMultiKill
+===============
+*/
+void G_checkForMultiKill( gentity_t *ent ) {
+    
+    int     loopStep;
+    char    *returnedString;
+    char    *sound;
+    int     soundIndex;
+    int     multiKillCount;
+    char    multiKillString[ 2 ];
+    
+    //Let's grab the multikill count for the player first
+    multiKillCount = ent->client->pers.multiKillCount;
+    
+    if( multiKillCount > multiKills[ level.mKillUBound ]->kills ) {
+        Q_snprintf( multiKillString, sizeof( multiKillString ), "%i", multiKillCount );
+        returnedString = CreateMessage ( ent, multiKills[ level.mKillUBound ]->killMsg, multiKillString );
+        sound = multiKills[ level.mKillUBound ]->sound2Play;
+        soundIndex = G_SoundIndex( sound );
+        G_GlobalSound( soundIndex );
+        AP( va("chat \"%s\"", returnedString ) );
+        return;
+    } else {     
+        for( loopStep = 0; multiKills[ loopStep ]; loopStep++ ) {
+            //If the multikill count is equal to a killLevel let's do this. 
+            
+            if( multiKills[ loopStep ]->kills == multiKillCount ) {            
+                Q_snprintf( multiKillString, sizeof( multiKillString ), "%i", multiKills[ loopStep ]->kills );
+                //Build the Message
+                returnedString = CreateMessage ( ent, multiKills[ loopStep ]->killMsg, multiKillString );
+                //Grab the sound
+                sound = multiKills[ loopStep ]->sound2Play;
+                //Index the sound
+                soundIndex = G_SoundIndex( sound );
+                //Play the sound
+                G_GlobalSound( soundIndex );
+                /* Print the String
+                Since we don't want to clutter screens (the player is already going to get the excellent icon)
+                we won't give them an option to centerprint. 
+                */
+                AP( va("chat \"%s\"", returnedString ) );
+                break;
+            }
+        }   
+
+    }
+      
+}
 
 
      

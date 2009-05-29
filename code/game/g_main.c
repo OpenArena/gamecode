@@ -334,7 +334,7 @@ static cvarTable_t		gameCvarTable[] = {
         { &g_blueTeamClientNumbers, "g_blueTeamClientNumbers", "0",CVAR_ROM, 0, qfalse },
         //KK-OAX
         { &g_sprees, "g_sprees", "sprees.dat", 0, 0 },
-        { &g_altExcellent, "g_altExcellent", "0", 0 },
+        { &g_altExcellent, "g_altExcellent", "0", CVAR_SERVERINFO, 0, qfalse },
         { &g_spreeDiv, "g_spreeDiv", "5", 0 }
 };
 
@@ -597,6 +597,7 @@ void G_InitGame( int levelTime, int randomSeed, int restart ) {
 
 	// set some level globals
 	memset( &level, 0, sizeof( level ) );
+	
 	level.time = levelTime;
 	level.startTime = levelTime;
 
@@ -629,7 +630,7 @@ void G_InitGame( int levelTime, int randomSeed, int restart ) {
         VoteParseCustomVotes();
 
 	G_InitWorldSession();
-	
+
 	//KK-OAX Let's Load up any killing sprees/multikills
 	G_ReadAltKillSettings( NULL, 0 );
 

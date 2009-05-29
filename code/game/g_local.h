@@ -289,6 +289,8 @@ typedef struct {
     int         killstreak;
     int         deathstreak;
     qboolean    onSpree;
+    
+    int         multiKillCount;
 } clientPersistant_t;
 
 //unlagged - backward reconciliation #1
@@ -520,6 +522,12 @@ typedef struct {
 	// actual time this server frame started
 	int			frameStartTime;
 //unlagged - backward reconciliation #4
+//KK-OAX Storing value of cvar g_altExcellent so it won't change in level.
+    
+    int         kSpreeUBound;
+    int         dSpreeUBound;
+    int         mKillUBound;
+    
 } level_locals_t;
 
 //KK-OAX These are some Print Shortcuts for KillingSprees and Admin
