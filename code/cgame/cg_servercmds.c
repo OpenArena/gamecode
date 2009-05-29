@@ -510,6 +510,10 @@ static void CG_ConfigStringModified( void ) {
 #ifdef MISSIONPACK
 		trap_S_StartLocalSound( cgs.media.voteNow, CHAN_ANNOUNCER );
 #endif
+	//KK-OAX Used to see if Multikills are enabled. 
+	} else if ( num == CS_MULTIKILLS ) {
+	    cgs.altExcellent = atoi( str );
+	    cgs.altExcellentMod = qtrue;	
 	} else if ( num == CS_INTERMISSION ) {
 		cg.intermissionStarted = atoi( str );
 	} else if ( num >= CS_MODELS && num < CS_MODELS+MAX_MODELS ) {

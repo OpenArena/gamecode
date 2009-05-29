@@ -1120,6 +1120,9 @@ typedef struct {
 	// this will be set to the server's g_delagHitscan
 	int				delagHitscan;
 //unlagged - client options
+//KK-OAX For storing whether or not the server has multikills enabled. 
+    qboolean        altExcellent;
+    qboolean        altExcellentMod;
 } cgs_t;
 
 //==============================================================================

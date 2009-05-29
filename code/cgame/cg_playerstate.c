@@ -291,6 +291,20 @@ static void pushReward(sfxHandle_t sfx, qhandle_t shader, int rewardCount) {
 
 /*
 ==================
+pushRewardNoSound
+KK-OAX, Used for Servers replacing Reward Sounds. 
+==================
+*/
+static void pushRewardNoSound( qhandle_t shader, int rewardCount ) {
+    if(cg.rewardStack < (MAX_REWARDSTACK-1)) {
+        cg.rewardStack++;
+        cg.rewardShader[cg.rewardStack] = shader;
+        cg.rewardCount[cg.rewardStack] = rewardCount;
+    }
+}
+        
+/*
+==================
 CG_CheckLocalSounds
 ==================
 */
@@ -366,7 +380,13 @@ void CG_CheckLocalSounds( playerState_t *ps, playerState_t *ops ) {
 #else
 		sfx = cgs.media.excellentSound;
 #endif
-		pushReward(sfx, cgs.media.medalExcellent, ps->persistant[PERS_EXCELLENT_COUNT]);
+		//KK-OAX Used for Multikills, We don't want the "Excellent" Sound if they are enabled.
+		//The server will broadcast us a sound instead based on the server side definitions. 
+		if( cgs.altExcellent == qtrue ) {
+		    pushRewardNoSound( cgs.media.medalExcellent, ps->persistant[PERS_EXCELLENT_COUNT]);
+		} else {
+		    pushReward(sfx, cgs.media.medalExcellent, ps->persistant[PERS_EXCELLENT_COUNT]);
+		}
 		reward = qtrue;
 		//Com_Printf("excellent\n");
 	}

@@ -1932,7 +1932,12 @@ static void CG_DrawReward( void ) {
 			cg.rewardTime = cg.time;
 			cg.rewardStack--;
 			color = CG_FadeColor( cg.rewardTime, REWARD_TIME );
-			trap_S_StartLocalSound(cg.rewardSound[0], CHAN_ANNOUNCER);
+			
+			//KK-OAX Only Play a Sound if there is one specified.
+			if( cg.rewardSound[0] ) { 
+			    trap_S_StartLocalSound(cg.rewardSound[0], CHAN_ANNOUNCER);
+			}
+			
 		} else {
 			return;
 		}
