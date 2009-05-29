@@ -1,0 +1,25 @@
+
+#Tip: You can create a supermake.local file and this script will get the variable from there!
+BINNAME=openarena
+MODNAME=oax
+
+if [ -r ./supermake.local ] ; then
+source ./supermake.local
+fi
+
+if [ -r $BINNAME ] ; then
+	echo $BINNAME found
+else
+	echo $BINNAME not found! Check the variables in the script
+	exit 1
+fi
+
+#Create the mod dir
+mkdir -p ~/.openarena/$MODNAME
+
+
+pushd ..
+#Build, pak it and start 
+make && cd build/release-linux-x86_64/baseq3 && zip -r ~/.openarena/$MODNAME/$MODNAME.pk3 vm && $BINNAME +set fs_game $MODNAME +set debug 1 +set sv_pure 0
+popd
+
