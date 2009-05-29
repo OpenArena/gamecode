@@ -2,11 +2,11 @@
 level = 1
 printpos = 2
 message = [n] is on a killing spree!!! ( [k] kills!!! )
-sound = sound/misc/killingspree.wav
+sound = sound/feedback/excellent.wav
 
 [dspree]
 level = 1
 printpos = 2
 message = [n] suffers a humiliating defeat!!!! ( [k] straight deaths!!! )
-sound = sound/misc/humiliation.wav
+sound = sound/feedback/humiliation.wav
 
