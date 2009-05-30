@@ -2015,9 +2015,6 @@ void CG_Init( int serverMessageNum, int serverCommandSequence, int clientNum ) {
 
 	s = CG_ConfigString( CS_LEVEL_START_TIME );
 	cgs.levelStartTime = atoi( s );
-
-    s = CG_ConfigString( CS_MULTIKILLS );
-    cgs.altExcellent = atoi( s );
     
 	CG_ParseServerinfo();
 

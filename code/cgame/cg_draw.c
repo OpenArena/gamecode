@@ -1926,6 +1926,7 @@ static void CG_DrawReward( void ) {
 		if (cg.rewardStack > 0) {
 			for(i = 0; i < cg.rewardStack; i++) {
 				cg.rewardSound[i] = cg.rewardSound[i+1];
+				
 				cg.rewardShader[i] = cg.rewardShader[i+1];
 				cg.rewardCount[i] = cg.rewardCount[i+1];
 			}
@@ -1933,11 +1934,14 @@ static void CG_DrawReward( void ) {
 			cg.rewardStack--;
 			color = CG_FadeColor( cg.rewardTime, REWARD_TIME );
 			
-			//KK-OAX Only Play a Sound if there is one specified.
-			if( cg.rewardSound[0] ) { 
-			    trap_S_StartLocalSound(cg.rewardSound[0], CHAN_ANNOUNCER);
-			}
+			//Have to make sure we aren't playing the excellent sound if 
+			//multikills are enabled. 
 			
+			if( ( cg.rewardSound[0] != cgs.media.excellentSound ) ||
+			    ( cgs.altExcellent == 0 ) ) { 
+			    trap_S_StartLocalSound(cg.rewardSound[0], CHAN_ANNOUNCER);
+			}   
+
 		} else {
 			return;
 		}
