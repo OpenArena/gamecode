@@ -334,8 +334,9 @@ static cvarTable_t		gameCvarTable[] = {
         { &g_blueTeamClientNumbers, "g_blueTeamClientNumbers", "0",CVAR_ROM, 0, qfalse },
         //KK-OAX
         { &g_sprees, "g_sprees", "sprees.dat", 0, 0, qfalse },
-        { &g_altExcellent, "g_altExcellent", "0", CVAR_SERVERINFO, 0, qfalse },
-        { &g_spreeDiv, "g_spreeDiv", "5", 0, 0, qfalse }
+        //Sending this to the Clients is now done with CVAR_SERVERINFO 
+        { &g_altExcellent, "g_altExcellent", "0", CVAR_SERVERINFO, 0, qtrue}, 
+        { &g_spreeDiv, "g_spreeDiv", "5", 0, 0, qfalse}
 };
 
 // bk001129 - made static to avoid aliasing
@@ -550,7 +551,7 @@ void G_UpdateCvars( void ) {
 					trap_SendServerCommand( -1, va("print \"Server: %s changed to %s\n\"", 
 						cv->cvarName, cv->vmCvar->string ) );
 				}
-
+      
 				if (cv->teamShader) {
 					remapped = qtrue;
 				}

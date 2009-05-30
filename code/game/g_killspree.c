@@ -30,7 +30,6 @@ killspree_t *killSprees[ MAX_KSPREE ];
 deathspree_t *deathSprees[ MAX_DSPREE ];
 multikill_t *multiKills[ MAX_MULTIKILLS ];
 
-
 /*
 =================
 G_ReadAltKillSettings
@@ -78,23 +77,27 @@ qboolean G_ReadAltKillSettings( gentity_t *ent, int skiparg )
     // If the config file is not defined...forget reading/loading
     if( !g_sprees.string[0] ) {
         //Let's disable multikills to keep stock excellent sound
-        g_altExcellent.integer = 0;
+        if( g_altExcellent.integer == 1 )
+        {
+            trap_Cvar_Set( "g_altExcellent", "0" );
+        }
         return qfalse;
     }
     /* 
     only set spreeDivisor to cvar g_spreeDiv if g_spreeDiv is >= "2".
     0 will cause problems and having 1 is just a fool who wants to hear something
-    on every kill. 
-    
-    FIXME: This works for beta tests, but when multikills are added
-    it will really make server configuration inflexible and confusing.     
+    on every kill.      
     */  
     if( g_spreeDiv.integer >= 2 ) {
-        spreeDivisor = g_spreeDiv.integer;
+        level.spreeDivisor = g_spreeDiv.integer;
+        spreeDivisor = level.spreeDivisor;
     } else {
-        g_spreeDiv.integer = 5;
+        level.spreeDivisor = 5;
+        // We don't want to change the value, keep reminding the server operator.
+        //g_spreeDiv.integer = 5;
         spreeDivisor = 5; 
-        G_Printf( "Error: cvar g_spreeDiv must not be set to 0 or 1, reverting to default!\n" );
+        G_Printf( "Error: cvar g_spreeDiv must not be set to 0 or 1, reverting to default settings!\n" );
+        G_Printf( "Error: Set g_spreeDiv higher than 1 if 5 is not desired!\n" );
     } 
     
     length = trap_FS_FOpenFile( g_sprees.string, &file, FS_READ );
@@ -102,7 +105,7 @@ qboolean G_ReadAltKillSettings( gentity_t *ent, int skiparg )
     //If the file can't be accessed/opened. 
     if( length < 0 ) {
         G_Printf( "Could not open configuration file for Sprees and Multikills %s\n", g_sprees.string );
-        g_altExcellent.integer = 0;
+        trap_Cvar_Set( "g_altExcellent", "0" );
         return qfalse;
     }
     //Allocate some memory.
@@ -198,20 +201,18 @@ qboolean G_ReadAltKillSettings( gentity_t *ent, int skiparg )
     BG_Free( cnf2 );
     G_Printf("Sprees/Kills: loaded %d killing sprees, %d death sprees, and %d multikills.\n", ksc, dsc, mc );
     //Mark the Upper Bounds of the Arrays (Since they start numbering at 0, We subtract 1 )
-    if( ksc > 0 ) {
         level.kSpreeUBound = ( ksc - 1 );        
-    } else {
-        level.kSpreeUBound = -1;
-    }
-    if( dsc > 0 ) {
         level.dSpreeUBound = ( dsc - 1 );
-    } else {
-        level.dSpreeUBound = -1;
-    }
     if( mc > 0 ) {
         level.mKillUBound = ( dsc - 1 );
     } else {
         level.mKillUBound = -1;
+        //KK-OAX We don't have any kills defined, revert to stock.
+        //FIXME: Make sure this change shows up in the console... 
+        if( g_altExcellent.integer == 1 ) {
+            trap_Cvar_Set( "g_altExcellent", "0" );
+        }
+             
     }
     return qtrue;
 }
@@ -302,7 +303,9 @@ void G_RunStreakLogic( gentity_t *attacker, gentity_t *victim )
     }     
 }
 
-//This is basically a hackjob...but I don't care
+
+
+//If the streak / spree divisor is a whole number, we have a spree
 static qboolean TestSpreeWhole( int streak2Test ) {
     float   float2Test;
     float   spreeFDiv;
@@ -311,8 +314,8 @@ static qboolean TestSpreeWhole( int streak2Test ) {
     int     result;
 
     float2Test = streak2Test;
-    spreeFDiv = g_spreeDiv.integer;
-    spreeDiv = g_spreeDiv.integer;
+    spreeFDiv = level.spreeDivisor;
+    spreeDiv = level.spreeDivisor;
     result = ( streak2Test / spreeDiv );
     resultf = ( float2Test / spreeFDiv );
     
@@ -342,10 +345,10 @@ void G_CheckForSpree( gentity_t *ent, int streak2Test, qboolean checkKillSpree )
     int         divisionHolder;
     
     //Probably Not Needed, but to protect Server Ops from Crashing their Stuff MidMatch
-    if( g_spreeDiv.integer < 1 ) {
+    if( level.spreeDivisor < 1 ) {
                 return;
     }
-    divisionHolder = ( streak2Test / g_spreeDiv.integer );
+    divisionHolder = ( streak2Test / level.spreeDivisor );
     //if it's a deathspree
     if( !checkKillSpree ) {
         //Is the streak higher than the largest level defined?

@@ -522,12 +522,14 @@ typedef struct {
 	// actual time this server frame started
 	int			frameStartTime;
 //unlagged - backward reconciliation #4
-//KK-OAX Storing value of cvar g_altExcellent so it won't change in level.
+//KK-OAX Storing upper bounds of spree/multikill arrays
     
     int         kSpreeUBound;
     int         dSpreeUBound;
     int         mKillUBound;
-    
+//KK-OAX Storing g_spreeDiv to avoid dividing by 0.    
+    int         spreeDivisor;
+     
 } level_locals_t;
 
 //KK-OAX These are some Print Shortcuts for KillingSprees and Admin
