@@ -236,20 +236,9 @@ PlayerSettings_DrawEffects
 static void PlayerSettings_DrawEffects2( void *self ) {
 	menulist_s		*item;
 	qboolean		focus;
-	int				style;
-	float			*color;
 
 	item = (menulist_s *)self;
 	focus = (item->generic.parent->cursor == item->generic.menuPosition);
-
-	/*style = UI_LEFT|UI_SMALLFONT;
-	color = text_color_normal;
-	if( focus ) {
-		style |= UI_PULSE;
-		color = text_color_highlight;
-	}
-
-	UI_DrawProportionalString( item->generic.x, item->generic.y, "Effects2", style, color );*/
 
 	UI_DrawHandlePic( item->generic.x + 64, item->generic.y + 8, 128, 8, s_playersettings.fxBasePic );
 	UI_DrawHandlePic( item->generic.x + 64 + item->curvalue * 16 + 8, item->generic.y + 6, 16, 12, s_playersettings.fxPic[item->curvalue] );

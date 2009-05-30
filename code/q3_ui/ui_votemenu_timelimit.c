@@ -71,6 +71,8 @@ typedef struct
 
 static votemenu_t	s_votemenu_Timelmit;
 
+void UI_VoteTimelimitMenuInternal( void );
+
 /*
 =================
 VoteMenu_Timelimit_Event
@@ -157,16 +159,6 @@ static void setTimeMenutext(menutext_s *menu,int y,int id,int value,char *text) 
     menu->generic.callback    = VoteMenu_Timelimit_Event;
     menu->string              = text;
     menu->style               = UI_CENTER|UI_SMALLFONT;
-}
-
-/*
-=================
-VoteMenu_Timelimit_MenuKey
-=================
-*/
-static sfxHandle_t VoteMenu_Timelimit_MenuKey( int key )
-{
-	return ( Menu_DefaultKey( &s_votemenu_Timelmit.menu, key ) );
 }
 
 /*

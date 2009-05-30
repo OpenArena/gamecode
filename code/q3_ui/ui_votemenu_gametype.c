@@ -93,6 +93,8 @@ typedef struct
 
 static votemenu_t	s_votemenu_Gametype;
 
+void UI_VoteGametypeMenuInternal( void );
+
 /*
 =================
 VoteMenu_Gametype_Event

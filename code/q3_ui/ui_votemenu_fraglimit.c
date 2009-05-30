@@ -72,6 +72,8 @@ typedef struct
 
 static votemenu_t	s_votemenu_fraglmit;
 
+void UI_VoteFraglimitMenuInternal( void );
+
 /*
 =================
 VoteMenu_Fraglimit_Event
@@ -158,16 +160,6 @@ static void setMenutext(menutext_s *menu,int y,int id,int value,char *text) {
     menu->generic.callback    = VoteMenu_Fraglimit_Event;
     menu->string              = text;
     menu->style               = UI_CENTER|UI_SMALLFONT;
-}
-
-/*
-=================
-VoteMenu_Fraglimit_MenuKey
-=================
-*/
-static sfxHandle_t VoteMenu_Fraglimit_MenuKey( int key )
-{
-	return ( Menu_DefaultKey( &s_votemenu_fraglmit.menu, key ) );
 }
 
 /*

@@ -342,12 +342,12 @@ void G_CheckForSpree( gentity_t *ent, int streak2Test, qboolean checkKillSpree )
     int         divisionHolder;
     
     //Probably Not Needed, but to protect Server Ops from Crashing their Stuff MidMatch
-    if( g_spreeDiv.integer == 0 ) {
+    if( g_spreeDiv.integer < 1 ) {
                 return;
     }
     divisionHolder = ( streak2Test / g_spreeDiv.integer );
     //if it's a deathspree
-    if( checkKillSpree == qfalse ) {
+    if( !checkKillSpree ) {
         //Is the streak higher than the largest level defined?
         if( divisionHolder > level.dSpreeUBound ) {
             //Let's make sure it's a whole number to mimic the other sprees
@@ -393,7 +393,7 @@ void G_CheckForSpree( gentity_t *ent, int streak2Test, qboolean checkKillSpree )
                 }
             }
         }   
-    } else if( checkKillSpree == qtrue ) {
+    } else /*if( checkKillSpree )*/ {
         //Is the streak higher than the largest level defined?
         if( divisionHolder > level.kSpreeUBound ) {
             //Let's make sure it's a whole number to mimic the other sprees
@@ -431,10 +431,10 @@ void G_CheckForSpree( gentity_t *ent, int streak2Test, qboolean checkKillSpree )
                 }
             }
         }    
-    } else {
+    } /*else {
         G_Printf("Killing Spree Error in G_CheckForSpree\n");
         return;
-    }
+    }*/
 }
 
 /*

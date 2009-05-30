@@ -63,6 +63,8 @@ typedef struct
 
 static votemenu_t	s_votemenu_custom;
 
+void UI_VoteCustomMenuInternal( void );
+
 /*
 =================
 VoteMenu_custom_Event

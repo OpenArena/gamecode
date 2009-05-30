@@ -540,6 +540,11 @@ extern void FirstConnect_Cache( void );
 extern void UI_FirstConnectMenu( void );
 
 //
+// ui_votemenu_custom.c
+
+extern void UI_VoteCustomMenu( void );
+
+//
 // ui_players.c
 //
 

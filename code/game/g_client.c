@@ -909,7 +909,7 @@ void LMSpoint(void)
 			continue;
 		}
 
-		if ( level.clients[i].isEliminated == qtrue ){
+		if ( level.clients[i].isEliminated ){
 			continue;
 		}
 		

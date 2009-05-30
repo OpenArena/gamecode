@@ -382,7 +382,7 @@ void CG_CheckLocalSounds( playerState_t *ps, playerState_t *ops ) {
 #endif
 		//KK-OAX Used for Multikills, We don't want the "Excellent" Sound if they are enabled.
 		//The server will broadcast us a sound instead based on the server side definitions. 
-		if( cgs.altExcellent == qtrue ) {
+		if( cgs.altExcellent ) {
 		    pushRewardNoSound( cgs.media.medalExcellent, ps->persistant[PERS_EXCELLENT_COUNT]);
 		} else {
 		    pushReward(sfx, cgs.media.medalExcellent, ps->persistant[PERS_EXCELLENT_COUNT]);

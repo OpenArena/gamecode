@@ -214,16 +214,6 @@ static void VoteMenu_Event( void* ptr, int event )
 
 /*
 =================
-VoteMenu_MenuKey
-=================
-*/
-static sfxHandle_t VoteMenu_MenuKey( int key )
-{
-	return ( Menu_DefaultKey( &s_votemenu.menu, key ) );
-}
-
-/*
-=================
 VoteMenu_Cache
 =================
 */
