@@ -1934,13 +1934,7 @@ static void CG_DrawReward( void ) {
 			cg.rewardStack--;
 			color = CG_FadeColor( cg.rewardTime, REWARD_TIME );
 			
-			//Have to make sure we aren't playing the excellent sound if 
-			//multikills are enabled. 
-			
-			if( ( cg.rewardSound[0] != cgs.media.excellentSound ) ||
-			    ( cgs.altExcellent == 0 ) ) { 
-			    trap_S_StartLocalSound(cg.rewardSound[0], CHAN_ANNOUNCER);
-			}   
+			trap_S_StartLocalSound(cg.rewardSound[0], CHAN_ANNOUNCER);  
 
 		} else {
 			return;

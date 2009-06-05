@@ -357,20 +357,23 @@ void CG_CheckLocalSounds( playerState_t *ps, playerState_t *ops ) {
 		reward = qtrue;
 		//Com_Printf("impressive\n");
 	}
-	if (ps->persistant[PERS_EXCELLENT_COUNT] != ops->persistant[PERS_EXCELLENT_COUNT]) {
+	//KK-OAX We Just Won't Draw The Excellent Stuff if Multikills are Enabled!!!
+	if( !cgs.altExcellent ) {
+	    if (ps->persistant[PERS_EXCELLENT_COUNT] != ops->persistant[PERS_EXCELLENT_COUNT]) {
 #ifdef MISSIONPACK
-		if (ps->persistant[PERS_EXCELLENT_COUNT] == 1) {
-			sfx = cgs.media.firstExcellentSound;
-		} else {
-			sfx = cgs.media.excellentSound;
-		}
+		    if (ps->persistant[PERS_EXCELLENT_COUNT] == 1) {
+			    sfx = cgs.media.firstExcellentSound;
+		    } else {
+			    sfx = cgs.media.excellentSound;
+		    }
 #else
-		sfx = cgs.media.excellentSound;
+		    sfx = cgs.media.excellentSound;
 #endif
 
-		pushReward(sfx, cgs.media.medalExcellent, ps->persistant[PERS_EXCELLENT_COUNT]);
-		reward = qtrue;
-		//Com_Printf("excellent\n");
+		    pushReward(sfx, cgs.media.medalExcellent, ps->persistant[PERS_EXCELLENT_COUNT]);
+		    reward = qtrue;
+		    //Com_Printf("excellent\n");
+	    }
 	}
 	if (ps->persistant[PERS_GAUNTLET_FRAG_COUNT] != ops->persistant[PERS_GAUNTLET_FRAG_COUNT]) {
 #ifdef MISSIONPACK
