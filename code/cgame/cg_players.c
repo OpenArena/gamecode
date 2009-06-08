@@ -1751,8 +1751,6 @@ static void CG_PlayerFlag( centity_t *cent, qhandle_t hSkin, refEntity_t *torso 
 	trap_R_AddRefEntityToScene( &flag );
 }
 
-
-#ifdef MISSIONPACK // bk001204
 /*
 ===============
 CG_PlayerTokens
@@ -1817,7 +1815,6 @@ static void CG_PlayerTokens( centity_t *cent, int renderfx ) {
 		VectorCopy(trail->positions[i], origin);
 	}
 }
-#endif
 
 
 /*
@@ -2295,11 +2292,9 @@ void CG_Player( centity_t *cent ) {
 		renderfx |= RF_SHADOW_PLANE;
 	}
 	renderfx |= RF_LIGHTING_ORIGIN;			// use the same origin for all
-#ifdef MISSIONPACK
 	if( cgs.gametype == GT_HARVESTER ) {
 		CG_PlayerTokens( cent, renderfx );
 	}
-#endif
 	//
 	// add the legs
 	//
