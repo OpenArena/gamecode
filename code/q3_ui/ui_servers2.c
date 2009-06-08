@@ -604,6 +604,11 @@ static void ArenaServers_UpdateMenu( void ) {
 			continue;
 		}
 
+                //If "Show only humans" and "Hide empty server" are enabled hide servers that only have bots
+                if( !g_emptyservers && g_onlyhumans && !servernodeptr->humanclients ) {
+			continue;
+		}
+
 		if( !g_fullservers && ( servernodeptr->numclients == servernodeptr->maxclients ) ) {
 			continue;
 		}
