@@ -351,6 +351,8 @@ void G_CheckForSpree( gentity_t *ent, int streak2Test, qboolean checkKillSpree )
     divisionHolder = ( streak2Test / level.spreeDivisor );
     //if it's a deathspree
     if( !checkKillSpree ) {
+        if (!g_altExcellent.integer)
+            return; //If altExcelent is disabled. Don't even try!
         //Is the streak higher than the largest level defined?
         if( divisionHolder > level.dSpreeUBound ) {
             //Let's make sure it's a whole number to mimic the other sprees
@@ -360,6 +362,9 @@ void G_CheckForSpree( gentity_t *ent, int streak2Test, qboolean checkKillSpree )
             }
             //We've made it this far...now do the largest spree defined.
             Q_snprintf( streakcount, sizeof( streakcount ), "%i", streak2Test );
+            //Check if deathSprees is NULL (actual problem!)
+            if(!deathSprees[ level.dSpreeUBound ])
+                return;
             returnedString = CreateMessage( ent, deathSprees[ level.dSpreeUBound ]->spreeMsg, streakcount ); 
             position = deathSprees[ level.dSpreeUBound ]->position;
             sound = deathSprees[ level.dSpreeUBound ]->sound2Play;
@@ -397,6 +402,8 @@ void G_CheckForSpree( gentity_t *ent, int streak2Test, qboolean checkKillSpree )
             }
         }   
     } else /*if( checkKillSpree )*/ {
+        if (!g_altExcellent.integer)
+            return; //If altExcelent is disabled. Don't even try!
         //Is the streak higher than the largest level defined?
         if( divisionHolder > level.kSpreeUBound ) {
             //Let's make sure it's a whole number to mimic the other sprees
@@ -406,6 +413,9 @@ void G_CheckForSpree( gentity_t *ent, int streak2Test, qboolean checkKillSpree )
             }
             //We've made it this far...now do the largest spree defined.
             Q_snprintf( streakcount, sizeof( streakcount ), "%i", streak2Test );
+            //Check if killSprees is NULL (actual problem!)
+            if(!killSprees[ level.kSpreeUBound ])
+                return;
             returnedString = CreateMessage( ent, killSprees[ level.kSpreeUBound ]->spreeMsg, streakcount ); 
             position = killSprees[ level.kSpreeUBound ]->position;
             sound = killSprees[ level.kSpreeUBound ]->sound2Play;

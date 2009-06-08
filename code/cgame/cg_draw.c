@@ -2420,7 +2420,10 @@ static void CG_DrawCrosshair(void)
 	qhandle_t	hShader;
 	float		f;
 	float		x, y;
-	int			ca;
+	int			ca = 0; //only to get rid of the warning(not useful)
+	int 		currentWeapon;
+	
+	currentWeapon = cg.predictedPlayerState.weapon;
 
 	if ( !cg_drawCrosshair.integer ) {
 		return;
@@ -2444,21 +2447,81 @@ static void CG_DrawCrosshair(void)
 		trap_R_SetColor( NULL );
 	}
 
-	w = h = cg_crosshairSize.value;
-
-	// pulse the size of the crosshair when picking up items
-	f = cg.time - cg.itemPickupBlendTime;
-	if ( f > 0 && f < ITEM_BLOB_TIME ) {
-		f /= ITEM_BLOB_TIME;
-		w *= ( 1 + f );
-		h *= ( 1 + f );
+	if( cg_differentCrosshairs.integer == 1 ){
+		switch( currentWeapon ){
+			case 1:
+				w = h = cg_ch1size.value;
+				ca = cg_ch1.integer;
+				break;
+			case 2:
+				w = h = cg_ch2size.value;
+				ca = cg_ch2.integer;
+				break;
+			case 3:
+				w = h = cg_ch3size.value;
+				ca = cg_ch3.integer;
+				break;
+			case 4:
+				w = h = cg_ch4size.value;
+				ca = cg_ch4.integer;
+				break;
+			case 5:
+				w = h = cg_ch5size.value;
+				ca = cg_ch5.integer;
+				break;
+			case 6:
+				w = h = cg_ch6size.value;
+				ca = cg_ch6.integer;
+				break;
+			case 7:
+				w = h = cg_ch7size.value;
+				ca = cg_ch7.integer;
+				break;
+			case 8:
+				w = h = cg_ch8size.value;
+				ca = cg_ch8.integer;
+				break;
+			case 9:
+				w = h = cg_ch9size.value;
+				ca = cg_ch9.integer;
+				break;
+			case 10:
+				w = h = cg_ch10size.value;
+				ca = cg_ch10.integer;
+				break;
+			case 11:
+				w = h = cg_ch11size.value;
+				ca = cg_ch11.integer;
+				break;
+			case 12:
+				w = h = cg_ch12size.value;
+				ca = cg_ch12.integer;
+				break;
+			case 13:
+				w = h = cg_ch13size.value;
+				ca = cg_ch13.integer;
+				break;
+		}
+	}
+	else{
+		w = h = cg_crosshairSize.value;
+		ca = cg_drawCrosshair.integer;
+	}
+	
+	if( cg_crosshairPulse.integer ){
+		// pulse the size of the crosshair when picking up items
+		f = cg.time - cg.itemPickupBlendTime;
+		if ( f > 0 && f < ITEM_BLOB_TIME ) {
+			f /= ITEM_BLOB_TIME;
+			w *= ( 1 + f );
+			h *= ( 1 + f );
+		}
 	}
 
 	x = cg_crosshairX.integer;
 	y = cg_crosshairY.integer;
 	CG_AdjustFrom640( &x, &y, &w, &h );
 
-	ca = cg_drawCrosshair.integer;
 	if (ca < 0) {
 		ca = 0;
 	}

@@ -225,6 +225,37 @@ vmCvar_t        cg_voteNames;
 vmCvar_t        cg_cyclegrapple;
 vmCvar_t        cg_vote_custom_commands;
 
+vmCvar_t	cg_fragmsgsize;
+
+vmCvar_t	cg_crosshairPulse;
+vmCvar_t	cg_differentCrosshairs;
+vmCvar_t	cg_ch1;
+vmCvar_t	cg_ch1size;
+vmCvar_t	cg_ch2;
+vmCvar_t	cg_ch2size;
+vmCvar_t	cg_ch3;
+vmCvar_t	cg_ch3size;
+vmCvar_t	cg_ch4;
+vmCvar_t	cg_ch4size;
+vmCvar_t	cg_ch5;
+vmCvar_t	cg_ch5size;
+vmCvar_t	cg_ch6;
+vmCvar_t	cg_ch6size;
+vmCvar_t	cg_ch7;
+vmCvar_t	cg_ch7size;
+vmCvar_t	cg_ch8;
+vmCvar_t	cg_ch8size;
+vmCvar_t	cg_ch9;
+vmCvar_t	cg_ch9size;
+vmCvar_t	cg_ch10;
+vmCvar_t	cg_ch10size;
+vmCvar_t	cg_ch11;
+vmCvar_t	cg_ch11size;
+vmCvar_t	cg_ch12;
+vmCvar_t	cg_ch12size;
+vmCvar_t	cg_ch13;
+vmCvar_t	cg_ch13size;
+
 typedef struct {
 	vmCvar_t	*vmCvar;
 	char		*cvarName;
@@ -370,6 +401,37 @@ static cvarTable_t cvarTable[] = { // bk001129
 	{ &cg_trueLightning, "cg_trueLightning", "0.0", CVAR_ARCHIVE},
         { &cg_music, "cg_music", "", CVAR_ARCHIVE},
 //	{ &cg_pmove_fixed, "cg_pmove_fixed", "0", CVAR_USERINFO | CVAR_ARCHIVE }
+
+	{ &cg_fragmsgsize, "cg_fragmsgsize", "1.0", CVAR_ARCHIVE},
+	{ &cg_crosshairPulse, "cg_crosshairPulse", "1", CVAR_ARCHIVE},
+	
+	{ &cg_differentCrosshairs, "cg_differentCrosshairs", "0", CVAR_ARCHIVE},
+	{ &cg_ch1, "cg_ch1", "1", CVAR_ARCHIVE},
+	{ &cg_ch1size, "cg_ch1size", "24", CVAR_ARCHIVE},
+	{ &cg_ch2, "cg_ch2", "1", CVAR_ARCHIVE},
+	{ &cg_ch2size, "cg_ch2size", "24", CVAR_ARCHIVE},
+	{ &cg_ch3, "cg_ch3", "1", CVAR_ARCHIVE},
+	{ &cg_ch3size, "cg_ch3size", "24", CVAR_ARCHIVE},
+	{ &cg_ch4, "cg_ch4", "1", CVAR_ARCHIVE},
+	{ &cg_ch4size, "cg_ch4size", "24", CVAR_ARCHIVE},
+	{ &cg_ch5, "cg_ch5", "1", CVAR_ARCHIVE},
+	{ &cg_ch5size, "cg_ch5size", "24", CVAR_ARCHIVE},
+	{ &cg_ch6, "cg_ch6", "1", CVAR_ARCHIVE},
+	{ &cg_ch6size, "cg_ch6size", "24", CVAR_ARCHIVE},
+	{ &cg_ch7, "cg_ch7", "1", CVAR_ARCHIVE},
+	{ &cg_ch7size, "cg_ch7size", "24", CVAR_ARCHIVE},
+	{ &cg_ch8, "cg_ch8", "1", CVAR_ARCHIVE},
+	{ &cg_ch8size, "cg_ch8size", "24", CVAR_ARCHIVE},
+	{ &cg_ch9, "cg_ch9", "1", CVAR_ARCHIVE},
+	{ &cg_ch9size, "cg_ch9size", "24", CVAR_ARCHIVE},
+	{ &cg_ch10, "cg_ch10", "1", CVAR_ARCHIVE},
+	{ &cg_ch10size, "cg_ch10size", "24", CVAR_ARCHIVE},
+	{ &cg_ch11, "cg_ch11", "1", CVAR_ARCHIVE},
+	{ &cg_ch11size, "cg_ch11size", "24", CVAR_ARCHIVE},
+	{ &cg_ch12, "cg_ch12", "1", CVAR_ARCHIVE},
+	{ &cg_ch12size, "cg_ch12size", "24", CVAR_ARCHIVE},
+	{ &cg_ch13, "cg_ch13", "1", CVAR_ARCHIVE},
+	{ &cg_ch13size, "cg_ch13size", "24", CVAR_ARCHIVE},
 };
 
 static int  cvarTableSize = sizeof( cvarTable ) / sizeof( cvarTable[0] );

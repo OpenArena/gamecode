@@ -1267,6 +1267,38 @@ extern  vmCvar_t                cg_voteNames;
 extern  vmCvar_t                cg_cyclegrapple;
 extern  vmCvar_t                cg_vote_custom_commands;
 
+//Cvar to adjust the size of the fragmessage
+extern	vmCvar_t		cg_fragmsgsize;
+
+extern	vmCvar_t		cg_crosshairPulse;
+extern	vmCvar_t		cg_differentCrosshairs;
+extern	vmCvar_t		cg_ch1;
+extern	vmCvar_t		cg_ch1size;
+extern	vmCvar_t		cg_ch2;
+extern	vmCvar_t		cg_ch2size;
+extern	vmCvar_t		cg_ch3;
+extern	vmCvar_t		cg_ch3size;
+extern	vmCvar_t		cg_ch4;
+extern	vmCvar_t		cg_ch4size;
+extern	vmCvar_t		cg_ch5;
+extern	vmCvar_t		cg_ch5size;
+extern	vmCvar_t		cg_ch6;
+extern	vmCvar_t		cg_ch6size;
+extern	vmCvar_t		cg_ch7;
+extern	vmCvar_t		cg_ch7size;
+extern	vmCvar_t		cg_ch8;
+extern	vmCvar_t		cg_ch8size;
+extern	vmCvar_t		cg_ch9;
+extern	vmCvar_t		cg_ch9size;
+extern	vmCvar_t		cg_ch10;
+extern	vmCvar_t		cg_ch10size;
+extern	vmCvar_t		cg_ch11;
+extern	vmCvar_t		cg_ch11size;
+extern	vmCvar_t		cg_ch12;
+extern	vmCvar_t		cg_ch12size;
+extern	vmCvar_t		cg_ch13;
+extern	vmCvar_t		cg_ch13size;
+
 //unlagged - cg_unlagged.c
 void CG_PredictWeaponEffects( centity_t *cent );
 //void CG_AddBoundingBox( centity_t *cent );
