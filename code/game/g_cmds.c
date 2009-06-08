@@ -860,10 +860,6 @@ Cmd_Follow_f
 void Cmd_Follow_f( gentity_t *ent ) {
 	int		i;
 	char	arg[MAX_TOKEN_CHARS];
-
-	//Don't follow in elimination mode, or player will get wrong score
-	/*if(ent->client->sess.sessionTeam != TEAM_SPECTATOR && g_gametype.integer>=GT_ELIMINATION && g_gametype.integer<=GT_LMS)
-		return;*/
 	
 	if ( trap_Argc() != 2 ) {
 		if ( ent->client->sess.spectatorState == SPECTATOR_FOLLOW ) {
@@ -890,6 +886,12 @@ void Cmd_Follow_f( gentity_t *ent ) {
 	if ( (level.clients[ i ].sess.sessionTeam == TEAM_SPECTATOR) || level.clients[ i ].isEliminated) {
 		return;
 	}
+
+        if ( (g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_CTF_ELIMINATION) && g_elimination_lockspectator.integer
+            &&  ((ent->client->sess.sessionTeam == TEAM_RED && level.clients[ i ].sess.sessionTeam == TEAM_BLUE) ||
+                 (ent->client->sess.sessionTeam == TEAM_BLUE && level.clients[ i ].sess.sessionTeam == TEAM_RED) ) ) {
+            return;
+        }
 
 	// if they are playing a tournement game, count as a loss
 	if ( (g_gametype.integer == GT_TOURNAMENT )
@@ -972,6 +974,13 @@ void Cmd_FollowCycle_f( gentity_t *ent ) {
 		if ( (level.clients[ clientnum ].sess.sessionTeam == TEAM_SPECTATOR) || level.clients[ clientnum ].isEliminated) {
 			continue;
 		}
+
+                //Stop players from spectating players on the enemy team in elimination modes.
+                if ( (g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_CTF_ELIMINATION) && g_elimination_lockspectator.integer
+                    &&  ((ent->client->sess.sessionTeam == TEAM_RED && level.clients[ clientnum ].sess.sessionTeam == TEAM_BLUE) ||
+                         (ent->client->sess.sessionTeam == TEAM_BLUE && level.clients[ clientnum ].sess.sessionTeam == TEAM_RED) ) ) {
+                    continue;
+                }
 
 		// this is good, we can use it
 		ent->client->sess.spectatorClient = clientnum;

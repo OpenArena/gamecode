@@ -124,6 +124,8 @@ vmCvar_t	g_elimination_mine;
 vmCvar_t	g_elimination_nail;
 //#endif
 
+vmCvar_t        g_elimination_lockspectator;
+
 vmCvar_t	g_rockets;
 
 //dmn_clowns suggestions (with my idea of implementing):
@@ -269,8 +271,8 @@ static cvarTable_t		gameCvarTable[] = {
 	{ &g_proxMineTimeout, "g_proxMineTimeout", "20000", 0, 0, qfalse },
 //#endif
 	{ &g_smoothClients, "g_smoothClients", "1", 0, 0, qfalse},
-	{ &pmove_fixed, "pmove_fixed", "0", CVAR_SYSTEMINFO, 0, qfalse},
-	{ &pmove_msec, "pmove_msec", "8", CVAR_SYSTEMINFO, 0, qfalse},
+	{ &pmove_fixed, "pmove_fixed", "1", CVAR_SYSTEMINFO | CVAR_ARCHIVE, 0, qfalse},
+	{ &pmove_msec, "pmove_msec", "11", CVAR_SYSTEMINFO | CVAR_ARCHIVE, 0, qfalse},
 
         { &pmove_float, "pmove_float", "0", CVAR_SYSTEMINFO | CVAR_ARCHIVE, 0, qtrue},
 
@@ -287,13 +289,13 @@ static cvarTable_t		gameCvarTable[] = {
         { &g_music, "g_music", "", 0, 0, qfalse},
 	//Now for elimination stuff:
 	{ &g_elimination_selfdamage, "elimination_selfdamage", "0", 0, 0, qtrue },
-	{ &g_elimination_startHealth, "elimination_startHealth", "200", CVAR_NORESTART, 0, qtrue },
-	{ &g_elimination_startArmor, "elimination_startArmor", "200", CVAR_NORESTART, 0, qtrue },
+	{ &g_elimination_startHealth, "elimination_startHealth", "200", CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
+	{ &g_elimination_startArmor, "elimination_startArmor", "200", CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
 	{ &g_elimination_bfg, "elimination_bfg", "0", CVAR_ARCHIVE| CVAR_NORESTART, 0, qtrue },
         { &g_elimination_grapple, "elimination_grapple", "0", CVAR_ARCHIVE| CVAR_NORESTART, 0, qtrue },
 	{ &g_elimination_roundtime, "elimination_roundtime", "90", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
-	{ &g_elimination_warmup, "elimination_warmup", "7", 0, 0, qtrue },
-	{ &g_elimination_activewarmup, "elimination_activewarmup", "5", 0, 0, qtrue },
+	{ &g_elimination_warmup, "elimination_warmup", "7", CVAR_ARCHIVE | CVAR_NORESTART , 0, qtrue },
+	{ &g_elimination_activewarmup, "elimination_activewarmup", "5", CVAR_ARCHIVE | CVAR_NORESTART , 0, qtrue },
         { &g_elimination_allgametypes, "g_elimination", "0", CVAR_SERVERINFO | CVAR_LATCH | CVAR_NORESTART, 0, qfalse },
 //more weapons in beta 9:
 	{ &g_elimination_machinegun, "elimination_machinegun", "200", CVAR_ARCHIVE| CVAR_NORESTART, 0, qtrue },
@@ -311,6 +313,7 @@ static cvarTable_t		gameCvarTable[] = {
 	//Beta 10
 	{ &g_elimination_ctf_oneway, "elimination_ctf_oneway", "0", CVAR_SERVERINFO | CVAR_ARCHIVE| CVAR_NORESTART, 0, qtrue },
 
+        { &g_elimination_lockspectator, "elimination_lockspectator", "0", CVAR_NORESTART, 0, qtrue },
         
         { &g_awardpushing, "g_awardpushing", "1", CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },    
         
