@@ -351,8 +351,6 @@ void G_CheckForSpree( gentity_t *ent, int streak2Test, qboolean checkKillSpree )
     divisionHolder = ( streak2Test / level.spreeDivisor );
     //if it's a deathspree
     if( !checkKillSpree ) {
-        if (!g_altExcellent.integer)
-            return; //If altExcelent is disabled. Don't even try!
         //Is the streak higher than the largest level defined?
         if( divisionHolder > level.dSpreeUBound ) {
             //Let's make sure it's a whole number to mimic the other sprees
@@ -402,8 +400,6 @@ void G_CheckForSpree( gentity_t *ent, int streak2Test, qboolean checkKillSpree )
             }
         }   
     } else /*if( checkKillSpree )*/ {
-        if (!g_altExcellent.integer)
-            return; //If altExcelent is disabled. Don't even try!
         //Is the streak higher than the largest level defined?
         if( divisionHolder > level.kSpreeUBound ) {
             //Let's make sure it's a whole number to mimic the other sprees
@@ -455,7 +451,7 @@ void G_CheckForSpree( gentity_t *ent, int streak2Test, qboolean checkKillSpree )
 G_globalMultikillSound
 ===============
 */
-static void G_GlobalMultikillSound( gentity_t *ent, int soundIndex )
+/*static void G_GlobalMultikillSound( gentity_t *ent, int soundIndex )
 {
     int i;
     
@@ -469,13 +465,13 @@ static void G_GlobalMultikillSound( gentity_t *ent, int soundIndex )
         }
     }
 
-}
+}*/
 /*
 ===============
 G_AddExcellentCount
 ===============
 */
-static void G_AddExcellentCount( gentity_t *ent )
+/*static void G_AddExcellentCount( gentity_t *ent )
 {
         ent->client->ps.persistant[PERS_EXCELLENT_COUNT]++;
         G_LogPrintf( "Award: %i %i: %s gained the %s award!\n", ent->client->ps.clientNum, 1, ent->client->pers.netname, "EXCELLENT" );
@@ -485,7 +481,7 @@ static void G_AddExcellentCount( gentity_t *ent )
 		ent->client->ps.eFlags &= ~(EF_AWARD_IMPRESSIVE | EF_AWARD_EXCELLENT | EF_AWARD_GAUNTLET | EF_AWARD_ASSIST | EF_AWARD_DEFEND | EF_AWARD_CAP );
 		ent->client->ps.eFlags |= EF_AWARD_EXCELLENT;
 		ent->client->rewardTime = level.time + REWARD_SPRITE_TIME;
-}
+}*/
 
 /*
 ===============
@@ -511,6 +507,8 @@ void G_checkForMultiKill( gentity_t *ent ) {
     
     if( multiKillCount > multiKills[ level.mKillUBound ]->kills ) {
         Q_snprintf( multiKillString, sizeof( multiKillString ), "%i", multiKillCount );
+        if(!multiKills[ level.mKillUBound ])
+            return; //If null
         returnedString = CreateMessage ( ent, multiKills[ level.mKillUBound ]->killMsg, multiKillString );
         sound = multiKills[ level.mKillUBound ]->sound2Play;
         soundIndex = G_SoundIndex( sound );

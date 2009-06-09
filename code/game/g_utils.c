@@ -623,8 +623,9 @@ KK-OAX G_SoundIndex must first be called.
 void G_GlobalSound( int soundIndex )
 {
     gentity_t  *te;    
-    //Let's avoid the S_FindName error if soundIndex is null or 0. 
-	if( ( soundIndex == 0 ) || ( !soundIndex ) ) {
+    //Let's avoid the S_FindName error if soundIndex is 0.
+    //Sago: And let's check that the sound index is within the allowed range.
+	if( ( soundIndex <= 0 ) ||  soundIndex >= MAX_SOUNDS ) {
 	    //Display this message when debugging
 	    #ifdef DEBUG
             G_Printf( "GlobalSound: Error, no soundIndex specified. Check your code!\n" );	
