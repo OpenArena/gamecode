@@ -446,42 +446,6 @@ void G_CheckForSpree( gentity_t *ent, int streak2Test, qboolean checkKillSpree )
     }*/
 }
 
-/*
-===============
-G_globalMultikillSound
-===============
-*/
-/*static void G_GlobalMultikillSound( gentity_t *ent, int soundIndex )
-{
-    int i;
-    
-    for( i = 0; i < level.maxclients; i++ ) {
-        if( ent == &g_entities[i] ) {
-            continue;
-        } 
-        if( ent != &g_entities[i]) {
-            //G_Sound( &g_entities[i], CHAN_LOCAL, soundIndex );
-            G_AddEvent( &g_entities[i], EV_GENERAL_SOUND, soundIndex );
-        }
-    }
-
-}*/
-/*
-===============
-G_AddExcellentCount
-===============
-*/
-/*static void G_AddExcellentCount( gentity_t *ent )
-{
-        ent->client->ps.persistant[PERS_EXCELLENT_COUNT]++;
-        G_LogPrintf( "Award: %i %i: %s gained the %s award!\n", ent->client->ps.clientNum, 1, ent->client->pers.netname, "EXCELLENT" );
-        if(!level.hadBots) //There has not been any bots
-            ChallengeMessage(ent,AWARD_EXCELLENT);
-				// add the sprite over the player's head
-		ent->client->ps.eFlags &= ~(EF_AWARD_IMPRESSIVE | EF_AWARD_EXCELLENT | EF_AWARD_GAUNTLET | EF_AWARD_ASSIST | EF_AWARD_DEFEND | EF_AWARD_CAP );
-		ent->client->ps.eFlags |= EF_AWARD_EXCELLENT;
-		ent->client->rewardTime = level.time + REWARD_SPRITE_TIME;
-}*/
 
 /*
 ===============
