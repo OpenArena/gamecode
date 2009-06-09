@@ -1388,9 +1388,7 @@ int BotAILoadMap( int restart ) {
 	return qtrue;
 }
 
-#ifdef MISSIONPACK
 void ProximityMine_Trigger( gentity_t *trigger, gentity_t *other, trace_t *trace );
-#endif
 
 /*
 ==================
@@ -1505,7 +1503,7 @@ int BotAIStartFrame(int time) {
 				trap_BotLibUpdateEntity(i, NULL);
 				continue;
 			}
-#ifdef MISSIONPACK
+
 			// never link prox mine triggers
 			if (ent->r.contents == CONTENTS_TRIGGER) {
 				if (ent->touch == ProximityMine_Trigger) {
@@ -1513,7 +1511,7 @@ int BotAIStartFrame(int time) {
 					continue;
 				}
 			}
-#endif
+                        
 			//
 			memset(&state, 0, sizeof(bot_entitystate_t));
 			//
