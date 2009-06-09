@@ -1235,15 +1235,14 @@ extern	vmCvar_t		cg_blueTeamName;
 extern	vmCvar_t		cg_currentSelectedPlayer;
 extern	vmCvar_t		cg_currentSelectedPlayerName;
 extern	vmCvar_t		cg_singlePlayer;
-extern	vmCvar_t		cg_enableDust;
-extern	vmCvar_t		cg_enableBreath;
 extern	vmCvar_t		cg_singlePlayerActive;
 extern  vmCvar_t		cg_recordSPDemo;
 extern  vmCvar_t		cg_recordSPDemoName;
 #endif
 //Sago: Moved outside
 extern	vmCvar_t		cg_obeliskRespawnDelay;
-
+extern	vmCvar_t		cg_enableDust;
+extern	vmCvar_t		cg_enableBreath;
 
 //unlagged - client options
 extern	vmCvar_t		cg_delag;

@@ -1521,7 +1521,6 @@ static void CG_HasteTrail( centity_t *cent ) {
 	smoke->leType = LE_SCALE_FADE;
 }
 
-#ifdef MISSIONPACK
 /*
 ===============
 CG_BreathPuffs
@@ -1606,8 +1605,6 @@ static void CG_DustTrail( centity_t *cent ) {
 				  0,
 				  cgs.media.dustPuffShader );
 }
-
-#endif
 
 /*
 ===============
@@ -2556,11 +2553,9 @@ void CG_Player( centity_t *cent ) {
 
 	CG_AddRefEntityWithPowerups( &head, &cent->currentState, ci->team );
 
-#ifdef MISSIONPACK
 	CG_BreathPuffs(cent, &head);
 
 	CG_DustTrail(cent);
-#endif
 
 	//
 	// add the gun / barrel / flash
