@@ -256,6 +256,8 @@ vmCvar_t	cg_ch12size;
 vmCvar_t	cg_ch13;
 vmCvar_t	cg_ch13size;
 
+vmCvar_t	cg_weaponBarStyle;
+
 typedef struct {
 	vmCvar_t	*vmCvar;
 	char		*cvarName;
@@ -432,6 +434,8 @@ static cvarTable_t cvarTable[] = { // bk001129
 	{ &cg_ch12size, "cg_ch12size", "24", CVAR_ARCHIVE},
 	{ &cg_ch13, "cg_ch13", "1", CVAR_ARCHIVE},
 	{ &cg_ch13size, "cg_ch13size", "24", CVAR_ARCHIVE},
+	
+	{ &cg_weaponBarStyle, "cg_weaponBarStyle", "0", CVAR_ARCHIVE},
 };
 
 static int  cvarTableSize = sizeof( cvarTable ) / sizeof( cvarTable[0] );

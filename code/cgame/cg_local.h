@@ -1299,6 +1299,8 @@ extern	vmCvar_t		cg_ch12size;
 extern	vmCvar_t		cg_ch13;
 extern	vmCvar_t		cg_ch13size;
 
+extern vmCvar_t			cg_weaponBarStyle;
+
 //unlagged - cg_unlagged.c
 void CG_PredictWeaponEffects( centity_t *cent );
 //void CG_AddBoundingBox( centity_t *cent );
@@ -1487,6 +1489,15 @@ void CG_GrappleTrail( centity_t *ent, const weaponInfo_t *wi );
 void CG_AddViewWeapon (playerState_t *ps);
 void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent, int team );
 void CG_DrawWeaponSelect( void );
+
+void CG_DrawWeaponBar0(int count, int bits);
+void CG_DrawWeaponBar1(int count, int bits);
+void CG_DrawWeaponBar2(int count, int bits, float *color);
+void CG_DrawWeaponBar3(int count, int bits, float *color);
+void CG_DrawWeaponBar4(int count, int bits, float *color);
+void CG_DrawWeaponBar5(int count, int bits, float *color);
+void CG_DrawWeaponBar6(int count, int bits, float *color);
+void CG_DrawWeaponBar7(int count, int bits, float *color);
 
 void CG_OutOfAmmoChange( void );	// should this be in pmove?
 
