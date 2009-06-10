@@ -968,7 +968,7 @@ typedef struct {
 	sfxHandle_t	countFightSound;
 	sfxHandle_t	countPrepareSound;
 
-//#ifdef MISSIONPACK
+#ifdef MISSIONPACK
 	// new stuff
 	qhandle_t patrolShader;
 	qhandle_t assaultShader;
@@ -978,6 +978,7 @@ typedef struct {
 	qhandle_t teamLeaderShader;
 	qhandle_t retrieveShader;
 	qhandle_t escortShader;
+        qhandle_t deathShader;
 	qhandle_t flagShaders[3];
 	sfxHandle_t	countPrepareTeamSound;
 
@@ -985,7 +986,7 @@ typedef struct {
 	sfxHandle_t doublerSound;
 	sfxHandle_t guardSound;
 	sfxHandle_t scoutSound;
-//#endif
+#endif
 	qhandle_t cursor;
 	qhandle_t selectCursor;
 	qhandle_t sizeCursor;

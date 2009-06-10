@@ -1223,6 +1223,8 @@ static void CG_RegisterGraphics( void ) {
 	cgs.media.teamLeaderShader = trap_R_RegisterShaderNoMip("ui/assets/statusbar/team_leader.tga");
 	cgs.media.retrieveShader = trap_R_RegisterShaderNoMip("ui/assets/statusbar/retrieve.tga");
 	cgs.media.escortShader = trap_R_RegisterShaderNoMip("ui/assets/statusbar/escort.tga");
+        cgs.media.deathShader = trap_R_RegisterShaderNoMip("ui/assets/statusbar/death.tga");
+
 	cgs.media.cursor = trap_R_RegisterShaderNoMip( "menu/art/3_cursor2" );
 	cgs.media.sizeCursor = trap_R_RegisterShaderNoMip( "ui/assets/sizecursor.tga" );
 	cgs.media.selectCursor = trap_R_RegisterShaderNoMip( "ui/assets/selectcursor.tga" );
@@ -1783,7 +1785,9 @@ static const char *CG_FeederItemText(float feederID, int index, int column, qhan
 			case 1:
 				if (team == -1) {
 					return "";
-				} else {
+				} else if (info->isDead) {
+                                        *handle = cgs.media.deathShader;
+                                } else {
 					*handle = CG_StatusHandle(info->teamTask);
 				}
 		  break;

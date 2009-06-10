@@ -399,6 +399,8 @@ static void CG_DrawSelectedPlayerStatus( rectDef_t *rect ) {
 	clientInfo_t *ci = cgs.clientinfo + sortedTeamPlayers[CG_GetSelectedPlayer()];
 	if (ci) {
 		qhandle_t h;
+                if(ci->isDead)
+                    return;
 		if (cgs.orderPending) {
 			// blink the icon
 			if ( cg.time > cgs.orderTime - 2500 && (cg.time >> 9 ) & 1 ) {
@@ -417,6 +419,8 @@ static void CG_DrawPlayerStatus( rectDef_t *rect ) {
 	clientInfo_t *ci = &cgs.clientinfo[cg.snap->ps.clientNum];
 	if (ci) {
 		qhandle_t h = CG_StatusHandle(ci->teamTask);
+                if(ci->isDead)
+                    h = cgs.media.deathShader;
 		CG_DrawPic( rect->x, rect->y, rect->w, rect->h, h);
 	}
 }
@@ -1354,6 +1358,9 @@ void CG_DrawNewTeamInfo(rectDef_t *rect, float text_x, float text_y, float scale
 #endif
 
 			trap_R_SetColor(NULL);
+                        if(ci->isDead) {
+                                h = cgs.media.deathShader;
+                        } else
 			if (cgs.orderPending) {
 				// blink the icon
 				if ( cg.time > cgs.orderTime - 2500 && (cg.time >> 9 ) & 1 ) {

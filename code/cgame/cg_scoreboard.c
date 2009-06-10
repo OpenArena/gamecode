@@ -160,7 +160,10 @@ static void CG_DrawClientScore( int y, score_t *score, float *color, float fade,
 #ifdef MISSIONPACK
 	// draw the team task
 	if ( ci->teamTask != TEAMTASK_NONE ) {
-		if ( ci->teamTask == TEAMTASK_OFFENSE ) {
+                if (ci->isDead) {
+                    CG_DrawPic( headx + 48, y, 16, 16, cgs.media.deathShader );
+                }
+                else if ( ci->teamTask == TEAMTASK_OFFENSE ) {
 			CG_DrawPic( headx + 48, y, 16, 16, cgs.media.assaultShader );
 		}
 		else if ( ci->teamTask == TEAMTASK_DEFENSE ) {
