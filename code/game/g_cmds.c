@@ -1253,7 +1253,7 @@ static void Cmd_Voice_f( gentity_t *ent ) {
     int         mode = SAY_ALL;
     qboolean    voiceonly = qfalse;
     
-	trap_Argv( 1, arg, sizeof( arg ) );
+	trap_Argv( 0, arg, sizeof( arg ) );
 	if((Q_stricmp ( arg, "vsay_team" ) == 0 ) ||
 	    Q_stricmp ( arg, "vosay_team" ) == 0 )
 	    mode = SAY_TEAM;
