@@ -2525,6 +2525,12 @@ int start, end;
 	// get any cvar changes
 	G_UpdateCvars();
 
+        if( (g_gametype.integer==GT_ELIMINATION || g_gametype.integer==GT_CTF_ELIMINATION) && !(g_dmflags.integer & DF_NO_FREESPEC) && g_elimination_lockspectator.integer>1)
+            trap_Cvar_Set("dmflags",va("%i",g_dmflags.integer|DF_NO_FREESPEC));
+        else
+        if( (g_dmflags.integer & DF_NO_FREESPEC) && g_elimination_lockspectator.integer<2)
+            trap_Cvar_Set("dmflags",va("%i",g_dmflags.integer&(~DF_NO_FREESPEC) ) );
+
 	//
 	// go through all allocated objects
 	//

@@ -331,6 +331,13 @@ void SpectatorThink( gentity_t *ent, usercmd_t *ucmd ) {
 
 	client = ent->client;
 
+        if ( ( g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_CTF_ELIMINATION) &&
+                client->sess.spectatorState != SPECTATOR_FOLLOW &&
+                g_elimination_lockspectator.integer>1 &&
+                ent->client->sess.sessionTeam != TEAM_SPECTATOR ) {
+            Cmd_FollowCycle_f(ent);
+        }
+
 	if ( client->sess.spectatorState != SPECTATOR_FOLLOW ) {
 		client->ps.pm_type = PM_SPECTATOR;
 		client->ps.speed = 400;	// faster than normal
@@ -367,11 +374,12 @@ void SpectatorThink( gentity_t *ent, usercmd_t *ucmd ) {
 	}
 
 	if ( ( client->buttons & BUTTON_USE_HOLDABLE ) && ! ( client->oldbuttons & BUTTON_USE_HOLDABLE ) ) {
-		//Cmd_FollowCycle_f( ent, 1 );
-		//client->sess.spectatorState = SPECTATOR_FREE;
+		if ( ( g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_CTF_ELIMINATION) &&
+                g_elimination_lockspectator.integer>1 &&
+                ent->client->sess.sessionTeam != TEAM_SPECTATOR ) {
+                    return;
+                }
 		StopFollowing(ent);
-		//ent->client->ps.stats[STAT_HEALTH] = 0;
-		//ClientBegin( ent->client - level.clients );
 	}
 }
 

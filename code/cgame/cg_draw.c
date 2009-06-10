@@ -1350,7 +1350,7 @@ static float CG_DrawFollowMessage( float y ) {
 	char		*s;
 	int			w;	
 
-	if ( !(cg.snap->ps.pm_flags & PMF_FOLLOW) ) {
+	if ( !(cg.snap->ps.pm_flags & PMF_FOLLOW) || ( ( cgs.dmflags & DF_NO_FREESPEC ) && (cgs.gametype == GT_ELIMINATION || cgs.gametype == GT_CTF_ELIMINATION ) ) ) {
 		return y;
 	}
 
