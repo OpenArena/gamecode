@@ -41,6 +41,7 @@ gclient_t		g_clients[MAX_CLIENTS];
 vmCvar_t	g_gametype;
 vmCvar_t	g_dmflags;
 vmCvar_t	g_elimflags;
+vmCvar_t	g_voteflags;
 vmCvar_t	g_fraglimit;
 vmCvar_t	g_timelimit;
 vmCvar_t	g_capturelimit;
@@ -178,6 +179,7 @@ static cvarTable_t		gameCvarTable[] = {
 	// change anytime vars
 	{ &g_dmflags, "dmflags", "0", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qtrue  },
         { &g_elimflags, "elimflags", "0", CVAR_SERVERINFO, 0, qfalse  },
+        { &g_voteflags, "voteflags", "0", CVAR_SERVERINFO, 0, qfalse  },
 	{ &g_fraglimit, "fraglimit", "20", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
 	{ &g_timelimit, "timelimit", "0", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
 	{ &g_capturelimit, "capturelimit", "8", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
@@ -223,7 +225,7 @@ static cvarTable_t		gameCvarTable[] = {
 	{ &g_allowVote, "g_allowVote", "1", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse },
         
         //new in beta 19
-        { &g_voteNames, "g_voteNames", "/map_restart/nextmap/map/g_gametype/kick/clientkick/g_doWarmup/timelimit/fraglimit/", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse }, //clientkick g_doWarmup timelimit fraglimit
+        { &g_voteNames, "g_voteNames", "/map_restart/nextmap/map/g_gametype/kick/clientkick/g_doWarmup/timelimit/fraglimit/", CVAR_ARCHIVE, 0, qfalse }, //clientkick g_doWarmup timelimit fraglimit
         { &g_voteGametypes, "g_voteGametypes", "/0/1/3/4/8/9/10/11/12/", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse },
         { &g_voteMaxTimelimit, "g_voteMaxTimelimit", "0", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse },
         { &g_voteMinTimelimit, "g_voteMinTimelimit", "0", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse },
@@ -525,6 +527,39 @@ void G_UpdateCvars( void ) {
 					trap_SendServerCommand( -1, va("print \"Server: %s changed to %s\n\"", 
 						cv->cvarName, cv->vmCvar->string ) );
 				}
+
+                                if ( cv->vmCvar == &g_voteNames ) {
+                                    //Set vote flags
+                                    int voteflags=0;
+                                    if( allowedVote("map_restart") )
+                                        voteflags|=VF_map_restart;
+
+                                    if( allowedVote("map") )
+                                        voteflags|=VF_map;
+
+                                    if( allowedVote("clientkick") )
+                                        voteflags|=VF_clientkick;
+
+                                    if( allowedVote("nextmap") )
+                                        voteflags|=VF_nextmap;
+
+                                    if( allowedVote("g_gametype") )
+                                        voteflags|=VF_g_gametype;
+                                    
+                                    if( allowedVote("g_doWarmup") )
+                                        voteflags|=VF_g_doWarmup;
+
+                                    if( allowedVote("timelimit") )
+                                        voteflags|=VF_timelimit;
+
+                                    if( allowedVote("fraglimit") )
+                                        voteflags|=VF_fraglimit;
+
+                                    if( allowedVote("custom") )
+                                        voteflags|=VF_custom;
+
+                                    trap_Cvar_Set("voteflags",va("%i",voteflags));
+                                }
       
 				if (cv->teamShader) {
 					remapped = qtrue;

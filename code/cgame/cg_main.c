@@ -221,7 +221,7 @@ vmCvar_t	cl_timeNudge;
 vmCvar_t	cg_alwaysWeaponBar;
 vmCvar_t	cg_hitsound;
 vmCvar_t        cg_voip_teamonly;
-vmCvar_t        cg_voteNames;
+vmCvar_t        cg_voteflags;
 vmCvar_t        cg_cyclegrapple;
 vmCvar_t        cg_vote_custom_commands;
 
@@ -345,7 +345,7 @@ static cvarTable_t cvarTable[] = { // bk001129
 	{ &cg_alwaysWeaponBar, "cg_alwaysWeaponBar", "0", CVAR_ARCHIVE},	//Elimination
         { &cg_hitsound, "cg_hitsound", "0", CVAR_ARCHIVE},
         { &cg_voip_teamonly, "cg_voipTeamOnly", "1", CVAR_ARCHIVE},
-        { &cg_voteNames, "cg_voteNames", "*", CVAR_ROM},
+        { &cg_voteflags, "cg_voteflags", "*", CVAR_ROM},
         { &cg_cyclegrapple, "cg_cyclegrapple", "1", CVAR_ARCHIVE},
         { &cg_vote_custom_commands, "cg_vote_custom_commands", "", CVAR_ROM },
 	{ &cg_synchronousClients, "g_synchronousClients", "0", CVAR_SYSTEMINFO },	// communicated by systeminfo

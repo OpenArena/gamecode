@@ -703,6 +703,20 @@ qboolean	BG_CanItemBeGrabbed( int gametype, const entityState_t *ent, const play
 #define EF_ONEWAY                       1
 #define EF_NO_FREESPEC                  2
 
+//g_voteflags->integer
+//Autoparsed from allowedvote
+//List: "/map_restart/nextmap/map/g_gametype/kick/clientkick/g_doWarmup/timelimit/fraglimit/custom/"
+#define VF_map_restart  1
+#define VF_nextmap      2
+#define VF_map          4
+#define VF_g_gametype   8
+//Note that we skipped kick... not needed
+#define VF_clientkick   16
+#define VF_g_doWarmup   32
+#define VF_timelimit    64
+#define VF_fraglimit    128
+#define VF_custom       256
+
 // content masks
 #define	MASK_ALL				(-1)
 #define	MASK_SOLID				(CONTENTS_SOLID)

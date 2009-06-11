@@ -1531,7 +1531,7 @@ void ClientBegin( int clientNum ) {
 	{
 		if(!level.hadBots)
 		{
-			G_LogPrintf( "There has been at least 1 bot now" );
+			G_LogPrintf( "There has been at least 1 bot now\n" );
 			level.hadBots = qtrue;
 		}
 	}

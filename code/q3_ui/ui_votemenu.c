@@ -89,36 +89,6 @@ static votemenu_t	s_votemenu;
 
 void UI_VoteMenuMenuInternal( void );
 
-/*
-==================
-allowedVote
- *Note: Keep this in sync with allowedVote in g_cmds.c (except for cg_voteNames and g_voteNames)
-==================
- */
-#define MAX_VOTENAME_LENGTH 14 //currently the longest string is "/map_restart/\0" (14 chars)
-static int allowedVote(char *commandStr) {
-    char tempStr[MAX_VOTENAME_LENGTH];
-    int length;
-    char voteNames[MAX_CVAR_VALUE_STRING];
-    trap_Cvar_VariableStringBuffer( "cg_voteNames", voteNames, sizeof( voteNames ) );
-    if(!Q_stricmp(voteNames, "*" ))
-        return qtrue; //if star, everything is allowed
-    length = strlen(commandStr);
-    if(length>MAX_VOTENAME_LENGTH-3)
-    {
-        //Error: too long
-        return qfalse;
-    }
-    //Now constructing a string that starts and ends with '/' like: "/clientkick/"
-    tempStr[0] = '/';
-    strncpy(&tempStr[1],commandStr,length);
-    tempStr[length+1] = '/';
-    tempStr[length+2] = '\0';
-    if(Q_stristr(voteNames,tempStr) != NULL)
-        return qtrue;
-    else
-        return qfalse;
-}
 
 /*
 =================
@@ -127,16 +97,18 @@ VoteMenu_CheckVoteNames
 */
 
 static void VoteMenu_CheckVoteNames( void ) {
-    s_votemenu.map_restart = allowedVote("map_restart");
-    s_votemenu.nextmap = allowedVote("nextmap");
-    s_votemenu.map = allowedVote("map");
-    s_votemenu.gametype = allowedVote("g_gametype");
+    int voteflags;
+    voteflags = trap_Cvar_VariableValue("cg_voteflags");
+    s_votemenu.map_restart = voteflags&VF_map_restart;
+    s_votemenu.nextmap = voteflags&VF_nextmap;
+    s_votemenu.map = voteflags&VF_map;
+    s_votemenu.gametype = voteflags&VF_g_gametype;
     //We never use "kick" in menues, always clientkick
-    s_votemenu.clientkick = allowedVote("clientkick");
-    s_votemenu.g_doWarmup = allowedVote("g_doWarmup");
-    s_votemenu.timelimit = allowedVote("timelimit");
-    s_votemenu.fraglimit = allowedVote("fraglimit");
-    s_votemenu.custom = allowedVote("custom");
+    s_votemenu.clientkick = voteflags&VF_clientkick;
+    s_votemenu.g_doWarmup = voteflags&VF_g_doWarmup;
+    s_votemenu.timelimit = voteflags&VF_timelimit;
+    s_votemenu.fraglimit = voteflags&VF_fraglimit;
+    s_votemenu.custom = voteflags&VF_custom;
 }
 
 /*

@@ -1263,7 +1263,7 @@ extern	vmCvar_t		cl_timeNudge;
 extern	vmCvar_t		cg_alwaysWeaponBar;
 extern	vmCvar_t		cg_hitsound;
 extern  vmCvar_t                cg_voip_teamonly;
-extern  vmCvar_t                cg_voteNames;
+extern  vmCvar_t                cg_voteflags;
 extern  vmCvar_t                cg_cyclegrapple;
 extern  vmCvar_t                cg_vote_custom_commands;
 

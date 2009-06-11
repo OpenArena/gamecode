@@ -351,7 +351,7 @@ void CG_ParseServerinfo( void ) {
 //unlagged - server options
 
         //Copy allowed votes directly to the client:
-        trap_Cvar_Set("cg_voteNames",Info_ValueForKey( info, "g_voteNames" ) );
+        trap_Cvar_Set("cg_voteflags",Info_ValueForKey( info, "voteflags" ) );
 }
 
 /*
