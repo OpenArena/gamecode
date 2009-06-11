@@ -83,7 +83,6 @@ vmCvar_t	pmove_msec;
 vmCvar_t        pmove_float;
 vmCvar_t	g_rankings;
 vmCvar_t	g_listEntity;
-//#ifdef MISSIONPACK
 vmCvar_t	g_obeliskHealth;
 vmCvar_t	g_obeliskRegenPeriod;
 vmCvar_t	g_obeliskRegenAmount;
@@ -98,7 +97,6 @@ vmCvar_t	g_enableBreath;
 #endif
 vmCvar_t	g_proxMineTimeout;
 vmCvar_t	g_music;
-//#endif
 //Following for elimination:
 vmCvar_t	g_elimination_selfdamage;
 vmCvar_t	g_elimination_startHealth;
@@ -108,9 +106,7 @@ vmCvar_t	g_elimination_grapple;
 vmCvar_t	g_elimination_roundtime;
 vmCvar_t	g_elimination_warmup;
 vmCvar_t	g_elimination_activewarmup;
-//new in beta 36:
 vmCvar_t        g_elimination_allgametypes;
-//more weapons in beta 9:
 vmCvar_t	g_elimination_machinegun;
 vmCvar_t	g_elimination_shotgun;
 vmCvar_t	g_elimination_grenade;
@@ -118,11 +114,9 @@ vmCvar_t	g_elimination_rocket;
 vmCvar_t	g_elimination_railgun;
 vmCvar_t	g_elimination_lightning;
 vmCvar_t	g_elimination_plasmagun;
-//#ifdef MISSIONPACK
 vmCvar_t	g_elimination_chain;
 vmCvar_t	g_elimination_mine;
 vmCvar_t	g_elimination_nail;
-//#endif
 
 vmCvar_t        g_elimination_lockspectator;
 
@@ -134,34 +128,21 @@ vmCvar_t	g_vampire;
 vmCvar_t	g_vampireMaxHealth;
 //Regen
 vmCvar_t	g_regen;
-//Beta 4
 int	g_ffa_gt; //Are this a FFA gametype even if gametype is high?
-//beta 5
 vmCvar_t	g_lms_lives;
-
-//beta 8
 vmCvar_t	g_lms_mode;
-
-//beta 10
 vmCvar_t	g_elimination_ctf_oneway;
-
-//beta 18 (oa 0.7.6)
 vmCvar_t        g_awardpushing; //The server can decide if players are awarded for pushing people in lave etc.
 
-//new in beta 19
 vmCvar_t        g_voteNames;
 vmCvar_t        g_voteGametypes;
 vmCvar_t        g_voteMinTimelimit;
 vmCvar_t        g_voteMaxTimelimit;
 vmCvar_t        g_voteMinFraglimit;
 vmCvar_t        g_voteMaxFraglimit;
-//new in beta 19 end
 
-//new in beta 23
 vmCvar_t        g_humanplayers;
-//new in beta 23 end
 
-//new in beta 30
 //used for voIP
 vmCvar_t         g_redTeamClientNumbers;
 vmCvar_t         g_blueTeamClientNumbers;
@@ -170,7 +151,6 @@ vmCvar_t         g_blueTeamClientNumbers;
 vmCvar_t	g_delagHitscan;
 vmCvar_t	g_truePing;
 vmCvar_t	sv_fps;
-//From beta 29
 vmCvar_t        g_lagLightning; //Adds a little lag to the lightninggun to make it less powerfull
 //unlagged - server options
 //KK-OAX
@@ -280,9 +260,8 @@ static cvarTable_t		gameCvarTable[] = {
 	{ &g_delagHitscan, "g_delagHitscan", "0", CVAR_ARCHIVE | CVAR_SERVERINFO, 0, qtrue },
 	{ &g_truePing, "g_truePing", "0", CVAR_ARCHIVE, 0, qtrue },
 	// it's CVAR_SYSTEMINFO so the client's sv_fps will be automagically set to its value
-        //Sago: WARNING this does not work in never versions of ioquake3 as these values are protected
 	{ &sv_fps, "sv_fps", "20", CVAR_SYSTEMINFO | CVAR_ARCHIVE, 0, qfalse },
-        { &g_lagLightning, "g_lagLightning", "0", CVAR_ARCHIVE, 0, qtrue },
+        { &g_lagLightning, "g_lagLightning", "1", CVAR_ARCHIVE, 0, qtrue },
 //unlagged - server options
 
 	{ &g_rankings, "g_rankings", "0", 0, 0, qfalse},
@@ -297,7 +276,7 @@ static cvarTable_t		gameCvarTable[] = {
 	{ &g_elimination_warmup, "elimination_warmup", "7", CVAR_ARCHIVE | CVAR_NORESTART , 0, qtrue },
 	{ &g_elimination_activewarmup, "elimination_activewarmup", "5", CVAR_ARCHIVE | CVAR_NORESTART , 0, qtrue },
         { &g_elimination_allgametypes, "g_elimination", "0", CVAR_LATCH | CVAR_NORESTART, 0, qfalse },
-//more weapons in beta 9:
+
 	{ &g_elimination_machinegun, "elimination_machinegun", "200", CVAR_ARCHIVE| CVAR_NORESTART, 0, qtrue },
 	{ &g_elimination_shotgun, "elimination_shotgun", "200", CVAR_ARCHIVE| CVAR_NORESTART, 0, qtrue },
 	{ &g_elimination_grenade, "elimination_grenade", "200", CVAR_ARCHIVE| CVAR_NORESTART, 0, qtrue },
@@ -305,12 +284,10 @@ static cvarTable_t		gameCvarTable[] = {
 	{ &g_elimination_railgun, "elimination_railgun", "200", CVAR_ARCHIVE| CVAR_NORESTART, 0, qtrue },
 	{ &g_elimination_lightning, "elimination_lightning", "200", CVAR_ARCHIVE| CVAR_NORESTART, 0, qtrue },
 	{ &g_elimination_plasmagun, "elimination_plasmagun", "200", CVAR_ARCHIVE| CVAR_NORESTART, 0, qtrue },
-//#ifdef MISSIONPACK
 	{ &g_elimination_chain, "elimination_chain", "0", CVAR_ARCHIVE| CVAR_NORESTART, 0, qtrue },
 	{ &g_elimination_mine, "elimination_mine", "0", CVAR_ARCHIVE| CVAR_NORESTART, 0, qtrue },
 	{ &g_elimination_nail, "elimination_nail", "0", CVAR_ARCHIVE| CVAR_NORESTART, 0, qtrue },
-//#endif
-	//Beta 10
+
 	{ &g_elimination_ctf_oneway, "elimination_ctf_oneway", "0", CVAR_SERVERINFO | CVAR_ARCHIVE| CVAR_NORESTART, 0, qtrue },
 
         { &g_elimination_lockspectator, "elimination_lockspectator", "0", CVAR_NORESTART, 0, qtrue },
@@ -325,13 +302,10 @@ static cvarTable_t		gameCvarTable[] = {
 	{ &g_vampire, "g_vampire", "0.0", CVAR_NORESTART, 0, qtrue },
 	{ &g_regen, "g_regen", "0", CVAR_NORESTART, 0, qtrue },
 	{ &g_vampireMaxHealth, "g_vampire_max_health", "500", CVAR_NORESTART, 0, qtrue },
-	//beta 5
 	{ &g_lms_lives, "g_lms_lives", "1", CVAR_NORESTART, 0, qtrue },
-	//beta 8
 	{ &g_lms_mode, "g_lms_mode", "0", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
-        //beta 23
+
         { &g_humanplayers, "g_humanplayers", "0", CVAR_ROM | CVAR_NORESTART, 0, qfalse },
-        //new in beta 30
 //used for voIP
         { &g_redTeamClientNumbers, "g_redTeamClientNumbers", "0",CVAR_ROM, 0, qfalse },
         { &g_blueTeamClientNumbers, "g_blueTeamClientNumbers", "0",CVAR_ROM, 0, qfalse },

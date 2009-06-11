@@ -182,9 +182,7 @@ void SnapVectorTowards( vec3_t v, vec3_t to ) {
 }
 //unlagged - attack prediction #3
 
-//#ifdef MISSIONPACK
 #define CHAINGUN_SPREAD		600.0
-//#endif
 #define MACHINEGUN_SPREAD	200
 #define	MACHINEGUN_DAMAGE	7
 #define	MACHINEGUN_TEAM_DAMAGE	5		// wimpier MG in teamplay
@@ -810,7 +808,6 @@ void Weapon_LightningFire( gentity_t *ent ) {
 	}
 }
 
-//#ifdef MISSIONPACK
 /*
 ======================================================================
 
@@ -855,7 +852,6 @@ void weapon_proxlauncher_fire (gentity_t *ent) {
 //	VectorAdd( m->s.pos.trDelta, ent->client->ps.velocity, m->s.pos.trDelta );	// "real" physics
 }
 
-//#endif
 
 //======================================================================
 

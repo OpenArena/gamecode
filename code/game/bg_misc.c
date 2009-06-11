@@ -1289,8 +1289,7 @@ qboolean BG_CanItemBeGrabbed( int gametype, const entityState_t *ent, const play
 		return qtrue;
 #endif
 
-	case IT_TEAM: // team items, such as flags
-//#ifdef MISSIONPACK		
+	case IT_TEAM: // team items, such as flags	
 		if( gametype == GT_1FCTF ) {
 			// neutral flag can always be picked up
 			if( item->giTag == PW_NEUTRALFLAG ) {
@@ -1306,7 +1305,6 @@ qboolean BG_CanItemBeGrabbed( int gametype, const entityState_t *ent, const play
 				}
 			}
 		}
-//#endif
 		if( gametype == GT_CTF || gametype == GT_CTF_ELIMINATION) {
 			// ent->modelindex2 is non-zero on items if they are dropped
 			// we need to know this because we can pick up our dropped flag (and return it)
@@ -1342,11 +1340,9 @@ qboolean BG_CanItemBeGrabbed( int gametype, const entityState_t *ent, const play
 			}
 		}
 
-//#ifdef MISSIONPACK
 		if( gametype == GT_HARVESTER ) {
 			return qtrue;
 		}
-//#endif
 		return qfalse;
 
 	case IT_HOLDABLE:
@@ -1544,7 +1540,7 @@ char *eventnames[] = {
 	"EV_GIB_PLAYER",			// gib a previously living player
 	"EV_SCOREPLUM",			// score plum
 
-//#ifdef MISSIONPACK
+//Not all of these are used in baseoa but we keep them to gurantie event numbers between version
 	"EV_PROXIMITY_MINE_STICK",
 	"EV_PROXIMITY_MINE_TRIGGER",
 	"EV_KAMIKAZE",			// kamikaze explodes
@@ -1552,7 +1548,7 @@ char *eventnames[] = {
 	"EV_INVUL_IMPACT",		// invulnerability sphere impact
 	"EV_JUICED",				// invulnerability juiced effect
 	"EV_LIGHTNINGBOLT",		// lightning bolt bounced of invulnerability sphere
-//#endif
+
 
 	"EV_DEBUG_LINE",
 	"EV_STOPLOOPINGSOUND",

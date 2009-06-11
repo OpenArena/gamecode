@@ -670,10 +670,8 @@ gentity_t *fire_grenade (gentity_t *self, vec3_t start, vec3_t aimdir);
 gentity_t *fire_rocket (gentity_t *self, vec3_t start, vec3_t dir);
 gentity_t *fire_bfg (gentity_t *self, vec3_t start, vec3_t dir);
 gentity_t *fire_grapple (gentity_t *self, vec3_t start, vec3_t dir);
-//#ifdef MISSIONPACK
 gentity_t *fire_nail( gentity_t *self, vec3_t start, vec3_t forward, vec3_t right, vec3_t up );
 gentity_t *fire_prox( gentity_t *self, vec3_t start, vec3_t aimdir );
-//#endif
 
 
 //
@@ -1008,9 +1006,7 @@ extern	vmCvar_t	g_elimination_grapple;
 extern	vmCvar_t	g_elimination_roundtime;
 extern	vmCvar_t	g_elimination_warmup;
 extern	vmCvar_t	g_elimination_activewarmup;
-//new in beta 36:
 extern  vmCvar_t        g_elimination_allgametypes;
-//more weapons in beta 9:
 extern	vmCvar_t	g_elimination_machinegun;
 extern	vmCvar_t	g_elimination_shotgun;
 extern	vmCvar_t	g_elimination_grenade;
@@ -1018,11 +1014,9 @@ extern	vmCvar_t	g_elimination_rocket;
 extern	vmCvar_t	g_elimination_railgun;
 extern	vmCvar_t	g_elimination_lightning;
 extern	vmCvar_t	g_elimination_plasmagun;
-//#ifdef MISSIONPACK
 extern	vmCvar_t	g_elimination_chain;
 extern	vmCvar_t	g_elimination_mine;
 extern	vmCvar_t	g_elimination_nail;
-//#endif
 
 //If lockspectator: 0=no limit, 1 = cannot follow enemy, 2 = must follow friend
 extern  vmCvar_t        g_elimination_lockspectator;
@@ -1038,19 +1032,14 @@ extern vmCvar_t		g_regen;
 //Free for all gametype
 extern int		g_ffa_gt; //0 = TEAM GAME, 1 = FFA, 2 = TEAM GAME without bases
 
-//beta 5
 extern vmCvar_t		g_lms_lives;
 
-//beta 8
 extern vmCvar_t		g_lms_mode; //How do we score: 0 = One Survivor get a point, 1 = same but without overtime, 2 = one point for each player killed (+overtime), 3 = same without overtime
 
-//beta 10
 extern vmCvar_t		g_elimination_ctf_oneway;	//Only attack in one direction (level.eliminationSides+level.roundNumber)%2 == 0 red attacks
 
-//beta 18 (oa 0.7.6)
 extern vmCvar_t         g_awardpushing; //The server can decide if players are awarded for pushing people in lave etc.
 
-//beta 19
 extern vmCvar_t        g_voteNames;
 extern vmCvar_t        g_voteGametypes;
 extern vmCvar_t        g_voteMinTimelimit;
@@ -1058,10 +1047,8 @@ extern vmCvar_t        g_voteMaxTimelimit;
 extern vmCvar_t        g_voteMinFraglimit;
 extern vmCvar_t        g_voteMaxFraglimit;
 
-//new in beta 23
 extern vmCvar_t        g_humanplayers;
 
-//new in beta 30
 //used for voIP
 extern vmCvar_t         g_redTeamClientNumbers;
 extern vmCvar_t         g_blueTeamClientNumbers;

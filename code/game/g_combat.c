@@ -134,8 +134,6 @@ void TossClientItems( gentity_t *self ) {
 	}
 }
 
-//#ifdef MISSIONPACK
-
 /*
 =================
 TossClientCubes
@@ -187,7 +185,6 @@ void TossClientCubes( gentity_t *self ) {
 	drop->spawnflags = self->client->sess.sessionTeam;
 }
 
-//Sago: moved to here
 #ifdef MISSIONPACK
 
 /*
@@ -317,13 +314,11 @@ char	*modNames[] = {
 	"MOD_SUICIDE",
 	"MOD_TARGET_LASER",
 	"MOD_TRIGGER_HURT",
-//#ifdef MISSIONPACK
 	"MOD_NAIL",
 	"MOD_CHAINGUN",
 	"MOD_PROXIMITY_MINE",
 	"MOD_KAMIKAZE",
 	"MOD_JUICED",
-//#endif
 	"MOD_GRAPPLE"
 };
 
@@ -477,13 +472,11 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 	if (self->client && self->client->hook) {
 		Weapon_HookFree(self->client->hook);
 	}
-//#ifdef MISSIONPACK
 	if ((self->client->ps.eFlags & EF_TICKING) && self->activator) {
 		self->client->ps.eFlags &= ~EF_TICKING;
 		self->activator->think = G_FreeEntity;
 		self->activator->nextthink = level.time;
 	}
-//#endif
 	self->client->ps.pm_type = PM_DEAD;
 
 	if ( attacker ) {
@@ -921,7 +914,6 @@ int RaySphereIntersections( vec3_t origin, float radius, vec3_t point, vec3_t di
 	return 0;
 }
 
-//#ifdef MISSIONPACK
 /*
 ================
 G_InvulnerabilityEffect
@@ -959,7 +951,7 @@ int G_InvulnerabilityEffect( gentity_t *targ, vec3_t dir, vec3_t point, vec3_t i
 		return qfalse;
 	}
 }
-//#endif
+
 /*
 ============
 T_Damage

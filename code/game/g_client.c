@@ -1879,7 +1879,6 @@ else
         if (g_elimination_grapple.integer) {
 		client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_GRAPPLING_HOOK );
 	}
-//#ifdef MISSIONPACK
 	if (g_elimination_nail.integer > 0) {
 		client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_NAILGUN );
 		client->ps.ammo[WP_NAILGUN] = g_elimination_nail.integer;
@@ -1892,7 +1891,6 @@ else
 		client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_CHAINGUN );
 		client->ps.ammo[WP_CHAINGUN] = g_elimination_chain.integer;
 	}
-//#endif
 	
 	ent->health = client->ps.stats[STAT_ARMOR] = g_elimination_startArmor.integer; //client->ps.stats[STAT_MAX_HEALTH]*2;
 	ent->health = client->ps.stats[STAT_HEALTH] = g_elimination_startHealth.integer; //client->ps.stats[STAT_MAX_HEALTH]*2;	

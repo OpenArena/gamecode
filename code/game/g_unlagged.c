@@ -263,15 +263,7 @@ Decide what time to shift everyone back to, and do it
 ================
 */
 void G_DoTimeShiftFor( gentity_t *ent ) {	
-//#ifndef MISSIONPACK
-
-#ifndef MISSIONPACK
-
 	int wpflags[WP_NUM_WEAPONS] = { 0, 0, 2, 4, 0, 0, 8, 16, 0, 0, 0, 32, 0, 64 };
-#else
-
-	int wpflags[WP_NUM_WEAPONS] = { 0, 0, 2, 4, 0, 0, 8, 16, 0, 0, 0, 32, 0, 64 };
-#endif
 
 	int wpflag = wpflags[ent->client->ps.weapon];
 	int time;

@@ -96,12 +96,10 @@ bot_goal_t ctf_redflag;
 bot_goal_t ctf_blueflag;
 //Domination goals:
 bot_goal_t dom_points_bot[MAX_DOMINATION_POINTS];
-//#ifdef MISSIONPACK
 bot_goal_t ctf_neutralflag;
 bot_goal_t redobelisk;
 bot_goal_t blueobelisk;
 bot_goal_t neutralobelisk;
-//#endif
 
 #define MAX_ALTROUTEGOALS		32
 
@@ -389,7 +387,6 @@ BotSetTeamStatus
 ==================
 */
 void BotSetTeamStatus(bot_state_t *bs) {
-//#ifdef MISSIONPACK
 	int teamtask;
 	aas_entityinfo_t entinfo;
 
