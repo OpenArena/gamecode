@@ -1054,8 +1054,6 @@ extern vmCvar_t        g_humanplayers;
 extern vmCvar_t         g_redTeamClientNumbers;
 extern vmCvar_t         g_blueTeamClientNumbers;
 
-extern vmCvar_t         g_logfile2stdout;
-
 //unlagged - server options
 // some new server-side variables
 extern	vmCvar_t	g_delagHitscan;

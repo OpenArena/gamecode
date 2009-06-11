@@ -171,8 +171,7 @@ void G_InitWorldSession( void ) {
 	// client sessions
 	if ( g_gametype.integer != gt ) {
 		level.newSession = qtrue;
-                if(!g_logfile2stdout.integer)
-                    G_Printf( "Gametype changed, clearing session data.\n" );
+                G_Printf( "Gametype changed, clearing session data.\n" );
 	}
 }
 

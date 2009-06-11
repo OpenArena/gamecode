@@ -102,7 +102,6 @@ void QDECL BotAI_Print(int type, char *fmt, ...) {
 	Q_vsnprintf(str, sizeof(str), fmt, ap);
 	va_end(ap);
 
-        if(!g_logfile2stdout.integer)
 	switch(type) {
 		case PRT_MESSAGE: {
 			G_Printf("%s", str);

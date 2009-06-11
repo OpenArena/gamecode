@@ -101,8 +101,7 @@ static qboolean StringToFilter (char *s, ipFilter_t *f)
 				s++;
 				continue;
 			}
-                        if(!g_logfile2stdout.integer)
-                            G_Printf( "Bad filter address: %s\n", s );
+                        G_Printf( "Bad filter address: %s\n", s );
 			return qfalse;
 		}
 		
@@ -220,8 +219,7 @@ static void AddIP( char *str )
 	{
 		if (numIPFilters == MAX_IPFILTERS)
 		{
-                        if(!g_logfile2stdout.integer)
-                            G_Printf ("IP filter list is full\n");
+                        G_Printf ("IP filter list is full\n");
 			return;
 		}
 		numIPFilters++;
@@ -268,8 +266,7 @@ void Svcmd_AddIP_f (void)
 	char		str[MAX_TOKEN_CHARS];
 
 	if ( trap_Argc() < 2 ) {
-                if(!g_logfile2stdout.integer)
-                    G_Printf("Usage:  addip <ip-mask>\n");
+                G_Printf("Usage:  addip <ip-mask>\n");
 		return;
 	}
 
@@ -291,8 +288,7 @@ void Svcmd_RemoveIP_f (void)
 	char		str[MAX_TOKEN_CHARS];
 
 	if ( trap_Argc() < 2 ) {
-                if(!g_logfile2stdout.integer)
-                    G_Printf("Usage:  sv removeip <ip-mask>\n");
+                G_Printf("Usage:  sv removeip <ip-mask>\n");
 		return;
 	}
 
@@ -305,15 +301,13 @@ void Svcmd_RemoveIP_f (void)
 		if (ipFilters[i].mask == f.mask	&&
 			ipFilters[i].compare == f.compare) {
 			ipFilters[i].compare = 0xffffffffu;
-                        if(!g_logfile2stdout.integer)
-                            G_Printf ("Removed.\n");
+                        G_Printf ("Removed.\n");
 
 			UpdateIPBans();
 			return;
 		}
 	}
-        if(!g_logfile2stdout.integer)
-            G_Printf ( "Didn't find %s.\n", str );
+        G_Printf ( "Didn't find %s.\n", str );
 }
 
 /*
@@ -330,9 +324,7 @@ void	Svcmd_EntityList_f (void) {
 		if ( !check->inuse ) {
 			continue;
 		}
-                if(!g_logfile2stdout.integer)
-                    G_Printf("%3i:", e);
-                if(!g_logfile2stdout.integer)
+                G_Printf("%3i:", e);
 		switch ( check->s.eType ) {
 		case ET_GENERAL:
 			G_Printf("ET_GENERAL          ");
@@ -374,12 +366,10 @@ void	Svcmd_EntityList_f (void) {
 			G_Printf("%3i                 ", check->s.eType);
 			break;
 		}
-                if(!g_logfile2stdout.integer)
 		if ( check->classname ) {
 			G_Printf("%s", check->classname);
 		}
-                if(!g_logfile2stdout.integer)
-                    G_Printf("\n");
+                G_Printf("\n");
 	}
 }
 
@@ -398,8 +388,7 @@ gclient_t	*ClientForString( const char *s ) {
 
 		cl = &level.clients[idnum];
 		if ( cl->pers.connected == CON_DISCONNECTED ) {
-                        if(!g_logfile2stdout.integer)
-                            G_Printf( "Client %i is not connected\n", idnum );
+                        G_Printf( "Client %i is not connected\n", idnum );
 			return NULL;
 		}
 		return cl;
@@ -415,8 +404,7 @@ gclient_t	*ClientForString( const char *s ) {
 			return cl;
 		}
 	}
-        if(!g_logfile2stdout.integer)
-            G_Printf( "User %s is not on the server\n", s );
+        G_Printf( "User %s is not on the server\n", s );
 
 	return NULL;
 }

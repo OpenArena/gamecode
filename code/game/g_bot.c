@@ -516,8 +516,7 @@ static void AddBotToSpawnQueue( int clientNum, int delay ) {
 			return;
 		}
 	}
-        if(!g_logfile2stdout.integer)
-            G_Printf( S_COLOR_YELLOW "Unable to delay spawn\n" );
+        G_Printf( S_COLOR_YELLOW "Unable to delay spawn\n" );
 	ClientBegin( clientNum );
 }
 
@@ -585,8 +584,7 @@ static void G_AddBot( const char *name, float skill, const char *team, int delay
 	// get the botinfo from bots.txt
 	botinfo = G_GetBotInfoByName( name );
 	if ( !botinfo ) {
-                if(!g_logfile2stdout.integer)
-                    G_Printf( S_COLOR_RED "Error: Bot '%s' not defined\n", name );
+                G_Printf( S_COLOR_RED "Error: Bot '%s' not defined\n", name );
 		return;
 	}
 
@@ -664,11 +662,9 @@ static void G_AddBot( const char *name, float skill, const char *team, int delay
 	// have the server allocate a client slot
 	clientNum = trap_BotAllocateClient();
 	if ( clientNum == -1 ) {
-                if(!g_logfile2stdout.integer) {
-                    G_Printf( S_COLOR_RED "Unable to add bot.  All player slots are in use.\n" );
-                    G_Printf( S_COLOR_RED "Start server with more 'open' slots (or check setting of sv_maxclients cvar).\n" );
-                }
-		return;
+                G_Printf( S_COLOR_RED "Unable to add bot.  All player slots are in use.\n" );
+                G_Printf( S_COLOR_RED "Start server with more 'open' slots (or check setting of sv_maxclients cvar).\n" );
+                return;
 	}
 
 	// initialize the bot settings

@@ -68,7 +68,6 @@ vmCvar_t	g_warmup;
 vmCvar_t	g_doWarmup;
 vmCvar_t	g_restarted;
 vmCvar_t	g_logfile;
-vmCvar_t	g_logfile2stdout;
 vmCvar_t	g_logfileSync;
 vmCvar_t	g_blood;
 vmCvar_t	g_podiumDist;
@@ -193,7 +192,6 @@ static cvarTable_t		gameCvarTable[] = {
 	{ &g_warmup, "g_warmup", "20", CVAR_ARCHIVE, 0, qtrue  },
 	{ &g_doWarmup, "g_doWarmup", "0", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qtrue  },
 	{ &g_logfile, "g_log", "games.log", CVAR_ARCHIVE, 0, qfalse  },
-        { &g_logfile2stdout, "g_log2stdout", "0", CVAR_ROM, 0, qfalse  },
 	{ &g_logfileSync, "g_logsync", "0", CVAR_ARCHIVE, 0, qfalse  },
 
 	{ &g_password, "g_password", "", CVAR_USERINFO, 0, qfalse  },
@@ -447,8 +445,7 @@ void G_FindTeams( void ) {
 			}
 		}
 	}
-        if(!g_logfile2stdout.integer)
-            G_Printf ("%i teams with %i entities\n", c, c2);
+        G_Printf ("%i teams with %i entities\n", c, c2);
 }
 
 void G_RemapTeamShaders( void ) {
@@ -493,8 +490,7 @@ void G_RegisterCvars( void ) {
 
 	// check some things
 	if ( g_gametype.integer < 0 || g_gametype.integer >= GT_MAX_GAME_TYPE ) {
-                if(!g_logfile2stdout.integer)
-                    G_Printf( "g_gametype %i is out of range, defaulting to 0\n", g_gametype.integer );
+                G_Printf( "g_gametype %i is out of range, defaulting to 0\n", g_gametype.integer );
 		trap_Cvar_Set( "g_gametype", "0" );
 	}
 
@@ -551,11 +547,10 @@ G_InitGame
 void G_InitGame( int levelTime, int randomSeed, int restart ) {
 	int					i;
 
-        if(!g_logfile2stdout.integer) {
-            G_Printf ("------- Game Initialization -------\n");
-            G_Printf ("gamename: %s\n", GAMEVERSION);
-            G_Printf ("gamedate: %s\n", __DATE__);
-        }
+        
+        G_Printf ("------- Game Initialization -------\n");
+        G_Printf ("gamename: %s\n", GAMEVERSION);
+        G_Printf ("gamedate: %s\n", __DATE__);
 
 	srand( randomSeed );
 
@@ -589,7 +584,6 @@ void G_InitGame( int levelTime, int randomSeed, int restart ) {
 			trap_FS_FOpenFile( g_logfile.string, &level.logFile, FS_APPEND );
 		}
 		if ( !level.logFile ) {
-                    if(!g_logfile2stdout.integer)
 			G_Printf( "WARNING: Couldn't open logfile: %s\n", g_logfile.string );
 		} else {
 			char	serverinfo[MAX_INFO_STRING];
@@ -601,7 +595,6 @@ void G_InitGame( int levelTime, int randomSeed, int restart ) {
                         G_LogPrintf("ServerInfo length: %d of %d\n", strlen(serverinfo), MAX_INFO_STRING );
 		}
 	} else {
-            if(!g_logfile2stdout.integer)
 		G_Printf( "Not logging to disk.\n" );
 	}
 
@@ -654,8 +647,7 @@ void G_InitGame( int levelTime, int randomSeed, int restart ) {
 
 	SaveRegisteredItems();
         
-        if(!g_logfile2stdout.integer)
-            G_Printf ("-----------------------------------\n");
+        G_Printf ("-----------------------------------\n");
 
 	if( g_gametype.integer == GT_SINGLE_PLAYER || trap_Cvar_VariableIntegerValue( "com_buildScript" ) ) {
 		G_ModelIndex( SP_PODIUM_MODEL );
@@ -703,8 +695,7 @@ G_ShutdownGame
 =================
 */
 void G_ShutdownGame( int restart ) {
-        if(!g_logfile2stdout.integer)
-            G_Printf ("==== ShutdownGame ====\n");
+        G_Printf ("==== ShutdownGame ====\n");
 
 	if ( level.logFile ) {
 		G_LogPrintf("ShutdownGame:\n" );
@@ -743,8 +734,7 @@ void QDECL Com_Printf( const char *msg, ... ) {
 	Q_vsnprintf (text, sizeof(text), msg, argptr);
 	va_end (argptr);
 
-        if(!g_logfile2stdout.integer)
-            G_Printf ("%s", text);
+        G_Printf ("%s", text);
 }
 
 /*
@@ -1390,9 +1380,6 @@ void QDECL G_LogPrintf( const char *fmt, ... ) {
 	va_end( argptr );
 
 	if ( g_dedicated.integer ) {
-            if(g_logfile2stdout.integer)
-                G_Printf( "%s", string );
-            else
 		G_Printf( "%s", string + 7 );
 	}
 
@@ -2656,7 +2643,6 @@ end = trap_Milliseconds();
 
 	if (g_listEntity.integer) {
 		for (i = 0; i < MAX_GENTITIES; i++) {
-                    if(!g_logfile2stdout.integer)
 			G_Printf("%4i: %s\n", i, g_entities[i].classname);
 		}
 		trap_Cvar_Set("g_listEntity", "0");

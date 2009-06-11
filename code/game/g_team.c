@@ -904,8 +904,7 @@ void Team_ReturnFlagSound( gentity_t *ent, int team ) {
 	gentity_t	*te;
 
 	if (ent == NULL) {
-                if(!g_logfile2stdout.integer)
-                    G_Printf ("Warning:  NULL passed to Team_ReturnFlagSound\n");
+                G_Printf ("Warning:  NULL passed to Team_ReturnFlagSound\n");
 		return;
 	}
 
@@ -927,8 +926,7 @@ void Team_TakeFlagSound( gentity_t *ent, int team ) {
 	gentity_t	*te;
 
 	if (ent == NULL) {
-                if(!g_logfile2stdout.integer)
-                    G_Printf ("Warning:  NULL passed to Team_TakeFlagSound\n");
+                G_Printf ("Warning:  NULL passed to Team_TakeFlagSound\n");
 		return;
 	}
 
@@ -966,8 +964,7 @@ void Team_CaptureFlagSound( gentity_t *ent, int team ) {
 	gentity_t	*te;
 
 	if (ent == NULL) {
-                if(!g_logfile2stdout.integer)
-                    G_Printf ("Warning:  NULL passed to Team_CaptureFlagSound\n");
+                G_Printf ("Warning:  NULL passed to Team_CaptureFlagSound\n");
 		return;
 	}
 
@@ -1974,8 +1971,7 @@ gentity_t *SpawnObelisk( vec3_t origin, int team, int spawnflags) {
 		trap_Trace( &tr, ent->s.origin, ent->r.mins, ent->r.maxs, dest, ent->s.number, MASK_SOLID );
 		if ( tr.startsolid ) {
 			ent->s.origin[2] -= 1;
-                        if(!g_logfile2stdout.integer)
-                            G_Printf( "SpawnObelisk: %s startsolid at %s\n", ent->classname, vtos(ent->s.origin) );
+                        G_Printf( "SpawnObelisk: %s startsolid at %s\n", ent->classname, vtos(ent->s.origin) );
 
 			ent->s.groundEntityNum = ENTITYNUM_NONE;
 			G_SetOrigin( ent, ent->s.origin );

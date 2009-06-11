@@ -703,7 +703,6 @@ void FinishSpawningItem( gentity_t *ent ) {
 		VectorSet( dest, ent->s.origin[0], ent->s.origin[1], ent->s.origin[2] - 4096 );
 		trap_Trace( &tr, ent->s.origin, ent->r.mins, ent->r.maxs, dest, ent->s.number, MASK_SOLID );
 		if ( tr.startsolid ) {
-                    if(!g_logfile2stdout.integer)
 			G_Printf ("FinishSpawningItem: %s startsolid at %s\n", ent->classname, vtos(ent->s.origin));
 			G_FreeEntity( ent );
 			return;
@@ -760,12 +759,10 @@ void G_CheckTeamItems( void ) {
 		// check for the two flags
 		item = BG_FindItem( "Red Flag" );
 		if ( !item || !itemRegistered[ item - bg_itemlist ] ) {
-                    if(!g_logfile2stdout.integer)
 			G_Printf( S_COLOR_YELLOW "WARNING: No team_CTF_redflag in map" );
 		}
 		item = BG_FindItem( "Blue Flag" );
 		if ( !item || !itemRegistered[ item - bg_itemlist ] ) {
-                    if(!g_logfile2stdout.integer)
 			G_Printf( S_COLOR_YELLOW "WARNING: No team_CTF_blueflag in map" );
 		}
 	}
@@ -775,17 +772,14 @@ void G_CheckTeamItems( void ) {
 		// check for all three flags
 		item = BG_FindItem( "Red Flag" );
 		if ( !item || !itemRegistered[ item - bg_itemlist ] ) {
-                    if(!g_logfile2stdout.integer)
 			G_Printf( S_COLOR_YELLOW "WARNING: No team_CTF_redflag in map" );
 		}
 		item = BG_FindItem( "Blue Flag" );
 		if ( !item || !itemRegistered[ item - bg_itemlist ] ) {
-                    if(!g_logfile2stdout.integer)
 			G_Printf( S_COLOR_YELLOW "WARNING: No team_CTF_blueflag in map" );
 		}
 		item = BG_FindItem( "Neutral Flag" );
 		if ( !item || !itemRegistered[ item - bg_itemlist ] ) {
-                    if(!g_logfile2stdout.integer)
 			G_Printf( S_COLOR_YELLOW "WARNING: No team_CTF_neutralflag in map" );
 		}
 	}
@@ -797,14 +791,12 @@ void G_CheckTeamItems( void ) {
 		ent = NULL;
 		ent = G_Find( ent, FOFS(classname), "team_redobelisk" );
 		if( !ent ) {
-                    if(!g_logfile2stdout.integer)
 			G_Printf( S_COLOR_YELLOW "WARNING: No team_redobelisk in map" );
 		}
 
 		ent = NULL;
 		ent = G_Find( ent, FOFS(classname), "team_blueobelisk" );
 		if( !ent ) {
-                    if(!g_logfile2stdout.integer)
 			G_Printf( S_COLOR_YELLOW "WARNING: No team_blueobelisk in map" );
 		}
 	}
@@ -816,21 +808,18 @@ void G_CheckTeamItems( void ) {
 		ent = NULL;
 		ent = G_Find( ent, FOFS(classname), "team_redobelisk" );
 		if( !ent ) {
-                    if(!g_logfile2stdout.integer)
 			G_Printf( S_COLOR_YELLOW "WARNING: No team_redobelisk in map" );
 		}
 
 		ent = NULL;
 		ent = G_Find( ent, FOFS(classname), "team_blueobelisk" );
 		if( !ent ) {
-                    if(!g_logfile2stdout.integer)
 			G_Printf( S_COLOR_YELLOW "WARNING: No team_blueobelisk in map" );
 		}
 
 		ent = NULL;
 		ent = G_Find( ent, FOFS(classname), "team_neutralobelisk" );
 		if( !ent ) {
-                    if(!g_logfile2stdout.integer)
 			G_Printf( S_COLOR_YELLOW "WARNING: No team_neutralobelisk in map" );
 		}
 	}
@@ -935,8 +924,7 @@ void SaveRegisteredItems( void ) {
 		}
 	}
 	string[ bg_numItems ] = 0;
-        if(!g_logfile2stdout.integer)
-            G_Printf( "%i items registered\n", count );
+        G_Printf( "%i items registered\n", count );
 	trap_SetConfigstring(CS_ITEMS, string);
 }
 

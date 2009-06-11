@@ -1207,7 +1207,6 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 	take -= asave;
 
 	if ( g_debugDamage.integer ) {
-            if(!g_logfile2stdout.integer)
 		G_Printf( "%i: client:%i health:%i damage:%i armor:%i\n", level.time, targ->s.number,
 			targ->health, take, asave );
 	}

@@ -1083,7 +1083,6 @@ void G_Say( gentity_t *ent, gentity_t *target, int mode, const char *chatText ) 
 
 	// echo the text to the console
 	if ( g_dedicated.integer ) {
-            if(!g_logfile2stdout.integer)
 		G_Printf( "%s%s\n", name, text);
 	}
 
@@ -1227,7 +1226,6 @@ void G_Voice( gentity_t *ent, gentity_t *target, int mode, const char *id, qbool
 
 	// echo the text to the console
 	if ( g_dedicated.integer ) {
-            if(!g_logfile2stdout.integer)
 		G_Printf( "voice: %s %s\n", ent->client->pers.netname, id);
 	}
 
