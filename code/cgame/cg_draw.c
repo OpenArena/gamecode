@@ -990,7 +990,7 @@ static float CG_DrawCTFoneway( float y ) {
 
 	memcpy(color,g_color_table[ColorIndex(COLOR_WHITE)],sizeof(color));
 
-	if(cgs.oneway == 0) {
+	if( (cgs.elimflags&EF_ONEWAY)==0) {
 		return y; //nothing to draw
 	} else
 	if(cgs.attackingTeam == TEAM_BLUE) {
@@ -1350,7 +1350,7 @@ static float CG_DrawFollowMessage( float y ) {
 	char		*s;
 	int			w;	
 
-	if ( !(cg.snap->ps.pm_flags & PMF_FOLLOW) || ( ( cgs.dmflags & DF_NO_FREESPEC ) && (cgs.gametype == GT_ELIMINATION || cgs.gametype == GT_CTF_ELIMINATION ) ) ) {
+	if ( !(cg.snap->ps.pm_flags & PMF_FOLLOW) || ( ( cgs.elimflags & EF_NO_FREESPEC ) && (cgs.gametype == GT_ELIMINATION || cgs.gametype == GT_CTF_ELIMINATION ) ) ) {
 		return y;
 	}
 

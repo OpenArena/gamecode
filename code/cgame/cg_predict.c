@@ -311,10 +311,10 @@ static void CG_TouchItem( centity_t *cent ) {
 			return;
 		//Even in instantgib, we can predict our enemy flag
 		if (cg.predictedPlayerState.persistant[PERS_TEAM] == TEAM_RED &&
-			item->giTag == PW_BLUEFLAG && (!cgs.oneway || cgs.attackingTeam == TEAM_RED))
+			item->giTag == PW_BLUEFLAG && (!(cgs.elimflags&EF_ONEWAY) || cgs.attackingTeam == TEAM_RED))
 			canBePicked = qtrue;
 		if (cg.predictedPlayerState.persistant[PERS_TEAM] == TEAM_BLUE &&
-			item->giTag == PW_REDFLAG && (!cgs.oneway || cgs.attackingTeam == TEAM_BLUE))
+			item->giTag == PW_REDFLAG && (!(cgs.elimflags&EF_ONEWAY) || cgs.attackingTeam == TEAM_BLUE))
 			canBePicked = qtrue;
 		if (item->giTag == WP_RAILGUN)
 			canBePicked = qfalse;

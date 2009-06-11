@@ -618,7 +618,7 @@ void Team_FragBonuses(gentity_t *targ, gentity_t *inflictor, gentity_t *attacker
 		( VectorLength(v2) < CTF_TARGET_PROTECT_RADIUS &&
 		trap_InPVS(flag->r.currentOrigin, attacker->r.currentOrigin ) ) ) &&
 		attacker->client->sess.sessionTeam != targ->client->sess.sessionTeam && g_gametype.integer != GT_ELIMINATION &&
-		(g_gametype.integer != GT_CTF_ELIMINATION || g_elimination_ctf_oneway.integer==0 || 
+		(g_gametype.integer != GT_CTF_ELIMINATION || !g_elimination_ctf_oneway.integer ||
 		((level.eliminationSides+level.roundNumber)%2 == 0 && attacker->client->sess.sessionTeam == TEAM_BLUE ) ||
 		((level.eliminationSides+level.roundNumber)%2 == 1 && attacker->client->sess.sessionTeam == TEAM_RED ) ) ) {
 

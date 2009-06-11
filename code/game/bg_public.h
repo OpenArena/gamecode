@@ -698,8 +698,10 @@ qboolean	BG_CanItemBeGrabbed( int gametype, const entityState_t *ent, const play
 #define DF_FIXED_FOV			16
 #define	DF_NO_FOOTSTEPS			32
 
+// g_elimflags->integer
 //This is used to signal the client that it cannot go to free spectator:
-#define DF_NO_FREESPEC                  4096
+#define EF_ONEWAY                       1
+#define EF_NO_FREESPEC                  2
 
 // content masks
 #define	MASK_ALL				(-1)

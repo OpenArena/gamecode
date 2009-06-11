@@ -1023,6 +1023,7 @@ typedef struct {
 	// parsed from serverinfo
 	gametype_t		gametype;
 	int				dmflags;
+        int				elimflags;
 	int				teamflags;
 	int				fraglimit;
 	int				capturelimit;
@@ -1054,7 +1055,6 @@ typedef struct {
 	int				roundtime;
 
 //CTF Elimination
-	qboolean			oneway;
 	int				attackingTeam;
 
 //Last Man Standing
