@@ -318,9 +318,7 @@ Returns -1 if invalid
 int ClientNumberFromString( gentity_t *to, char *s ) {
 	gclient_t	*cl;
 	int			idnum;
-    char        s2[MAX_STRING_CHARS];
-    char        n2[MAX_STRING_CHARS];
-    //char        cleanName[MAX_STRING_CHARS];
+    char        cleanName[MAX_STRING_CHARS];
 
 	// numeric values are just slot numbers
 	if (s[0] >= '0' && s[0] <= '9') {
@@ -339,16 +337,13 @@ int ClientNumberFromString( gentity_t *to, char *s ) {
 	}
 
 	// check for a name match
-	SanitizeString( s, s2 );
 	for ( idnum=0,cl=level.clients ; idnum < level.maxclients ; idnum++,cl++ ) {
 		if ( cl->pers.connected != CON_CONNECTED ) {
 			continue;
 		}
-        //Q_strncpyz(cleanName, cl->pers.netname, sizeof(cleanName));
-        //Q_CleanStr(cleanName);
-        //if ( !Q_stricmp( cleanName, s ) ) {
-        SanitizeString( cl->pers.netname, n2 );
-        if( !strcmp( n2, s2 ) ) {
+        Q_strncpyz(cleanName, cl->pers.netname, sizeof(cleanName));
+        Q_CleanStr(cleanName);
+        if ( !Q_stricmp( cleanName, s ) ) {
 			return idnum;
 		}
 	}
