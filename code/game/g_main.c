@@ -92,9 +92,9 @@ vmCvar_t	g_cubeTimeout;
 vmCvar_t	g_redteam;
 vmCvar_t	g_blueteam;
 vmCvar_t	g_singlePlayer;
+#endif
 vmCvar_t	g_enableDust;
 vmCvar_t	g_enableBreath;
-#endif
 vmCvar_t	g_proxMineTimeout;
 vmCvar_t	g_music;
 //Following for elimination:
@@ -233,7 +233,6 @@ static cvarTable_t		gameCvarTable[] = {
         
 	{ &g_listEntity, "g_listEntity", "0", 0, 0, qfalse },
 
-//#ifdef MISSIONPACK
 	{ &g_obeliskHealth, "g_obeliskHealth", "2500", 0, 0, qfalse },
 	{ &g_obeliskRegenPeriod, "g_obeliskRegenPeriod", "1", 0, 0, qfalse },
 	{ &g_obeliskRegenAmount, "g_obeliskRegenAmount", "15", 0, 0, qfalse },
@@ -244,12 +243,12 @@ static cvarTable_t		gameCvarTable[] = {
 	{ &g_redteam, "g_redteam", "Stroggs", CVAR_ARCHIVE | CVAR_SERVERINFO | CVAR_USERINFO , 0, qtrue, qtrue },
 	{ &g_blueteam, "g_blueteam", "Pagans", CVAR_ARCHIVE | CVAR_SERVERINFO | CVAR_USERINFO , 0, qtrue, qtrue  },
 	{ &g_singlePlayer, "ui_singlePlayerActive", "", 0, 0, qfalse, qfalse  },
+        #endif
 
 	{ &g_enableDust, "g_enableDust", "0", CVAR_SERVERINFO, 0, qtrue, qfalse },
 	{ &g_enableBreath, "g_enableBreath", "0", CVAR_SERVERINFO, 0, qtrue, qfalse },
-        #endif
 	{ &g_proxMineTimeout, "g_proxMineTimeout", "20000", 0, 0, qfalse },
-//#endif
+
 	{ &g_smoothClients, "g_smoothClients", "1", 0, 0, qfalse},
 	{ &pmove_fixed, "pmove_fixed", "1", CVAR_SYSTEMINFO | CVAR_ARCHIVE, 0, qfalse},
 	{ &pmove_msec, "pmove_msec", "11", CVAR_SYSTEMINFO | CVAR_ARCHIVE, 0, qfalse},

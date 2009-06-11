@@ -988,12 +988,12 @@ extern	vmCvar_t	pmove_msec;
 extern	vmCvar_t	pmove_float;
 extern	vmCvar_t	g_rankings;
 #ifdef MISSIONPACK
-extern	vmCvar_t	g_enableDust;
-extern	vmCvar_t	g_enableBreath;
 extern	vmCvar_t	g_singlePlayer;
 extern	vmCvar_t	g_redteam;
 extern	vmCvar_t	g_blueteam;
 #endif
+extern	vmCvar_t	g_enableDust;
+extern	vmCvar_t	g_enableBreath;
 extern	vmCvar_t	g_proxMineTimeout;
 extern	vmCvar_t	g_music;
 
