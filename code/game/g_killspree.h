@@ -20,11 +20,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ===========================================================================
 */
 
-//Cvars Needed
-extern  vmCvar_t    g_sprees; //Used for specifiying the config file
-extern  vmCvar_t    g_altExcellent; //Turns on Multikills instead of Excellent
-extern  vmCvar_t    g_spreeDiv; // Interval of a "streak" that form the spree triggers
-
 //definitions
 // I'd say 32 sprees is a lot!!! 
 #define MAX_KSPREE      32

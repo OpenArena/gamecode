@@ -159,6 +159,26 @@ vmCvar_t        g_sprees;
 vmCvar_t        g_altExcellent;
 vmCvar_t        g_spreeDiv;
 
+//Command/Chat spamming/flooding
+vmCvar_t        g_floodMaxDemerits;
+vmCvar_t        g_floodMinTime;
+
+//Admin
+vmCvar_t        g_admin;
+vmCvar_t        g_adminLog;
+vmCvar_t        g_adminParseSay;
+vmCvar_t        g_adminNameProtect;
+vmCvar_t        g_adminTempBan;
+vmCvar_t        g_adminMaxBan;
+vmCvar_t        g_specChat;
+vmCvar_t        g_publicAdminMessages;
+
+vmCvar_t        g_maxWarnings;
+vmCvar_t        g_warningExpire;
+
+vmCvar_t        g_minNameChangePeriod;
+vmCvar_t        g_maxNameChanges;
+
 // bk001129 - made static to avoid aliasing
 static cvarTable_t		gameCvarTable[] = {
 	// don't override the cheat state set by the system
@@ -310,11 +330,33 @@ static cvarTable_t		gameCvarTable[] = {
 //used for voIP
         { &g_redTeamClientNumbers, "g_redTeamClientNumbers", "0",CVAR_ROM, 0, qfalse },
         { &g_blueTeamClientNumbers, "g_blueTeamClientNumbers", "0",CVAR_ROM, 0, qfalse },
+        
         //KK-OAX
         { &g_sprees, "g_sprees", "sprees.dat", 0, 0, qfalse },
-        //Sending this to the Clients is now done with CVAR_SERVERINFO 
         { &g_altExcellent, "g_altExcellent", "0", CVAR_SERVERINFO, 0, qtrue}, 
-        { &g_spreeDiv, "g_spreeDiv", "5", 0, 0, qfalse}
+        { &g_spreeDiv, "g_spreeDiv", "5", 0, 0, qfalse},
+        
+        //Used for command/chat flooding
+        { &g_floodMaxDemerits, "g_floodMaxDemerits", "5000", CVAR_ARCHIVE, 0, qfalse  },
+        { &g_floodMinTime, "g_floodMinTime", "2000", CVAR_ARCHIVE, 0, qfalse  },
+        
+        //Admin
+        { &g_admin, "g_admin", "admin.dat", CVAR_ARCHIVE, 0, qfalse  },
+        { &g_adminLog, "g_adminLog", "admin.log", CVAR_ARCHIVE, 0, qfalse  },
+        { &g_adminParseSay, "g_adminParseSay", "1", CVAR_ARCHIVE, 0, qfalse  },
+        { &g_adminNameProtect, "g_adminNameProtect", "1", CVAR_ARCHIVE, 0, qfalse  },
+        { &g_adminTempBan, "g_adminTempBan", "2m", CVAR_ARCHIVE, 0, qfalse  },
+        { &g_adminMaxBan, "g_adminMaxBan", "2w", CVAR_ARCHIVE, 0, qfalse  },
+        
+        { &g_specChat, "g_specChat", "1", CVAR_ARCHIVE, 0, qfalse  },
+        { &g_publicAdminMessages, "g_publicAdminMessages", "1", CVAR_ARCHIVE, 0, qfalse  },
+        
+        { &g_maxWarnings, "g_maxWarnings", "3", CVAR_ARCHIVE, 0, qfalse },
+	    { &g_warningExpire, "g_warningExpire", "3600", CVAR_ARCHIVE, 0, qfalse },
+	    
+	    { &g_minNameChangePeriod, "g_minNameChangePeriod", "5", 0, 0, qfalse},
+        { &g_maxNameChanges, "g_maxNameChanges", "5", 0, 0, qfalse}
+        
 };
 
 // bk001129 - made static to avoid aliasing
@@ -637,8 +679,10 @@ void G_InitGame( int levelTime, int randomSeed, int restart ) {
         VoteParseCustomVotes();
 
 	G_InitWorldSession();
-
-	//KK-OAX Let's Load up any killing sprees/multikills
+    
+    //KK-OAX Get Admin Configuration
+    G_admin_readconfig( NULL, 0 );
+	//Let's Load up any killing sprees/multikills
 	G_ReadAltKillSettings( NULL, 0 );
 
 	// initialize all entities for this game
@@ -740,6 +784,10 @@ void G_ShutdownGame( int restart ) {
 
 	// write all the client session data so we can get it back
 	G_WriteSessionData();
+	
+	//KK-OAX Admin Cleanup
+    G_admin_cleanup( );
+    G_admin_namelog_cleanup( );
 
 	if ( trap_Cvar_VariableIntegerValue( "bot_enable" ) ) {
 		BotAIShutdown( restart );

@@ -91,7 +91,7 @@ void writeFile_int( int v, fileHandle_t f )
 {
   char buf[ 32 ];
 
-  Com_sprintf( buf, sizeof(buf), "%d", v );
+  Com_sprintf( buf, sizeof( buf ), "%d", v );
   trap_FS_Write( buf, strlen( buf ), f );
   trap_FS_Write( "\n", 1, f );
 }

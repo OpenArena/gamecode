@@ -289,8 +289,24 @@ typedef struct {
     int         killstreak;
     int         deathstreak;
     qboolean    onSpree;
-    
     int         multiKillCount;
+    
+//KK-OAX Admin Stuff        
+    char        guid[ 33 ];
+    char        ip[ 40 ];
+    qboolean    muted;
+    qboolean    disoriented;
+    qboolean    wasdisoriented;
+    int         adminLevel;
+
+// flood protection
+    int         floodDemerits;
+    int         floodTime;
+ 
+//Used To Track Name Changes
+    int         nameChangeTime;
+    int         nameChanges;
+    
 } clientPersistant_t;
 
 //unlagged - backward reconciliation #1
@@ -522,19 +538,23 @@ typedef struct {
 	// actual time this server frame started
 	int			frameStartTime;
 //unlagged - backward reconciliation #4
-//KK-OAX Storing upper bounds of spree/multikill arrays
-    
+//KK-OAX Storing upper bounds of spree/multikill arrays 
     int         kSpreeUBound;
     int         dSpreeUBound;
     int         mKillUBound;
 //KK-OAX Storing g_spreeDiv to avoid dividing by 0.    
     int         spreeDivisor;
+
+    qboolean    RedTeamLocked;
+    qboolean    BlueTeamLocked;
+    qboolean    FFALocked;
      
 } level_locals_t;
 
 //KK-OAX These are some Print Shortcuts for KillingSprees and Admin
+//KK-Moved to g_admin.h
 //Prints to All when using "va()" in conjunction.
-#define AP(x)   trap_SendServerCommand(-1, x) 
+//#define AP(x)   trap_SendServerCommand(-1, x) 
 
 //
 // g_spawn.c
@@ -562,10 +582,22 @@ void G_Say( gentity_t *ent, gentity_t *target, int mode, const char *chatText );
 
 // KK-OAX Added these in a seperate file to keep g_cmds.c familiar. 
 // g_cmds_ext.c
-// These aren't used yet so they are commented out!
-/*int G_SayArgc( void );
-qboolean G_SayArgv( int n, char *buffer, int bufferLength );
-char *G_SayConcatArgs( int start );*/
+//
+
+int         G_SayArgc( void );
+qboolean    G_SayArgv( int n, char *buffer, int bufferLength );
+char        *G_SayConcatArgs( int start );
+void        G_DecolorString( char *in, char *out, int len );
+void        G_MatchOnePlayer( int *plist, int num, char *err, int len );
+void        G_SanitiseString( char *in, char *out, int len );
+int         G_ClientNumbersFromString( char *s, int *plist, int max );
+int         G_FloodLimited( gentity_t *ent );
+//void QDECL G_AdminMessage( const char *prefix, const char *fmt, ... ) 
+// ^^ Do Not Need to Declare--Just for Documentation of where it is.
+void        Cmd_AdminMessage_f( gentity_t *ent );
+int         G_ClientNumberFromString( char *s );
+qboolean    G_ClientIsLagging( gclient_t *client );
+void        SanitizeString( char *in, char *out );
 
 // KK-OAX Added this for common file stuff between Admin and Sprees.
 // g_fileops.c
@@ -618,7 +650,7 @@ void	G_Sound( gentity_t *ent, int channel, int soundIndex );
 //KK-OAX For Playing Sounds Globally
 void    G_GlobalSound( int soundIndex );
 
-void	G_FreeEntity( gentity_t *e );
+void	    G_FreeEntity( gentity_t *e );
 qboolean	G_EntitiesFree( void );
 
 void	G_TouchTriggers (gentity_t *ent);
@@ -807,6 +839,10 @@ void SendDominationPointsStatusMessageToAllClients( void );
 void SendYourTeamMessageToTeam( team_t team );
 void QDECL G_Printf( const char *fmt, ... );
 void QDECL G_Error( const char *fmt, ... );
+//KK-OAX Made Accessible for g_admin.c
+void LogExit( const char *string ); 
+void CheckVote( void );
+void CheckTeamVote( int team );
 
 //
 // g_client.c
@@ -942,6 +978,7 @@ extern	gentity_t		g_entities[MAX_GENTITIES];
 
 #define	FOFS(x) ((size_t)&(((gentity_t *)0)->x))
 
+//CVARS 
 extern	vmCvar_t	g_gametype;
 extern	vmCvar_t	g_dedicated;
 extern	vmCvar_t	g_cheats;
@@ -1063,6 +1100,30 @@ extern	vmCvar_t	g_truePing;
 extern	vmCvar_t	sv_fps;
 extern  vmCvar_t        g_lagLightning;
 //unlagged - server options
+//KK-OAX Killing Sprees
+extern  vmCvar_t    g_sprees; //Used for specifiying the config file
+extern  vmCvar_t    g_altExcellent; //Turns on Multikills instead of Excellent
+extern  vmCvar_t    g_spreeDiv; // Interval of a "streak" that form the spree triggers
+//KK-OAX Command/Chat Flooding/Spamming
+extern  vmCvar_t    g_floodMaxDemerits;
+extern  vmCvar_t    g_floodMinTime;
+//KK-OAX Admin
+extern  vmCvar_t    g_admin;
+extern  vmCvar_t    g_adminLog;
+extern  vmCvar_t    g_adminParseSay;
+extern  vmCvar_t    g_adminNameProtect;
+extern  vmCvar_t    g_adminTempBan;
+extern  vmCvar_t    g_adminMaxBan;
+//KK-OAX Admin-Like
+extern  vmCvar_t    g_specChat;
+extern  vmCvar_t    g_publicAdminMessages;
+
+extern  vmCvar_t    g_maxWarnings;
+extern  vmCvar_t    g_warningExpire;
+
+extern  vmCvar_t    g_minNameChangePeriod;
+extern  vmCvar_t    g_maxNameChanges;
+
 
 void	trap_Printf( const char *fmt );
 void	trap_Error( const char *fmt );
@@ -1304,4 +1365,4 @@ void Svcmd_ListIP_f( void );
 void Svcmd_MessageWrapper( void );
 
 #include "g_killspree.h"
-
+#include "g_admin.h"

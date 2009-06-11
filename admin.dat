@@ -1,0 +1,45 @@
+[level]
+level   = 0
+name    = ^4Unknown Player
+flags   = iahC
+
+[level]
+level   = 1
+name    = ^5Server Regular
+flags   = iahC
+
+[level]
+level   = 2
+name    = ^6Team Manager
+flags   = iahCpP
+
+[level]
+level   = 3
+name    = ^2Junior Admin
+flags   = iahCpPkm?
+
+[level]
+level   = 4
+name    = ^3Senior Admin
+flags   = iahCpPkmBbe?
+
+[level]
+level   = 5
+name    = ^1Server Operator
+flags   = *
+
+[admin]
+name    = UnnamedPlayer
+guid    = (BLANK ON PURPOSE SAMPLE ONLY)
+level   = 5
+flags   = 
+
+[warning]
+name    = UnnamedPlayer
+guid    = C05670692B49DB80C1CF3211949B7452
+ip      = localhost
+warning = Dumb Move
+made    = 06/11/09 01:23:48
+expires = 1244701428
+warner  = UnnamedPlayer
+

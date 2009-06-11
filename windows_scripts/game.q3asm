@@ -15,10 +15,12 @@ ai_chat
 ai_cmd
 ai_vcmd
 g_active
+g_admin
 g_arenas
 g_bot
 g_client
 g_cmds
+g_cmds_ext
 g_combat
 g_items
 bg_alloc

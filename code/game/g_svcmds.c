@@ -498,8 +498,8 @@ qboolean  ConsoleCommand( void )
   }
   // KK-OAX Will be enabled when admin is added. 
   // see if this is an admin command
-  //if( G_admin_cmd_check( NULL, qfalse ) )
-  //  return qtrue;
+  if( G_admin_cmd_check( NULL, qfalse ) )
+    return qtrue;
 
   if( g_dedicated.integer )
     G_Printf( "unknown command: %s\n", cmd );

@@ -1102,6 +1102,10 @@ void ClientUserinfoChanged( int clientNum ) {
 	char	model[MAX_QPATH];
 	char	headModel[MAX_QPATH];
 	char	oldname[MAX_STRING_CHARS];
+	//KK-OAX
+	char        err[MAX_STRING_CHARS];
+	qboolean    revertName = qfalse;
+	
 	gclient_t	*client;
 	char	c1[MAX_INFO_STRING];
 	char	c2[MAX_INFO_STRING];
@@ -1173,6 +1177,54 @@ void ClientUserinfoChanged( int clientNum ) {
 	s = Info_ValueForKey (userinfo, "name");
 	ClientCleanName( s, client->pers.netname, sizeof(client->pers.netname) );
 
+    //KK-OAPub Added From Tremulous-Control Name Changes
+    if( strcmp( oldname, client->pers.netname ) )
+    {
+        if( client->pers.nameChangeTime &&
+            ( level.time - client->pers.nameChangeTime )
+            <= ( g_minNameChangePeriod.value * 1000 ) )
+        {
+            trap_SendServerCommand( ent - g_entities, va(
+            "print \"Name change spam protection (g_minNameChangePeriod = %d)\n\"",
+            g_minNameChangePeriod.integer ) );
+            revertName = qtrue;
+        }
+        else if( g_maxNameChanges.integer > 0
+            && client->pers.nameChanges >= g_maxNameChanges.integer  )
+        {
+            trap_SendServerCommand( ent - g_entities, va(
+                "print \"Maximum name changes reached (g_maxNameChanges = %d)\n\"",
+                g_maxNameChanges.integer ) );
+            revertName = qtrue;
+        }
+        else if( client->pers.muted )
+        {
+            trap_SendServerCommand( ent - g_entities,
+                "print \"You cannot change your name while you are muted\n\"" );
+            revertName = qtrue;
+        }
+        else if( !G_admin_name_check( ent, client->pers.netname, err, sizeof( err ) ) )
+        {
+            trap_SendServerCommand( ent - g_entities, va( "print \"%s\n\"", err ) );
+            revertName = qtrue;
+        }
+
+        if( revertName )
+        {
+            Q_strncpyz( client->pers.netname, *oldname ? oldname : "UnnamedPlayer",
+                sizeof( client->pers.netname ) );
+            Info_SetValueForKey( userinfo, "name", oldname );
+            trap_SetUserinfo( clientNum, userinfo );
+        }
+        else
+        {
+            if( client->pers.connected == CON_CONNECTED )
+            {
+                client->pers.nameChangeTime = level.time;
+                client->pers.nameChanges++;
+            }
+        }
+    }
 	// N_G: this condition makes no sense to me and I'm not going to
 	// try finding out what it means, I've added parentheses according to
 	// evaluation rules of the original code so grab a
@@ -1369,22 +1421,39 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 	gclient_t	*client;
 	char		userinfo[MAX_INFO_STRING];
 	gentity_t	*ent;
-
+	char        reason[ MAX_STRING_CHARS ] = {""};
+	int         i;
+    
+    //KK-OAX I moved these up so userinfo could be assigned/used. 
 	ent = &g_entities[ clientNum ];
+	client = &level.clients[ clientNum ];
+	ent->client = client;
+	memset( client, 0, sizeof(*client) );
 
 	trap_GetUserinfo( clientNum, userinfo, sizeof( userinfo ) );
 
- 	// IP filtering
+ 	value = Info_ValueForKey( userinfo, "cl_guid" );
+ 	Q_strncpyz( client->pers.guid, value, sizeof( client->pers.guid ) );
+ 	
+
+ 	// IP filtering //KK-OAX Has this been obsoleted? 
  	// https://zerowing.idsoftware.com/bugzilla/show_bug.cgi?id=500
  	// recommanding PB based IP / GUID banning, the builtin system is pretty limited
  	// check to see if they are on the banned IP list
 	value = Info_ValueForKey (userinfo, "ip");
+	Q_strncpyz( client->pers.ip, value, sizeof( client->pers.ip ) );
+	
 	if ( G_FilterPacket( value ) && !Q_stricmp(value,"localhost") ) {
             G_Printf("Player with IP: %s is banned\n",value);
 		return "You are banned from this server.";
 	}
-
-  // we don't check password for bots and local client
+	
+    if( G_admin_ban_check( userinfo, reason, sizeof( reason ) ) ) {    
+ 	    return va( "%s", reason );
+ 	}
+ 	 
+  //KK-OAX
+  // we don't check GUID or password for bots and local client
   // NOTE: local client <-> "ip" "localhost"
   //   this means this client is not running in our current process
 	if ( !isBot && (strcmp(value, "localhost") != 0)) {
@@ -1394,15 +1463,31 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 			strcmp( g_password.string, value) != 0) {
 			return "Invalid password";
 		}
+		for( i = 0; i < sizeof( client->pers.guid ) - 1 &&
+		    isxdigit( client->pers.guid[ i ] ); i++ );
+		if( i < sizeof( client->pers.guid ) - 1 )
+		    return "Invalid GUID";
+		    
+		for( i = 0; i < level.maxclients; i++ ) {
+		
+		    if( level.clients[ i ].pers.connected == CON_DISCONNECTED )
+		        continue;
+		        
+		    if( !Q_stricmp( client->pers.guid, level.clients[ i ].pers.guid ) ) {
+		        if( !G_ClientIsLagging( level.clients + i ) ) {
+		            trap_SendServerCommand( i, "cp \"Your GUID is not secure\"" );
+		                return "Duplicate GUID";
+		        }
+		        trap_DropClient( i, "Ghost" );
+		    }
+		}
+		    
 	}
 
-	// they can connect
-	ent->client = level.clients + clientNum;
-	client = ent->client;
-
-//	areabits = client->areabits;
-
-	memset( client, 0, sizeof(*client) );
+    //Check for local client
+    if( !strcmp( client->pers.ip, "localhost" ) )
+        client->pers.localClient = qtrue;
+        client->pers.adminLevel = G_admin_level( ent );
 
 	client->pers.connected = CON_CONNECTING;
 
@@ -1420,9 +1505,11 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 		}
 	}
 
+	//KK-OAX Swapped these in order...seemed to help the connection process.
 	// get and distribute relevent paramters
-	G_LogPrintf( "ClientConnect: %i\n", clientNum );
 	ClientUserinfoChanged( clientNum );
+	G_LogPrintf( "ClientConnect: %i\n", clientNum );
+	
 
 	// don't do the "xxx connected" messages if they were caried over from previous level
 	if ( firstTime ) {
@@ -1453,7 +1540,7 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 	}
 
 //unlagged - backward reconciliation #5
-
+    G_admin_namelog_update( client, qfalse );
 	return NULL;
 }
 
@@ -2021,7 +2108,9 @@ void ClientDisconnect( int clientNum ) {
 	if ( !ent->client ) {
 		return;
 	}
-
+    //KK-OAX Admin
+    G_admin_namelog_update( ent->client, qtrue );
+    
         trap_GetUserinfo( clientNum, userinfo, sizeof( userinfo ) );
 
 	// stop any following clients

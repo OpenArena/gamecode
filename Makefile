@@ -1731,9 +1731,11 @@ Q3GOBJ_ = \
   $(B)/baseq3/game/bg_slidemove.o \
   $(B)/baseq3/game/g_active.o \
   $(B)/baseq3/game/g_arenas.o \
+  $(B)/baseq3/game/g_admin.o \
   $(B)/baseq3/game/g_bot.o \
   $(B)/baseq3/game/g_client.o \
   $(B)/baseq3/game/g_cmds.o \
+  $(B)/baseq3/game/g_cmds_ext.o \
   $(B)/baseq3/game/g_combat.o \
   $(B)/baseq3/game/g_items.o \
   $(B)/baseq3/game/bg_alloc.o \
@@ -1787,10 +1789,12 @@ MPGOBJ_ = \
   $(B)/missionpack/game/bg_pmove.o \
   $(B)/missionpack/game/bg_slidemove.o \
   $(B)/missionpack/game/g_active.o \
+  $(B)/missionpack/game/g_admin.o \
   $(B)/missionpack/game/g_arenas.o \
   $(B)/missionpack/game/g_bot.o \
   $(B)/missionpack/game/g_client.o \
   $(B)/missionpack/game/g_cmds.o \
+  $(B)/missionpack/game/g_cmds_ext.o \
   $(B)/missionpack/game/g_combat.o \
   $(B)/missionpack/game/g_items.o \
   $(B)/missionpack/game/bg_alloc.o \

@@ -318,7 +318,9 @@ Returns -1 if invalid
 int ClientNumberFromString( gentity_t *to, char *s ) {
 	gclient_t	*cl;
 	int			idnum;
-        char            cleanName[MAX_STRING_CHARS];
+    char        s2[MAX_STRING_CHARS];
+    char        n2[MAX_STRING_CHARS];
+    //char        cleanName[MAX_STRING_CHARS];
 
 	// numeric values are just slot numbers
 	if (s[0] >= '0' && s[0] <= '9') {
@@ -337,13 +339,16 @@ int ClientNumberFromString( gentity_t *to, char *s ) {
 	}
 
 	// check for a name match
+	SanitizeString( s, s2 );
 	for ( idnum=0,cl=level.clients ; idnum < level.maxclients ; idnum++,cl++ ) {
 		if ( cl->pers.connected != CON_CONNECTED ) {
 			continue;
 		}
-                Q_strncpyz(cleanName, cl->pers.netname, sizeof(cleanName));
-                Q_CleanStr(cleanName);
-                if ( !Q_stricmp( cleanName, s ) ) {
+        //Q_strncpyz(cleanName, cl->pers.netname, sizeof(cleanName));
+        //Q_CleanStr(cleanName);
+        //if ( !Q_stricmp( cleanName, s ) ) {
+        SanitizeString( cl->pers.netname, n2 );
+        if( !strcmp( n2, s2 ) ) {
 			return idnum;
 		}
 	}
@@ -1040,7 +1045,7 @@ void G_Say( gentity_t *ent, gentity_t *target, int mode, const char *chatText ) 
 	char		text[MAX_SAY_TEXT];
 	char		location[64];
 
-        if ((ent->r.svFlags & SVF_BOT) && trap_Cvar_VariableValue( "bot_nochat" )>1) return;
+    if ((ent->r.svFlags & SVF_BOT) && trap_Cvar_VariableValue( "bot_nochat" )>1) return;
 
 	if ( (g_gametype.integer < GT_TEAM || g_ffa_gt == 1) && mode == SAY_TEAM ) {
 		mode = SAY_ALL;
@@ -1090,6 +1095,11 @@ void G_Say( gentity_t *ent, gentity_t *target, int mode, const char *chatText ) 
 	for (j = 0; j < level.maxclients; j++) {
 		other = &g_entities[j];
 		G_SayTo( ent, other, mode, color, name, text );
+	}
+	//KK-OAX Admin Command Check from Say/SayTeam line
+	if( g_adminParseSay.integer )
+	{
+	    G_admin_cmd_check ( ent, qtrue );
 	}
 }
 
@@ -2077,7 +2087,7 @@ commands_t cmds[ ] =
 
   { "teamvote", CMD_TEAM, Cmd_TeamVote_f },
   { "teamtask", CMD_TEAM, Cmd_TeamTask_f },
-  //KK-OAPub
+  //KK-OAX
   { "freespectator", CMD_NOTEAM, StopFollowing },
   { "getmappage", 0, Cmd_GetMappage_f },
   { "gc", 0, Cmd_GameCommand_f }
@@ -2112,15 +2122,11 @@ void ClientCommand( int clientNum )
     }
     
     if( i == numCmds )
-    {   /* KK-OAX Will Enable this when integrating Admin
+    {   // KK-OAX Admin Command Check
         if( !G_admin_cmd_check( ent, qfalse ) )
             trap_SendServerCommand( clientNum,
                 va( "print \"Unknown command %s\n\"", cmd ) );
-            return; */
-        
-        //KK-OAX Delete this when admin is integrated
-        trap_SendServerCommand( clientNum, va( "print \"Unknown command %s\n\"", cmd ) );
-        return;
+            return;
     }
 
   // do tests here to reduce the amount of repeated code
