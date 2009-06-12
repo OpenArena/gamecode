@@ -764,6 +764,39 @@ void G_InitGame( int levelTime, int randomSeed, int restart ) {
 	}
 
         PlayerStoreInit();
+
+        //Set vote flags
+        {
+            int voteflags=0;
+            if( allowedVote("map_restart") )
+                voteflags|=VF_map_restart;
+
+            if( allowedVote("map") )
+                voteflags|=VF_map;
+
+            if( allowedVote("clientkick") )
+                voteflags|=VF_clientkick;
+
+            if( allowedVote("nextmap") )
+                voteflags|=VF_nextmap;
+
+            if( allowedVote("g_gametype") )
+                voteflags|=VF_g_gametype;
+
+            if( allowedVote("g_doWarmup") )
+                voteflags|=VF_g_doWarmup;
+
+            if( allowedVote("timelimit") )
+                voteflags|=VF_timelimit;
+
+            if( allowedVote("fraglimit") )
+                voteflags|=VF_fraglimit;
+
+            if( allowedVote("custom") )
+                voteflags|=VF_custom;
+
+            trap_Cvar_Set("voteflags",va("%i",voteflags));
+        }
 }
 
 
@@ -1029,7 +1062,6 @@ void CalculateRanks( void ) {
 	level.numConnectedClients = 0;
 	level.numNonSpectatorClients = 0;
 	level.numPlayingClients = 0;
-	level.numVotingClients = 0;	 // don't count bots
         humanplayers = 0; // don't count bots
 	for ( i = 0; i < TEAM_NUM_TEAMS; i++ ) {
 		level.numteamVotingClients[i] = 0;
@@ -1045,13 +1077,10 @@ void CalculateRanks( void ) {
                         }
 
 			if ( level.clients[i].sess.sessionTeam != TEAM_SPECTATOR ) {
-				level.numNonSpectatorClients++;
-			
 				// decide if this should be auto-followed
 				if ( level.clients[i].pers.connected == CON_CONNECTED ) {
 					level.numPlayingClients++;
 					if ( !(g_entities[i].r.svFlags & SVF_BOT) ) {
-						level.numVotingClients++;
 						if ( level.clients[i].sess.sessionTeam == TEAM_RED )
 							level.numteamVotingClients[0]++;
 						else if ( level.clients[i].sess.sessionTeam == TEAM_BLUE )
@@ -1063,14 +1092,7 @@ void CalculateRanks( void ) {
 						level.follow2 = i;
 					}
 				}
-			} else {
-                            //Spectators
-                            //Spectators who have voted does still count!
-                            cl = &level.clients[i];
-                            if ( cl->ps.eFlags & EF_VOTED ) {
-                                level.numVotingClients++;
-                            }
-                        }
+			}
 		}
 	}
 
@@ -2345,39 +2367,7 @@ void CheckTournament( void ) {
 }
 
 
-/*
-==================
-CheckVote
-==================
-*/
-void CheckVote( void ) {
-	if ( level.voteExecuteTime && level.voteExecuteTime < level.time ) {
-		level.voteExecuteTime = 0;
-		trap_SendConsoleCommand( EXEC_APPEND, va("%s\n", level.voteString ) );
-	}
-	if ( !level.voteTime ) {
-		return;
-	}
-	if ( level.time - level.voteTime >= VOTE_TIME ) {
-		trap_SendServerCommand( -1, "print \"Vote failed.\n\"" );
-	} else {
-		// ATVI Q3 1.32 Patch #9, WNF
-		if ( level.voteYes > (level.numVotingClients+level.numHesBeenVotingClients)/2 ) {
-			// execute the command, then remove the vote
-			trap_SendServerCommand( -1, "print \"Vote passed.\n\"" );
-			level.voteExecuteTime = level.time + 3000;
-		} else if ( level.voteNo >= (level.numVotingClients+level.numHesBeenVotingClients)/2 ) {
-			// same behavior as a timeout
-			trap_SendServerCommand( -1, "print \"Vote failed.\n\"" );
-		} else {
-			// still waiting for a majority
-			return;
-		}
-	}
-	level.voteTime = 0;
-	trap_SetConfigstring( CS_VOTE_TIME, "" );
 
-}
 
 /*
 ==================

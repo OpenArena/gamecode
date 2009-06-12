@@ -2165,11 +2165,6 @@ void ClientDisconnect( int clientNum ) {
 
 	G_LogPrintf( "ClientDisconnect: %i\n", clientNum );
 
-        //If the player has voted remember that he has voted:
-        if ( ent->client->ps.eFlags & EF_VOTED ) {
-            level.numHesBeenVotingClients++;
-        }
-
 	// if we are playing in tourney mode and losing, give a win to the other player
 	if ( (g_gametype.integer == GT_TOURNAMENT )
 		&& !level.intermissiontime
@@ -2199,6 +2194,7 @@ void ClientDisconnect( int clientNum ) {
 	trap_SetConfigstring( CS_PLAYERS + clientNum, "");
 
 	CalculateRanks();
+        CountVotes();
 
 	if ( ent->r.svFlags & SVF_BOT ) {
 		BotAIShutdownClient( clientNum, qfalse );

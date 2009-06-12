@@ -343,3 +343,85 @@ t_customvote getCustomVote(char* votecommand) {
     memset(&result,0,sizeof(result));
         return result;
 }
+
+/*
+==================
+CheckVote
+==================
+*/
+void CheckVote( void ) {
+	if ( level.voteExecuteTime && level.voteExecuteTime < level.time ) {
+		level.voteExecuteTime = 0;
+		trap_SendConsoleCommand( EXEC_APPEND, va("%s\n", level.voteString ) );
+	}
+	if ( !level.voteTime ) {
+		return;
+	}
+	if ( level.time - level.voteTime >= VOTE_TIME ) {
+		trap_SendServerCommand( -1, "print \"Vote failed.\n\"" );
+	} else {
+		// ATVI Q3 1.32 Patch #9, WNF
+		if ( level.voteYes > (level.numVotingClients)/2 ) {
+			// execute the command, then remove the vote
+			trap_SendServerCommand( -1, "print \"Vote passed.\n\"" );
+			level.voteExecuteTime = level.time + 3000;
+		} else if ( level.voteNo >= (level.numVotingClients)/2 ) {
+			// same behavior as a timeout
+			trap_SendServerCommand( -1, "print \"Vote failed.\n\"" );
+		} else {
+			// still waiting for a majority
+			return;
+		}
+	}
+	level.voteTime = 0;
+	trap_SetConfigstring( CS_VOTE_TIME, "" );
+
+}
+
+/*
+==================
+CountVotes
+
+ Iterates through all the clients and counts the votes
+==================
+*/
+void CountVotes( void ) {
+    int i;
+    int yes=0,no=0;
+
+    level.numVotingClients=0;
+
+    for ( i = 0 ; i < level.maxclients ; i++ ) {
+            if ( level.clients[ i ].pers.connected != CON_CONNECTED )
+                continue; //Client was not connected
+
+            if (level.clients[i].sess.sessionTeam == TEAM_SPECTATOR)
+		continue; //Don't count spectators
+
+            if ( g_entities[i].r.svFlags & SVF_BOT )
+                continue; //Is a bot
+
+            //The client can vote
+            level.numVotingClients++;
+
+            //Did the client vote yes?
+            if(level.clients[i].vote>0)
+                yes++;
+
+            //Did the client vote no?
+            if(level.clients[i].vote<0)
+                no++;
+    }
+
+    //See if anything has changed
+    if(level.voteYes != yes) {
+        level.voteYes = yes;
+        trap_SetConfigstring( CS_VOTE_YES, va("%i", level.voteYes ) );
+    }
+
+    if(level.voteNo != no) {
+        level.voteNo = no;
+        trap_SetConfigstring( CS_VOTE_NO, va("%i", level.voteNo ) );
+    }
+}
+

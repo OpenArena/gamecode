@@ -393,6 +393,10 @@ struct gclient_s {
 	char		*areabits;
 
 	qboolean	isEliminated;			//Has been killed in this round
+
+        //New vote system. The votes are saved in the client info, so we know who voted on what and can cancel votes on leave.
+        //0=not voted, 1=voted yes, -1=voted no
+        int vote;
         
         int lastSentFlying;                             //The last client that sent the player flying
         int lastSentFlyingTime;                         //So we can time out
@@ -471,8 +475,7 @@ typedef struct {
 	int			voteExecuteTime;		// time the vote is executed
 	int			voteYes;
 	int			voteNo;
-	int			numVotingClients;		// set by CalculateRanks
-        int             numHesBeenVotingClients;        //Number of players that voted then left
+	int			numVotingClients;		// set by CountVotes
 
 	// team voting state
 	char		teamVoteString[2][MAX_STRING_CHARS];
@@ -841,7 +844,6 @@ void QDECL G_Printf( const char *fmt, ... );
 void QDECL G_Error( const char *fmt, ... );
 //KK-OAX Made Accessible for g_admin.c
 void LogExit( const char *string ); 
-void CheckVote( void );
 void CheckTeamVote( int team );
 
 //
@@ -920,7 +922,9 @@ void PlayerStore_restore(char* guid, playerState_t *ps);
 //
 // g_vote.c
 //
-extern int allowedVote(char *commandStr);
+int allowedVote(char *commandStr);
+void CheckVote( void );
+void CountVotes( void );
 
 #define MAX_MAPNAME 32
 #define MAPS_PER_PAGE 10

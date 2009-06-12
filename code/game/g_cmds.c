@@ -1739,14 +1739,17 @@ void Cmd_CallVote_f( gentity_t *ent ) {
 
 	for ( i = 0 ; i < level.maxclients ; i++ ) {
 		level.clients[i].ps.eFlags &= ~EF_VOTED;
+                level.clients[i].vote = 0;
 	}
 	ent->client->ps.eFlags |= EF_VOTED;
+        ent->client->vote = 1;
+        //Do a first count to make sure that numvotingclients is correct!
+        CountVotes();
 
 	trap_SetConfigstring( CS_VOTE_TIME, va("%i", level.voteTime ) );
 	trap_SetConfigstring( CS_VOTE_STRING, level.voteDisplayString );	
 	trap_SetConfigstring( CS_VOTE_YES, va("%i", level.voteYes ) );
 	trap_SetConfigstring( CS_VOTE_NO, va("%i", level.voteNo ) );
-        level.numHesBeenVotingClients = 0;
 }
 
 /*
@@ -1761,10 +1764,10 @@ void Cmd_Vote_f( gentity_t *ent ) {
 		trap_SendServerCommand( ent-g_entities, "print \"No vote in progress.\n\"" );
 		return;
 	}
-	if ( ent->client->ps.eFlags & EF_VOTED ) {
+	/*if ( ent->client->ps.eFlags & EF_VOTED ) {
 		trap_SendServerCommand( ent-g_entities, "print \"Vote already cast.\n\"" );
 		return;
-	}
+	}*/
 	if ( ent->client->sess.sessionTeam == TEAM_SPECTATOR ) {
 		trap_SendServerCommand( ent-g_entities, "print \"Not allowed to vote as spectator.\n\"" );
 		return;
@@ -1777,12 +1780,13 @@ void Cmd_Vote_f( gentity_t *ent ) {
 	trap_Argv( 1, msg, sizeof( msg ) );
 
 	if ( msg[0] == 'y' || msg[1] == 'Y' || msg[1] == '1' ) {
-		level.voteYes++;
-		trap_SetConfigstring( CS_VOTE_YES, va("%i", level.voteYes ) );
+                ent->client->vote = 1;
 	} else {
-		level.voteNo++;
-		trap_SetConfigstring( CS_VOTE_NO, va("%i", level.voteNo ) );	
+                ent->client->vote = -1;
 	}
+
+        //Re count the votes
+        CountVotes();
 
 	// a majority will be determined in CheckVote, which will also account
 	// for players entering or leaving
