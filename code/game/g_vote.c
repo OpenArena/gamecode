@@ -358,7 +358,17 @@ void CheckVote( void ) {
 		return;
 	}
 	if ( level.time - level.voteTime >= VOTE_TIME ) {
-		trap_SendServerCommand( -1, "print \"Vote failed.\n\"" );
+            //Let pass if there was at least twice as many for as against
+            if ( level.voteYes > level.voteNo*2 ) {
+                trap_SendServerCommand( -1, "print \"Vote passed. At least 2 of 3 voted yes\n\"" );
+		level.voteExecuteTime = level.time + 3000;
+            } else
+            //Let pass if there is more yes than no and at least 2 yes votes and at least 30% yes of all on the server
+            if ( level.voteYes > level.voteNo && level.voteYes >= 2 && (level.voteYes*10)>=(level.numVotingClients*3) ) {
+                trap_SendServerCommand( -1, "print \"Vote passed.\n\"" );
+		level.voteExecuteTime = level.time + 3000;
+            } else
+                trap_SendServerCommand( -1, "print \"Vote failed.\n\"" );
 	} else {
 		// ATVI Q3 1.32 Patch #9, WNF
 		if ( level.voteYes > (level.numVotingClients)/2 ) {
