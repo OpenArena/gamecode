@@ -2115,7 +2115,7 @@ void ShuffleTeams(void) {
     int i;
     int assignedClients=1, nextTeam=TEAM_RED;
 
-    if ( g_gametype.integer < GT_TEAM | g_ffa_gt)
+    if ( g_gametype.integer < GT_TEAM || g_ffa_gt)
         return; //Can only shuffle team games!
 
     for( i=0;i < level.numConnectedClients; i++ ) {
