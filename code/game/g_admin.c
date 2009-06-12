@@ -3073,8 +3073,7 @@ qboolean G_admin_disorient(gentity_t *ent, int skiparg)
 	}
 	vic = &g_entities[pids[0]];
 	if(!admin_higher(ent, vic)) {
-		ADMP("^/disorient: ^7sorry, but your intended victim has a"
-			"higher admin level than you do");
+		ADMP("^/disorient: ^7sorry, but your intended victim has a higher admin level than you do");
 		return qfalse;
 	}
 
@@ -3175,8 +3174,7 @@ qboolean G_admin_slap( gentity_t *ent, int skiparg )
 	
 	vic = &g_entities[pids[0]];
 	if(!admin_higher(ent, vic)) {
-		ADMP("^/slap: ^7sorry, but your intended victim has a"
-			"higher admin level than you do");
+		ADMP("^/slap: ^7sorry, but your intended victim has a higher admin level than you do");
 		return qfalse;
 	}
 	
@@ -3304,8 +3302,7 @@ qboolean G_admin_warn( gentity_t *ent, int skiparg )
 	
 	vic = &g_entities[pids[0]];
 	if(!admin_higher(ent, vic)) {
-		ADMP("^/slap: ^7sorry, but your intended victim has a"
-			"higher admin level than you do");
+		ADMP("^/slap: ^7sorry, but your intended victim has a higher admin level than you do");
 		return qfalse;
 	}
 

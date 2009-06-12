@@ -143,8 +143,7 @@ void G_MatchOnePlayer( int *plist, int num, char *err, int len )
     }
     else if( num > 1 )
     {
-        Q_strcat( err, len, "more than one player name matches. "
-            "be more specific or use the slot #:\n" );
+        Q_strcat( err, len, "more than one player name matches. Be more specific or use the slot #:\n" );
         for( i = 0; i < num; i++ )
         {
             cl = &level.clients[ plist[ i ] ];
@@ -301,8 +300,7 @@ int G_FloodLimited( gentity_t *ent )
   ms = ent->client->pers.floodDemerits - g_floodMaxDemerits.integer;
   if( ms <= 0 )
     return 0;
-  trap_SendServerCommand( ent - g_entities, va( "print \"You are flooding: "
-                          "please wait %d second%s before trying again\n",
+  trap_SendServerCommand( ent - g_entities, va( "print \"You are flooding: please wait %d second%s before trying again\n",
                           ( ms + 999 ) / 1000, ( ms > 1000 ) ? "s" : "" ) );
   return ms;
 }
@@ -510,8 +508,7 @@ void Cmd_AdminMessage_f( gentity_t *ent )
     {
       Com_sprintf( prefix, sizeof( prefix ), "[PLAYER] %s" S_COLOR_WHITE ":",
                    ent->client->pers.netname );
-      ADMP( "Your message has been sent to any available admins "
-            "and to the server logs.\n" );
+      ADMP( "Your message has been sent to any available admins and to the server logs.\n" );
     }
   }
   else
