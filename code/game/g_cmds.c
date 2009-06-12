@@ -636,6 +636,7 @@ void BroadcastTeamChange( gclient_t *client, int oldTeam )
 /*
 =================
 SetTeam
+KK-OAX Modded this to accept a forced admin change. 
 =================
 */
 void SetTeam( gentity_t *ent, char *s ) {
@@ -645,8 +646,11 @@ void SetTeam( gentity_t *ent, char *s ) {
 	spectatorState_t	specState;
 	int					specClient;
 	int					teamLeader;
-        char	userinfo[MAX_INFO_STRING];
+    char	            userinfo[MAX_INFO_STRING];
+    qboolean            force;
 
+	force = G_admin_permission(ent, ADMF_FORCETEAMCHANGE);
+	
 	//
 	// see what change is requested
 	//
@@ -681,40 +685,41 @@ void SetTeam( gentity_t *ent, char *s ) {
 			// pick the team with the least number of players
 			team = PickTeam( clientNum );
 		}
+        if ( !force ) {
+		    if ( g_teamForceBalance.integer  ) {
+			    int		counts[TEAM_NUM_TEAMS];
 
-		if ( g_teamForceBalance.integer  ) {
-			int		counts[TEAM_NUM_TEAMS];
+			    counts[TEAM_BLUE] = TeamCount( ent->client->ps.clientNum, TEAM_BLUE );
+			    counts[TEAM_RED] = TeamCount( ent->client->ps.clientNum, TEAM_RED );
 
-			counts[TEAM_BLUE] = TeamCount( ent->client->ps.clientNum, TEAM_BLUE );
-			counts[TEAM_RED] = TeamCount( ent->client->ps.clientNum, TEAM_RED );
+			    // We allow a spread of two
+			    if ( team == TEAM_RED && counts[TEAM_RED] - counts[TEAM_BLUE] > 1 ) {
+				    trap_SendServerCommand( ent->client->ps.clientNum, 
+					    "cp \"Red team has too many players.\n\"" );
+				    return; // ignore the request
+			    }
+			    if ( team == TEAM_BLUE && counts[TEAM_BLUE] - counts[TEAM_RED] > 1 ) {
+				    trap_SendServerCommand( ent->client->ps.clientNum, 
+					    "cp \"Blue team has too many players.\n\"" );
+				    return; // ignore the request
+			    }
 
-			// We allow a spread of two
-			if ( team == TEAM_RED && counts[TEAM_RED] - counts[TEAM_BLUE] > 1 ) {
-				trap_SendServerCommand( ent->client->ps.clientNum, 
-					"cp \"Red team has too many players.\n\"" );
-				return; // ignore the request
-			}
-			if ( team == TEAM_BLUE && counts[TEAM_BLUE] - counts[TEAM_RED] > 1 ) {
-				trap_SendServerCommand( ent->client->ps.clientNum, 
-					"cp \"Blue team has too many players.\n\"" );
-				return; // ignore the request
-			}
-
-			// It's ok, the team we are switching to has less or same number of players
-		}
-
+			    // It's ok, the team we are switching to has less or same number of players
+		    }
+        }
 	} else {
 		// force them to spectators if there aren't any spots free
 		team = TEAM_FREE;
 	}
-
-	// override decision if limiting the players
-	if ( (g_gametype.integer == GT_TOURNAMENT)
-		&& level.numNonSpectatorClients >= 2 ) {
-		team = TEAM_SPECTATOR;
-	} else if ( g_maxGameClients.integer > 0 && 
-		level.numNonSpectatorClients >= g_maxGameClients.integer ) {
-		team = TEAM_SPECTATOR;
+    if ( !force ) {
+	    // override decision if limiting the players
+	    if ( (g_gametype.integer == GT_TOURNAMENT)
+		    && level.numNonSpectatorClients >= 2 ) {
+		    team = TEAM_SPECTATOR;
+	    } else if ( g_maxGameClients.integer > 0 && 
+		    level.numNonSpectatorClients >= g_maxGameClients.integer ) {
+		    team = TEAM_SPECTATOR;
+	    }
 	}
 
 	//
@@ -724,7 +729,23 @@ void SetTeam( gentity_t *ent, char *s ) {
 	if ( team == oldTeam && team != TEAM_SPECTATOR ) {
 		return;
 	}
-
+    //KK-OAX Check to make sure the team is not locked from Admin
+    if ( !force ) {
+        if ( team == TEAM_RED && level.RedTeamLocked ) {
+            trap_SendServerCommand( ent->client->ps.clientNum,
+            "cp \"The Red Team has been locked by the Admin! \n\"" );
+            return;    
+        }
+        if ( team == TEAM_BLUE && level.BlueTeamLocked ) {
+            trap_SendServerCommand( ent->client->ps.clientNum,
+            "cp \"The Blue Team has been locked by the Admin! \n\"" );
+            return;
+        }
+        if ( team == TEAM_FREE && level.FFALocked ) {
+            trap_SendServerCommand( ent->client->ps.clientNum,
+            "cp \"This Deathmatch has been locked by the Admin! \n\"" );
+        }
+    }
 	//
 	// execute the team change
 	//
@@ -813,6 +834,7 @@ Cmd_Team_f
 void Cmd_Team_f( gentity_t *ent ) {
 	int			oldTeam;
 	char		s[MAX_TOKEN_CHARS];
+	qboolean    force;
 
 	if ( trap_Argc() != 2 ) {
 		oldTeam = ent->client->sess.sessionTeam;
@@ -824,7 +846,7 @@ void Cmd_Team_f( gentity_t *ent ) {
 			trap_SendServerCommand( ent-g_entities, "print \"Red team\n\"" );
 			break;
 		case TEAM_FREE:
-			trap_SendServerCommand( ent-g_entities, "print \"Free team\n\"" );
+			trap_SendServerCommand( ent-g_entities, "print \"Deathmatch-Playing\n\"" );
 			break;
 		case TEAM_SPECTATOR:
 			trap_SendServerCommand( ent-g_entities, "print \"Spectator team\n\"" );
@@ -832,10 +854,14 @@ void Cmd_Team_f( gentity_t *ent ) {
 		}
 		return;
 	}
-
-	if ( ent->client->switchTeamTime > level.time ) {
-		trap_SendServerCommand( ent-g_entities, "print \"May not switch teams more than once per 5 seconds.\n\"" );
-		return;
+    
+    force = G_admin_permission(ent, ADMF_FORCETEAMCHANGE);
+	
+	if( !force ) {
+	    if ( ent->client->switchTeamTime > level.time ) {
+		    trap_SendServerCommand( ent-g_entities, "print \"May not switch teams more than once per 5 seconds.\n\"" );
+		    return;
+		}
 	}
 
 	// if they are playing a tournement game, count as a loss

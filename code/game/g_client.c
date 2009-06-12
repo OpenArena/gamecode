@@ -963,18 +963,27 @@ team_t PickTeam( int ignoreClientNum ) {
 
 	counts[TEAM_BLUE] = TeamCount( ignoreClientNum, TEAM_BLUE );
 	counts[TEAM_RED] = TeamCount( ignoreClientNum, TEAM_RED );
-
-	if ( counts[TEAM_BLUE] > counts[TEAM_RED] ) {
+    
+    //KK-OAX Both Teams locked...forget about it, print an error message, keep as spec
+    if ( level.RedTeamLocked && level.BlueTeamLocked ) {
+        G_Printf( "Both teams have been locked by the Admin! \n" );
+        return TEAM_NONE;
+    }	
+	if ( ( counts[TEAM_BLUE] > counts[TEAM_RED] ) && ( !level.RedTeamLocked ) ) {
 		return TEAM_RED;
 	}
-	if ( counts[TEAM_RED] > counts[TEAM_BLUE] ) {
+	if ( ( counts[TEAM_RED] > counts[TEAM_BLUE] ) && ( !level.BlueTeamLocked ) ) {
 		return TEAM_BLUE;
 	}
 	// equal team count, so join the team with the lowest score
-	if ( level.teamScores[TEAM_BLUE] > level.teamScores[TEAM_RED] ) {
+	if ( ( level.teamScores[TEAM_BLUE] > level.teamScores[TEAM_RED] ) && ( !level.RedTeamLocked ) ) {
 		return TEAM_RED;
 	}
-	return TEAM_BLUE;
+	if ( ( level.teamScores[TEAM_RED] > level.teamScores[TEAM_BLUE] ) && ( !level.BlueTeamLocked ) ) {  
+	    return TEAM_BLUE;
+    }
+    //KK-OAX Force Team Blue?
+    return TEAM_BLUE;
 }
 
 /*
