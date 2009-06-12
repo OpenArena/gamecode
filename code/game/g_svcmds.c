@@ -471,6 +471,8 @@ struct
   /*{ "m", qtrue, Svcmd_MessageWrapper },
   { "a", qtrue, Svcmd_MessageWrapper },
   { "bp", qtrue, Svcmd_BannerPrint_f }, */
+  //Shuffle the teams
+  { "shuffle", qfalse, ShuffleTeams },
 };
 
 /*
