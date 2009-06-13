@@ -2109,6 +2109,13 @@ qboolean CheckObeliskAttack( gentity_t *obelisk, gentity_t *attacker ) {
 ShuffleTeams
  *Randomizes the teams based on a type of function and then restarts the map
  *Currently there is only one type so type is ignored. You can add total randomizaion or waighted randomization later.
+ *
+ *The function will split the teams like this:
+ *1. Red team
+ *2. Blue team
+ *3. Blue team
+ *4. Red team
+ *5. Go to 1
 ================
 */
 void ShuffleTeams(void) {
@@ -2134,17 +2141,10 @@ void ShuffleTeams(void) {
 
             //Set the team
             //We do not run all the logic because we shall run map_restart in a moment.
-            /*level.clients[level.sortedClients[i]].sess.sessionTeam = nextTeam;
+            level.clients[level.sortedClients[i]].sess.sessionTeam = nextTeam;
 
             ClientUserinfoChanged( level.sortedClients[i] );
-            ClientBegin( level.sortedClients[i] );*/
-
-            if(nextTeam==TEAM_RED) {
-                SetTeam(&g_entities[ &level.clients[level.sortedClients[i]] - level.clients],"red");
-            }
-            else {
-                SetTeam(&g_entities[ &level.clients[level.sortedClients[i]] - level.clients],"blue");
-            }
+            ClientBegin( level.sortedClients[i] );
 
             assignedClients++;
         }
