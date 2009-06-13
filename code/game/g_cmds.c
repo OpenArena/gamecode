@@ -1542,6 +1542,7 @@ void Cmd_CallVote_f( gentity_t *ent ) {
 	} else if ( !Q_stricmp( arg1, "timelimit" ) ) {
 	} else if ( !Q_stricmp( arg1, "fraglimit" ) ) {
         } else if ( !Q_stricmp( arg1, "custom" ) ) {
+        } else if ( !Q_stricmp( arg1, "shuffle" ) ) {
 	} else {
 		trap_SendServerCommand( ent-g_entities, "print \"Invalid vote string.\n\"" );
 		//trap_SendServerCommand( ent-g_entities, "print \"Vote commands are: map_restart, nextmap, map <mapname>, g_gametype <n>, kick <player>, clientkick <clientnum>, g_doWarmup, timelimit <time>, fraglimit <frags>.\n\"" );
@@ -1565,6 +1566,8 @@ void Cmd_CallVote_f( gentity_t *ent ) {
                     strcat(buffer, "timelimit <time>, ");
                 if(allowedVote("fraglimit"))
                     strcat(buffer, "fraglimit <frags>, ");
+                if(allowedVote("shuffle"))
+                    strcat(buffer, "shuffle, ");
                 if(allowedVote("custom"))
                     strcat(buffer, "custom <special>, ");
                 buffer[strlen(buffer)-2] = 0;
@@ -1589,6 +1592,8 @@ void Cmd_CallVote_f( gentity_t *ent ) {
                     strcat(buffer, "kick <player>, ");
                 if(allowedVote("clientkick"))
                     strcat(buffer, "clientkick <clientnum>, ");
+                if(allowedVote("shuffle"))
+                    strcat(buffer, "shuffle, ");
                 if(allowedVote("g_doWarmup"))
                     strcat(buffer, "g_doWarmup, ");
                 if(allowedVote("timelimit"))
@@ -1718,6 +1723,14 @@ void Cmd_CallVote_f( gentity_t *ent ) {
                 }
                 Com_sprintf( level.voteString, sizeof( level.voteString ), "clientkick \"%d\"", i );
 		Com_sprintf( level.voteDisplayString, sizeof( level.voteDisplayString ), "Kick %s?" , (g_entities+i)->client->pers.netname );
+        } else if ( !Q_stricmp( arg1, "shuffle" ) ) {
+                if(g_gametype.integer<GT_TEAM || g_ffa_gt==1) { //Not a team game
+                    trap_SendServerCommand( ent-g_entities, "print \"Can only be used in team games.\n\"" );
+                    return;
+                }
+
+                Com_sprintf( level.voteString, sizeof( level.voteString ), "shuffle" );
+		Com_sprintf( level.voteDisplayString, sizeof( level.voteDisplayString ), "Shuffle teams?" );
         } else if ( !Q_stricmp( arg1, "kick" ) ) {
                 i = 0;
                 while(Q_stricmp(arg2,(g_entities+i)->client->pers.netname)) {

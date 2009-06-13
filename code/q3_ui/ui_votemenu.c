@@ -47,10 +47,11 @@ static char* votemenu_artlist[] =
 #define ID_FRAG     107
 #define ID_TIME     108
 #define ID_GAMETYPE 109
-#define ID_CUSTOM 110
+#define ID_CUSTOM   110
+#define ID_SHUFFLE  111
 
 //This sorta dependend on number of vote options
-#define VOTEMENU_MENU_VERTICAL_SPACING	26
+#define VOTEMENU_MENU_VERTICAL_SPACING	22
 
 typedef struct
 {
@@ -70,6 +71,7 @@ typedef struct
         qboolean        fraglimit;
         qboolean        timelimit;
         qboolean        custom;
+        qboolean        shuffle;
 
         //Buttons:
         menutext_s      bMapRestart;
@@ -80,6 +82,7 @@ typedef struct
         menutext_s      bGametype;
         menutext_s      bTimelimit;
         menutext_s      bFraglimit;
+        menutext_s      bShuffle;
         menutext_s      bCustom;
 
         int             selection;
@@ -109,6 +112,7 @@ static void VoteMenu_CheckVoteNames( void ) {
     s_votemenu.timelimit = voteflags&VF_timelimit;
     s_votemenu.fraglimit = voteflags&VF_fraglimit;
     s_votemenu.custom = voteflags&VF_custom;
+    s_votemenu.shuffle = voteflags&VF_shuffle;
 }
 
 /*
@@ -144,6 +148,10 @@ static void VoteMenu_Event( void* ptr, int event )
                             trap_Cmd_ExecuteText( EXEC_APPEND, "callvote g_doWarmup 0" );
                         else
                             trap_Cmd_ExecuteText( EXEC_APPEND, "callvote g_doWarmup 1" );
+                        UI_PopMenu();
+                        break;
+                    case ID_SHUFFLE:
+                        trap_Cmd_ExecuteText( EXEC_APPEND, "callvote shuffle" );
                         UI_PopMenu();
                         break;
                     case ID_FRAG:
@@ -272,6 +280,22 @@ void UI_VoteMenuMenuInternal( void )
         s_votemenu.bMapRestart.generic.callback = VoteMenu_Event;
         s_votemenu.bMapRestart.string           = "Restart match";
         s_votemenu.bMapRestart.style            = UI_CENTER|UI_SMALLFONT;
+
+        y+=VOTEMENU_MENU_VERTICAL_SPACING;
+        s_votemenu.bShuffle.generic.type     = MTYPE_PTEXT;
+        s_votemenu.bShuffle.color            = color_red;
+        s_votemenu.bShuffle.generic.flags	= QMF_CENTER_JUSTIFY|QMF_PULSEIFFOCUS;
+        if(!s_votemenu.map_restart)
+            s_votemenu.bShuffle.generic.flags |= QMF_INACTIVE|QMF_GRAYED;
+        else
+        if(s_votemenu.selection==ID_SHUFFLE)
+            s_votemenu.bShuffle.color        = color_orange;
+        s_votemenu.bShuffle.generic.x        = 320;
+        s_votemenu.bShuffle.generic.y        = y;
+        s_votemenu.bShuffle.generic.id       = ID_SHUFFLE;
+        s_votemenu.bShuffle.generic.callback = VoteMenu_Event;
+        s_votemenu.bShuffle.string           = "Shuffle teams";
+        s_votemenu.bShuffle.style            = UI_CENTER|UI_SMALLFONT;
 
         y+=VOTEMENU_MENU_VERTICAL_SPACING;
         s_votemenu.bMap.generic.type        = MTYPE_PTEXT;
@@ -431,6 +455,7 @@ void UI_VoteMenuMenu( void ) {
         Menu_AddItem( &s_votemenu.menu, (void*) &s_votemenu.go );
 	Menu_AddItem( &s_votemenu.menu, (void*) &s_votemenu.bNextmap );
         Menu_AddItem( &s_votemenu.menu, (void*) &s_votemenu.bMapRestart );
+        Menu_AddItem( &s_votemenu.menu, (void*) &s_votemenu.bShuffle );
         Menu_AddItem( &s_votemenu.menu, (void*) &s_votemenu.bMap );
         Menu_AddItem( &s_votemenu.menu, (void*) &s_votemenu.bGametype );
         Menu_AddItem( &s_votemenu.menu, (void*) &s_votemenu.bKick );
