@@ -1077,6 +1077,7 @@ void CalculateRanks( void ) {
                         }
 
 			if ( level.clients[i].sess.sessionTeam != TEAM_SPECTATOR ) {
+                                level.numNonSpectatorClients++;
 				// decide if this should be auto-followed
 				if ( level.clients[i].pers.connected == CON_CONNECTED ) {
 					level.numPlayingClients++;
