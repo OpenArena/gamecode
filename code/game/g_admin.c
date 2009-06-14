@@ -36,7 +36,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 /* KK-OAX TODO
 1. Clean up the default admin levels to include the commands which I have added
-2. Implement Team Locking
 3. Implement Disorientation in Code
 4. DEBUG, DEBUG, DEBUG
 */
@@ -538,7 +537,7 @@ static void admin_default_levels( void )
   }
   Q_strncpyz( g_admin_levels[ 0 ]->name, "^4Unknown Player",
     sizeof( l->name ) );
-  Q_strncpyz( g_admin_levels[ 0 ]->flags, "iahC", sizeof( l->flags ) );
+  Q_strncpyz( g_admin_levels[ 0 ]->flags, "ahC", sizeof( l->flags ) );
 
   Q_strncpyz( g_admin_levels[ 1 ]->name, "^5Server Regular",
     sizeof( l->name ) );
@@ -546,15 +545,15 @@ static void admin_default_levels( void )
 
   Q_strncpyz( g_admin_levels[ 2 ]->name, "^6Team Manager",
     sizeof( l->name ) );
-  Q_strncpyz( g_admin_levels[ 2 ]->flags, "iahCpP", sizeof( l->flags ) );
+  Q_strncpyz( g_admin_levels[ 2 ]->flags, "iahCpPwr", sizeof( l->flags ) );
 
   Q_strncpyz( g_admin_levels[ 3 ]->name, "^2Junior Admin",
     sizeof( l->name ) );
-  Q_strncpyz( g_admin_levels[ 3 ]->flags, "iahCpPkm?", sizeof( l->flags ) );
+  Q_strncpyz( g_admin_levels[ 3 ]->flags, "iahCpPwrkmfKncN?", sizeof( l->flags ) );
 
   Q_strncpyz( g_admin_levels[ 4 ]->name, "^3Senior Admin",
     sizeof( l->name ) );
-  Q_strncpyz( g_admin_levels[ 4 ]->flags, "iahCpPkmBbe?", sizeof( l->flags ) );
+  Q_strncpyz( g_admin_levels[ 4 ]->flags, "iahCpPwrkmfKncN?MVdBbeDS51", sizeof( l->flags ) );
 
   Q_strncpyz( g_admin_levels[ 5 ]->name, "^1Server Operator",
     sizeof( l->name ) );
@@ -3145,12 +3144,8 @@ qboolean G_admin_slap( gentity_t *ent, int skiparg )
 	gentity_t *vic;
 	int soundIndex;
     
-    //KK-OAX Too Many Paramenters Check
-    if(G_SayArgc() > 3+skiparg)
-    {
-        ADMP("^/slap usage: ^7!slap [name|slot#] [reason] [damage]");
-        return qfalse;
-    }
+    //KK-Too many Parameters Check removed.  It'll truncate the reason message.
+    
 	if(G_SayArgc() < 2+skiparg) 
 	{
 		ADMP("^/slap usage: ^7!slap [name|slot#] [reason] [damage]");
@@ -3161,7 +3156,7 @@ qboolean G_admin_slap( gentity_t *ent, int skiparg )
 	G_SayArgv(2+skiparg, damage, sizeof(damage));
 	
 	dmg = atoi(damage);
-	if(dmg <= 0) 
+	if(!dmg) 
 	{
 	    dmg = 25;
 	    reason = G_SayConcatArgs(2+skiparg);
@@ -3192,7 +3187,7 @@ qboolean G_admin_slap( gentity_t *ent, int skiparg )
 	//Player Not Alive
 	if( vic->health < 1 )
 	{
-	    //Is There Body Alive?
+	    //Is Their Body Alive?
 	    if(vic->s.eType != ET_INVISIBLE)
 	    {
 	        //Make 'em a Bloody mess

@@ -134,7 +134,7 @@ g_admin_command_t;
 
 typedef struct g_admin_namelog
 {
-  char      name[ MAX_ADMIN_NAMELOG_NAMES ][MAX_NAME_LENGTH ];
+  char      name[ MAX_ADMIN_NAMELOG_NAMES ][ MAX_NAME_LENGTH ];
   char      ip[ 40 ];
   char      guid[ 33 ];
   int       slot;
