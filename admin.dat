@@ -30,13 +30,13 @@ flags   = *
 
 [admin]
 name    = UnnamedPlayer
-guid    = (BLANK ON PURPOSE SAMPLE ONLY)
+guid    = 
 level   = 5
 flags   = 
 
 [warning]
 name    = UnnamedPlayer
-guid    = C05670692B49DB80C1CF3211949B7452
+guid    = 
 ip      = localhost
 warning = Dumb Move
 made    = 06/11/09 01:23:48
