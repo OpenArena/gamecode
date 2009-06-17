@@ -1218,6 +1218,10 @@ void ClientUserinfoChanged( int clientNum ) {
             revertName = qtrue;
         }
 
+        //Never revert a bots name... just to bad if it hapens... but the bot will always be expendeble :-)
+        if (ent->r.svFlags & SVF_BOT)
+            revertName = qfalse;
+
         if( revertName )
         {
             Q_strncpyz( client->pers.netname, *oldname ? oldname : "UnnamedPlayer",
