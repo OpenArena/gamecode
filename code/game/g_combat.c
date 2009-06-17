@@ -50,6 +50,8 @@ Adds score to both the client and his team
 ============
 */
 void AddScore( gentity_t *ent, vec3_t origin, int score ) {
+        int i;
+
 	if ( !ent->client ) {
 		return;
 	}
@@ -58,11 +60,28 @@ void AddScore( gentity_t *ent, vec3_t origin, int score ) {
 		return;
 	}
 	// show score plum
-	ScorePlum(ent, origin, score);
-	//
-	ent->client->ps.persistant[PERS_SCORE] += score;
-	if ( g_gametype.integer == GT_TEAM )
-		level.teamScores[ ent->client->ps.persistant[PERS_TEAM] ] += score;
+        if( level.numNonSpectatorClients<3 && score < 0 && (g_gametype.integer<GT_TEAM || g_ffa_gt==1)) {
+            for ( i = 0 ; i < level.maxclients ; i++ ) {
+                if ( level.clients[ i ].pers.connected != CON_CONNECTED )
+                    continue; //Client was not connected
+
+                if (level.clients[i].sess.sessionTeam == TEAM_SPECTATOR)
+                    continue; //Don't give anything to spectators
+
+                if (g_entities+i == ent)
+                    continue; //Don't award dead one
+
+                level.clients[i].ps.persistant[PERS_SCORE] -= score;
+                ScorePlum(ent, origin, -score);
+            }
+        }
+        else {
+            ScorePlum(ent, origin, score);
+            //
+            ent->client->ps.persistant[PERS_SCORE] += score;
+            if ( g_gametype.integer == GT_TEAM )
+                    level.teamScores[ ent->client->ps.persistant[PERS_TEAM] ] += score;
+        }
 	CalculateRanks();
 }
 
@@ -527,7 +546,7 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 
 		if ( attacker == self || OnSameTeam (self, attacker ) ) {
 			if(g_gametype.integer!=GT_LMS && !((g_gametype.integer==GT_ELIMINATION || g_gametype.integer==GT_CTF_ELIMINATION) && level.time < level.roundStartTime))
-                            if(g_gametype.integer <GT_TEAM && g_ffa_gt!=1 && self->client->ps.persistant[PERS_SCORE]>0) //Cannot get negative scores by suicide
+                            if(g_gametype.integer <GT_TEAM && g_ffa_gt!=1 && self->client->ps.persistant[PERS_SCORE]>0 || level.numNonSpectatorClients<3) //Cannot get negative scores by suicide
                                 AddScore( attacker, self->r.currentOrigin, -1 );
 		} else {
 			if(g_gametype.integer!=GT_LMS)
@@ -701,7 +720,7 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 		}
 	} else {
 		if(g_gametype.integer!=GT_LMS && !((g_gametype.integer==GT_ELIMINATION || g_gametype.integer==GT_CTF_ELIMINATION) && level.time < level.roundStartTime))
-                    if(self->client->ps.persistant[PERS_SCORE]>0) //Cannot get negative scores by suicide
+                    if(self->client->ps.persistant[PERS_SCORE]>0 || level.numNonSpectatorClients<3) //Cannot get negative scores by suicide
 			AddScore( self, self->r.currentOrigin, -1 );
 	}
 
@@ -1111,7 +1130,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 			targ->client->ps.pm_flags |= PMF_TIME_KNOCKBACK;
 		}
                 //Remeber the last person to hurt the player
-                if( g_awardpushing.integer==0 || targ==attacker || OnSameTeam (targ, attacker)) {
+                if( !g_awardpushing.integer || targ==attacker || OnSameTeam (targ, attacker)) {
                     targ->client->lastSentFlying = -1;
                 } else {
 	/*if ( pm->waterlevel <= 1 ) {
