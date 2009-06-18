@@ -4309,7 +4309,7 @@ static const char *UI_FeederItemText(float feederID, int index, int column, qhan
 		return UI_SelectedMap(index, &actual);
 	} else if (feederID == FEEDER_SERVERS) {
 		if (index >= 0 && index < uiInfo.serverStatus.numDisplayServers) {
-			int ping, game, punkbuster;
+			int ping, game;
 			if (lastColumn != column || lastTime > uiInfo.uiDC.realTime + 5000) {
 				trap_LAN_GetServerInfo(ui_netSource.integer, uiInfo.serverStatus.displayServers[index], info, MAX_STRING_CHARS);
 				lastColumn = column;
@@ -4352,13 +4352,6 @@ static const char *UI_FeederItemText(float feederID, int index, int column, qhan
 						return "...";
 					} else {
 						return Info_ValueForKey(info, "ping");
-					}
-				case SORT_PUNKBUSTER:
-					punkbuster = atoi(Info_ValueForKey(info, "punkbuster"));
-					if ( punkbuster ) {
-						return "Yes";
-					} else {
-						return "No";
 					}
 			}
 		}

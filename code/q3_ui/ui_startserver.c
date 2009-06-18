@@ -137,9 +137,6 @@ static int gametype_remap2[] = {
 		10,
                 11 };		//this works and should increment for more gametypes
 
-// use ui_servers2.c definition
-//extern const char* punkbuster_items[];
-
 static void UI_ServerOptionsMenu( qboolean multiplayer );
 
 
@@ -971,8 +968,6 @@ static void ServerOptions_Start( void ) {
                 break;
         };
 	trap_Cvar_Set("sv_hostname", s_serveroptions.hostname.field.buffer );
-	
-	//trap_Cvar_SetValue( "sv_punkbuster", s_serveroptions.punkbuster.curvalue );
 
 	// the wait commands will allow the dedicated to take effect
 	info = UI_GetArenaInfoByNumber( s_startserver.maplist[ s_startserver.currentmap ]);
@@ -1556,7 +1551,6 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 	s_serveroptions.multiplayer = multiplayer;
 	// so the new gametypes work
 	s_serveroptions.gametype = (int)Com_Clamp( 0, GT_MAX_GAME_TYPE - 1, trap_Cvar_VariableValue( "g_gameType" ) );
-	//s_serveroptions.punkbuster.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "sv_punkbuster" ) );
 
 	ServerOptions_Cache();
 
