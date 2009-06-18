@@ -53,10 +53,14 @@ static const char *skillLevels[] = {
 
 static const int numSkillLevels = sizeof(skillLevels) / sizeof(const char*);
 
-
+/*
+ *These sources are currently hardcoded in the engine.
+ *
+ *Empty options will not be displayed or circled to.
+ */
 static const char *netSources[] = {
 	"Local",
-	"Mplayer",
+	"",
 	"Internet",
 	"Favorites"
 };
@@ -65,7 +69,7 @@ static const int numNetSources = sizeof(netSources) / sizeof(const char*);
 static const serverFilter_t serverFilters[] = {
 	{"All", "" },
 	{"OpenArena", "" },
-	{"Team Arena", "missionpack" },
+	{"Missionpack", "missionpack" },
 	{"Rocket Arena", "arena" },
 	{"Alliance", "alliance20" },
 	{"Weapons Factory Arena", "wfa" },
@@ -81,11 +85,11 @@ static const char *teamArenaGameTypes[] = {
 	"1FCTF",
 	"OVERLOAD",
 	"HARVESTER",
-	"TEAMTOURNAMENT",
 	"ELIMINATION",
 	"CTFELIMINATION",
 	"LMS",
-	"DD"
+	"DOUBLE D",
+        "DOMINATION"
 };
 
 static int const numTeamArenaGameTypes = sizeof(teamArenaGameTypes) / sizeof(const char*);
@@ -100,11 +104,11 @@ static const char *teamArenaGameNames[] = {
 	"One Flag CTF",
 	"Overload",
 	"Harvester",
-	"Team Tournament",
 	"Elimination",
 	"CTF Elimination",
 	"Last Man Standing",
-	"Double Domination"
+	"Double Domination",
+        "Domination"
 };
 
 static int const numTeamArenaGameNames = sizeof(teamArenaGameNames) / sizeof(const char*);
@@ -2503,8 +2507,12 @@ static qboolean UI_NetSource_HandleKey(int flags, float *special, int key) {
 		
 		if (key == K_MOUSE2) {
 			ui_netSource.integer--;
+                        if(strlen(netSources[ui_netSource.integer])<1)
+                            ui_netSource.integer--;
 		} else {
 			ui_netSource.integer++;
+                        if(strlen(netSources[ui_netSource.integer])<1)
+                            ui_netSource.integer++;
 		}
     
 		if (ui_netSource.integer >= numNetSources) {
