@@ -327,11 +327,8 @@ void BotSayTeamOrder(bot_state_t *bs, int toclient) {
 	// voice chats only
 	char buf[MAX_MESSAGE_SIZE];
 
-        if (bot_nochat.integer>2) return;
-
 	trap_BotGetChatMessage(bs->cs, buf, sizeof(buf));
 #else
-        if (bot_nochat.integer>2) return;
 	BotSayTeamOrderAlways(bs, toclient);
 #endif
 }
@@ -342,9 +339,6 @@ BotVoiceChat
 ==================
 */
 void BotVoiceChat(bot_state_t *bs, int toclient, char *voicechat) {
-
-    if (bot_nochat.integer>2) return;
-
 #ifdef MISSIONPACK
 	if (toclient == -1)
 		// voice only say team
@@ -362,8 +356,6 @@ BotVoiceChatOnly
 */
 void BotVoiceChatOnly(bot_state_t *bs, int toclient, char *voicechat) {
 
-    if (bot_nochat.integer>2) return;
-
 #ifdef MISSIONPACK
 	if (toclient == -1)
 		// voice only say team
@@ -380,8 +372,6 @@ BotSayVoiceTeamOrder
 ==================
 */
 void BotSayVoiceTeamOrder(bot_state_t *bs, int toclient, char *voicechat) {
-
-    if (bot_nochat.integer>2) return;
 
 #ifdef MISSIONPACK
 	BotVoiceChat(bs, toclient, voicechat);

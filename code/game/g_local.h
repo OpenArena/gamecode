@@ -167,10 +167,8 @@ struct gentity_s {
 	gentity_t	*teamchain;		// next entity in team
 	gentity_t	*teammaster;	// master of the team
 
-#ifdef MISSIONPACK
 	int			kamikazeTime;
 	int			kamikazeShockTime;
-#endif
 
 	int			watertype;
 	int			waterlevel;
@@ -382,11 +380,9 @@ struct gclient_s {
 	// like health / armor countdowns and regeneration
 	int			timeResidual;
 
-#ifdef MISSIONPACK
 	gentity_t	*persistantPowerup;
 	int			portalID;
 	int			ammoTimes[WP_NUM_WEAPONS];
-#endif
         int			invulnerabilityTime;
 
 
@@ -508,9 +504,7 @@ typedef struct {
 	gentity_t	*locationHead;			// head of the location list
 	int			bodyQueIndex;			// dead bodies
 	gentity_t	*bodyQue[BODY_QUEUE_SIZE];
-#ifdef MISSIONPACK
 	int			portalSequence;
-#endif
 	//Added for elimination:
 	int roundStartTime;		//time the current round was started
 	int roundNumber;			//The round number we have reached
@@ -679,9 +673,7 @@ qboolean G_RadiusDamage (vec3_t origin, gentity_t *attacker, float damage, float
 int G_InvulnerabilityEffect( gentity_t *targ, vec3_t dir, vec3_t point, vec3_t impactpoint, vec3_t bouncedir );
 void body_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int damage, int meansOfDeath );
 void TossClientItems( gentity_t *self );
-#ifdef MISSIONPACK
 void TossClientPersistantPowerups( gentity_t *self );
-#endif
 void TossClientCubes( gentity_t *self );
 
 // damage flags
@@ -689,9 +681,7 @@ void TossClientCubes( gentity_t *self );
 #define DAMAGE_NO_ARMOR				0x00000002	// armour does not protect from this damage
 #define DAMAGE_NO_KNOCKBACK			0x00000004	// do not affect velocity, just view angles
 #define DAMAGE_NO_PROTECTION		0x00000008  // armor, shields, invulnerability, and godmode have no effect
-#ifdef MISSIONPACK
 #define DAMAGE_NO_TEAM_PROTECTION	0x00000010  // armor, shields, invulnerability, and godmode have no effect
-#endif
 
 //
 // g_missile.c
@@ -725,10 +715,8 @@ void trigger_teleporter_touch (gentity_t *self, gentity_t *other, trace_t *trace
 // g_misc.c
 //
 void TeleportPlayer( gentity_t *player, vec3_t origin, vec3_t angles );
-#ifdef MISSIONPACK
 void DropPortalSource( gentity_t *ent );
 void DropPortalDestination( gentity_t *ent );
-#endif
 
 
 //
@@ -798,9 +786,7 @@ gclient_t	*ClientForString( const char *s );
 // g_weapon.c
 //
 void FireWeapon( gentity_t *ent );
-#ifdef MISSIONPACK
 void G_StartKamikaze( gentity_t *ent );
-#endif
 
 //
 // p_hud.c
@@ -1083,6 +1069,8 @@ extern vmCvar_t		g_lms_mode; //How do we score: 0 = One Survivor get a point, 1 
 extern vmCvar_t		g_elimination_ctf_oneway;	//Only attack in one direction (level.eliminationSides+level.roundNumber)%2 == 0 red attacks
 
 extern vmCvar_t         g_awardpushing; //The server can decide if players are awarded for pushing people in lave etc.
+
+extern vmCvar_t         g_persistantpowerups;
 
 extern vmCvar_t        g_voteNames;
 extern vmCvar_t        g_voteGametypes;

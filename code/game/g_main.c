@@ -134,6 +134,7 @@ vmCvar_t	g_lms_lives;
 vmCvar_t	g_lms_mode;
 vmCvar_t	g_elimination_ctf_oneway;
 vmCvar_t        g_awardpushing; //The server can decide if players are awarded for pushing people in lave etc.
+vmCvar_t        g_persistantpowerups; //Allow missionpack style persistant powerups?
 
 vmCvar_t        g_voteNames;
 vmCvar_t        g_voteGametypes;
@@ -313,8 +314,16 @@ static cvarTable_t		gameCvarTable[] = {
 
         { &g_elimination_lockspectator, "elimination_lockspectator", "0", CVAR_NORESTART, 0, qtrue },
         
-        { &g_awardpushing, "g_awardpushing", "1", CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },    
-        
+        { &g_awardpushing, "g_awardpushing", "1", CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
+
+        //g_persistantpowerups
+        #ifdef MISSIONPACK
+        { &g_persistantpowerups, "g_persistantpowerups", "1", CVAR_LATCH, 0, qtrue },
+        #else
+        { &g_persistantpowerups, "g_persistantpowerups", "0", CVAR_LATCH, 0, qtrue },
+        #endif
+
+
 	//nexuiz style rocket arena
 	{ &g_rockets, "g_rockets", "0", CVAR_SERVERINFO | CVAR_LATCH | CVAR_NORESTART, 0, qfalse },
 
@@ -1512,9 +1521,7 @@ Append information about this game to the log file
 void LogExit( const char *string ) {
 	int				i, numSorted;
 	gclient_t		*cl;
-#ifdef MISSIONPACK // bk001205
 	qboolean won = qtrue;
-#endif
 	G_LogPrintf( "Exit: %s\n", string );
 
 	level.intermissionQueued = level.time;

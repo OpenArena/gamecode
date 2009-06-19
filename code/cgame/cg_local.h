@@ -228,12 +228,10 @@ typedef enum {
 	LE_FADE_RGB,
 	LE_SCALE_FADE,
 	LE_SCOREPLUM,
-//#ifdef MISSIONPACK
 	LE_KAMIKAZE,
 	LE_INVULIMPACT,
 	LE_INVULJUICED,
 	LE_SHOWREFENTITY
-//#endif
 } leType_t;
 
 typedef enum {
@@ -703,7 +701,6 @@ typedef struct {
 	qhandle_t	blueFlagBaseModel;
 	qhandle_t	neutralFlagBaseModel;
 
-//#ifdef MISSIONPACK
 	qhandle_t	overloadBaseModel;
 	qhandle_t	overloadTargetModel;
 	qhandle_t	overloadLightsModel;
@@ -713,7 +710,6 @@ typedef struct {
 	qhandle_t	harvesterRedSkin;
 	qhandle_t	harvesterBlueSkin;
 	qhandle_t	harvesterNeutralModel;
-//#endif
 
 	qhandle_t	armorModel;
 	qhandle_t	armorIcon;
@@ -981,12 +977,13 @@ typedef struct {
         qhandle_t deathShader;
 	qhandle_t flagShaders[3];
 	sfxHandle_t	countPrepareTeamSound;
+#endif
 
 	sfxHandle_t ammoregenSound;
 	sfxHandle_t doublerSound;
 	sfxHandle_t guardSound;
 	sfxHandle_t scoutSound;
-#endif
+
 	qhandle_t cursor;
 	qhandle_t selectCursor;
 	qhandle_t sizeCursor;

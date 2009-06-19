@@ -154,11 +154,9 @@ static void CG_Obituary( entityState_t *ent ) {
 	if (attacker == target) {
 		gender = ci->gender;
 		switch (mod) {
-#ifdef MISSIONPACK
 		case MOD_KAMIKAZE:
 			message = "goes out with a bang";
 			break;
-#endif
 		case MOD_GRENADE_SPLASH:
 			if ( gender == GENDER_FEMALE )
 				message = "tripped on her own grenade";
@@ -186,7 +184,6 @@ static void CG_Obituary( entityState_t *ent ) {
 		case MOD_BFG_SPLASH:
 			message = "should have used a smaller gun";
 			break;
-//#ifdef MISSIONPACK
 		case MOD_PROXIMITY_MINE:
 			if( gender == GENDER_FEMALE ) {
 				message = "found her prox mine";
@@ -196,7 +193,6 @@ static void CG_Obituary( entityState_t *ent ) {
 				message = "found his prox mine";
 			}
 			break;
-//#endif
 		default:
 			if ( gender == GENDER_FEMALE )
 				message = "killed herself";
@@ -307,7 +303,6 @@ static void CG_Obituary( entityState_t *ent ) {
 			message = "was blasted by";
 			message2 = "'s BFG";
 			break;
-//#ifdef MISSIONPACK
 		case MOD_NAIL:
 			message = "was nailed by";
 			break;
@@ -319,7 +314,6 @@ static void CG_Obituary( entityState_t *ent ) {
 			message = "was too close to";
 			message2 = "'s Prox Mine";
 			break;
-#ifdef MISSIONPACK
 		case MOD_KAMIKAZE:
 			message = "falls to";
 			message2 = "'s Kamikaze blast";
@@ -327,7 +321,6 @@ static void CG_Obituary( entityState_t *ent ) {
 		case MOD_JUICED:
 			message = "was juiced by";
 			break;
-#endif
 		case MOD_TELEFRAG:
 			message = "tried to invade";
 			message2 = "'s personal space";
@@ -1152,11 +1145,9 @@ void CG_EntityEvent( centity_t *cent, vec3_t position ) {
 				case GTS_TEAMS_ARE_TIED:
 					CG_AddBufferedSound( cgs.media.teamsTiedSound );
 					break;
-#ifdef MISSIONPACK
 				case GTS_KAMIKAZE:
 					trap_S_StartLocalSound(cgs.media.kamikazeFarSound, CHAN_ANNOUNCER);
 					break;
-#endif
 				default:
 					break;
 			}

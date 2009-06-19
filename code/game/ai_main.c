@@ -1027,13 +1027,13 @@ int BotAI(int client, float thinktime) {
 		}
 #ifdef MISSIONPACK
 		else if (!Q_stricmp(buf, "vchat")) {
-			if (bot_nochat.integer<3)BotVoiceChatCommand(bs, SAY_ALL, args);
+			BotVoiceChatCommand(bs, SAY_ALL, args);
 		}
 		else if (!Q_stricmp(buf, "vtchat")) {
-			if (bot_nochat.integer<3)BotVoiceChatCommand(bs, SAY_TEAM, args);
+			BotVoiceChatCommand(bs, SAY_TEAM, args);
 		}
 		else if (!Q_stricmp(buf, "vtell")) {
-			if (bot_nochat.integer<3)BotVoiceChatCommand(bs, SAY_TELL, args);
+			BotVoiceChatCommand(bs, SAY_TELL, args);
 		}
 #endif
 		else if (!Q_stricmp(buf, "scores"))

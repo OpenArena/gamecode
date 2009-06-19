@@ -43,10 +43,8 @@ void UpdateTournamentInfo( void ) {
 	int			playerClientNum;
 	int			n, accuracy, perfect,	msglen;
 	int			buflen;
-#ifdef MISSIONPACK // bk001205
   int score1, score2;
 	qboolean won;
-#endif
 	char		buf[32];
 	char		msg[MAX_STRING_CHARS];
 
@@ -70,11 +68,7 @@ void UpdateTournamentInfo( void ) {
 	CalculateRanks();
 
 	if ( level.clients[playerClientNum].sess.sessionTeam == TEAM_SPECTATOR ) {
-#ifdef MISSIONPACK
 		Com_sprintf( msg, sizeof(msg), "postgame %i %i 0 0 0 0 0 0 0 0 0 0 0", level.numNonSpectatorClients, playerClientNum );
-#else
-		Com_sprintf( msg, sizeof(msg), "postgame %i %i 0 0 0 0 0 0", level.numNonSpectatorClients, playerClientNum );
-#endif
 	}
 	else {
 		if( player->client->accuracy_shots ) {
@@ -83,7 +77,6 @@ void UpdateTournamentInfo( void ) {
 		else {
 			accuracy = 0;
 		}
-#ifdef MISSIONPACK
 		won = qfalse;
 		if (g_gametype.integer >= GT_CTF && g_ffa_gt==0) {
 			score1 = level.teamScores[TEAM_RED];
@@ -112,14 +105,6 @@ void UpdateTournamentInfo( void ) {
 			player->client->ps.persistant[PERS_IMPRESSIVE_COUNT], player->client->ps.persistant[PERS_EXCELLENT_COUNT],player->client->ps.persistant[PERS_DEFEND_COUNT],
 			player->client->ps.persistant[PERS_ASSIST_COUNT], player->client->ps.persistant[PERS_GAUNTLET_FRAG_COUNT], player->client->ps.persistant[PERS_SCORE],
 			perfect, score1, score2, level.time, player->client->ps.persistant[PERS_CAPTURES] );
-
-#else
-		perfect = ( level.clients[playerClientNum].ps.persistant[PERS_RANK] == 0 && player->client->ps.persistant[PERS_KILLED] == 0 ) ? 1 : 0;
-		Com_sprintf( msg, sizeof(msg), "postgame %i %i %i %i %i %i %i %i", level.numNonSpectatorClients, playerClientNum, accuracy,
-			player->client->ps.persistant[PERS_IMPRESSIVE_COUNT], player->client->ps.persistant[PERS_EXCELLENT_COUNT],
-			player->client->ps.persistant[PERS_GAUNTLET_FRAG_COUNT], player->client->ps.persistant[PERS_SCORE],
-			perfect );
-#endif
 	}
 
 	msglen = strlen( msg );

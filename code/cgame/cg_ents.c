@@ -326,24 +326,19 @@ static void CG_Item( centity_t *cent ) {
 		VectorScale( ent.axis[1], 1.5, ent.axis[1] );
 		VectorScale( ent.axis[2], 1.5, ent.axis[2] );
 		ent.nonNormalizedAxes = qtrue;
-#ifdef MISSIONPACK
 		trap_S_AddLoopingSound( cent->currentState.number, cent->lerpOrigin, vec3_origin, cgs.media.weaponHoverSound );
-#endif
 	}
 
-#ifdef MISSIONPACK
 	if ( item->giType == IT_HOLDABLE && item->giTag == HI_KAMIKAZE ) {
 		VectorScale( ent.axis[0], 2, ent.axis[0] );
 		VectorScale( ent.axis[1], 2, ent.axis[1] );
 		VectorScale( ent.axis[2], 2, ent.axis[2] );
 		ent.nonNormalizedAxes = qtrue;
 	}
-#endif
 
 	// add to refresh list
 	trap_R_AddRefEntityToScene(&ent);
 
-//#ifdef MISSIONPACK
 	if ( item->giType == IT_WEAPON && wi->barrelModel ) {
 		refEntity_t	barrel;
 
@@ -362,7 +357,6 @@ static void CG_Item( centity_t *cent ) {
 
 		trap_R_AddRefEntityToScene( &barrel );
 	}
-//#endif
 
 	// accompanying rings / spheres for powerups
 	if ( !cg_simpleItems.integer ) 

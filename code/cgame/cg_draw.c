@@ -1659,6 +1659,10 @@ static float CG_DrawPowerups( float y ) {
 			continue;
 		}
 
+                item = BG_FindItemForPowerup( i );
+                if ( item && item->giType == IT_PERSISTANT_POWERUP)
+                    continue; //Don't draw persistant powerups here!
+
 		// insert into the list
 		for ( j = 0 ; j < active ; j++ ) {
 			if ( sortedTime[j] >= t ) {
@@ -1886,13 +1890,13 @@ static void CG_DrawHoldableItem( void ) {
 }
 #endif // MISSIONPACK
 
-#ifdef MISSIONPACK
+#ifndef MISSIONPACK
 /*
 ===================
 CG_DrawPersistantPowerup
 ===================
 */
-#if 0 // sos001208 - DEAD
+#if 1 // sos001208 - DEAD // sago - ALIVE
 static void CG_DrawPersistantPowerup( void ) { 
 	int		value;
 
@@ -3049,14 +3053,12 @@ static void CG_DrawWarmup( void ) {
 			s = "Last Man Standing";
 		} else if ( cgs.gametype == GT_DOUBLE_D ) {
 			s = "Double Domination";
-//#ifdef MISSIONPACK
 		} else if ( cgs.gametype == GT_1FCTF ) {
 			s = "One Flag CTF";
 		} else if ( cgs.gametype == GT_OBELISK ) {
 			s = "Overload";
 		} else if ( cgs.gametype == GT_HARVESTER ) {
 			s = "Harvester";
-//#endif
                 } else if ( cgs.gametype == GT_DOMINATION ) {
 			s = "Domination";
 		} else {
@@ -3200,20 +3202,18 @@ static void CG_Draw2D(stereoFrame_t stereoFrame)
       
 			CG_DrawAmmoWarning();
 
-//#ifdef MISSIONPACK
 			CG_DrawProxWarning();
-//#endif      
 			if(stereoFrame == STEREO_CENTER)
 				CG_DrawCrosshair();
 			CG_DrawCrosshairNames();
 			CG_DrawWeaponSelect();
 
-#ifndef MISSIONPACK
+                        #ifndef MISSIONPACK
 			CG_DrawHoldableItem();
-#else
-			//CG_DrawPersistantPowerup();
-#endif
-			CG_DrawReward();
+			CG_DrawPersistantPowerup();
+			#endif
+
+                        CG_DrawReward();
 		}
     
 		if ( cgs.gametype >= GT_TEAM && cgs.ffa_gt!=1) {
