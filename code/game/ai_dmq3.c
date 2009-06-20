@@ -119,8 +119,9 @@ int untrap_BotGetLevelItemGoal(int start, char *classname, void /* struct bot_go
     static char *gametypeNames[] = {"ffa", "tournament", "single", "team", "ctf", "oneflag", "obelisk", "harvester", "elimination", "ctf", "lms", "dd", "dom"};
     char allowedGametypes[MAX_EPAIRKEY];
     char *gametypeName;
+
     start = trap_BotGetLevelItemGoal(start,classname,goal);
-    while(start>-1) {
+    if(start>-1) {
         if(!trap_AAS_ValueForBSPEpairKey(start,"gametype",allowedGametypes,MAX_EPAIRKEY))
             return start; //No gametype flag
         if( gametype >= GT_FFA && gametype < GT_MAX_GAME_TYPE ) {
