@@ -699,6 +699,7 @@ qboolean	BG_CanItemBeGrabbed( int gametype, const entityState_t *ent, const play
 //g_fairflags->integer
 #define FF_LOCK_CVARS_BASIC             1
 #define FF_LOCK_CVARS_EXTENDED          2
+#define FF_LOCK_VERTEX                  4
 
 // g_elimflags->integer
 //This is used to signal the client that it cannot go to free spectator:

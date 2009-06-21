@@ -200,7 +200,7 @@ static cvarTable_t		gameCvarTable[] = {
 
 	// change anytime vars
 	{ &g_dmflags, "dmflags", "0", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qtrue  },
-        { &g_fairflags, "fairflags", "3", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qtrue  },
+        { &g_fairflags, "fairflags", "7", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qtrue  },
         { &g_elimflags, "elimflags", "0", CVAR_SERVERINFO, 0, qfalse  },
         { &g_voteflags, "voteflags", "0", CVAR_SERVERINFO, 0, qfalse  },
 	{ &g_fraglimit, "fraglimit", "20", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },

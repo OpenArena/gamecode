@@ -2181,6 +2181,8 @@ void SnapVectorTowards( vec3_t v, vec3_t to ) {
 }
 //unlagged - attack prediction #3
 
+static qboolean do_vid_restart = qfalse;
+
 void CG_FairCvars() {
     qboolean vid_restart_required = qfalse;
     char rendererinfos[128];
@@ -2213,12 +2215,6 @@ void CG_FairCvars() {
         trap_Cvar_VariableStringBuffer("r_subdivisions",rendererinfos,sizeof(rendererinfos) );
         if(atoi( rendererinfos ) > 20 ) {
             trap_Cvar_Set("r_subdivisions","20");
-            vid_restart_required = qtrue;
-        }
-
-        trap_Cvar_VariableStringBuffer("r_vertexlight",rendererinfos,sizeof(rendererinfos) );
-        if(atoi( rendererinfos ) != 0 ) {
-            trap_Cvar_Set("r_vertexlight","0");
             vid_restart_required = qtrue;
         }
 
@@ -2257,6 +2253,14 @@ void CG_FairCvars() {
             trap_Cvar_Set("r_overbrightbits","0");
             vid_restart_required = qtrue;
         }
+    } 
+
+    if(cgs.fairflags & FF_LOCK_VERTEX) {
+        trap_Cvar_VariableStringBuffer("r_vertexlight",rendererinfos,sizeof(rendererinfos) );
+        if(atoi( rendererinfos ) != 0 ) {
+            trap_Cvar_Set("r_vertexlight","0");
+            vid_restart_required = qtrue;
+        }
     } else if(cg_autovertex.integer){
         trap_Cvar_VariableStringBuffer("r_vertexlight",rendererinfos,sizeof(rendererinfos) );
         if(atoi( rendererinfos ) == 0 ) {
@@ -2265,7 +2269,9 @@ void CG_FairCvars() {
         }
     }
 
-    if(vid_restart_required)
+    if(vid_restart_required && do_vid_restart)
         trap_SendConsoleCommand("vid_restart");
+
+    do_vid_restart = qtrue;
 }
 
