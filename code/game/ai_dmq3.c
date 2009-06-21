@@ -121,7 +121,7 @@ int untrap_BotGetLevelItemGoal(int start, char *classname, void /* struct bot_go
     char *gametypeName;
 
     start = trap_BotGetLevelItemGoal(start,classname,goal);
-    if(start>-1) {
+    while(start>-1) {
         if(!trap_AAS_ValueForBSPEpairKey(start,"gametype",allowedGametypes,MAX_EPAIRKEY))
             return start; //No gametype flag
         if( gametype >= GT_FFA && gametype < GT_MAX_GAME_TYPE ) {
@@ -134,6 +134,7 @@ int untrap_BotGetLevelItemGoal(int start, char *classname, void /* struct bot_go
         }
         else
             return start;
+        start = trap_BotGetLevelItemGoal(start,classname,goal);
     }
     return -1;
 }
