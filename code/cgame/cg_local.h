@@ -1334,7 +1334,6 @@ void SnapVectorTowards( vec3_t v, vec3_t to );
 
 void CG_FairCvars();
 
-
 //
 // cg_view.c
 //

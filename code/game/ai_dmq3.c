@@ -5221,7 +5221,7 @@ void BotSetupAlternativeRouteGoals(void) {
 	if (altroutegoals_setup)
 		return;
 	if (gametype == GT_CTF || gametype == GT_CTF_ELIMINATION) {
-		if (untrap_BotGetLevelItemGoal(-1, "Neutral Flag", &ctf_neutralflag) < 0)
+		if (trap_BotGetLevelItemGoal(-1, "Neutral Flag", &ctf_neutralflag) < 0)
 			BotAI_Print(PRT_WARNING, "no alt routes without Neutral Flag\n");
 		if (ctf_neutralflag.areanum) {
 			//
@@ -5255,8 +5255,8 @@ void BotSetupAlternativeRouteGoals(void) {
 									ALTROUTEGOAL_VIEWPORTALS);
 	}
 	else if (gametype == GT_OBELISK) {
-		if (untrap_BotGetLevelItemGoal(-1, "Neutral Obelisk", &neutralobelisk) < 0)
-			BotAI_Print(PRT_WARNING, "Harvester without neutral obelisk\n");
+                if (trap_BotGetLevelItemGoal(-1, "Neutral Obelisk", &neutralobelisk) < 0)
+			BotAI_Print(PRT_WARNING, "Obelisk without neutral obelisk\n");
 		//
 		red_numaltroutegoals = trap_AAS_AlternativeRouteGoals(
 									neutralobelisk.origin, neutralobelisk.areanum,
@@ -5272,6 +5272,8 @@ void BotSetupAlternativeRouteGoals(void) {
 									ALTROUTEGOAL_VIEWPORTALS);
 	}
 	else if (gametype == GT_HARVESTER) {
+		if (untrap_BotGetLevelItemGoal(-1, "Neutral Obelisk", &neutralobelisk) < 0)
+			BotAI_Print(PRT_WARNING, "Harvester without neutral obelisk\n");
 		//
 		red_numaltroutegoals = trap_AAS_AlternativeRouteGoals(
 									neutralobelisk.origin, neutralobelisk.areanum,
@@ -5370,14 +5372,16 @@ void BotDeathmatchAI(bot_state_t *bs, float thinktime) {
 	//if the bot removed itself :)
 	if (!bs->inuse) return;
 	//if the bot executed too many AI nodes
-	if (i >= MAX_NODESWITCHES) {
+	//Sago: FIXME - Outcommented this test... this is wrong
+        #ifdef DEBUG
+        if (i >= MAX_NODESWITCHES) {
 		trap_BotDumpGoalStack(bs->gs);
 		trap_BotDumpAvoidGoals(bs->gs);
 		BotDumpNodeSwitches(bs);
 		ClientName(bs->client, name, sizeof(name));
-                //Sago: FIXME... this should not happens but it does in some maps in Obelisk.
-                //BotAI_Print(PRT_ERROR, "%s at %1.1f switched more than %d AI nodes\n", name, FloatTime(), MAX_NODESWITCHES);
+                BotAI_Print(PRT_ERROR, "%s at %1.1f switched more than %d AI nodes\n", name, FloatTime(), MAX_NODESWITCHES);
 	}
+        #endif
 	//
 	bs->lastframe_health = bs->inventory[INVENTORY_HEALTH];
 	bs->lasthitcount = bs->cur_ps.persistant[PERS_HITS];
@@ -5508,11 +5512,15 @@ void BotSetupDeathmatchAI(void) {
             ent = untrap_BotGetLevelItemGoal(-1, "Domination point", &dom_points_bot[0]);
             if(ent < 0)
 		BotAI_Print(PRT_WARNING, "Domination without a single domination point\n");
+            else
+                BotSetEntityNumForGoal(&dom_points_bot[0], va("domination_point%i",0) );
             for(i=1;i<level.domination_points_count;i++) {
                 //Find next from the privius found entity
-                ent = trap_BotGetLevelItemGoal(ent, "Domination point", &dom_points_bot[i]);
+                ent = untrap_BotGetLevelItemGoal(ent, "Domination point", &dom_points_bot[i]);
                 if(ent < 0)
                     BotAI_Print(PRT_WARNING, "Domination point %i not found!\n",i);
+                else
+                    BotSetEntityNumForGoal(&dom_points_bot[0], va("domination_point%i",i) );
             }
             //MAX_DOMINATION_POINTS
 	}
