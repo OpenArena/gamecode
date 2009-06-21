@@ -40,6 +40,7 @@ gclient_t		g_clients[MAX_CLIENTS];
 
 vmCvar_t	g_gametype;
 vmCvar_t	g_dmflags;
+vmCvar_t        g_fairflags;
 vmCvar_t	g_elimflags;
 vmCvar_t	g_voteflags;
 vmCvar_t	g_fraglimit;
@@ -199,6 +200,7 @@ static cvarTable_t		gameCvarTable[] = {
 
 	// change anytime vars
 	{ &g_dmflags, "dmflags", "0", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qtrue  },
+        { &g_fairflags, "fairflags", "3", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qtrue  },
         { &g_elimflags, "elimflags", "0", CVAR_SERVERINFO, 0, qfalse  },
         { &g_voteflags, "voteflags", "0", CVAR_SERVERINFO, 0, qfalse  },
 	{ &g_fraglimit, "fraglimit", "20", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },

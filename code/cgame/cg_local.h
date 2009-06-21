@@ -1020,6 +1020,7 @@ typedef struct {
 	// parsed from serverinfo
 	gametype_t		gametype;
 	int				dmflags;
+        int                             fairflags;
         int				elimflags;
 	int				teamflags;
 	int				fraglimit;
@@ -1330,6 +1331,8 @@ void CG_BuildSpectatorString( void );
 
 //unlagged, sagos modfication
 void SnapVectorTowards( vec3_t v, vec3_t to );
+
+void CG_FairCvars();
 
 
 //

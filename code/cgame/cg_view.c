@@ -495,15 +495,26 @@ static int CG_CalcFov( void ) {
 			} else if ( fov_x > 160 ) {
 				fov_x = 160;
 			}
+                        if( (cgs.fairflags & FF_LOCK_CVARS_BASIC) && fov_x>140 )
+                            fov_x = 140;
+
 		}
 
-		// account for zooms
-		zoomFov = cg_zoomFov.value;
-		if ( zoomFov < 1 ) {
-			zoomFov = 1;
-		} else if ( zoomFov > 160 ) {
-			zoomFov = 160;
-		}
+                if ( cgs.dmflags & DF_FIXED_FOV ) {
+			// dmflag to prevent wide fov for all clients
+			zoomFov = 22.5;
+		} else {
+                        // account for zooms
+                        zoomFov = cg_zoomFov.value;
+                        if ( zoomFov < 1 ) {
+                                zoomFov = 1;
+                        } else if ( zoomFov > 160 ) {
+                                zoomFov = 160;
+                        }
+
+                        if( (cgs.fairflags & FF_LOCK_CVARS_BASIC) && zoomFov>140 )
+                                zoomFov = 140;
+                }
 
 		if ( cg.zoomed ) {
 			f = ( cg.time - cg.zoomTime ) / (float)ZOOM_TIME;

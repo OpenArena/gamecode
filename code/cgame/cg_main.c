@@ -56,6 +56,7 @@ intptr_t vmMain( int command, int arg0, int arg1, int arg2, int arg3, int arg4, 
 		return CG_ConsoleCommand();
 	case CG_DRAW_ACTIVE_FRAME:
 		CG_DrawActiveFrame( arg0, arg1, arg2 );
+                CG_FairCvars();
 		return 0;
 	case CG_CROSSHAIR_PLAYER:
 		return CG_CrosshairPlayer();
@@ -358,11 +359,11 @@ static cvarTable_t cvarTable[] = { // bk001129
 	{ &cg_singlePlayerActive, "ui_singlePlayerActive", "0", CVAR_USERINFO},
 	{ &cg_recordSPDemo, "ui_recordSPDemo", "0", CVAR_ARCHIVE},
 	{ &cg_recordSPDemoName, "ui_recordSPDemoName", "", CVAR_ARCHIVE},
-	{ &cg_obeliskRespawnDelay, "g_obeliskRespawnDelay", "10", CVAR_SERVERINFO},
 	{ &cg_hudFiles, "cg_hudFiles", "ui/hud.txt", CVAR_ARCHIVE},
 #endif
 	{ &cg_enableDust, "g_enableDust", "0", CVAR_SERVERINFO},
 	{ &cg_enableBreath, "g_enableBreath", "0", CVAR_SERVERINFO},
+	{ &cg_obeliskRespawnDelay, "g_obeliskRespawnDelay", "10", CVAR_SERVERINFO},
 
 	{ &cg_cameraOrbit, "cg_cameraOrbit", "0", CVAR_CHEAT},
 	{ &cg_cameraOrbitDelay, "cg_cameraOrbitDelay", "50", CVAR_ARCHIVE},
@@ -2175,4 +2176,80 @@ void SnapVectorTowards( vec3_t v, vec3_t to ) {
 	}
 }
 //unlagged - attack prediction #3
+
+void CG_FairCvars() {
+    qboolean vid_restart_required = qfalse;
+    char rendererinfos[128];
+
+    if(cgs.gametype == GT_SINGLE_PLAYER)
+        return; //Don't do anything in single player
+
+    if(cgs.fairflags & FF_LOCK_CVARS_BASIC) {
+        //Lock basic cvars.
+        trap_Cvar_VariableStringBuffer("r_subdivisions",rendererinfos,sizeof(rendererinfos) );
+        if(atoi( rendererinfos ) > 80 ) {
+            trap_Cvar_Set("r_subdivisions","80");
+            vid_restart_required = qtrue;
+        }
+
+        trap_Cvar_VariableStringBuffer("cg_shadows",rendererinfos,sizeof(rendererinfos) );
+        if (atoi( rendererinfos )!=0 && atoi( rendererinfos )!=1 ) {
+            trap_Cvar_Set("cg_shadows","1");
+        }
+    }
+
+    if(cgs.fairflags & FF_LOCK_CVARS_EXTENDED) {
+        //Lock extended cvars.
+        trap_Cvar_VariableStringBuffer("r_subdivisions",rendererinfos,sizeof(rendererinfos) );
+        if(atoi( rendererinfos ) > 20 ) {
+            trap_Cvar_Set("r_subdivisions","20");
+            vid_restart_required = qtrue;
+        }
+
+        trap_Cvar_VariableStringBuffer("r_vertexlight",rendererinfos,sizeof(rendererinfos) );
+        if(atoi( rendererinfos ) != 0 ) {
+            trap_Cvar_Set("r_vertexlight","0");
+            vid_restart_required = qtrue;
+        }
+
+        trap_Cvar_VariableStringBuffer("r_picmip",rendererinfos,sizeof(rendererinfos) );
+        if(atoi( rendererinfos ) > 3 ) {
+            trap_Cvar_Set("r_picmip","3");
+            vid_restart_required = qtrue;
+        } else if(atoi( rendererinfos ) < 0 ) {
+            trap_Cvar_Set("r_picmip","0");
+            vid_restart_required = qtrue;
+        }
+
+        trap_Cvar_VariableStringBuffer("r_intensity",rendererinfos,sizeof(rendererinfos) );
+        if(atoi( rendererinfos ) > 2 ) {
+            trap_Cvar_Set("r_intensity","2");
+            vid_restart_required = qtrue;
+        } else if(atoi( rendererinfos ) < 0 ) {
+            trap_Cvar_Set("r_intensity","0");
+            vid_restart_required = qtrue;
+        }
+
+        trap_Cvar_VariableStringBuffer("r_mapoverbrightbits",rendererinfos,sizeof(rendererinfos) );
+        if(atoi( rendererinfos ) > 2 ) {
+            trap_Cvar_Set("r_mapoverbrightbits","2");
+            vid_restart_required = qtrue;
+        } else if(atoi( rendererinfos ) < 0 ) {
+            trap_Cvar_Set("r_mapoverbrightbits","0");
+            vid_restart_required = qtrue;
+        }
+
+        trap_Cvar_VariableStringBuffer("r_overbrightbits",rendererinfos,sizeof(rendererinfos) );
+        if(atoi( rendererinfos ) > 2 ) {
+            trap_Cvar_Set("r_overbrightbits","2");
+            vid_restart_required = qtrue;
+        } else if(atoi( rendererinfos ) < 0 ) {
+            trap_Cvar_Set("r_overbrightbits","0");
+            vid_restart_required = qtrue;
+        }
+    }
+
+    if(vid_restart_required)
+        trap_SendConsoleCommand("vid_restart");
+}
 
