@@ -226,6 +226,8 @@ vmCvar_t        cg_voteflags;
 vmCvar_t        cg_cyclegrapple;
 vmCvar_t        cg_vote_custom_commands;
 
+vmCvar_t                cg_autovertex;
+
 vmCvar_t	cg_fragmsgsize;
 
 vmCvar_t	cg_crosshairPulse;
@@ -350,6 +352,8 @@ static cvarTable_t cvarTable[] = { // bk001129
         { &cg_cyclegrapple, "cg_cyclegrapple", "1", CVAR_ARCHIVE},
         { &cg_vote_custom_commands, "cg_vote_custom_commands", "", CVAR_ROM },
 	{ &cg_synchronousClients, "g_synchronousClients", "0", CVAR_SYSTEMINFO },	// communicated by systeminfo
+
+        { &cg_autovertex, "cg_autovertex", "0", CVAR_ARCHIVE },
 #ifdef MISSIONPACK
 	{ &cg_redTeamName, "g_redteam", DEFAULT_REDTEAM_NAME, CVAR_ARCHIVE | CVAR_SERVERINFO | CVAR_USERINFO },
 	{ &cg_blueTeamName, "g_blueteam", DEFAULT_BLUETEAM_NAME, CVAR_ARCHIVE | CVAR_SERVERINFO | CVAR_USERINFO },
@@ -2181,8 +2185,14 @@ void CG_FairCvars() {
     qboolean vid_restart_required = qfalse;
     char rendererinfos[128];
 
-    if(cgs.gametype == GT_SINGLE_PLAYER)
+    if(cgs.gametype == GT_SINGLE_PLAYER) {
+        trap_Cvar_VariableStringBuffer("r_vertexlight",rendererinfos,sizeof(rendererinfos) );
+        if(atoi( rendererinfos ) == 0 ) {
+            trap_Cvar_Set("r_vertexlight","1");
+            vid_restart_required = qtrue;
+        }
         return; //Don't do anything in single player
+    }
 
     if(cgs.fairflags & FF_LOCK_CVARS_BASIC) {
         //Lock basic cvars.
@@ -2245,6 +2255,12 @@ void CG_FairCvars() {
             vid_restart_required = qtrue;
         } else if(atoi( rendererinfos ) < 0 ) {
             trap_Cvar_Set("r_overbrightbits","0");
+            vid_restart_required = qtrue;
+        }
+    } else if(cg_autovertex.integer){
+        trap_Cvar_VariableStringBuffer("r_vertexlight",rendererinfos,sizeof(rendererinfos) );
+        if(atoi( rendererinfos ) == 0 ) {
+            trap_Cvar_Set("r_vertexlight","1");
             vid_restart_required = qtrue;
         }
     }

@@ -609,6 +609,7 @@ static void GraphicsOptions_ApplyChanges( void *unused, int notification )
 	trap_Cvar_SetValue( "r_depthbits", 0 );
 	trap_Cvar_SetValue( "r_stencilbits", 0 );
 	trap_Cvar_SetValue( "r_vertexLight", s_graphicsoptions.lighting.curvalue );
+        trap_Cvar_SetValue( "cg_autovertex", s_graphicsoptions.lighting.curvalue );
         trap_Cvar_SetValue( "r_flares", s_graphicsoptions.flares.curvalue );
         trap_Cvar_SetValue( "r_bloom", s_graphicsoptions.bloom.curvalue );
         
