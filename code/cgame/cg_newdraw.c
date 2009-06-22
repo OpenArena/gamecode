@@ -48,10 +48,10 @@ void CG_InitTeamChat(void) {
 
 void CG_SetPrintString(int type, const char *p) {
   if (type == SYSTEM_PRINT) {
-    strcpy(systemChat, p);
+    Q_strncpyz(systemChat, p, sizeof(systemChat));
   } else {
-    strcpy(teamChat2, teamChat1);
-    strcpy(teamChat1, p);
+    Q_strncpyz(teamChat2, teamChat1, sizeof(teamChat2));
+    Q_strncpyz(teamChat1, p, sizeof(teamChat1));
   }
 }
 

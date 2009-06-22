@@ -320,9 +320,9 @@ static cvarTable_t		gameCvarTable[] = {
 
         //g_persistantpowerups
         #ifdef MISSIONPACK
-        { &g_persistantpowerups, "g_persistantpowerups", "1", CVAR_LATCH, 0, qfalse },
+        { &g_persistantpowerups, "g_persistentpowerups", "1", CVAR_LATCH, 0, qfalse },
         #else
-        { &g_persistantpowerups, "g_persistantpowerups", "0", CVAR_LATCH|CVAR_ARCHIVE, 0, qfalse },
+        { &g_persistantpowerups, "g_persistentpowerups", "0", CVAR_LATCH|CVAR_ARCHIVE, 0, qfalse },
         #endif
 
 

@@ -907,7 +907,7 @@ int BotChat_Random(bot_state_t *bs) {
 	if (BotVisibleEnemies(bs)) return qfalse;
 	//
 	if (bs->lastkilledplayer == bs->client) {
-		strcpy(name, BotRandomOpponentName(bs));
+		Q_strncpyz(name, BotRandomOpponentName(bs),sizeof(name));
 	}
 	else {
 		EasyClientName(bs->lastkilledplayer, name, sizeof(name));
@@ -1181,7 +1181,7 @@ void BotChatTest(bot_state_t *bs) {
 	}
 	//
 	if (bs->lastkilledplayer == bs->client) {
-		strcpy(name, BotRandomOpponentName(bs));
+		Q_strncpyz(name, BotRandomOpponentName(bs), sizeof(name));
 	}
 	else {
 		EasyClientName(bs->lastkilledplayer, name, sizeof(name));
