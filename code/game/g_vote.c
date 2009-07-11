@@ -138,6 +138,7 @@ int allowedMap(char *mapname) {
         return qfalse; //maps/MAPNAME.bsp does not exist
     trap_FS_FCloseFile(file);
 
+    //Now read the file votemaps.cfg to see what maps are allowed
     trap_FS_FOpenFile("votemaps.cfg",&file,FS_READ);
 
     if(!file)
@@ -236,6 +237,13 @@ int allowedFraglimit(int limit) {
 
 char            custom_vote_info[1024];
 
+/*
+==================
+VoteParseCustomVotes
+ *Reads the file votecustom.cfg. Finds all the commands that can be used with
+ *"/callvote custom COMMAND" and adds the commands to custom_vote_info
+==================
+ */
 int VoteParseCustomVotes( void ) {
     fileHandle_t	file;
     char            buffer[4*1024];
@@ -273,7 +281,12 @@ int VoteParseCustomVotes( void ) {
 
     return commands;
 }
-
+/*
+==================
+getCustomVote
+ *Returns a custom vote. This will go beyond MAX_CUSTOM_VOTES.
+==================
+ */
 t_customvote getCustomVote(char* votecommand) {
     t_customvote result;
     fileHandle_t	file;

@@ -249,7 +249,7 @@ static cvarTable_t		gameCvarTable[] = {
         
         //new in beta 19
         { &g_voteNames, "g_voteNames", "/map_restart/nextmap/map/g_gametype/kick/clientkick/g_doWarmup/timelimit/fraglimit/shuffle/", CVAR_ARCHIVE, 0, qfalse }, //clientkick g_doWarmup timelimit fraglimit
-        { &g_voteGametypes, "g_voteGametypes", "/0/1/3/4/8/9/10/11/12/", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse },
+        { &g_voteGametypes, "g_voteGametypes", "/0/1/3/4/5/6/7/8/9/10/11/12/", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse },
         { &g_voteMaxTimelimit, "g_voteMaxTimelimit", "0", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse },
         { &g_voteMinTimelimit, "g_voteMinTimelimit", "0", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse },
         { &g_voteMaxFraglimit, "g_voteMaxFraglimit", "0", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse },
@@ -320,9 +320,9 @@ static cvarTable_t		gameCvarTable[] = {
 
         //g_persistantpowerups
         #ifdef MISSIONPACK
-        { &g_persistantpowerups, "g_persistentpowerups", "1", CVAR_LATCH, 0, qfalse },
+        { &g_persistantpowerups, "g_runes", "1", CVAR_LATCH, 0, qfalse },
         #else
-        { &g_persistantpowerups, "g_persistentpowerups", "0", CVAR_LATCH|CVAR_ARCHIVE, 0, qfalse },
+        { &g_persistantpowerups, "g_runes", "0", CVAR_LATCH|CVAR_ARCHIVE, 0, qfalse },
         #endif
 
 
