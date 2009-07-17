@@ -2189,7 +2189,7 @@ void CG_FairCvars() {
 
     if(cgs.gametype == GT_SINGLE_PLAYER) {
         trap_Cvar_VariableStringBuffer("r_vertexlight",rendererinfos,sizeof(rendererinfos) );
-        if(atoi( rendererinfos ) == 0 ) {
+        if(cg_autovertex.integer && atoi( rendererinfos ) == 0 ) {
             trap_Cvar_Set("r_vertexlight","1");
             vid_restart_required = qtrue;
         }
