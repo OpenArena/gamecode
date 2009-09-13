@@ -244,7 +244,8 @@ typedef struct
 
 static controls_t s_controls;
 
-static vec4_t controls_binding_color  = {1.00f, 0.43f, 0.00f, 1.00f}; // bk: Win32 C4305
+// New! blueish
+static vec4_t controls_binding_color  = {0.58f, 0.70f, 0.81f, 1.00f};
 
 static bind_t g_bindings[] = 
 {
