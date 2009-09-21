@@ -31,11 +31,11 @@ SAVE CONFIG MENU
 #include "ui_local.h"
 
 
-#define ART_BACK0			"menu/art/back_0"
-#define ART_BACK1			"menu/art/back_1"	
-#define ART_SAVE0			"menu/art/save_0"
-#define ART_SAVE1			"menu/art/save_1"
-#define ART_BACKGROUND		"menu/art/cut_frame"
+#define ART_BACK0			"menu/art_blueish/back_0"
+#define ART_BACK1			"menu/art_blueish/back_1"
+#define ART_SAVE0			"menu/art_blueish/save_0"
+#define ART_SAVE1			"menu/art_blueish/save_1"
+#define ART_BACKGROUND		"menu/art_blueish/cut_frame"
 
 #define ID_NAME			10
 #define ID_BACK			11

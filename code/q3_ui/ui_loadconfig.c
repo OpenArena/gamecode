@@ -31,15 +31,15 @@ LOAD CONFIG MENU
 #include "ui_local.h"
 
 
-#define ART_BACK0			"menu/art/back_0"
-#define ART_BACK1			"menu/art/back_1"	
-#define ART_FIGHT0			"menu/art/load_0"
-#define ART_FIGHT1			"menu/art/load_1"
-#define ART_FRAMEL			"menu/art/frame2_l"
-#define ART_FRAMER			"menu/art/frame1_r"
-#define ART_ARROWS			"menu/art/arrows_horz_0"
-#define ART_ARROWLEFT		"menu/art/arrows_horz_left"
-#define ART_ARROWRIGHT		"menu/art/arrows_horz_right"
+#define ART_BACK0			"menu/art_blueish/back_0"
+#define ART_BACK1			"menu/art_blueish/back_1"
+#define ART_FIGHT0			"menu/art_blueish/load_0"
+#define ART_FIGHT1			"menu/art_blueish/load_1"
+#define ART_FRAMEL			"menu/art_blueish/frame2_l"
+#define ART_FRAMER			"menu/art_blueish/frame1_r"
+#define ART_ARROWS			"menu/art_blueish/arrows_horz_0"
+#define ART_ARROWLEFT		"menu/art_blueish/arrows_horz_left"
+#define ART_ARROWRIGHT		"menu/art_blueish/arrows_horz_right"
 
 #define MAX_CONFIGS			128
 #define NAMEBUFSIZE			( MAX_CONFIGS * 16 )

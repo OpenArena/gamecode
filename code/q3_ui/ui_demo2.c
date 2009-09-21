@@ -32,15 +32,15 @@ DEMOS MENU
 #include "ui_local.h"
 
 
-#define ART_BACK0			"menu/art/back_0"
-#define ART_BACK1			"menu/art/back_1"
-#define ART_GO0				"menu/art/play_0"
-#define ART_GO1				"menu/art/play_1"
-#define ART_FRAMEL			"menu/art/frame2_l"
-#define ART_FRAMER			"menu/art/frame1_r"
-#define ART_ARROWS			"menu/art/arrows_vert_0"
-#define ART_ARROWUP		"menu/art/arrows_vert_top"
-#define ART_ARROWDN		"menu/art/arrows_vert_bot"
+#define ART_BACK0			"menu/art_blueish/back_0"
+#define ART_BACK1			"menu/art_blueish/back_1"
+#define ART_GO0				"menu/art_blueish/play_0"
+#define ART_GO1				"menu/art_blueish/play_1"
+#define ART_FRAMEL			"menu/art_blueish/frame2_l"
+#define ART_FRAMER			"menu/art_blueish/frame1_r"
+#define ART_ARROWS			"menu/art_blueish/arrows_vert_0"
+#define ART_ARROWUP		"menu/art_blueish/arrows_vert_top"
+#define ART_ARROWDN		"menu/art_blueish/arrows_vert_bot"
 
 #define MAX_DEMOS			128
 #define NAMEBUFSIZE			( MAX_DEMOS * 16 )

@@ -34,10 +34,10 @@ SETUP MENU
 
 #define SETUP_MENU_VERTICAL_SPACING		34
 
-#define ART_BACK0		"menu/art/back_0"
-#define ART_BACK1		"menu/art/back_1"	
-#define ART_FRAMEL		"menu/art/frame2_l"
-#define ART_FRAMER		"menu/art/frame1_r"
+#define ART_BACK0		"menu/art_blueish/back_0"
+#define ART_BACK1		"menu/art_blueish/back_1"
+#define ART_FRAMEL		"menu/art_blueish/frame2_l"
+#define ART_FRAMER		"menu/art_blueish/frame1_r"
 
 #define ID_CUSTOMIZEPLAYER		10
 #define ID_CUSTOMIZECONTROLS	11

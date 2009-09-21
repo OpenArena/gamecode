@@ -31,11 +31,11 @@ SINGLE PLAYER SKILL MENU
 #include "ui_local.h"
 
 
-#define ART_FRAME					"menu/art/cut_frame"
-#define ART_BACK					"menu/art/back_0.tga"
-#define ART_BACK_FOCUS				"menu/art/back_1.tga"
-#define ART_FIGHT					"menu/art/fight_0"
-#define ART_FIGHT_FOCUS				"menu/art/fight_1"
+#define ART_FRAME				"menu/art_blueish/cut_frame"
+#define ART_BACK				"menu/art_blueish/back_0.tga"
+#define ART_BACK_FOCUS				"menu/art_blueish/back_1.tga"
+#define ART_FIGHT				"menu/art_blueish/fight_0"
+#define ART_FIGHT_FOCUS				"menu/art_blueish/fight_1"
 #define ART_MAP_COMPLETE1			"menu/art/level_complete1"
 #define ART_MAP_COMPLETE2			"menu/art/level_complete2"
 #define ART_MAP_COMPLETE3			"menu/art/level_complete3"

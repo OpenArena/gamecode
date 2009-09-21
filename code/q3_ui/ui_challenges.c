@@ -37,10 +37,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define ID_POWERUPS                     104
 #define ID_FFA                          105
 
-#define ART_BACK0		"menu/art/back_0"
-#define ART_BACK1		"menu/art/back_1"
-#define ART_FRAMEL		"menu/art/frame2_l"
-#define ART_FRAMER		"menu/art/frame1_r"
+#define ART_BACK0		"menu/art_blueish/back_0"
+#define ART_BACK1		"menu/art_blueish/back_1"
+#define ART_FRAMEL		"menu/art_blueish/frame2_l"
+#define ART_FRAMER		"menu/art_blueish/frame1_r"
 
 #define MAX_ENTRIES                     18
 #define MAX_INT_AS_STRING               8

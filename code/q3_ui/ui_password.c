@@ -26,12 +26,12 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	SPECIFY PASSWORD
 *********************************************************************************/
 
-#define SPECIFYPASSWORD_FRAMEL	"menu/art/frame2_l"
-#define SPECIFYPASSWORD_FRAMER	"menu/art/frame1_r"
-#define SPECIFYPASSWORD_BACK0		"menu/art/back_0"
-#define SPECIFYPASSWORD_BACK1		"menu/art/back_1"
-#define SPECIFYPASSWORD_FIGHT0	"menu/art/fight_0"
-#define SPECIFYPASSWORD_FIGHT1	"menu/art/fight_1"
+#define SPECIFYPASSWORD_FRAMEL	"menu/art_blueish/frame2_l"
+#define SPECIFYPASSWORD_FRAMER	"menu/art_blueish/frame1_r"
+#define SPECIFYPASSWORD_BACK0		"menu/art_blueish/back_0"
+#define SPECIFYPASSWORD_BACK1		"menu/art_blueish/back_1"
+#define SPECIFYPASSWORD_FIGHT0	"menu/art_blueish/fight_0"
+#define SPECIFYPASSWORD_FIGHT1	"menu/art_blueish/fight_1"
 
 #define ID_SPECIFYPASSWORDBACK	102
 #define ID_SPECIFYPASSWORDGO		103

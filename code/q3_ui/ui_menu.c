@@ -172,7 +172,7 @@ static void Main_MenuDraw( void ) {
 	vec3_t			angles;
 	float			adjust;
 	float			x, y, w, h;
-	vec4_t			color = {0, 0, 0.5, 1};
+	vec4_t			color = {0.2, 0.2, 1.0, 1};
 
 	// setup the refdef
 

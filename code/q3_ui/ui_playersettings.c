@@ -22,12 +22,12 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 //
 #include "ui_local.h"
 
-#define ART_FRAMEL			"menu/art/frame2_l"
-#define ART_FRAMER			"menu/art/frame1_r"
-#define ART_MODEL0			"menu/art/model_0"
-#define ART_MODEL1			"menu/art/model_1"
-#define ART_BACK0			"menu/art/back_0"
-#define ART_BACK1			"menu/art/back_1"
+#define ART_FRAMEL			"menu/art_blueish/frame2_l"
+#define ART_FRAMER			"menu/art_blueish/frame1_r"
+#define ART_MODEL0			"menu/art_blueish/model_0"
+#define ART_MODEL1			"menu/art_blueish/model_1"
+#define ART_BACK0			"menu/art_blueish/back_0"
+#define ART_BACK1			"menu/art_blueish/back_1"
 #define ART_FX_BASE			"menu/art/fx_base"
 #define ART_FX_BLUE			"menu/art/fx_blue"
 #define ART_FX_CYAN			"menu/art/fx_cyan"

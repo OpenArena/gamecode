@@ -28,12 +28,12 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * Options: Name, Network Rate, Delag, Auto Download                          *
  ******************************************************************************/
 
-#define ART_BACK0		"menu/art/back_0"
-#define ART_BACK1		"menu/art/back_1"
-#define ART_FRAMEL		"menu/art/frame2_l"
-#define ART_FRAMER		"menu/art/frame1_r"
-#define ART_FIGHT0              "menu/art/accept_0"
-#define ART_FIGHT1              "menu/art/accept_1"
+#define ART_BACK0		"menu/art_blueish/back_0"
+#define ART_BACK1		"menu/art_blueish/back_1"
+#define ART_FRAMEL		"menu/art_blueish/frame2_l"
+#define ART_FRAMER		"menu/art_blueish/frame1_r"
+#define ART_FIGHT0              "menu/art_blueish/accept_0"
+#define ART_FIGHT1              "menu/art_blueish/accept_1"
 
 
 #define ID_NAME			10
