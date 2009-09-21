@@ -696,12 +696,12 @@ static void ArenaServers_UpdateMenu( void ) {
                  */
                 b = buff;
                 *b++ = '^';
-                *b++ = '8';
+                *b++ = '7';
 		bufAddr = Q_strcpyColor( servernodeptr->hostname, b, 30 );
 		b += bufAddr; 
 		*b++ = ' ';
                 *b++ = '^';
-                *b++ = '8';
+                *b++ = '7';
 	
 		bufAddr = Q_strcpyColor( servernodeptr->mapname, b, 16 );
 		b += bufAddr;
