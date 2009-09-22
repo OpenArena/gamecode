@@ -1721,8 +1721,8 @@ void Cmd_CallVote_f( gentity_t *ent ) {
                     trap_SendServerCommand( ent-g_entities, "print \"Cannot kick that number.\n\"" );
                     return;
                 }
-                Com_sprintf( level.voteString, sizeof( level.voteString ), "clientkick \"%d\"", i );
-		Com_sprintf( level.voteDisplayString, sizeof( level.voteDisplayString ), "Kick %s?" , (g_entities+i)->client->pers.netname );
+                Com_sprintf( level.voteString, sizeof( level.voteString ), "clientkick_game \"%d\"", i );
+		Com_sprintf( level.voteDisplayString, sizeof( level.voteDisplayString ), "Kick %s?" , level.clients[i].pers.netname );
         } else if ( !Q_stricmp( arg1, "shuffle" ) ) {
                 if(g_gametype.integer<GT_TEAM || g_ffa_gt==1) { //Not a team game
                     trap_SendServerCommand( ent-g_entities, "print \"Can only be used in team games.\n\"" );
@@ -1742,8 +1742,8 @@ void Cmd_CallVote_f( gentity_t *ent ) {
                     }
                 }
 
-                Com_sprintf( level.voteString, sizeof( level.voteString ), "clientkick \"%d\"", i );
-		Com_sprintf( level.voteDisplayString, sizeof( level.voteDisplayString ), "Kick %s?" , (g_entities+i)->client->pers.netname );
+                Com_sprintf( level.voteString, sizeof( level.voteString ), "clientkick_game \"%d\"", i );
+		Com_sprintf( level.voteDisplayString, sizeof( level.voteDisplayString ), "Kick %s?" , level.clients[i].pers.netname );
         } else if ( !Q_stricmp( arg1, "custom" ) ) {
                 t_customvote customvote;
                 //Sago: There must always be a test to ensure that length(arg2) is non-zero or the client might be able to execute random commands.

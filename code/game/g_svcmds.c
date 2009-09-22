@@ -432,6 +432,35 @@ void	Svcmd_ForceTeam_f( void ) {
 	SetTeam( &g_entities[cl - level.clients], str );
 }
 
+void	ClientKick_f( void ) {
+        int idnum, i;
+        char	str[MAX_TOKEN_CHARS];
+
+        trap_Argv( 1, str, sizeof( str ) );
+
+        for (i = 0; str[i]; i++) {
+		if (str[i] < '0' || str[i] > '9') {
+                    G_Printf("not a valid client number: \"%s\"\n",str);
+			return;
+		}
+	}
+
+        idnum = atoi( str );
+
+        //Local client
+        if( !strcmp( level.clients[idnum].pers.ip, "localhost" ) ) {
+            G_Printf("Kick failed - local player\n");
+            return;
+        }
+
+        //Now clientkick has been moved into game, but we still need to find the idnum the server expects....
+        //FIXME: To fix this, we need a relieble way to generate difference between the server's client number and the game's client numbers
+        //FIXME: This should not depend on the engine's clientkick at all
+        trap_DropClient( idnum, "was kicked" );
+        //trap_SendConsoleCommand( EXEC_INSERT, va("clientkick %d\n", level.clients[idnum].ps.clientNum) );
+        
+}
+
 //KK-OAX Moved this Declaration to g_local.h
 //char	*ConcatArgs( int start );
 
@@ -473,6 +502,8 @@ struct
   { "bp", qtrue, Svcmd_BannerPrint_f }, */
   //Shuffle the teams
   { "shuffle", qfalse, ShuffleTeams },
+  //Kicks a player by number in the game logic rather than the server number
+  { "clientkick_game", qfalse, ClientKick_f },
 };
 
 /*
