@@ -2448,7 +2448,12 @@ static void CG_DrawCrosshair(void)
 		CG_ColorForHealth( hcolor );
 		trap_R_SetColor( hcolor );
 	} else {
-		trap_R_SetColor( NULL );
+                vec4_t         color;
+                color[0]=cg_crosshairColorRed.value;
+                color[1]=cg_crosshairColorGreen.value;
+                color[2]=cg_crosshairColorBlue.value;
+                color[3]=1.0f;
+		trap_R_SetColor( color );
 	}
 
 	if( cg_differentCrosshairs.integer == 1 ){

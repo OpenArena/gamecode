@@ -1299,6 +1299,10 @@ extern	vmCvar_t		cg_ch12size;
 extern	vmCvar_t		cg_ch13;
 extern	vmCvar_t		cg_ch13size;
 
+extern	vmCvar_t                cg_crosshairColorRed;
+extern	vmCvar_t                cg_crosshairColorGreen;
+extern	vmCvar_t                cg_crosshairColorBlue;
+
 extern vmCvar_t			cg_weaponBarStyle;
 
 //unlagged - cg_unlagged.c

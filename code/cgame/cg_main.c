@@ -259,6 +259,10 @@ vmCvar_t	cg_ch12size;
 vmCvar_t	cg_ch13;
 vmCvar_t	cg_ch13size;
 
+vmCvar_t	cg_crosshairColorRed;
+vmCvar_t	cg_crosshairColorGreen;
+vmCvar_t	cg_crosshairColorBlue;
+
 vmCvar_t	cg_weaponBarStyle;
 
 typedef struct {
@@ -439,7 +443,11 @@ static cvarTable_t cvarTable[] = { // bk001129
 	{ &cg_ch12size, "cg_ch12size", "24", CVAR_ARCHIVE},
 	{ &cg_ch13, "cg_ch13", "1", CVAR_ARCHIVE},
 	{ &cg_ch13size, "cg_ch13size", "24", CVAR_ARCHIVE},
-	
+
+	{ &cg_crosshairColorRed, "cg_crosshairColorRed", "1.0", CVAR_ARCHIVE},
+        { &cg_crosshairColorGreen, "cg_crosshairColorGreen", "1.0", CVAR_ARCHIVE},
+        { &cg_crosshairColorBlue, "cg_crosshairColorBlue", "1.0", CVAR_ARCHIVE},
+
 	{ &cg_weaponBarStyle, "cg_weaponBarStyle", "0", CVAR_ARCHIVE},
 };
 
