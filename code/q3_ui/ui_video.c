@@ -33,10 +33,10 @@ DRIVER INFORMATION MENU
 */
 
 
-#define DRIVERINFO_FRAMEL	"menu/art/frame2_l"
-#define DRIVERINFO_FRAMER	"menu/art/frame1_r"
-#define DRIVERINFO_BACK0	"menu/art/back_0"
-#define DRIVERINFO_BACK1	"menu/art/back_1"
+#define DRIVERINFO_FRAMEL	"menu/art_blueish/frame2_l"
+#define DRIVERINFO_FRAMER	"menu/art_blueish/frame1_r"
+#define DRIVERINFO_BACK0	"menu/art_blueish/back_0"
+#define DRIVERINFO_BACK1	"menu/art_blueish/back_1"
 
 static char* driverinfo_artlist[] = 
 {

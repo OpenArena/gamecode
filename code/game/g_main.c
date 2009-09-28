@@ -1909,8 +1909,16 @@ void CheckDoubleDomination( void ) {
 		return;
 	}
 
-	if ( level.warmupTime != 0)
-		return;
+	if ( level.warmupTime != 0) {
+            if( ((level.pointStatusA == TEAM_BLUE && level.pointStatusB == TEAM_BLUE) ||
+                 (level.pointStatusA == TEAM_RED && level.pointStatusB == TEAM_RED)) &&
+                    level.timeTaken + 10*1000 <= level.time ) {
+                        Team_RemoveDoubleDominationPoints();
+                        level.roundStartTime = level.time + 10*1000;
+                        SendScoreboardMessageToAllClients();
+            }
+            return;
+        }
 
 	if(g_gametype.integer != GT_DOUBLE_D)
 		return;
