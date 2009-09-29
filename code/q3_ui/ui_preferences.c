@@ -54,6 +54,9 @@ GAME OPTIONS MENU
 //Elimination
 #define ID_WEAPONBAR                    139
 #define ID_DELAGHITSCAN		140
+#define ID_COLORRED             141
+#define ID_COLORGREEN           142
+#define ID_COLORBLUE            143
 
 #define	NUM_CROSSHAIRS			99
 
@@ -66,6 +69,12 @@ typedef struct {
 	menubitmap_s		framer;
 
 	menulist_s			crosshair;
+
+        //Crosshair colors:
+        menuslider_s            crosshairColorRed;
+        menuslider_s            crosshairColorGreen;
+        menuslider_s            crosshairColorBlue;
+
 	menuradiobutton_s	simpleitems;
         menuradiobutton_s	alwaysweaponbar;
 	menuradiobutton_s	brass;
@@ -96,6 +105,9 @@ static const char *teamoverlay_names[] =
 
 static void Preferences_SetMenuItems( void ) {
 	s_preferences.crosshair.curvalue		= (int)trap_Cvar_VariableValue( "cg_drawCrosshair" ) % NUM_CROSSHAIRS;
+        s_preferences.crosshairColorRed.curvalue        = trap_Cvar_VariableValue( "cg_crosshairColorRed")*255.0f;
+        s_preferences.crosshairColorGreen.curvalue      = trap_Cvar_VariableValue( "cg_crosshairColorGreen")*255.0f;
+        s_preferences.crosshairColorBlue.curvalue       = trap_Cvar_VariableValue( "cg_crosshairColorBlue")*255.0f;
 	s_preferences.simpleitems.curvalue		= trap_Cvar_VariableValue( "cg_simpleItems" ) != 0;
         s_preferences.alwaysweaponbar.curvalue		= trap_Cvar_VariableValue( "cg_alwaysWeaponBar" ) != 0;
 	s_preferences.brass.curvalue			= trap_Cvar_VariableValue( "cg_brassTime" ) != 0;
@@ -123,6 +135,18 @@ static void Preferences_Event( void* ptr, int notification ) {
 		}
 		trap_Cvar_SetValue( "cg_drawCrosshair", s_preferences.crosshair.curvalue );
 		break;
+
+        case ID_COLORRED:
+                trap_Cvar_SetValue( "cg_crosshairColorRed", ((float)s_preferences.crosshairColorRed.curvalue)/255.f );
+                break;
+
+        case ID_COLORGREEN:
+                trap_Cvar_SetValue( "cg_crosshairColorGreen", ((float)s_preferences.crosshairColorGreen.curvalue)/255.f );
+                break;
+
+        case ID_COLORBLUE:
+                trap_Cvar_SetValue( "cg_crosshairColorBlue", ((float)s_preferences.crosshairColorBlue.curvalue)/255.f );
+                break;
 
 	case ID_SIMPLEITEMS:
 		trap_Cvar_SetValue( "cg_simpleItems", s_preferences.simpleitems.curvalue );
@@ -195,6 +219,7 @@ static void Crosshair_Draw( void *self ) {
 	int			x, y;
 	int			style;
 	qboolean	focus;
+        vec4_t          color4;
 
 	s = (menulist_s *)self;
 	x = s->generic.x;
@@ -229,6 +254,11 @@ static void Crosshair_Draw( void *self ) {
 	if( !s->curvalue ) {
 		return;
 	}
+        color4[0]=((float)s_preferences.crosshairColorRed.curvalue)/255.f;
+        color4[1]=((float)s_preferences.crosshairColorGreen.curvalue)/255.f;
+        color4[2]=((float)s_preferences.crosshairColorBlue.curvalue)/255.f;
+        color4[3]=1.0f;
+	trap_R_SetColor( color4 );
 	UI_DrawHandlePic( x + SMALLCHAR_WIDTH, y - 4, 24, 24, s_preferences.crosshairShader[s->curvalue] );
 }
 
@@ -266,7 +296,7 @@ static void Preferences_MenuInit( void ) {
 	s_preferences.framer.width  	   = 256;
 	s_preferences.framer.height  	   = 334;
 
-	y = 144;
+	y = 104;
 	s_preferences.crosshair.generic.type		= MTYPE_TEXT;
 	s_preferences.crosshair.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT|QMF_NODEFAULTINIT|QMF_OWNERDRAW;
 	s_preferences.crosshair.generic.x			= PREFERENCES_X_POS;
@@ -279,6 +309,39 @@ static void Preferences_MenuInit( void ) {
 	s_preferences.crosshair.generic.bottom		= y + 20;
 	s_preferences.crosshair.generic.left		= PREFERENCES_X_POS - ( ( strlen(s_preferences.crosshair.generic.name) + 1 ) * SMALLCHAR_WIDTH );
 	s_preferences.crosshair.generic.right		= PREFERENCES_X_POS + 48;
+
+        y += BIGCHAR_HEIGHT+2;
+        s_preferences.crosshairColorRed.generic.type		= MTYPE_SLIDER;
+	s_preferences.crosshairColorRed.generic.name		= "Crosshair red:";
+	s_preferences.crosshairColorRed.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	s_preferences.crosshairColorRed.generic.callback	= Preferences_Event;
+	s_preferences.crosshairColorRed.generic.id		= ID_COLORRED;
+	s_preferences.crosshairColorRed.generic.x			= PREFERENCES_X_POS;
+	s_preferences.crosshairColorRed.generic.y			= y;
+	s_preferences.crosshairColorRed.minvalue			= 0.0f;
+	s_preferences.crosshairColorRed.maxvalue			= 255.0f;
+
+        y += BIGCHAR_HEIGHT+2;
+        s_preferences.crosshairColorGreen.generic.type		= MTYPE_SLIDER;
+	s_preferences.crosshairColorGreen.generic.name		= "Crosshair green:";
+	s_preferences.crosshairColorGreen.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	s_preferences.crosshairColorGreen.generic.callback	= Preferences_Event;
+	s_preferences.crosshairColorGreen.generic.id		= ID_COLORGREEN;
+	s_preferences.crosshairColorGreen.generic.x			= PREFERENCES_X_POS;
+	s_preferences.crosshairColorGreen.generic.y			= y;
+	s_preferences.crosshairColorGreen.minvalue			= 0.0f;
+	s_preferences.crosshairColorGreen.maxvalue			= 255.0f;
+
+        y += BIGCHAR_HEIGHT+2;
+        s_preferences.crosshairColorBlue.generic.type		= MTYPE_SLIDER;
+	s_preferences.crosshairColorBlue.generic.name		= "Crosshair blue:";
+	s_preferences.crosshairColorBlue.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	s_preferences.crosshairColorBlue.generic.callback	= Preferences_Event;
+	s_preferences.crosshairColorBlue.generic.id		= ID_COLORBLUE;
+	s_preferences.crosshairColorBlue.generic.x			= PREFERENCES_X_POS;
+	s_preferences.crosshairColorBlue.generic.y			= y;
+	s_preferences.crosshairColorBlue.minvalue			= 0.0f;
+	s_preferences.crosshairColorBlue.maxvalue			= 255.0f;
 
 	y += BIGCHAR_HEIGHT+2+4;
 	s_preferences.simpleitems.generic.type        = MTYPE_RADIOBUTTON;
@@ -407,6 +470,9 @@ static void Preferences_MenuInit( void ) {
 	Menu_AddItem( &s_preferences.menu, &s_preferences.framer );
 
 	Menu_AddItem( &s_preferences.menu, &s_preferences.crosshair );
+        Menu_AddItem( &s_preferences.menu, &s_preferences.crosshairColorRed );
+        Menu_AddItem( &s_preferences.menu, &s_preferences.crosshairColorGreen );
+        Menu_AddItem( &s_preferences.menu, &s_preferences.crosshairColorBlue );
 	Menu_AddItem( &s_preferences.menu, &s_preferences.simpleitems );
         Menu_AddItem( &s_preferences.menu, &s_preferences.alwaysweaponbar );
 	Menu_AddItem( &s_preferences.menu, &s_preferences.wallmarks );
