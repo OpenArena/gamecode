@@ -1299,6 +1299,11 @@ int BotAIShutdownClient(int client, qboolean restart) {
 	memset(bs, 0, sizeof(bot_state_t));
 	//set the inuse flag to qfalse
 	bs->inuse = qfalse;
+
+        //Sago: Experimental (free memory)
+        BG_Free(botstates[client]);
+        botstates[client] = NULL;
+
 	//there's one bot less
 	numbots--;
 	//everything went ok
