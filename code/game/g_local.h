@@ -1073,6 +1073,8 @@ extern vmCvar_t         g_awardpushing; //The server can decide if players are a
 
 extern vmCvar_t         g_persistantpowerups;
 
+extern vmCvar_t        g_catchup; //Favors the week players
+
 extern vmCvar_t        g_voteNames;
 extern vmCvar_t        g_voteGametypes;
 extern vmCvar_t        g_voteMinTimelimit;

@@ -137,6 +137,8 @@ vmCvar_t	g_elimination_ctf_oneway;
 vmCvar_t        g_awardpushing; //The server can decide if players are awarded for pushing people in lave etc.
 vmCvar_t        g_persistantpowerups; //Allow missionpack style persistant powerups?
 
+vmCvar_t        g_catchup; //Favors the week players
+
 vmCvar_t        g_voteNames;
 vmCvar_t        g_voteGametypes;
 vmCvar_t        g_voteMinTimelimit;
@@ -336,6 +338,8 @@ static cvarTable_t		gameCvarTable[] = {
 	{ &g_vampireMaxHealth, "g_vampire_max_health", "500", CVAR_NORESTART, 0, qtrue },
 	{ &g_lms_lives, "g_lms_lives", "1", CVAR_NORESTART, 0, qtrue },
 	{ &g_lms_mode, "g_lms_mode", "0", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
+
+        { &g_catchup, "g_catchup", "0", CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue},
 
         { &g_humanplayers, "g_humanplayers", "0", CVAR_ROM | CVAR_NORESTART, 0, qfalse },
 //used for voIP

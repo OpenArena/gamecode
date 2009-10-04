@@ -968,6 +968,23 @@ int G_InvulnerabilityEffect( gentity_t *targ, vec3_t dir, vec3_t point, vec3_t i
 }
 
 /*
+catchup_damage
+*/
+static int catchup_damage(int damage, int attacker_points, int target_points) {
+    int newdamage;
+    if(g_catchup.integer <= 0 )
+        return damage;
+    //Reduce damage
+    if(attacker_points<=target_points+5)
+        return damage; //Never reduce damage if only 5 points ahead.
+
+    newdamage=damage-((attacker_points-target_points-5) * (g_catchup.integer*damage))/100;
+    if(newdamage<damage/2)
+        return damage/2;
+    return newdamage;
+}
+
+/*
 ============
 T_Damage
 
@@ -1182,6 +1199,9 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 	if ( targ == attacker) {
 		damage *= 0.5;
 	}
+
+        if(targ && targ->client && attacker->client )
+            damage = catchup_damage(damage, attacker->client->ps.persistant[PERS_SCORE], targ->client->ps.persistant[PERS_SCORE]);
 
 	if ( damage < 1 ) {
 		damage = 1;
