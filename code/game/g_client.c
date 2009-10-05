@@ -1007,86 +1007,61 @@ static void ForceClientSkin( gclient_t *client, char *model, const char *skin ) 
 ClientCheckName
 ============
 */
-static void ClientCleanName( const char *in, char *out, int outSize ) {
-	int		len, colorlessLen;
-	char	ch;
-	char	*p;
-	int		spaces;
+static void ClientCleanName(const char *in, char *out, int outSize)
+{
+    int outpos = 0, colorlessLen = 0, spaces = 0;
 
-	//save room for trailing null byte
-	outSize--;
+    // discard leading spaces
+    for(; *in == ' '; in++);
 
-	len = 0;
-	colorlessLen = 0;
-	p = out;
-	*p = 0;
-	spaces = 0;
+    for(; *in && outpos < outSize - 1; in++)
+    {
+        out[outpos] = *in;
 
-	while( 1 ) {
-		ch = *in++;
-		if( !ch ) {
-			break;
-		}
+        if(*in == ' ')
+        {
+            // don't allow too many consecutive spaces
+            if(spaces > 2)
+                continue;
 
-		// don't allow leading spaces
-		if( colorlessLen == 0 && ch == ' ' ) {
-			continue;
-		}
+            spaces++;
+        }
+        else if(outpos > 0 && out[outpos - 1] == Q_COLOR_ESCAPE)
+        {
+            if(Q_IsColorString(&out[outpos - 1]))
+            {
+                colorlessLen--;
 
-		// check colors
-		if( ch == Q_COLOR_ESCAPE ) {
-			// solo trailing carat is not a color prefix
-			if( !*in ) {
-				break;
-			}
+                if(ColorIndex(*in) == 0)
+                {
+                    // Disallow color black in names to prevent players
+                    // from getting advantage playing in front of black backgrounds
+                    outpos--;
+                    continue;
+                }
+            }
+            else
+            {
+                spaces = 0;
+                colorlessLen++;
+            }
+        }
+        else
+        {
+            spaces = 0;
+            colorlessLen++;
+        }
 
-			// don't allow black in a name, period
-			if( ColorIndex(*in) == 0 ) {
-				in++;
-				continue;
-			}
+        outpos++;
+    }
 
-			// make sure room in dest for both chars
-			if( len > outSize - 2 ) {
-				break;
-			}
+    out[outpos] = '\0';
 
-			*out++ = ch;
-			*out++ = *in++;
-			len += 2;
-			continue;
-		}
-
-		// don't allow too many consecutive spaces
-		// don't count spaces in colorlessLen
-                if( ch == ' ' ) {
-			spaces++;
-			if( spaces > 3 ) {
-				continue;
-			}
-                        *out++ = ch;
-			len++;
-			continue;
-		}
-		else {
-			spaces = 0;
-		}
-
-		if( len > outSize - 1 ) {
-			break;
-		}
-
-		*out++ = ch;
-		colorlessLen++;
-		len++;
-	}
-	*out = 0;
-
-	// don't allow empty names
-	if( *p == 0 || colorlessLen == 0 ) {
-		Q_strncpyz( p, "UnnamedPlayer", outSize );
-	}
+    // don't allow empty names
+    if( *out == '\0' || colorlessLen == 0)
+        Q_strncpyz(out, "UnnamedPlayer", outSize );
 }
+
 
 
 /*

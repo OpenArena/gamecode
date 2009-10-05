@@ -343,8 +343,7 @@ extern	vec4_t		colorMdGrey;
 extern	vec4_t		colorDkGrey;
 
 #define Q_COLOR_ESCAPE	'^'
-#define Q_IsColorString(p)	( p && *(p) == Q_COLOR_ESCAPE && *((p)+1) && isalnum(*((p)+1)) ) // ^[0-9a-zA-Z]
-
+#define Q_IsColorString(p)      ((p) && *(p) == Q_COLOR_ESCAPE && *((p)+1) && *((p)+1) >= '0' && *((p)+1) <= '8') // ^[0-8]
 #define COLOR_BLACK		'0'
 #define COLOR_RED		'1'
 #define COLOR_GREEN		'2'
@@ -354,7 +353,7 @@ extern	vec4_t		colorDkGrey;
 #define COLOR_MAGENTA	'6'
 #define COLOR_WHITE		'7'
 #define COLOR_MENU      '8'
-#define ColorIndex(c)	( (unsigned int)( (c) - '0' ) & 7 )
+#define ColorIndex(c)   ((c) - '0')
 
 #define S_COLOR_BLACK	"^0"
 #define S_COLOR_RED		"^1"
