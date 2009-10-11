@@ -231,12 +231,12 @@ GRAPHICS OPTIONS MENU
 =======================================================================
 */
 
-#define GRAPHICSOPTIONS_FRAMEL	"menu/art/frame2_l"
-#define GRAPHICSOPTIONS_FRAMER	"menu/art/frame1_r"
-#define GRAPHICSOPTIONS_BACK0	"menu/art/back_0"
-#define GRAPHICSOPTIONS_BACK1	"menu/art/back_1"
-#define GRAPHICSOPTIONS_ACCEPT0	"menu/art/accept_0"
-#define GRAPHICSOPTIONS_ACCEPT1	"menu/art/accept_1"
+#define GRAPHICSOPTIONS_FRAMEL	"menu/art_blueish/frame2_l"
+#define GRAPHICSOPTIONS_FRAMER	"menu/art_blueish/frame1_r"
+#define GRAPHICSOPTIONS_BACK0	"menu/art_blueish/back_0"
+#define GRAPHICSOPTIONS_BACK1	"menu/art_blueish/back_1"
+#define GRAPHICSOPTIONS_ACCEPT0	"menu/art_blueish/accept_0"
+#define GRAPHICSOPTIONS_ACCEPT1	"menu/art_blueish/accept_1"
 
 #define ID_BACK2		101
 #define ID_FULLSCREEN	102
