@@ -114,11 +114,11 @@ MULTIPLAYER MENU (SERVER BROWSER)
 
 static const char *master_items[] = {
 	"Local",
-	"Internet1",
-	"Internet2",
-	"Internet3",
-	"Internet4",
-	"Internet5",
+	"Internet",
+	"Internet(2)",
+	"Internet(3)",
+	"Internet(4)",
+	"Internet(5)",
 	"Favorites",
 	NULL
 };
