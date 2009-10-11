@@ -50,7 +50,7 @@ void PlayerStore_store(char* guid, playerState_t ps) {
     int i;
     if(strlen(guid)<32)
     {
-        G_LogPrintf("Failed to store player. Invalid guid: %s\n",guid);
+        G_LogPrintf("Playerstore: Failed to store player. Invalid guid: %s\n",guid);
         return;
     }
     for(i=0;i<MAX_PLAYERS_STORED;i++) {
@@ -74,14 +74,14 @@ void PlayerStore_store(char* guid, playerState_t ps) {
     playerstore[place2store].age = nextAge++;
     Q_strncpyz(playerstore[place2store].guid,guid,GUID_SIZE+1);
     memcpy(playerstore[place2store].persistant,ps.persistant,sizeof(int[MAX_PERSISTANT]));
-    G_LogPrintf("Stored player with guid: %s in %u\n", playerstore[place2store].guid,place2store);
+    G_LogPrintf("Playerstore: Stored player with guid: %s in %u\n", playerstore[place2store].guid,place2store);
 }
 
 void PlayerStore_restore(char* guid, playerState_t *ps)  {
     int i;
     if(strlen(guid)<32)
     {
-        G_LogPrintf("Failed to restore player. Invalid guid: %s\n",guid);
+        G_LogPrintf("Playerstore: Failed to restore player. Invalid guid: %s\n",guid);
         return;
     }
     for(i=0;i<MAX_PLAYERS_STORED;i++) {
@@ -95,5 +95,5 @@ void PlayerStore_restore(char* guid, playerState_t *ps)  {
             return;
         }
     }
-    G_LogPrintf("Nothing to restore. Guid: %s\n",guid);
+    G_LogPrintf("Playerstore: Nothing to restore. Guid: %s\n",guid);
 }
