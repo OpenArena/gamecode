@@ -47,9 +47,26 @@ static char           memoryPool[POOLSIZE];
 static freeMemNode_t  *freeHead;
 static int            freeMem;
 
+/*
+ * Returns qtrue if BG_Alloc will succeed, qfalse otherwise
+ */
+qboolean BG_CanAlloc( unsigned int size) {
+    freeMemNode_t *fmn;
+    int allocsize = ( size + sizeof(int) + ROUNDBITS ) & ~ROUNDBITS;    // Round to 32-byte boundary
+    for( fmn = freeHead; fmn; fmn = fmn->next ) {
+        if( fmn->cookie != FREEMEMCOOKIE ) {
+            //Memory curroption
+            return qfalse;
+        }
+        if( fmn->size >= allocsize ) {
+            //At least one useable block
+            return qtrue;
+        }
+    }
+    return qfalse;
+}
 
-void *BG_Alloc( unsigned int size )
-{
+void *BG_Alloc( unsigned int size ) {
   // Find a free block and allocate.
   // Does two passes, attempts to fill same-sized free slot first.
 
@@ -63,16 +80,13 @@ void *BG_Alloc( unsigned int size )
 
   smallest = NULL;
   smallestsize = POOLSIZE + 1;    // Guaranteed not to miss any slots :)
-  for( fmn = freeHead; fmn; fmn = fmn->next )
-  {
+  for( fmn = freeHead; fmn; fmn = fmn->next ) {
     if( fmn->cookie != FREEMEMCOOKIE )
       Com_Error( ERR_DROP, "BG_Alloc: Memory corruption detected!\n" );
 
-    if( fmn->size >= allocsize )
-    {
+    if( fmn->size >= allocsize ) {
       // We've got a block
-      if( fmn->size == allocsize )
-      {
+      if( fmn->size == allocsize ) {
         // Same size, just remove
 
         prev = fmn->prev;
@@ -85,12 +99,9 @@ void *BG_Alloc( unsigned int size )
           freeHead = next;      // Set head pointer to next
         ptr = (int *) fmn;
         break;              // Stop the loop, this is fine
-      }
-      else
-      {
+      } else {
         // Keep track of the smallest free slot
-        if( fmn->size < smallestsize )
-        {
+        if( fmn->size < smallestsize ) {
           smallest = fmn;
           smallestsize = fmn->size;
         }
@@ -98,16 +109,14 @@ void *BG_Alloc( unsigned int size )
     }
   }
 
-  if( !ptr && smallest )
-  {
+  if( !ptr && smallest ) {
     // We found a slot big enough
     smallest->size -= allocsize;
     endptr = (char *) smallest + smallest->size;
     ptr = (int *) endptr;
   }
 
-  if( ptr )
-  {
+  if( ptr ) {
     freeMem -= allocsize;
     memset( ptr, 0, allocsize );
     *ptr++ = allocsize;        // Store a copy of size for deallocation
@@ -118,8 +127,7 @@ void *BG_Alloc( unsigned int size )
   return( NULL );
 }
 
-void BG_Free( void *ptr )
-{
+void BG_Free( void *ptr ) {
   // Release allocated memory, add it to the free list.
 
   freeMemNode_t *fmn;
@@ -131,11 +139,9 @@ void BG_Free( void *ptr )
 
   freeMem += *freeptr;
 
-  for( fmn = freeHead; fmn; fmn = fmn->next )
-  {
+  for( fmn = freeHead; fmn; fmn = fmn->next ) {
     freeend = ((char *) fmn) + fmn->size;
-    if( freeend == (char *) freeptr )
-    {
+    if( freeend == (char *) freeptr ) {
       // Released block can be merged to an existing node
 
       fmn->size += *freeptr;    // Add size of node.
@@ -153,8 +159,7 @@ void BG_Free( void *ptr )
   freeHead = fmn;
 }
 
-void BG_InitMemory( void )
-{
+void BG_InitMemory( void ) {
   // Set up the initial node
 
   freeHead = (freeMemNode_t *)memoryPool;
@@ -165,30 +170,25 @@ void BG_InitMemory( void )
   freeMem = sizeof( memoryPool );
 }
 
-void BG_DefragmentMemory( void )
-{
+void BG_DefragmentMemory( void ) {
   // If there's a frenzy of deallocation and we want to
   // allocate something big, this is useful. Otherwise...
   // not much use.
 
   freeMemNode_t *startfmn, *endfmn, *fmn;
 
-  for( startfmn = freeHead; startfmn; )
-  {
+  for( startfmn = freeHead; startfmn; ) {
     endfmn = (freeMemNode_t *)(((char *) startfmn) + startfmn->size);
-    for( fmn = freeHead; fmn; )
-    {
+    for( fmn = freeHead; fmn; ) {
       if( fmn->cookie != FREEMEMCOOKIE )
         Com_Error( ERR_DROP, "BG_DefragmentMemory: Memory corruption detected!\n" );
 
-      if( fmn == endfmn )
-      {
+      if( fmn == endfmn ) {
         // We can add fmn onto startfmn.
 
         if( fmn->prev )
           fmn->prev->next = fmn->next;
-        if( fmn->next )
-        {
+        if( fmn->next ) {
           if( !(fmn->next->prev = fmn->prev) )
             freeHead = fmn->next;  // We're removing the head node
         }

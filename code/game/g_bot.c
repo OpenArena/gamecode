@@ -107,6 +107,8 @@ int G_ParseInfos( char *buf, int max, char *infos[] ) {
 			}
 			Info_SetValueForKey( info, key, token );
 		}
+                if(!BG_CanAlloc(strlen(info) + strlen("\\num\\") + strlen(va("%d", MAX_ARENAS)) + 1))
+                    break; //Not enough memory. Don't even try
 		//NOTE: extra space for arena number
 		//KK-OAX Changed to Tremulous's BG_Alloc
 		infos[count] = BG_Alloc(strlen(info) + strlen("\\num\\") + strlen(va("%d", MAX_ARENAS)) + 1);
