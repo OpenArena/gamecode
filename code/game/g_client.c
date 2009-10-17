@@ -1711,6 +1711,7 @@ void ClientSpawn(gentity_t *ent) {
 			client->sess.spectatorState = SPECTATOR_FREE;
 			client->isEliminated = qtrue;
 			client->ps.pm_type = PM_SPECTATOR;
+                        CalculateRanks();
 			return;
 		}
 		else
@@ -1719,10 +1720,12 @@ void ClientSpawn(gentity_t *ent) {
 			client->sess.spectatorState = SPECTATOR_NOT;
 			client->ps.pm_type = PM_NORMAL;
 			client->isEliminated = qfalse;
+                        CalculateRanks();
 		}
 	} else {
             //Force false.
             client->isEliminated = qfalse;
+            CalculateRanks();
         }
 
 	if(g_gametype.integer == GT_LMS && client->sess.sessionTeam != TEAM_SPECTATOR && (!level.intermissiontime || level.warmupTime != 0))

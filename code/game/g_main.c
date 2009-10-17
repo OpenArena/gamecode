@@ -1049,6 +1049,15 @@ int QDECL SortRanks( const void *a, const void *b ) {
 		return -1;
 	}
 
+        //In elimination and CTF elimination, sort dead players last
+        if((g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_CTF_ELIMINATION)
+                && (level.clients[*(int *)a].isEliminated != level.clients[*(int *)b].isEliminated)) {
+            if( level.clients[*(int *)a].isEliminated )
+                return 1;
+            if( level.clients[*(int *)b].isEliminated )
+                return -1;
+        }
+
 	// then sort by score
 	if ( ca->ps.persistant[PERS_SCORE]
 		> cb->ps.persistant[PERS_SCORE] ) {
