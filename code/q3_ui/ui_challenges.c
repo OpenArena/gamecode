@@ -64,6 +64,8 @@ typedef struct {
         char            entryIntString[MAX_ENTRIES][MAX_INT_AS_STRING];
         int             entryInt[MAX_ENTRIES];
 
+        menutext_s      notice;
+        menutext_s      notice2;
 	menubitmap_s	back;
 } challenges_t;
 
@@ -224,6 +226,18 @@ static void UI_Challenges_Init( void ) {
 	challenges.powerups.style				= UI_RIGHT;
 	challenges.powerups.color				= color_red;
 
+        challenges.notice.generic.type          = MTYPE_TEXT;
+        challenges.notice.generic.flags	= QMF_CENTER_JUSTIFY|QMF_INACTIVE|QMF_SMALLFONT;
+        challenges.notice.generic.x     = 160;
+        challenges.notice.generic.y     = 430;
+        challenges.notice.string        = "Only results against";
+
+        challenges.notice2.generic.type          = MTYPE_TEXT;
+        challenges.notice2.generic.flags	= QMF_CENTER_JUSTIFY|QMF_INACTIVE|QMF_SMALLFONT;
+        challenges.notice2.generic.x     = 160;
+        challenges.notice2.generic.y     = 430+PROP_HEIGHT-10;
+        challenges.notice2.string        = "humans are counted";
+
         challenges.back.generic.type		= MTYPE_BITMAP;
 	challenges.back.generic.name		= ART_BACK0;
 	challenges.back.generic.flags		= QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS;
@@ -378,6 +392,8 @@ static void UI_Challenges_Init( void ) {
             Menu_AddItem( &challenges.menu, ( void * ) &challenges.entry[i] );
             Menu_AddItem( &challenges.menu, ( void * ) &challenges.entryIntText[i] );
         }
+        Menu_AddItem( &challenges.menu, (void *) &challenges.notice);
+        Menu_AddItem( &challenges.menu, (void *) &challenges.notice2);
 	Menu_AddItem( &challenges.menu, ( void * ) &challenges.back );
 }
 
