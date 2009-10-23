@@ -260,12 +260,12 @@ static void UI_Challenges_Init( void ) {
                 challenges.entryInt[0]              = getChallenge(GENERAL_TOTALKILLS);
                 challenges.entryInt[1]              = getChallenge(GENERAL_TOTALDEATHS);
                 //challenges.entryInt[2]              = getChallenge(GENERAL_TOTALGAMES);
-                challenges.general.generic.flags		= QMF_RIGHT_JUSTIFY|QMF_INACTIVE|QMF_GRAYED;
+                challenges.general.generic.flags		= QMF_RIGHT_JUSTIFY|QMF_INACTIVE;
                 break;
             case 1:
                 //gametypes
                 challenges.numberOfEntries = 0;
-                challenges.gametypes.generic.flags     = QMF_RIGHT_JUSTIFY|QMF_INACTIVE|QMF_GRAYED;
+                challenges.gametypes.generic.flags     = QMF_RIGHT_JUSTIFY|QMF_INACTIVE;
                 break;
             case 2:
                 //weapons
@@ -304,7 +304,7 @@ static void UI_Challenges_Init( void ) {
                 challenges.entryInt[14]              = getChallenge(WEAPON_TELEFRAG_KILLS);
                 challenges.entryInt[15]              = getChallenge(WEAPON_PUSH_KILLS);
                 challenges.entryInt[16]              = getChallenge(WEAPON_CRUSH_KILLS);
-                challenges.weapons.generic.flags     = QMF_RIGHT_JUSTIFY|QMF_INACTIVE|QMF_GRAYED;
+                challenges.weapons.generic.flags     = QMF_RIGHT_JUSTIFY|QMF_INACTIVE;
                 break;
             case 3:
                 //awards
@@ -321,7 +321,7 @@ static void UI_Challenges_Init( void ) {
                 challenges.entryInt[3]              = getChallenge(AWARD_CAPTURE);
                 challenges.entryInt[4]              = getChallenge(AWARD_ASSIST);
                 challenges.entryInt[5]              = getChallenge(AWARD_DEFENCE);
-                challenges.awards.generic.flags     = QMF_RIGHT_JUSTIFY|QMF_INACTIVE|QMF_GRAYED;
+                challenges.awards.generic.flags     = QMF_RIGHT_JUSTIFY|QMF_INACTIVE;
                 break;
             case 4:
                 challenges.entry[0].string          = "Quad kills";
@@ -350,7 +350,7 @@ static void UI_Challenges_Init( void ) {
                 challenges.entryInt[9]              = getChallenge(POWERUP_COUNTER_ENVIR);
                 challenges.entryInt[10]              = getChallenge(POWERUP_COUNTER_REGEN);
                 challenges.entryInt[11]              = getChallenge(POWERUP_COUNTER_MULTI);
-                challenges.powerups.generic.flags     = QMF_RIGHT_JUSTIFY|QMF_INACTIVE|QMF_GRAYED;
+                challenges.powerups.generic.flags     = QMF_RIGHT_JUSTIFY|QMF_INACTIVE;
                 break;
 
             default:
