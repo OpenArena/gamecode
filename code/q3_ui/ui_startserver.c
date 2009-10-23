@@ -1215,7 +1215,7 @@ ServerOptions_StatusBar_Pmove
 static void ServerOptions_StatusBar_Pmove( void* ptr ) {
     switch( ((menulist_s*)ptr)->curvalue ) {
         case 0:
-            UI_DrawString( 320, 440, "Physics depends on players framerate", UI_CENTER|UI_SMALLFONT, colorWhite );
+            UI_DrawString( 320, 440, "Physics depends on players framerates", UI_CENTER|UI_SMALLFONT, colorWhite );
             UI_DrawString( 320, 460, "Not all players are equal", UI_CENTER|UI_SMALLFONT, colorWhite );
             break;
         case 1:
@@ -1224,7 +1224,7 @@ static void ServerOptions_StatusBar_Pmove( void* ptr ) {
             UI_DrawString( 320, 460, "All players are equal", UI_CENTER|UI_SMALLFONT, colorWhite );
             break;
         case 3:
-            UI_DrawString( 320, 440, "Physics are calculated exectly", UI_CENTER|UI_SMALLFONT, colorWhite );
+            UI_DrawString( 320, 440, "Physics are calculated exactly", UI_CENTER|UI_SMALLFONT, colorWhite );
             UI_DrawString( 320, 460, "All players are equal", UI_CENTER|UI_SMALLFONT, colorWhite );
             break;
 	default:
