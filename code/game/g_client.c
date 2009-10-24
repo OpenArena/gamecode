@@ -1724,8 +1724,10 @@ void ClientSpawn(gentity_t *ent) {
 		}
 	} else {
             //Force false.
-            client->isEliminated = qfalse;
-            CalculateRanks();
+            if(client->isEliminated) {
+                client->isEliminated = qfalse;
+                CalculateRanks();
+            }
         }
 
 	if(g_gametype.integer == GT_LMS && client->sess.sessionTeam != TEAM_SPECTATOR && (!level.intermissiontime || level.warmupTime != 0))

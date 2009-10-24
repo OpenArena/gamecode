@@ -1051,10 +1051,10 @@ int QDECL SortRanks( const void *a, const void *b ) {
 
         //In elimination and CTF elimination, sort dead players last
         if((g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_CTF_ELIMINATION)
-                && (level.clients[*(int *)a].isEliminated != level.clients[*(int *)b].isEliminated)) {
-            if( level.clients[*(int *)a].isEliminated )
+                && level.roundNumber==level.roundNumberStarted && (ca->isEliminated != cb->isEliminated)) {
+            if( ca->isEliminated )
                 return 1;
-            if( level.clients[*(int *)b].isEliminated )
+            if( cb->isEliminated )
                 return -1;
         }
 
@@ -1878,6 +1878,7 @@ void EndEliminationRound(void)
 	level.roundNumber++;
 	level.roundStartTime = level.time+1000*g_elimination_warmup.integer;
 	SendEliminationMessageToAllClients();
+        CalculateRanks();
 	level.roundRespawned = qfalse;
 	if(g_elimination_ctf_oneway.integer)
 		SendAttackingTeamMessageToAllClients();
