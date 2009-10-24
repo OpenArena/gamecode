@@ -57,6 +57,7 @@ GAME OPTIONS MENU
 #define ID_COLORRED             141
 #define ID_COLORGREEN           142
 #define ID_COLORBLUE            143
+#define ID_CROSSHAIRHEALTH      144
 
 #define	NUM_CROSSHAIRS			99
 
@@ -69,6 +70,7 @@ typedef struct {
 	menubitmap_s		framer;
 
 	menulist_s			crosshair;
+        menuradiobutton_s	crosshairHealth;
 
         //Crosshair colors:
         menuslider_s            crosshairColorRed;
@@ -105,6 +107,7 @@ static const char *teamoverlay_names[] =
 
 static void Preferences_SetMenuItems( void ) {
 	s_preferences.crosshair.curvalue		= (int)trap_Cvar_VariableValue( "cg_drawCrosshair" ) % NUM_CROSSHAIRS;
+        s_preferences.crosshairHealth.curvalue          = trap_Cvar_VariableValue( "cg_crosshairHealth") != 0;
         s_preferences.crosshairColorRed.curvalue        = trap_Cvar_VariableValue( "cg_crosshairColorRed")*255.0f;
         s_preferences.crosshairColorGreen.curvalue      = trap_Cvar_VariableValue( "cg_crosshairColorGreen")*255.0f;
         s_preferences.crosshairColorBlue.curvalue       = trap_Cvar_VariableValue( "cg_crosshairColorBlue")*255.0f;
@@ -135,6 +138,21 @@ static void Preferences_Event( void* ptr, int notification ) {
 		}
 		trap_Cvar_SetValue( "cg_drawCrosshair", s_preferences.crosshair.curvalue );
 		break;
+
+        case ID_CROSSHAIRHEALTH:
+                trap_Cvar_SetValue( "cg_crosshairHealth", s_preferences.crosshairHealth.curvalue );
+                if(s_preferences.crosshairHealth.curvalue) {
+                    //If crosshairHealth is on: Don't allow color selection
+                    s_preferences.crosshairColorRed.generic.flags       |= QMF_INACTIVE;
+                    s_preferences.crosshairColorGreen.generic.flags     |= QMF_INACTIVE;
+                    s_preferences.crosshairColorBlue.generic.flags      |= QMF_INACTIVE;
+                } else {
+                    //If crosshairHealth is off: Allow color selection
+                    s_preferences.crosshairColorRed.generic.flags       &= ~QMF_INACTIVE;
+                    s_preferences.crosshairColorGreen.generic.flags     &= ~QMF_INACTIVE;
+                    s_preferences.crosshairColorBlue.generic.flags      &= ~QMF_INACTIVE;
+                }
+                break;
 
         case ID_COLORRED:
                 trap_Cvar_SetValue( "cg_crosshairColorRed", ((float)s_preferences.crosshairColorRed.curvalue)/255.f );
@@ -311,6 +329,15 @@ static void Preferences_MenuInit( void ) {
 	s_preferences.crosshair.generic.right		= PREFERENCES_X_POS + 48;
 
         y += BIGCHAR_HEIGHT+2;
+	s_preferences.crosshairHealth.generic.type        = MTYPE_RADIOBUTTON;
+	s_preferences.crosshairHealth.generic.name	      = "Crosshair shows health:";
+	s_preferences.crosshairHealth.generic.flags	      = QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	s_preferences.crosshairHealth.generic.callback    = Preferences_Event;
+	s_preferences.crosshairHealth.generic.id          = ID_CROSSHAIRHEALTH;
+	s_preferences.crosshairHealth.generic.x	          = PREFERENCES_X_POS;
+	s_preferences.crosshairHealth.generic.y	          = y;
+
+        y += BIGCHAR_HEIGHT;
         s_preferences.crosshairColorRed.generic.type		= MTYPE_SLIDER;
 	s_preferences.crosshairColorRed.generic.name		= "Crosshair red:";
 	s_preferences.crosshairColorRed.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
@@ -342,6 +369,13 @@ static void Preferences_MenuInit( void ) {
 	s_preferences.crosshairColorBlue.generic.y			= y;
 	s_preferences.crosshairColorBlue.minvalue			= 0.0f;
 	s_preferences.crosshairColorBlue.maxvalue			= 255.0f;
+
+
+        if(s_preferences.crosshairHealth.curvalue) {
+            s_preferences.crosshairColorRed.generic.flags       |= QMF_INACTIVE;
+            s_preferences.crosshairColorGreen.generic.flags       |= QMF_INACTIVE;
+            s_preferences.crosshairColorBlue.generic.flags       |= QMF_INACTIVE;
+        }
 
 	y += BIGCHAR_HEIGHT+2+4;
 	s_preferences.simpleitems.generic.type        = MTYPE_RADIOBUTTON;
@@ -470,6 +504,7 @@ static void Preferences_MenuInit( void ) {
 	Menu_AddItem( &s_preferences.menu, &s_preferences.framer );
 
 	Menu_AddItem( &s_preferences.menu, &s_preferences.crosshair );
+        Menu_AddItem( &s_preferences.menu, &s_preferences.crosshairHealth );
         Menu_AddItem( &s_preferences.menu, &s_preferences.crosshairColorRed );
         Menu_AddItem( &s_preferences.menu, &s_preferences.crosshairColorGreen );
         Menu_AddItem( &s_preferences.menu, &s_preferences.crosshairColorBlue );
