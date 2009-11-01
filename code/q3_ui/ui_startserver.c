@@ -1868,15 +1868,15 @@ BOT SELECT MENU *****
 */
 
 
-#define BOTSELECT_BACK0			"menu/art/back_0"
-#define BOTSELECT_BACK1			"menu/art/back_1"
-#define BOTSELECT_ACCEPT0		"menu/art/accept_0"
-#define BOTSELECT_ACCEPT1		"menu/art/accept_1"
+#define BOTSELECT_BACK0			"menu/art_blueish/back_0"
+#define BOTSELECT_BACK1			"menu/art_blueish/back_1"
+#define BOTSELECT_ACCEPT0		"menu/art_blueish/accept_0"
+#define BOTSELECT_ACCEPT1		"menu/art_blueish/accept_1"
 #define BOTSELECT_SELECT		"menu/art/opponents_select"
 #define BOTSELECT_SELECTED		"menu/art/opponents_selected"
-#define BOTSELECT_ARROWS		"menu/art/gs_arrows_0"
-#define BOTSELECT_ARROWSL		"menu/art/gs_arrows_l"
-#define BOTSELECT_ARROWSR		"menu/art/gs_arrows_r"
+#define BOTSELECT_ARROWS		"menu/art_blueish/gs_arrows_0"
+#define BOTSELECT_ARROWSL		"menu/art_blueish/gs_arrows_l"
+#define BOTSELECT_ARROWSR		"menu/art_blueish/gs_arrows_r"
 
 #define PLAYERGRID_COLS			4
 #define PLAYERGRID_ROWS			4
