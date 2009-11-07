@@ -1596,6 +1596,9 @@ void CG_DrawWeaponBar0(int count, int bits){
 		}
 
 		x += 40;
+                //Sago: Undo mad change of weapons
+                if(i==10)
+                        i=0;
 	}
 }
 
@@ -1691,6 +1694,9 @@ void CG_DrawWeaponBar1(int count, int bits){
 		}
 
 		x += 40;
+                //Sago: Undo mad change of weapons
+                if(i==10)
+                        i=0;
 	}
 }
 
@@ -1768,6 +1774,9 @@ void CG_DrawWeaponBar2(int count, int bits, float *color){
 			}
 
 			y -= 24;
+                //Sago: Undo mad change of weapons
+                if(i==10)
+                        i=0;
 	}	
 }
 
@@ -1885,7 +1894,10 @@ void CG_DrawWeaponBar3(int count, int bits, float *color){
 				CG_DrawSmallStringColor(x - w/2 + 32, y+4, s, color);
 			}
 
-			y -= 24;	
+			y -= 24;
+                        //Sago: Undo mad change of weapons
+                if(i==10)
+                        i=0;
 	}
 }
 
@@ -1971,6 +1983,9 @@ void CG_DrawWeaponBar4(int count, int bits, float *color){
 			}
 
 			y -= 24;
+                        //Sago: Undo mad change of weapons
+                if(i==10)
+                        i=0;
 	}
 }
 
@@ -2045,7 +2060,10 @@ void CG_DrawWeaponBar5(int count, int bits, float *color){
 			CG_DrawSmallStringColor(x - w/2 + 15, y+20, s, color);
 		}
 			
-		x += 30;	
+		x += 30;
+                //Sago: Undo mad change of weapons
+                if(i==10)
+                        i=0;
 	}
 }
 
@@ -2162,7 +2180,10 @@ void CG_DrawWeaponBar6(int count, int bits, float *color){
 			CG_DrawSmallStringColor(x - w/2 + 15, y+20, s, color);
 		}
 			
-		x += 30;	
+		x += 30;
+                //Sago: Undo mad change of weapons
+                if(i==10)
+                        i=0;
 	}	
 }
 
@@ -2246,6 +2267,9 @@ void CG_DrawWeaponBar7(int count, int bits, float *color){
 		}
 		
 		x += 30;
+                //Sago: Undo mad change of weapons
+                if(i==10)
+                        i=0;
 	}
 }
 
