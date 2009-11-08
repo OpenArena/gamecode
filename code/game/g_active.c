@@ -533,6 +533,9 @@ void ClientIntermissionThink( gclient_t *client ) {
 
 	// the level will exit when everyone wants to or after timeouts
 
+        if( g_entities[client->ps.clientNum].r.svFlags & SVF_BOT )
+            return; //Bots cannot mark themself as ready
+
 	// swap and latch button actions
 	client->oldbuttons = client->buttons;
 	client->buttons = client->pers.cmd.buttons;

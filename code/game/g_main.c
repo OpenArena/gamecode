@@ -1731,7 +1731,16 @@ void CheckExitRules( void ) {
 	if ( level.intermissiontime ) {
 		CheckIntermissionExit ();
 		return;
-	}
+	} else {
+            //sago: Find the reason for this to be neccesary.
+            for (i=0 ; i< g_maxclients.integer ; i++) {
+		cl = level.clients + i;
+		if ( cl->pers.connected != CON_CONNECTED ) {
+			continue;
+                }
+                cl->ps.stats[STAT_CLIENTS_READY] = 0;
+            }
+        }
 
 	if ( level.intermissionQueued ) {
 #ifdef MISSIONPACK
