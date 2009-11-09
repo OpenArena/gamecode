@@ -136,6 +136,13 @@ void CG_PredictWeaponEffects( centity_t *cent ) {
 			VectorMA( muzzlePoint, 4, right, muzzlePoint );
 			VectorMA( muzzlePoint, -1, up, muzzlePoint );
 
+                        if(!cg.renderingThirdPerson) {
+                           if(cg_drawGun.integer == 2)
+				VectorMA(muzzlePoint, 8, cg.refdef.viewaxis[1], muzzlePoint);
+                           else if(cg_drawGun.integer == 3)
+				VectorMA(muzzlePoint, 4, cg.refdef.viewaxis[1], muzzlePoint);
+                        }
+
 			// draw a rail trail
 			CG_RailTrail( &cgs.clientinfo[cent->currentState.number], muzzlePoint, trace.endpos );
 			//Com_Printf( "Predicted rail trail\n" );

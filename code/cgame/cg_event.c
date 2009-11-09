@@ -953,6 +953,15 @@ void CG_EntityEvent( centity_t *cent, vec3_t position ) {
 			//Com_Printf("Ignoring rail trail event\n");
 		}
 		else {
+                        if(es->clientNum == cg.snap->ps.clientNum && !cg.renderingThirdPerson)
+                        {
+                           if(cg_drawGun.integer == 2)
+				VectorMA(es->origin2, 8, cg.refdef.viewaxis[1], es->origin2);
+                           else if(cg_drawGun.integer == 3)
+				VectorMA(es->origin2, 4, cg.refdef.viewaxis[1], es->origin2);
+                        }
+
+
 			// draw a rail trail, because it wasn't predicted
 			CG_RailTrail( ci, es->origin2, es->pos.trBase );
 
