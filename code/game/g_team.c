@@ -760,8 +760,13 @@ void Team_Dom_SpawnPoints( void ) {
 		if(i>=MAX_DOMINATION_POINTS)
 			break;
 		//domination_points_names[i] = flag->message;
-		Q_strncpyz(level.domination_points_names[i],flag->message,MAX_DOMINATION_POINTS_NAMES-1);
-		PrintMsg( NULL, "Domination point \'%s\' found\n",level.domination_points_names[i]);		
+                if(flag->message) {
+                    Q_strncpyz(level.domination_points_names[i],flag->message,MAX_DOMINATION_POINTS_NAMES-1);
+                    PrintMsg( NULL, "Domination point \'%s\' found\n",level.domination_points_names[i]);
+                } else {
+                    Q_strncpyz(level.domination_points_names[i],va("Point %i",i),MAX_DOMINATION_POINTS_NAMES-1);
+                    PrintMsg( NULL, "Domination point \'%s\' found (autonamed)\n",level.domination_points_names[i]);
+                }
 		dom_points[i] = G_Spawn();
 		VectorCopy( flag->r.currentOrigin, dom_points[i]->s.origin );
 		dom_points[i]->classname = it->classname;
