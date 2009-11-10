@@ -2357,6 +2357,8 @@ static void CG_DrawCenter1FctfString( void ) {
     #endif
 }
 
+static int lastDDSec = -100;
+
 /*
 =====================
 CG_DrawCenterDDString
@@ -2368,6 +2370,7 @@ static void CG_DrawCenterDDString( void ) {
     float       *color;
     char        *line;
     int 		statusA, statusB;
+    int sec;
 
     
     if(cgs.gametype != GT_DOUBLE_D)
@@ -2388,7 +2391,29 @@ static void CG_DrawCenterDDString( void ) {
     } else if(statusA == TEAM_RED) {
         line = va("Red scores in %i",(cgs.timetaken+10*1000-cg.time)/1000+1);
         color = colorRed;
+    } else {
+        lastDDSec = -100;
+        return;
     }
+
+    sec = (cgs.timetaken+10*1000-cg.time)/1000+1;
+    if(sec!=lastDDSec) {
+        //A new number is being displayed... play the sound!
+        switch ( sec ) {
+            case 1:
+                trap_S_StartLocalSound( cgs.media.count1Sound, CHAN_ANNOUNCER );
+                break;
+            case 2:
+                trap_S_StartLocalSound( cgs.media.count2Sound, CHAN_ANNOUNCER );
+                break;
+            case 3:
+                trap_S_StartLocalSound( cgs.media.count3Sound, CHAN_ANNOUNCER );
+                break;
+            default:
+                break;
+        }
+    }
+    lastDDSec = sec;
     
     y = 100;
     
