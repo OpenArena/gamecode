@@ -63,12 +63,12 @@ MULTIPLAYER MENU (SERVER BROWSER)
 #define ID_MASTER			10
 #define ID_GAMETYPE			11
 #define ID_SORTKEY			12
-#define ID_SHOW_FULL		13
-#define ID_SHOW_EMPTY		14
+#define ID_SHOW_FULL                    13
+#define ID_SHOW_EMPTY                   14
 
 #define ID_LIST				15
-#define ID_SCROLL_UP		16
-#define ID_SCROLL_DOWN		17
+#define ID_SCROLL_UP                    16
+#define ID_SCROLL_DOWN                  17
 #define ID_BACK				18
 #define ID_REFRESH			19
 #define ID_SPECIFY			20
@@ -77,8 +77,8 @@ MULTIPLAYER MENU (SERVER BROWSER)
 #define ID_REMOVE			23
 
 //Beta 23
-#define ID_ONLY_HUMANS          24
-#define ID_HIDE_PRIVATE         25
+#define ID_ONLY_HUMANS                  24
+#define ID_HIDE_PRIVATE                 25
 
 #define GR_LOGO				30
 #define GR_LETTERS			31
@@ -93,14 +93,15 @@ MULTIPLAYER MENU (SERVER BROWSER)
 
 #define SORT_HOST			0
 #define SORT_MAP			1
-#define SORT_CLIENTS		2
+#define SORT_CLIENTS                    2
 #define SORT_GAME			3
 #define SORT_PING			4
+#define SORT_HUMANS                     5
 
 #define GAMES_ALL			0
 #define GAMES_FFA			1
-#define GAMES_TEAMPLAY		2
-#define GAMES_TOURNEY		3
+#define GAMES_TEAMPLAY                  2
+#define GAMES_TOURNEY                   3
 #define GAMES_CTF			4
 #define GAMES_1FCTF                     5
 #define GAMES_OBELISK                   6
@@ -146,6 +147,7 @@ static const char *sortkey_items[] = {
 	"Open Player Spots",
 	"Game Type",
 	"Ping Time",
+        "Human Players",
 	NULL
 };
 
@@ -350,6 +352,18 @@ static int QDECL ArenaServers_Compare( const void *arg1, const void *arg2 ) {
 			return 0;
 		}
 		return -1;
+
+        case SORT_HUMANS:
+                f1 = t1->humanclients;
+                f2 = t2->humanclients;
+
+                if( f1 < f2 ) {
+                    return 1;
+                }
+                if( f1 == f2 ) {
+                    return 0;
+                }
+                return -1;
 
 	case SORT_GAME:
 		if( t1->gametype < t2->gametype ) {
