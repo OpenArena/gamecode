@@ -327,12 +327,14 @@ static void CG_TouchItem( centity_t *cent ) {
 		if(cgs.redflag == TEAM_NONE)
 			return; //Can never pick if just one flag is NONE (because then the other is too)
 		if(item->giTag == PW_REDFLAG){ //at point A
-			//if(cgs.redflag == cg.predictedPlayerState.persistant[PERS_TEAM]) //already taken
-				return;
+			if(cgs.redflag != cg.predictedPlayerState.persistant[PERS_TEAM]) //not already taken
+                            trap_S_StartLocalSound( cgs.media.hitSound , CHAN_ANNOUNCER );
+			return;
 		}	
 		if(item->giTag == PW_BLUEFLAG){ //at point B
-			//if(cgs.blueflag == cg.predictedPlayerState.persistant[PERS_TEAM]) //already taken
-				return;
+			if(cgs.blueflag != cg.predictedPlayerState.persistant[PERS_TEAM]) //already taken
+                            trap_S_StartLocalSound( cgs.media.hitSound , CHAN_ANNOUNCER );
+			return;
 		}	
 	}
 

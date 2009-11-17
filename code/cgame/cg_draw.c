@@ -2409,6 +2409,9 @@ static void CG_DrawCenterDDString( void ) {
             case 3:
                 trap_S_StartLocalSound( cgs.media.count3Sound, CHAN_ANNOUNCER );
                 break;
+            case 10:
+                trap_S_StartLocalSound( cgs.media.doublerSound , CHAN_ANNOUNCER );
+                break;
             default:
                 break;
         }
