@@ -26,7 +26,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "bg_public.h"
 #include "g_public.h"
 #include "challenges.h"
-#include "g_playerstore.h"
 
 //==================================================================
 
@@ -901,11 +900,11 @@ void BotInterbreedEndMatch( void );
 
 //
 // g_playerstore.c
-// declared in g_playerstore.h now
-/*
+//
+
 void PlayerStoreInit( void );
 void PlayerStore_store(char* guid, playerState_t ps);
-void PlayerStore_restore(char* guid, playerState_t *ps);*/
+void PlayerStore_restore(char* guid, playerState_t *ps);
 
 //
 // g_vote.c
@@ -1120,7 +1119,6 @@ extern  vmCvar_t    g_warningExpire;
 
 extern  vmCvar_t    g_minNameChangePeriod;
 extern  vmCvar_t    g_maxNameChanges;
-extern  vmCvar_t    g_playerLog;
 
 
 void	trap_Printf( const char *fmt );
@@ -1364,4 +1362,3 @@ void Svcmd_MessageWrapper( void );
 
 #include "g_killspree.h"
 #include "g_admin.h"
-#include "g_playerstore.h"

@@ -744,7 +744,6 @@ void SetTeam( gentity_t *ent, char *s ) {
         if ( team == TEAM_FREE && level.FFALocked ) {
             trap_SendServerCommand( ent->client->ps.clientNum,
             "cp \"This Deathmatch has been locked by the Admin! \n\"" );
-            return;
         }
     }
 	//
