@@ -182,6 +182,7 @@ vmCvar_t        g_warningExpire;
 
 vmCvar_t        g_minNameChangePeriod;
 vmCvar_t        g_maxNameChanges;
+vmCvar_t        g_playerLog;
 
 // bk001129 - made static to avoid aliasing
 static cvarTable_t		gameCvarTable[] = {
@@ -370,7 +371,9 @@ static cvarTable_t		gameCvarTable[] = {
 	    { &g_warningExpire, "g_warningExpire", "3600", CVAR_ARCHIVE, 0, qfalse },
 	    
 	    { &g_minNameChangePeriod, "g_minNameChangePeriod", "5", 0, 0, qfalse},
-        { &g_maxNameChanges, "g_maxNameChanges", "5", 0, 0, qfalse}
+        { &g_maxNameChanges, "g_maxNameChanges", "5", 0, 0, qfalse},
+        //KK-OAX B45
+        { &g_playerLog, "g_playerLog", "players.log", CVAR_ARCHIVE, 0, qfalse }
         
 };
 
@@ -782,6 +785,8 @@ void G_InitGame( int levelTime, int randomSeed, int restart ) {
 	}
 
         PlayerStoreInit();
+        //KK-OAX Prototype
+        //PlayerStore_readFromFile();
 
         //Set vote flags
         {
@@ -842,6 +847,12 @@ void G_ShutdownGame( int restart ) {
 	//KK-OAX Admin Cleanup
     G_admin_cleanup( );
     G_admin_namelog_cleanup( );
+    //KK-OAX Dump the players to the file. 
+    G_dumpPlayersToFile( );
+    PlayerStoreCleanup( );
+    //KK-OAX Prototyped Functions
+    //PlayerStore_writeToFile();
+
 
 	if ( trap_Cvar_VariableIntegerValue( "bot_enable" ) ) {
 		BotAIShutdown( restart );
@@ -1436,6 +1447,8 @@ void ExitLevel (void) {
 	gclient_t *cl;
 	char nextmap[MAX_STRING_CHARS];
 	char d1[MAX_STRING_CHARS];
+	char userinfo[MAX_INFO_STRING];
+	int clientNum;
 
 	//bot interbreeding
 	BotInterbreedEndMatch();
@@ -1469,6 +1482,14 @@ void ExitLevel (void) {
 	// reset all the scores so we don't enter the intermission again
 	level.teamScores[TEAM_RED] = 0;
 	level.teamScores[TEAM_BLUE] = 0;
+	//KK-OAX Yeah this will bite for performance, but oh well.
+	for( i=0; i < g_maxclients.integer; i++ )
+	{
+	    clientNum = level.clients[i].ps.clientNum;
+	    trap_GetUserinfo( clientNum, userinfo, sizeof( userinfo ) );
+	    PlayerStore_store(Info_ValueForKey(userinfo,"cl_guid"),level.clients[i].ps);
+	}
+	
 	for ( i=0 ; i< g_maxclients.integer ; i++ ) {
 		cl = level.clients + i;
 		if ( cl->pers.connected != CON_CONNECTED ) {
@@ -1537,6 +1558,8 @@ void LogExit( const char *string ) {
 	int				i, numSorted;
 	gclient_t		*cl;
 	qboolean won = qtrue;
+	char userinfo[MAX_INFO_STRING];
+	int clientNum;
 	G_LogPrintf( "Exit: %s\n", string );
 
 	level.intermissionQueued = level.time;
@@ -1555,7 +1578,15 @@ void LogExit( const char *string ) {
 		G_LogPrintf( "red:%i  blue:%i\n",
 			level.teamScores[TEAM_RED], level.teamScores[TEAM_BLUE] );
 	}
-
+	
+	//KK-OAX Yeah this will bite for performance, but oh well.
+	for( i=0; i < g_maxclients.integer; i++ )
+	{
+	    clientNum = level.clients[i].ps.clientNum;
+	    trap_GetUserinfo( clientNum, userinfo, sizeof( userinfo ) );
+	    PlayerStore_store(Info_ValueForKey(userinfo,"cl_guid"),level.clients[i].ps);
+	}
+	
 	for (i=0 ; i < numSorted ; i++) {
 		int		ping;
 

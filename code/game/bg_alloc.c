@@ -28,7 +28,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "g_local.h"
 
 #ifdef GAME
-# define  POOLSIZE ( 1024 * 1024 )
+# define  POOLSIZE ( 4096 * 1024 ) //KK-OAX Upped this, should allow more bots, more stuff...etc.
 #else
 # define  POOLSIZE ( 256 * 1024 )
 #endif
