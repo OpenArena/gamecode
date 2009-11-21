@@ -2016,3 +2016,4 @@ void CG_ParticleMisc (qhandle_t pshader, vec3_t origin, int size, int duration, 
 
 	p->rotate = qfalse;
 }
+

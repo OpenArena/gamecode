@@ -2272,3 +2272,168 @@ void CG_ParticleMisc (qhandle_t pshader, vec3_t origin, int size, int duration, 
 	p->rotate = qfalse;
 }
 
+
+
+
+
+// LEILEI ENHANCEMENT PARTICLE EFFECTS
+
+
+// sparks!
+// for small arms
+
+void CG_LeiSparks (vec3_t org, vec3_t vel, int duration, float x, float y, float speed)
+{
+	cparticle_t	*p;
+
+	if (!free_particles)
+		return;
+	p = free_particles;
+	free_particles = p->next;
+	p->next = active_particles;
+	active_particles = p;
+	p->time = cg.time;
+	
+	p->endtime = cg.time + duration;
+	p->startfade = cg.time + duration/2;
+	
+	p->color = EMISIVEFADE;
+	p->alpha = 0.8f;
+	p->alphavel = 0.8f;
+
+	p->height = 4;
+	p->width = 4;
+	p->endheight = 4;
+	p->endwidth = 4;
+
+	p->pshader = cgs.media.lspkShader1;
+
+	p->type = P_SMOKE;
+	
+	VectorCopy(org, p->org);
+
+	p->org[0] += (crandom() * x);
+	p->org[1] += (crandom() * y);
+
+	p->vel[0] = vel[0] * 35;
+	p->vel[1] = vel[1] * 35;
+	p->vel[2] = vel[2] * 85;
+
+	p->accel[0] = p->accel[1] = p->accel[2] = 0;
+
+	p->vel[0] += (crandom() * 44);
+	p->vel[1] += (crandom() * 44);
+	p->vel[2] += (75 + (crandom() * 190)) * speed;	
+
+	//	p->vel[0] += (crandom() * 24);
+	//p->vel[1] += (crandom() * 24);
+	//p->vel[2] += (20 + (crandom() * 180)) * speed;	
+
+		p->accel[0] = crandom()*6;
+		p->accel[1] = crandom()*6;
+		p->accel[2] = -PARTICLE_GRAVITY*7.2;
+	
+}
+
+// for explosions
+
+void CG_LeiSparks2 (vec3_t org, vec3_t vel, int duration, float x, float y, float speed)
+{
+	cparticle_t	*p;
+
+	if (!free_particles)
+		return;
+	p = free_particles;
+	free_particles = p->next;
+	p->next = active_particles;
+	active_particles = p;
+	p->time = cg.time;
+	
+	p->endtime = cg.time + duration;
+	p->startfade = cg.time + duration/2;
+	
+	p->color = EMISIVEFADE;
+	p->alpha = 0.8f;
+	p->alphavel = 0;
+
+	p->height = 9;
+	p->width = 9;
+	p->endheight = 16;
+	p->endwidth = 16;
+
+	p->pshader = cgs.media.lspkShader1;
+
+	p->type = P_SMOKE;
+	
+	VectorCopy(org, p->org);
+
+	p->org[0] += (crandom() * x);
+	p->org[1] += (crandom() * y);
+
+	p->vel[0] = vel[0] * 35;
+	p->vel[1] = vel[1] * 35;
+	p->vel[2] = vel[2] * 85;
+
+	p->accel[0] = p->accel[1] = p->accel[2] = 0;
+
+	p->vel[0] += (crandom() * 524);
+	p->vel[1] += (crandom() * 524);
+	p->vel[2] += (120 + (crandom() * 780)) * speed;	
+
+		p->accel[0] = crandom()*76;
+		p->accel[1] = crandom()*76;
+		p->accel[2] = crandom()*76;
+	
+	
+}
+
+// not so friendly water splash
+void CG_LeiSplash2 (vec3_t org, vec3_t vel, int duration, float x, float y, float speed)
+{
+	cparticle_t	*p;
+
+	if (!free_particles)
+		return;
+	p = free_particles;
+	free_particles = p->next;
+	p->next = active_particles;
+	active_particles = p;
+	p->time = cg.time;
+	
+	p->endtime = cg.time + duration;
+	p->startfade = cg.time + duration/2;
+	
+	p->color = EMISIVEFADE;
+	p->alpha = 0.9f;
+	p->alphavel = 0;
+
+	p->height = 4;
+	p->width = 4;
+	p->endheight = 2;
+	p->endwidth = 2;
+
+	p->pshader = cgs.media.lsplShader;
+
+	p->type = P_SMOKE;
+	
+	VectorCopy(org, p->org);
+
+	p->org[0] += (crandom() * x);
+	p->org[1] += (crandom() * y);
+
+	p->vel[0] = vel[0] * 44;
+	p->vel[1] = vel[1] * 44;
+	p->vel[2] = vel[2] * 872;
+
+	p->accel[0] = p->accel[1] = p->accel[2] = 0;
+
+	p->vel[0] += (crandom() * 4);
+	p->vel[1] += (crandom() * 4);
+	p->vel[2] += (20 + (crandom() * 10)) * speed;	
+
+		p->accel[0] = crandom()*3;
+		p->accel[1] = crandom()*3;
+		p->accel[2] = -PARTICLE_GRAVITY*4.2;
+	
+}
+

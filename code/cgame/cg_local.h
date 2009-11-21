@@ -231,7 +231,8 @@ typedef enum {
 	LE_KAMIKAZE,
 	LE_INVULIMPACT,
 	LE_INVULJUICED,
-	LE_SHOWREFENTITY
+	LE_SHOWREFENTITY,
+	LE_GORE
 } leType_t;
 
 typedef enum {
@@ -250,7 +251,8 @@ typedef enum {
 typedef enum {
 	LEBS_NONE,
 	LEBS_BLOOD,
-	LEBS_BRASS
+	LEBS_BRASS,
+	LEBS_SHELL
 } leBounceSoundType_t;	// fragment local entities can make sounds on impacts
 
 typedef struct localEntity_s {
@@ -759,6 +761,24 @@ typedef struct {
 	qhandle_t	plasmaBallShader;
 	qhandle_t	waterBubbleShader;
 	qhandle_t	bloodTrailShader;
+
+
+
+	// LEILEI shaders
+
+	qhandle_t	lsmkShader1;
+	qhandle_t	lsmkShader2;
+	qhandle_t	lsmkShader3;
+	qhandle_t	lsmkShader4;
+	qhandle_t	lbumShader1;
+	qhandle_t	lfblShader1;
+	qhandle_t	lsplShader;
+	qhandle_t	lspkShader1;
+	qhandle_t	lspkShader2;
+	qhandle_t	lbldShader1;
+	qhandle_t	lbldShader2;
+
+
 //#ifdef MISSIONPACK
 	qhandle_t	nailPuffShader;
 	qhandle_t	blueProxMine;
@@ -891,6 +911,21 @@ typedef struct {
 	sfxHandle_t landSound;
 	sfxHandle_t fallSound;
 	sfxHandle_t jumpPadSound;
+
+// LEILEI
+	sfxHandle_t	lspl1Sound;
+	sfxHandle_t	lspl2Sound; // Blood Splat Noises
+	sfxHandle_t	lspl3Sound;
+
+	sfxHandle_t	lbul1Sound;
+	sfxHandle_t	lbul2Sound;	// Bullet Drop Noises
+	sfxHandle_t	lbul3Sound;
+
+	sfxHandle_t	lshl1Sound;
+	sfxHandle_t	lshl2Sound; // Shell Drop Noises
+	sfxHandle_t	lshl3Sound;
+
+// LEILEI END
 
 	sfxHandle_t oneMinuteSound;
 	sfxHandle_t fiveMinuteSound;
@@ -1225,6 +1260,11 @@ extern	vmCvar_t		cg_noTaunt;
 extern	vmCvar_t		cg_noProjectileTrail;
 extern	vmCvar_t		cg_oldRail;
 extern	vmCvar_t		cg_oldRocket;
+
+extern	vmCvar_t		cg_leiEnhancement;			// LEILEI'S LINE!
+extern	vmCvar_t		cg_leiGoreNoise;			// LEILEI'S LINE!
+extern	vmCvar_t		cg_leiBrassNoise;			// LEILEI'S LINE!
+extern	vmCvar_t		cg_leiSuperGoreyAwesome;	// LEILEI'S LINE!
 extern	vmCvar_t		cg_oldPlasma;
 extern	vmCvar_t		cg_trueLightning;
 extern	vmCvar_t		cg_music;
@@ -1817,4 +1857,6 @@ void	CG_ParticleExplosion (char *animStr, vec3_t origin, vec3_t vel, int duratio
 extern qboolean		initparticles;
 int CG_NewParticleArea ( int num );
 
+
+// LEILEI ENHANCEMENT
 

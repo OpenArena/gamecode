@@ -519,6 +519,42 @@ void CG_Bleed( vec3_t origin, int entityNum ) {
 
 /*
 ==================
+CG_SpurtBlood (LEILEI)
+==================
+*/
+void CG_SpurtBlood( vec3_t origin, vec3_t velocity, int hard ) {
+	localEntity_t	*le;
+	refEntity_t		*re;
+	localEntity_t	*blood;
+//		if ( !cg_blood.integer ) {	return;	}
+
+	
+	velocity[0] = velocity[0] * hard * crandom()*460;
+	velocity[1] = velocity[1] * hard * crandom()*460;
+	velocity[2] = velocity[2] * hard * crandom()*566 + 65;
+		blood = CG_SmokePuff( origin, velocity, 
+					21,		// radius
+					  1, 1, 1, 1,	// color
+					 2450,		// trailTime
+					 cg.time,		// startTime
+					  0,		// fadeInTime
+					  0,		// flags
+					  cgs.media.lbldShader1 );
+		// use the optimized version
+		blood->leType = LE_FALL_SCALE_FADE;
+		blood->leType = LE_GORE;
+		blood->pos.trType = TR_GRAVITY;
+		VectorCopy( velocity, blood->pos.trDelta );
+		blood->pos.trDelta[2] = 55;
+		if (crandom() < 0.5){
+		blood->leMarkType = LEMT_BURN;
+		blood->leBounceSoundType = LEBS_BLOOD;
+		}
+	//	VectorCopy( velocity, blood->pos.trDelta );
+
+}
+/*
+==================
 CG_LaunchGib
 ==================
 */
@@ -546,7 +582,17 @@ void CG_LaunchGib( vec3_t origin, vec3_t velocity, qhandle_t hModel ) {
 
 	le->leBounceSoundType = LEBS_BLOOD;
 	le->leMarkType = LEMT_BLOOD;
+		if ( cg_leiSuperGoreyAwesome.integer ) {
+			CG_SpurtBlood( origin, velocity, 7); // LEILEI toss some extra juice
+			CG_SpurtBlood( origin, velocity, 22); 
+			CG_SpurtBlood( origin, velocity, 11); 
+			}
+	
 }
+
+
+
+
 
 /*
 ===================
@@ -674,7 +720,7 @@ CG_GibPlayer
 Generated a bunch of gibs launching out from the bodies location
 ===================
 */
-void CG_BigExplode( vec3_t playerOrigin ) {
+void CG_BigExplosion( vec3_t playerOrigin ) {
 	vec3_t	origin, velocity;
 
 	if ( !cg_blood.integer ) {
@@ -711,4 +757,8 @@ void CG_BigExplode( vec3_t playerOrigin ) {
 	velocity[2] = EXP_JUMP + crandom()*EXP_VELOCITY;
 	CG_LaunchExplode( origin, velocity, cgs.media.smoke2 );
 }
+
+
+
+
 

@@ -185,6 +185,10 @@ vmCvar_t	cg_noTaunt;
 vmCvar_t	cg_noProjectileTrail;
 vmCvar_t	cg_oldRail;
 vmCvar_t	cg_oldRocket;
+vmCvar_t	cg_leiEnhancement;		// ANOTHER LEILEI LINE!!!
+vmCvar_t	cg_leiBrassNoise;		// ANOTHER LEILEI LINE!!!
+vmCvar_t	cg_leiGoreNoise;		// ANOTHER LEILEI LINE!!!
+vmCvar_t	cg_leiSuperGoreyAwesome;		// ANOTHER LEILEI LINE!!!
 vmCvar_t	cg_oldPlasma;
 vmCvar_t	cg_trueLightning;
 vmCvar_t        cg_music;
@@ -394,6 +398,10 @@ static cvarTable_t cvarTable[] = { // bk001129
 	{ &cg_bigFont, "ui_bigFont", "0.4", CVAR_ARCHIVE},
 	{ &cg_oldRail, "cg_oldRail", "0", CVAR_ARCHIVE},
 	{ &cg_oldRocket, "cg_oldRocket", "1", CVAR_ARCHIVE},
+	{ &cg_leiEnhancement, "cg_leiEnhancement", "0", CVAR_ARCHIVE},				// LEILEI default off (in case of whiner)
+	{ &cg_leiGoreNoise, "cg_leiGoreNoise", "0", CVAR_ARCHIVE},					// LEILEI 
+	{ &cg_leiBrassNoise, "cg_leiBrassNoise", "0", CVAR_ARCHIVE},				// LEILEI 
+	{ &cg_leiSuperGoreyAwesome, "cg_leiSuperGoreyAwesome", "0", CVAR_ARCHIVE},	// LEILEI 
 	{ &cg_oldPlasma, "cg_oldPlasma", "1", CVAR_ARCHIVE},
 //unlagged - client options
 	{ &cg_delag, "cg_delag", "0", CVAR_ARCHIVE | CVAR_USERINFO },
@@ -775,6 +783,21 @@ static void CG_RegisterSounds( void ) {
 	cgs.media.gibBounce1Sound = trap_S_RegisterSound( "sound/player/gibimp1.wav", qfalse );
 	cgs.media.gibBounce2Sound = trap_S_RegisterSound( "sound/player/gibimp2.wav", qfalse );
 	cgs.media.gibBounce3Sound = trap_S_RegisterSound( "sound/player/gibimp3.wav", qfalse );
+
+
+	// LEILEI
+
+	cgs.media.lspl1Sound = trap_S_RegisterSound( "sound/le/splat1.wav", qfalse );
+	cgs.media.lspl2Sound = trap_S_RegisterSound( "sound/le/splat2.wav", qfalse );
+	cgs.media.lspl3Sound = trap_S_RegisterSound( "sound/le/splat3.wav", qfalse );
+
+	cgs.media.lbul1Sound = trap_S_RegisterSound( "sound/le/bullet1.wav", qfalse );
+	cgs.media.lbul2Sound = trap_S_RegisterSound( "sound/le/bullet2.wav", qfalse );
+	cgs.media.lbul3Sound = trap_S_RegisterSound( "sound/le/bullet3.wav", qfalse );
+
+	cgs.media.lshl1Sound = trap_S_RegisterSound( "sound/le/shell1.wav", qfalse );
+	cgs.media.lshl2Sound = trap_S_RegisterSound( "sound/le/shell2.wav", qfalse );
+	cgs.media.lshl3Sound = trap_S_RegisterSound( "sound/le/shell3.wav", qfalse );
 
 	cgs.media.useInvulnerabilitySound = trap_S_RegisterSound( "sound/items/invul_activate.wav", qfalse );
 	cgs.media.invulnerabilityImpactSound1 = trap_S_RegisterSound( "sound/items/invul_impact_01.wav", qfalse );
@@ -1170,6 +1193,21 @@ static void CG_RegisterGraphics( void ) {
 	cgs.media.medalDefend = trap_R_RegisterShaderNoMip( "medal_defend" );
 	cgs.media.medalAssist = trap_R_RegisterShaderNoMip( "medal_assist" );
 	cgs.media.medalCapture = trap_R_RegisterShaderNoMip( "medal_capture" );
+
+	// LEILEI SHADERS
+	cgs.media.lsmkShader1 = trap_R_RegisterShader("leismoke1" );
+	cgs.media.lsmkShader2 = trap_R_RegisterShader("leismoke2" );
+	cgs.media.lsmkShader3 = trap_R_RegisterShader("leismoke3" );
+	cgs.media.lsmkShader4 = trap_R_RegisterShader("leismoke4" );
+
+	cgs.media.lsplShader = trap_R_RegisterShader("leisplash" );
+	cgs.media.lspkShader1 = trap_R_RegisterShader("leispark" );
+	cgs.media.lspkShader2 = trap_R_RegisterShader("leispark2" );
+	cgs.media.lbumShader1 = trap_R_RegisterShader("leiboom1" );
+	cgs.media.lfblShader1 = trap_R_RegisterShader("leifball" );
+
+	cgs.media.lbldShader1 = trap_R_RegisterShader("leiblood1" );	
+	cgs.media.lbldShader2 = trap_R_RegisterShader("leiblood2" );	// this is a mark, by the way
 
 
 	memset( cg_items, 0, sizeof( cg_items ) );
