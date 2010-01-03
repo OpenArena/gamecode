@@ -327,7 +327,7 @@ void CG_ParseServerinfo( void ) {
 		cgs.ffa_gt = 1;
 	trap_Cvar_Set("g_gametype", va("%i", cgs.gametype));
 	cgs.dmflags = atoi( Info_ValueForKey( info, "dmflags" ) );
-        cgs.fairflags = atoi( Info_ValueForKey( info, "fairflags" ) );
+        cgs.fairflags = atoi( Info_ValueForKey( info, "videoflags" ) );
         cgs.elimflags = atoi( Info_ValueForKey( info, "elimflags" ) );
 	cgs.teamflags = atoi( Info_ValueForKey( info, "teamflags" ) );
 	cgs.fraglimit = atoi( Info_ValueForKey( info, "fraglimit" ) );
