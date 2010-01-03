@@ -2242,7 +2242,7 @@ void CG_FairCvars() {
         return; //Don't do anything in single player
     }
 
-    if(cgs.fairflags & FF_LOCK_CVARS_BASIC) {
+    if(cgs.videoflags & VF_LOCK_CVARS_BASIC) {
         //Lock basic cvars.
         trap_Cvar_VariableStringBuffer("r_subdivisions",rendererinfos,sizeof(rendererinfos) );
         if(atoi( rendererinfos ) > 80 ) {
@@ -2256,7 +2256,7 @@ void CG_FairCvars() {
         }
     }
 
-    if(cgs.fairflags & FF_LOCK_CVARS_EXTENDED) {
+    if(cgs.videoflags & VF_LOCK_CVARS_EXTENDED) {
         //Lock extended cvars.
         trap_Cvar_VariableStringBuffer("r_subdivisions",rendererinfos,sizeof(rendererinfos) );
         if(atoi( rendererinfos ) > 20 ) {
@@ -2301,7 +2301,7 @@ void CG_FairCvars() {
         }
     } 
 
-    if(cgs.fairflags & FF_LOCK_VERTEX) {
+    if(cgs.videoflags & VF_LOCK_VERTEX) {
         trap_Cvar_VariableStringBuffer("r_vertexlight",rendererinfos,sizeof(rendererinfos) );
         if(atoi( rendererinfos ) != 0 ) {
             trap_Cvar_Set("r_vertexlight","0");
