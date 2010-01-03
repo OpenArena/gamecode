@@ -29,7 +29,22 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 extern menuDef_t *menuScoreboard;
 #endif
 
+void CG_PrintClientNumbers( void ) {
+    int i;
 
+    CG_Printf( "slot score ping name\n" );
+    CG_Printf( "---- ----- ---- ----\n" );
+
+    for(i=0;i<cg.numScores;i++) {
+        CG_Printf("%-4d",cg.scores[i].client);
+
+        CG_Printf(" %-5d",cg.scores[i].score);
+
+        CG_Printf(" %-4d",cg.scores[i].ping);
+
+        CG_Printf(" %s\n",cgs.clientinfo[cg.scores[i].client].name);
+    }
+}
 
 void CG_TargetCommand_f( void ) {
 	int		targetNum;
@@ -500,7 +515,8 @@ static consoleCommand_t	commands[] = {
 #endif
 	{ "startOrbit", CG_StartOrbit_f },
 	//{ "camera", CG_Camera_f },
-	{ "loaddeferred", CG_LoadDeferredPlayers }	
+	{ "loaddeferred", CG_LoadDeferredPlayers },
+        { "clients", CG_PrintClientNumbers }
 };
 
 
