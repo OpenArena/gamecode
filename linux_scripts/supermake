@@ -2,6 +2,8 @@
 #Tip: You can create a supermake.local file and this script will get the variable from there!
 BINNAME=openarena
 MODNAME=oax
+#ARCH should be either i386 or x86_64
+ARCH=i386
 
 if [ -r ./supermake.local ] ; then
 source ./supermake.local
@@ -20,6 +22,6 @@ mkdir -p ~/.openarena/$MODNAME
 
 pushd ..
 #Build, pak it and start 
-make && cd build/release-linux-x86_64/baseq3 && zip -r ~/.openarena/$MODNAME/$MODNAME.pk3 vm && $BINNAME +set fs_game $MODNAME +set debug 1 +set sv_pure 0 +vm_ui 2 +vm_game 2 +vm_cgame 2
+make && cd build/release-linux-$ARCH/baseq3 && zip -r ~/.openarena/$MODNAME/$MODNAME.pk3 vm && $BINNAME +set fs_game $MODNAME +set debug 1 +set sv_pure 0 +vm_ui 2 +vm_game 2 +vm_cgame 2
 popd
 
