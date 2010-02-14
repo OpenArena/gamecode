@@ -722,9 +722,9 @@ static void ArenaServers_UpdateMenu( void ) {
 		*b++ = ' ';
 	
                 if(g_onlyhumans == 0)
-                    Com_sprintf( b, 7, "%2d/%2d ", servernodeptr->numclients, servernodeptr->maxclients );
+                    Com_sprintf( b, 8, "%2d/%2d ", servernodeptr->numclients, servernodeptr->maxclients );
                 else
-                    Com_sprintf( b, 7, "%2d/%2d ", servernodeptr->humanclients, servernodeptr->maxclients );
+                    Com_sprintf( b, 8, "%2d/%2d ", servernodeptr->humanclients, servernodeptr->maxclients );
 		b += 6;
 	
 		bufAddr = Q_strcpyColor( servernodeptr->gamename, b, 8 );
