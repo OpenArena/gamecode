@@ -407,6 +407,11 @@ void CopyToBodyQue( gentity_t *ent ) {
 	body = level.bodyQue[ level.bodyQueIndex ];
 	level.bodyQueIndex = (level.bodyQueIndex + 1) % BODY_QUEUE_SIZE;
 
+        //Check if the next body has the kamikaze, in that case skip it.
+        for(i=0;(level.bodyQue[ level.bodyQueIndex ]->s.eFlags & EF_KAMIKAZE) && (i<10);i++) {
+            level.bodyQueIndex = (level.bodyQueIndex + 1) % BODY_QUEUE_SIZE;
+        }
+
 	trap_UnlinkEntity (body);
 
 	body->s = ent->s;
