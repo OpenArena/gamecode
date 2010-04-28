@@ -1076,8 +1076,14 @@ static float CG_DrawEliminationTimer( float y ) {
 	float scale;
 	int cw;
 	int rst;
-	
+
+        
+
 	rst = cgs.roundStartTime;
+
+        if(cg.time>rst && !cgs.roundtime) {
+            return y;
+        }
 
 	//default color is white
 	memcpy(color,g_color_table[ColorIndex(COLOR_WHITE)],sizeof(color));
@@ -1145,8 +1151,9 @@ Lots of stuff
 			//w = CG_Text_Width(s, scale, 0);
 			//CG_Text_Paint(320 - w / 2, 125, scale, colorWhite, st, 0, 0, ITEM_TEXTSTYLE_SHADOWEDMORE);
 	#else
-		w = CG_DrawStrlen( st );
-		CG_DrawStringExt( 320 - w * cw/2, 70, st, colorWhite, 
+                
+                    w = CG_DrawStrlen( st );
+                    CG_DrawStringExt( 320 - w * cw/2, 70, st, colorWhite,
 				qfalse, qtrue, cw, (int)(cw * 1.5), 0 );
 	#endif
 	}

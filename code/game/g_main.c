@@ -2147,9 +2147,9 @@ void CheckElimination(void) {
 		}
 
 		//Time up
-		if((level.roundNumber==level.roundNumberStarted)&&(level.time>=level.roundStartTime+1000*g_elimination_roundtime.integer))
+		if((level.roundNumber==level.roundNumberStarted)&&(g_elimination_roundtime.integer)&&(level.time>=level.roundStartTime+1000*g_elimination_roundtime.integer))
 		{
-			trap_SendServerCommand( -1, "print \"No teams eliminated!\n\"");
+			trap_SendServerCommand( -1, "print \"No teams eliminated.\n\"");
 
 			if(level.roundBluePlayers != 0 && level.roundRedPlayers != 0) {//We don't want to divide by zero. (should not be possible)
 				if(g_gametype.integer == GT_CTF_ELIMINATION && g_elimination_ctf_oneway.integer) {
