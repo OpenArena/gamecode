@@ -526,7 +526,7 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 	ent->s.otherEntityNum = self->s.number;
 	ent->s.otherEntityNum2 = killer;
         //Sago: Hmmm... generic? Can I transmit anything I like? Like if it is a team kill? Let's try
-        ent->s.generic1 = OnSameTeam (self, self->enemy);
+        ent->s.generic1 = OnSameTeam (self, attacker);
         if( !((g_gametype.integer==GT_ELIMINATION || g_gametype.integer==GT_CTF_ELIMINATION) && level.time < level.roundStartTime) )
             ent->r.svFlags = SVF_BROADCAST;	// send to everyone (if not an elimination gametype during active warmup)
         else
