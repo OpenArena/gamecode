@@ -1523,7 +1523,7 @@ void motd (gentity_t *ent)
 	int fileLen;
 
 	strcpy (motd, "cp \"");
-	fileLen = trap_FS_FOpenFile("motd.cfg", &motdFile, FS_READ);
+	fileLen = trap_FS_FOpenFile(g_motdfile.string, &motdFile, FS_READ);
 	if(motdFile)
 	{
 		char * p;
