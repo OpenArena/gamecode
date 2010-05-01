@@ -140,6 +140,9 @@ vmCvar_t        g_persistantpowerups; //Allow missionpack style persistant power
 
 vmCvar_t        g_catchup; //Favors the week players
 
+vmCvar_t         g_autonextmap; //Autochange map
+vmCvar_t         g_mappools; //mappools to be used for autochange
+
 vmCvar_t        g_voteNames;
 vmCvar_t        g_voteGametypes;
 vmCvar_t        g_voteMinTimelimit;
@@ -342,6 +345,10 @@ static cvarTable_t		gameCvarTable[] = {
 	{ &g_lms_mode, "g_lms_mode", "0", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
 
         { &g_catchup, "g_catchup", "0", CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue},
+
+        { &g_autonextmap, "g_autonextmap", "0", CVAR_ARCHIVE | CVAR_NORESTART, 0, qfalse},
+        { &g_mappools, "g_mappools", "/0/maps_dm.cfg/1/maps_tourney.cfg/3/maps_tdm.cfg/4/maps_ctf.cfg/5/maps_oneflag.cfg/6/maps_obelisk.cfg\
+/7/maps_harvester.cfg/8/maps_elimination.cfg/9/maps_ctf.cfg/10/maps_lms.cfg/11/maps_dd.cfg/12/maps_dom.cfg/", CVAR_ARCHIVE | CVAR_NORESTART, 0, qfalse},
 
         { &g_humanplayers, "g_humanplayers", "0", CVAR_ROM | CVAR_NORESTART, 0, qfalse },
 //used for voIP
@@ -1438,6 +1445,9 @@ void ExitLevel (void) {
 	gclient_t *cl;
 	char nextmap[MAX_STRING_CHARS];
 	char d1[MAX_STRING_CHARS];
+        char	serverinfo[MAX_INFO_STRING];
+
+
 
 	//bot interbreeding
 	BotInterbreedEndMatch();
@@ -1457,6 +1467,16 @@ void ExitLevel (void) {
 
 	trap_Cvar_VariableStringBuffer( "nextmap", nextmap, sizeof(nextmap) );
 	trap_Cvar_VariableStringBuffer( "d1", d1, sizeof(d1) );
+        
+        trap_GetServerinfo( serverinfo, sizeof( serverinfo ) );
+
+        if(g_autonextmap.integer && (nextmap[0]==0 || 0==Q_stricmp(nextmap,Info_ValueForKey( serverinfo, "mapname" ) ) ) ) {
+            //Auto suggest a new nextmap, if nextmap and mapname are identical
+            char filename[MAX_FILEPATH];
+            Q_strncpyz(filename,Info_ValueForKey(g_mappools.string, va("%i",g_gametype.integer)),MAX_FILEPATH);
+
+            //TODO:Read from file in "filename", pick a random map from it and 
+        }
 
 	if( !Q_stricmp( nextmap, "map_restart 0" ) && Q_stricmp( d1, "" ) ) {
 		trap_Cvar_Set( "nextmap", "vstr d2" );
