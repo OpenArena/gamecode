@@ -347,9 +347,8 @@ static cvarTable_t		gameCvarTable[] = {
         { &g_catchup, "g_catchup", "0", CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue},
 
         { &g_autonextmap, "g_autonextmap", "0", CVAR_ARCHIVE | CVAR_NORESTART, 0, qfalse},
-        { &g_mappools, "g_mappools", "/0/maps_dm.cfg/1/maps_tourney.cfg/3/maps_tdm.cfg/4/maps_ctf.cfg/5/maps_oneflag.cfg/6/maps_obelisk.cfg\
-/7/maps_harvester.cfg/8/maps_elimination.cfg/9/maps_ctf.cfg/10/maps_lms.cfg/11/maps_dd.cfg/12/maps_dom.cfg/", CVAR_ARCHIVE | CVAR_NORESTART, 0, qfalse},
-
+        { &g_mappools, "g_mappools", "0\\maps_dm.cfg\\1\\maps_tourney.cfg\\3\\maps_tdm.cfg\\4\\maps_ctf.cfg\\5\\maps_oneflag.cfg\\6\\maps_obelisk.cfg\
+\\7\\maps_harvester.cfg\\8\\maps_elimination.cfg\\9\\maps_ctf.cfg\\10\\maps_lms.cfg\\11\\maps_dd.cfg\\12\\maps_dom.cfg\\", CVAR_ARCHIVE | CVAR_NORESTART, 0, qfalse},
         { &g_humanplayers, "g_humanplayers", "0", CVAR_ROM | CVAR_NORESTART, 0, qfalse },
 //used for voIP
         { &g_redTeamClientNumbers, "g_redTeamClientNumbers", "0",CVAR_ROM, 0, qfalse },
@@ -1447,8 +1446,6 @@ void ExitLevel (void) {
 	char d1[MAX_STRING_CHARS];
         char	serverinfo[MAX_INFO_STRING];
 
-
-
 	//bot interbreeding
 	BotInterbreedEndMatch();
 
@@ -1470,12 +1467,51 @@ void ExitLevel (void) {
         
         trap_GetServerinfo( serverinfo, sizeof( serverinfo ) );
 
-        if(g_autonextmap.integer && (nextmap[0]==0 || 0==Q_stricmp(nextmap,Info_ValueForKey( serverinfo, "mapname" ) ) ) ) {
-            //Auto suggest a new nextmap, if nextmap and mapname are identical
+        //Here the game finds the nextmap if g_autonextmap is set
+        if(g_autonextmap.integer ) {
             char filename[MAX_FILEPATH];
+            fileHandle_t file,mapfile;
+            //Look in g_mappools.string for the file to look for maps in
             Q_strncpyz(filename,Info_ValueForKey(g_mappools.string, va("%i",g_gametype.integer)),MAX_FILEPATH);
-
-            //TODO:Read from file in "filename", pick a random map from it and 
+            //If we found a filename:
+            if(filename[0]) {
+                //Read the file:
+                int len = trap_FS_FOpenFile(filename, &file, FS_READ);
+                if(file) {
+                    char  buffer[4*1024]; // buffer to read file into
+                    char mapnames[1024][20]; // Array of mapnames in the map pool
+                    char *pointer;
+                    int choice, count=0; //The random choice from mapnames and count of mapnames
+                    int i;
+                    memset(&buffer,0,sizeof(buffer));
+                    trap_FS_Read(&buffer,sizeof(buffer),file);
+                    pointer = buffer;
+                    while ( qtrue ) {
+                        Q_strncpyz(mapnames[count],COM_Parse( &pointer ),20);
+                        if ( !mapnames[count][0] ) {
+                            break;
+                        }
+                        G_Printf("Mapname in mappool: %s\n",mapnames[count]);
+                        count++;
+                    }
+                    trap_FS_FCloseFile(file);
+                    //It is possible that the maps in the file read are flawed, so we try up to ten times:
+                    for(i=0;i<10;i++) {
+                        choice = rand()%count;
+                        if(!Q_stricmp(mapnames[choice],Info_ValueForKey(serverinfo,"mapname")))
+                            continue;
+                        //Now check that the map exists:
+                        trap_FS_FOpenFile(va("maps/%s.bsp",mapnames[choice]),&mapfile,FS_READ);
+                        if(mapfile) {
+                            G_Printf("Picked map number %i - %s\n",choice,mapnames[choice]);
+                            Q_strncpyz(nextmap,va("map %s",mapnames[choice]),sizeof(nextmap));
+                            trap_Cvar_Set("nextmap",nextmap);
+                            trap_FS_FCloseFile(mapfile);
+                            break;
+                        }
+                    }
+                }
+            }
         }
 
 	if( !Q_stricmp( nextmap, "map_restart 0" ) && Q_stricmp( d1, "" ) ) {
