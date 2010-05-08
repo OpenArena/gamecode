@@ -1956,7 +1956,8 @@ void RestartEliminationRound(void) {
 	DisableWeapons();
 	level.roundNumberStarted = level.roundNumber-1;
 	level.roundStartTime = level.time+1000*g_elimination_warmup.integer;
-	SendEliminationMessageToAllClients();
+        if(!level.intermissiontime)
+            SendEliminationMessageToAllClients();
 	level.roundRespawned = qfalse;
 	if(g_elimination_ctf_oneway.integer)
 		SendAttackingTeamMessageToAllClients();

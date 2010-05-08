@@ -63,6 +63,8 @@ START SERVER MENU *****
 #define ID_STARTSERVERBACK		21
 #define ID_STARTSERVERNEXT		22
 
+#define ID_AUTONEXTMAP                  23
+
 typedef struct {
 	menuframework_s	menu;
 
@@ -71,6 +73,7 @@ typedef struct {
 	menubitmap_s	framer;
 
 	menulist_s		gametype;
+        menuradiobutton_s       autonextmap;
 	menubitmap_s	mappics[MAX_MAPSPERPAGE];
 	menubitmap_s	mapbuttons[MAX_MAPSPERPAGE];
 	menubitmap_s	arrows;
@@ -384,6 +387,11 @@ static void StartServer_MenuEvent( void* ptr, int event ) {
 		UI_ServerOptionsMenu( s_startserver.multiplayer );
 		break;
 
+            case ID_AUTONEXTMAP:
+                //trap_Cvar_SetValue( "cg_alwaysWeaponBar", s_preferences.alwaysweaponbar.curvalue );
+                trap_Cvar_SetValue( "g_autonextmap", s_startserver.autonextmap.curvalue );
+                break;
+
 	case ID_STARTSERVERBACK:
 		UI_PopMenu();
 		break;
@@ -467,6 +475,8 @@ static void StartServer_MenuInit( void ) {
 
 	StartServer_Cache();
 
+        s_startserver.autonextmap.curvalue = trap_Cvar_VariableValue( "g_autonextmap" ) != 0;
+
 	s_startserver.menu.wrapAround = qtrue;
 	s_startserver.menu.fullscreen = qtrue;
 
@@ -493,13 +503,21 @@ static void StartServer_MenuInit( void ) {
 	s_startserver.framer.width  	   = 256;
 	s_startserver.framer.height  	   = 334;
 
+        s_startserver.autonextmap.generic.type		= MTYPE_RADIOBUTTON;
+	s_startserver.autonextmap.generic.name		= "Auto change map:";
+	s_startserver.autonextmap.generic.flags	= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	s_startserver.autonextmap.generic.callback	= StartServer_MenuEvent;
+	s_startserver.autonextmap.generic.id		= ID_AUTONEXTMAP;
+	s_startserver.autonextmap.generic.x		= 320 +24;
+	s_startserver.autonextmap.generic.y		= 368;
+
 	s_startserver.gametype.generic.type		= MTYPE_SPINCONTROL;
 	s_startserver.gametype.generic.name		= "Game Type:";
 	s_startserver.gametype.generic.flags	= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	s_startserver.gametype.generic.callback	= StartServer_GametypeEvent;
 	s_startserver.gametype.generic.id		= ID_GAMETYPE;
 	s_startserver.gametype.generic.x		= 320 - 24;
-	s_startserver.gametype.generic.y		= 368;
+	s_startserver.gametype.generic.y		= 70;
 	s_startserver.gametype.itemnames		= gametype_items;
 
 	for (i=0; i<MAX_MAPSPERPAGE; i++)
@@ -605,6 +623,7 @@ static void StartServer_MenuInit( void ) {
 	Menu_AddItem( &s_startserver.menu, &s_startserver.framer );
 
 	Menu_AddItem( &s_startserver.menu, &s_startserver.gametype );
+        Menu_AddItem( &s_startserver.menu, &s_startserver.autonextmap );
 	for (i=0; i<MAX_MAPSPERPAGE; i++)
 	{
 		Menu_AddItem( &s_startserver.menu, &s_startserver.mappics[i] );

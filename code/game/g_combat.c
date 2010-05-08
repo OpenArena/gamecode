@@ -59,6 +59,11 @@ void AddScore( gentity_t *ent, vec3_t origin, int score ) {
 	if ( level.warmupTime ) {
 		return;
 	}
+
+        //No scoring during intermission
+        if ( level.intermissiontime ) {
+            return;
+        }
 	// show score plum
         if( level.numNonSpectatorClients<3 && score < 0 && (g_gametype.integer<GT_TEAM || g_ffa_gt==1)) {
             for ( i = 0 ; i < level.maxclients ; i++ ) {
