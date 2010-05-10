@@ -2086,7 +2086,7 @@ void CheckLMS(void) {
 			EndEliminationRound();
 		}
 
-		if((level.roundNumber==level.roundNumberStarted)&&(g_lms_mode.integer == 1 || g_lms_mode.integer==3)&&(level.time>=level.roundStartTime+1000*g_elimination_roundtime.integer))
+		if((g_elimination_roundtime.integer) && (level.roundNumber==level.roundNumberStarted)&&(g_lms_mode.integer == 1 || g_lms_mode.integer==3)&&(level.time>=level.roundStartTime+1000*g_elimination_roundtime.integer))
 		{
 			trap_SendServerCommand( -1, "print \"Time up - Overtime disabled\n\"");
 			if(mode <=1 )
