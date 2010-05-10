@@ -461,6 +461,10 @@ void	ClientKick_f( void ) {
         
 }
 
+void EndGame_f ( void ) {
+    ExitLevel();
+}
+
 //KK-OAX Moved this Declaration to g_local.h
 //char	*ConcatArgs( int start );
 
@@ -504,6 +508,7 @@ struct
   { "shuffle", qfalse, ShuffleTeams },
   //Kicks a player by number in the game logic rather than the server number
   { "clientkick_game", qfalse, ClientKick_f },
+  { "endgamenow", qfalse, EndGame_f },
 };
 
 /*

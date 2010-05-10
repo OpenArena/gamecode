@@ -1669,12 +1669,16 @@ void Cmd_CallVote_f( gentity_t *ent ) {
                     return;
                 }*/
 
-		trap_Cvar_VariableStringBuffer( "nextmap", s, sizeof(s) );
-		if (!*s) {
-			trap_SendServerCommand( ent-g_entities, "print \"nextmap not set.\n\"" );
-			return;
-		}
-		Com_sprintf( level.voteString, sizeof( level.voteString ), "vstr nextmap");
+                if(g_autonextmap.integer) {
+                    Com_sprintf( level.voteString, sizeof( level.voteString ), "endgamenow");
+                } else {
+                    trap_Cvar_VariableStringBuffer( "nextmap", s, sizeof(s) );
+                    if (!*s) {
+                            trap_SendServerCommand( ent-g_entities, "print \"nextmap not set.\n\"" );
+                            return;
+                    }
+                    Com_sprintf( level.voteString, sizeof( level.voteString ), "vstr nextmap");
+                }
 
 		//Com_sprintf( level.voteDisplayString, sizeof( level.voteDisplayString ), "%s", level.voteString );
                 Com_sprintf( level.voteDisplayString, sizeof( level.voteDisplayString ), "%s", "Next map?" );
