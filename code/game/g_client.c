@@ -372,6 +372,8 @@ After sitting around for five seconds, fall into the ground and dissapear
 */
 void BodySink( gentity_t *ent ) {
 	if ( level.time - ent->timestamp > 6500 ) {
+
+
 		// the body ques are never actually freed, they are just unlinked
 		trap_UnlinkEntity( ent );
 		ent->physicsObject = qfalse;
@@ -399,8 +401,25 @@ void CopyToBodyQue( gentity_t *ent ) {
 
 	// if client is in a nodrop area, don't leave the body
 	contents = trap_PointContents( ent->s.origin, -1 );
-	if ( contents & CONTENTS_NODROP ) {
-		return;
+	if ( (contents & CONTENTS_NODROP) && !(ent->s.eFlags & EF_KAMIKAZE) ) { //the check for kamikaze is a workaround for ctf4ish
+            /*if ( ent->s.eFlags & EF_KAMIKAZE ) {
+                    ent->s.eFlags &= ~EF_KAMIKAZE;
+
+                    // check if there is a kamikaze timer around for this owner
+                    for (i = 0; i < MAX_GENTITIES; i++) {
+                            e = &g_entities[i];
+                            if (!e->inuse)
+                                    continue;
+                            if (e->activator != ent)
+                                    continue;
+                            if (strcmp(e->classname, "kamikaze timer"))
+                                    continue;
+                            break;
+                    }
+                    if (!strcmp(e->classname, "kamikaze timer"))
+                        G_FreeEntity(e);
+            }*/
+            return;
 	}
 
 	// grab a body que and cycle to the next one
@@ -417,6 +436,7 @@ void CopyToBodyQue( gentity_t *ent ) {
 	body->s = ent->s;
 	body->s.eFlags = EF_DEAD;		// clear EF_TALK, etc
 	if ( ent->s.eFlags & EF_KAMIKAZE ) {
+                ent->s.eFlags &= ~EF_KAMIKAZE;
 		body->s.eFlags |= EF_KAMIKAZE;
 
 		// check if there is a kamikaze timer around for this owner
