@@ -367,12 +367,14 @@ void G_CheckForSpree( gentity_t *ent, int streak2Test, qboolean checkKillSpree )
             position = deathSprees[ level.dSpreeUBound ]->position;
             sound = deathSprees[ level.dSpreeUBound ]->sound2Play;
             soundIndex = G_SoundIndex( sound );
+            //Play the Sound
             G_GlobalSound( soundIndex );
+            //Print the Message
             if( position == CENTER_PRINT ) {
                 AP( va("cp \"%s\"", returnedString ) );
             } else {
                 AP( va("chat \"%s\"", returnedString ) );
-            } 
+            }
         } else {
             for( i = 0; deathSprees[ i ]; i++ ) {
                 //If the deathSpree is equal to the streak to test
@@ -416,12 +418,15 @@ void G_CheckForSpree( gentity_t *ent, int streak2Test, qboolean checkKillSpree )
             position = killSprees[ level.kSpreeUBound ]->position;
             sound = killSprees[ level.kSpreeUBound ]->sound2Play;
             soundIndex = G_SoundIndex( sound );
-            G_GlobalSound( soundIndex );
-            if( position == CENTER_PRINT ) {
-                AP( va("cp \"%s\"", returnedString ) );
-            } else {
-                AP( va("chat \"%s\"", returnedString ) );
-            }
+            soundIndex = G_SoundIndex( sound );
+            //G_GlobalSound( soundIndex );
+            G_Sound(ent,0,soundIndex);
+            /* Doesn't do anything at the moment. cp does not work while kill message is displayed
+             * if( position == CENTER_PRINT ) {
+                //Only Center print for player doing the killing spree
+                CP( va("cp \"%s\"", returnedString ) );
+            }*/
+            AP( va("chat \"%s\"", returnedString ) );
         } else { 
             for( i = 0; killSprees[ i ]; i++ ) {
                 if( killSprees[ i ]->streakCount == streak2Test ) {
@@ -430,12 +435,14 @@ void G_CheckForSpree( gentity_t *ent, int streak2Test, qboolean checkKillSpree )
                     position = killSprees[ i ]->position;
                     sound = killSprees[ i ]->sound2Play;
                     soundIndex = G_SoundIndex( sound );                
-                    G_GlobalSound( soundIndex );
-                    if( position == CENTER_PRINT ) {
-                        AP( va("cp \"%s\"", returnedString ) );
-                    } else {
-                        AP( va("chat \"%s\"", returnedString ) );
-                    }  
+                    soundIndex = G_SoundIndex( sound );
+                    //G_GlobalSound( soundIndex );
+                    G_Sound(ent,0,soundIndex);
+                    /*if( position == CENTER_PRINT ) {
+                        //Only Center print for player doing the killing spree
+                        CP( va("cp \"%s\"", returnedString ) );
+                    }*/
+                    AP( va("chat \"%s\"", returnedString ) );
                     break;
                 }
             }
