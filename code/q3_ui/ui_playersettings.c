@@ -374,6 +374,15 @@ static void PlayerSettings_MenuEvent( void* ptr, int event ) {
 	}
 }
 
+/*
+=================
+PlayerSettings_StatusBar
+=================
+*/
+static void PlayerSettings_StatusBar( void* ptr ) {
+	UI_DrawString( 320, 400, "Handicap makes you weaker", UI_CENTER|UI_SMALLFONT, colorWhite );
+        UI_DrawString( 320, 420, "giving you more challenge", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
 
 /*
 =================
@@ -438,6 +447,7 @@ static void PlayerSettings_MenuInit( void ) {
 	s_playersettings.handicap.generic.top		= y - 8;
 	s_playersettings.handicap.generic.right		= 192 + 200;
 	s_playersettings.handicap.generic.bottom	= y + 2 * PROP_HEIGHT;
+        s_playersettings.handicap.generic.statusbar     = PlayerSettings_StatusBar;
 	s_playersettings.handicap.numitems			= 20;
 
 	y += 3 * PROP_HEIGHT;

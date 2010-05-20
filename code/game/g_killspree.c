@@ -483,7 +483,7 @@ void G_checkForMultiKill( gentity_t *ent ) {
         returnedString = CreateMessage ( ent, multiKills[ level.mKillUBound ]->killMsg, multiKillString );
         sound = multiKills[ level.mKillUBound ]->sound2Play;
         soundIndex = G_SoundIndex( sound );
-        G_GlobalSound( soundIndex );
+        G_Sound(ent, 0, soundIndex );
         AP( va("chat \"%s\"", returnedString ) );
         return;
     } else {     
@@ -499,7 +499,7 @@ void G_checkForMultiKill( gentity_t *ent ) {
                 //Index the sound
                 soundIndex = G_SoundIndex( sound );
                 //Play the sound
-                G_GlobalSound( soundIndex ); 
+                G_Sound(ent, 0, soundIndex );
                 /* Print the String
                 Since we don't want to clutter screens (the player is already going to get the excellent icon)
                 we won't give them an option to centerprint. 
