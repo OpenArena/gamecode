@@ -1032,7 +1032,7 @@ static void ForceClientSkin( gclient_t *client, char *model, const char *skin ) 
 ClientCheckName
 ============
 */
-static void ClientCleanName(const char *in, char *out, int outSize)
+static void ClientCleanName(const char *in, char *out, int outSize, int clientNum)
 {
     int outpos = 0, colorlessLen = 0, spaces = 0;
 
@@ -1084,7 +1084,7 @@ static void ClientCleanName(const char *in, char *out, int outSize)
 
     // don't allow empty names
     if( *out == '\0' || colorlessLen == 0)
-        Q_strncpyz(out, "UnnamedPlayer", outSize );
+        Q_strncpyz(out, va("Nameless%i",clientNum), outSize );
 }
 
 
@@ -1180,7 +1180,7 @@ void ClientUserinfoChanged( int clientNum ) {
 	// set name
 	Q_strncpyz ( oldname, client->pers.netname, sizeof( oldname ) );
 	s = Info_ValueForKey (userinfo, "name");
-	ClientCleanName( s, client->pers.netname, sizeof(client->pers.netname) );
+	ClientCleanName( s, client->pers.netname, sizeof(client->pers.netname), clientNum );
 
     //KK-OAPub Added From Tremulous-Control Name Changes
     if( strcmp( oldname, client->pers.netname ) )
