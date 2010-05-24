@@ -239,7 +239,7 @@ typedef struct {
 
 //
 #define MAX_NETNAME			36
-#define	MAX_VOTE_COUNT		3
+#define	MAX_VOTE_COUNT		"3"
 
 //unlagged - true ping
 #define NUM_PING_SAMPLES 64
@@ -1086,6 +1086,7 @@ extern vmCvar_t        g_voteMinTimelimit;
 extern vmCvar_t        g_voteMaxTimelimit;
 extern vmCvar_t        g_voteMinFraglimit;
 extern vmCvar_t        g_voteMaxFraglimit;
+extern vmCvar_t        g_maxvotes;
 
 extern vmCvar_t        g_humanplayers;
 
