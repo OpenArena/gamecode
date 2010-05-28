@@ -479,6 +479,9 @@ void Touch_Item (gentity_t *ent, gentity_t *other, trace_t *trace) {
 		break;
 	case IT_TEAM:
 		respawn = Pickup_Team(ent, other);
+                //If touching a team item remove spawnprotection
+                if(other->client->spawnprotected)
+                    other->client->spawnprotected = qfalse;
 		break;
 	case IT_HOLDABLE:
 		respawn = Pickup_Holdable(ent, other);

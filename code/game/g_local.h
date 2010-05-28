@@ -417,6 +417,7 @@ struct gclient_s {
 	// the last frame number we got an update from this client
 	int			lastUpdateFrame;
 //unlagged - smooth clients #1
+        qboolean        spawnprotected;
 };
 
 
@@ -1029,6 +1030,7 @@ extern	vmCvar_t	g_enableDust;
 extern	vmCvar_t	g_enableBreath;
 extern	vmCvar_t	g_proxMineTimeout;
 extern	vmCvar_t	g_music;
+extern  vmCvar_t        g_spawnprotect;
 
 //elimination:
 extern	vmCvar_t	g_elimination_selfdamage;

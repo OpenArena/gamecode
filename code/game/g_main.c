@@ -100,6 +100,7 @@ vmCvar_t	g_enableDust;
 vmCvar_t	g_enableBreath;
 vmCvar_t	g_proxMineTimeout;
 vmCvar_t	g_music;
+vmCvar_t        g_spawnprotect;
 //Following for elimination:
 vmCvar_t	g_elimination_selfdamage;
 vmCvar_t	g_elimination_startHealth;
@@ -297,6 +298,7 @@ static cvarTable_t		gameCvarTable[] = {
 
 	{ &g_rankings, "g_rankings", "0", 0, 0, qfalse},
         { &g_music, "g_music", "", 0, 0, qfalse},
+        { &g_spawnprotect, "g_spawnprotect", "500", CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue},
 	//Now for elimination stuff:
 	{ &g_elimination_selfdamage, "elimination_selfdamage", "0", 0, 0, qtrue },
 	{ &g_elimination_startHealth, "elimination_startHealth", "200", CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
@@ -377,8 +379,8 @@ static cvarTable_t		gameCvarTable[] = {
         { &g_maxWarnings, "g_maxWarnings", "3", CVAR_ARCHIVE, 0, qfalse },
 	    { &g_warningExpire, "g_warningExpire", "3600", CVAR_ARCHIVE, 0, qfalse },
 	    
-	    { &g_minNameChangePeriod, "g_minNameChangePeriod", "5", 0, 0, qfalse},
-        { &g_maxNameChanges, "g_maxNameChanges", "5", 0, 0, qfalse}
+	    { &g_minNameChangePeriod, "g_minNameChangePeriod", "10", 0, 0, qfalse},
+        { &g_maxNameChanges, "g_maxNameChanges", "50", 0, 0, qfalse}
         
 };
 

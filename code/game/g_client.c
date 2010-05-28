@@ -2076,6 +2076,9 @@ else
 
 	// clear entity state values
 	BG_PlayerStateToEntityState( &client->ps, &ent->s, qtrue );
+
+        if(g_spawnprotect.integer)
+            client->spawnprotected = qtrue;
 }
 
 
