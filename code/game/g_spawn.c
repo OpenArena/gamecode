@@ -293,15 +293,28 @@ returning qfalse if not found
 qboolean G_CallSpawn( gentity_t *ent ) {
 	spawn_t	*s;
 	gitem_t	*item;
+        char cvarname[128];
+        char itemname[128];
 
-	if ( !ent->classname ) {
+        //Construct a replace cvar:
+	Com_sprintf(cvarname, sizeof(cvarname), "replace_%s", ent->classname);
+
+        //Look an alternative item up:
+        trap_Cvar_VariableStringBuffer(cvarname,itemname,sizeof(itemname));
+        if(itemname[0]==0) //If nothing found use original
+            Com_sprintf(itemname, sizeof(itemname), "%s", ent->classname);
+        else
+            G_Printf ("%s replaced by %s\n", ent->classname, itemname);
+
+
+	if ( !itemname ) {
                 G_Printf ("G_CallSpawn: NULL classname\n");
 		return qfalse;
 	}
 
 	// check item spawn functions
 	for ( item=bg_itemlist+1 ; item->classname ; item++ ) {
-		if ( !strcmp(item->classname, ent->classname) ) {
+		if ( !strcmp(item->classname, itemname) ) {
 			G_SpawnItem( ent, item );
 			return qtrue;
 		}
@@ -309,13 +322,13 @@ qboolean G_CallSpawn( gentity_t *ent ) {
 
 	// check normal spawn functions
 	for ( s=spawns ; s->name ; s++ ) {
-		if ( !strcmp(s->name, ent->classname) ) {
+		if ( !strcmp(s->name, itemname) ) {
 			// found it
 			s->spawn(ent);
 			return qtrue;
 		}
 	}
-        G_Printf ("%s doesn't have a spawn function\n", ent->classname);
+        G_Printf ("%s doesn't have a spawn function\n", itemname);
 	return qfalse;
 }
 
