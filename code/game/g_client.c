@@ -1852,14 +1852,16 @@ void ClientSpawn(gentity_t *ent) {
 //	savedAreaBits = client->areabits;
 	accuracy_hits = client->accuracy_hits;
 	accuracy_shots = client->accuracy_shots;
-        for( i = 0 ; i < WP_NUM_WEAPONS ; i++ ){
+        /*for( i = 0 ; i < WP_NUM_WEAPONS ; i++ ){
 		accuracy[i][0] = client->accuracy[i][0];
 		accuracy[i][1] = client->accuracy[i][1];
-	}
+	}*/
+        memcpy(accuracy,client->accuracy,sizeof(accuracy));
 
-	for ( i = 0 ; i < MAX_PERSISTANT ; i++ ) {
+	/*for ( i = 0 ; i < MAX_PERSISTANT ; i++ ) {
 		persistant[i] = client->ps.persistant[i];
-	}
+	}*/
+        memcpy(persistant,client->ps.persistant,MAX_PERSISTANT);
 	eventSequence = client->ps.eventSequence;
 
 	Com_Memset (client, 0, sizeof(*client));
