@@ -1706,6 +1706,7 @@ void ClientSpawn(gentity_t *ent) {
 	int		savedPing;
 //	char	*savedAreaBits;
 	int		accuracy_hits, accuracy_shots;
+        int		accuracy[WP_NUM_WEAPONS][2];
 	int		eventSequence;
 	char	userinfo[MAX_INFO_STRING];
 
@@ -1851,6 +1852,11 @@ void ClientSpawn(gentity_t *ent) {
 //	savedAreaBits = client->areabits;
 	accuracy_hits = client->accuracy_hits;
 	accuracy_shots = client->accuracy_shots;
+        for( i = 0 ; i < WP_NUM_WEAPONS ; i++ ){
+		accuracy[i][0] = client->accuracy[i][0];
+		accuracy[i][1] = client->accuracy[i][1];
+	}
+
 	for ( i = 0 ; i < MAX_PERSISTANT ; i++ ) {
 		persistant[i] = client->ps.persistant[i];
 	}
@@ -1864,6 +1870,11 @@ void ClientSpawn(gentity_t *ent) {
 //	client->areabits = savedAreaBits;
 	client->accuracy_hits = accuracy_hits;
 	client->accuracy_shots = accuracy_shots;
+        for( i = 0 ; i < WP_NUM_WEAPONS ; i++ ){
+		client->accuracy[i][0] = accuracy[i][0];
+		client->accuracy[i][1] = accuracy[i][1];
+	}
+
 	client->lastkilled_client = -1;
 
 	for ( i = 0 ; i < MAX_PERSISTANT ; i++ ) {

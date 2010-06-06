@@ -284,11 +284,13 @@ void Bullet_Fire (gentity_t *ent, float spread, int damage ) {
                             {
                                 G_Damage( traceEnt, ent, ent, forward, tr.endpos,
 					damage, 0, MOD_CHAINGUN);
+                                ent->client->accuracy[WP_CHAINGUN][1]++;
                             }
                             else
                             {
 				G_Damage( traceEnt, ent, ent, forward, tr.endpos,
 					damage, 0, MOD_MACHINEGUN);
+                                ent->client->accuracy[WP_MACHINEGUN][1]++;
                             }
 			}
 		}
@@ -414,6 +416,8 @@ void ShotgunPattern( vec3_t origin, vec3_t origin2, int seed, gentity_t *ent ) {
 			ent->client->accuracy_hits++;
 		}
 	}
+        if( hitClient )
+            ent->client->accuracy[WP_SHOTGUN][1]++;
 
 //unlagged - backward reconciliation #2
 	// put them back
@@ -639,6 +643,7 @@ void weapon_railgun_fire (gentity_t *ent) {
 			ent->client->rewardTime = level.time + REWARD_SPRITE_TIME;
 		}
 		ent->client->accuracy_hits++;
+                ent->client->accuracy[WP_RAILGUN][1]++;
 	}
 
 }
@@ -763,6 +768,7 @@ void Weapon_LightningFire( gentity_t *ent ) {
 			tent->s.weapon = ent->s.weapon;
 			if( LogAccuracyHit( traceEnt, ent ) ) {
 				ent->client->accuracy_hits++;
+                                ent->client->accuracy[WP_LIGHTNING][1]++;
 			}
 		} else if ( !( tr.surfaceFlags & SURF_NOIMPACT ) ) {
 			tent = G_TempEntity( tr.endpos, EV_MISSILE_MISS );
@@ -915,8 +921,10 @@ void FireWeapon( gentity_t *ent ) {
 	if( ent->s.weapon != WP_GRAPPLING_HOOK && ent->s.weapon != WP_GAUNTLET ) {
 		if( ent->s.weapon == WP_NAILGUN ) {
 			ent->client->accuracy_shots += NUM_NAILSHOTS;
+                        ent->client->accuracy[WP_NAILGUN][0]++;
 		} else {
 			ent->client->accuracy_shots++;
+                        ent->client->accuracy[ent->s.weapon][0]++;
 		}
 	}
 

@@ -123,6 +123,20 @@ static void CG_ParseScores( void ) {
 
 }
 
+static void CG_ParseAccuracy( void ) {
+	int		i;
+
+	for ( i = 0 ; i < WP_NUM_WEAPONS ; i++ ) {
+		cg.accuracys[i][0] = atoi( CG_Argv( i*2 + 1 ) );
+		cg.accuracys[i][1] = atoi( CG_Argv( i*2 + 2 ) );
+                #if DEBUG
+		CG_Printf("W: %i   shots: %i   Hits: %i\n", i,cg.accuracys[i][0], cg.accuracys[i][1]);
+                #endif
+	}
+
+}
+
+
 /*
 =================
 CG_ParseElimination
@@ -1240,6 +1254,13 @@ static void CG_ServerCommand( void ) {
 		CG_ParseScores();
 		return;
 	}
+
+
+        if ( !strcmp( cmd, "accs" ) ) {
+                CG_ParseAccuracy();
+                return;
+        }
+
 
 	if ( !strcmp( cmd, "ddtaken" ) ) {
 		CG_ParseDDtimetaken();

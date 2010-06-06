@@ -130,6 +130,31 @@ static void CG_ScoresUp_f( void ) {
 	}
 }
 
+static void CG_AccDown_f( void ) {
+
+	if ( cg.accRequestTime + 2000 < cg.time ) {
+
+		cg.accRequestTime = cg.time;
+		trap_SendClientCommand( "acc" );
+
+		if ( !cg.showAcc ) {
+			cg.showAcc = qtrue;
+		}
+
+	} else {
+		cg.showAcc = qtrue;
+	}
+}
+
+
+static void CG_AccUp_f( void ) {
+        if ( cg.showAcc ) {
+                cg.showAcc = qfalse;
+                cg.accFadeTime = cg.time;
+        }
+}
+
+
 #ifdef MISSIONPACK
 extern menuDef_t *menuScoreboard;
 void Menu_Reset( void );			// FIXME: add to right include file
@@ -516,6 +541,8 @@ static consoleCommand_t	commands[] = {
 	{ "startOrbit", CG_StartOrbit_f },
 	//{ "camera", CG_Camera_f },
 	{ "loaddeferred", CG_LoadDeferredPlayers },
+        { "+acc", CG_AccDown_f },
+	{ "-acc", CG_AccUp_f },
         { "clients", CG_PrintClientNumbers }
 };
 

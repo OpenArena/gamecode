@@ -418,6 +418,8 @@ struct gclient_s {
 	int			lastUpdateFrame;
 //unlagged - smooth clients #1
         qboolean        spawnprotected;
+
+        int			accuracy[WP_NUM_WEAPONS][2];
 };
 
 

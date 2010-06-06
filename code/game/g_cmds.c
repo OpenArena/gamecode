@@ -109,6 +109,35 @@ void DeathmatchScoreboardMessage( gentity_t *ent ) {
 
 /*
 ==================
+AccMessage
+
+==================
+*/
+void AccMessage( gentity_t *ent ) {
+	char		entry[1024];
+
+	Com_sprintf (entry, sizeof(entry),
+				" %i %i %i %i %i %i %i %i %i %i %i %i %i %i %i %i %i %i %i %i %i %i %i %i ",
+                                   ent->client->accuracy[WP_MACHINEGUN][0], ent->client->accuracy[WP_MACHINEGUN][1],
+                                  ent->client->accuracy[WP_SHOTGUN][0], ent->client->accuracy[WP_SHOTGUN][1],
+                                  ent->client->accuracy[WP_GRENADE_LAUNCHER][0], ent->client->accuracy[WP_GRENADE_LAUNCHER][1],
+                                  ent->client->accuracy[WP_ROCKET_LAUNCHER][0], ent->client->accuracy[WP_ROCKET_LAUNCHER][1],
+                                  ent->client->accuracy[WP_LIGHTNING][0], ent->client->accuracy[WP_LIGHTNING][1],
+                                  ent->client->accuracy[WP_RAILGUN][0], ent->client->accuracy[WP_RAILGUN][1],
+                                  ent->client->accuracy[WP_PLASMAGUN][0], ent->client->accuracy[WP_PLASMAGUN][1],
+                                  ent->client->accuracy[WP_BFG][0], ent->client->accuracy[WP_BFG][1],
+                                   0,0, //Hook
+                                    ent->client->accuracy[WP_NAILGUN][0], ent->client->accuracy[WP_NAILGUN][1],
+                                    0,0,
+                                    ent->client->accuracy[WP_CHAINGUN][0], ent->client->accuracy[WP_CHAINGUN][1]
+                                 );
+
+	trap_SendServerCommand( ent-g_entities, va("accs%s", entry ));
+}
+
+
+/*
+==================
 DominationPointStatusMessage
 
 ==================
@@ -255,6 +284,16 @@ void Cmd_Score_f( gentity_t *ent ) {
 	DeathmatchScoreboardMessage( ent );
 }
 
+
+/*
+==================
+ Cmd_Acc_f
+ Request current scoreboard information
+==================
+*/
+void Cmd_Acc_f( gentity_t *ent ) {
+    AccMessage( ent );
+}
 
 
 /*
@@ -2110,6 +2149,7 @@ commands_t cmds[ ] =
   { "a", CMD_MESSAGE|CMD_INTERMISSION, Cmd_AdminMessage_f },*/
 
   { "score", CMD_INTERMISSION, Cmd_Score_f },
+  { "acc", CMD_INTERMISSION, Cmd_Acc_f},
 
   // cheats
   { "give", CMD_CHEAT|CMD_LIVING, Cmd_Give_f },

@@ -549,6 +549,14 @@ typedef struct {
 	qboolean	showScores;
 	qboolean	scoreBoardShowing;
 	int			scoreFadeTime;
+
+        int		accuracys[WP_NUM_WEAPONS][2];
+	int		accRequestTime;
+	qboolean	showAcc;
+	qboolean	accBoardShowing;
+	int		accFadeTime;
+
+
 	char		killerName[MAX_NAME_LENGTH];
 	char			spectatorList[MAX_STRING_CHARS];		// list of names
 	int				spectatorLen;												// length of list
