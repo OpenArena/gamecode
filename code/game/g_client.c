@@ -1034,7 +1034,8 @@ ClientCheckName
 */
 static void ClientCleanName(const char *in, char *out, int outSize, int clientNum)
 {
-    int outpos = 0, colorlessLen = 0, spaces = 0;
+    int outpos = 0, colorlessLen = 0, spaces = 0, notblack=0;
+    qboolean black = qfalse;
 
     // discard leading spaces
     for(; *in == ' '; in++);
@@ -1061,9 +1062,12 @@ static void ClientCleanName(const char *in, char *out, int outSize, int clientNu
                 {
                     // Disallow color black in names to prevent players
                     // from getting advantage playing in front of black backgrounds
-                    outpos--;
-                    continue;
+                    //outpos--;
+                    //continue;
+                    black = qtrue;
                 }
+                else
+                    black = qfalse;
             }
             else
             {
@@ -1075,12 +1079,18 @@ static void ClientCleanName(const char *in, char *out, int outSize, int clientNu
         {
             spaces = 0;
             colorlessLen++;
+            if(!black && (Q_isalpha(*in) || (*in>='0' && *in<='9') ) )
+                notblack++;
         }
 
         outpos++;
     }
 
     out[outpos] = '\0';
+
+    //There was none not-black alphanum chars. Remove all colors
+    if(notblack<1)
+        Q_CleanStr(out);
 
     // don't allow empty names
     if( *out == '\0' || colorlessLen == 0)

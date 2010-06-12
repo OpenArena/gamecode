@@ -707,12 +707,39 @@ char	*Q_strrchr( const char* string, int c );
 const char	*Q_stristr( const char *s, const char *find);
 
 // buffer size safe library replacements
+/**
+ * Copies a string from one array to another in a safe way
+ *
+ * @param dest (out) pointer to destination array
+ * @param src (in) pointer to source array
+ * @param destsize size of the destination array, at most destsize-1 will be copied
+ */
 void	Q_strncpyz( char *dest, const char *src, int destsize );
+/**
+ * Appends a string to another string. The function protects against overflow.
+ * The size is the max size of the destination AFTER the string has been appended
+ * If the length of dest is larger or equal to destsize then nothing will be appended.
+ *
+ * @param dest (in/out) pointer to the string that will be appended to
+ * @param size size of the destination array
+ * @param src (in) the string to append
+ */
 void	Q_strcat( char *dest, int size, const char *src );
 
-// strlen that discounts Quake color sequences
+/**
+ * strlen that counts the length of the string after the color sequences have
+ * been removed. Example: "A^2I" = 2 because it will be printed "AI"
+ *
+ * @param string the string to
+ * @return the length of the string as printed
+ */
 int Q_PrintStrlen( const char *string );
-// removes color sequences from string
+/**
+ * Removes all colors from a string.
+ *
+ * @param string (in/out) the string to make color less
+ * @return pointer to the string
+ */
 char *Q_CleanStr( char *string );
 // Count the number of char tocount encountered in string
 int Q_CountChar(const char *string, char tocount);
