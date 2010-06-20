@@ -1796,7 +1796,7 @@ void ClientSpawn(gentity_t *ent) {
 	} else if (g_gametype.integer == GT_DOUBLE_D) {
 		//Double Domination uses special spawn points:
 		spawnPoint = SelectDoubleDominationSpawnPoint (client->sess.sessionTeam, spawn_origin, spawn_angles);
-	} else if (g_gametype.integer >= GT_CTF && g_ffa_gt==0) {
+	} else if (g_gametype.integer >= GT_CTF && g_ffa_gt==0 && g_gametype.integer!= GT_DOMINATION) {
 		// all base oriented team games use the CTF spawn points
 		spawnPoint = SelectCTFSpawnPoint ( 
 						client->sess.sessionTeam, 
