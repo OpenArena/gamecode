@@ -2364,7 +2364,7 @@ static void CG_DrawCenter1FctfString( void ) {
     #endif
 }
 
-static int lastDDSec = -100;
+
 
 /*
 =====================
@@ -2378,6 +2378,7 @@ static void CG_DrawCenterDDString( void ) {
     char        *line;
     int 		statusA, statusB;
     int sec;
+    static int lastDDSec = -100;
 
     
     if(cgs.gametype != GT_DOUBLE_D)
@@ -2902,7 +2903,7 @@ static qboolean CG_DrawScoreboard( void ) {
 #define ACCITEM_SIZE 16
 
 qboolean CG_DrawAccboard( void ) {
-        int counter, weaponNum, i;
+        int counter, i;
 
         i = 0;
 

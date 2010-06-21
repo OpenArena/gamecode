@@ -471,8 +471,8 @@ void CG_AddGore( localEntity_t *le ) {
 
 	if ( le->pos.trType == TR_STATIONARY ) {
 		// sink into the ground if near the removal time
-		int		t;
-		float	oldZ;
+		//int		t;
+		//float	oldZ;
 		
 		CG_FreeLocalEntity( le ); // kill it
 

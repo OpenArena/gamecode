@@ -523,8 +523,6 @@ CG_SpurtBlood (LEILEI)
 ==================
 */
 void CG_SpurtBlood( vec3_t origin, vec3_t velocity, int hard ) {
-	localEntity_t	*le;
-	refEntity_t		*re;
 	localEntity_t	*blood;
 //		if ( !cg_blood.integer ) {	return;	}
 

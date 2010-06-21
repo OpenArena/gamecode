@@ -471,8 +471,6 @@ static void CG_LeiPlasmaTrail( centity_t *ent, const weaponInfo_t *wi ) {
 	entityState_t	*es;
 	vec3_t	up;
 	localEntity_t	*smoke;
-	int		therando;
-	int		theradio;
 
 	if ( cg_noProjectileTrail.integer ) {
 		return;
@@ -3062,9 +3060,7 @@ static void CG_ShotgunPellet( vec3_t start, vec3_t end, int skipNum ) {
 
 // LEILEI ENHACNEMENT
 	localEntity_t	*smoke;
-	vec3_t	kapew;	
 	vec3_t  kapow;
-	int	therando;
 
 
 
@@ -3384,10 +3380,8 @@ void CG_Bullet( vec3_t end, int sourceEntityNum, vec3_t normal, qboolean flesh, 
 	vec3_t		start;
 // LEILEI ENHACNEMENT
 	localEntity_t	*smoke;
-	localEntity_t	*spark;
 	vec3_t	kapew;	
 	vec3_t  kapow;
-	int	therando;
 
 
 

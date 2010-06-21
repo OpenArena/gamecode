@@ -1386,7 +1386,7 @@ void CG_BuildSpectatorString( void );
 //unlagged, sagos modfication
 void SnapVectorTowards( vec3_t v, vec3_t to );
 
-void CG_FairCvars();
+void CG_FairCvars( void );
 
 //
 // cg_view.c
@@ -1565,6 +1565,9 @@ void	CG_ImpactMark( qhandle_t markShader,
 				    float r, float g, float b, float a, 
 					qboolean alphaFade, 
 					float radius, qboolean temporary );
+void    CG_LeiSparks (vec3_t org, vec3_t vel, int duration, float x, float y, float speed);
+void    CG_LeiSparks2 (vec3_t org, vec3_t vel, int duration, float x, float y, float speed);
+
 
 //
 // cg_localents.c
@@ -1605,6 +1608,8 @@ void CG_Bleed( vec3_t origin, int entityNum );
 localEntity_t *CG_MakeExplosion( vec3_t origin, vec3_t dir,
 								qhandle_t hModel, qhandle_t shader, int msec,
 								qboolean isSprite );
+
+void CG_SpurtBlood( vec3_t origin, vec3_t velocity, int hard );
 
 //
 // cg_snapshot.c

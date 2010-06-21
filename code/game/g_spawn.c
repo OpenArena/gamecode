@@ -307,7 +307,7 @@ qboolean G_CallSpawn( gentity_t *ent ) {
             G_Printf ("%s replaced by %s\n", ent->classname, itemname);
 
 
-	if ( !itemname ) {
+	if ( itemname[0]==0) {
                 G_Printf ("G_CallSpawn: NULL classname\n");
 		return qfalse;
 	}

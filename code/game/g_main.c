@@ -1596,7 +1596,9 @@ Append information about this game to the log file
 void LogExit( const char *string ) {
 	int				i, numSorted;
 	gclient_t		*cl;
+#ifdef MISSIONPACK
 	qboolean won = qtrue;
+ #endif
 	G_LogPrintf( "Exit: %s\n", string );
 
 	level.intermissionQueued = level.time;
