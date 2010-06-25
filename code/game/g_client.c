@@ -402,23 +402,6 @@ void CopyToBodyQue( gentity_t *ent ) {
 	// if client is in a nodrop area, don't leave the body
 	contents = trap_PointContents( ent->s.origin, -1 );
 	if ( (contents & CONTENTS_NODROP) && !(ent->s.eFlags & EF_KAMIKAZE) ) { //the check for kamikaze is a workaround for ctf4ish
-            /*if ( ent->s.eFlags & EF_KAMIKAZE ) {
-                    ent->s.eFlags &= ~EF_KAMIKAZE;
-
-                    // check if there is a kamikaze timer around for this owner
-                    for (i = 0; i < MAX_GENTITIES; i++) {
-                            e = &g_entities[i];
-                            if (!e->inuse)
-                                    continue;
-                            if (e->activator != ent)
-                                    continue;
-                            if (strcmp(e->classname, "kamikaze timer"))
-                                    continue;
-                            break;
-                    }
-                    if (!strcmp(e->classname, "kamikaze timer"))
-                        G_FreeEntity(e);
-            }*/
             return;
 	}
 
