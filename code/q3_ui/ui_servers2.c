@@ -1794,7 +1794,7 @@ static void ArenaServers_MenuInit( void ) {
 	g_gametype = Com_Clamp( 0, 12, ui_browserGameType.integer );
 	g_arenaservers.gametype.curvalue = g_gametype;
 
-	g_sortkey = Com_Clamp( 0, 4, ui_browserSortKey.integer );
+	g_sortkey = Com_Clamp( 0, 5, ui_browserSortKey.integer );
 	g_arenaservers.sortkey.curvalue = g_sortkey;
 
 	g_fullservers = Com_Clamp( 0, 1, ui_browserShowFull.integer );
