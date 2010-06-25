@@ -1380,7 +1380,7 @@ void CG_MouseEvent(int x, int y);
 void CG_EventHandling(int type);
 void CG_RankRunFrame( void );
 void CG_SetScoreSelection(void *menu);
-score_t *CG_GetSelectedScore( void );
+//score_t *CG_GetSelectedScore( void );
 void CG_BuildSpectatorString( void );
 
 //unlagged, sagos modfication
