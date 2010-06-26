@@ -1854,7 +1854,7 @@ void ClientSpawn(gentity_t *ent) {
 	/*for ( i = 0 ; i < MAX_PERSISTANT ; i++ ) {
 		persistant[i] = client->ps.persistant[i];
 	}*/
-        memcpy(persistant,client->ps.persistant,MAX_PERSISTANT);
+        memcpy(persistant,client->ps.persistant,MAX_PERSISTANT*sizeof(int));
 	eventSequence = client->ps.eventSequence;
 
 	Com_Memset (client, 0, sizeof(*client));
