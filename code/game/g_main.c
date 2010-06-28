@@ -66,6 +66,8 @@ vmCvar_t	g_weaponRespawn;
 vmCvar_t	g_weaponTeamRespawn;
 vmCvar_t	g_motd;
 vmCvar_t        g_motdfile;
+vmCvar_t        g_votemaps;
+vmCvar_t        g_votecustom;
 vmCvar_t	g_synchronousClients;
 vmCvar_t	g_warmup;
 vmCvar_t	g_doWarmup;
@@ -263,6 +265,8 @@ static cvarTable_t		gameCvarTable[] = {
         { &g_voteMinTimelimit, "g_voteMinTimelimit", "0", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse },
         { &g_voteMaxFraglimit, "g_voteMaxFraglimit", "0", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse },
         { &g_voteMinFraglimit, "g_voteMinFraglimit", "0", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse },
+        { &g_votemaps, "g_votemapsfile", "votemaps.cfg", 0, 0, qfalse },
+        { &g_votecustom, "g_votecustomfile", "votecustomfile.cfg", 0, 0, qfalse },
         
 	{ &g_listEntity, "g_listEntity", "0", 0, 0, qfalse },
 

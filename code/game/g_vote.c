@@ -70,7 +70,7 @@ t_mappage getMappage(int page) {
         memset(&buffer,0,sizeof(buffer));
 
 	//Check if there is a votemaps.cfg
-	trap_FS_FOpenFile("votemaps.cfg",&file,FS_READ);
+	trap_FS_FOpenFile(g_votemaps.string,&file,FS_READ);
 	if(file)
 	{
 		//there is a votemaps.cfg file, take allowed maps from there
@@ -139,7 +139,7 @@ int allowedMap(char *mapname) {
     trap_FS_FCloseFile(file);
 
     //Now read the file votemaps.cfg to see what maps are allowed
-    trap_FS_FOpenFile("votemaps.cfg",&file,FS_READ);
+    trap_FS_FOpenFile(g_votemaps.string,&file,FS_READ);
 
     if(!file)
         return qtrue; //if no file, everything is allowed
@@ -250,7 +250,7 @@ int VoteParseCustomVotes( void ) {
     int             commands;
     char	*token,*pointer;
 
-    trap_FS_FOpenFile("votecustom.cfg",&file,FS_READ);
+    trap_FS_FOpenFile(g_votecustom.string,&file,FS_READ);
 
     if(!file)
         return 0;
@@ -294,7 +294,7 @@ t_customvote getCustomVote(char* votecommand) {
     char	*token,*pointer;
     char	key[MAX_TOKEN_CHARS];
 
-    trap_FS_FOpenFile("votecustom.cfg",&file,FS_READ);
+    trap_FS_FOpenFile(g_votecustom.string,&file,FS_READ);
 
     if(!file) {
         memset(&result,0,sizeof(result));
