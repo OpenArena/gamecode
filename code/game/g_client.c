@@ -584,19 +584,23 @@ void respawnRound( gentity_t *ent ) {
 	//	ent->client->isEliminated  = qtrue;
 		//CopyToBodyQue (ent);
 	//}
+        
 
 	//if(g_gametype.integer==GT_ELIMINATION && ent->client->ps.pm_type == PM_SPECTATOR && ent->client->ps.stats[STAT_HEALTH] > 0)
 	//	return;
         if(ent->client->hook)
                 Weapon_HookFree(ent->client->hook);
-		ClientSpawn(ent);
 
-		// add a teleportation effect
-		if(g_gametype.integer!=GT_ELIMINATION && g_gametype.integer!=GT_CTF_ELIMINATION && g_gametype.integer!=GT_LMS)
-		{	
-			tent = G_TempEntity( ent->client->ps.origin, EV_PLAYER_TELEPORT_IN );
-			tent->s.clientNum = ent->s.clientNum;
-		}
+        trap_UnlinkEntity (ent);
+
+	ClientSpawn(ent);
+
+        // add a teleportation effect
+        if(g_gametype.integer!=GT_ELIMINATION && g_gametype.integer!=GT_CTF_ELIMINATION && g_gametype.integer!=GT_LMS)
+        {
+                tent = G_TempEntity( ent->client->ps.origin, EV_PLAYER_TELEPORT_IN );
+                tent->s.clientNum = ent->s.clientNum;
+        }
 }
 
 /*
