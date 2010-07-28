@@ -79,7 +79,7 @@ static int gamecodetoui[] = {4,2,3,0,5,1,6};
 static int uitogamecode[] = {4,6,2,3,1,5,7};
 
 static const char *handicap_items[] = {
-	"None",
+	"100",
 	"95",
 	"90",
 	"85",
@@ -380,7 +380,7 @@ PlayerSettings_StatusBar
 =================
 */
 static void PlayerSettings_StatusBar( void* ptr ) {
-	UI_DrawString( 320, 400, "Handicap makes you weaker", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 400, "Lower handicap makes you weaker", UI_CENTER|UI_SMALLFONT, colorWhite );
         UI_DrawString( 320, 420, "giving you more challenge", UI_CENTER|UI_SMALLFONT, colorWhite );
 }
 

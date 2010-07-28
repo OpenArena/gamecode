@@ -287,6 +287,7 @@ void UI_MainMenu( void ) {
 	int		style = UI_CENTER | UI_DROPSHADOW;
 
 	trap_Cvar_Set( "sv_killserver", "1" );
+        trap_Cvar_SetValue( "handicap", 100 ); //Reset handicap during server change, it must be ser per game
 
 	memset( &s_main, 0 ,sizeof(mainmenu_t) );
 	memset( &s_errorMessage, 0 ,sizeof(errorMessage_t) );
