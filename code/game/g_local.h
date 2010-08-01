@@ -1089,6 +1089,7 @@ extern vmCvar_t         g_autonextmap; //Autochange map
 extern vmCvar_t         g_mappools; //mappools to be used for autochange
 
 extern vmCvar_t        g_voteNames;
+extern vmCvar_t        g_voteBan;
 extern vmCvar_t        g_voteGametypes;
 extern vmCvar_t        g_voteMinTimelimit;
 extern vmCvar_t        g_voteMaxTimelimit;

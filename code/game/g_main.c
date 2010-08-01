@@ -149,6 +149,7 @@ vmCvar_t         g_autonextmap; //Autochange map
 vmCvar_t         g_mappools; //mappools to be used for autochange
 
 vmCvar_t        g_voteNames;
+vmCvar_t        g_voteBan;
 vmCvar_t        g_voteGametypes;
 vmCvar_t        g_voteMinTimelimit;
 vmCvar_t        g_voteMaxTimelimit;
@@ -264,6 +265,7 @@ static cvarTable_t		gameCvarTable[] = {
 	{ &g_allowVote, "g_allowVote", "1", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse },
         { &g_maxvotes, "g_maxVotes", MAX_VOTE_COUNT, CVAR_ARCHIVE, 0, qfalse },
         { &g_voteNames, "g_voteNames", "/map_restart/nextmap/map/g_gametype/kick/clientkick/g_doWarmup/timelimit/fraglimit/shuffle/", CVAR_ARCHIVE, 0, qfalse }, //clientkick g_doWarmup timelimit fraglimit
+        { &g_voteBan, "g_voteBan", "0", CVAR_ARCHIVE, 0, qfalse },
         { &g_voteGametypes, "g_voteGametypes", "/0/1/3/4/5/6/7/8/9/10/11/12/", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse },
         { &g_voteMaxTimelimit, "g_voteMaxTimelimit", "0", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse },
         { &g_voteMinTimelimit, "g_voteMinTimelimit", "0", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse },

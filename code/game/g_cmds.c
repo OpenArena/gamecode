@@ -1765,7 +1765,11 @@ void Cmd_CallVote_f( gentity_t *ent ) {
                     trap_SendServerCommand( ent-g_entities, "print \"Cannot kick that number.\n\"" );
                     return;
                 }
-                Com_sprintf( level.voteString, sizeof( level.voteString ), "clientkick_game \"%d\"", i );
+                if(g_voteBan.integer<1) {
+                    Com_sprintf( level.voteString, sizeof( level.voteString ), "clientkick_game \"%d\"", i );
+                } else {
+                    Com_sprintf( level.voteString, sizeof( level.voteString ), "!ban \"%d\" \"%dm\" \"Banned by public vote\"", i, g_voteBan.integer );
+                }
 		Com_sprintf( level.voteDisplayString, sizeof( level.voteDisplayString ), "Kick %s?" , level.clients[i].pers.netname );
         } else if ( !Q_stricmp( arg1, "shuffle" ) ) {
                 if(g_gametype.integer<GT_TEAM || g_ffa_gt==1) { //Not a team game
@@ -1786,7 +1790,11 @@ void Cmd_CallVote_f( gentity_t *ent ) {
                     }
                 }
 
-                Com_sprintf( level.voteString, sizeof( level.voteString ), "clientkick_game \"%d\"", i );
+                if(g_voteBan.integer<1) {
+                    Com_sprintf( level.voteString, sizeof( level.voteString ), "clientkick_game \"%d\"", i );
+                } else {
+                    Com_sprintf( level.voteString, sizeof( level.voteString ), "!ban \"%d\" \"%dm\" \"Banned by public vote\"", i, g_voteBan.integer );
+                }
 		Com_sprintf( level.voteDisplayString, sizeof( level.voteDisplayString ), "Kick %s?" , level.clients[i].pers.netname );
         } else if ( !Q_stricmp( arg1, "custom" ) ) {
                 t_customvote customvote;

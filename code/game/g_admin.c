@@ -1867,6 +1867,9 @@ qboolean G_admin_ban( gentity_t *ent, int skiparg )
   if( !g_admin.string[ 0 ] )
     ADMP( "^3!ban: ^7WARNING g_admin not set, not saving ban to a file\n" );
   else
+  if(strlen(g_admin_namelog[ logmatch ]->guid)==0 || strlen(g_admin_namelog[ logmatch ]->ip) )
+      ADMP( "^3!ban: ^7WARNING bot or without GUID or IP cannot write to ban file\n");
+  else
     admin_writeconfig();
 
   if( g_admin_namelog[ logmatch ]->slot == -1 )
