@@ -2089,6 +2089,8 @@ else
 
         if(g_spawnprotect.integer)
             client->spawnprotected = qtrue;
+
+        RespawnTimeMessage(ent,0);
 }
 
 

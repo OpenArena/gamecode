@@ -669,6 +669,8 @@ typedef struct {
 	int			stateHead, stateTail;
 //unlagged - optimized prediction
 
+        //time that the client will respawn. If 0 = the player is alive.
+        int respawnTime;
 } cg_t;
 
 

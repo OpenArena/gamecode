@@ -175,6 +175,10 @@ void EliminationMessage(gentity_t *ent) {
 		level.teamScores[TEAM_RED], level.teamScores[TEAM_BLUE], level.roundStartTime) );
 }
 
+void RespawnTimeMessage(gentity_t *ent, int time) {
+    trap_SendServerCommand( ent-g_entities, va("respawn %i", time) );
+}
+
 /*
 ==================
 DoubleDominationScoreTime

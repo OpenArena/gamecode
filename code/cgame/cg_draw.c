@@ -2828,6 +2828,8 @@ static void CG_DrawTeamVote(void) {
 
 
 static qboolean CG_DrawScoreboard( void ) {
+        char        *s;
+        int w;
 #ifdef MISSIONPACK
 	static qboolean firstTime = qtrue;
 	float fade, *fadeColor;
@@ -2892,6 +2894,17 @@ static qboolean CG_DrawScoreboard( void ) {
 
 	return qtrue;
 #else
+        if(cg.respawnTime) {
+            if(cg.respawnTime>cg.time) {
+                s = va("Respawn in: %f",((double)cg.respawnTime-(double)cg.time)/1000.0);
+                w = CG_DrawStrlen( s ) * SMALLCHAR_WIDTH;
+                CG_DrawSmallStringColor(320-w/2,400, s, colorYellow);
+            } else {
+                s = va("Click FIRE to respawn");
+                w = CG_DrawStrlen( s ) * SMALLCHAR_WIDTH;
+                CG_DrawSmallStringColor(320-w/2,400, "Click FIRE to respawn", colorGreen);
+            }
+        }
 	return CG_DrawOldScoreboard();
 #endif
 }

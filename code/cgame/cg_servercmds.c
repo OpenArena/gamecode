@@ -253,6 +253,14 @@ static void CG_ParseChallenge( void ) {
 	addChallenge(atoi( CG_Argv(1) ) );
 }
 
+
+/**
+ * Sets the respawn counter for the client.
+ */
+static void CG_ParseRespawnTime( void ) {
+    cg.respawnTime = atoi( CG_Argv(1) );
+}
+
 /*
 =================
 CG_ParseTeam
@@ -1336,6 +1344,11 @@ static void CG_ServerCommand( void ) {
 	// challenge completed is determened by the server. A client should consider this message valid:
 	if ( !strcmp( cmd, "ch" ) ) {
 		CG_ParseChallenge();
+		return;
+	}
+
+        if ( !strcmp( cmd, "respawn" ) ) {
+		CG_ParseRespawnTime();
 		return;
 	}
 

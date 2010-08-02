@@ -813,6 +813,8 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 	if(g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_CTF_ELIMINATION || g_gametype.integer == GT_LMS)
 		if(level.time<=level.roundStartTime && level.time>level.roundStartTime-1000*g_elimination_activewarmup.integer)
 			self->client->respawnTime = level.time + rand()%800;
+
+        RespawnTimeMessage(self,self->client->respawnTime);
 		
 
 	// remove powerups

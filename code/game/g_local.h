@@ -806,6 +806,7 @@ void YourTeamMessage( gentity_t *ent);
 void AttackingTeamMessage( gentity_t *ent );
 void DeathmatchScoreboardMessage (gentity_t *client);
 void EliminationMessage (gentity_t *client);
+void RespawnTimeMessage(gentity_t *ent, int time);
 void DominationPointNamesMessage (gentity_t *client);
 void DominationPointStatusMessage( gentity_t *ent );
 void ChallengeMessage( gentity_t *ent, int challengeNumber );
