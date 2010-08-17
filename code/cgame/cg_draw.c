@@ -2896,7 +2896,7 @@ static qboolean CG_DrawScoreboard( void ) {
 #else
         if(cg.respawnTime) {
             if(cg.respawnTime>cg.time) {
-                s = va("Respawn in: %f",((double)cg.respawnTime-(double)cg.time)/1000.0);
+                s = va("Respawn in: %2.2f",((double)cg.respawnTime-(double)cg.time)/1000.0);
                 w = CG_DrawStrlen( s ) * SMALLCHAR_WIDTH;
                 CG_DrawSmallStringColor(320-w/2,400, s, colorYellow);
             } else {

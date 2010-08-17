@@ -272,7 +272,7 @@ static cvarTable_t		gameCvarTable[] = {
         { &g_voteMaxFraglimit, "g_voteMaxFraglimit", "0", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse },
         { &g_voteMinFraglimit, "g_voteMinFraglimit", "0", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse },
         { &g_votemaps, "g_votemapsfile", "votemaps.cfg", 0, 0, qfalse },
-        { &g_votecustom, "g_votecustomfile", "votecustomfile.cfg", 0, 0, qfalse },
+        { &g_votecustom, "g_votecustomfile", "votecustom.cfg", 0, 0, qfalse },
         
 	{ &g_listEntity, "g_listEntity", "0", 0, 0, qfalse },
 
@@ -604,6 +604,9 @@ void G_UpdateCvars( void ) {
 					trap_SendServerCommand( -1, va("print \"Server: %s changed to %s\n\"", 
 						cv->cvarName, cv->vmCvar->string ) );
 				}
+
+                                if ( cv->vmCvar == &g_votecustom )
+                                    VoteParseCustomVotes();
 
                                 if ( cv->vmCvar == &g_voteNames ) {
                                     //Set vote flags
