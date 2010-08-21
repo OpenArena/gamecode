@@ -608,6 +608,11 @@ void G_UpdateCvars( void ) {
                                 if ( cv->vmCvar == &g_votecustom )
                                     VoteParseCustomVotes();
 
+                                //Here comes the cvars that must trigger a map_restart
+                                if (cv->vmCvar == &g_instantgib || cv->vmCvar == &g_rockets  ||  cv->vmCvar == &g_elimination_allgametypes) {
+                                    trap_Cvar_Set("sv_dorestart","1");
+                                }
+
                                 if ( cv->vmCvar == &g_voteNames ) {
                                     //Set vote flags
                                     int voteflags=0;

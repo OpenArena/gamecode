@@ -820,14 +820,16 @@ void ClearRegisteredItems( void ) {
 	memset( itemRegistered, 0, sizeof( itemRegistered ) );
 
 	if(g_instantgib.integer) {
-		//Always load Gauntlet and machine gun because g_instantgib might suddenly change
-		RegisterItem( BG_FindItemForWeapon( WP_GAUNTLET ) );
-		RegisterItem( BG_FindItemForWeapon( WP_MACHINEGUN ) );
-		RegisterItem( BG_FindItemForWeapon( WP_RAILGUN ) );
+            //Always load Gauntlet and machine gun because g_instantgib might suddenly change
+            if(g_instantgib.integer & 2)
+                RegisterItem( BG_FindItemForWeapon( WP_GAUNTLET ) );
+            //RegisterItem( BG_FindItemForWeapon( WP_MACHINEGUN ) );
+            RegisterItem( BG_FindItemForWeapon( WP_RAILGUN ) );
 	}
+        else
 	if(g_rockets.integer) {
-		RegisterItem( BG_FindItemForWeapon( WP_GAUNTLET ) );
-		RegisterItem( BG_FindItemForWeapon( WP_MACHINEGUN ) );
+		//RegisterItem( BG_FindItemForWeapon( WP_GAUNTLET ) );
+		//RegisterItem( BG_FindItemForWeapon( WP_MACHINEGUN ) );
 		RegisterItem( BG_FindItemForWeapon( WP_ROCKET_LAUNCHER ) );
 	}
 	else
@@ -941,8 +943,7 @@ void G_SpawnItem (gentity_t *ent, gitem_t *item) {
 	G_SpawnFloat( "random", "0", &ent->random );
 	G_SpawnFloat( "wait", "0", &ent->wait );
 
-	//Load all items in instantgib anyway or we will be in trouble if it is suddenly disabled!
-	//if((item->giType == IT_TEAM && g_instantgib.integer) || !g_instantgib.integer)
+	if((item->giType == IT_TEAM && (g_instantgib.integer || g_rockets.integer) ) || (!g_instantgib.integer && g_rockets.integer) )
 	{
 		//Don't load pickups in Elimination (or maybe... gives warnings)
 		if (g_gametype.integer != GT_ELIMINATION && g_gametype.integer != GT_CTF_ELIMINATION && g_gametype.integer != GT_LMS)
