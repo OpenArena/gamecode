@@ -943,7 +943,7 @@ void G_SpawnItem (gentity_t *ent, gitem_t *item) {
 	G_SpawnFloat( "random", "0", &ent->random );
 	G_SpawnFloat( "wait", "0", &ent->wait );
 
-	if((item->giType == IT_TEAM && (g_instantgib.integer || g_rockets.integer) ) || (!g_instantgib.integer && g_rockets.integer) )
+	if((item->giType == IT_TEAM && (g_instantgib.integer || g_rockets.integer) ) || (!g_instantgib.integer && !g_rockets.integer) )
 	{
 		//Don't load pickups in Elimination (or maybe... gives warnings)
 		if (g_gametype.integer != GT_ELIMINATION && g_gametype.integer != GT_CTF_ELIMINATION && g_gametype.integer != GT_LMS)
