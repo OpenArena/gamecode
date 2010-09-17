@@ -820,7 +820,6 @@ void ClearRegisteredItems( void ) {
 	memset( itemRegistered, 0, sizeof( itemRegistered ) );
 
 	if(g_instantgib.integer) {
-            //Always load Gauntlet and machine gun because g_instantgib might suddenly change
             if(g_instantgib.integer & 2)
                 RegisterItem( BG_FindItemForWeapon( WP_GAUNTLET ) );
             //RegisterItem( BG_FindItemForWeapon( WP_MACHINEGUN ) );
