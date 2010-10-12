@@ -1055,7 +1055,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
         
         //Sago: See if the client was sent flying
         //Check if damage is by somebody who is not a player!
-        if( (!attacker || attacker->s.eType != ET_PLAYER) && client->lastSentFlying>-1 && ( mod==MOD_FALLING || mod==MOD_LAVA || mod==MOD_SLIME || mod==MOD_TRIGGER_HURT || mod==MOD_SUICIDE) )  {
+        if( (!attacker || attacker->s.eType != ET_PLAYER) && client && client->lastSentFlying>-1 && ( mod==MOD_FALLING || mod==MOD_LAVA || mod==MOD_SLIME || mod==MOD_TRIGGER_HURT || mod==MOD_SUICIDE) )  {
             if( client->lastSentFlyingTime+5000<level.time) {
                 client->lastSentFlying = -1; //More than 5 seconds, not a kill!
             } else {
