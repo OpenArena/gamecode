@@ -2894,7 +2894,7 @@ static qboolean CG_DrawScoreboard( void ) {
 
 	return qtrue;
 #else
-        if(cg.respawnTime) {
+        if(cg.respawnTime && cg.snap->ps.persistant[PERS_TEAM] != TEAM_SPECTATOR && (cgs.gametype < GT_ELIMINATION || cgs.gametype > GT_LMS) ) {
             if(cg.respawnTime>cg.time) {
                 s = va("Respawn in: %2.2f",((double)cg.respawnTime-(double)cg.time)/1000.0);
                 w = CG_DrawStrlen( s ) * SMALLCHAR_WIDTH;
