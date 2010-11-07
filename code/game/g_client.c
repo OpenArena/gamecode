@@ -1285,6 +1285,7 @@ void ClientUserinfoChanged( int clientNum ) {
 			// pick the team with the least number of players
 			team = PickTeam( clientNum );
 		}
+                client->sess.sessionTeam = team;
 	}
 	else {
 		team = client->sess.sessionTeam;
