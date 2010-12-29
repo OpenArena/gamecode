@@ -973,7 +973,7 @@ void G_SpawnItem (gentity_t *ent, gitem_t *item) {
 	if(g_gametype.integer == GT_DOUBLE_D && (strcmp(ent->classname, "team_CTF_redflag")==0 || strcmp(ent->classname, "team_CTF_blueflag")==0 || strcmp(ent->classname, "team_CTF_neutralflag") == 0 || item->giType == IT_PERSISTANT_POWERUP  ))
 		ent->s.eFlags |= EF_NODRAW; //Don't draw the flag models/persistant powerups
 
-	if(g_gametype.integer == GT_CTF_ELIMINATION && strcmp(ent->classname, "team_CTF_neutralflag") == 0)
+	if( g_gametype.integer != GT_1FCTF && strcmp(ent->classname, "team_CTF_neutralflag") == 0)
 		ent->s.eFlags |= EF_NODRAW; // Don't draw the flag in CTF_elimination
 
         if(strcmp(ent->classname, "domination_point") == 0)
