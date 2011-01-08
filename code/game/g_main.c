@@ -194,6 +194,8 @@ vmCvar_t        g_warningExpire;
 vmCvar_t        g_minNameChangePeriod;
 vmCvar_t        g_maxNameChanges;
 
+vmCvar_t        g_timestamp_startgame;
+
 // bk001129 - made static to avoid aliasing
 static cvarTable_t		gameCvarTable[] = {
 	// don't override the cheat state set by the system
@@ -390,7 +392,9 @@ static cvarTable_t		gameCvarTable[] = {
 	    { &g_warningExpire, "g_warningExpire", "3600", CVAR_ARCHIVE, 0, qfalse },
 	    
 	    { &g_minNameChangePeriod, "g_minNameChangePeriod", "10", 0, 0, qfalse},
-        { &g_maxNameChanges, "g_maxNameChanges", "50", 0, 0, qfalse}
+        { &g_maxNameChanges, "g_maxNameChanges", "50", 0, 0, qfalse},
+
+        { &g_timestamp_startgame, "g_timestamp", "0001-01-01 00:00:00", CVAR_SERVERINFO, 0, qfalse}
         
 };
 
@@ -662,6 +666,20 @@ void G_UpdateCvars( void ) {
 }
 
 /*
+ Sets the cvar g_timestamp. Return 0 if success or !0 for errors.
+ */
+int G_UpdateTimestamp( ) {
+    int ret = 0;
+    qtime_t timestamp;
+    ret = trap_RealTime(&timestamp);
+    trap_Cvar_Set("g_timestamp",va("%04i-%02i-%02i %02i:%02i:%02i",
+    1900+timestamp.tm_year,1+timestamp.tm_mon, timestamp.tm_mday,
+    timestamp.tm_hour,timestamp.tm_min,timestamp.tm_sec));
+
+    return ret;
+}
+
+/*
 ============
 G_InitGame
 
@@ -678,6 +696,8 @@ void G_InitGame( int levelTime, int randomSeed, int restart ) {
 	srand( randomSeed );
 
 	G_RegisterCvars();
+
+        G_UpdateTimestamp();
         
         //disable unwanted cvars
         if( g_gametype.integer == GT_SINGLE_PLAYER )
