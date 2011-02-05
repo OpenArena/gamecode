@@ -428,6 +428,10 @@ void Team_FragBonuses(gentity_t *targ, gentity_t *inflictor, gentity_t *attacker
 		PrintMsg(NULL, "%s" S_COLOR_WHITE " fragged %s's skull carrier!\n",
 			attacker->client->pers.netname, TeamName(team));
 
+                G_LogPrintf("HARVESTER: %i %i %i %i %i: %s fragged %s (%s) who had %i skulls.\n",
+                        attacker->client->ps.clientNum, team, 1, targ->client->ps.clientNum, tokens,
+                        attacker->client->pers.netname, targ->client->pers.netname,TeamName(team),tokens);
+
 		// the target had the flag, clear the hurt carrier
 		// field on the other team
 		for (i = 0; i < g_maxclients.integer; i++) {
@@ -1367,9 +1371,16 @@ int Pickup_Team( gentity_t *ent, gentity_t *other ) {
 	if( g_gametype.integer == GT_HARVESTER ) {
 		// the only team items that can be picked up in harvester are the cubes
 		if( ent->spawnflags != cl->sess.sessionTeam ) {
-			cl->ps.generic1 += 1;
-		}
-		G_FreeEntity( ent );
+			cl->ps.generic1 += 1; //Skull pickedup
+                        G_LogPrintf("HARVESTER: %i %i %i %i %i: %s picked up a skull.\n",
+                            cl->ps.clientNum,cl->sess.sessionTeam,3,-1,1,
+                            cl->pers.netname);
+		} else {
+                    G_LogPrintf("HARVESTER: %i %i %i %i %i: %s destroyed a skull.\n,",
+                            cl->ps.clientNum,cl->sess.sessionTeam,2,-1,1,
+                            cl->pers.netname);
+                }
+		G_FreeEntity( ent ); //Destory skull
 		return 0;
 	}
 	if ( g_gametype.integer == GT_DOMINATION ) {
@@ -1894,7 +1905,11 @@ static void ObeliskTouch( gentity_t *self, gentity_t *other, trace_t *trace ) {
 	}
 
 	PrintMsg(NULL, "%s" S_COLOR_WHITE " brought in %i skull%s.\n",
-					other->client->pers.netname, tokens, tokens ? "s" : "" );
+					other->client->pers.netname, tokens, tokens>1 ? "s" : "" );
+
+        G_LogPrintf("HARVESTER: %i %i %i %i %i: %s brought in %i skull%s for %s\n",
+            other->client->ps.clientNum,other->client->sess.sessionTeam,0,-1,tokens,
+            other->client->pers.netname,tokens, tokens>1 ? "s" : "", TeamName(other->client->sess.sessionTeam));
 
 	AddTeamScore(self->s.pos.trBase, other->client->sess.sessionTeam, tokens);
 	Team_ForceGesture(other->client->sess.sessionTeam);
