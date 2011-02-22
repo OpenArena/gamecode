@@ -2389,6 +2389,9 @@ void CheckDomination(void) {
 				AddTeamScore(level.intermission_origin,TEAM_RED,1);
 			if ( level.pointStatusDom[i] == TEAM_BLUE )
 				AddTeamScore(level.intermission_origin,TEAM_BLUE,1);
+                        G_LogPrintf( "DOM: %i %i %i %i: %s holds point %s for 1 point!\n",
+                                    -1,i,1,level.pointStatusDom[i],
+                                    TeamName(level.pointStatusDom[i]),level.domination_points_names[i]);
 		}
 		level.dom_scoreGiven++;
 		while(level.time>level.dom_scoreGiven*DOM_SECSPERPOINT*scoreFactor)

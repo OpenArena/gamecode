@@ -793,7 +793,7 @@ int getDomPointNumber( gentity_t *point ) {
 	return 0;
 }
 
-void Team_Dom_TakePoint( gentity_t *point, int team ) {
+void Team_Dom_TakePoint( gentity_t *point, int team, int clientnumber ) {
 	gitem_t			*it;
 	vec3_t			origin;
 	int i;
@@ -829,6 +829,9 @@ void Team_Dom_TakePoint( gentity_t *point, int team ) {
 	G_SpawnItem(point, it);
 	FinishSpawningItem( point );
 	level.pointStatusDom[i] = team;
+        G_LogPrintf( "DOM: %i %i %i %i: %s takes point %s!\n",
+                    clientnumber,i,0,team,
+                    TeamName(team),level.domination_points_names[i]);
 	SendDominationPointsStatusMessageToAllClients();
 }
 
@@ -1384,7 +1387,7 @@ int Pickup_Team( gentity_t *ent, gentity_t *other ) {
 		return 0;
 	}
 	if ( g_gametype.integer == GT_DOMINATION ) {
-		Team_Dom_TakePoint(ent, cl->sess.sessionTeam);
+		Team_Dom_TakePoint(ent, cl->sess.sessionTeam,cl->ps.clientNum);
 		return 0;
 	}
 	// figure out what team this flag is
@@ -1880,6 +1883,9 @@ static void ObeliskDie( gentity_t *self, gentity_t *inflictor, gentity_t *attack
 	attacker->client->rewardTime = level.time + REWARD_SPRITE_TIME;
 	attacker->client->ps.persistant[PERS_CAPTURES]++;
         G_LogPrintf( "Award: %i %i: %s gained the %s award!\n", attacker->client->ps.clientNum, 4, attacker->client->pers.netname, "CAPTURE" );
+        G_LogPrintf("OBELISK: %i %i %i %i: %s destroyed the enemy obelisk.\n",
+                 attacker->client->ps.clientNum,attacker->client->sess.sessionTeam,3,0,
+                 attacker->client->pers.netname);
         if(TeamCount(-1,TEAM_RED) && TeamCount(-1,TEAM_BLUE) && !level.hadBots)
             ChallengeMessage(attacker,AWARD_CAPTURE);
 
@@ -1945,6 +1951,9 @@ static void ObeliskPain( gentity_t *self, gentity_t *attacker, int damage ) {
 	}
 	self->activator->s.frame = 1;
 	AddScore(attacker, self->r.currentOrigin, actualDamage);
+        G_LogPrintf("OBELISK: %i %i %i %i: %s dealt %i damage to the enemy obelisk.\n",
+                 attacker->client->ps.clientNum,attacker->client->sess.sessionTeam,1,actualDamage,
+                 attacker->client->pers.netname,actualDamage);
 }
 
 gentity_t *SpawnObelisk( vec3_t origin, int team, int spawnflags) {
