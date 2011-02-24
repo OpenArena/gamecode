@@ -596,6 +596,14 @@ void Cmd_LevelShot_f( gentity_t *ent ) {
 		return;
 	}
 
+        if(!ent->client->pers.localClient)
+	{
+		trap_SendServerCommand(ent-g_entities,
+		"print \"The levelshot command must be executed by a local client\n\"");
+		return;
+	}
+
+
 	BeginIntermission();
 	trap_SendServerCommand( ent-g_entities, "clientLevelShot" );
 }
