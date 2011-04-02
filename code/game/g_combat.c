@@ -1294,7 +1294,8 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 	}
 
 	//If vampire is enabled, gain health but not from self or teammate, cannot steal more than targ has
-	if( g_vampire.value>0.0 && (targ != attacker) && !(OnSameTeam(targ, attacker)) && attacker->health > 0 )
+	if( g_vampire.value>0.0 && (targ != attacker) && 
+                !(OnSameTeam(targ, attacker)) && attacker->health > 0 && targ->health > 0 )
 	{
 		if(take<targ->health)
 			attacker->health += (int)(((float)take)*g_vampire.value);
