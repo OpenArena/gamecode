@@ -401,6 +401,20 @@ void CheckVote( void ) {
 
 }
 
+void ForceFail( void ) {
+    level.voteTime = 0;
+    level.voteExecuteTime = 0;
+    level.voteString[0] = 0;
+    level.voteDisplayString[0] = 0;
+    level.voteKickClient = -1;
+    level.voteKickType = 0;
+    trap_SetConfigstring( CS_VOTE_TIME, "" );
+    trap_SetConfigstring( CS_VOTE_STRING, "" );	
+    trap_SetConfigstring( CS_VOTE_YES, "" );
+    trap_SetConfigstring( CS_VOTE_NO, "" );
+}
+
+
 /*
 ==================
 CountVotes
@@ -445,6 +459,12 @@ void CountVotes( void ) {
     if(level.voteNo != no) {
         level.voteNo = no;
         trap_SetConfigstring( CS_VOTE_NO, va("%i", level.voteNo ) );
+    }
+}
+
+void ClientLeaving(int clientNumber) {
+    if(clientNumber == level.voteKickClient) {
+            ForceFail();
     }
 }
 

@@ -475,6 +475,8 @@ typedef struct {
 	int			voteYes;
 	int			voteNo;
 	int			numVotingClients;		// set by CountVotes
+        int             voteKickClient;                         // if non-negative the current vote is about this client.
+        int             voteKickType;                           // if 1 = ban (execute ban)
 
 	// team voting state
 	char		teamVoteString[2][MAX_STRING_CHARS];
@@ -917,6 +919,7 @@ void PlayerStore_restore(char* guid, playerState_t *ps);
 int allowedVote(char *commandStr);
 void CheckVote( void );
 void CountVotes( void );
+void ClientLeaving(int clientNumber);
 
 #define MAX_MAPNAME 32
 #define MAPS_PER_PAGE 10

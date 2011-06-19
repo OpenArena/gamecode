@@ -2120,6 +2120,8 @@ void ClientDisconnect( int clientNum ) {
 	if ( !ent->client ) {
 		return;
 	}
+
+        ClientLeaving( clientNum);
     //KK-OAX Admin
     G_admin_namelog_update( ent->client, qtrue );
     
