@@ -930,6 +930,8 @@ void LMSpoint(void)
 		*/
 	
 		client->client->ps.persistant[PERS_SCORE] += 1;
+                        G_LogPrintf("PlayerScore: %i %i: %s now has %d points\n",
+		i, client->client->ps.persistant[PERS_SCORE], client->client->pers.netname, client->client->ps.persistant[PERS_SCORE] );
 	}
 	
 	CalculateRanks();
@@ -1734,6 +1736,8 @@ void ClientSpawn(gentity_t *ent) {
 		{	
 			client->sess.spectatorState = SPECTATOR_FREE;
 			client->isEliminated = qtrue;
+                        if(g_gametype.integer == GT_LMS)
+                                G_LogPrintf( "LMS: %i %i %i: Player \"%s^7\" eliminated!\n", level.roundNumber, index, 1, client->pers.netname );
 			client->ps.pm_type = PM_SPECTATOR;
                         CalculateRanks();
 			return;
@@ -1763,6 +1767,7 @@ void ClientSpawn(gentity_t *ent) {
 				client->isEliminated = qtrue;
 				if((g_lms_mode.integer == 2 || g_lms_mode.integer == 3) && level.roundNumber == level.roundNumberStarted)
 					LMSpoint();
+                                G_LogPrintf( "LMS: %i %i %i: Player \"%s^7\" eliminated!\n", level.roundNumber, index, 1, client->pers.netname );
 			}
 			client->ps.pm_type = PM_SPECTATOR;
 			return;

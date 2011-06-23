@@ -1937,7 +1937,7 @@ void StartLMSRound(void) {
 	//If we are enough to start a round:
 	level.roundNumberStarted = level.roundNumber; //Set numbers
 
-        
+        G_LogPrintf( "LMS: %i %i %i: Round %i has started!\n", level.roundNumber, -1, 0, level.roundNumber );
         
 	SendEliminationMessageToAllClients();
 	EnableWeapons();
