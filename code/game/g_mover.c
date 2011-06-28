@@ -871,7 +871,7 @@ void Touch_DoorTrigger( gentity_t *ent, gentity_t *other, trace_t *trace ) {
 	}
 }
 
-
+void Think_SpawnNewDoorTrigger( gentity_t *ent ) __attribute__((nonnull));
 /*
 ======================
 Think_SpawnNewDoorTrigger

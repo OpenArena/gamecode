@@ -2546,6 +2546,10 @@ static void CG_DrawCrosshair(void)
 				w = h = cg_ch13size.value;
 				ca = cg_ch13.integer;
 				break;
+                        default:
+                                w = h = cg_crosshairSize.value;
+                                ca = cg_drawCrosshair.integer;
+                                break;
 		}
 	}
 	else{

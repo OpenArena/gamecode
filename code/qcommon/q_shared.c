@@ -405,9 +405,10 @@ int COM_Compress( char *data_p ) {
                             }
 			}
 		}
+            *out = 0;
+            return out - data_p;
 	}
-	*out = 0;
-	return out - data_p;
+        return 0;
 }
 
 char *COM_ParseExt( char **data_p, qboolean allowLineBreaks )

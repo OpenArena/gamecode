@@ -483,7 +483,7 @@ typedef struct {
 	int			teamVoteTime[2];		// level.time vote was called
 	int			teamVoteYes[2];
 	int			teamVoteNo[2];
-	int			numteamVotingClients[2];// set by CalculateRanks
+	int			numteamVotingClients[TEAM_NUM_TEAMS];// set by CalculateRanks
 
 	// spawn variables
 	qboolean	spawning;				// the G_Spawn*() functions are valid
@@ -834,7 +834,7 @@ void SendDDtimetakenMessageToAllClients( void );
 void SendDominationPointsStatusMessageToAllClients( void );
 void SendYourTeamMessageToTeam( team_t team );
 void QDECL G_Printf( const char *fmt, ... );
-void QDECL G_Error( const char *fmt, ... );
+void QDECL G_Error( const char *fmt, ... ) __attribute__((noreturn));
 //KK-OAX Made Accessible for g_admin.c
 void LogExit( const char *string ); 
 void CheckTeamVote( int team );
@@ -1141,7 +1141,7 @@ extern  vmCvar_t    g_maxNameChanges;
 
 
 void	trap_Printf( const char *fmt );
-void	trap_Error( const char *fmt );
+void	trap_Error( const char *fmt ) __attribute__((noreturn));
 int		trap_Milliseconds( void );
 int     trap_RealTime( qtime_t *qtime );
 int		trap_Argc( void );

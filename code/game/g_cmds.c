@@ -810,7 +810,7 @@ void SetTeam( gentity_t *ent, char *s ) {
 	// he starts at 'base'
 	client->pers.teamState.state = TEAM_BEGIN;
 	if ( oldTeam != TEAM_SPECTATOR ) {
-                int teamscore;
+                int teamscore = -99;
                 //Prevent a team from loosing point because of player leaving team
                 if(g_gametype.integer == GT_TEAM && ent->client->ps.stats[STAT_HEALTH])
                     teamscore = level.teamScores[ ent->client->sess.sessionTeam ];
@@ -818,7 +818,7 @@ void SetTeam( gentity_t *ent, char *s ) {
 		ent->flags &= ~FL_GODMODE;
 		ent->client->ps.stats[STAT_HEALTH] = ent->health = 0;
 		player_die (ent, ent, ent, 100000, MOD_SUICIDE);
-                if(g_gametype.integer == GT_TEAM && ent->client->ps.stats[STAT_HEALTH])
+                if(teamscore != -99)
                     level.teamScores[ ent->client->sess.sessionTeam ] = teamscore;
 
 	}

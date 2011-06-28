@@ -1180,6 +1180,7 @@ int BotAISetupClient(int client, struct bot_settings_s *settings, qboolean resta
 		return qfalse;
             }
             botstates[client] = BG_Alloc(sizeof(bot_state_t));
+            //BG_Allow will succed or terminate
         }
 	bs = botstates[client];
 

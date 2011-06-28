@@ -668,7 +668,7 @@ void G_UpdateCvars( void ) {
 /*
  Sets the cvar g_timestamp. Return 0 if success or !0 for errors.
  */
-int G_UpdateTimestamp( ) {
+int G_UpdateTimestamp( void ) {
     int ret = 0;
     qtime_t timestamp;
     ret = trap_RealTime(&timestamp);
@@ -1516,7 +1516,7 @@ void ExitLevel (void) {
             //If we found a filename:
             if(filename[0]) {
                 //Read the file:
-                int len = trap_FS_FOpenFile(filename, &file, FS_READ);
+                /*int len =*/ trap_FS_FOpenFile(filename, &file, FS_READ);
                 if(file) {
                     char  buffer[4*1024]; // buffer to read file into
                     char mapnames[1024][20]; // Array of mapnames in the map pool
@@ -1537,7 +1537,7 @@ void ExitLevel (void) {
                     trap_FS_FCloseFile(file);
                     //It is possible that the maps in the file read are flawed, so we try up to ten times:
                     for(i=0;i<10;i++) {
-                        choice = rand()%count;
+                        choice = (count > 0)? rand()%count : 0;
                         if(!Q_stricmp(mapnames[choice],Info_ValueForKey(serverinfo,"mapname")))
                             continue;
                         //Now check that the map exists:

@@ -47,6 +47,7 @@ void	trap_Printf( const char *fmt ) {
 
 void	trap_Error( const char *fmt ) {
 	syscall( G_ERROR, fmt );
+        exit(0); //Will never be executed. Makes compiler happy
 }
 
 int		trap_Milliseconds( void ) {

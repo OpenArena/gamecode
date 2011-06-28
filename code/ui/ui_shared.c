@@ -608,8 +608,8 @@ void Window_Paint(Window *w, float fadeAmount, float fadeClamp, float fadeCycle)
   rectDef_t fillRect = w->rect;
 
 
+  color[0] = color[1] = color[2] = color[3] = 1;
   if (debugMode) {
-    color[0] = color[1] = color[2] = color[3] = 1;
     DC->drawRect(w->rect.x, w->rect.y, w->rect.w, w->rect.h, 1, color);
   }
 
@@ -3648,7 +3648,8 @@ void Item_Image_Paint(itemDef_t *item) {
 }
 
 void Item_ListBox_Paint(itemDef_t *item) {
-	float x, y, size, count, i, thumb;
+	float x, y, size, thumb;
+        int count, i;
 	qhandle_t image;
 	qhandle_t optionalImage;
 	listBoxDef_t *listPtr = (listBoxDef_t*)item->typeData;

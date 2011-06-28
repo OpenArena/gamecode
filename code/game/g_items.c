@@ -277,6 +277,9 @@ int Pickup_Health (gentity_t *ent, gentity_t *other) {
 	int			max;
 	int			quantity;
 
+        if( !other->client)
+            return RESPAWN_HEALTH;
+        
 	// small and mega healths will go over the max
 	if( other->client && bg_itemlist[other->client->ps.stats[STAT_PERSISTANT_POWERUP]].giTag == PW_GUARD ) {
 		max = other->client->ps.stats[STAT_MAX_HEALTH];
@@ -355,7 +358,7 @@ void RespawnItem( gentity_t *ent ) {
 		for (count = 0, ent = master; ent; ent = ent->teamchain, count++)
 			;
 
-		choice = rand() % count;
+		choice = (count > 0)? rand()%count : 0;
 
 		for (count = 0, ent = master; count < choice; ent = ent->teamchain, count++)
 			;

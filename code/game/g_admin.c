@@ -722,7 +722,7 @@ static int admin_listadmins( gentity_t *ent, int start, char *search )
   {
     vic = &g_entities[ i ];
 
-    if( vic->client && vic->client->pers.connected != CON_CONNECTED )
+    if( !vic->client || vic->client->pers.connected != CON_CONNECTED )
       continue;
 
     l = vic->client->pers.adminLevel;
@@ -1437,7 +1437,7 @@ qboolean G_admin_setlevel( gentity_t *ent, int skiparg )
         Q_strncpyz( guid, vic->client->pers.guid, sizeof( guid ) );
       }
     }
-    if( vic )
+    if( vic && vic->client)
       Q_strncpyz( adminname, vic->client->pers.netname, sizeof( adminname ) );
   }
 
@@ -1490,7 +1490,7 @@ qboolean G_admin_setlevel( gentity_t *ent, int skiparg )
   AP( va(
     "print \"^3!setlevel: ^7%s^7 was given level %d admin rights by %s\n\"",
     adminname, l, ( ent ) ? ent->client->pers.netname : "console" ) );
-  if( vic )
+  if( vic && vic->client )
     vic->client->pers.adminLevel = l;
 
   if( !g_admin.string[ 0 ] )
