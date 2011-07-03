@@ -827,9 +827,8 @@ void SetTeam( gentity_t *ent, char *s ) {
             PlayerStore_store(Info_ValueForKey(userinfo,"cl_guid"),client->ps);
         
 	// they go to the end of the line for tournements
-	if ( team == TEAM_SPECTATOR ) {
-		client->sess.spectatorTime = level.time;
-	}
+        if(team == TEAM_SPECTATOR && oldTeam != team)
+                AddTournamentQueue(client);
 
 	client->sess.sessionTeam = team;
 	client->sess.spectatorState = specState;

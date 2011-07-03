@@ -868,6 +868,7 @@ void CG_RegisterWeapon( int weaponNum ) {
 		MAKERGB( weaponInfo->missileDlightColor, 1, 0.75f, 0 );
 		weaponInfo->readySound = trap_S_RegisterSound( "sound/weapons/melee/fsthum.wav", qfalse );
 		weaponInfo->firingSound = trap_S_RegisterSound( "sound/weapons/melee/fstrun.wav", qfalse );
+                cgs.media.lightningShader = trap_R_RegisterShader( "lightningBoltNew");
 		break;
 
 //#ifdef MISSIONPACK
@@ -1423,7 +1424,7 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
 	gun.renderfx = parent->renderfx;
 
 	// set custom shading for railgun refire rate
-	if ( ps ) {
+	if ( ps || cent->currentState.clientNum == cg.predictedPlayerState.clientNum ) {
 		if ( cg.predictedPlayerState.weapon == WP_RAILGUN 
 			&& cg.predictedPlayerState.weaponstate == WEAPON_FIRING ) {
 			float	f;
@@ -2986,6 +2987,10 @@ void CG_MissileHitWall( int weapon, int clientNum, vec3_t origin, vec3_t dir, im
 		if ( weapon == WP_RAILGUN ) {
 			// colorize with client color
 			VectorCopy( cgs.clientinfo[clientNum].color1, le->color );
+			le->refEntity.shaderRGBA[0] = le->color[0] * 0xff;
+			le->refEntity.shaderRGBA[1] = le->color[1] * 0xff;
+			le->refEntity.shaderRGBA[2] = le->color[2] * 0xff;
+			le->refEntity.shaderRGBA[3] = 0xff;
 		}
 	}
 
@@ -3066,8 +3071,8 @@ static void CG_ShotgunPellet( vec3_t start, vec3_t end, int skipNum ) {
 
 	CG_Trace( &tr, start, NULL, NULL, end, skipNum, MASK_SHOT );
 
-	sourceContentType = trap_CM_PointContents( start, 0 );
-	destContentType = trap_CM_PointContents( tr.endpos, 0 );
+	sourceContentType = CG_PointContents( start, 0 );
+	destContentType = CG_PointContents( tr.endpos, 0 );
 
 	// FIXME: should probably move this cruft into CG_BubbleTrail
 	if ( sourceContentType == destContentType ) {
@@ -3212,7 +3217,7 @@ void CG_ShotgunFire( entityState_t *es ) {
 		// ragepro can't alpha fade, so don't even bother with smoke
 		vec3_t			up;
 
-		contents = trap_CM_PointContents( es->pos.trBase, 0 );
+		contents = CG_PointContents( es->pos.trBase, 0 );
 		if ( !( contents & CONTENTS_WATER ) ) {
 			VectorSet( up, 0, 0, 8 );
 // LEILEI ENHANCEMENT
@@ -3390,8 +3395,8 @@ void CG_Bullet( vec3_t end, int sourceEntityNum, vec3_t normal, qboolean flesh, 
 	// do trail effects
 	if ( sourceEntityNum >= 0 && cg_tracerChance.value > 0 ) {
 		if ( CG_CalcMuzzlePoint( sourceEntityNum, start ) ) {
-			sourceContentType = trap_CM_PointContents( start, 0 );
-			destContentType = trap_CM_PointContents( end, 0 );
+			sourceContentType = CG_PointContents( start, 0 );
+			destContentType = CG_PointContents( end, 0 );
 
 			// do a complete bubble trail if necessary
 			if ( ( sourceContentType == destContentType ) && ( sourceContentType & CONTENTS_WATER ) ) {

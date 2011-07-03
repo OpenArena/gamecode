@@ -237,7 +237,28 @@ char *strchr( const char *string, int c ) {
 		}
 		string++;
 	}
-	return (char *)0;
+	if(c)
+                return NULL;
+        else
+                return (char*) string;
+}
+
+char *strrchr(const char *string, int c)
+{
+	const char *found = NULL;
+	
+	while(*string)
+	{
+		if(*string == c)
+			found = string;
+
+		string++;
+	}
+	
+	if(c)
+		return (char *) found;
+	else
+		return (char *) string;
 }
 
 char *strstr( const char *string, const char *strCharSet ) {

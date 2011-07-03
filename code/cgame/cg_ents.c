@@ -139,16 +139,17 @@ static void CG_EntityEffects( centity_t *cent ) {
 
 
 	// constant light glow
-	if ( cent->currentState.constantLight ) {
+	if(cent->currentState.constantLight)
+	{
 		int		cl;
-		int		i, r, g, b;
+		float		i, r, g, b;
 
 		cl = cent->currentState.constantLight;
-		r = cl & 255;
-		g = ( cl >> 8 ) & 255;
-		b = ( cl >> 16 ) & 255;
-		i = ( ( cl >> 24 ) & 255 ) * 4;
-		trap_R_AddLightToScene( cent->lerpOrigin, i, r, g, b );
+		r = (float) (cl & 0xFF) / 255.0;
+		g = (float) ((cl >> 8) & 0xFF) / 255.0;
+		b = (float) ((cl >> 16) & 0xFF) / 255.0;
+		i = (float) ((cl >> 24) & 0xFF) * 4.0;
+		trap_R_AddLightToScene(cent->lerpOrigin, i, r, g, b);
 	}
 
 }
@@ -403,7 +404,7 @@ static void CG_Missile( centity_t *cent ) {
 //	int	col;
 
 	s1 = &cent->currentState;
-	if ( s1->weapon > WP_NUM_WEAPONS ) {
+	if ( s1->weapon >= WP_NUM_WEAPONS ) {
 		s1->weapon = 0;
 	}
 	weapon = &cg_weapons[s1->weapon];
@@ -512,7 +513,7 @@ static void CG_Grapple( centity_t *cent ) {
 	const weaponInfo_t		*weapon;
 
 	s1 = &cent->currentState;
-	if ( s1->weapon > WP_NUM_WEAPONS ) {
+	if ( s1->weapon >= WP_NUM_WEAPONS ) {
 		s1->weapon = 0;
 	}
 	weapon = &cg_weapons[s1->weapon];
