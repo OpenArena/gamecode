@@ -316,3 +316,15 @@ void UI_UpdateCvars( void ) {
 		trap_Cvar_Update( cv->vmCvar );
 	}
 }
+
+/*
+==================
+ * UI_SetDefaultCvar
+ * If the cvar is blank it will be set to value
+ * This is only good for cvars that cannot naturally be blank
+================== 
+ */
+void UI_SetDefaultCvar(const char* cvar, const char* value) {
+    if(strlen(UI_Cvar_VariableString(cvar)) == 0)
+        trap_Cvar_Set(cvar,value);
+}

@@ -283,7 +283,12 @@ static void Crosshair_Draw( void *self ) {
 
 static void Preferences_MenuInit( void ) {
 	int				y;
-
+        
+        UI_SetDefaultCvar("cg_crosshairHealth","1");
+        UI_SetDefaultCvar("cg_crosshairColorRed","1");
+        UI_SetDefaultCvar("cg_crosshairColorBlue","1");
+        UI_SetDefaultCvar("cg_crosshairColorGreen","1");
+        
 	memset( &s_preferences, 0 ,sizeof(preferences_t) );
 
 	Preferences_Cache();
