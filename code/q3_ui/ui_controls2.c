@@ -216,7 +216,7 @@ typedef struct
 	menuradiobutton_s	smoothmouse;
 	menuradiobutton_s	alwaysrun;
 	menuaction_s		showscores;
-	menuradiobutton_s	autoswitch;
+	menulist_s              autoswitch;
 	menuaction_s		useitem;
 	playerInfo_t		playerinfo;
 	qboolean			changesmade;
@@ -243,6 +243,15 @@ typedef struct
 } controls_t; 	
 
 static controls_t s_controls;
+
+static const char *autoswitch_items[] = {
+	"NEVER",
+	"ALWAYS",
+	"NEW",
+	"BETTER",
+        "NEW&BETTER",
+	NULL
+};
 
 // OLD
 //static vec4_t controls_binding_color  = {1.00f, 0.43f, 0.00f, 1.00f}; // bk: Win32 C4305
@@ -858,7 +867,7 @@ static void Controls_GetConfig( void )
 	s_controls.invertmouse.curvalue  = Controls_GetCvarValue( "m_pitch" ) < 0;
 	s_controls.smoothmouse.curvalue  = UI_ClampCvar( 0, 1, Controls_GetCvarValue( "m_filter" ) );
 	s_controls.alwaysrun.curvalue    = UI_ClampCvar( 0, 1, Controls_GetCvarValue( "cl_run" ) );
-	s_controls.autoswitch.curvalue   = UI_ClampCvar( 0, 1, Controls_GetCvarValue( "cg_autoswitch" ) );
+	s_controls.autoswitch.curvalue   = UI_ClampCvar( 0, 4, Controls_GetCvarValue( "cg_autoswitch" ) );
 	s_controls.sensitivity.curvalue  = UI_ClampCvar( 2, 30, Controls_GetCvarValue( "sensitivity" ) );
 	s_controls.joyenable.curvalue    = UI_ClampCvar( 0, 1, Controls_GetCvarValue( "in_joystick" ) );
 	s_controls.joythreshold.curvalue = UI_ClampCvar( 0.05f, 0.75f, Controls_GetCvarValue( "joy_threshold" ) );
@@ -1564,13 +1573,14 @@ static void Controls_MenuInit( void )
 	s_controls.alwaysrun.generic.callback  = Controls_MenuEvent;
 	s_controls.alwaysrun.generic.statusbar = Controls_StatusBar;
 
-	s_controls.autoswitch.generic.type      = MTYPE_RADIOBUTTON;
+	s_controls.autoswitch.generic.type      = MTYPE_SPINCONTROL;
 	s_controls.autoswitch.generic.flags	    = QMF_SMALLFONT;
 	s_controls.autoswitch.generic.x	        = SCREEN_WIDTH/2;
 	s_controls.autoswitch.generic.name	    = "autoswitch weapons";
 	s_controls.autoswitch.generic.id        = ID_AUTOSWITCH;
 	s_controls.autoswitch.generic.callback  = Controls_MenuEvent;
 	s_controls.autoswitch.generic.statusbar = Controls_StatusBar;
+        s_controls.autoswitch.itemnames = autoswitch_items;
 
 	s_controls.sensitivity.generic.type	     = MTYPE_SLIDER;
 	s_controls.sensitivity.generic.x		 = SCREEN_WIDTH/2;

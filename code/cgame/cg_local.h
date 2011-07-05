@@ -1355,6 +1355,8 @@ extern	vmCvar_t                cg_crosshairColorBlue;
 
 extern vmCvar_t			cg_weaponBarStyle;
 
+extern vmCvar_t                 cg_weaponOrder;
+
 //unlagged - cg_unlagged.c
 void CG_PredictWeaponEffects( centity_t *cent );
 //void CG_AddBoundingBox( centity_t *cent );

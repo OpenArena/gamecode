@@ -192,6 +192,7 @@ vmCvar_t	cg_leiSuperGoreyAwesome;		// ANOTHER LEILEI LINE!!!
 vmCvar_t	cg_oldPlasma;
 vmCvar_t	cg_trueLightning;
 vmCvar_t        cg_music;
+vmCvar_t        cg_weaponOrder;
 
 
 #ifdef MISSIONPACK
@@ -457,6 +458,7 @@ static cvarTable_t cvarTable[] = { // bk001129
         { &cg_crosshairColorBlue, "cg_crosshairColorBlue", "1.0", CVAR_ARCHIVE},
 
 	{ &cg_weaponBarStyle, "cg_weaponBarStyle", "0", CVAR_ARCHIVE},
+        { &cg_weaponOrder,"cg_weaponOrder", "/1/2/4/3/6/7/8/9/5/", CVAR_ARCHIVE},
 };
 
 static int  cvarTableSize = sizeof( cvarTable ) / sizeof( cvarTable[0] );
