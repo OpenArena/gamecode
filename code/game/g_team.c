@@ -1829,8 +1829,29 @@ Obelisks
 ================
 */
 
+static void ObeliskHealthChange( int team, int health ) {
+    int currentPercentage;
+    int percentage = (health*100)/g_obeliskHealth.integer;
+    if(percentage < 0)
+        percentage = 0;
+    currentPercentage = level.healthRedObelisk;
+    if(team != TEAM_RED)
+        currentPercentage = level.healthBlueObelisk;
+    if(percentage != currentPercentage) {
+        if(team == TEAM_RED) {
+            level.healthRedObelisk = percentage;
+        } else {
+            level.healthBlueObelisk = percentage;
+        }
+        level.MustSendObeliskHealth = qtrue;
+        //G_Printf("Obelisk health %i %i\n",team,percentage);
+        ObeliskHealthMessage();
+    }
+} 
+
 static void ObeliskRegen( gentity_t *self ) {
 	self->nextthink = level.time + g_obeliskRegenPeriod.integer * 1000;
+        ObeliskHealthChange(self->spawnflags,self->health);
 	if( self->health >= g_obeliskHealth.integer ) {
 		return;
 	}
@@ -1889,6 +1910,7 @@ static void ObeliskDie( gentity_t *self, gentity_t *inflictor, gentity_t *attack
         if(TeamCount(-1,TEAM_RED) && TeamCount(-1,TEAM_BLUE) && !level.hadBots)
             ChallengeMessage(attacker,AWARD_CAPTURE);
 
+        ObeliskHealthChange(self->spawnflags,self->health);
 	teamgame.redObeliskAttackedTime = 0;
 	teamgame.blueObeliskAttackedTime = 0;
 }

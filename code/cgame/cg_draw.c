@@ -1543,6 +1543,11 @@ static float CG_DrawScores( float y ) {
                         }
 		}
                 
+                if ( cgs.gametype == GT_OBELISK ) {
+                    s = va("^1%3i%% ^4%3i%%",cg.redObeliskHealth,cg.blueObeliskHealth);
+                    CG_DrawSmallString( x, y-28, s, 1.0F);
+                }
+                
                 
 
 		if ( cgs.gametype >= GT_CTF && cgs.ffa_gt==0) {
@@ -2832,8 +2837,6 @@ static void CG_DrawTeamVote(void) {
 
 
 static qboolean CG_DrawScoreboard( void ) {
-        char        *s;
-        int w;
 #ifdef MISSIONPACK
 	static qboolean firstTime = qtrue;
 	float fade, *fadeColor;
@@ -2898,6 +2901,8 @@ static qboolean CG_DrawScoreboard( void ) {
 
 	return qtrue;
 #else
+        char        *s;
+        int w;
         if(cg.respawnTime && cg.snap->ps.persistant[PERS_TEAM] != TEAM_SPECTATOR && (cgs.gametype < GT_ELIMINATION || cgs.gametype > GT_LMS) ) {
             if(cg.respawnTime>cg.time) {
                 s = va("Respawn in: %2.2f",((double)cg.respawnTime-(double)cg.time)/1000.0);

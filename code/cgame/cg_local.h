@@ -671,6 +671,9 @@ typedef struct {
 
         //time that the client will respawn. If 0 = the player is alive.
         int respawnTime;
+        
+        int redObeliskHealth;
+        int blueObeliskHealth;
 } cg_t;
 
 

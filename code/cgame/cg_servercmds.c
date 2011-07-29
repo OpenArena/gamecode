@@ -253,6 +253,10 @@ static void CG_ParseChallenge( void ) {
 	addChallenge(atoi( CG_Argv(1) ) );
 }
 
+static void CG_ParseObeliskHealth( void ) {
+    cg.redObeliskHealth = atoi( CG_Argv(1) );
+    cg.blueObeliskHealth = atoi( CG_Argv(2) );
+}
 
 /**
  * Sets the respawn counter for the client.
@@ -1346,6 +1350,11 @@ static void CG_ServerCommand( void ) {
 		CG_ParseChallenge();
 		return;
 	}
+        
+        if ( !strcmp (cmd, "oh") ) {
+            CG_ParseObeliskHealth();
+            return;
+        }
 
         if ( !strcmp( cmd, "respawn" ) ) {
 		CG_ParseRespawnTime();

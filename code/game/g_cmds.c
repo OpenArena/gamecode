@@ -254,6 +254,17 @@ void AttackingTeamMessage( gentity_t *ent ) {
 }
 
 /*
+ 
+ */
+
+void ObeliskHealthMessage() {
+    if(level.MustSendObeliskHealth) {
+        trap_SendServerCommand( -1, va("oh %i %i",level.healthRedObelisk,level.healthBlueObelisk) );
+        level.MustSendObeliskHealth = qfalse;
+    }
+}
+
+/*
 ==================
 ChallengeMessage
 

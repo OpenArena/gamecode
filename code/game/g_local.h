@@ -550,6 +550,11 @@ typedef struct {
     qboolean    RedTeamLocked;
     qboolean    BlueTeamLocked;
     qboolean    FFALocked;
+    
+    //Obelisk tell
+    int healthRedObelisk; //health in percent
+    int healthBlueObelisk; //helth in percent
+    qboolean MustSendObeliskHealth; //Health has changed
      
 } level_locals_t;
 
@@ -806,6 +811,7 @@ void G_SetStats (gentity_t *ent);
 void DoubleDominationScoreTimeMessage( gentity_t *ent );
 void YourTeamMessage( gentity_t *ent);
 void AttackingTeamMessage( gentity_t *ent );
+void ObeliskHealthMessage( void );
 void DeathmatchScoreboardMessage (gentity_t *client);
 void EliminationMessage (gentity_t *client);
 void RespawnTimeMessage(gentity_t *ent, int time);
