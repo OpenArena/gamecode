@@ -1212,6 +1212,16 @@ static void CG_RegisterGraphics( void ) {
 	cgs.media.lbldShader1 = trap_R_RegisterShader("leiblood1" );	
 	cgs.media.lbldShader2 = trap_R_RegisterShader("leiblood2" );	// this is a mark, by the way
 
+	// New Bullet Marks
+	cgs.media.lmarkmetal1 = trap_R_RegisterShader("leimetalmark1" );	
+	cgs.media.lmarkmetal2 = trap_R_RegisterShader("leimetalmark2" );	
+	cgs.media.lmarkmetal3 = trap_R_RegisterShader("leimetalmark3" );	
+	cgs.media.lmarkmetal4 = trap_R_RegisterShader("leimetalmark4" );	
+	cgs.media.lmarkbullet1 = trap_R_RegisterShader("leibulletmark1" );	
+	cgs.media.lmarkbullet2 = trap_R_RegisterShader("leibulletmark2" );	
+	cgs.media.lmarkbullet3 = trap_R_RegisterShader("leibulletmark3" );	
+	cgs.media.lmarkbullet4 = trap_R_RegisterShader("leibulletmark4" );	
+
 
 	memset( cg_items, 0, sizeof( cg_items ) );
 	memset( cg_weapons, 0, sizeof( cg_weapons ) );

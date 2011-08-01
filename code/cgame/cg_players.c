@@ -281,11 +281,11 @@ static qboolean	CG_ParseAnimationFile( const char *filename, clientInfo_t *ci ) 
 	//
 	// new anims changes
 	//
-//	animations[TORSO_GETFLAG].flipflop = qtrue;
-//	animations[TORSO_GUARDBASE].flipflop = qtrue;
-//	animations[TORSO_PATROL].flipflop = qtrue;
-//	animations[TORSO_AFFIRMATIVE].flipflop = qtrue;
-//	animations[TORSO_NEGATIVE].flipflop = qtrue;
+	animations[TORSO_GETFLAG].flipflop = qtrue;
+	animations[TORSO_GUARDBASE].flipflop = qtrue;
+	animations[TORSO_PATROL].flipflop = qtrue;
+	animations[TORSO_AFFIRMATIVE].flipflop = qtrue;
+	animations[TORSO_NEGATIVE].flipflop = qtrue;
 	//
 	return qtrue;
 }

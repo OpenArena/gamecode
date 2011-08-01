@@ -155,6 +155,9 @@ void CG_ImpactMark( qhandle_t markShader, const vec3_t origin, const vec3_t dir,
 	// create the texture axis
 	VectorNormalize2( dir, axis[0] );
 	PerpendicularVector( axis[1], axis[0] );
+	if (cg_leiEnhancement.integer) // LEILEI HACK HACK HACK - don't spin atlas variated particles (for consistent lighting on the texture)
+	orientation = 90; 
+	
 	RotatePointAroundVector( axis[2], axis[0], axis[1], orientation );
 	CrossProduct( axis[0], axis[2], axis[1] );
 
@@ -2315,23 +2318,138 @@ void CG_LeiSparks (vec3_t org, vec3_t vel, int duration, float x, float y, float
 	p->org[0] += (crandom() * x);
 	p->org[1] += (crandom() * y);
 
-	p->vel[0] = vel[0] * 35;
-	p->vel[1] = vel[1] * 35;
-	p->vel[2] = vel[2] * 85;
+	p->vel[0] = vel[0] * 75;
+	p->vel[1] = vel[1] * 75;
+	p->vel[2] = vel[2] * 75;
+
+
+	p->accel[0] = p->accel[1] = p->accel[2] = 0;
+
+	p->vel[0] += (crandom() * speed);
+	p->vel[1] += (crandom() * speed);
+	p->vel[2] += speed + (crandom() * speed);	
+
+	p->vel[0] += (crandom() * 24);
+	p->vel[1] += (crandom() * 24);
+	p->vel[2] += (20 + (crandom() * 180));	
+
+		p->accel[0] = crandom()*6;
+		p->accel[1] = crandom()*6;
+		p->accel[2] = -PARTICLE_GRAVITY*7.2;
+	
+}
+
+// a different sort of puff
+
+void CG_LeiPuff (vec3_t org, vec3_t vel, int duration, float x, float y, float speed, float size)
+{
+	cparticle_t	*p;
+
+	if (!free_particles)
+		return;
+	p = free_particles;
+	free_particles = p->next;
+	p->next = active_particles;
+	active_particles = p;
+	p->time = cg.time;
+	
+	p->endtime = cg.time + duration;
+	p->startfade = cg.time + duration/2;
+	
+	p->color = EMISIVEFADE;
+	p->alpha = 0.8f;
+	p->alphavel = 0.8f;
+
+	p->height = size;
+	p->width = size;
+	p->endheight = size * 1.8;
+	p->endwidth = size * 1.8;
+
+	p->pshader = cgs.media.lspkShader1;
+
+	p->type = P_SMOKE;
+	
+	VectorCopy(org, p->org);
+
+	p->org[0] += (crandom() * x);
+	p->org[1] += (crandom() * y);
+
+	p->vel[0] = vel[0] * speed;
+	p->vel[1] = vel[1] * speed;
+	p->vel[2] = vel[2] * speed;
 
 	p->accel[0] = p->accel[1] = p->accel[2] = 0;
 
 	p->vel[0] += (crandom() * 44);
 	p->vel[1] += (crandom() * 44);
-	p->vel[2] += (75 + (crandom() * 190)) * speed;	
+	p->vel[2] += (crandom() * 44);	
+	p->roll = (crandom() * 256 - 128);	
+
 
 	//	p->vel[0] += (crandom() * 24);
 	//p->vel[1] += (crandom() * 24);
 	//p->vel[2] += (20 + (crandom() * 180)) * speed;	
 
-		p->accel[0] = crandom()*6;
-		p->accel[1] = crandom()*6;
-		p->accel[2] = -PARTICLE_GRAVITY*7.2;
+		p->accel[0] = -2;
+		p->accel[1] = -2;
+		p->accel[2] = -2;
+	
+}
+
+// a violent blast puff
+
+void CG_LeiBlast (vec3_t org, vec3_t vel, int duration, float x, float y, float speed, float size)
+{
+	cparticle_t	*p;
+
+	if (!free_particles)
+		return;
+	p = free_particles;
+	free_particles = p->next;
+	p->next = active_particles;
+	active_particles = p;
+	p->time = cg.time;
+	
+	p->endtime = cg.time + duration;
+	p->startfade = cg.time + duration/2;
+	
+	p->color = EMISIVEFADE;
+	p->alpha = 1.0f;
+	p->alphavel = 0.72f;
+
+	p->height = size;
+	p->width = size;
+	p->endheight = size * 6;
+	p->endwidth = size * 6;
+
+	p->pshader = cgs.media.lbumShader1;
+
+	p->type = P_SMOKE;
+	
+	VectorCopy(org, p->org);
+
+	p->org[0] += (crandom() * x);
+	p->org[1] += (crandom() * y);
+
+	p->vel[0] = vel[0] * speed;
+	p->vel[1] = vel[1] * speed;
+	p->vel[2] = vel[2] * speed;
+
+	p->accel[0] = p->accel[1] = p->accel[2] = 0;
+
+	p->vel[0] += (crandom() * 84);
+	p->vel[1] += (crandom() * 84);
+	p->vel[2] += (crandom() * 84);	
+	p->roll = (crandom() * 256 - 128);	
+
+
+	//	p->vel[0] += (crandom() * 24);
+	//p->vel[1] += (crandom() * 24);
+	//p->vel[2] += (20 + (crandom() * 180)) * speed;	
+
+		p->accel[0] = -2;
+		p->accel[1] = -2;
+		p->accel[2] = -2;
 	
 }
 
@@ -2358,8 +2476,8 @@ void CG_LeiSparks2 (vec3_t org, vec3_t vel, int duration, float x, float y, floa
 
 	p->height = 9;
 	p->width = 9;
-	p->endheight = 16;
-	p->endwidth = 16;
+	p->endheight = 32;
+	p->endwidth = 32;
 
 	p->pshader = cgs.media.lspkShader1;
 
@@ -2370,9 +2488,9 @@ void CG_LeiSparks2 (vec3_t org, vec3_t vel, int duration, float x, float y, floa
 	p->org[0] += (crandom() * x);
 	p->org[1] += (crandom() * y);
 
-	p->vel[0] = vel[0] * 35;
-	p->vel[1] = vel[1] * 35;
-	p->vel[2] = vel[2] * 85;
+	p->vel[0] = vel[0] * 15;
+	p->vel[1] = vel[1] * 15;
+	p->vel[2] = vel[2] * 15;
 
 	p->accel[0] = p->accel[1] = p->accel[2] = 0;
 
@@ -2380,10 +2498,16 @@ void CG_LeiSparks2 (vec3_t org, vec3_t vel, int duration, float x, float y, floa
 	p->vel[1] += (crandom() * 524);
 	p->vel[2] += (120 + (crandom() * 780)) * speed;	
 
-		p->accel[0] = crandom()*76;
-		p->accel[1] = crandom()*76;
-		p->accel[2] = crandom()*76;
+	//	p->accel[0] = crandom()*76;
+	//	p->accel[1] = crandom()*76;
+	//	p->accel[2] = crandom()*76;
 	
+
+//	VectorCopy( origin, p->org );
+//	VectorCopy( vel, p->vel );
+//	VectorClear( p->accel );
+
+
 	
 }
 

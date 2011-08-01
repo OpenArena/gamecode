@@ -571,6 +571,7 @@ typedef struct {
 } playerInfo_t;
 
 void UI_DrawPlayer( float x, float y, float w, float h, playerInfo_t *pi, int time );
+void UI_DrawPlayerII( float x, float y, float w, float h, playerInfo_t *pi, int time );
 void UI_PlayerInfo_SetModel( playerInfo_t *pi, const char *model, const char *headmodel, char *teamName );
 void UI_PlayerInfo_SetInfo( playerInfo_t *pi, int legsAnim, int torsoAnim, vec3_t viewAngles, vec3_t moveAngles, weapon_t weaponNum, qboolean chat );
 qboolean UI_RegisterClientModelname( playerInfo_t *pi, const char *modelSkinName , const char *headName, const char *teamName);
@@ -636,7 +637,9 @@ typedef struct {
 #define MAX_MODS 64
 #define MAX_DEMOS 256
 #define MAX_MOVIES 256
-#define MAX_PLAYERMODELS 256
+//#define MAX_PLAYERMODELS 256
+#define MAX_PLAYERMODELS 1024
+
 
 
 typedef struct {

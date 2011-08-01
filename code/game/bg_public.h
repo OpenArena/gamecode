@@ -550,6 +550,8 @@ typedef enum {
 	TORSO_AFFIRMATIVE,
 	TORSO_NEGATIVE,
 
+//	BOTH_POSE,		// leilei - crappy ui posing code trying
+
 	MAX_ANIMATIONS,
 
 	LEGS_BACKCR,

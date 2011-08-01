@@ -271,6 +271,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define UI_PREVIEWCINEMATIC 254
 #define UI_STARTMAPCINEMATIC 255
 #define UI_MAPS_SELECTION 256
+#define UI_PLAYERMODEL2 257
+#define UI_OPPONENTMODEL2 258
 
 #define VOICECHAT_GETFLAG			"getflag"				// command someone to get the flag
 #define VOICECHAT_OFFENSE			"offense"				// command someone to go on offense

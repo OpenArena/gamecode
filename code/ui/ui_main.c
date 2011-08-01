@@ -1320,6 +1320,49 @@ static void UI_DrawPlayerModel(rectDef_t *rect) {
 
 }
 
+static void UI_DrawPlayerModel2(rectDef_t *rect) {
+  static playerInfo_t info;
+  char model[MAX_QPATH];
+  char team[256];
+	char head[256];
+	vec3_t	viewangles;
+	vec3_t	moveangles;
+
+	  if (trap_Cvar_VariableValue("ui_Q3Model")) {
+	  strcpy(model, UI_Cvar_VariableString("model"));
+		strcpy(head, UI_Cvar_VariableString("headmodel"));
+		if (!q3Model) {
+			q3Model = qtrue;
+			updateModel = qtrue;
+		}
+		team[0] = '\0';
+	} else {
+
+		strcpy(team, UI_Cvar_VariableString("ui_teamName"));
+		strcpy(model, UI_Cvar_VariableString("team_model"));
+		strcpy(head, UI_Cvar_VariableString("team_headmodel"));
+		if (q3Model) {
+			q3Model = qfalse;
+			updateModel = qtrue;
+		}
+	}
+  if (updateModel) {
+  	memset( &info, 0, sizeof(playerInfo_t) );
+  	viewangles[YAW]   = 180 - 10;
+  	viewangles[PITCH] = 0;
+  	viewangles[ROLL]  = 0;
+  	VectorClear( moveangles );
+    UI_PlayerInfo_SetModel( &info, model, head, team);
+    UI_PlayerInfo_SetInfo( &info, LEGS_IDLE, TORSO_STAND, viewangles, vec3_origin, WP_MACHINEGUN, qfalse );
+//		UI_RegisterClientModelname( &info, model, head, team);
+    updateModel = qfalse;
+  }
+
+  UI_DrawPlayerII( rect->x, rect->y, rect->w, rect->h, &info, uiInfo.uiDC.realTime / 2);
+
+}
+
+
 static void UI_DrawNetSource(rectDef_t *rect, float scale, vec4_t color, int textStyle) {
 	if (ui_netSource.integer < 0 || ui_netSource.integer > numNetSources) {
 		ui_netSource.integer = 0;
@@ -1513,6 +1556,35 @@ static void UI_DrawOpponent(rectDef_t *rect) {
   }
 
   UI_DrawPlayer( rect->x, rect->y, rect->w, rect->h, &info2, uiInfo.uiDC.realTime / 2);
+
+}
+
+static void UI_DrawOpponent2(rectDef_t *rect) {
+  static playerInfo_t info2;
+  char model[MAX_QPATH];
+  char headmodel[MAX_QPATH];
+  char team[256];
+	vec3_t	viewangles;
+	vec3_t	moveangles;
+  
+	if (updateOpponentModel) {
+		
+		strcpy(model, UI_Cvar_VariableString("ui_opponentModel"));
+	  strcpy(headmodel, UI_Cvar_VariableString("ui_opponentModel"));
+		team[0] = '\0';
+
+  	memset( &info2, 0, sizeof(playerInfo_t) );
+  	viewangles[YAW]   = 180 - 10;
+  	viewangles[PITCH] = 0;
+  	viewangles[ROLL]  = 0;
+  	VectorClear( moveangles );
+    UI_PlayerInfo_SetModel( &info2, model, headmodel, "");
+    UI_PlayerInfo_SetInfo( &info2, LEGS_IDLE, TORSO_STAND, viewangles, vec3_origin, WP_MACHINEGUN, qfalse );
+		UI_RegisterClientModelname( &info2, model, headmodel, team);
+    updateOpponentModel = qfalse;
+  }
+
+  UI_DrawPlayerII( rect->x, rect->y, rect->w, rect->h, &info2, uiInfo.uiDC.realTime / 2);
 
 }
 
@@ -2005,6 +2077,9 @@ static void UI_OwnerDraw(float x, float y, float w, float h, float text_x, float
     case UI_PLAYERMODEL:
       UI_DrawPlayerModel(&rect);
       break;
+    case UI_PLAYERMODEL2:
+      UI_DrawPlayerModel2(&rect);
+      break;
     case UI_CLANNAME:
       UI_DrawClanName(&rect, scale, color, textStyle);
       break;
@@ -2078,6 +2153,9 @@ static void UI_OwnerDraw(float x, float y, float w, float h, float text_x, float
 			break;
 		case UI_OPPONENTMODEL:
 			UI_DrawOpponent(&rect);
+			break;
+		case UI_OPPONENTMODEL2:
+			UI_DrawOpponent2(&rect);
 			break;
 		case UI_TIERMAP1:
 			UI_DrawTierMap(&rect, 0);
@@ -4976,7 +5054,7 @@ static void UI_BuildQ3Model_List( void )
 	uiInfo.q3HeadCount = 0;
 
 	// iterate directory of all player models
-	numdirs = trap_FS_GetFileList("models/players", "/", dirlist, 2048 );
+	numdirs = trap_FS_GetFileList("models/players", "/", dirlist, 32768 ); // upped from 2048
 	dirptr  = dirlist;
 	for (i=0; i<numdirs && uiInfo.q3HeadCount < MAX_PLAYERMODELS; i++,dirptr+=dirlen+1)
 	{

@@ -790,7 +790,15 @@ typedef struct {
 	qhandle_t	lspkShader2;
 	qhandle_t	lbldShader1;
 	qhandle_t	lbldShader2;
-
+	qhandle_t	grappleShader;	// leilei - grapple hook
+	qhandle_t	lmarkmetal1;
+	qhandle_t	lmarkmetal2;
+	qhandle_t	lmarkmetal3;
+	qhandle_t	lmarkmetal4;
+	qhandle_t	lmarkbullet1;
+	qhandle_t	lmarkbullet2;
+	qhandle_t	lmarkbullet3;
+	qhandle_t	lmarkbullet4;
 
 //#ifdef MISSIONPACK
 	qhandle_t	nailPuffShader;

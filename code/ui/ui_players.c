@@ -899,6 +899,240 @@ void UI_DrawPlayer( float x, float y, float w, float h, playerInfo_t *pi, int ti
 	trap_R_RenderScene( &refdef );
 }
 
+
+
+/*
+===============
+UI_DrawPlayerII
+
+A less FOV stretched version for drawing on the main menu
+===============
+*/
+void UI_DrawPlayerII( float x, float y, float w, float h, playerInfo_t *pi, int time ) {
+	refdef_t		refdef;
+	refEntity_t		legs;
+	refEntity_t		torso;
+	refEntity_t		head;
+	refEntity_t		gun;
+	refEntity_t		barrel;
+	refEntity_t		flash;
+	vec3_t			origin;
+	int				renderfx;
+	vec3_t			mins = {-16, -16, -24};
+	vec3_t			maxs = {16, 16, 32};
+	float			len;
+	float			xx;
+
+	if ( !pi->legsModel || !pi->torsoModel || !pi->headModel || !pi->animations[0].numFrames ) {
+		return;
+	}
+
+	// this allows the ui to cache the player model on the main menu
+	if (w == 0 || h == 0) {
+		return;
+	}
+
+	dp_realtime = time;
+
+	if ( pi->pendingWeapon != -1 && dp_realtime > pi->weaponTimer ) {
+		pi->weapon = pi->pendingWeapon;
+		pi->lastWeapon = pi->pendingWeapon;
+		pi->pendingWeapon = -1;
+		pi->weaponTimer = 0;
+		if( pi->currentWeapon != pi->weapon ) {
+			trap_S_StartLocalSound( weaponChangeSound, CHAN_LOCAL );
+		}
+	}
+
+	UI_AdjustFrom640( &x, &y, &w, &h );
+
+	y -= jumpHeight;
+
+	memset( &refdef, 0, sizeof( refdef ) );
+	memset( &legs, 0, sizeof(legs) );
+	memset( &torso, 0, sizeof(torso) );
+	memset( &head, 0, sizeof(head) );
+
+	refdef.rdflags = RDF_NOWORLDMODEL;
+
+	AxisClear( refdef.viewaxis );
+
+	refdef.x = x;
+	refdef.y = y;
+	refdef.width = w;
+	refdef.height = h;
+
+	refdef.fov_x = (int)((float)refdef.width / 640.0f * 30.0f);
+	xx = refdef.width / tan( refdef.fov_x / 360 * M_PI );
+	refdef.fov_y = atan2( refdef.height, xx );
+	refdef.fov_y *= ( 360 / (float)M_PI );
+
+	// calculate distance so the player nearly fills the box
+	len = 0.7 * ( maxs[2] - mins[2] );		
+	origin[0] = len / tan( DEG2RAD(refdef.fov_x) * 0.93 );
+	origin[1] = 1.0 * ( mins[1] + maxs[1] );
+	origin[2] = -2.7 * ( mins[2] + maxs[2] );
+
+	refdef.time = dp_realtime;
+
+	trap_R_ClearScene();
+
+	// get the rotation information
+	UI_PlayerAngles( pi, legs.axis, torso.axis, head.axis );
+
+	// get the animation state (after rotation, to allow feet shuffle)
+	UI_PlayerAnimation( pi, &legs.oldframe, &legs.frame, &legs.backlerp,
+		 &torso.oldframe, &torso.frame, &torso.backlerp );
+
+	renderfx = RF_LIGHTING_ORIGIN;
+
+	//
+	// add the legs
+	//
+	legs.hModel = pi->legsModel;
+	legs.customSkin = pi->legsSkin;
+
+	VectorCopy( origin, legs.origin );
+
+	VectorCopy( origin, legs.lightingOrigin );
+	legs.renderfx = renderfx;
+	VectorCopy (legs.origin, legs.oldorigin);
+
+	trap_R_AddRefEntityToScene( &legs );
+	if (!legs.hModel) {
+		return;
+	}
+
+	//
+	// add the torso
+	//
+	torso.hModel = pi->torsoModel;
+	if (!torso.hModel) {
+		return;
+	}
+
+	torso.customSkin = pi->torsoSkin;
+
+	VectorCopy( origin, torso.lightingOrigin );
+
+	UI_PositionRotatedEntityOnTag( &torso, &legs, pi->legsModel, "tag_torso");
+
+	torso.renderfx = renderfx;
+
+	trap_R_AddRefEntityToScene( &torso );
+
+	//
+	// add the head
+	//
+	head.hModel = pi->headModel;
+	if (!head.hModel) {
+		return;
+	}
+	head.customSkin = pi->headSkin;
+
+	VectorCopy( origin, head.lightingOrigin );
+
+	UI_PositionRotatedEntityOnTag( &head, &torso, pi->torsoModel, "tag_head");
+
+	head.renderfx = renderfx;
+
+	trap_R_AddRefEntityToScene( &head );
+
+	//
+	// add the gun
+	//
+	if ( pi->currentWeapon != WP_NONE ) {
+		memset( &gun, 0, sizeof(gun) );
+		gun.hModel = pi->weaponModel;
+		VectorCopy( origin, gun.lightingOrigin );
+		UI_PositionEntityOnTag( &gun, &torso, pi->torsoModel, "tag_weapon");
+		gun.renderfx = renderfx;
+		trap_R_AddRefEntityToScene( &gun );
+	}
+
+	//
+	// add the spinning barrel
+	//
+	if ( pi->realWeapon == WP_MACHINEGUN || pi->realWeapon == WP_GAUNTLET || pi->realWeapon == WP_BFG ) {
+		vec3_t	angles;
+
+		memset( &barrel, 0, sizeof(barrel) );
+		VectorCopy( origin, barrel.lightingOrigin );
+		barrel.renderfx = renderfx;
+
+		barrel.hModel = pi->barrelModel;
+		angles[YAW] = 0;
+		angles[PITCH] = 0;
+		angles[ROLL] = UI_MachinegunSpinAngle( pi );
+		if( pi->realWeapon == WP_GAUNTLET || pi->realWeapon == WP_BFG ) {
+			angles[PITCH] = angles[ROLL];
+			angles[ROLL] = 0;
+		}
+		AnglesToAxis( angles, barrel.axis );
+
+		UI_PositionRotatedEntityOnTag( &barrel, &gun, pi->weaponModel, "tag_barrel");
+
+		trap_R_AddRefEntityToScene( &barrel );
+	}
+
+	//
+	// add muzzle flash
+	//
+	if ( dp_realtime <= pi->muzzleFlashTime ) {
+		if ( pi->flashModel ) {
+			memset( &flash, 0, sizeof(flash) );
+			flash.hModel = pi->flashModel;
+			VectorCopy( origin, flash.lightingOrigin );
+			UI_PositionEntityOnTag( &flash, &gun, pi->weaponModel, "tag_flash");
+			flash.renderfx = renderfx;
+			trap_R_AddRefEntityToScene( &flash );
+		}
+
+		// make a dlight for the flash
+		if ( pi->flashDlightColor[0] || pi->flashDlightColor[1] || pi->flashDlightColor[2] ) {
+			trap_R_AddLightToScene( flash.origin, 200 + (rand()&31), pi->flashDlightColor[0],
+				pi->flashDlightColor[1], pi->flashDlightColor[2] );
+		}
+	}
+
+	//
+	// add the chat icon
+	//
+	if ( pi->chat ) {
+		UI_PlayerFloatSprite( pi, origin, trap_R_RegisterShaderNoMip( "sprites/balloon3" ) );
+	}
+
+	//
+	// add an accent light
+	//
+	origin[0] -= 100;	// + = behind, - = in front
+	origin[1] += 100;	// + = left, - = right
+	origin[2] += 100;	// + = above, - = below
+	//trap_R_AddLightToScene( origin, 500, 0.3, 0.2, 0.8 );
+
+	origin[0] += 10;	// + = behind, - = in front
+	origin[1] += 80;	// + = left, - = right
+	origin[2] += 130;	// + = above, - = below
+	trap_R_AddLightToScene( origin, 250, 0.54, 0.89, 0.79 );
+
+
+	origin[0] -= 50;	// + = behind, - = in front
+	origin[1] -= 90;	// + = left, - = right
+	origin[2] -= 69;	// + = above, - = below
+	trap_R_AddLightToScene( origin, 350, 0.60, 0.03, 0.22 );
+
+
+	origin[0] -= 100;
+	origin[1] -= 100;
+	origin[2] -= 100;
+	//trap_R_AddLightToScene( origin, 500, 0.8, 0.2, 0.1 );
+//	UI_ForceLegsAnim( pi, BOTH_POSE );	// leilei - pose hack
+//	UI_ForceTorsoAnim( pi, BOTH_POSE );
+
+	trap_R_RenderScene( &refdef );
+}
+
+
 /*
 ==========================
 UI_FileExists

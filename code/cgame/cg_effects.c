@@ -134,6 +134,72 @@ localEntity_t *CG_SmokePuff( const vec3_t p, const vec3_t vel,
 	le->color[3] = a;
 
 
+	le->pos.trType = TR_LINEAR_STOP;
+	le->pos.trTime = startTime;
+	VectorCopy( vel, le->pos.trDelta );
+	VectorCopy( p, le->pos.trBase );
+
+	VectorCopy( p, re->origin );
+	re->customShader = hShader;
+
+	// rage pro can't alpha fade, so use a different shader
+	if ( cgs.glconfig.hardwareType == GLHW_RAGEPRO ) {
+		re->customShader = cgs.media.smokePuffRageProShader;
+		re->shaderRGBA[0] = 0xff;
+		re->shaderRGBA[1] = 0xff;
+		re->shaderRGBA[2] = 0xff;
+		re->shaderRGBA[3] = 0xff;
+	} else {
+		re->shaderRGBA[0] = le->color[0] * 0xff;
+		re->shaderRGBA[1] = le->color[1] * 0xff;
+		re->shaderRGBA[2] = le->color[2] * 0xff;
+		re->shaderRGBA[3] = 0xff;
+	}
+
+	re->reType = RT_SPRITE;
+	re->radius = le->radius;
+
+	return le;
+}
+
+// LEILEI same as above, but slows down.......
+localEntity_t *CG_SlowPuff( const vec3_t p, const vec3_t vel, 
+				   float radius,
+				   float r, float g, float b, float a,
+				   float duration,
+				   int startTime,
+				   int fadeInTime,
+				   int leFlags,
+				   qhandle_t hShader ) {
+	static int	seed = 0x92;
+	localEntity_t	*le;
+	refEntity_t		*re;
+
+	le = CG_AllocLocalEntity();
+	le->leFlags = leFlags;
+	le->radius = radius;
+
+	re = &le->refEntity;
+	re->rotation = Q_random( &seed ) * 360;
+	re->radius = radius;
+	re->shaderTime = startTime / 1000.0f;
+
+	le->leType = LE_MOVE_SCALE_FADE;
+	le->startTime = startTime;
+	le->fadeInTime = fadeInTime;
+	le->endTime = startTime + duration;
+	if ( fadeInTime > startTime ) {
+		le->lifeRate = 1.0 / ( le->endTime - le->fadeInTime );
+	}
+	else {
+		le->lifeRate = 1.0 / ( le->endTime - le->startTime );
+	}
+	le->color[0] = r;
+	le->color[1] = g; 
+	le->color[2] = b;
+	le->color[3] = a;
+
+
 	le->pos.trType = TR_LINEAR;
 	le->pos.trTime = startTime;
 	VectorCopy( vel, le->pos.trDelta );
