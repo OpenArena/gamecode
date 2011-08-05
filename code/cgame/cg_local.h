@@ -1582,6 +1582,7 @@ void	CG_ImpactMark( qhandle_t markShader,
 					float radius, qboolean temporary );
 void    CG_LeiSparks (vec3_t org, vec3_t vel, int duration, float x, float y, float speed);
 void    CG_LeiSparks2 (vec3_t org, vec3_t vel, int duration, float x, float y, float speed);
+void    CG_LeiPuff (vec3_t org, vec3_t vel, int duration, float x, float y, float speed, float size);
 
 
 //

@@ -1848,7 +1848,7 @@ void CG_DrawWeaponBar1(int count, int bits){
 			
 		br=ammo*32/100;
 			
-		if(i!=1 && i!=10){
+		if(i!=WP_GAUNTLET && i!=WP_GRAPPLING_HOOK){
 			if(ammo <= 20)
 				CG_FillRect( x, y+38, br,4, red);
 			if(ammo > 20 && ammo <= 50)
@@ -2034,7 +2034,7 @@ void CG_DrawWeaponBar3(int count, int bits, float *color){
 			
 		br=ammo*20/100;
 				
-		if(i!=1 && i!=10){
+		if(i!=WP_GAUNTLET && i!=WP_GRAPPLING_HOOK){
 			if(ammo <= 20)
 				CG_FillRect( 51, y+2+20-br, 4,br, red);
 			if(ammo > 20 && ammo <= 50)
@@ -2322,7 +2322,7 @@ void CG_DrawWeaponBar6(int count, int bits, float *color){
 			
 		br=ammo*26/100;
 				
-		if(i!=1 && i!=10){
+		if(i!=WP_GAUNTLET && i!=WP_GRAPPLING_HOOK){
 			if(ammo <= 20)
 				CG_FillRect( x+2, y +40, br, 4, red);
 			if(ammo > 20 && ammo <= 50)
