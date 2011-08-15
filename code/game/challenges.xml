@@ -1,0 +1,339 @@
+<Challenges>
+	<Group>
+		<Id>0</Id>
+		<DefineName>GENERAL_</DefineName>
+		<Name>Overall statistics</Name>
+		<Description>Totals</Description>		
+		<Challenge>
+			<Id>0</Id>
+			<DefineName>TEST</DefineName>
+			<HideInMenu>1</HideInMenu>
+			<Name>Test</Name>
+			<Description>Used for test</Description>
+		</Challenge>
+		<Challenge>
+			<Id>1</Id>
+			<DefineName>TOTALKILLS</DefineName>
+			<Name>Kills</Name>
+			<Description>Total number of players killed</Description>
+		</Challenge>
+		<Challenge>
+			<Id>2</Id>
+			<DefineName>TOTALDEATHS</DefineName>
+			<Name>Deaths</Name>
+			<Description>Number of times killed by another player</Description>
+		</Challenge>
+		<Challenge>
+			<Id>3</Id>
+			<DefineName>TOTALGAMES</DefineName>
+			<Name>Games</Name>
+			<Description>Number of games played with 2 or more human players</Description>
+		</Challenge>
+	</Group>
+	<Group>
+		<Id>1</Id>
+		<DefineName>GAMETYPE_</DefineName>
+		<Name>Gametype wins</Name>
+		<Description>Number of wins in the different gametypes</Description>
+		<Challenge>
+			<Id>1</Id>
+			<DefineName>FFA_WINS</DefineName>
+			<Name>Deathmatch</Name>
+			<Description>Number of victories in deathmatch games</Description>
+		</Challenge>
+		<Challenge>
+			<Id>2</Id>
+			<DefineName>TOURNEY_WINS</DefineName>
+			<Name>Tournament</Name>
+			<Description>Number of victories in tournament games</Description>
+		</Challenge>
+		<Challenge>
+			<Id>3</Id>
+			<DefineName>TDM_WINS</DefineName>
+			<Name>Team Deathmatch</Name>
+			<Description>Number of victories in team deathmatch games</Description>
+		</Challenge>
+		<Challenge>
+			<Id>4</Id>
+			<DefineName>CTF_WINS</DefineName>
+			<Name>Capture the flag</Name>
+			<Description>Number of victories in capture the flag games</Description>
+		</Challenge>
+		<Challenge>
+			<Id>5</Id>
+			<DefineName>1FCTF_WINS</DefineName>
+			<Name>One flag capture</Name>
+			<Description>Number of victories in one flag capture games</Description>
+		</Challenge>
+		<Challenge>
+			<Id>6</Id>
+			<DefineName>OVERLOAD_WINS</DefineName>
+			<Name>Obelisk</Name>
+			<Description>Number of victories in obelisk games</Description>
+		</Challenge>
+		<Challenge>
+			<Id>7</Id>
+			<DefineName>HARVESTER_WINS</DefineName>
+			<Name>Harvester</Name>
+			<Description>Number of victories in harvester games</Description>
+		</Challenge>
+		<Challenge>
+			<Id>8</Id>
+			<DefineName>ELIMINATION_WINS</DefineName>
+			<Name>Elimination</Name>
+			<Description>Number of victories in elimination games</Description>
+		</Challenge>
+		<Challenge>
+			<Id>9</Id>
+			<DefineName>CTF_ELIMINATION_WINS</DefineName>
+			<Name>CTF Elimination</Name>
+			<Description>Number of victories in CTF elimination games</Description>
+		</Challenge>
+		<Challenge>
+			<Id>10</Id>
+			<DefineName>LMS_WINS</DefineName>
+			<Name>Last man standing</Name>
+			<Description>Number of victories in last man standing games</Description>
+		</Challenge>
+		<Challenge>
+			<Id>11</Id>
+			<DefineName>DD_WINS</DefineName>
+			<Name>Double Domination</Name>
+			<Description>Number of victories in double domination games</Description>
+		</Challenge>
+		<Challenge>
+			<Id>12</Id>
+			<DefineName>DOM_WINS</DefineName>
+			<Name>Domination</Name>
+			<Description>Number of victories in domination games</Description>
+		</Challenge>
+	</Group>
+	<Group>
+		<Id>2</Id>
+		<DefineName>WEAPON_</DefineName>
+		<Name>Weapon kills</Name>
+		<Description>Number of kills with different weapons</Description>
+		<Challenge>
+			<Id>1</Id>
+			<DefineName>GAUNTLET_KILLS</DefineName>
+			<Name>Gauntlet</Name>
+			<Description>Number of kills with gauntlet</Description>
+		</Challenge>
+		<Challenge>
+			<Id>2</Id>
+			<DefineName>MACHINEGUN_KILLS</DefineName>
+			<Name>Machinegun</Name>
+			<Description>Number of kills with machinegun</Description>
+		</Challenge>
+		<Challenge>
+			<Id>3</Id>
+			<DefineName>SHOTGUN_KILLS</DefineName>
+			<Name>Shotgun</Name>
+			<Description>Number of kills with shotgun</Description>
+		</Challenge>
+		<Challenge>
+			<Id>4</Id>
+			<DefineName>GRANADE_KILLS</DefineName>
+			<Name>Granade launcher</Name>
+			<Description>Number of kills with granade launcher</Description>
+		</Challenge>
+		<Challenge>
+			<Id>5</Id>
+			<DefineName>ROCKET_KILLS</DefineName>
+			<Name>Rocket launcher</Name>
+			<Description>Number of kills with rocket launcher</Description>
+		</Challenge>
+		<Challenge>
+			<Id>6</Id>
+			<DefineName>LIGHTNING_KILLS</DefineName>
+			<Name>Lightning gun</Name>
+			<Description>Number of kills with lightning</Description>
+		</Challenge>
+		<Challenge>
+			<Id>7</Id>
+			<DefineName>PLASMA_KILLS</DefineName>
+			<Name>Plasma gun</Name>
+			<Description>Number of kills with plasma</Description>
+		</Challenge>
+		<Challenge>
+			<Id>8</Id>
+			<DefineName>RAIL_KILLS</DefineName>
+			<Name>Railgun</Name>
+			<Description>Number of kills with railgun</Description>
+		</Challenge>
+		<Challenge>
+			<Id>9</Id>
+			<DefineName>BFG_KILLS</DefineName>
+			<Name>BFG</Name>
+			<Description>Number of kills with BFG</Description>
+		</Challenge>
+		<Challenge>
+			<Id>10</Id>
+			<DefineName>GRAPPLE_KILLS</DefineName>
+			<Name>Grapple</Name>
+			<Description>Number of kills with grapple gun (almost impossible)</Description>
+		</Challenge>
+		<Challenge>
+			<Id>11</Id>
+			<DefineName>CHAINGUN_KILLS</DefineName>
+			<Name>Chaingun</Name>
+			<Description>Number of kills with the chaingun</Description>
+		</Challenge>
+		<Challenge>
+			<Id>12</Id>
+			<DefineName>NAILGUN_KILLS</DefineName>
+			<Name>Nailgun</Name>
+			<Description>Number of kills with nails</Description>
+		</Challenge>
+		<Challenge>
+			<Id>13</Id>
+			<DefineName>MINE_KILLS</DefineName>
+			<Name>Mines</Name>
+			<Description>Number of kills with mines</Description>
+		</Challenge>
+		<Challenge>
+			<Id>14</Id>
+			<DefineName>PUSH_KILLS</DefineName>
+			<Name>Push kills</Name>
+			<Description>Number of kills by pushing players into lava or void</Description>
+		</Challenge>
+		<Challenge>
+			<Id>15</Id>
+			<DefineName>INSTANT_RAIL_KILLS</DefineName>
+			<Name>Instant rail</Name>
+			<Description>Number of kills with railgun in instantgib</Description>
+		</Challenge>
+		<Challenge>
+			<Id>16</Id>
+			<DefineName>TELEFRAG_KILLS</DefineName>
+			<Name>Telefrags</Name>
+			<Description>Number of kills by telefrag</Description>
+		</Challenge>
+		<Challenge>
+			<Id>17</Id>
+			<DefineName>CRUSH_KILLS</DefineName>
+			<Name>Crushing</Name>
+			<Description>Number of kills by crushing</Description>
+		</Challenge>
+	</Group>
+	<Group>
+		<Id>3</Id>
+		<DefineName>AWARD_</DefineName>
+		<Name>Awards</Name>
+		<Description>Number of times different awards have been archived</Description>
+		<Challenge>
+			<Id>101</Id>
+			<MenuOnly>1</MenuOnly>
+			<Name>Gauntlet</Name>
+			<Description>Number of kills by gauntlet</Description>
+		</Challenge>
+		<Challenge>
+			<Id>1</Id>
+			<DefineName>IMPRESSIVE</DefineName>
+			<Name>Impressive</Name>
+			<Description>Two hits in a row with railgun</Description>
+		</Challenge>
+		<Challenge>
+			<Id>2</Id>
+			<DefineName>EXCELLENT</DefineName>
+			<Name>Excelent</Name>
+			<Description>Two kills in two seconds</Description>
+		</Challenge>
+		<Challenge>
+			<Id>3</Id>
+			<DefineName>CAPTURE</DefineName>
+			<Name>Capture</Name>
+			<Description>Scoring in team games</Description>
+		</Challenge>
+		<Challenge>
+			<Id>4</Id>
+			<DefineName>ASSIST</DefineName>
+			<Name>Assist</Name>
+			<Description>Asisting a capture</Description>
+		</Challenge>
+		<Challenge>
+			<Id>5</Id>
+			<DefineName>DEFENCE</DefineName>
+			<Name>Defence</Name>
+			<Description>Defending objective</Description>
+		</Challenge>	
+	</Group>
+	<Group>
+		<Id>4</Id>
+		<DefineName>POWERUP_</DefineName>
+		<Name>Power-ups</Name>
+		<Description>Number of kills with different powerups involved</Description>
+		<Challenge>
+			<Id>1</Id>
+			<DefineName>QUAD_KILL</DefineName>
+			<Name>Defence</Name>
+			<Description>Defending objective</Description>
+		</Challenge>	
+		<Challenge>
+			<Id>2</Id>
+			<DefineName>SPEED_KILL</DefineName>
+			<Name>Defence</Name>
+			<Description>Defending objective</Description>
+		</Challenge>	
+		<Challenge>
+			<Id>3</Id>
+			<DefineName>FLIGHT_KILL</DefineName>
+			<Name>Defence</Name>
+			<Description>Defending objective</Description>
+		</Challenge>	
+		<Challenge>
+			<Id>4</Id>
+			<DefineName>INVIS_KILL</DefineName>
+			<Name>Defence</Name>
+			<Description>Defending objective</Description>
+		</Challenge>	
+		<Challenge>
+			<Id>5</Id>
+			<DefineName>MULTI_KILL</DefineName>
+			<Name>Defence</Name>
+			<Description>Defending objective</Description>
+		</Challenge>	
+		<Challenge>
+			<Id>6</Id>
+			<DefineName>DEFENCE</DefineName>
+			<Name>Defence</Name>
+			<Description>Defending objective</Description>
+		</Challenge>	
+		<Challenge>
+			<Id>7</Id>
+			<DefineName>DEFENCE</DefineName>
+			<Name>Defence</Name>
+			<Description>Defending objective</Description>
+		</Challenge>	
+		<Challenge>
+			<Id>8</Id>
+			<DefineName>DEFENCE</DefineName>
+			<Name>Defence</Name>
+			<Description>Defending objective</Description>
+		</Challenge>	
+		<Challenge>
+			<Id>9</Id>
+			<DefineName>DEFENCE</DefineName>
+			<Name>Defence</Name>
+			<Description>Defending objective</Description>
+		</Challenge>	
+		<Challenge>
+			<Id>10</Id>
+			<DefineName>DEFENCE</DefineName>
+			<Name>Defence</Name>
+			<Description>Defending objective</Description>
+		</Challenge>	
+		<Challenge>
+			<Id>11</Id>
+			<DefineName>DEFENCE</DefineName>
+			<Name>Defence</Name>
+			<Description>Defending objective</Description>
+		</Challenge>	
+		<Challenge>
+			<Id>12</Id>
+			<DefineName>DEFENCE</DefineName>
+			<Name>Defence</Name>
+			<Description>Defending objective</Description>
+		</Challenge>	
+	</Group>
+</Challenges>
