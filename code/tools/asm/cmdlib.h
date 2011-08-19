@@ -71,6 +71,7 @@ char *strupr (char *in);
 char *strlower (char *in);
 int Q_strncasecmp( const char *s1, const char *s2, int n );
 int Q_stricmp( const char *s1, const char *s2 );
+#define Q_strequal(s1,s2) (Q_stricmp(s1,s2)==0)
 void Q_getwd( char *out );
 
 int Q_filelength (FILE *f);

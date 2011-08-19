@@ -1567,7 +1567,7 @@ void ExitLevel (void) {
                     //It is possible that the maps in the file read are flawed, so we try up to ten times:
                     for(i=0;i<10;i++) {
                         choice = (count > 0)? rand()%count : 0;
-                        if(!Q_stricmp(mapnames[choice],Info_ValueForKey(serverinfo,"mapname")))
+                        if(Q_strequal(mapnames[choice],Info_ValueForKey(serverinfo,"mapname")))
                             continue;
                         //Now check that the map exists:
                         trap_FS_FOpenFile(va("maps/%s.bsp",mapnames[choice]),&mapfile,FS_READ);

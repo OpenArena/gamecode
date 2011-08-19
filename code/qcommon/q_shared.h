@@ -699,6 +699,7 @@ int Q_isalpha( int c );
 
 // portable case insensitive compare
 int		Q_stricmp (const char *s1, const char *s2);
+#define Q_strequal(s1,s2) (Q_stricmp(s1,s2)==0)
 int		Q_strncmp (const char *s1, const char *s2, int n);
 int		Q_stricmpn (const char *s1, const char *s2, int n);
 char	*Q_strlwr( char *s1 );

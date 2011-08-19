@@ -275,6 +275,7 @@ void ChallengeMessage(gentity_t *ent, int challenge) {
         if ( level.warmupTime != 0)
 		return; //We don't send anything doring warmup
 	trap_SendServerCommand( ent-g_entities, va("ch %u", challenge) );
+        G_LogPrintf( "Challenge: %i %i %i: Client %i got award %i\n",ent-g_entities,challenge,1,ent-g_entities,challenge);
 }
 
 /*
@@ -397,7 +398,7 @@ int ClientNumberFromString( gentity_t *to, char *s ) {
 		}
         Q_strncpyz(cleanName, cl->pers.netname, sizeof(cleanName));
         Q_CleanStr(cleanName);
-        if ( !Q_stricmp( cleanName, s ) ) {
+        if ( Q_strequal( cleanName, s ) ) {
 			return idnum;
 		}
 	}
@@ -428,19 +429,19 @@ void Cmd_Give_f (gentity_t *ent)
 
 	name = ConcatArgs( 1 );
 
-	if (Q_stricmp(name, "all") == 0)
+	if Q_strequal(name, "all")
 		give_all = qtrue;
 	else
 		give_all = qfalse;
 
-	if (give_all || Q_stricmp( name, "health") == 0)
+	if (give_all || Q_strequal( name, "health"))
 	{
 		ent->health = ent->client->ps.stats[STAT_MAX_HEALTH];
 		if (!give_all)
 			return;
 	}
 
-	if (give_all || Q_stricmp(name, "weapons") == 0)
+	if (give_all || Q_strequal(name, "weapons"))
 	{
 		ent->client->ps.stats[STAT_WEAPONS] = (1 << WP_NUM_WEAPONS) - 1 - 
 			( 1 << WP_GRAPPLING_HOOK ) - ( 1 << WP_NONE );
@@ -448,7 +449,7 @@ void Cmd_Give_f (gentity_t *ent)
 			return;
 	}
 
-	if (give_all || Q_stricmp(name, "ammo") == 0)
+	if (give_all || Q_strequal(name, "ammo"))
 	{
 		for ( i = 0 ; i < MAX_WEAPONS ; i++ ) {
 			ent->client->ps.ammo[i] = 999;
@@ -457,7 +458,7 @@ void Cmd_Give_f (gentity_t *ent)
 			return;
 	}
 
-	if (give_all || Q_stricmp(name, "armor") == 0)
+	if (give_all || Q_strequal(name, "armor"))
 	{
 		ent->client->ps.stats[STAT_ARMOR] = 200;
 
@@ -465,23 +466,23 @@ void Cmd_Give_f (gentity_t *ent)
 			return;
 	}
 
-	if (Q_stricmp(name, "excellent") == 0) {
+	if (Q_strequal(name, "excellent")) {
 		ent->client->ps.persistant[PERS_EXCELLENT_COUNT]++;
 		return;
 	}
-	if (Q_stricmp(name, "impressive") == 0) {
+	if (Q_strequal(name, "impressive")) {
 		ent->client->ps.persistant[PERS_IMPRESSIVE_COUNT]++;
 		return;
 	}
-	if (Q_stricmp(name, "gauntletaward") == 0) {
+	if (Q_strequal(name, "gauntletaward")) {
 		ent->client->ps.persistant[PERS_GAUNTLET_FRAG_COUNT]++;
 		return;
 	}
-	if (Q_stricmp(name, "defend") == 0) {
+	if (Q_strequal(name, "defend")) {
 		ent->client->ps.persistant[PERS_DEFEND_COUNT]++;
 		return;
 	}
-	if (Q_stricmp(name, "assist") == 0) {
+	if (Q_strequal(name, "assist")) {
 		ent->client->ps.persistant[PERS_ASSIST_COUNT]++;
 		return;
 	}
@@ -722,26 +723,26 @@ void SetTeam( gentity_t *ent, char *s ) {
         trap_GetUserinfo( clientNum, userinfo, sizeof( userinfo ) );
 	specClient = 0;
 	specState = SPECTATOR_NOT;
-	if ( !Q_stricmp( s, "scoreboard" ) || !Q_stricmp( s, "score" )  ) {
+	if ( Q_strequal( s, "scoreboard" ) || Q_strequal( s, "score" )  ) {
 		team = TEAM_SPECTATOR;
 		specState = SPECTATOR_SCOREBOARD;
-	} else if ( !Q_stricmp( s, "follow1" ) ) {
+	} else if ( Q_strequal( s, "follow1" ) ) {
 		team = TEAM_SPECTATOR;
 		specState = SPECTATOR_FOLLOW;
 		specClient = -1;
-	} else if ( !Q_stricmp( s, "follow2" ) ) {
+	} else if ( Q_strequal( s, "follow2" ) ) {
 		team = TEAM_SPECTATOR;
 		specState = SPECTATOR_FOLLOW;
 		specClient = -2;
-	} else if ( !Q_stricmp( s, "spectator" ) || !Q_stricmp( s, "s" ) ) {
+	} else if ( Q_strequal( s, "spectator" ) || Q_strequal( s, "s" ) ) {
 		team = TEAM_SPECTATOR;
 		specState = SPECTATOR_FREE;
 	} else if ( g_gametype.integer >= GT_TEAM && g_ffa_gt!=1) {
 		// if running a team game, assign player to one of the teams
 		specState = SPECTATOR_NOT;
-		if ( !Q_stricmp( s, "red" ) || !Q_stricmp( s, "r" ) ) {
+		if ( Q_strequal( s, "red" ) || Q_strequal( s, "r" ) ) {
 			team = TEAM_RED;
-		} else if ( !Q_stricmp( s, "blue" ) || !Q_stricmp( s, "b" ) ) {
+		} else if ( Q_strequal( s, "blue" ) || Q_strequal( s, "b" ) ) {
 			team = TEAM_BLUE;
 		} else {
 			// pick the team with the least number of players
@@ -1018,9 +1019,9 @@ void Cmd_FollowCycle_f( gentity_t *ent ) {
     }
     
     trap_Argv( 0, args, sizeof( args ) );
-    if( Q_stricmp( args, "followprev" ) == 0 ) {
+    if( Q_strequal( args, "followprev" )) {
         dir = -1;
-    } else if( Q_stricmp( args, "follownext" ) == 0 ) {
+    } else if( Q_strequal( args, "follownext" )) {
         dir = 1;
     } else {
         dir = 1;
@@ -1202,7 +1203,7 @@ static void Cmd_Say_f( gentity_t *ent ){
 	int         mode = SAY_ALL;
 
     trap_Argv( 0, arg, sizeof( arg ) );
-    if( Q_stricmp ( arg, "say_team" ) == 0 )
+    if( Q_strequal( arg, "say_team" ) )
         mode = SAY_TEAM ;
     // KK-OAX Disabled until PM'ing is added
     // support parsing /m out of say text since some people have a hard
@@ -1348,12 +1349,12 @@ static void Cmd_Voice_f( gentity_t *ent ) {
     qboolean    voiceonly = qfalse;
     
 	trap_Argv( 0, arg, sizeof( arg ) );
-	if((Q_stricmp ( arg, "vsay_team" ) == 0 ) ||
-	    Q_stricmp ( arg, "vosay_team" ) == 0 )
+	if((Q_strequal( arg, "vsay_team" ) ) ||
+	    Q_strequal( arg, "vosay_team" ) )
 	    mode = SAY_TEAM;
 	
-	if((Q_stricmp ( arg, "vosay" ) == 0 ) ||
-	    Q_stricmp ( arg, "vosay_team" ) == 0 )
+	if((Q_strequal( arg, "vosay" ) ) ||
+	    Q_strequal( arg, "vosay_team" ) )
 	    voiceonly = qtrue;
     
     //KK-OAX Removed "arg0" since it will always be set to qfalse.          
@@ -1393,7 +1394,7 @@ static void Cmd_VoiceTell_f( gentity_t *ent ) {
 	}
 	
 	trap_Argv( 0, arg, sizeof( arg ) );
-	if( Q_stricmp ( arg, "votell" ) == 0 )
+	if( Q_strequal( arg, "votell" ) )
 	    voiceonly = qtrue;
         
 	trap_Argv( 1, arg, sizeof( arg ) );
