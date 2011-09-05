@@ -2980,6 +2980,8 @@ void CG_MissileHitWall( int weapon, int clientNum, vec3_t origin, vec3_t dir, im
 		mod = cgs.media.bulletFlashModel;
 		shader = cgs.media.bulletExplosionShader;
 		mark = cgs.media.bulletMarkShader;
+#if 0
+//Some problems here
 		if (cg_leiEnhancement.integer) {
 			if( soundType == IMPACTSOUND_FLESH ) {
 				mark = cgs.media.lbldShader2;
@@ -2995,6 +2997,7 @@ void CG_MissileHitWall( int weapon, int clientNum, vec3_t origin, vec3_t dir, im
 				} else { mark = cgs.media.lmarkbullet4;
 				}       }
 			}
+#endif
 		sfx = 0;
 		radius = 4;
 		break;
@@ -3011,6 +3014,8 @@ void CG_MissileHitWall( int weapon, int clientNum, vec3_t origin, vec3_t dir, im
 		}
 
 		mark = cgs.media.bulletMarkShader;
+#if 0
+//Some problems here
 		if (cg_leiEnhancement.integer) {
 
 			if( soundType == IMPACTSOUND_FLESH ) {
@@ -3027,6 +3032,7 @@ void CG_MissileHitWall( int weapon, int clientNum, vec3_t origin, vec3_t dir, im
 				} else { mark = cgs.media.lmarkbullet4;	}
 				}
 			}
+#endif
 		r = rand() & 3;
 		if ( r < 2 ) {
 			sfx = cgs.media.sfx_ric1;
@@ -3044,6 +3050,8 @@ void CG_MissileHitWall( int weapon, int clientNum, vec3_t origin, vec3_t dir, im
 		mod = cgs.media.bulletFlashModel;
 		shader = cgs.media.bulletExplosionShader;
 		mark = cgs.media.bulletMarkShader;
+#if 0
+//Some problems here
 		if (cg_leiEnhancement.integer) {
 			if( soundType == IMPACTSOUND_FLESH ) {
 				mark = cgs.media.lbldShader2;
@@ -3063,6 +3071,7 @@ void CG_MissileHitWall( int weapon, int clientNum, vec3_t origin, vec3_t dir, im
 
  }
 			}
+#endif
 		r = rand() & 3;
 		if ( r == 0 ) {
 			sfx = cgs.media.sfx_ric1;
@@ -3266,6 +3275,7 @@ static void CG_ShotgunPellet( vec3_t start, vec3_t end, int skipNum ) {
 					
 					smoke = CG_SmokePuff( tr.endpos, kapow, 21, 1, 1, 1, 0.9f, 1200, cg.time, 0, 0,  cgs.media.lsmkShader2 );
 					//smoke = CG_SmokePuff( tr.endpos, kapow, 21, 1, 1, 1, 0.9f, 1200, cg.time, 0, 0,  cgs.media.lbumShader1 );
+#if 0
 					CG_LeiPuff(tr.endpos, kapow, 500, 0, 0, 177, 6);
 					CG_LeiPuff(tr.endpos, tr.plane.normal, 500, 0, 0, 127, 12);
 					CG_LeiPuff(tr.endpos, tr.plane.normal, 500, 0, 0, 77, 16);
@@ -3273,6 +3283,7 @@ static void CG_ShotgunPellet( vec3_t start, vec3_t end, int skipNum ) {
 					CG_LeiPuff(tr.endpos, tr.plane.normal, 500, 0, 0, 77, 16);
 					CG_LeiPuff(tr.endpos, tr.plane.normal, 500, 0, 0, 127, 12);
 					CG_LeiPuff(tr.endpos, tr.plane.normal, 500, 0, 0, 77, 16);
+#endif
 				}
 // END LEIHANCMENET
 		}
