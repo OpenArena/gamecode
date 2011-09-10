@@ -239,7 +239,8 @@ Handles user intended acceleration
 ==============
 */
 static void PM_Accelerate( vec3_t wishdir, float wishspeed, float accel ) {
-#if 1
+if(! (pm->pmove_flags & DF_NO_BUNNY) ) {
+//#if 1
 
 	// q2 style
 	int			i;
@@ -258,7 +259,8 @@ static void PM_Accelerate( vec3_t wishdir, float wishspeed, float accel ) {
 	for (i=0 ; i<3 ; i++) {
 		pm->ps->velocity[i] += accelspeed*wishdir[i];	
 	}
-#else
+} else {
+        //#else
 	// proper way (avoids strafe jump maxspeed bug), but feels bad
 	vec3_t		wishVelocity;
 	vec3_t		pushDir;
@@ -276,7 +278,7 @@ static void PM_Accelerate( vec3_t wishdir, float wishspeed, float accel ) {
 
 	VectorMA( pm->ps->velocity, canPush, pushDir, pm->ps->velocity );
 }
-#endif
+//#endif
 }
 
 
@@ -1486,10 +1488,16 @@ static void PM_BeginWeaponChange( int weapon ) {
 		return;
 	}
 
-	PM_AddEvent( EV_CHANGE_WEAPON );
-	pm->ps->weaponstate = WEAPON_DROPPING;
-	pm->ps->weaponTime += 200;
-	PM_StartTorsoAnim( TORSO_DROP );
+        if(pm->pmove_flags & DF_INSTANT_WEAPON_CHANGE)
+        {
+                pm->ps->weaponstate = WEAPON_DROPPING;
+        } else
+        {
+            PM_AddEvent( EV_CHANGE_WEAPON );
+            pm->ps->weaponstate = WEAPON_DROPPING;
+            pm->ps->weaponTime += 200;
+            PM_StartTorsoAnim( TORSO_DROP );
+        }
 }
 
 
@@ -1512,8 +1520,11 @@ static void PM_FinishWeaponChange( void ) {
 
 	pm->ps->weapon = weapon;
 	pm->ps->weaponstate = WEAPON_RAISING;
-	pm->ps->weaponTime += 250;
-	PM_StartTorsoAnim( TORSO_RAISE );
+        if(! (pm->pmove_flags & DF_INSTANT_WEAPON_CHANGE))
+        {
+                pm->ps->weaponTime += 250;
+                PM_StartTorsoAnim( TORSO_RAISE );
+        }
 }
 
 

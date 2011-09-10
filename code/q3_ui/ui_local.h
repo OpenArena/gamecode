@@ -23,6 +23,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #ifndef __UI_LOCAL_H__
 #define __UI_LOCAL_H__
 
+#define BASEOA
+
 #include "../qcommon/q_shared.h"
 #include "../renderer/tr_types.h"
 //NOTE: include the ui_public.h from the new UI
@@ -32,6 +34,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define UI_API_VERSION	4
 #include "../client/keycodes.h"
 #include "../game/bg_public.h"
+#include "../ui/ui_shared.h"
 
 typedef void (*voidfunc_f)(void);
 
@@ -137,7 +140,9 @@ extern vmCvar_t ui_browserOnlyHumans;
 #define	MAX_EDIT_LINE			256
 
 #define MAX_MENUDEPTH			8
+#ifndef MAX_MENUITEMS
 #define MAX_MENUITEMS			64
+#endif
 
 #define MTYPE_NULL				0
 #define MTYPE_SLIDER			1	

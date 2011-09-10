@@ -210,6 +210,9 @@ typedef struct {
 
         //Sago's pmove
         int                     pmove_float;
+        
+        //Flags effecting movement (see dmflags)
+        int                     pmove_flags;
 
 	// callbacks to test the world
 	// these will be different functions during game and cgame
@@ -697,6 +700,8 @@ qboolean	BG_CanItemBeGrabbed( int gametype, const entityState_t *ent, const play
 #define	DF_NO_FALLING			8
 #define DF_FIXED_FOV			16
 #define	DF_NO_FOOTSTEPS			32
+#define DF_INSTANT_WEAPON_CHANGE        64
+#define DF_NO_BUNNY                     128
 
 //g_videoflags->integer
 #define VF_LOCK_CVARS_BASIC             1
