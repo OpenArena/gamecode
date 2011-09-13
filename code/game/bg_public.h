@@ -702,6 +702,7 @@ qboolean	BG_CanItemBeGrabbed( int gametype, const entityState_t *ent, const play
 #define	DF_NO_FOOTSTEPS			32
 #define DF_INSTANT_WEAPON_CHANGE        64
 #define DF_NO_BUNNY                     128
+#define DF_INVIS                        256
 
 //g_videoflags->integer
 #define VF_LOCK_CVARS_BASIC             1
