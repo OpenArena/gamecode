@@ -1230,6 +1230,10 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 
         if(targ && targ->client && attacker->client )
             damage = catchup_damage(damage, attacker->client->ps.persistant[PERS_SCORE], targ->client->ps.persistant[PERS_SCORE]);
+        
+        if(g_damageModifier.value > 0.01) {
+            damage *= g_damageModifier.value;
+        }
 
 	if ( damage < 1 ) {
 		damage = 1;
