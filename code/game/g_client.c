@@ -414,8 +414,6 @@ void CopyToBodyQue( gentity_t *ent ) {
             level.bodyQueIndex = (level.bodyQueIndex + 1) % BODY_QUEUE_SIZE;
         }
 
-	trap_UnlinkEntity (body);
-
 	body->s = ent->s;
 	body->s.eFlags = EF_DEAD;		// clear EF_TALK, etc
 	if ( ent->s.eFlags & EF_KAMIKAZE ) {
@@ -523,7 +521,7 @@ void SetClientViewAngle( gentity_t *ent, vec3_t angle ) {
 respawn
 ================
 */
-void respawn( gentity_t *ent ) {
+void ClientRespawn( gentity_t *ent ) {
 	gentity_t	*tent;
 
 	if((g_gametype.integer!=GT_ELIMINATION && g_gametype.integer!=GT_CTF_ELIMINATION && g_gametype.integer !=GT_LMS) && !ent->client->isEliminated)
@@ -1574,7 +1572,7 @@ and on transition between teams, but doesn't happen on respawns
 void ClientBegin( int clientNum ) {
 	gentity_t	*ent;
 	gclient_t	*client;
-	gentity_t	*tent;
+	gentity_t       *tent;
 	int			flags;
 	int		countRed, countBlue, countFree;
         char		userinfo[MAX_INFO_STRING];
@@ -1702,6 +1700,7 @@ void ClientSpawn(gentity_t *ent) {
 	clientSession_t		savedSess;
 	int		persistant[MAX_PERSISTANT];
 	gentity_t	*spawnPoint;
+	//gentity_t *tent;
 	int		flags;
 	int		savedPing;
 //	char	*savedAreaBits;

@@ -172,20 +172,17 @@ BotTeam
 ==================
 */
 int BotTeam(bot_state_t *bs) {
-	char info[1024];
-
 	if (bs->client < 0 || bs->client >= MAX_CLIENTS) {
-		//BotAI_Print(PRT_ERROR, "BotCTFTeam: client out of range\n");
 		return qfalse;
 	}
-	trap_GetConfigstring(CS_PLAYERS+bs->client, info, sizeof(info));
-	//
-	/*if (atoi(Info_ValueForKey(info, "t")) == TEAM_RED) return TEAM_RED;
-	else if (atoi(Info_ValueForKey(info, "t")) == TEAM_BLUE) return TEAM_BLUE;
-	return TEAM_FREE;*/
-        if (level.clients[bs->client].sess.sessionTeam == TEAM_RED) return TEAM_RED;
-        else if (level.clients[bs->client].sess.sessionTeam == TEAM_BLUE) return TEAM_BLUE;
-        return TEAM_FREE;
+
+	if (level.clients[bs->client].sess.sessionTeam == TEAM_RED) {
+		return TEAM_RED;
+	} else if (level.clients[bs->client].sess.sessionTeam == TEAM_BLUE) {
+		return TEAM_BLUE;
+	}
+
+	return TEAM_FREE;
 }
 
 /*
@@ -2386,7 +2383,7 @@ int BotWantsToRetreat(bot_state_t *bs) {
 	else if (gametype == GT_OBELISK) {
 		//the bots should be dedicated to attacking the enemy obelisk
 		if (bs->ltgtype == LTG_ATTACKENEMYBASE) {
-			if (bs->enemy != redobelisk.entitynum ||
+			if (bs->enemy != redobelisk.entitynum &&
 						bs->enemy != blueobelisk.entitynum) {
 				return qtrue;
 			}
@@ -2404,8 +2401,12 @@ int BotWantsToRetreat(bot_state_t *bs) {
 	if (bs->enemy >= 0) {
 		//if the enemy is carrying a flag
 		BotEntityInfo(bs->enemy, &entinfo);
-		if (EntityCarriesFlag(&entinfo))
-			return qfalse;
+		// if the enemy is carrying a flag
+		if (EntityCarriesFlag(&entinfo)) return qfalse;
+#ifdef MISSIONPACK
+		// if the enemy is carrying cubes
+		if (EntityCarriesCubes(&entinfo)) return qfalse;
+#endif
 	}
 	//if the bot is getting the flag
 	if (bs->ltgtype == LTG_GETFLAG)
@@ -2445,7 +2446,7 @@ int BotWantsToChase(bot_state_t *bs) {
 	else if (gametype == GT_OBELISK) {
 		//the bots should be dedicated to attacking the enemy obelisk
 		if (bs->ltgtype == LTG_ATTACKENEMYBASE) {
-			if (bs->enemy != redobelisk.entitynum ||
+			if (bs->enemy != redobelisk.entitynum &&
 						bs->enemy != blueobelisk.entitynum) {
 				return qfalse;
 			}
@@ -2453,8 +2454,11 @@ int BotWantsToChase(bot_state_t *bs) {
 	}
 	else if (gametype == GT_HARVESTER) {
 		//never chase if carrying cubes
-		if (BotHarvesterCarryingCubes(bs))
-			return qfalse;
+		if (BotHarvesterCarryingCubes(bs)) return qfalse;
+
+		BotEntityInfo(bs->enemy, &entinfo);
+		// always chase if the enemy is carrying cubes
+		if (EntityCarriesCubes(&entinfo)) return qtrue;
 	}
 	//if the bot is getting the flag
 	if (bs->ltgtype == LTG_GETFLAG)
@@ -3736,7 +3740,7 @@ void BotCheckAttack(bot_state_t *bs) {
 	VectorMA(start, -12, forward, start);
 	BotAI_Trace(&trace, start, mins, maxs, end, bs->entitynum, MASK_SHOT);
 	//if the entity is a client
-	if (trace.ent > 0 && trace.ent <= MAX_CLIENTS) {
+	if (trace.ent >= 0 && trace.ent < MAX_CLIENTS) {
 		if (trace.ent != attackentity) {
 			//if a teammate is hit
 			if (BotSameTeam(bs, trace.ent))
@@ -5222,7 +5226,7 @@ void BotSetupAlternativeRouteGoals(void) {
 		return;
 	if (gametype == GT_CTF || gametype == GT_CTF_ELIMINATION) {
 		if (trap_BotGetLevelItemGoal(-1, "Neutral Flag", &ctf_neutralflag) < 0)
-			BotAI_Print(PRT_WARNING, "no alt routes without Neutral Flag\n");
+			BotAI_Print(PRT_WARNING, "No alt routes without Neutral Flag\n");
 		if (ctf_neutralflag.areanum) {
 			//
 			red_numaltroutegoals = trap_AAS_AlternativeRouteGoals(
@@ -5240,7 +5244,8 @@ void BotSetupAlternativeRouteGoals(void) {
 		}
 	}
 	else if (gametype == GT_1FCTF) {
-		//
+		if (trap_BotGetLevelItemGoal(-1, "Neutral Obelisk", &neutralobelisk) < 0)
+			BotAI_Print(PRT_WARNING, "One Flag CTF without Neutral Obelisk\n");
 		red_numaltroutegoals = trap_AAS_AlternativeRouteGoals(
 									ctf_neutralflag.origin, ctf_neutralflag.areanum,
 									ctf_redflag.origin, ctf_redflag.areanum, TFL_DEFAULT,
