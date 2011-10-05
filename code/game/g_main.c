@@ -2283,10 +2283,12 @@ void CheckElimination(void) {
 					if ( (level.eliminationSides+level.roundNumber)%2 == 0 ) { //Red was attacking
 						trap_SendServerCommand( -1, "print \"Blue team defended the base\n\"");
 						AddTeamScore(level.intermission_origin,TEAM_BLUE,1);
+                                                G_LogPrintf( "CTF_ELIMINATION: %i %i %i %i: %s wins round %i by defending the flag!\n", level.roundNumber, -1, TEAM_BLUE, 5, TeamName(TEAM_BLUE), level.roundNumber );
 					}
 					else {
 						trap_SendServerCommand( -1, "print \"Red team defended the base\n\"");
 						AddTeamScore(level.intermission_origin,TEAM_RED,1);
+                                                G_LogPrintf( "CTF_ELIMINATION: %i %i %i %i: %s wins round %i by defending the flag!\n", level.roundNumber, -1, TEAM_RED, 5, TeamName(TEAM_RED), level.roundNumber );
 					}
 				}
 				else if(((double)countsLiving[TEAM_RED])/((double)level.roundRedPlayers)>((double)countsLiving[TEAM_BLUE])/((double)level.roundBluePlayers))
