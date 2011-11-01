@@ -705,6 +705,7 @@ qboolean	BG_CanItemBeGrabbed( int gametype, const entityState_t *ent, const play
 #define DF_INVIS                        256
 #define DF_LIGHT_VOTING                 512
 #define DF_NO_SELF_DAMAGE               1024
+#define DF_PLAYER_OVERLAY               2048
 
 //g_videoflags->integer
 #define VF_LOCK_CVARS_BASIC             1

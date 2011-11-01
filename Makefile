@@ -2132,11 +2132,13 @@ ifneq ($(BUILD_GAME_SO),0)
 endif
 
 clean: clean-debug clean-release
-ifeq ($(PLATFORM),mingw32)
-	@$(MAKE) -C $(NSISDIR) clean
-else
-	@$(MAKE) -C $(LOKISETUPDIR) clean
-endif
+
+#We do not make installers
+#ifeq ($(PLATFORM),mingw32)
+#	@$(MAKE) -C $(NSISDIR) clean
+#else
+#	@$(MAKE) -C $(LOKISETUPDIR) clean
+#endif
 
 clean-debug:
 	@$(MAKE) clean2 B=$(BD)

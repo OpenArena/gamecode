@@ -1072,6 +1072,13 @@ static void CG_RegisterGraphics( void ) {
 		cgs.media.redCubeIcon = trap_R_RegisterShader( "icons/skull_red" );
 		cgs.media.blueCubeIcon = trap_R_RegisterShader( "icons/skull_blue" );
 	}
+        
+        if( ( cgs.gametype >= GT_TEAM ) && ( cgs.ffa_gt != 1 ) ) {
+                cgs.media.redOverlay = trap_R_RegisterShader( "playeroverlays/playerSuit1_Red");
+                cgs.media.blueOverlay = trap_R_RegisterShader( "playeroverlays/playerSuit1_Blue");
+        } else {
+                cgs.media.neutralOverlay = trap_R_RegisterShader( "playeroverlays/playerSuit1_Neutral");
+        }
 
 //For Double Domination:
 	if ( cgs.gametype == GT_DOUBLE_D ) {

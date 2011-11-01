@@ -2129,7 +2129,7 @@ Adds a piece with modifications or duplications for powerups
 Also called by CG_Missile for quad rockets, but nobody can tell...
 ===============
 */
-void CG_AddRefEntityWithPowerups( refEntity_t *ent, entityState_t *state, int team ) {
+void CG_AddRefEntityWithPowerups( refEntity_t *ent, entityState_t *state, int team, qboolean isMissile ) {
 
 	if ( state->powerups & ( 1 << PW_INVIS ) ) {
             if( (cgs.dmflags & DF_INVIS) == 0) {
@@ -2148,7 +2148,22 @@ void CG_AddRefEntityWithPowerups( refEntity_t *ent, entityState_t *state, int te
 		else {*/
 			trap_R_AddRefEntityToScene( ent );
 		//}
-
+                        if(!isMissile && (cgs.dmflags & DF_PLAYER_OVERLAY) && !(state->eFlags & EF_DEAD)  ) {
+                            switch(team) {
+                                case TEAM_RED:
+                                    ent->customShader = cgs.media.redOverlay;
+                                    trap_R_AddRefEntityToScene( ent );
+                                    break;
+                                case TEAM_BLUE:
+                                    ent->customShader = cgs.media.blueOverlay;
+                                    trap_R_AddRefEntityToScene( ent );
+                                    break;
+                                default:
+                                    ent->customShader = cgs.media.neutralOverlay;
+                                    trap_R_AddRefEntityToScene( ent );
+                            }
+                        }
+                        
 		if ( state->powerups & ( 1 << PW_QUAD ) )
 		{
 			if (team == TEAM_RED)
@@ -2169,6 +2184,8 @@ void CG_AddRefEntityWithPowerups( refEntity_t *ent, entityState_t *state, int te
 		}
 	}
 }
+
+
 
 /*
 =================
@@ -2306,7 +2323,7 @@ void CG_Player( centity_t *cent ) {
 	legs.renderfx = renderfx;
 	VectorCopy (legs.origin, legs.oldorigin);	// don't positionally lerp at all
 
-	CG_AddRefEntityWithPowerups( &legs, &cent->currentState, ci->team );
+	CG_AddRefEntityWithPowerups( &legs, &cent->currentState, ci->team, qfalse );
 
 	// if the model failed, allow the default nullmodel to be displayed
 	if (!legs.hModel) {
@@ -2330,7 +2347,7 @@ void CG_Player( centity_t *cent ) {
 	torso.shadowPlane = shadowPlane;
 	torso.renderfx = renderfx;
 
-	CG_AddRefEntityWithPowerups( &torso, &cent->currentState, ci->team );
+	CG_AddRefEntityWithPowerups( &torso, &cent->currentState, ci->team, qfalse );
 
 	if ( cent->currentState.eFlags & EF_KAMIKAZE ) {
 
@@ -2550,7 +2567,7 @@ void CG_Player( centity_t *cent ) {
 	head.shadowPlane = shadowPlane;
 	head.renderfx = renderfx;
 
-	CG_AddRefEntityWithPowerups( &head, &cent->currentState, ci->team );
+	CG_AddRefEntityWithPowerups( &head, &cent->currentState, ci->team, qfalse );
 
 	CG_BreathPuffs(cent, &head);
 
