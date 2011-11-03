@@ -1943,6 +1943,7 @@ void CG_DrawWeaponBar2(int count, int bits, float *color){
 			}
 		}
 		     
+                CG_RegisterWeapon( i );
 			// draw weapon icon
 			CG_DrawPic( x+2, y+4, 16, 16, cg_weapons[i].weaponIcon );
 		
@@ -2063,7 +2064,7 @@ void CG_DrawWeaponBar3(int count, int bits, float *color){
 					CG_FillRect( x, y,50, 24, red );
 			}
 		}
-		     
+		     CG_RegisterWeapon( i );
 			// draw weapon icon
 			CG_DrawPic( x+2, y+4, 16, 16, cg_weapons[i].weaponIcon );
 		
@@ -2151,7 +2152,7 @@ void CG_DrawWeaponBar4(int count, int bits, float *color){
 		else{   
 			CG_FillRect( x, y,50, 24, boxColor );
 		}
-			
+			CG_RegisterWeapon( i );
 			// draw weapon icon
 			CG_DrawPic( x+2, y+4, 16, 16, cg_weapons[i].weaponIcon );
 		
@@ -2231,7 +2232,7 @@ void CG_DrawWeaponBar5(int count, int bits, float *color){
 				CG_FillRect( x, y,30, 38, red );
 			}
 		}
-				
+		CG_RegisterWeapon( i );		
 		CG_DrawPic( x+7, y+2, 16, 16, cg_weapons[i].weaponIcon );
 			
 		if(cg.snap->ps.ammo[ i ]!=-1){
@@ -2351,7 +2352,7 @@ void CG_DrawWeaponBar6(int count, int bits, float *color){
 					CG_FillRect( x, y,30, 38, red );
 			}
 		}	
-			
+		CG_RegisterWeapon( i );	
 		CG_DrawPic( x+7, y+2, 16, 16, cg_weapons[i].weaponIcon );
 			
 		if(cg.snap->ps.ammo[ i ]!=-1){
@@ -2437,7 +2438,7 @@ void CG_DrawWeaponBar7(int count, int bits, float *color){
 		else{   
 				CG_FillRect( x, y,30, 38, boxColor );
 		}
-			
+		CG_RegisterWeapon( i );	
 		CG_DrawPic( x+7, y+2, 16, 16, cg_weapons[i].weaponIcon );
 			
 		if(cg.snap->ps.ammo[ i ]!=-1){
