@@ -58,6 +58,8 @@ GAME OPTIONS MENU
 #define ID_COLORGREEN           142
 #define ID_COLORBLUE            143
 #define ID_CROSSHAIRHEALTH      144
+#define ID_CHATBEEP             145
+#define ID_TEAMCHATBEEP         146
 
 #define	NUM_CROSSHAIRS			99
 
@@ -89,6 +91,8 @@ typedef struct {
 	menulist_s			drawteamoverlay;
         menuradiobutton_s	delaghitscan;
 	menuradiobutton_s	allowdownload;
+        menuradiobutton_s       chatbeep;
+        menuradiobutton_s       teamchatbeep;
 	menubitmap_s		back;
 
 	qhandle_t			crosshairShader[NUM_CROSSHAIRS];
@@ -123,6 +127,8 @@ static void Preferences_SetMenuItems( void ) {
 	s_preferences.drawteamoverlay.curvalue	= Com_Clamp( 0, 3, trap_Cvar_VariableValue( "cg_drawTeamOverlay" ) );
 	s_preferences.allowdownload.curvalue	= trap_Cvar_VariableValue( "cl_allowDownload" ) != 0;
         s_preferences.delaghitscan.curvalue	= trap_Cvar_VariableValue( "cg_delag" ) != 0;
+        s_preferences.chatbeep.curvalue         = trap_Cvar_VariableValue( "cg_chatBeep" ) != 0;
+        s_preferences.teamchatbeep.curvalue     = trap_Cvar_VariableValue( "cg_teamChatBeep" ) != 0;
 }
 
 static void Preferences_Event( void* ptr, int notification ) {
@@ -218,6 +224,14 @@ static void Preferences_Event( void* ptr, int notification ) {
                 trap_Cvar_SetValue( "g_delagHitscan", s_preferences.delaghitscan.curvalue );
 		trap_Cvar_SetValue( "cg_delag", s_preferences.delaghitscan.curvalue );
 		break;
+                
+        case ID_CHATBEEP:
+                trap_Cvar_SetValue( "cg_chatBeep", s_preferences.chatbeep.curvalue );
+                break;
+                
+        case ID_TEAMCHATBEEP:
+                trap_Cvar_SetValue( "cg_teamChatBeep", s_preferences.teamchatbeep.curvalue );
+                break;
 
 	case ID_BACK:
 		UI_PopMenu();
@@ -319,7 +333,7 @@ static void Preferences_MenuInit( void ) {
 	s_preferences.framer.width  	   = 256;
 	s_preferences.framer.height  	   = 334;
 
-	y = 104;
+	y = 82;
 	s_preferences.crosshair.generic.type		= MTYPE_TEXT;
 	s_preferences.crosshair.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT|QMF_NODEFAULTINIT|QMF_OWNERDRAW;
 	s_preferences.crosshair.generic.x			= PREFERENCES_X_POS;
@@ -491,6 +505,24 @@ static void Preferences_MenuInit( void ) {
 	s_preferences.allowdownload.generic.id       = ID_ALLOWDOWNLOAD;
 	s_preferences.allowdownload.generic.x	       = PREFERENCES_X_POS;
 	s_preferences.allowdownload.generic.y	       = y;
+        
+        y += BIGCHAR_HEIGHT+2;
+	s_preferences.chatbeep.generic.type     = MTYPE_RADIOBUTTON;
+	s_preferences.chatbeep.generic.name	   = "Beep on chat:";
+	s_preferences.chatbeep.generic.flags	   = QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	s_preferences.chatbeep.generic.callback = Preferences_Event;
+	s_preferences.chatbeep.generic.id       = ID_CHATBEEP;
+	s_preferences.chatbeep.generic.x	       = PREFERENCES_X_POS;
+	s_preferences.chatbeep.generic.y	       = y;
+        
+        y += BIGCHAR_HEIGHT+2;
+	s_preferences.teamchatbeep.generic.type     = MTYPE_RADIOBUTTON;
+	s_preferences.teamchatbeep.generic.name	   = "Beep on team chat:";
+	s_preferences.teamchatbeep.generic.flags	   = QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	s_preferences.teamchatbeep.generic.callback = Preferences_Event;
+	s_preferences.teamchatbeep.generic.id       = ID_TEAMCHATBEEP;
+	s_preferences.teamchatbeep.generic.x	       = PREFERENCES_X_POS;
+	s_preferences.teamchatbeep.generic.y	       = y;
 
 	y += BIGCHAR_HEIGHT+2;
 	s_preferences.back.generic.type	    = MTYPE_BITMAP;
@@ -525,6 +557,8 @@ static void Preferences_MenuInit( void ) {
 	Menu_AddItem( &s_preferences.menu, &s_preferences.drawteamoverlay );
         Menu_AddItem( &s_preferences.menu, &s_preferences.delaghitscan );
 	Menu_AddItem( &s_preferences.menu, &s_preferences.allowdownload );
+        Menu_AddItem( &s_preferences.menu, &s_preferences.teamchatbeep );
+        Menu_AddItem( &s_preferences.menu, &s_preferences.chatbeep );
 
 	Menu_AddItem( &s_preferences.menu, &s_preferences.back );
 

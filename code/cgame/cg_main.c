@@ -269,6 +269,8 @@ vmCvar_t	cg_crosshairColorGreen;
 vmCvar_t	cg_crosshairColorBlue;
 
 vmCvar_t	cg_weaponBarStyle;
+vmCvar_t	cg_chatBeep;
+vmCvar_t	cg_teamChatBeep;
 
 typedef struct {
 	vmCvar_t	*vmCvar;
@@ -405,7 +407,7 @@ static cvarTable_t cvarTable[] = { // bk001129
 	{ &cg_leiSuperGoreyAwesome, "cg_leiSuperGoreyAwesome", "0", CVAR_ARCHIVE},	// LEILEI 
 	{ &cg_oldPlasma, "cg_oldPlasma", "1", CVAR_ARCHIVE},
 //unlagged - client options
-	{ &cg_delag, "cg_delag", "0", CVAR_ARCHIVE | CVAR_USERINFO },
+	{ &cg_delag, "cg_delag", "1", CVAR_ARCHIVE | CVAR_USERINFO },
 //	{ &cg_debugDelag, "cg_debugDelag", "0", CVAR_USERINFO | CVAR_CHEAT },
 //	{ &cg_drawBBox, "cg_drawBBox", "0", CVAR_CHEAT },
 	{ &cg_cmdTimeNudge, "cg_cmdTimeNudge", "0", CVAR_ARCHIVE | CVAR_USERINFO },
@@ -459,6 +461,8 @@ static cvarTable_t cvarTable[] = { // bk001129
 
 	{ &cg_weaponBarStyle, "cg_weaponBarStyle", "0", CVAR_ARCHIVE},
         { &cg_weaponOrder,"cg_weaponOrder", "/1/2/4/3/6/7/8/9/5/", CVAR_ARCHIVE},
+        {&cg_chatBeep, "cg_chatBeep", "1", CVAR_ARCHIVE },
+        {&cg_teamChatBeep, "cg_teamChatBeep", "1", CVAR_ARCHIVE }
 };
 
 static int  cvarTableSize = sizeof( cvarTable ) / sizeof( cvarTable[0] );
