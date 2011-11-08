@@ -239,7 +239,7 @@ static void Main_MenuDraw( void ) {
 		UI_DrawString( 320, 444, "read COPYING for details.", UI_CENTER|UI_SMALLFONT, color );
                 
                 //Draw version.
-                UI_DrawString( 640-40, 480-14, "^7OAX", UI_SMALLFONT, color );
+                UI_DrawString( 640-40, 480-14, "^70.8.8", UI_SMALLFONT, color );
                 if((int)trap_Cvar_VariableValue("protocol")!=71)
                     UI_DrawString( 0, 480-14, va("^7Protocol: %i",(int)trap_Cvar_VariableValue("protocol")), UI_SMALLFONT, color);
 }
