@@ -1542,6 +1542,8 @@ void ExitLevel (void) {
             if(filename[0]) {
                 //Read the file:
                 /*int len =*/ trap_FS_FOpenFile(filename, &file, FS_READ);
+                if(!file)
+                    trap_FS_FOpenFile(va("%s.org",filename), &file, FS_READ);
                 if(file) {
                     char  buffer[4*1024]; // buffer to read file into
                     char mapnames[1024][20]; // Array of mapnames in the map pool
