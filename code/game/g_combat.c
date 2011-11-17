@@ -748,7 +748,10 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 			self->client->ps.powerups[PW_BLUEFLAG] = 0;
 		}
 	}
-
+        TossClientPersistantPowerups( self );
+        if( g_gametype.integer == GT_HARVESTER ) {
+                TossClientCubes( self );
+        }
 	// if client is in a nodrop area, don't drop anything (but return CTF flags!)
 	TossClientItems( self );
 //#endif
