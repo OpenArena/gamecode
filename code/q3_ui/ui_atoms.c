@@ -1062,6 +1062,11 @@ qboolean UI_ConsoleCommand( int realTime ) {
                 UI_VoteMapMenuInternal();
 		return qtrue;
 	}
+        
+        if ( Q_stricmp (cmd, "ui_writemappools") == 0) {
+            WriteMapList();
+            return qtrue;
+        }
 
 	return qfalse;
 }

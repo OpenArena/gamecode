@@ -488,6 +488,7 @@ extern void StartServer_Cache( void );
 extern void ServerOptions_Cache( void );
 extern void UI_BotSelectMenu( char *bot );
 extern void UI_BotSelectMenu_Cache( void );
+extern void WriteMapList(void) ;
 
 //
 // ui_serverinfo.c

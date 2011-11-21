@@ -315,6 +315,55 @@ static void StartServer_MapEvent( void* ptr, int event ) {
 	StartServer_Update();
 }
 
+static void WriteMapList2File(int gametype,const char *filename) {
+    int			i;
+    int			count;
+    int			gamebits;
+    int			matchbits;
+    const char	*info;
+    fileHandle_t f;
+    int len;
+    char *mapname;
+    
+    len = trap_FS_FOpenFile( filename, &f, FS_WRITE );
+    
+    
+    if(len < 0)
+    {
+        Com_Printf("WriteMapList2File: Failed to open file %s, length: %i\n",filename,len);
+        return;
+    }
+    
+    count = UI_GetNumArenas();
+    matchbits = 1 <<gametype;
+    for( i = 0; i < count; i++ ) {
+        info = UI_GetArenaInfoByNumber( i );
+
+        gamebits = GametypeBits( Info_ValueForKey( info, "type") );
+        if( !( gamebits & matchbits ) ) {
+                continue;
+        }
+        mapname = va("%s ", Info_ValueForKey( info, "map"));
+        trap_FS_Write( mapname, strlen(mapname), f );
+    }
+    trap_FS_FCloseFile( f );
+}
+
+void WriteMapList(void) {
+    int i;
+    char filename[144];
+    char mappoolstring[MAX_CVAR_VALUE_STRING];
+    trap_Cvar_VariableStringBuffer("g_mappools",mappoolstring,sizeof(mappoolstring));
+    Com_Printf("g_mappools: %s\n",mappoolstring);
+    for(i=0;i<GT_MAX_GAME_TYPE;i++) {
+        Q_strncpyz(filename,Info_ValueForKey(mappoolstring, va("%i",i)),sizeof(filename));
+        if(strlen(filename)>0) {
+            Com_Printf("Writing gamtype %i to %s\n",i,filename);
+            WriteMapList2File(i,filename);
+        }
+    }
+    
+}
 
 /*
 =================
