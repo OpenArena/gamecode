@@ -727,6 +727,12 @@ void trigger_teleporter_touch (gentity_t *self, gentity_t *other, trace_t *trace
 void TeleportPlayer( gentity_t *player, vec3_t origin, vec3_t angles );
 void DropPortalSource( gentity_t *ent );
 void DropPortalDestination( gentity_t *ent );
+/**
+ * Finds the minimum count of spawnpoints for spawnning players
+ * If there are more players than this count, telefragging may occour.
+ * @return number of spawnpoints for each type of spawning (initial spawn, respawn, red, blue)
+ */
+int MinSpawnpointCount( void );
 
 
 //

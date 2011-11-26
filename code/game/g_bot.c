@@ -47,6 +47,7 @@ typedef struct {
 static botSpawnQueue_t	botSpawnQueue[BOT_SPAWN_QUEUE_DEPTH];
 
 vmCvar_t bot_minplayers;
+vmCvar_t bot_autominplayers;
 
 extern gentity_t	*podium1;
 extern gentity_t	*podium2;
@@ -981,6 +982,7 @@ void G_InitBots( qboolean restart ) {
 	G_LoadArenas();
 
 	trap_Cvar_Register( &bot_minplayers, "bot_minplayers", "0", CVAR_SERVERINFO );
+	trap_Cvar_Register( &bot_autominplayers, "bot_autominplayers", "0", CVAR_SERVERINFO );
 
 	if( g_gametype.integer == GT_SINGLE_PLAYER ) {
 		trap_GetServerinfo( serverinfo, sizeof(serverinfo) );
@@ -1022,5 +1024,19 @@ void G_InitBots( qboolean restart ) {
 		if( !restart ) {
 			G_SpawnBots( Info_ValueForKey( arenainfo, "bots" ), basedelay );
 		}
+	} else {
+	    if(bot_autominplayers.integer) {
+		//Set bot_minplayers
+		if(g_gametype.integer == GT_TOURNAMENT) {
+		    trap_Cvar_Set("bot_minplayers","2"); //Always 2 for Tourney
+		} else {
+			basedelay = MinSpawnpointCount()/2;
+			if(basedelay < 3 && (g_gametype.integer < GT_TEAM || g_ffa_gt) )
+			    basedelay = 3; //Minimum 3 for FFA
+			if(basedelay < 2 && !(g_gametype.integer < GT_TEAM || g_ffa_gt) )
+			    basedelay = 2; //Minimum 2 for TEAM
+			trap_Cvar_Set("bot_minplayers",va("%i",basedelay) );
+		}
+	    }
 	}
 }
