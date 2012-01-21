@@ -271,7 +271,7 @@ static cvarTable_t		gameCvarTable[] = {
         { &g_voteNames, "g_voteNames", "/map_restart/nextmap/map/g_gametype/kick/clientkick/g_doWarmup/timelimit/fraglimit/shuffle/", CVAR_ARCHIVE, 0, qfalse }, //clientkick g_doWarmup timelimit fraglimit
         { &g_voteBan, "g_voteBan", "0", CVAR_ARCHIVE, 0, qfalse },
         { &g_voteGametypes, "g_voteGametypes", "/0/1/3/4/5/6/7/8/9/10/11/12/", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse },
-        { &g_voteMaxTimelimit, "g_voteMaxTimelimit", "0", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse },
+        { &g_voteMaxTimelimit, "g_voteMaxTimelimit", "1000", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse },
         { &g_voteMinTimelimit, "g_voteMinTimelimit", "0", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse },
         { &g_voteMaxFraglimit, "g_voteMaxFraglimit", "0", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse },
         { &g_voteMinFraglimit, "g_voteMinFraglimit", "0", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse },
@@ -618,7 +618,7 @@ void G_UpdateCvars( void ) {
                                 if (cv->vmCvar == &g_instantgib || cv->vmCvar == &g_rockets  ||  cv->vmCvar == &g_elimination_allgametypes) {
                                     trap_Cvar_Set("sv_dorestart","1");
                                 }
-
+                                
                                 if ( cv->vmCvar == &g_voteNames ) {
                                     //Set vote flags
                                     int voteflags=0;
@@ -1891,8 +1891,8 @@ void CheckExitRules( void ) {
 		return;
 	}
 
-	if ( g_timelimit.integer && !level.warmupTime ) {
-		if ( level.time - level.startTime >= g_timelimit.integer*60000 ) {
+	if ( g_timelimit.integer > 0 && !level.warmupTime ) {
+		if ( (level.time - level.startTime)/60000 >= g_timelimit.integer ) {
 			trap_SendServerCommand( -1, "print \"Timelimit hit.\n\"");
 			LogExit( "Timelimit hit." );
 			return;
