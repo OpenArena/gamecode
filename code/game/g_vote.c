@@ -80,7 +80,7 @@ t_mappage getMappage(int page) {
 		if(token[0]==0 && page == 0) {
 			//First page empty
 			result.pagenumber = -1;
-                        trap_FS_FCloseFile(file);
+            trap_FS_FCloseFile(file);
 			return result;
 		}
 		//Skip the first pages
@@ -89,7 +89,7 @@ t_mappage getMappage(int page) {
 		}
 		if(!token || token[0]==0) {
 			//Page empty, return to first page
-                        trap_FS_FCloseFile(file);
+            trap_FS_FCloseFile(file);
 			return getMappage(0);
 		}
 		//There is an actual page:
@@ -98,7 +98,7 @@ t_mappage getMappage(int page) {
 			Q_strncpyz(result.mapname[i],token,MAX_MAPNAME);
 			token = COM_Parse(&pointer);
 		}
-                trap_FS_FCloseFile(file);
+        trap_FS_FCloseFile(file);
 		return result;
 	}
         //There is no votemaps.cfg file, find filelist of maps
@@ -304,6 +304,8 @@ t_customvote getCustomVote(char* votecommand) {
     memset(&buffer,0,sizeof(buffer));
 
     trap_FS_Read(&buffer,sizeof(buffer),file);
+	
+	trap_FS_FCloseFile(file);
 
     pointer = buffer;
 

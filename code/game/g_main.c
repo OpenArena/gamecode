@@ -197,6 +197,8 @@ vmCvar_t        g_maxNameChanges;
 
 vmCvar_t        g_timestamp_startgame;
 
+vmCvar_t		g_execute_gametype_script;
+
 // bk001129 - made static to avoid aliasing
 static cvarTable_t		gameCvarTable[] = {
 	// don't override the cheat state set by the system
@@ -396,7 +398,8 @@ static cvarTable_t		gameCvarTable[] = {
 	    { &g_minNameChangePeriod, "g_minNameChangePeriod", "10", 0, 0, qfalse},
         { &g_maxNameChanges, "g_maxNameChanges", "50", 0, 0, qfalse},
 
-        { &g_timestamp_startgame, "g_timestamp", "0001-01-01 00:00:00", CVAR_SERVERINFO, 0, qfalse}
+        { &g_timestamp_startgame, "g_timestamp", "0001-01-01 00:00:00", CVAR_SERVERINFO, 0, qfalse},
+		{ &g_execute_gametype_script, "g_egs", "0", CVAR_ROM, 0, qfalse }
         
 };
 
@@ -605,6 +608,11 @@ void G_UpdateCvars( void ) {
 
 			if ( cv->modificationCount != cv->vmCvar->modificationCount ) {
 				cv->modificationCount = cv->vmCvar->modificationCount;
+				
+				if(cv->vmCvar == &g_gametype) {
+					//gametype modified
+					trap_Cvar_Set("g_egs","1");
+				}
 
 				if ( cv->trackChange ) {
 					trap_SendServerCommand( -1, va("print \"Server: %s changed to %s\n\"", 
@@ -670,7 +678,7 @@ void G_UpdateCvars( void ) {
 /*
  Sets the cvar g_timestamp. Return 0 if success or !0 for errors.
  */
-int G_UpdateTimestamp( void ) {
+static int G_UpdateTimestamp( void ) {
     int ret = 0;
     qtime_t timestamp;
     ret = trap_RealTime(&timestamp);
@@ -679,6 +687,32 @@ int G_UpdateTimestamp( void ) {
     timestamp.tm_hour,timestamp.tm_min,timestamp.tm_sec));
 
     return ret;
+}
+
+/**
+ * Runs a script of it exists
+ * @param script The script that is to be exec'ed
+ * @return 0 if the script ran, 1 if it did not exist
+ */
+static int G_RunScript( const char* script ) {
+	fileHandle_t	file; 
+	char command[100];
+	trap_FS_FOpenFile(script,&file,FS_READ);
+    if(!file) {
+        return 1; //script does not exist
+	}
+    trap_FS_FCloseFile(file);
+	Q_snprintf(command,sizeof(command),"exec %s;\n",script);
+	trap_SendConsoleCommand( EXEC_APPEND, command );
+	return 0;
+}
+
+static int G_CheckGametypeScripts( void ) {
+	if(g_execute_gametype_script.integer) {
+		G_RunScript(va("gametype_%i.cfg",g_gametype.integer));
+		trap_Cvar_Set("g_egs","0"); //Don't run again on next restart
+	}
+	return 0;
 }
 
 /*
@@ -870,6 +904,8 @@ void G_InitGame( int levelTime, int randomSeed, int restart ) {
 
             trap_Cvar_Set("voteflags",va("%i",voteflags));
         }
+		
+		G_CheckGametypeScripts();
 }
 
 
