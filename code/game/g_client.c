@@ -1704,7 +1704,7 @@ void ClientSpawn(gentity_t *ent) {
 	int		flags;
 	int		savedPing;
 //	char	*savedAreaBits;
-	int		accuracy_hits, accuracy_shots;
+	int		accuracy_hits, accuracy_shots,vote;
         int		accuracy[WP_NUM_WEAPONS][2];
 	int		eventSequence;
 	char	userinfo[MAX_INFO_STRING];
@@ -1851,19 +1851,13 @@ void ClientSpawn(gentity_t *ent) {
 	saved = client->pers;
 	savedSess = client->sess;
 	savedPing = client->ps.ping;
+	vote = client->vote;
 //	savedAreaBits = client->areabits;
 	accuracy_hits = client->accuracy_hits;
 	accuracy_shots = client->accuracy_shots;
-        /*for( i = 0 ; i < WP_NUM_WEAPONS ; i++ ){
-		accuracy[i][0] = client->accuracy[i][0];
-		accuracy[i][1] = client->accuracy[i][1];
-	}*/
-        memcpy(accuracy,client->accuracy,sizeof(accuracy));
+    memcpy(accuracy,client->accuracy,sizeof(accuracy));
 
-	/*for ( i = 0 ; i < MAX_PERSISTANT ; i++ ) {
-		persistant[i] = client->ps.persistant[i];
-	}*/
-        memcpy(persistant,client->ps.persistant,MAX_PERSISTANT*sizeof(int));
+    memcpy(persistant,client->ps.persistant,MAX_PERSISTANT*sizeof(int));
 	eventSequence = client->ps.eventSequence;
 
 	Com_Memset (client, 0, sizeof(*client));
@@ -1871,6 +1865,7 @@ void ClientSpawn(gentity_t *ent) {
 	client->pers = saved;
 	client->sess = savedSess;
 	client->ps.ping = savedPing;
+	client->vote = vote;
 //	client->areabits = savedAreaBits;
 	client->accuracy_hits = accuracy_hits;
 	client->accuracy_shots = accuracy_shots;
