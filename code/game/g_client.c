@@ -1857,7 +1857,7 @@ void ClientSpawn(gentity_t *ent) {
 	accuracy_shots = client->accuracy_shots;
     memcpy(accuracy,client->accuracy,sizeof(accuracy));
 
-    memcpy(persistant,client->ps.persistant,MAX_PERSISTANT*sizeof(int));
+    memcpy(persistant,client->ps.persistant,sizeof(persistant));
 	eventSequence = client->ps.eventSequence;
 
 	Com_Memset (client, 0, sizeof(*client));
@@ -1869,16 +1869,11 @@ void ClientSpawn(gentity_t *ent) {
 //	client->areabits = savedAreaBits;
 	client->accuracy_hits = accuracy_hits;
 	client->accuracy_shots = accuracy_shots;
-        for( i = 0 ; i < WP_NUM_WEAPONS ; i++ ){
-		client->accuracy[i][0] = accuracy[i][0];
-		client->accuracy[i][1] = accuracy[i][1];
-	}
+	memcpy(client->accuracy,accuracy,sizeof(accuracy));
 
 	client->lastkilled_client = -1;
 
-	for ( i = 0 ; i < MAX_PERSISTANT ; i++ ) {
-		client->ps.persistant[i] = persistant[i];
-	}
+	memcpy(client->ps.persistant,persistant,sizeof(persistant));
 	client->ps.eventSequence = eventSequence;
 	// increment the spawncount so the client will detect the respawn
 	client->ps.persistant[PERS_SPAWN_COUNT]++;
