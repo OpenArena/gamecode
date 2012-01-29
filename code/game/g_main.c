@@ -696,14 +696,18 @@ static int G_UpdateTimestamp( void ) {
  */
 static int G_RunScript( const char* script ) {
 	fileHandle_t	file; 
-	char command[100];
-	trap_FS_FOpenFile(script,&file,FS_READ);
+	char buffer[100];
+	Q_snprintf(buffer,sizeof(buffer),"%s",script);
+	Q_StrToLower(buffer);
+	G_LogPrintf("Looking for: %s\n",buffer);
+	trap_FS_FOpenFile(buffer,&file,FS_READ);
     if(!file) {
         return 1; //script does not exist
 	}
     trap_FS_FCloseFile(file);
-	Q_snprintf(command,sizeof(command),"exec %s;\n",script);
-	trap_SendConsoleCommand( EXEC_APPEND, command );
+	Q_snprintf(buffer,sizeof(buffer),"exec %s;\n",script);
+	Q_StrToLower(buffer);
+	trap_SendConsoleCommand( EXEC_APPEND, buffer );
 	return 0;
 }
 
@@ -723,6 +727,7 @@ G_InitGame
 */
 void G_InitGame( int levelTime, int randomSeed, int restart ) {
 	int					i;
+	char	mapname[MAX_CVAR_VALUE_STRING];
 
         
         G_Printf ("------- Game Initialization -------\n");
@@ -906,6 +911,13 @@ void G_InitGame( int levelTime, int randomSeed, int restart ) {
         }
 		
 		G_CheckGametypeScripts();
+		
+		trap_Cvar_VariableStringBuffer("mapname",mapname,sizeof(mapname));
+		
+		if(G_RunScript(va("mapscripts/g_%s.cfg",mapname)))
+			G_RunScript("mapscripts/g_default.cfg");
+		if(G_RunScript(va("mapscripts/g_%s_%i.cfg",mapname,g_gametype.integer)))
+			G_RunScript(va("mapscripts/g_default_%i.cfg",g_gametype.integer) );
 }
 
 
@@ -2760,8 +2772,8 @@ Advances the non-player objects in the world
 void G_RunFrame( int levelTime ) {
 	int			i;
 	gentity_t	*ent;
-	int			msec;
-int start, end;
+	//int			msec;
+//int start, end;
 
 	// if we are waiting for the level to restart, do nothing
 	if ( level.restarted ) {
@@ -2771,7 +2783,7 @@ int start, end;
 	level.framenum++;
 	level.previousTime = level.time;
 	level.time = levelTime;
-	msec = level.time - level.previousTime;
+	//msec = level.time - level.previousTime;
 
 	// get any cvar changes
 	G_UpdateCvars();
@@ -2795,7 +2807,7 @@ int start, end;
 	//
 	// go through all allocated objects
 	//
-	start = trap_Milliseconds();
+	//start = trap_Milliseconds();
 	ent = &g_entities[0];
 	for (i=0 ; i<level.num_entities ; i++, ent++) {
 		if ( !ent->inuse ) {
@@ -2886,9 +2898,9 @@ int start, end;
 	G_UnTimeShiftAllClients( NULL );
 //unlagged - backward reconciliation #2
 
-end = trap_Milliseconds();
+//end = trap_Milliseconds();
 
-start = trap_Milliseconds();
+//start = trap_Milliseconds();
 	// perform final fixups on the players
 	ent = &g_entities[0];
 	for (i=0 ; i < level.maxclients ; i++, ent++ ) {
@@ -2896,7 +2908,7 @@ start = trap_Milliseconds();
 			ClientEndFrame( ent );
 		}
 	}
-end = trap_Milliseconds();
+//end = trap_Milliseconds();
 
 	// see if it is time to do a tournement restart
 	CheckTournament();

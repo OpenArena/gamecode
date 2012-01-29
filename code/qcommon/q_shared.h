@@ -690,6 +690,9 @@ typedef enum {
 	FS_SEEK_SET
 } fsOrigin_t;
 
+
+void Q_StrToLower(char *io_string);
+
 //=============================================
 
 int Q_isprint( int c );

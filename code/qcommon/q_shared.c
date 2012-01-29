@@ -670,6 +670,12 @@ void Parse3DMatrix (char **buf_p, int z, int y, int x, float *m) {
 	COM_MatchToken( buf_p, ")" );
 }
 
+void Q_StrToLower(char *io_string) {
+	int i;
+	for(i=0;i<strlen(io_string);i++) {
+		io_string[i] = tolower(io_string[i]);
+	}
+}
 
 /*
 ============================================================================
