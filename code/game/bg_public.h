@@ -174,8 +174,7 @@ typedef enum {
 #define PMF_SCOREBOARD		8192	// spectate as a scoreboard
 #define PMF_INVULEXPAND		16384	// invulnerability sphere set to full size
 //Elimination players cannot fire in warmup
-#define PMF_ELIMWARMUP		32768	//I hope this is more than 16 signed bits! (it's not but it just works anyway...)
-//Don't add anymore, I have already set the sign bit :-(
+#define PMF_ELIMWARMUP		32768	//Bit 15
 
 #define	PMF_ALL_TIMES	(PMF_TIME_WATERJUMP|PMF_TIME_LAND|PMF_TIME_KNOCKBACK)
 
@@ -232,12 +231,12 @@ void Pmove (pmove_t *pmove);
 typedef enum {
 	STAT_HEALTH,
 	STAT_HOLDABLE_ITEM,
-	STAT_PERSISTANT_POWERUP,
 	STAT_WEAPONS,					// 16 bit fields
 	STAT_ARMOR,				
 	STAT_DEAD_YAW,					// look this direction when dead (FIXME: get rid of?)
 	STAT_CLIENTS_READY,				// bit mask of clients wishing to exit the intermission (FIXME: configstring?)
-	STAT_MAX_HEALTH					// health / armor limit, changable by handicap
+	STAT_MAX_HEALTH,					// health / armor limit, changable by handicap
+	STAT_PERSISTANT_POWERUP
 } statIndex_t;
 
 
