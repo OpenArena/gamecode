@@ -411,6 +411,7 @@ void G_InitGame( int levelTime, int randomSeed, int restart );
 void G_RunFrame( int levelTime );
 void G_ShutdownGame( int restart );
 void CheckExitRules( void );
+static void WriteAccForAllClients( void );
 
 
 /*
@@ -930,6 +931,8 @@ G_ShutdownGame
 void G_ShutdownGame( int restart ) {
         G_Printf ("==== ShutdownGame ====\n");
 
+		WriteAccForAllClients();
+		
 	if ( level.logFile ) {
 		G_LogPrintf("ShutdownGame:\n" );
 		G_LogPrintf("------------------------------------------------------------\n" );
@@ -1343,6 +1346,16 @@ void SendScoreboardMessageToAllClients( void ) {
 		if ( level.clients[ i ].pers.connected == CON_CONNECTED ) {
 			DeathmatchScoreboardMessage( g_entities + i );
 			EliminationMessage( g_entities + i );
+		}
+	}
+}
+
+void WriteAccForAllClients( void ) {
+	int		i;
+
+	for ( i = 0 ; i < level.maxclients ; i++ ) {
+		if ( level.clients[ i ].pers.connected == CON_CONNECTED ) {
+			LogAcc(i);
 		}
 	}
 }

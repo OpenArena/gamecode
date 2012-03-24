@@ -922,6 +922,7 @@ void BotInterbreedEndMatch( void );
 // g_playerstore.c
 //
 
+void LogAcc(int clientNum);
 void PlayerStoreInit( void );
 void PlayerStore_store(char* guid, playerState_t ps);
 void PlayerStore_restore(char* guid, playerState_t *ps);

@@ -38,7 +38,27 @@ static playerstore_t playerstore[MAX_PLAYERS_STORED];
 
 static int nextAge;
 
-/*
+/**
+ * Logs all accuracy values for a given client. This should be called just before the game ends and then a client leaves.
+ * @param clientNum
+ */
+void LogAcc(int clientNum) {
+	char buffer[1024];
+	int i;
+	qboolean first = qtrue;
+	memset(buffer,0,sizeof(buffer));
+	Com_sprintf(buffer,sizeof(buffer),"Accuracy: %i ",clientNum);
+	for(i=0;i<WP_NUM_WEAPONS;++i) {
+		char *tmp = va("%sf%i\\%i\\h%i\\%i",first ? "" : "\\",i,level.clients[clientNum].accuracy[i][0],i,level.clients[clientNum].accuracy[i][1]);
+		if(strlen(tmp)+strlen(buffer)+1+1<sizeof(buffer)) /* +1 \n +1 \0 */
+			strcat(buffer,tmp);
+		first = qfalse;
+	}
+	strcat(buffer,"\n");
+	G_LogPrintf(buffer);
+}
+
+/**
  *Resets the player store. Should be called everytime game.qvm is loaded.
  */
 void PlayerStoreInit( void ) {
@@ -50,6 +70,7 @@ void PlayerStore_store(char* guid, playerState_t ps) {
     int place2store = -1;
     int lowestAge = 32000;
     int i;
+	LogAcc(ps.clientNum);
     if(strlen(guid)<32)
     {
         G_LogPrintf("Playerstore: Failed to store player. Invalid guid: %s\n",guid);
