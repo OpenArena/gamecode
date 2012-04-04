@@ -412,6 +412,7 @@ void G_RunFrame( int levelTime );
 void G_ShutdownGame( int restart );
 void CheckExitRules( void );
 static void WriteAccForAllClients( void );
+static void SendVictoryChallenge( void );
 
 
 /*
@@ -929,9 +930,7 @@ G_ShutdownGame
 =================
 */
 void G_ShutdownGame( int restart ) {
-        G_Printf ("==== ShutdownGame ====\n");
-
-		WriteAccForAllClients();
+	G_Printf ("==== ShutdownGame ====\n");
 		
 	if ( level.logFile ) {
 		G_LogPrintf("ShutdownGame:\n" );
@@ -1220,7 +1219,7 @@ void CalculateRanks( void ) {
 	level.numConnectedClients = 0;
 	level.numNonSpectatorClients = 0;
 	level.numPlayingClients = 0;
-        humanplayers = 0; // don't count bots
+	humanplayers = 0; // don't count bots
 	for ( i = 0; i < TEAM_NUM_TEAMS; i++ ) {
 		level.numteamVotingClients[i] = 0;
 	}
@@ -1320,6 +1319,10 @@ void CalculateRanks( void ) {
         
         if(g_humanplayers.integer != humanplayers) //Presume all spectators are humans!
             trap_Cvar_Set( "g_humanplayers", va("%i", humanplayers) );
+	if(humanplayers > level.max_humanplayers) {
+		G_LogPrintf( "Info: There has been at least %i humans now\n", humanplayers );
+	    level.max_humanplayers = humanplayers;
+	}
 }
 
 
@@ -1350,7 +1353,7 @@ void SendScoreboardMessageToAllClients( void ) {
 	}
 }
 
-void WriteAccForAllClients( void ) {
+static void WriteAccForAllClients( void ) {
 	int		i;
 
 	for ( i = 0 ; i < level.maxclients ; i++ ) {
@@ -1358,6 +1361,79 @@ void WriteAccForAllClients( void ) {
 			LogAcc(i);
 		}
 	}
+}
+
+static void SendVictoryChallenge( void ) {
+	int		i;
+	int		award = 0;
+	gclient_t		*cl;
+	
+	if(level.max_humanplayers < 2 || level.hadBots)
+		return;
+	
+	switch(g_gametype.integer) {
+		case GT_FFA:
+			award = GAMETYPES_FFA_WINS;
+			break;
+		case GT_TOURNAMENT:
+			award = GAMETYPES_TOURNEY_WINS;
+			break;
+		case GT_LMS:
+			award = GAMETYPES_LMS_WINS;
+			break;
+		case GT_CTF:
+			award = GAMETYPES_CTF_WINS;
+			break;
+		case GT_1FCTF:
+			award = GAMETYPES_1FCTF_WINS;
+			break;
+		case GT_OBELISK:
+			award = GAMETYPES_OVERLOAD_WINS;
+			break;
+		case GT_HARVESTER:
+			award = GAMETYPES_HARVESTER_WINS;
+			break;
+		case GT_ELIMINATION:
+			award = GAMETYPES_ELIMINATION_WINS;
+			break;
+		case GT_CTF_ELIMINATION:
+			award = GAMETYPES_CTF_ELIMINATION_WINS;
+			break;
+		case GT_DOUBLE_D:
+			award = GAMETYPES_DD_WINS;
+			break;
+		case GT_DOMINATION:
+			award = GAMETYPES_DOM_WINS;
+			break;
+		default:
+			return;
+	};
+//	for ( i = 0 ; i < level.maxclients ; i++ ) {
+//		if ( if ( level.clients[ i ].pers.connected == CON_CONNECTED ) {
+			if ( g_gametype.integer >= GT_TEAM && g_ffa_gt!=1) {
+				//Team games
+				for ( i = 0 ; i < level.maxclients ; i++ ) {
+					cl = &level.clients[i];
+
+					if ( cl->sess.sessionTeam == TEAM_SPECTATOR ) {
+						continue;
+					}
+					if ( cl->pers.connected != CON_CONNECTED ) {
+						continue;
+					}
+					
+					if( cl->sess.sessionTeam == TEAM_RED && level.teamScores[TEAM_RED] > level.teamScores[TEAM_BLUE] )
+						ChallengeMessage(g_entities + cl->ps.clientNum,award);
+					
+					if( cl->sess.sessionTeam == TEAM_BLUE && level.teamScores[TEAM_RED] < level.teamScores[TEAM_BLUE] )
+						ChallengeMessage(g_entities + cl->ps.clientNum,award);
+				}
+			} else {
+				//FFA games
+				ChallengeMessage(g_entities + level.sortedClients[0],award);
+			}
+//		}
+//	}
 }
 
 /*
@@ -1729,6 +1805,10 @@ void LogExit( const char *string ) {
 
 	level.intermissionQueued = level.time;
 
+	WriteAccForAllClients();
+	
+	SendVictoryChallenge();
+	
 	// this will keep the clients from playing any voice sounds
 	// that will get cut off when the queued intermission starts
 	trap_SetConfigstring( CS_INTERMISSION, "1" );

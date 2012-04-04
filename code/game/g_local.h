@@ -305,6 +305,7 @@ typedef struct {
     int         nameChangeTime;
     int         nameChanges;
     
+    qboolean    cannotWin; // Set to true if the players joins a leading team or the team with the most players
 } clientPersistant_t;
 
 //unlagged - backward reconciliation #1
@@ -555,6 +556,8 @@ typedef struct {
     int healthRedObelisk; //health in percent
     int healthBlueObelisk; //helth in percent
     qboolean MustSendObeliskHealth; //Health has changed
+	
+    int		max_humanplayers;
      
 } level_locals_t;
 
