@@ -26,6 +26,7 @@
 		<Challenge>
 			<Id>3</Id>
 			<DefineName>TOTALGAMES</DefineName>
+			<HideInMenu>1</HideInMenu>
 			<Name>Games</Name>
 			<Description>Number of games played with 2 or more human players</Description>
 		</Challenge>
@@ -223,6 +224,7 @@
 		<Description>Number of times different awards have been archived</Description>
 		<Challenge>
 			<Id>101</Id>
+			<AltDefineName>WEAPON_GAUNTLET_KILLS</AltDefineName>
 			<MenuOnly>1</MenuOnly>
 			<Name>Gauntlet</Name>
 			<Description>Number of kills by gauntlet</Description>
@@ -266,74 +268,74 @@
 		<Challenge>
 			<Id>1</Id>
 			<DefineName>QUAD_KILL</DefineName>
-			<Name>Defence</Name>
-			<Description>Defending objective</Description>
+			<Name>Quad kills</Name>
+			<Description>Kills while under the effect of Quad-power-up</Description>
 		</Challenge>	
 		<Challenge>
 			<Id>2</Id>
 			<DefineName>SPEED_KILL</DefineName>
-			<Name>Defence</Name>
-			<Description>Defending objective</Description>
+			<Name>2 fast 4 U</Name>
+			<Description>Kills while under the effect of the Speed-power-up</Description>
 		</Challenge>	
 		<Challenge>
 			<Id>3</Id>
 			<DefineName>FLIGHT_KILL</DefineName>
-			<Name>Defence</Name>
-			<Description>Defending objective</Description>
+			<Name>I'm flying</Name>
+			<Description>Kills while under the effect of the Flight-power-up</Description>
 		</Challenge>	
 		<Challenge>
 			<Id>4</Id>
 			<DefineName>INVIS_KILL</DefineName>
-			<Name>Defence</Name>
-			<Description>Defending objective</Description>
+			<Name>They didn't see me</Name>
+			<Description>Kills while under the effect of the Invisibility-power-up</Description>
 		</Challenge>	
 		<Challenge>
 			<Id>5</Id>
 			<DefineName>MULTI_KILL</DefineName>
-			<Name>Defence</Name>
-			<Description>Defending objective</Description>
+			<Name>Killing machine</Name>
+			<Description>Kills while under the effect of two or more power-ups</Description>
 		</Challenge>	
 		<Challenge>
 			<Id>6</Id>
-			<DefineName>DEFENCE</DefineName>
-			<Name>Defence</Name>
-			<Description>Defending objective</Description>
+			<DefineName>COUNTER_QUAD</DefineName>
+			<Name>Counter Quad</Name>
+			<Description>Killed a Quad holder</Description>
 		</Challenge>	
 		<Challenge>
 			<Id>7</Id>
-			<DefineName>DEFENCE</DefineName>
-			<Name>Defence</Name>
-			<Description>Defending objective</Description>
+			<DefineName>COUNTER_SPEED</DefineName>
+			<Name>Not fast enough</Name>
+			<Description>Killed a Speed holder</Description>
 		</Challenge>	
 		<Challenge>
 			<Id>8</Id>
-			<DefineName>DEFENCE</DefineName>
-			<Name>Defence</Name>
-			<Description>Defending objective</Description>
+			<DefineName>COUNTER_INVIS</DefineName>
+			<Name>You cannot hide</Name>
+			<Description>Killed an invisible enemy</Description>
 		</Challenge>	
 		<Challenge>
 			<Id>9</Id>
-			<DefineName>DEFENCE</DefineName>
-			<Name>Defence</Name>
-			<Description>Defending objective</Description>
+			<DefineName>COUNTER_FLIGHT</DefineName>
+			<Name>Fall deep</Name>
+			<Description>Killed a flying enemy</Description>
 		</Challenge>	
 		<Challenge>
 			<Id>10</Id>
-			<DefineName>DEFENCE</DefineName>
-			<Name>Defence</Name>
-			<Description>Defending objective</Description>
+			<DefineName>COUNTER_ENVIR</DefineName>
+			<Name>Counter battlesuit</Name>
+			<Description>Killed an enemy wearing battlesuit</Description>
 		</Challenge>	
 		<Challenge>
 			<Id>11</Id>
-			<DefineName>DEFENCE</DefineName>
-			<Name>Defence</Name>
-			<Description>Defending objective</Description>
+			<DefineName>COUNTER_REGEN</DefineName>
+			<Name>Counter regen</Name>
+			<Description>Killed an enemy holding the regeneration power-up</Description>
 		</Challenge>	
 		<Challenge>
 			<Id>12</Id>
-			<DefineName>DEFENCE</DefineName>
-			<Name>Defence</Name>
-			<Description>Defending objective</Description>
+			<DefineName>COUNTER_MULTI</DefineName>
+			<Name>Counter multi</Name>
+			<Description>Killed an enemy holding multiple power-ups</Description>
 		</Challenge>	
 	</Group>
 </Challenges>

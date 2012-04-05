@@ -931,7 +931,7 @@ G_ShutdownGame
 */
 void G_ShutdownGame( int restart ) {
 	G_Printf ("==== ShutdownGame ====\n");
-		
+
 	if ( level.logFile ) {
 		G_LogPrintf("ShutdownGame:\n" );
 		G_LogPrintf("------------------------------------------------------------\n" );

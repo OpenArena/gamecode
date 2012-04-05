@@ -52,11 +52,7 @@ typedef struct {
 	menubitmap_s	framel;
 	menubitmap_s	framer;
 
-	menutext_s	general;
-	menutext_s	gametypes;
-	menutext_s      weapons;
-        menutext_s      awards;
-        menutext_s      powerups;
+	menutext_s headlines[5];
 
         int             numberOfEntries;
         menutext_s	entry[MAX_ENTRIES];
@@ -176,55 +172,55 @@ static void UI_Challenges_Init( void ) {
 	challenges.framer.width				= 256;
 	challenges.framer.height			= 334;
 
-        challenges.general.generic.type		= MTYPE_PTEXT;
-	challenges.general.generic.flags		= QMF_RIGHT_JUSTIFY|QMF_PULSEIFFOCUS;
-	challenges.general.generic.id			= ID_GENERAL;
-	challenges.general.generic.callback	= UI_Challenges_Event;
-	challenges.general.generic.x			= 216;
-	challenges.general.generic.y			= 240 - 1 * PROP_HEIGHT;
-	challenges.general.string				= "GENERAL";
-	challenges.general.style				= UI_RIGHT;
-	challenges.general.color				= color_red;
+        challenges.headlines[0].generic.type		= MTYPE_PTEXT;
+	challenges.headlines[0].generic.flags		= QMF_RIGHT_JUSTIFY|QMF_PULSEIFFOCUS;
+	challenges.headlines[0].generic.id			= ID_GENERAL;
+	challenges.headlines[0].generic.callback	= UI_Challenges_Event;
+	challenges.headlines[0].generic.x			= 216;
+	challenges.headlines[0].generic.y			= 240 - 2 * PROP_HEIGHT;
+	challenges.headlines[0].string				= "GENERAL";
+	challenges.headlines[0].style				= UI_RIGHT;
+	challenges.headlines[0].color				= color_red;
 
-	/*challenges.gametypes.generic.type			= MTYPE_PTEXT;
-	challenges.gametypes.generic.flags		= QMF_RIGHT_JUSTIFY|QMF_PULSEIFFOCUS;
-	challenges.gametypes.generic.id			= ID_GAMETYPES;
-	challenges.gametypes.generic.callback		= UI_Challenges_Event;
-	challenges.gametypes.generic.x			= 216;
-	challenges.gametypes.generic.y			= 240 - PROP_HEIGHT;
-	challenges.gametypes.string				= "GAMETYPES";
-	challenges.gametypes.style				= UI_RIGHT;
-	challenges.gametypes.color				= color_red;*/
+	challenges.headlines[1].generic.type			= MTYPE_PTEXT;
+	challenges.headlines[1].generic.flags		= QMF_RIGHT_JUSTIFY|QMF_PULSEIFFOCUS;
+	challenges.headlines[1].generic.id			= ID_GAMETYPES;
+	challenges.headlines[1].generic.callback		= UI_Challenges_Event;
+	challenges.headlines[1].generic.x			= 216;
+	challenges.headlines[1].generic.y			= 240 - PROP_HEIGHT;
+	challenges.headlines[1].string				= "GAMETYPES";
+	challenges.headlines[1].style				= UI_RIGHT;
+	challenges.headlines[1].color				= color_red;
 
-	challenges.weapons.generic.type			= MTYPE_PTEXT;
-	challenges.weapons.generic.flags			= QMF_RIGHT_JUSTIFY|QMF_PULSEIFFOCUS;
-	challenges.weapons.generic.id				= ID_WEAPONS;
-	challenges.weapons.generic.callback		= UI_Challenges_Event;
-	challenges.weapons.generic.x				= 216;
-	challenges.weapons.generic.y				= 240;
-	challenges.weapons.string					= "WEAPONS";
-	challenges.weapons.style					= UI_RIGHT;
-	challenges.weapons.color					= color_red;
+	challenges.headlines[2].generic.type			= MTYPE_PTEXT;
+	challenges.headlines[2].generic.flags			= QMF_RIGHT_JUSTIFY|QMF_PULSEIFFOCUS;
+	challenges.headlines[2].generic.id				= ID_WEAPONS;
+	challenges.headlines[2].generic.callback		= UI_Challenges_Event;
+	challenges.headlines[2].generic.x				= 216;
+	challenges.headlines[2].generic.y				= 240;
+	challenges.headlines[2].string					= "WEAPONS";
+	challenges.headlines[2].style					= UI_RIGHT;
+	challenges.headlines[2].color					= color_red;
 
-	challenges.awards.generic.type			= MTYPE_PTEXT;
-	challenges.awards.generic.flags		= QMF_RIGHT_JUSTIFY|QMF_PULSEIFFOCUS;
-	challenges.awards.generic.id			= ID_AWARDS;
-	challenges.awards.generic.callback		= UI_Challenges_Event;
-	challenges.awards.generic.x			= 216;
-	challenges.awards.generic.y			= 240 + PROP_HEIGHT;
-	challenges.awards.string				= "AWARDS";
-	challenges.awards.style				= UI_RIGHT;
-	challenges.awards.color				= color_red;
+	challenges.headlines[3].generic.type			= MTYPE_PTEXT;
+	challenges.headlines[3].generic.flags		= QMF_RIGHT_JUSTIFY|QMF_PULSEIFFOCUS;
+	challenges.headlines[3].generic.id			= ID_AWARDS;
+	challenges.headlines[3].generic.callback		= UI_Challenges_Event;
+	challenges.headlines[3].generic.x			= 216;
+	challenges.headlines[3].generic.y			= 240 + PROP_HEIGHT;
+	challenges.headlines[3].string				= "AWARDS";
+	challenges.headlines[3].style				= UI_RIGHT;
+	challenges.headlines[3].color				= color_red;
 
-        challenges.powerups.generic.type			= MTYPE_PTEXT;
-	challenges.powerups.generic.flags		= QMF_RIGHT_JUSTIFY|QMF_PULSEIFFOCUS;
-	challenges.powerups.generic.id			= ID_POWERUPS;
-	challenges.powerups.generic.callback		= UI_Challenges_Event;
-	challenges.powerups.generic.x			= 216;
-	challenges.powerups.generic.y			= 240 + PROP_HEIGHT*2;
-	challenges.powerups.string				= "POWERUPS";
-	challenges.powerups.style				= UI_RIGHT;
-	challenges.powerups.color				= color_red;
+        challenges.headlines[4].generic.type			= MTYPE_PTEXT;
+	challenges.headlines[4].generic.flags		= QMF_RIGHT_JUSTIFY|QMF_PULSEIFFOCUS;
+	challenges.headlines[4].generic.id			= ID_POWERUPS;
+	challenges.headlines[4].generic.callback		= UI_Challenges_Event;
+	challenges.headlines[4].generic.x			= 216;
+	challenges.headlines[4].generic.y			= 240 + PROP_HEIGHT*2;
+	challenges.headlines[4].string				= "POWERUPS";
+	challenges.headlines[4].style				= UI_RIGHT;
+	challenges.headlines[4].color				= color_red;
 
         challenges.notice.generic.type          = MTYPE_TEXT;
         challenges.notice.generic.flags	= QMF_CENTER_JUSTIFY|QMF_INACTIVE|QMF_SMALLFONT;
@@ -249,113 +245,141 @@ static void UI_Challenges_Init( void ) {
 	challenges.back.height				= 64;
 	challenges.back.focuspic			= ART_BACK1;
 
-        switch(mainSelection)
-        {
-            case 0:
-                //generel
-                challenges.entry[0].string          = "Total kills:";
-                challenges.entry[1].string          = "Total deaths:";
-                //challenges.entry[2].string          = "Total games:";
-                challenges.numberOfEntries = 2;
-                challenges.entryInt[0]              = getChallenge(GENERAL_TOTALKILLS);
-                challenges.entryInt[1]              = getChallenge(GENERAL_TOTALDEATHS);
-                //challenges.entryInt[2]              = getChallenge(GENERAL_TOTALGAMES);
-                challenges.general.generic.flags		= QMF_RIGHT_JUSTIFY|QMF_INACTIVE;
-                break;
-            case 1:
-                //gametypes
-                challenges.numberOfEntries = 0;
-                challenges.gametypes.generic.flags     = QMF_RIGHT_JUSTIFY|QMF_INACTIVE;
-                break;
-            case 2:
-                //weapons
-                challenges.entry[0].string          = "Gauntlet kills:";
-                challenges.entry[1].string          = "Machinegun kills:";
-                challenges.entry[2].string          = "Shotgun kills:";
-                challenges.entry[3].string          = "Granade kills:";
-                challenges.entry[4].string          = "Rocket kills:";
-                challenges.entry[5].string          = "Lightning kills:";
-                challenges.entry[6].string          = "Plasmagun kills:";
-                challenges.entry[7].string          = "Railgun kills:";
-                challenges.entry[8].string          = "Instant rail kills:";
-                challenges.entry[9].string          = "BFG kills:";
-                challenges.entry[10].string          = "Grapple kills:";
-                challenges.entry[11].string          = "Chaingun kills:";
-                challenges.entry[12].string          = "Nailgun kills:";
-                challenges.entry[13].string          = "Proxy mine kills:";
-                challenges.entry[14].string          = "Telefrags:";
-                challenges.entry[15].string          = "Push kills:";
-                challenges.entry[16].string          = "Crush kills:";
-                challenges.numberOfEntries = 17;
-                challenges.entryInt[0]              = getChallenge(WEAPON_GAUNTLET_KILLS);
-                challenges.entryInt[1]              = getChallenge(WEAPON_MACHINEGUN_KILLS);
-                challenges.entryInt[2]              = getChallenge(WEAPON_SHOTGUN_KILLS);
-                challenges.entryInt[3]              = getChallenge(WEAPON_GRANADE_KILLS);
-                challenges.entryInt[4]              = getChallenge(WEAPON_ROCKET_KILLS);
-                challenges.entryInt[5]              = getChallenge(WEAPON_LIGHTNING_KILLS);
-                challenges.entryInt[6]              = getChallenge(WEAPON_PLASMA_KILLS);
-                challenges.entryInt[7]              = getChallenge(WEAPON_RAIL_KILLS);
-                challenges.entryInt[8]              = getChallenge(WEAPON_INSTANT_RAIL_KILLS);
-                challenges.entryInt[9]              = getChallenge(WEAPON_BFG_KILLS);
-                challenges.entryInt[10]              = getChallenge(WEAPON_GRAPPLE_KILLS);
-                challenges.entryInt[11]              = getChallenge(WEAPON_CHAINGUN_KILLS);
-                challenges.entryInt[12]              = getChallenge(WEAPON_NAILGUN_KILLS);
-                challenges.entryInt[13]              = getChallenge(WEAPON_MINE_KILLS);
-                challenges.entryInt[14]              = getChallenge(WEAPON_TELEFRAG_KILLS);
-                challenges.entryInt[15]              = getChallenge(WEAPON_PUSH_KILLS);
-                challenges.entryInt[16]              = getChallenge(WEAPON_CRUSH_KILLS);
-                challenges.weapons.generic.flags     = QMF_RIGHT_JUSTIFY|QMF_INACTIVE;
-                break;
-            case 3:
-                //awards
-                challenges.entry[0].string          = "Gauntlet";
-                challenges.entry[1].string          = "Impressive";
-                challenges.entry[2].string          = "Excellent";
-                challenges.entry[3].string          = "Capture";
-                challenges.entry[4].string          = "Assist";
-                challenges.entry[5].string          = "Defend";
-                challenges.numberOfEntries = 6;
-                challenges.entryInt[0]              = getChallenge(WEAPON_GAUNTLET_KILLS);
-                challenges.entryInt[1]              = getChallenge(AWARD_IMPRESSIVE);
-                challenges.entryInt[2]              = getChallenge(AWARD_EXCELLENT);
-                challenges.entryInt[3]              = getChallenge(AWARD_CAPTURE);
-                challenges.entryInt[4]              = getChallenge(AWARD_ASSIST);
-                challenges.entryInt[5]              = getChallenge(AWARD_DEFENCE);
-                challenges.awards.generic.flags     = QMF_RIGHT_JUSTIFY|QMF_INACTIVE;
-                break;
-            case 4:
-                challenges.entry[0].string          = "Quad kills";
-                challenges.entry[1].string          = "2 fast 4 U";
-                challenges.entry[2].string          = "They didn't see me";
-                challenges.entry[3].string          = "I'm flying";
-                challenges.entry[4].string          = "Killing machine";
-                challenges.entry[5].string          = "Counter Quad";
-                challenges.entry[6].string          = "Not fast enough";
-                challenges.entry[7].string          = "You cannot hide";
-                challenges.entry[8].string          = "Fall deep";
-                challenges.entry[9].string          = "Counter battlesuit";
-                challenges.entry[10].string          = "Counter regen";
-                challenges.entry[11].string          = "Counter multi";
-                challenges.numberOfEntries  = 12;
+	challenges.headlines[mainSelection].generic.flags     = QMF_RIGHT_JUSTIFY|QMF_INACTIVE;
+	
+        switch( mainSelection ) {
 
-                challenges.entryInt[0]              = getChallenge(POWERUP_QUAD_KILL);
-                challenges.entryInt[1]              = getChallenge(POWERUP_SPEED_KILL);
-                challenges.entryInt[2]              = getChallenge(POWERUP_INVIS_KILL);
-                challenges.entryInt[3]              = getChallenge(POWERUP_FLIGHT_KILL);
-                challenges.entryInt[4]              = getChallenge(POWERUP_MULTI_KILL);
-                challenges.entryInt[5]              = getChallenge(POWERUP_COUNTER_QUAD);
-                challenges.entryInt[6]              = getChallenge(POWERUP_COUNTER_SPEED);
-                challenges.entryInt[7]              = getChallenge(POWERUP_COUNTER_INVIS);
-                challenges.entryInt[8]              = getChallenge(POWERUP_COUNTER_FLIGHT);
-                challenges.entryInt[9]              = getChallenge(POWERUP_COUNTER_ENVIR);
-                challenges.entryInt[10]              = getChallenge(POWERUP_COUNTER_REGEN);
-                challenges.entryInt[11]              = getChallenge(POWERUP_COUNTER_MULTI);
-                challenges.powerups.generic.flags     = QMF_RIGHT_JUSTIFY|QMF_INACTIVE;
-                break;
+case 0: 
+//Overall statistics
+challenges.entry[0].string = "Kills:";
+challenges.entryInt[0] = getChallenge(GENERAL_TOTALKILLS);
+challenges.entry[1].string = "Deaths:";
+challenges.entryInt[1] = getChallenge(GENERAL_TOTALDEATHS);
 
-            default:
-                challenges.numberOfEntries = 0;
-        };
+challenges.numberOfEntries = 2;
+break;
+
+case 1: 
+//Gametype wins
+challenges.entry[0].string = "Deathmatch:";
+challenges.entryInt[0] = getChallenge(GAMETYPES_FFA_WINS);
+challenges.entry[1].string = "Tournament:";
+challenges.entryInt[1] = getChallenge(GAMETYPES_TOURNEY_WINS);
+challenges.entry[2].string = "Team Deathmatch:";
+challenges.entryInt[2] = getChallenge(GAMETYPES_TDM_WINS);
+challenges.entry[3].string = "Capture the flag:";
+challenges.entryInt[3] = getChallenge(GAMETYPES_CTF_WINS);
+challenges.entry[4].string = "One flag capture:";
+challenges.entryInt[4] = getChallenge(GAMETYPES_1FCTF_WINS);
+challenges.entry[5].string = "Obelisk:";
+challenges.entryInt[5] = getChallenge(GAMETYPES_OVERLOAD_WINS);
+challenges.entry[6].string = "Harvester:";
+challenges.entryInt[6] = getChallenge(GAMETYPES_HARVESTER_WINS);
+challenges.entry[7].string = "Elimination:";
+challenges.entryInt[7] = getChallenge(GAMETYPES_ELIMINATION_WINS);
+challenges.entry[8].string = "CTF Elimination:";
+challenges.entryInt[8] = getChallenge(GAMETYPES_CTF_ELIMINATION_WINS);
+challenges.entry[9].string = "Last man standing:";
+challenges.entryInt[9] = getChallenge(GAMETYPES_LMS_WINS);
+challenges.entry[10].string = "Double Domination:";
+challenges.entryInt[10] = getChallenge(GAMETYPES_DD_WINS);
+challenges.entry[11].string = "Domination:";
+challenges.entryInt[11] = getChallenge(GAMETYPES_DOM_WINS);
+
+challenges.numberOfEntries = 12;
+break;
+
+case 2: 
+//Weapon kills
+challenges.entry[0].string = "Gauntlet:";
+challenges.entryInt[0] = getChallenge(WEAPON_GAUNTLET_KILLS);
+challenges.entry[1].string = "Machinegun:";
+challenges.entryInt[1] = getChallenge(WEAPON_MACHINEGUN_KILLS);
+challenges.entry[2].string = "Shotgun:";
+challenges.entryInt[2] = getChallenge(WEAPON_SHOTGUN_KILLS);
+challenges.entry[3].string = "Granade launcher:";
+challenges.entryInt[3] = getChallenge(WEAPON_GRANADE_KILLS);
+challenges.entry[4].string = "Rocket launcher:";
+challenges.entryInt[4] = getChallenge(WEAPON_ROCKET_KILLS);
+challenges.entry[5].string = "Lightning gun:";
+challenges.entryInt[5] = getChallenge(WEAPON_LIGHTNING_KILLS);
+challenges.entry[6].string = "Plasma gun:";
+challenges.entryInt[6] = getChallenge(WEAPON_PLASMA_KILLS);
+challenges.entry[7].string = "Railgun:";
+challenges.entryInt[7] = getChallenge(WEAPON_RAIL_KILLS);
+challenges.entry[8].string = "BFG:";
+challenges.entryInt[8] = getChallenge(WEAPON_BFG_KILLS);
+challenges.entry[9].string = "Grapple:";
+challenges.entryInt[9] = getChallenge(WEAPON_GRAPPLE_KILLS);
+challenges.entry[10].string = "Chaingun:";
+challenges.entryInt[10] = getChallenge(WEAPON_CHAINGUN_KILLS);
+challenges.entry[11].string = "Nailgun:";
+challenges.entryInt[11] = getChallenge(WEAPON_NAILGUN_KILLS);
+challenges.entry[12].string = "Mines:";
+challenges.entryInt[12] = getChallenge(WEAPON_MINE_KILLS);
+challenges.entry[13].string = "Push kills:";
+challenges.entryInt[13] = getChallenge(WEAPON_PUSH_KILLS);
+challenges.entry[14].string = "Instant rail:";
+challenges.entryInt[14] = getChallenge(WEAPON_INSTANT_RAIL_KILLS);
+challenges.entry[15].string = "Telefrags:";
+challenges.entryInt[15] = getChallenge(WEAPON_TELEFRAG_KILLS);
+challenges.entry[16].string = "Crushing:";
+challenges.entryInt[16] = getChallenge(WEAPON_CRUSH_KILLS);
+
+challenges.numberOfEntries = 17;
+break;
+
+case 3: 
+//Awards
+challenges.entry[0].string = "Gauntlet:";
+challenges.entryInt[0] = getChallenge(WEAPON_GAUNTLET_KILLS);
+challenges.entry[1].string = "Impressive:";
+challenges.entryInt[1] = getChallenge(AWARD_IMPRESSIVE);
+challenges.entry[2].string = "Excelent:";
+challenges.entryInt[2] = getChallenge(AWARD_EXCELLENT);
+challenges.entry[3].string = "Capture:";
+challenges.entryInt[3] = getChallenge(AWARD_CAPTURE);
+challenges.entry[4].string = "Assist:";
+challenges.entryInt[4] = getChallenge(AWARD_ASSIST);
+challenges.entry[5].string = "Defence:";
+challenges.entryInt[5] = getChallenge(AWARD_DEFENCE);
+
+challenges.numberOfEntries = 6;
+break;
+
+case 4: 
+//Power-ups
+challenges.entry[0].string = "Quad kills:";
+challenges.entryInt[0] = getChallenge(POWERUP_QUAD_KILL);
+challenges.entry[1].string = "2 fast 4 U:";
+challenges.entryInt[1] = getChallenge(POWERUP_SPEED_KILL);
+challenges.entry[2].string = "I'm flying:";
+challenges.entryInt[2] = getChallenge(POWERUP_FLIGHT_KILL);
+challenges.entry[3].string = "They didn't see me:";
+challenges.entryInt[3] = getChallenge(POWERUP_INVIS_KILL);
+challenges.entry[4].string = "Killing machine:";
+challenges.entryInt[4] = getChallenge(POWERUP_MULTI_KILL);
+challenges.entry[5].string = "Counter Quad:";
+challenges.entryInt[5] = getChallenge(POWERUP_COUNTER_QUAD);
+challenges.entry[6].string = "Not fast enough:";
+challenges.entryInt[6] = getChallenge(POWERUP_COUNTER_SPEED);
+challenges.entry[7].string = "You cannot hide:";
+challenges.entryInt[7] = getChallenge(POWERUP_COUNTER_INVIS);
+challenges.entry[8].string = "Fall deep:";
+challenges.entryInt[8] = getChallenge(POWERUP_COUNTER_FLIGHT);
+challenges.entry[9].string = "Counter battlesuit:";
+challenges.entryInt[9] = getChallenge(POWERUP_COUNTER_ENVIR);
+challenges.entry[10].string = "Counter regen:";
+challenges.entryInt[10] = getChallenge(POWERUP_COUNTER_REGEN);
+challenges.entry[11].string = "Counter multi:";
+challenges.entryInt[11] = getChallenge(POWERUP_COUNTER_MULTI);
+
+challenges.numberOfEntries = 12;
+break;
+
+default:
+challenges.numberOfEntries = 0;
+};
 
         //Now write the challenges
         y = 240 - (int)((((float)challenges.numberOfEntries)/2.0) * (float)(BIGCHAR_HEIGHT + 2));
@@ -381,11 +405,11 @@ static void UI_Challenges_Init( void ) {
 	Menu_AddItem( &challenges.menu, ( void * ) &challenges.framel );
 	Menu_AddItem( &challenges.menu, ( void * ) &challenges.framer );
 
-        Menu_AddItem( &challenges.menu, ( void * ) &challenges.general );
-        //Menu_AddItem( &challenges.menu, ( void * ) &challenges.gametypes );
-        Menu_AddItem( &challenges.menu, ( void * ) &challenges.weapons );
-        Menu_AddItem( &challenges.menu, ( void * ) &challenges.awards );
-        Menu_AddItem( &challenges.menu, ( void * ) &challenges.powerups );
+        Menu_AddItem( &challenges.menu, ( void * ) &challenges.headlines[0] );
+        Menu_AddItem( &challenges.menu, ( void * ) &challenges.headlines[1] );
+        Menu_AddItem( &challenges.menu, ( void * ) &challenges.headlines[2] );
+        Menu_AddItem( &challenges.menu, ( void * ) &challenges.headlines[3] );
+        Menu_AddItem( &challenges.menu, ( void * ) &challenges.headlines[4] );
 
         for(i=0;i<MAX_ENTRIES && i<challenges.numberOfEntries;i++)
         {
