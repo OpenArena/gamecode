@@ -55,14 +55,6 @@ void SP_info_player_start(gentity_t *ent) {
 	SP_info_player_deathmatch( ent );
 }
 
-//Three for Double_D
-void SP_info_player_dd(gentity_t *ent) {
-}
-void SP_info_player_dd_red(gentity_t *ent) {
-}
-void SP_info_player_dd_blue(gentity_t *ent) {
-}
-
 //One for Standard Domination, not really a player spawn point
 void SP_domination_point(gentity_t *ent) {
 }
@@ -1788,7 +1780,10 @@ void ClientSpawn(gentity_t *ent) {
 	} else if (g_gametype.integer == GT_DOUBLE_D) {
 		//Double Domination uses special spawn points:
 		spawnPoint = SelectDoubleDominationSpawnPoint (client->sess.sessionTeam, spawn_origin, spawn_angles);
-	} else if (g_gametype.integer >= GT_CTF && g_ffa_gt==0 && g_gametype.integer!= GT_DOMINATION) {
+	} else if (g_gametype.integer == GT_DOMINATION) {
+		//Domination uses special spawn points:
+		spawnPoint = SelectDominationSpawnPoint (client->sess.sessionTeam, spawn_origin, spawn_angles);
+	} else if (g_gametype.integer >= GT_CTF && g_ffa_gt==0 ) {
 		// all base oriented team games use the CTF spawn points
 		spawnPoint = SelectCTFSpawnPoint ( 
 						client->sess.sessionTeam, 

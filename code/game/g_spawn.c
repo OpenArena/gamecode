@@ -129,10 +129,6 @@ typedef struct {
 void SP_info_player_start (gentity_t *ent);
 void SP_info_player_deathmatch (gentity_t *ent);
 void SP_info_player_intermission (gentity_t *ent);
-//For Double Domination:
-void SP_info_player_dd (gentity_t *ent);
-void SP_info_player_dd_red (gentity_t *ent);
-void SP_info_player_dd_blue (gentity_t *ent);
 //standard domination:
 void SP_domination_point ( gentity_t *ent);
 
@@ -206,11 +202,13 @@ spawn_t	spawns[] = {
 	{"info_player_deathmatch", SP_info_player_deathmatch},
 	{"info_player_intermission", SP_info_player_intermission},
 //Double Domination player spawn:
-	{"info_player_dd", SP_info_player_dd},
-        {"info_player_dd_red", SP_info_player_dd_red},
-        {"info_player_dd_blue", SP_info_player_dd_blue},
+	{"info_player_dd", SP_info_player_deathmatch},
+	{"info_player_dd_red", SP_info_player_deathmatch},
+	{"info_player_dd_blue", SP_info_player_deathmatch},
 //Standard Domination point spawn:
 	{"domination_point", SP_domination_point},
+	{"info_player_dom_red", SP_info_player_deathmatch},
+	{"info_player_dom_blue", SP_info_player_deathmatch},
 
 
 	{"info_null", SP_info_null},

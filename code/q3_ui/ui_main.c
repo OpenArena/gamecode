@@ -328,3 +328,4 @@ void UI_SetDefaultCvar(const char* cvar, const char* value) {
     if(strlen(UI_Cvar_VariableString(cvar)) == 0)
         trap_Cvar_Set(cvar,value);
 }
+

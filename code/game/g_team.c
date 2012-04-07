@@ -1626,6 +1626,39 @@ gentity_t *SelectRandomTeamDDSpawnPoint( team_t team ) {
 	return spots[ selection ];
 }
 
+gentity_t *SelectRandomTeamDomSpawnPoint( team_t team ) {
+	gentity_t	*spot;
+	int			count;
+	int			selection;
+	gentity_t	*spots[MAX_TEAM_SPAWN_POINTS];
+	char		*classname;
+
+	if(team == TEAM_RED)
+		classname = "info_player_dom_red";
+	else
+		classname = "info_player_dom_blue";
+
+	count = 0;
+
+	spot = NULL;
+
+	while ((spot = G_Find (spot, FOFS(classname), classname)) != NULL) {
+		if ( SpotWouldTelefrag( spot ) ) {
+			continue;
+		}
+		spots[ count ] = spot;
+		if (++count == MAX_TEAM_SPAWN_POINTS)
+			break;
+	}
+
+	if ( !count ) {	// no spots that won't telefrag
+		return G_Find( NULL, FOFS(classname), classname);
+	}
+
+	selection = rand() % count;
+	return spots[ selection ];
+}
+
 
 /*
 ===========
@@ -1664,6 +1697,28 @@ gentity_t *SelectDoubleDominationSpawnPoint ( team_t team, vec3_t origin, vec3_t
             spot = SelectRandomDDSpawnPoint ( );
         }
         
+	if (!spot) {
+		return SelectSpawnPoint( vec3_origin, origin, angles );
+	}
+
+	VectorCopy (spot->s.origin, origin);
+	origin[2] += 9;
+	VectorCopy (spot->s.angles, angles);
+
+	return spot;
+}
+
+/*
+===========
+SelectDominationSpawnPoint
+
+============
+*/
+gentity_t *SelectDominationSpawnPoint ( team_t team, vec3_t origin, vec3_t angles ) {
+	gentity_t	*spot;
+
+	spot = SelectRandomTeamDomSpawnPoint( team );
+
 	if (!spot) {
 		return SelectSpawnPoint( vec3_origin, origin, angles );
 	}
