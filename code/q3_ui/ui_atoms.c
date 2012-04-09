@@ -1165,6 +1165,10 @@ void UI_DrawHandlePic( float x, float y, float w, float h, qhandle_t hShader ) {
 	trap_R_DrawStretchPic( x, y, w, h, s0, t0, s1, t1, hShader );
 }
 
+void UI_DrawBackgroundPic( qhandle_t hShader ) {
+	trap_R_DrawStretchPic( 0.0, 0.0, uis.glconfig.vidWidth, uis.glconfig.vidHeight, 0, 0, 1, 1, hShader );
+}
+
 /*
 ================
 UI_FillRect
@@ -1231,10 +1235,10 @@ void UI_Refresh( int realtime )
 		{
 			// draw the background
 			if( uis.activemenu->showlogo ) {
-				UI_DrawHandlePic( 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, uis.menuBackShader );
+				UI_DrawBackgroundPic( uis.menuBackShader );
 			}
 			else {
-				UI_DrawHandlePic( 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, uis.menuBackNoLogoShader );
+				UI_DrawBackgroundPic( uis.menuBackNoLogoShader );
 			}
 		}
 
