@@ -778,7 +778,7 @@ void G_InitGame( int levelTime, int randomSeed, int restart ) {
 
 			G_LogPrintf("------------------------------------------------------------\n" );
 			G_LogPrintf("InitGame: %s\n", serverinfo );
-                        G_LogPrintf("Info: ServerInfo length: %d of %d\n", strlen(serverinfo), MAX_INFO_STRING );
+                        G_LogPrintf("Info: ServerInfo length: %ld of %d\n", strlen(serverinfo), MAX_INFO_STRING );
 		}
 	} else {
 		G_Printf( "Not logging to disk.\n" );

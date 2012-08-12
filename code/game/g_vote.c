@@ -29,7 +29,7 @@ allowedVote
 ==================
  */
 #define MAX_VOTENAME_LENGTH 14 //currently the longest string is "/map_restart/\0" (14 chars)
-int allowedVote(char *commandStr) {
+int allowedVote(const char *commandStr) {
     char tempStr[MAX_VOTENAME_LENGTH];
     int length;
     char voteNames[MAX_CVAR_VALUE_STRING];
@@ -126,7 +126,7 @@ allowedMap
 ==================
  */
 
-int allowedMap(char *mapname) {
+int allowedMap(const char *mapname) {
     int length;
     fileHandle_t	file;           //To check that the map actually exists.
     char                buffer[MAX_MAPS_TEXT];
@@ -173,7 +173,7 @@ allowedGametype
 ==================
  */
 #define MAX_GAMETYPENAME_LENGTH 5 //currently the longest string is "/12/\0" (5 chars)
-int allowedGametype(char *gametypeStr) {
+int allowedGametype(const char *gametypeStr) {
     char tempStr[MAX_GAMETYPENAME_LENGTH];
     int length;
     char voteGametypes[MAX_CVAR_VALUE_STRING];

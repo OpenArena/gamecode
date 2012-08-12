@@ -223,7 +223,7 @@ YourTeamMessage
 ==================
 */
 
-void YourTeamMessage( gentity_t *ent) {
+void YourTeamMessage( const gentity_t *ent) {
     int team = level.clients[ent-g_entities].sess.sessionTeam;
 
     switch(team) {
@@ -275,7 +275,7 @@ void ChallengeMessage(gentity_t *ent, int challenge) {
         if ( level.warmupTime != 0)
 		return; //We don't send anything doring warmup
 	trap_SendServerCommand( ent-g_entities, va("ch %u", challenge) );
-        G_LogPrintf( "Challenge: %i %i %i: Client %i got award %i\n",ent-g_entities,challenge,1,ent-g_entities,challenge);
+        G_LogPrintf( "Challenge: %li %i %i: Client %li got award %i\n",ent-g_entities,challenge,1,ent-g_entities,challenge);
 }
 
 /*

@@ -46,7 +46,6 @@ void LogAcc(int clientNum) {
 	char buffer[1024];
 	int i;
 	qboolean first = qtrue;
-	memset(buffer,0,sizeof(buffer));
 	Com_sprintf(buffer,sizeof(buffer),"Accuracy: %i ",clientNum);
 	for(i=0;i<WP_NUM_WEAPONS;++i) {
 		char *tmp = va("%sf%i\\%i\\h%i\\%i",first ? "" : "\\",i,level.clients[clientNum].accuracy[i][0],i,level.clients[clientNum].accuracy[i][1]);
@@ -54,8 +53,7 @@ void LogAcc(int clientNum) {
 			strcat(buffer,tmp);
 		first = qfalse;
 	}
-	strcat(buffer,"\n");
-	G_LogPrintf(buffer);
+	G_LogPrintf("%s\n",buffer);
 }
 
 /**
@@ -66,7 +64,7 @@ void PlayerStoreInit( void ) {
     nextAge = 1;
 }
 
-void PlayerStore_store(char* guid, playerState_t ps) {
+void PlayerStore_store(const char* guid, playerState_t ps) {
     int place2store = -1;
     int lowestAge = 32000;
     int i;
@@ -102,7 +100,7 @@ void PlayerStore_store(char* guid, playerState_t ps) {
     G_LogPrintf("Playerstore: Stored player with guid: %s in %u\n", playerstore[place2store].guid,place2store);
 }
 
-void PlayerStore_restore(char* guid, playerState_t *ps)  {
+void PlayerStore_restore(const char* guid, playerState_t *ps)  {
     int i;
     if(strlen(guid)<32)
     {

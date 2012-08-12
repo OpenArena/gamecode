@@ -46,6 +46,7 @@ void trap_Print( const char *string ) {
 
 void trap_Error( const char *string ) {
 	syscall( UI_ERROR, string );
+        exit(UI_ERROR); //Will never occour but makes compiler happy
 }
 
 int trap_Milliseconds( void ) {
