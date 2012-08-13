@@ -210,7 +210,7 @@ void AddTeamScore(vec3_t origin, int team, int score) {
 OnSameTeam
 ==============
 */
-qboolean OnSameTeam( gentity_t *ent1, gentity_t *ent2 ) {
+qboolean OnSameTeam( const gentity_t *ent1, const gentity_t *ent2 ) {
 	if ( !ent1->client || !ent2->client ) {
 		return qfalse;
 	}
@@ -279,7 +279,7 @@ void Team_SetFlagStatus( int team, flagStatus_t status ) {
 	}
 }
 
-void Team_CheckDroppedItem( gentity_t *dropped ) {
+void Team_CheckDroppedItem( const gentity_t *dropped ) {
 	if( dropped->item->giTag == PW_REDFLAG ) {
 		Team_SetFlagStatus( TEAM_RED, FLAG_DROPPED );
 	}
@@ -2169,7 +2169,7 @@ void SP_team_neutralobelisk( gentity_t *ent ) {
 CheckObeliskAttack
 ================
 */
-qboolean CheckObeliskAttack( gentity_t *obelisk, gentity_t *attacker ) {
+qboolean CheckObeliskAttack( const gentity_t *obelisk, const gentity_t *attacker ) {
 	gentity_t	*te;
 
 	// if this really is an obelisk

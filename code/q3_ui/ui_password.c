@@ -58,7 +58,7 @@ typedef struct
 	menubitmap_s	go;
 	menubitmap_s	back;
 
-	char		*connectstring;
+	const char		*connectstring;
         char            servername[32];
 } specifypassword_t;
 
@@ -201,7 +201,7 @@ void SpecifyPassword_Cache( void )
 UI_SpecifyPasswordMenu
 =================
 */
-void UI_SpecifyPasswordMenu( char* string, char *name )
+void UI_SpecifyPasswordMenu( const char* string, const char *name )
 {
 	SpecifyPassword_MenuInit();
 	s_specifypassword.connectstring = string;

@@ -40,7 +40,7 @@ G_WriteClientSessionData
 Called on game shutdown
 ================
 */
-void G_WriteClientSessionData( gclient_t *client ) {
+static void G_WriteClientSessionData( const gclient_t *client ) {
 	const char	*s;
 	const char	*var;
 

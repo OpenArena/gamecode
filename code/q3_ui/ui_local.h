@@ -538,7 +538,7 @@ extern void UI_VoteMapMenuInternal( void );
 // ui_password.c
 //
 extern void SpecifyPassword_Cache( void );
-extern void UI_SpecifyPasswordMenu( char* string, char *name );
+extern void UI_SpecifyPasswordMenu( const char* string, const char *name );
 
 //
 // ui_firstconnect.c
