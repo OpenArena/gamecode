@@ -784,7 +784,8 @@ gentity_t *fire_grapple (gentity_t *self, vec3_t start, vec3_t dir) {
 	SnapVector( hook->s.pos.trDelta );			// save net bandwidth
 	VectorCopy (start, hook->r.currentOrigin);
 
-	self->client->hook = hook;
+	if(self->client)
+		self->client->hook = hook;
 
 	return hook;
 }

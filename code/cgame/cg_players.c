@@ -1459,7 +1459,6 @@ static void CG_PlayerAngles( centity_t *cent, vec3_t legs[3], vec3_t torso[3], v
 	}
 
 	//
-	clientNum = cent->currentState.clientNum;
 	if ( clientNum >= 0 && clientNum < MAX_CLIENTS ) {
 		ci = &cgs.clientinfo[ clientNum ];
 		if ( ci->fixedlegs ) {

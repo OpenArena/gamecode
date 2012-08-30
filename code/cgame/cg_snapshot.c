@@ -234,12 +234,12 @@ static void CG_SetNextSnap( snapshot_t *snap ) {
 	}
 
 	// if changing follow mode, don't interpolate
-	if ( cg.nextSnap->ps.clientNum != cg.snap->ps.clientNum ) {
+	if ( cg.snap && cg.nextSnap->ps.clientNum != cg.snap->ps.clientNum ) {
 		cg.nextFrameTeleport = qtrue;
 	}
 
 	// if changing server restarts, don't interpolate
-	if ( ( cg.nextSnap->snapFlags ^ cg.snap->snapFlags ) & SNAPFLAG_SERVERCOUNT ) {
+	if ( cg.snap && ( ( cg.nextSnap->snapFlags ^ cg.snap->snapFlags ) & SNAPFLAG_SERVERCOUNT ) ) {
 		cg.nextFrameTeleport = qtrue;
 	}
 

@@ -3036,14 +3036,14 @@ void CG_MissileHitWall( int weapon, int clientNum, vec3_t origin, vec3_t dir, im
 				}
 			}
 #endif
-		r = rand() & 3;
+		/*r = rand() & 3;
 		if ( r < 2 ) {
 			sfx = cgs.media.sfx_ric1;
 		} else if ( r == 2 ) {
 			sfx = cgs.media.sfx_ric2;
 		} else {
 			sfx = cgs.media.sfx_ric3;
-		}
+		}*/
 
 		radius = 8;
 		break;
