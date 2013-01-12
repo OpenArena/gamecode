@@ -1760,7 +1760,7 @@ void Cmd_CallVote_f( gentity_t *ent ) {
                     Com_sprintf( level.voteString, sizeof( level.voteString ), "%s %d; map_restart; set nextmap \"%s\"", arg1, i,s );
                     Com_sprintf( level.voteDisplayString, sizeof( level.voteDisplayString ), "Change gametype to: %s?", gameNames[i] );
                 } else {
-                    Com_sprintf( level.voteString, sizeof( level.voteString ), "%s %d; mao_restart", arg1, i );
+                    Com_sprintf( level.voteString, sizeof( level.voteString ), "%s %d; map_restart", arg1, i );
                     Com_sprintf( level.voteDisplayString, sizeof( level.voteDisplayString ), "Change gametype to: %s?", gameNames[i] );
                 }
 	} else if ( !Q_stricmp( arg1, "map" ) ) {
