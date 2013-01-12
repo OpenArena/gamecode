@@ -275,6 +275,7 @@ typedef struct {
 	menulist_s  	geometry;
 	menulist_s  	filter;
         menulist_s  	aniso;
+	menulist_s  	drawfps;
 	menutext_s		driverinfo;
 
 	menubitmap_s	apply;
@@ -287,8 +288,9 @@ typedef struct
 	qboolean fullscreen;
 	int tq;
 	int lighting;
-        qboolean flares;
-        qboolean bloom;
+	qboolean flares;
+	qboolean bloom;
+	qboolean drawfps;
 	int texturebits;
 	int geometry;
 	int filter;
@@ -303,22 +305,22 @@ static graphicsoptions_t		s_graphicsoptions;
 static InitialVideoOptions_s s_ivo_templates[] =
 {
 	{
-		6, qtrue, 3, 0, qfalse,qfalse, 2, 2, 1, 0, 0, qtrue
+		6, qtrue, 3, 0, qfalse,qfalse,qfalse, 2, 2, 1, 0, 0, qtrue
 	},
 	{
-		4, qtrue, 2, 0, qfalse,qfalse, 2, 1, 1, 0, 0, qtrue	// JDC: this was tq 3
+		4, qtrue, 2, 0, qfalse,qfalse,qfalse, 2, 1, 1, 0, 0, qtrue	// JDC: this was tq 3
 	},
 	{
-		3, qtrue, 2, 0, qfalse,qfalse, 0, 1, 0, 0, 0, qtrue
+		3, qtrue, 2, 0, qfalse,qfalse,qfalse, 0, 1, 0, 0, 0, qtrue
 	},
 	{
-		2, qtrue, 1, 0, qfalse,qfalse, 0, 0, 0, 0, 0, qtrue
+		2, qtrue, 1, 0, qfalse,qfalse,qfalse, 0, 0, 0, 0, 0, qtrue
 	},
 	{
-		2, qtrue, 1, 1, qfalse,qfalse, 0, 0, 0, 0, 0, qtrue
+		2, qtrue, 1, 1, qfalse,qfalse,qfalse, 0, 0, 0, 0, 0, qtrue
 	},
 	{
-		3, qtrue, 1, 0, qfalse,qfalse, 0, 1, 0, 0, 0, qtrue
+		3, qtrue, 1, 0, qfalse,qfalse,qfalse, 0, 1, 0, 0, 0, qtrue
 	}
 };
 
@@ -478,8 +480,9 @@ static void GraphicsOptions_GetInitialVideo( void )
 	s_ivo.extensions  = s_graphicsoptions.allow_extensions.curvalue;
 	s_ivo.tq          = s_graphicsoptions.tq.curvalue;
 	s_ivo.lighting    = s_graphicsoptions.lighting.curvalue;
-        s_ivo.flares      = s_graphicsoptions.flares.curvalue;
-        s_ivo.bloom      = s_graphicsoptions.bloom.curvalue;
+	s_ivo.flares      = s_graphicsoptions.flares.curvalue;
+	s_ivo.bloom      = s_graphicsoptions.bloom.curvalue;
+	s_ivo.drawfps     = s_graphicsoptions.drawfps.curvalue;
 	s_ivo.geometry    = s_graphicsoptions.geometry.curvalue;
 	s_ivo.filter      = s_graphicsoptions.filter.curvalue;
         s_ivo.aniso      = s_graphicsoptions.aniso.curvalue;
@@ -539,6 +542,8 @@ static void GraphicsOptions_CheckConfig( void )
                 if ( s_ivo_templates[i].flares != s_graphicsoptions.flares.curvalue )
 			continue;
                 if ( s_ivo_templates[i].bloom != s_graphicsoptions.bloom.curvalue )
+			continue;
+		if ( s_ivo_templates[i].drawfps != s_graphicsoptions.drawfps.curvalue )
 			continue;
 		if ( s_ivo_templates[i].geometry != s_graphicsoptions.geometry.curvalue )
 			continue;
@@ -608,6 +613,10 @@ static void GraphicsOptions_UpdateMenuItems( void )
 		s_graphicsoptions.apply.generic.flags &= ~(QMF_HIDDEN|QMF_INACTIVE);
 	}
         if ( s_ivo.bloom != s_graphicsoptions.bloom.curvalue )
+	{
+		s_graphicsoptions.apply.generic.flags &= ~(QMF_HIDDEN|QMF_INACTIVE);
+	}
+	if ( s_ivo.drawfps != s_graphicsoptions.drawfps.curvalue )
 	{
 		s_graphicsoptions.apply.generic.flags &= ~(QMF_HIDDEN|QMF_INACTIVE);
 	}
@@ -693,6 +702,7 @@ static void GraphicsOptions_ApplyChanges( void *unused, int notification )
         trap_Cvar_SetValue( "cg_autovertex", s_graphicsoptions.lighting.curvalue );
         trap_Cvar_SetValue( "r_flares", s_graphicsoptions.flares.curvalue );
         trap_Cvar_SetValue( "r_bloom", s_graphicsoptions.bloom.curvalue );
+        trap_Cvar_SetValue( "cg_drawFPS", s_graphicsoptions.drawfps.curvalue );
         
         //r_ext_texture_filter_anisotropic is special
         if(s_graphicsoptions.aniso.curvalue) {
@@ -775,6 +785,7 @@ static void GraphicsOptions_Event( void* ptr, int event ) {
 		s_graphicsoptions.fs.curvalue          = ivo->fullscreen;
                 s_graphicsoptions.flares.curvalue      = ivo->flares;
                 s_graphicsoptions.bloom.curvalue      = ivo->bloom;
+                s_graphicsoptions.drawfps.curvalue      = ivo->drawfps;
 		break;
 
 	case ID_DRIVERINFO:
@@ -873,6 +884,7 @@ static void GraphicsOptions_SetMenuItems( void )
 	s_graphicsoptions.allow_extensions.curvalue = trap_Cvar_VariableValue("r_allowExtensions");
         s_graphicsoptions.flares.curvalue = trap_Cvar_VariableValue("r_flares");
         s_graphicsoptions.bloom.curvalue = trap_Cvar_VariableValue("r_bloom");
+        s_graphicsoptions.drawfps.curvalue = trap_Cvar_VariableValue("cg_drawFPS");
         if(trap_Cvar_VariableValue("r_ext_texture_filter_anisotropic")) {
             s_graphicsoptions.aniso.curvalue = trap_Cvar_VariableValue("r_ext_max_anisotropy")/2;
         }
@@ -1164,6 +1176,14 @@ void GraphicsOptions_MenuInit( void )
 	s_graphicsoptions.bloom.itemnames	      = enabled_names;
 	y += BIGCHAR_HEIGHT+2;
 
+	s_graphicsoptions.drawfps.generic.type	  = MTYPE_SPINCONTROL;
+	s_graphicsoptions.drawfps.generic.name	  = "Draw FPS:";
+	s_graphicsoptions.drawfps.generic.flags	  = QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	s_graphicsoptions.drawfps.generic.x	      = 400;
+	s_graphicsoptions.drawfps.generic.y	      = y;
+	s_graphicsoptions.drawfps.itemnames	      = enabled_names;
+	y += BIGCHAR_HEIGHT+2;
+
 	// references/modifies "r_lodBias" & "subdivisions"
 	s_graphicsoptions.geometry.generic.type  = MTYPE_SPINCONTROL;
 	s_graphicsoptions.geometry.generic.name	 = "Geometric Detail:";
@@ -1260,6 +1280,7 @@ void GraphicsOptions_MenuInit( void )
 	Menu_AddItem( &s_graphicsoptions.menu, ( void * ) &s_graphicsoptions.lighting );
         Menu_AddItem( &s_graphicsoptions.menu, ( void * ) &s_graphicsoptions.flares );
         Menu_AddItem( &s_graphicsoptions.menu, ( void * ) &s_graphicsoptions.bloom );
+	Menu_AddItem( &s_graphicsoptions.menu, ( void * ) &s_graphicsoptions.drawfps );
 	Menu_AddItem( &s_graphicsoptions.menu, ( void * ) &s_graphicsoptions.geometry );
 	Menu_AddItem( &s_graphicsoptions.menu, ( void * ) &s_graphicsoptions.tq );
 	Menu_AddItem( &s_graphicsoptions.menu, ( void * ) &s_graphicsoptions.texturebits );
