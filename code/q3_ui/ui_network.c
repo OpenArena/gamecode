@@ -41,7 +41,9 @@ NETWORK OPTIONS MENU
 #define ID_SOUND			12
 #define ID_NETWORK			13
 #define ID_RATE				14
-#define ID_BACK				15
+#define ID_ALLOWDOWNLOAD	15
+#define ID_LAGOMETER		16
+#define ID_BACK				17
 
 
 const char *rate_items[] = {
@@ -66,6 +68,8 @@ typedef struct {
 	menutext_s		network;
 
 	menulist_s		rate;
+	menuradiobutton_s	allowdownload;
+	menuradiobutton_s	lagometer;
 
 	menubitmap_s	back;
 } networkOptionsInfo_t;
@@ -118,6 +122,15 @@ static void UI_NetworkOptionsMenu_Event( void* ptr, int event ) {
 		else if( networkOptionsInfo.rate.curvalue == 4 ) {
 			trap_Cvar_SetValue( "rate", 25000 );
 		}
+		break;
+
+	case ID_ALLOWDOWNLOAD:
+		trap_Cvar_SetValue( "cl_allowDownload", networkOptionsInfo.allowdownload.curvalue );
+		trap_Cvar_SetValue( "sv_allowDownload", networkOptionsInfo.allowdownload.curvalue );
+		break;
+
+	case ID_LAGOMETER:
+		trap_Cvar_SetValue( "cg_lagometer", networkOptionsInfo.lagometer.curvalue );
 		break;
 
 	case ID_BACK:
@@ -216,6 +229,24 @@ static void UI_NetworkOptionsMenu_Init( void ) {
 	networkOptionsInfo.rate.generic.y			= y;
 	networkOptionsInfo.rate.itemnames			= rate_items;
 
+	y += BIGCHAR_HEIGHT+2;
+	networkOptionsInfo.allowdownload.generic.type     = MTYPE_RADIOBUTTON;
+	networkOptionsInfo.allowdownload.generic.name	   = "Auto Downloading:";
+	networkOptionsInfo.allowdownload.generic.flags	   = QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	networkOptionsInfo.allowdownload.generic.callback = UI_NetworkOptionsMenu_Event;
+	networkOptionsInfo.allowdownload.generic.id       = ID_ALLOWDOWNLOAD;
+	networkOptionsInfo.allowdownload.generic.x	       = 400;
+	networkOptionsInfo.allowdownload.generic.y	       = y;
+
+	y += BIGCHAR_HEIGHT+2;
+	networkOptionsInfo.lagometer.generic.type     = MTYPE_RADIOBUTTON;
+	networkOptionsInfo.lagometer.generic.name	   = "Lagometer:";
+	networkOptionsInfo.lagometer.generic.flags	   = QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	networkOptionsInfo.lagometer.generic.callback = UI_NetworkOptionsMenu_Event;
+	networkOptionsInfo.lagometer.generic.id       = ID_LAGOMETER;
+	networkOptionsInfo.lagometer.generic.x	       = 400;
+	networkOptionsInfo.lagometer.generic.y	       = y;
+
 	networkOptionsInfo.back.generic.type		= MTYPE_BITMAP;
 	networkOptionsInfo.back.generic.name		= ART_BACK0;
 	networkOptionsInfo.back.generic.flags		= QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS;
@@ -235,6 +266,8 @@ static void UI_NetworkOptionsMenu_Init( void ) {
 	Menu_AddItem( &networkOptionsInfo.menu, ( void * ) &networkOptionsInfo.sound );
 	Menu_AddItem( &networkOptionsInfo.menu, ( void * ) &networkOptionsInfo.network );
 	Menu_AddItem( &networkOptionsInfo.menu, ( void * ) &networkOptionsInfo.rate );
+	Menu_AddItem( &networkOptionsInfo.menu, ( void * ) &networkOptionsInfo.allowdownload );
+	Menu_AddItem( &networkOptionsInfo.menu, ( void * ) &networkOptionsInfo.lagometer );
 	Menu_AddItem( &networkOptionsInfo.menu, ( void * ) &networkOptionsInfo.back );
 
 	rate = trap_Cvar_VariableValue( "rate" );
@@ -253,6 +286,9 @@ static void UI_NetworkOptionsMenu_Init( void ) {
 	else {
 		networkOptionsInfo.rate.curvalue = 4;
 	}
+
+	networkOptionsInfo.allowdownload.curvalue = trap_Cvar_VariableValue( "cl_allowDownload" ) != 0;
+	networkOptionsInfo.lagometer.curvalue = trap_Cvar_VariableValue( "cg_lagometer" ) != 0;
 }
 
 
