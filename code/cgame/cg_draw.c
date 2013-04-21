@@ -1073,8 +1073,8 @@ static float CG_DrawEliminationTimer( float y ) {
 	int			msec;
 	vec4_t			color;
 	const char	*st;
-	float scale;
-	int cw;
+	float scale __attribute__((unused));
+	int cw __attribute__((unused));
 	int rst;
 
         
@@ -2839,7 +2839,7 @@ static void CG_DrawTeamVote(void) {
 static qboolean CG_DrawScoreboard( void ) {
 #ifdef MISSIONPACK
 	static qboolean firstTime = qtrue;
-	float fade, *fadeColor;
+	float *fadeColor;
 
 	if (menuScoreboard) {
 		menuScoreboard->window.flags &= ~WINDOW_FORCED;
@@ -2863,7 +2863,6 @@ static qboolean CG_DrawScoreboard( void ) {
 	}
 
 	if ( cg.showScores || cg.predictedPlayerState.pm_type == PM_DEAD || cg.predictedPlayerState.pm_type == PM_INTERMISSION ) {
-		fade = 1.0;
 		fadeColor = colorWhite;
 	} else {
 		fadeColor = CG_FadeColor( cg.scoreFadeTime, FADE_TIME );
@@ -2874,7 +2873,6 @@ static qboolean CG_DrawScoreboard( void ) {
 			firstTime = qtrue;
 			return qfalse;
 		}
-		fade = *fadeColor;
 	}																					  
 
 
@@ -3096,9 +3094,9 @@ static void CG_DrawWarmup( void ) {
 	int			w;
 	int			sec;
 	int			i;
-	float scale;
+	float scale __attribute__((unused));
 	clientInfo_t	*ci1, *ci2;
-	int			cw;
+	int			cw __attribute__((unused));
 	const char	*s;
 
 	sec = cg.warmup;
