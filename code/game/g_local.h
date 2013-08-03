@@ -558,6 +558,7 @@ typedef struct {
     qboolean MustSendObeliskHealth; //Health has changed
 	
     int		max_humanplayers;
+	int		lastActiveTime; ///< Updated as long as there are at least one human player on the server
      
 } level_locals_t;
 

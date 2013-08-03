@@ -198,6 +198,8 @@ vmCvar_t        g_maxNameChanges;
 vmCvar_t        g_timestamp_startgame;
 
 vmCvar_t		g_execute_gametype_script;
+vmCvar_t		g_emptyCommand;
+vmCvar_t		g_emptyTime;
 
 // bk001129 - made static to avoid aliasing
 static cvarTable_t		gameCvarTable[] = {
@@ -398,7 +400,9 @@ static cvarTable_t		gameCvarTable[] = {
         { &g_maxNameChanges, "g_maxNameChanges", "50", 0, 0, qfalse},
 
         { &g_timestamp_startgame, "g_timestamp", "0001-01-01 00:00:00", CVAR_SERVERINFO, 0, qfalse},
-		{ &g_execute_gametype_script, "g_egs", "0", CVAR_ROM, 0, qfalse }
+		{ &g_execute_gametype_script, "g_egs", "0", CVAR_ROM, 0, qfalse },
+		{ &g_emptyCommand, "g_emptyCommand", "map_restart", CVAR_ARCHIVE, 0, qfalse},
+		{ &g_emptyTime, "g_emptytime", "0", CVAR_ARCHIVE, 0, qfalse}
         
 };
 
@@ -2815,6 +2819,21 @@ void CheckTeamVote( int team ) {
 
 }
 
+static void CheckEmpty ( void ) {
+	if (!g_emptyTime.integer ) {
+		return; //a time period must be set
+	}
+	if (g_humanplayers.integer > 0 || level.lastActiveTime==0) {
+		level.lastActiveTime = level.time;
+	}
+	else {
+		if (level.lastActiveTime+g_emptyTime.integer*1000 < level.time) {
+			level.lastActiveTime = level.time;
+			trap_SendConsoleCommand( EXEC_APPEND, va("%s\n",g_emptyCommand.string) );
+		} 
+	}
+}
+
 
 /*
 ==================
@@ -3035,6 +3054,8 @@ void G_RunFrame( int levelTime ) {
 	// check team votes
 	CheckTeamVote( TEAM_RED );
 	CheckTeamVote( TEAM_BLUE );
+	
+	CheckEmpty();
 
 	// for tracking changes
 	CheckCvars();
