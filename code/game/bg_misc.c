@@ -1773,7 +1773,7 @@ BG_TeamName
 KK-OAX Copied from Tremulous
 ============
 */
-char *BG_TeamName( team_t team )
+const char *BG_TeamName( team_t team )
 {
   if( team == TEAM_NONE )
     return "spectator";
@@ -1785,3 +1785,4 @@ char *BG_TeamName( team_t team )
     return "Free For All";
   return "<team>";
 }
+

@@ -819,6 +819,6 @@ qboolean	BG_PlayerTouchesItem( playerState_t *ps, entityState_t *item, int atTim
 
 //KK-OAX
 //bg_misc.c
-char *BG_TeamName( team_t team );
+const char *BG_TeamName( team_t team );
 
 #endif
