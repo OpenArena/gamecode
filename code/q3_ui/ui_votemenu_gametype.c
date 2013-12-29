@@ -102,6 +102,9 @@ VoteMenu_Gametype_Event
 */
 static void VoteMenu_Gametype_Event( void* ptr, int event )
 {
+	if (event != QM_ACTIVATED)
+		return;
+
 	switch (((menucommon_s*)ptr)->id)
 	{
 		case ID_BACK:
@@ -110,11 +113,13 @@ static void VoteMenu_Gametype_Event( void* ptr, int event )
 
 			UI_PopMenu();
 			break;
+			/*
             case ID_GO:
                 if( event != QM_ACTIVATED ) {
                     return;
                 }
                 switch(s_votemenu_Gametype.selection) {
+            */
                     case ID_FFA:
                         trap_Cmd_ExecuteText( EXEC_APPEND, "callvote g_gametype 0" );
                         UI_PopMenu();
@@ -175,6 +180,7 @@ static void VoteMenu_Gametype_Event( void* ptr, int event )
                         UI_PopMenu();
                         UI_PopMenu();
                         break;
+            /*
                 };
                 break;
             default:
@@ -186,6 +192,7 @@ static void VoteMenu_Gametype_Event( void* ptr, int event )
                     UI_VoteGametypeMenuInternal();
                 }
                 break;
+            */
 	}
 }
 
@@ -362,7 +369,7 @@ void UI_VoteGametypeMenu( void ) {
 
 	Menu_AddItem( &s_votemenu_Gametype.menu, (void*) &s_votemenu_Gametype.banner );
 	Menu_AddItem( &s_votemenu_Gametype.menu, (void*) &s_votemenu_Gametype.back );
-        Menu_AddItem( &s_votemenu_Gametype.menu, (void*) &s_votemenu_Gametype.go );
+        //Menu_AddItem( &s_votemenu_Gametype.menu, (void*) &s_votemenu_Gametype.go );
         Menu_AddItem( &s_votemenu_Gametype.menu, (void*) &s_votemenu_Gametype.bFFA );
         Menu_AddItem( &s_votemenu_Gametype.menu, (void*) &s_votemenu_Gametype.bTourney );
         Menu_AddItem( &s_votemenu_Gametype.menu, (void*) &s_votemenu_Gametype.bTDM );

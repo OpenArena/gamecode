@@ -127,19 +127,24 @@ VoteMenu_Event
 */
 static void VoteMenu_Event( void* ptr, int event )
 {
+	if (event != QM_ACTIVATED)
+		return;
+
 	switch (((menucommon_s*)ptr)->id)
 	{
 		case ID_BACK:
 			if (event != QM_ACTIVATED)
-				break;
+				return;
 
 			UI_PopMenu();
 			break;
+			/*
             case ID_GO:
                 if( event != QM_ACTIVATED ) {
                     return;
                 }
                 switch(s_votemenu.selection) {
+            */
                     case ID_NEXTMAP:
                         trap_Cmd_ExecuteText( EXEC_APPEND, "callvote nextmap" );
                         UI_PopMenu();
@@ -191,6 +196,7 @@ static void VoteMenu_Event( void* ptr, int event )
                         trap_Cmd_ExecuteText( EXEC_APPEND, "vote no" );
                         UI_PopMenu();
                         break;
+            /*
                 };
                 break;
             default:
@@ -202,6 +208,7 @@ static void VoteMenu_Event( void* ptr, int event )
                     UI_VoteMenuMenuInternal();
                 }
                 break;
+            */
 	}
 }
 
@@ -491,7 +498,7 @@ void UI_VoteMenuMenu( void ) {
 
 	Menu_AddItem( &s_votemenu.menu, (void*) &s_votemenu.banner );
 	Menu_AddItem( &s_votemenu.menu, (void*) &s_votemenu.back );
-        Menu_AddItem( &s_votemenu.menu, (void*) &s_votemenu.go );
+        //Menu_AddItem( &s_votemenu.menu, (void*) &s_votemenu.go );
 	Menu_AddItem( &s_votemenu.menu, (void*) &s_votemenu.bNextmap );
         Menu_AddItem( &s_votemenu.menu, (void*) &s_votemenu.bMapRestart );
         Menu_AddItem( &s_votemenu.menu, (void*) &s_votemenu.bShuffle );

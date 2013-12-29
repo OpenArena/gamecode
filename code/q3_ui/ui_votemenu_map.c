@@ -83,7 +83,16 @@ static void VoteMapMenu_Event( void* ptr, int event )
                     return;
                 UI_PopMenu();
                 break;
-            case ID_GO:
+            default:
+                if( event != QM_ACTIVATED ) {
+                    return;
+                }
+                if(s_votemenu_map.selected != ((menucommon_s*)ptr)->id) {
+                    s_votemenu_map.selected = ((menucommon_s*)ptr)->id;
+                    UI_VoteMapMenuInternal();
+                }
+            //    break;
+            //case ID_GO:
                 if( event != QM_ACTIVATED ) {
                     return;
                 }
@@ -94,15 +103,6 @@ static void VoteMapMenu_Event( void* ptr, int event )
                 trap_Cmd_ExecuteText( EXEC_APPEND, va("callvote map %s", mappage.mapname[s_votemenu_map.selected-ID_MAPNAME0]) );
                 UI_PopMenu();
                 UI_PopMenu();
-                break;
-            default:
-                if( event != QM_ACTIVATED ) {
-                    return;
-                }
-                if(s_votemenu_map.selected != ((menucommon_s*)ptr)->id) {
-                    s_votemenu_map.selected = ((menucommon_s*)ptr)->id;
-                    UI_VoteMapMenuInternal();
-                }
                 break;
          }
 }
@@ -170,6 +170,8 @@ static void setMapMenutext(menutext_s *menu,int y,int id,char * text) {
     if(s_votemenu_map.selected == id)
          menu->color       = color_orange;
     menu->generic.x           = 320-80;
+    menu->generic.left        = 320-80;
+    menu->generic.right       = 320+120;
     menu->generic.y           = y;
     menu->generic.id          = id;
     menu->generic.callback    = VoteMapMenu_Event;
@@ -290,7 +292,7 @@ void UI_VoteMapMenu( void ) {
     Menu_AddItem( &s_votemenu_map.menu, (void*) &s_votemenu_map.banner );
     Menu_AddItem( &s_votemenu_map.menu, (void*) &s_votemenu_map.info );
     Menu_AddItem( &s_votemenu_map.menu, (void*) &s_votemenu_map.back );
-    Menu_AddItem( &s_votemenu_map.menu, (void*) &s_votemenu_map.go );
+    //Menu_AddItem( &s_votemenu_map.menu, (void*) &s_votemenu_map.go );
     Menu_AddItem( &s_votemenu_map.menu, (void*) &s_votemenu_map.arrows );
     Menu_AddItem( &s_votemenu_map.menu, (void*) &s_votemenu_map.down );
     Menu_AddItem( &s_votemenu_map.menu, (void*) &s_votemenu_map.up );

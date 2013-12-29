@@ -81,6 +81,9 @@ VoteMenu_Fraglimit_Event
 */
 static void VoteMenu_Fraglimit_Event( void* ptr, int event )
 {
+	if( event != QM_ACTIVATED )
+		return;
+
 	switch (((menucommon_s*)ptr)->id)
 	{
 		case ID_BACK:
@@ -89,11 +92,13 @@ static void VoteMenu_Fraglimit_Event( void* ptr, int event )
 
 			UI_PopMenu();
 			break;
+			/*
             case ID_GO:
                 if( event != QM_ACTIVATED ) {
                     return;
                 }
                 switch(s_votemenu_fraglmit.selection) {
+            */
                     case ID_10:
                         trap_Cmd_ExecuteText( EXEC_APPEND, "callvote fraglimit 10" );
                         UI_PopMenu();
@@ -129,6 +134,7 @@ static void VoteMenu_Fraglimit_Event( void* ptr, int event )
                         UI_PopMenu();
                         UI_PopMenu();
                         break;
+            /*
                 };
                 break;
             default:
@@ -140,6 +146,7 @@ static void VoteMenu_Fraglimit_Event( void* ptr, int event )
                     UI_VoteFraglimitMenuInternal();
                 }
                 break;
+            */
 	}
 }
 
@@ -271,7 +278,7 @@ void UI_VoteFraglimitMenu( void ) {
 
 	Menu_AddItem( &s_votemenu_fraglmit.menu, (void*) &s_votemenu_fraglmit.banner );
 	Menu_AddItem( &s_votemenu_fraglmit.menu, (void*) &s_votemenu_fraglmit.back );
-        Menu_AddItem( &s_votemenu_fraglmit.menu, (void*) &s_votemenu_fraglmit.go );
+        //Menu_AddItem( &s_votemenu_fraglmit.menu, (void*) &s_votemenu_fraglmit.go );
         Menu_AddItem( &s_votemenu_fraglmit.menu, (void*) &s_votemenu_fraglmit.bLimit10 );
         Menu_AddItem( &s_votemenu_fraglmit.menu, (void*) &s_votemenu_fraglmit.bLimit15 );
         Menu_AddItem( &s_votemenu_fraglmit.menu, (void*) &s_votemenu_fraglmit.bLimit20 );

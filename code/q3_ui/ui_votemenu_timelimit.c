@@ -80,6 +80,9 @@ VoteMenu_Timelimit_Event
 */
 static void VoteMenu_Timelimit_Event( void* ptr, int event )
 {
+	if (event != QM_ACTIVATED)
+		return;
+
 	switch (((menucommon_s*)ptr)->id)
 	{
 		case ID_BACK:
@@ -88,11 +91,13 @@ static void VoteMenu_Timelimit_Event( void* ptr, int event )
 
 			UI_PopMenu();
 			break;
+            /*
             case ID_GO:
                 if( event != QM_ACTIVATED ) {
                     return;
                 }
                 switch(s_votemenu_Timelmit.selection) {
+            */
                     case ID_10:
                         trap_Cmd_ExecuteText( EXEC_APPEND, "callvote timelimit 10" );
                         UI_PopMenu();
@@ -128,6 +133,7 @@ static void VoteMenu_Timelimit_Event( void* ptr, int event )
                         UI_PopMenu();
                         UI_PopMenu();
                         break;
+            /*
                 };
                 break;
             default:
@@ -139,6 +145,7 @@ static void VoteMenu_Timelimit_Event( void* ptr, int event )
                     UI_VoteTimelimitMenuInternal();
                 }
                 break;
+            */
 	}
 }
 
@@ -270,7 +277,7 @@ void UI_VoteTimelimitMenu( void ) {
 
 	Menu_AddItem( &s_votemenu_Timelmit.menu, (void*) &s_votemenu_Timelmit.banner );
 	Menu_AddItem( &s_votemenu_Timelmit.menu, (void*) &s_votemenu_Timelmit.back );
-        Menu_AddItem( &s_votemenu_Timelmit.menu, (void*) &s_votemenu_Timelmit.go );
+        //Menu_AddItem( &s_votemenu_Timelmit.menu, (void*) &s_votemenu_Timelmit.go );
         Menu_AddItem( &s_votemenu_Timelmit.menu, (void*) &s_votemenu_Timelmit.bLimit10 );
         Menu_AddItem( &s_votemenu_Timelmit.menu, (void*) &s_votemenu_Timelmit.bLimit15 );
         Menu_AddItem( &s_votemenu_Timelmit.menu, (void*) &s_votemenu_Timelmit.bLimit20 );

@@ -108,16 +108,6 @@ static void VoteKickMenu_Event( void* ptr, int event )
                     return;
                 UI_PopMenu();
                 break;
-            case ID_GO:
-                if( event != QM_ACTIVATED ) {
-                    return;
-                }
-                if(!s_votemenu_kick.selected)
-                    return;
-                trap_Cmd_ExecuteText( EXEC_APPEND, va("callvote clientkick %d",s_votemenu_kick.players_profiles[(s_votemenu_kick.selected-20)+s_votemenu_kick.startIndex].id) );
-                UI_PopMenu();
-                UI_PopMenu();
-                break;
             default:
                 if( event != QM_ACTIVATED ) {
                     return;
@@ -126,6 +116,16 @@ static void VoteKickMenu_Event( void* ptr, int event )
                     s_votemenu_kick.selected = ((menucommon_s*)ptr)->id;
                     UI_VoteKickMenuInternal();
                 }
+            //    break;
+            //case ID_GO:
+                if( event != QM_ACTIVATED ) {
+                    return;
+                }
+                if(!s_votemenu_kick.selected)
+                    return;
+                trap_Cmd_ExecuteText( EXEC_APPEND, va("callvote clientkick %d",s_votemenu_kick.players_profiles[(s_votemenu_kick.selected-20)+s_votemenu_kick.startIndex].id) );
+                UI_PopMenu();
+                UI_PopMenu();
                 break;
          }
 }
@@ -320,7 +320,7 @@ void UI_VoteKickMenu( void ) {
 
     Menu_AddItem( &s_votemenu_kick.menu, (void*) &s_votemenu_kick.banner );
     Menu_AddItem( &s_votemenu_kick.menu, (void*) &s_votemenu_kick.back );
-    Menu_AddItem( &s_votemenu_kick.menu, (void*) &s_votemenu_kick.go );
+    //Menu_AddItem( &s_votemenu_kick.menu, (void*) &s_votemenu_kick.go );
     Menu_AddItem( &s_votemenu_kick.menu, (void*) &s_votemenu_kick.arrows );
     Menu_AddItem( &s_votemenu_kick.menu, (void*) &s_votemenu_kick.down );
     Menu_AddItem( &s_votemenu_kick.menu, (void*) &s_votemenu_kick.up );

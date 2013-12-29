@@ -80,14 +80,6 @@ static void VoteMenu_custom_Event( void* ptr, int event )
 
 			UI_PopMenu();
 			break;
-            case ID_GO:
-                if( event != QM_ACTIVATED || !s_votemenu_custom.selection) {
-                    return;
-                }
-                trap_Cmd_ExecuteText( EXEC_APPEND, va("callvote custom %s",s_votemenu_custom.bEntry[s_votemenu_custom.selection-ID_CUSTOM0].string ) );
-                UI_PopMenu();
-                UI_PopMenu();
-                break;
             default:
                 if( event != QM_ACTIVATED ) {
                     return;
@@ -96,6 +88,14 @@ static void VoteMenu_custom_Event( void* ptr, int event )
                     s_votemenu_custom.selection = ((menucommon_s*)ptr)->id;
                     UI_VoteCustomMenuInternal();
                 }
+            //    break;
+            //case ID_GO:
+                if( event != QM_ACTIVATED || !s_votemenu_custom.selection) {
+                    return;
+                }
+                trap_Cmd_ExecuteText( EXEC_APPEND, va("callvote custom %s",s_votemenu_custom.bEntry[s_votemenu_custom.selection-ID_CUSTOM0].string ) );
+                UI_PopMenu();
+                UI_PopMenu();
                 break;
         }
 
@@ -224,7 +224,7 @@ void UI_VoteCustomMenu( void ) {
 
 	Menu_AddItem( &s_votemenu_custom.menu, (void*) &s_votemenu_custom.banner );
 	Menu_AddItem( &s_votemenu_custom.menu, (void*) &s_votemenu_custom.back );
-        Menu_AddItem( &s_votemenu_custom.menu, (void*) &s_votemenu_custom.go );
+        //Menu_AddItem( &s_votemenu_custom.menu, (void*) &s_votemenu_custom.go );
         for(i=0;i<CUSTOM_MENU_MAX_ENTRIES;i++)
             Menu_AddItem( &s_votemenu_custom.menu, (void*) &s_votemenu_custom.bEntry[i] );
 
