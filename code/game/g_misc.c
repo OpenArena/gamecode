@@ -488,19 +488,19 @@ void DropPortalSource( gentity_t *player ) {
 }
 
 static int countItems(const char* itemname, qboolean exclude_no_bots) {
-        gentity_t	*spot;
+	gentity_t	*spot;
 	int			count;
-        
-        count = 0;
-        spot = NULL;
-        
-        while ((spot = G_Find (spot, FOFS(classname), itemname)) != NULL) {
-                if(exclude_no_bots && spot->flags & (FL_NO_BOTS|FL_NO_HUMANS) )
-			continue; //Do not count no_humans or no_bots items
-                count++;
-        }
+
+	count = 0;
+	spot = NULL;
+
+	while ((spot = G_Find (spot, FOFS(classname), itemname)) != NULL) {
+			if(exclude_no_bots && spot->flags & (FL_NO_BOTS|FL_NO_HUMANS) )
+		continue; //Do not count no_humans or no_bots items
+			count++;
+	}
 	G_Printf("Number of %s: %i\n",itemname,count);
-        return count;
+	return count;
 }
 
 static int countFfaSpawnpoints(void) {
@@ -508,71 +508,69 @@ static int countFfaSpawnpoints(void) {
 }
 
 static int countDdSpawnpoints(void) {
-    int mincount,tmp;
-    mincount = 100;
-    
-    tmp = countItems("info_player_dd_red",qtrue);
-    if(!tmp){
+	int mincount,tmp;
+	mincount = 100;
+
+	tmp = countItems("info_player_dd_red",qtrue);
+	if(!tmp){
 	tmp = countFfaSpawnpoints(); //tmp==0 -> Fallback to FFA spawnpoints!
-    }
-    if(tmp<mincount)
-	    mincount=tmp;
-    
-    tmp = countItems("info_player_dd_blue",qtrue);
-    if(!tmp){
+	}
+	if(tmp<mincount)
+		mincount=tmp;
+
+	tmp = countItems("info_player_dd_blue",qtrue);
+	if(!tmp){
 	tmp = countFfaSpawnpoints(); //tmp==0 -> Fallback to FFA spawnpoints!
-    }
-    if(tmp<mincount)
-	    mincount=tmp;
-    
-    return mincount;
-    
+	}
+	if(tmp<mincount)
+		mincount=tmp;
+
+	return mincount;
+
 }
 
 static int countCtfSpawnpoints(void) {
-    int mincount,tmp;
-    
-    mincount=100;
-    
-    tmp = countItems("team_CTF_redplayer",qtrue);
-    if(!tmp){
+	int mincount,tmp;
+
+	mincount=100;
+
+	tmp = countItems("team_CTF_redplayer",qtrue);
+	if(!tmp){
 	tmp = countFfaSpawnpoints(); //tmp==0 -> Fallback to FFA spawnpoints!
-    }
-    if(tmp<mincount)
-	    mincount=tmp;
-    
-    tmp = countItems("team_CTF_blueplayer",qtrue);
-    if(!tmp){
+	}
+	if(tmp<mincount)
+		mincount=tmp;
+
+	tmp = countItems("team_CTF_blueplayer",qtrue);
+	if(!tmp){
 	tmp = countFfaSpawnpoints(); //tmp==0 -> Fallback to FFA spawnpoints!
-    }
-    if(tmp<mincount)
-	    mincount=tmp;
-    
-    tmp = countItems("team_CTF_redspawn",qtrue);
-    if(!tmp){
+	}
+	if(tmp<mincount)
+		mincount=tmp;
+
+	tmp = countItems("team_CTF_redspawn",qtrue);
+	if(!tmp){
 	tmp = countFfaSpawnpoints(); //tmp==0 -> Fallback to FFA spawnpoints!
-    }
-    if(tmp<mincount)
-	    mincount=tmp;
-    
-    tmp = countItems("team_CTF_bluespawn",qtrue);
-    if(!tmp){
+	}
+	if(tmp<mincount)
+		mincount=tmp;
+
+	tmp = countItems("team_CTF_bluespawn",qtrue);
+	if(!tmp){
 	tmp = countFfaSpawnpoints(); //tmp==0 -> Fallback to FFA spawnpoints!
-    }
-    if(tmp<mincount)
-	    mincount=tmp;
-    
-    return mincount;
+	}
+	if(tmp<mincount)
+		mincount=tmp;
+
+	return mincount;
 }
 
 int MinSpawnpointCount(void) {
-    if(g_gametype.integer < GT_CTF || g_ffa_gt > 0) {
-	return countFfaSpawnpoints();
-    }
-    if(g_gametype.integer == GT_DOUBLE_D ) {
-	return countDdSpawnpoints();
-    }
-    
-    return countCtfSpawnpoints();
-    
+	if(g_gametype.integer < GT_CTF || g_ffa_gt > 0) {
+		return countFfaSpawnpoints();
+	}
+	if(g_gametype.integer == GT_DOUBLE_D ) {
+		return countDdSpawnpoints();
+	}
+	return countCtfSpawnpoints();
 }

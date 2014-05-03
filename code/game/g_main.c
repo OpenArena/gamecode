@@ -33,7 +33,7 @@ typedef struct {
 	int			cvarFlags;
 	int			modificationCount;  // for tracking changes
 	qboolean	trackChange;	    // track this variable, and announce if changed
-  qboolean teamShader;        // track and if changed, update shader state
+	qboolean teamShader;        // track and if changed, update shader state
 } cvarTable_t;
 
 gentity_t		g_entities[MAX_GENTITIES];
@@ -222,9 +222,9 @@ static cvarTable_t		gameCvarTable[] = {
 
 	// change anytime vars
 	{ &g_dmflags, "dmflags", "0", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qtrue  },
-        { &g_videoflags, "videoflags", "7", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qtrue  },
-        { &g_elimflags, "elimflags", "0", CVAR_SERVERINFO, 0, qfalse  },
-        { &g_voteflags, "voteflags", "0", CVAR_SERVERINFO, 0, qfalse  },
+	{ &g_videoflags, "videoflags", "7", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qtrue  },
+	{ &g_elimflags, "elimflags", "0", CVAR_SERVERINFO, 0, qfalse  },
+	{ &g_voteflags, "voteflags", "0", CVAR_SERVERINFO, 0, qfalse  },
 	{ &g_fraglimit, "fraglimit", "20", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
 	{ &g_timelimit, "timelimit", "0", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
 	{ &g_capturelimit, "capturelimit", "8", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
@@ -253,37 +253,37 @@ static cvarTable_t		gameCvarTable[] = {
 	{ &g_speed, "g_speed", "320", 0, 0, qtrue  },
 	{ &g_gravity, "g_gravity", "800", 0, 0, qtrue  },
 	{ &g_gravityModifier, "g_gravityModifier", "1", 0, 0, qtrue  },
-        { &g_damageModifier, "g_damageModifier", "0", 0, 0, qtrue },
+	{ &g_damageModifier, "g_damageModifier", "0", 0, 0, qtrue },
 	{ &g_knockback, "g_knockback", "1000", 0, 0, qtrue  },
 	{ &g_quadfactor, "g_quadfactor", "3", 0, 0, qtrue  },
 	{ &g_weaponRespawn, "g_weaponrespawn", "5", 0, 0, qtrue  },
 	{ &g_weaponTeamRespawn, "g_weaponTeamRespawn", "30", 0, 0, qtrue },
 	{ &g_forcerespawn, "g_forcerespawn", "20", 0, 0, qtrue },
-        { &g_respawntime, "g_respawntime", "0", CVAR_ARCHIVE, 0, qtrue },
+	{ &g_respawntime, "g_respawntime", "0", CVAR_ARCHIVE, 0, qtrue },
 	{ &g_inactivity, "g_inactivity", "0", 0, 0, qtrue },
 	{ &g_debugMove, "g_debugMove", "0", 0, 0, qfalse },
 	{ &g_debugDamage, "g_debugDamage", "0", 0, 0, qfalse },
 	{ &g_debugAlloc, "g_debugAlloc", "0", 0, 0, qfalse },
 	{ &g_motd, "g_motd", "", 0, 0, qfalse },
-        { &g_motdfile, "g_motdfile", "motd.cfg", 0, 0, qfalse },
+	{ &g_motdfile, "g_motdfile", "motd.cfg", 0, 0, qfalse },
 	{ &g_blood, "com_blood", "1", 0, 0, qfalse },
 
 	{ &g_podiumDist, "g_podiumDist", "80", 0, 0, qfalse },
 	{ &g_podiumDrop, "g_podiumDrop", "70", 0, 0, qfalse },
 
-        //Votes start:
+	//Votes start:
 	{ &g_allowVote, "g_allowVote", "1", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse },
-        { &g_maxvotes, "g_maxVotes", MAX_VOTE_COUNT, CVAR_ARCHIVE, 0, qfalse },
-        { &g_voteNames, "g_voteNames", "/map_restart/nextmap/map/g_gametype/kick/clientkick/g_doWarmup/timelimit/fraglimit/shuffle/", CVAR_ARCHIVE, 0, qfalse }, //clientkick g_doWarmup timelimit fraglimit
-        { &g_voteBan, "g_voteBan", "0", CVAR_ARCHIVE, 0, qfalse },
-        { &g_voteGametypes, "g_voteGametypes", "/0/1/3/4/5/6/7/8/9/10/11/12/", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse },
-        { &g_voteMaxTimelimit, "g_voteMaxTimelimit", "1000", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse },
-        { &g_voteMinTimelimit, "g_voteMinTimelimit", "0", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse },
-        { &g_voteMaxFraglimit, "g_voteMaxFraglimit", "0", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse },
-        { &g_voteMinFraglimit, "g_voteMinFraglimit", "0", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse },
-        { &g_votemaps, "g_votemapsfile", "votemaps.cfg", 0, 0, qfalse },
-        { &g_votecustom, "g_votecustomfile", "votecustom.cfg", 0, 0, qfalse },
-        
+	{ &g_maxvotes, "g_maxVotes", MAX_VOTE_COUNT, CVAR_ARCHIVE, 0, qfalse },
+	{ &g_voteNames, "g_voteNames", "/map_restart/nextmap/map/g_gametype/kick/clientkick/g_doWarmup/timelimit/fraglimit/shuffle/", CVAR_ARCHIVE, 0, qfalse }, //clientkick g_doWarmup timelimit fraglimit
+	{ &g_voteBan, "g_voteBan", "0", CVAR_ARCHIVE, 0, qfalse },
+	{ &g_voteGametypes, "g_voteGametypes", "/0/1/3/4/5/6/7/8/9/10/11/12/", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse },
+	{ &g_voteMaxTimelimit, "g_voteMaxTimelimit", "1000", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse },
+	{ &g_voteMinTimelimit, "g_voteMinTimelimit", "0", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse },
+	{ &g_voteMaxFraglimit, "g_voteMaxFraglimit", "0", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse },
+	{ &g_voteMinFraglimit, "g_voteMinFraglimit", "0", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse },
+	{ &g_votemaps, "g_votemapsfile", "votemaps.cfg", 0, 0, qfalse },
+	{ &g_votecustom, "g_votecustomfile", "votecustom.cfg", 0, 0, qfalse },
+
 	{ &g_listEntity, "g_listEntity", "0", 0, 0, qfalse },
 
 	{ &g_obeliskHealth, "g_obeliskHealth", "2500", 0, 0, qfalse },
@@ -292,11 +292,11 @@ static cvarTable_t		gameCvarTable[] = {
 	{ &g_obeliskRespawnDelay, "g_obeliskRespawnDelay", "10", CVAR_SERVERINFO, 0, qfalse },
 
 	{ &g_cubeTimeout, "g_cubeTimeout", "30", 0, 0, qfalse },
-        #ifdef MISSIONPACK
+	#ifdef MISSIONPACK
 	{ &g_redteam, "g_redteam", "Stroggs", CVAR_ARCHIVE | CVAR_SERVERINFO | CVAR_USERINFO , 0, qtrue, qtrue },
 	{ &g_blueteam, "g_blueteam", "Pagans", CVAR_ARCHIVE | CVAR_SERVERINFO | CVAR_USERINFO , 0, qtrue, qtrue  },
 	{ &g_singlePlayer, "ui_singlePlayerActive", "", 0, 0, qfalse, qfalse  },
-        #endif
+	#endif
 
 	{ &g_enableDust, "g_enableDust", "0", CVAR_SERVERINFO, 0, qtrue, qfalse },
 	{ &g_enableBreath, "g_enableBreath", "0", CVAR_SERVERINFO, 0, qtrue, qfalse },
@@ -306,29 +306,29 @@ static cvarTable_t		gameCvarTable[] = {
 	{ &pmove_fixed, "pmove_fixed", "0", CVAR_SYSTEMINFO | CVAR_ARCHIVE, 0, qfalse},
 	{ &pmove_msec, "pmove_msec", "11", CVAR_SYSTEMINFO | CVAR_ARCHIVE, 0, qfalse},
 
-        { &pmove_float, "pmove_float", "1", CVAR_SYSTEMINFO | CVAR_ARCHIVE, 0, qtrue},
+	{ &pmove_float, "pmove_float", "1", CVAR_SYSTEMINFO | CVAR_ARCHIVE, 0, qtrue},
 
 //unlagged - server options
 	{ &g_delagHitscan, "g_delagHitscan", "0", CVAR_ARCHIVE | CVAR_SERVERINFO, 0, qtrue },
 	{ &g_truePing, "g_truePing", "0", CVAR_ARCHIVE, 0, qtrue },
 	// it's CVAR_SYSTEMINFO so the client's sv_fps will be automagically set to its value
 	{ &sv_fps, "sv_fps", "20", CVAR_SYSTEMINFO | CVAR_ARCHIVE, 0, qfalse },
-        { &g_lagLightning, "g_lagLightning", "1", CVAR_ARCHIVE, 0, qtrue },
+	{ &g_lagLightning, "g_lagLightning", "1", CVAR_ARCHIVE, 0, qtrue },
 //unlagged - server options
 
 	{ &g_rankings, "g_rankings", "0", 0, 0, qfalse},
-        { &g_music, "g_music", "", 0, 0, qfalse},
-        { &g_spawnprotect, "g_spawnprotect", "500", CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue},
+	{ &g_music, "g_music", "", 0, 0, qfalse},
+	{ &g_spawnprotect, "g_spawnprotect", "500", CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue},
 	//Now for elimination stuff:
 	{ &g_elimination_selfdamage, "elimination_selfdamage", "0", 0, 0, qtrue },
 	{ &g_elimination_startHealth, "elimination_startHealth", "200", CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
 	{ &g_elimination_startArmor, "elimination_startArmor", "150", CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
 	{ &g_elimination_bfg, "elimination_bfg", "0", CVAR_ARCHIVE| CVAR_NORESTART, 0, qtrue },
-        { &g_elimination_grapple, "elimination_grapple", "0", CVAR_ARCHIVE| CVAR_NORESTART, 0, qtrue },
+	{ &g_elimination_grapple, "elimination_grapple", "0", CVAR_ARCHIVE| CVAR_NORESTART, 0, qtrue },
 	{ &g_elimination_roundtime, "elimination_roundtime", "120", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
 	{ &g_elimination_warmup, "elimination_warmup", "7", CVAR_ARCHIVE | CVAR_NORESTART , 0, qtrue },
 	{ &g_elimination_activewarmup, "elimination_activewarmup", "5", CVAR_ARCHIVE | CVAR_NORESTART , 0, qtrue },
-        { &g_elimination_allgametypes, "g_elimination", "0", CVAR_LATCH | CVAR_NORESTART, 0, qfalse },
+	{ &g_elimination_allgametypes, "g_elimination", "0", CVAR_LATCH | CVAR_NORESTART, 0, qfalse },
 
 	{ &g_elimination_machinegun, "elimination_machinegun", "500", CVAR_ARCHIVE| CVAR_NORESTART, 0, qtrue },
 	{ &g_elimination_shotgun, "elimination_shotgun", "500", CVAR_ARCHIVE| CVAR_NORESTART, 0, qtrue },
@@ -343,16 +343,16 @@ static cvarTable_t		gameCvarTable[] = {
 
 	{ &g_elimination_ctf_oneway, "elimination_ctf_oneway", "0", CVAR_ARCHIVE| CVAR_NORESTART, 0, qtrue },
 
-        { &g_elimination_lockspectator, "elimination_lockspectator", "0", CVAR_NORESTART, 0, qtrue },
-        
-        { &g_awardpushing, "g_awardpushing", "1", CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
+	{ &g_elimination_lockspectator, "elimination_lockspectator", "0", CVAR_NORESTART, 0, qtrue },
 
-        //g_persistantpowerups
-        #ifdef MISSIONPACK
-        { &g_persistantpowerups, "g_runes", "1", CVAR_LATCH, 0, qfalse },
-        #else
-        { &g_persistantpowerups, "g_runes", "0", CVAR_LATCH|CVAR_ARCHIVE, 0, qfalse },
-        #endif
+	{ &g_awardpushing, "g_awardpushing", "1", CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
+
+	//g_persistantpowerups
+	#ifdef MISSIONPACK
+	{ &g_persistantpowerups, "g_runes", "1", CVAR_LATCH, 0, qfalse },
+	#else
+	{ &g_persistantpowerups, "g_runes", "0", CVAR_LATCH|CVAR_ARCHIVE, 0, qfalse },
+	#endif
 
 
 	//nexuiz style rocket arena
@@ -366,46 +366,46 @@ static cvarTable_t		gameCvarTable[] = {
 	{ &g_lms_lives, "g_lms_lives", "1", CVAR_NORESTART, 0, qtrue },
 	{ &g_lms_mode, "g_lms_mode", "0", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
 
-        { &g_catchup, "g_catchup", "0", CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue},
+	{ &g_catchup, "g_catchup", "0", CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue},
 
-        { &g_autonextmap, "g_autonextmap", "0", CVAR_ARCHIVE | CVAR_NORESTART, 0, qfalse},
-        { &g_mappools, "g_mappools", "0\\maps_dm.cfg\\1\\maps_tourney.cfg\\3\\maps_tdm.cfg\\4\\maps_ctf.cfg\\5\\maps_oneflag.cfg\\6\\maps_obelisk.cfg\
+	{ &g_autonextmap, "g_autonextmap", "0", CVAR_ARCHIVE | CVAR_NORESTART, 0, qfalse},
+	{ &g_mappools, "g_mappools", "0\\maps_dm.cfg\\1\\maps_tourney.cfg\\3\\maps_tdm.cfg\\4\\maps_ctf.cfg\\5\\maps_oneflag.cfg\\6\\maps_obelisk.cfg\
 \\7\\maps_harvester.cfg\\8\\maps_elimination.cfg\\9\\maps_ctf.cfg\\10\\maps_lms.cfg\\11\\maps_dd.cfg\\12\\maps_dom.cfg\\", CVAR_ARCHIVE | CVAR_NORESTART, 0, qfalse},
-        { &g_humanplayers, "g_humanplayers", "0", CVAR_ROM | CVAR_NORESTART, 0, qfalse },
+	{ &g_humanplayers, "g_humanplayers", "0", CVAR_ROM | CVAR_NORESTART, 0, qfalse },
 //used for voIP
-        { &g_redTeamClientNumbers, "g_redTeamClientNumbers", "0",CVAR_ROM, 0, qfalse },
-        { &g_blueTeamClientNumbers, "g_blueTeamClientNumbers", "0",CVAR_ROM, 0, qfalse },
-        
-        //KK-OAX
-        { &g_sprees, "g_sprees", "sprees.dat", 0, 0, qfalse },
-        { &g_altExcellent, "g_altExcellent", "0", CVAR_SERVERINFO, 0, qtrue}, 
-        { &g_spreeDiv, "g_spreeDiv", "5", 0, 0, qfalse},
-        
-        //Used for command/chat flooding
-        { &g_floodMaxDemerits, "g_floodMaxDemerits", "5000", CVAR_ARCHIVE, 0, qfalse  },
-        { &g_floodMinTime, "g_floodMinTime", "2000", CVAR_ARCHIVE, 0, qfalse  },
-        
-        //Admin
-        { &g_admin, "g_admin", "admin.dat", CVAR_ARCHIVE, 0, qfalse  },
-        { &g_adminLog, "g_adminLog", "admin.log", CVAR_ARCHIVE, 0, qfalse  },
-        { &g_adminParseSay, "g_adminParseSay", "1", CVAR_ARCHIVE, 0, qfalse  },
-        { &g_adminNameProtect, "g_adminNameProtect", "1", CVAR_ARCHIVE, 0, qfalse  },
-        { &g_adminTempBan, "g_adminTempBan", "2m", CVAR_ARCHIVE, 0, qfalse  },
-        { &g_adminMaxBan, "g_adminMaxBan", "2w", CVAR_ARCHIVE, 0, qfalse  },
-        
-        { &g_specChat, "g_specChat", "1", CVAR_ARCHIVE, 0, qfalse  },
-        { &g_publicAdminMessages, "g_publicAdminMessages", "1", CVAR_ARCHIVE, 0, qfalse  },
-        
-        { &g_maxWarnings, "g_maxWarnings", "3", CVAR_ARCHIVE, 0, qfalse },
-	    { &g_warningExpire, "g_warningExpire", "3600", CVAR_ARCHIVE, 0, qfalse },
-	    
-	    { &g_minNameChangePeriod, "g_minNameChangePeriod", "10", 0, 0, qfalse},
-        { &g_maxNameChanges, "g_maxNameChanges", "50", 0, 0, qfalse},
+	{ &g_redTeamClientNumbers, "g_redTeamClientNumbers", "0",CVAR_ROM, 0, qfalse },
+	{ &g_blueTeamClientNumbers, "g_blueTeamClientNumbers", "0",CVAR_ROM, 0, qfalse },
 
-        { &g_timestamp_startgame, "g_timestamp", "0001-01-01 00:00:00", CVAR_SERVERINFO, 0, qfalse},
-		{ &g_execute_gametype_script, "g_egs", "0", CVAR_ROM, 0, qfalse },
-		{ &g_emptyCommand, "g_emptyCommand", "map_restart", CVAR_ARCHIVE, 0, qfalse},
-		{ &g_emptyTime, "g_emptytime", "0", CVAR_ARCHIVE, 0, qfalse}
+	//KK-OAX
+	{ &g_sprees, "g_sprees", "sprees.dat", 0, 0, qfalse },
+	{ &g_altExcellent, "g_altExcellent", "0", CVAR_SERVERINFO, 0, qtrue}, 
+	{ &g_spreeDiv, "g_spreeDiv", "5", 0, 0, qfalse},
+
+	//Used for command/chat flooding
+	{ &g_floodMaxDemerits, "g_floodMaxDemerits", "5000", CVAR_ARCHIVE, 0, qfalse  },
+	{ &g_floodMinTime, "g_floodMinTime", "2000", CVAR_ARCHIVE, 0, qfalse  },
+
+	//Admin
+	{ &g_admin, "g_admin", "admin.dat", CVAR_ARCHIVE, 0, qfalse  },
+	{ &g_adminLog, "g_adminLog", "admin.log", CVAR_ARCHIVE, 0, qfalse  },
+	{ &g_adminParseSay, "g_adminParseSay", "1", CVAR_ARCHIVE, 0, qfalse  },
+	{ &g_adminNameProtect, "g_adminNameProtect", "1", CVAR_ARCHIVE, 0, qfalse  },
+	{ &g_adminTempBan, "g_adminTempBan", "2m", CVAR_ARCHIVE, 0, qfalse  },
+	{ &g_adminMaxBan, "g_adminMaxBan", "2w", CVAR_ARCHIVE, 0, qfalse  },
+
+	{ &g_specChat, "g_specChat", "1", CVAR_ARCHIVE, 0, qfalse  },
+	{ &g_publicAdminMessages, "g_publicAdminMessages", "1", CVAR_ARCHIVE, 0, qfalse  },
+
+	{ &g_maxWarnings, "g_maxWarnings", "3", CVAR_ARCHIVE, 0, qfalse },
+	{ &g_warningExpire, "g_warningExpire", "3600", CVAR_ARCHIVE, 0, qfalse },
+
+	{ &g_minNameChangePeriod, "g_minNameChangePeriod", "10", 0, 0, qfalse},
+	{ &g_maxNameChanges, "g_maxNameChanges", "50", 0, 0, qfalse},
+
+	{ &g_timestamp_startgame, "g_timestamp", "0001-01-01 00:00:00", CVAR_SERVERINFO, 0, qfalse},
+	{ &g_execute_gametype_script, "g_egs", "0", CVAR_ROM, 0, qfalse },
+	{ &g_emptyCommand, "g_emptyCommand", "map_restart", CVAR_ARCHIVE, 0, qfalse},
+	{ &g_emptyTime, "g_emptytime", "0", CVAR_ARCHIVE, 0, qfalse}
         
 };
 
@@ -627,49 +627,49 @@ void G_UpdateCvars( void ) {
 						cv->cvarName, cv->vmCvar->string ) );
 				}
 
-                                if ( cv->vmCvar == &g_votecustom )
-                                    VoteParseCustomVotes();
+				if ( cv->vmCvar == &g_votecustom )
+					VoteParseCustomVotes();
 
-                                //Here comes the cvars that must trigger a map_restart
-                                if (cv->vmCvar == &g_instantgib || cv->vmCvar == &g_rockets  ||  cv->vmCvar == &g_elimination_allgametypes) {
-                                    trap_Cvar_Set("sv_dorestart","1");
-                                }
-                                
-                                if ( cv->vmCvar == &g_voteNames ) {
-                                    //Set vote flags
-                                    int voteflags=0;
-                                    if( allowedVote("map_restart") )
-                                        voteflags|=VF_map_restart;
+				//Here comes the cvars that must trigger a map_restart
+				if (cv->vmCvar == &g_instantgib || cv->vmCvar == &g_rockets  ||  cv->vmCvar == &g_elimination_allgametypes) {
+					trap_Cvar_Set("sv_dorestart","1");
+				}
 
-                                    if( allowedVote("map") )
-                                        voteflags|=VF_map;
+				if ( cv->vmCvar == &g_voteNames ) {
+					//Set vote flags
+					int voteflags=0;
+					if( allowedVote("map_restart") )
+						voteflags|=VF_map_restart;
 
-                                    if( allowedVote("clientkick") )
-                                        voteflags|=VF_clientkick;
+					if( allowedVote("map") )
+						voteflags|=VF_map;
 
-                                    if( allowedVote("shuffle") )
-                                        voteflags|=VF_shuffle;
+					if( allowedVote("clientkick") )
+						voteflags|=VF_clientkick;
 
-                                    if( allowedVote("nextmap") )
-                                        voteflags|=VF_nextmap;
+					if( allowedVote("shuffle") )
+						voteflags|=VF_shuffle;
 
-                                    if( allowedVote("g_gametype") )
-                                        voteflags|=VF_g_gametype;
-                                    
-                                    if( allowedVote("g_doWarmup") )
-                                        voteflags|=VF_g_doWarmup;
+					if( allowedVote("nextmap") )
+						voteflags|=VF_nextmap;
 
-                                    if( allowedVote("timelimit") )
-                                        voteflags|=VF_timelimit;
+					if( allowedVote("g_gametype") )
+						voteflags|=VF_g_gametype;
 
-                                    if( allowedVote("fraglimit") )
-                                        voteflags|=VF_fraglimit;
+					if( allowedVote("g_doWarmup") )
+						voteflags|=VF_g_doWarmup;
 
-                                    if( allowedVote("custom") )
-                                        voteflags|=VF_custom;
+					if( allowedVote("timelimit") )
+						voteflags|=VF_timelimit;
 
-                                    trap_Cvar_Set("voteflags",va("%i",voteflags));
-                                }
+					if( allowedVote("fraglimit") )
+						voteflags|=VF_fraglimit;
+
+					if( allowedVote("custom") )
+						voteflags|=VF_custom;
+
+					trap_Cvar_Set("voteflags",va("%i",voteflags));
+				}
       
 				if (cv->teamShader) {
 					remapped = qtrue;
@@ -687,14 +687,13 @@ void G_UpdateCvars( void ) {
  Sets the cvar g_timestamp. Return 0 if success or !0 for errors.
  */
 static int G_UpdateTimestamp( void ) {
-    int ret = 0;
-    qtime_t timestamp;
-    ret = trap_RealTime(&timestamp);
-    trap_Cvar_Set("g_timestamp",va("%04i-%02i-%02i %02i:%02i:%02i",
-    1900+timestamp.tm_year,1+timestamp.tm_mon, timestamp.tm_mday,
-    timestamp.tm_hour,timestamp.tm_min,timestamp.tm_sec));
-
-    return ret;
+	int ret = 0;
+	qtime_t timestamp;
+	ret = trap_RealTime(&timestamp);
+	trap_Cvar_Set("g_timestamp",va("%04i-%02i-%02i %02i:%02i:%02i",
+	1900+timestamp.tm_year,1+timestamp.tm_mon, timestamp.tm_mday,
+	timestamp.tm_hour,timestamp.tm_min,timestamp.tm_sec));
+	return ret;
 }
 
 /**
@@ -738,27 +737,27 @@ void G_InitGame( int levelTime, int randomSeed, int restart ) {
 	char	mapname[MAX_CVAR_VALUE_STRING];
 
         
-        G_Printf ("------- Game Initialization -------\n");
-        G_Printf ("gamename: %s\n", GAMEVERSION);
-        G_Printf ("gamedate: %s\n", __DATE__);
+	G_Printf ("------- Game Initialization -------\n");
+	G_Printf ("gamename: %s\n", GAMEVERSION);
+	G_Printf ("gamedate: %s\n", __DATE__);
 
 	srand( randomSeed );
 
 	G_RegisterCvars();
 
-        G_UpdateTimestamp();
-        
-        //disable unwanted cvars
-        if( g_gametype.integer == GT_SINGLE_PLAYER )
-        {
-            g_instantgib.integer = 0;
-            g_rockets.integer = 0;
-            g_vampire.value = 0.0f;
-        }
+	G_UpdateTimestamp();
+
+	//disable unwanted cvars
+	if( g_gametype.integer == GT_SINGLE_PLAYER )
+	{
+		g_instantgib.integer = 0;
+		g_rockets.integer = 0;
+		g_vampire.value = 0.0f;
+	}
 
 	G_ProcessIPBans();
     
-    //KK-OAX Changed to Tremulous's BG_InitMemory
+	//KK-OAX Changed to Tremulous's BG_InitMemory
 	BG_InitMemory();
 
 	// set some level globals
@@ -779,12 +778,10 @@ void G_InitGame( int levelTime, int randomSeed, int restart ) {
 			G_Printf( "WARNING: Couldn't open logfile: %s\n", g_logfile.string );
 		} else {
 			char	serverinfo[MAX_INFO_STRING];
-
 			trap_GetServerinfo( serverinfo, sizeof( serverinfo ) );
-
 			G_LogPrintf("------------------------------------------------------------\n" );
 			G_LogPrintf("InitGame: %s\n", serverinfo );
-                        G_LogPrintf("Info: ServerInfo length: %ld of %d\n", strlen(serverinfo), MAX_INFO_STRING );
+			G_LogPrintf("Info: ServerInfo length: %ld of %d\n", strlen(serverinfo), MAX_INFO_STRING );
 		}
 	} else {
 		G_Printf( "Not logging to disk.\n" );
@@ -792,13 +789,13 @@ void G_InitGame( int levelTime, int randomSeed, int restart ) {
 	
 	
 
-        //Parse the custom vote names:
-        VoteParseCustomVotes();
+	//Parse the custom vote names:
+	VoteParseCustomVotes();
 
 	G_InitWorldSession();
-    
-    //KK-OAX Get Admin Configuration
-    G_admin_readconfig( NULL, 0 );
+
+	//KK-OAX Get Admin Configuration
+	G_admin_readconfig( NULL, 0 );
 	//Let's Load up any killing sprees/multikills
 	G_ReadAltKillSettings( NULL, 0 );
 
@@ -821,10 +818,10 @@ void G_InitGame( int levelTime, int randomSeed, int restart ) {
 	// range are NEVER anything but clients
 	level.num_entities = MAX_CLIENTS;
 
-        for ( i=0 ; i<MAX_CLIENTS ; i++ ) {
-                g_entities[i].classname = "clientslot";
-        }
-        
+	for ( i=0 ; i<MAX_CLIENTS ; i++ ) {
+			g_entities[i].classname = "clientslot";
+	}
+
 	// let the server system know where the entites are
 	trap_LocateGameData( level.gentities, level.num_entities, sizeof( gentity_t ), 
 		&level.clients[0].ps, sizeof( level.clients[0] ) );
@@ -846,8 +843,8 @@ void G_InitGame( int levelTime, int randomSeed, int restart ) {
 	}
 
 	SaveRegisteredItems();
-        
-        G_Printf ("-----------------------------------\n");
+
+	G_Printf ("-----------------------------------\n");
 
 	if( g_gametype.integer == GT_SINGLE_PLAYER || trap_Cvar_VariableIntegerValue( "com_buildScript" ) ) {
 		G_ModelIndex( SP_PODIUM_MODEL );
@@ -882,56 +879,51 @@ void G_InitGame( int levelTime, int randomSeed, int restart ) {
 		level.domination_points_count = 0; //make sure its not too big
 	}
 
-        PlayerStoreInit();
+	PlayerStoreInit();
 
-        //Set vote flags
-        {
-            int voteflags=0;
-            if( allowedVote("map_restart") )
-                voteflags|=VF_map_restart;
+	//Set vote flags
+	{
+		int voteflags=0;
+		if( allowedVote("map_restart") )
+			voteflags|=VF_map_restart;
 
-            if( allowedVote("map") )
-                voteflags|=VF_map;
+		if( allowedVote("map") )
+			voteflags|=VF_map;
 
-            if( allowedVote("clientkick") )
-                voteflags|=VF_clientkick;
+		if( allowedVote("clientkick") )
+			voteflags|=VF_clientkick;
 
-            if( allowedVote("shuffle") )
-                voteflags|=VF_shuffle;
+		if( allowedVote("shuffle") )
+			voteflags|=VF_shuffle;
 
-            if( allowedVote("nextmap") )
-                voteflags|=VF_nextmap;
+		if( allowedVote("nextmap") )
+			voteflags|=VF_nextmap;
 
-            if( allowedVote("g_gametype") )
-                voteflags|=VF_g_gametype;
+		if( allowedVote("g_gametype") )
+			voteflags|=VF_g_gametype;
 
-            if( allowedVote("g_doWarmup") )
-                voteflags|=VF_g_doWarmup;
+		if( allowedVote("g_doWarmup") )
+			voteflags|=VF_g_doWarmup;
 
-            if( allowedVote("timelimit") )
-                voteflags|=VF_timelimit;
+		if( allowedVote("timelimit") )
+			voteflags|=VF_timelimit;
 
-            if( allowedVote("fraglimit") )
-                voteflags|=VF_fraglimit;
+		if( allowedVote("fraglimit") )
+			voteflags|=VF_fraglimit;
 
-            if( allowedVote("custom") )
-                voteflags|=VF_custom;
+		if( allowedVote("custom") )
+			voteflags|=VF_custom;
 
-            trap_Cvar_Set("voteflags",va("%i",voteflags));
-        }
-		
-		G_CheckGametypeScripts();
-		
-		trap_Cvar_VariableStringBuffer("mapname",mapname,sizeof(mapname));
-		
-		
+		trap_Cvar_Set("voteflags",va("%i",voteflags));
+	}
+	G_CheckGametypeScripts();
+	trap_Cvar_VariableStringBuffer("mapname",mapname,sizeof(mapname));
 	MapInfoGet(mapname,g_gametype.integer,&mapinfo);
-	MapInfoPrint(&mapinfo);
-		
-		if(G_RunScript(va("mapscripts/g_%s.cfg",mapname)))
-			G_RunScript("mapscripts/g_default.cfg");
-		if(G_RunScript(va("mapscripts/g_%s_%i.cfg",mapname,g_gametype.integer)))
-			G_RunScript(va("mapscripts/g_default_%i.cfg",g_gametype.integer) );
+	MapInfoPrint(&mapinfo);	
+	if(G_RunScript(va("mapscripts/g_%s.cfg",mapname)))
+		G_RunScript("mapscripts/g_default.cfg");
+	if(G_RunScript(va("mapscripts/g_%s_%i.cfg",mapname,g_gametype.integer)))
+		G_RunScript(va("mapscripts/g_default_%i.cfg",g_gametype.integer) );
 }
 
 
@@ -955,8 +947,8 @@ void G_ShutdownGame( int restart ) {
 	G_WriteSessionData();
 	
 	//KK-OAX Admin Cleanup
-    G_admin_cleanup( );
-    G_admin_namelog_cleanup( );
+	G_admin_cleanup( );
+	G_admin_namelog_cleanup( );
 
 	if ( trap_Cvar_VariableIntegerValue( "bot_enable" ) ) {
 		BotAIShutdown( restart );
@@ -986,7 +978,7 @@ void QDECL Com_Printf( const char *msg, ... ) {
 	Q_vsnprintf (text, sizeof(text), msg, argptr);
 	va_end (argptr);
 
-        G_Printf ("%s", text);
+	G_Printf ("%s", text);
 }
 
 /*
@@ -1059,19 +1051,19 @@ Add client to end of tournament queue
 */
 void AddTournamentQueue(gclient_t *client)
 {
-    int index;
-    gclient_t *curclient;
-    for(index = 0; index < level.maxclients; index++)
-    {
-        curclient = &level.clients[index];
-        if(curclient->pers.connected != CON_DISCONNECTED)
-        {
-            if(curclient == client)
-            curclient->sess.spectatorNum = 0;
-            else if(curclient->sess.sessionTeam == TEAM_SPECTATOR)
-            curclient->sess.spectatorNum++;
-        }
-    }
+	int index;
+	gclient_t *curclient;
+	for(index = 0; index < level.maxclients; index++)
+	{
+		curclient = &level.clients[index];
+		if(curclient->pers.connected != CON_DISCONNECTED)
+		{
+			if(curclient == client)
+			curclient->sess.spectatorNum = 0;
+			else if(curclient->sess.sessionTeam == TEAM_SPECTATOR)
+			curclient->sess.spectatorNum++;
+		}
+	}
 }
 
 /*
@@ -1188,14 +1180,14 @@ int QDECL SortRanks( const void *a, const void *b ) {
 		return -1;
 	}
 
-        //In elimination and CTF elimination, sort dead players last
-        if((g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_CTF_ELIMINATION)
-                && level.roundNumber==level.roundNumberStarted && (ca->isEliminated != cb->isEliminated)) {
-            if( ca->isEliminated )
-                return 1;
-            if( cb->isEliminated )
-                return -1;
-        }
+	//In elimination and CTF elimination, sort dead players last
+	if((g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_CTF_ELIMINATION)
+			&& level.roundNumber==level.roundNumberStarted && (ca->isEliminated != cb->isEliminated)) {
+		if( ca->isEliminated )
+			return 1;
+		if( cb->isEliminated )
+			return -1;
+	}
 
 	// then sort by score
 	if ( ca->ps.persistant[PERS_SCORE]
@@ -1223,7 +1215,7 @@ void CalculateRanks( void ) {
 	int		rank;
 	int		score;
 	int		newScore;
-        int             humanplayers;
+	int		humanplayers;
 	gclient_t	*cl;
 
 	level.follow1 = -1;
@@ -1240,10 +1232,10 @@ void CalculateRanks( void ) {
 			level.sortedClients[level.numConnectedClients] = i;
 			level.numConnectedClients++;
 
-                        //We just set humanplayers to 0 during intermission
-                        if ( !level.intermissiontime && level.clients[i].pers.connected == CON_CONNECTED && !(g_entities[i].r.svFlags & SVF_BOT) ) {
-                            humanplayers++;
-                        }
+			//We just set humanplayers to 0 during intermission
+			if ( !level.intermissiontime && level.clients[i].pers.connected == CON_CONNECTED && !(g_entities[i].r.svFlags & SVF_BOT) ) {
+				humanplayers++;
+			}
 
 			if ( level.clients[i].sess.sessionTeam != TEAM_SPECTATOR ) {
                                 level.numNonSpectatorClients++;
@@ -1329,11 +1321,11 @@ void CalculateRanks( void ) {
 		SendScoreboardMessageToAllClients();
 	}
         
-        if(g_humanplayers.integer != humanplayers) //Presume all spectators are humans!
-            trap_Cvar_Set( "g_humanplayers", va("%i", humanplayers) );
+	if(g_humanplayers.integer != humanplayers) //Presume all spectators are humans!
+		trap_Cvar_Set( "g_humanplayers", va("%i", humanplayers) );
 	if(humanplayers > level.max_humanplayers) {
 		G_LogPrintf( "Info: There has been at least %i humans now\n", humanplayers );
-	    level.max_humanplayers = humanplayers;
+		level.max_humanplayers = humanplayers;
 	}
 }
 
@@ -1679,56 +1671,56 @@ void ExitLevel (void) {
 	trap_Cvar_VariableStringBuffer( "nextmap", nextmap, sizeof(nextmap) );
 	trap_Cvar_VariableStringBuffer( "d1", d1, sizeof(d1) );
         
-        trap_GetServerinfo( serverinfo, sizeof( serverinfo ) );
+	trap_GetServerinfo( serverinfo, sizeof( serverinfo ) );
 
-        //Here the game finds the nextmap if g_autonextmap is set
-        if(g_autonextmap.integer ) {
-            char filename[MAX_FILEPATH];
-            fileHandle_t file,mapfile;
-            //Look in g_mappools.string for the file to look for maps in
-            Q_strncpyz(filename,Info_ValueForKey(g_mappools.string, va("%i",g_gametype.integer)),MAX_FILEPATH);
-            //If we found a filename:
-            if(filename[0]) {
-                //Read the file:
-                /*int len =*/ trap_FS_FOpenFile(filename, &file, FS_READ);
-                if(!file)
-                    trap_FS_FOpenFile(va("%s.org",filename), &file, FS_READ);
-                if(file) {
-                    char  buffer[4*1024]; // buffer to read file into
-                    char mapnames[1024][20]; // Array of mapnames in the map pool
-                    char *pointer;
-                    int choice, count=0; //The random choice from mapnames and count of mapnames
-                    int i;
-                    memset(&buffer,0,sizeof(buffer));
-                    trap_FS_Read(&buffer,sizeof(buffer),file);
-                    pointer = buffer;
-                    while ( qtrue ) {
-                        Q_strncpyz(mapnames[count],COM_Parse( &pointer ),20);
-                        if ( !mapnames[count][0] ) {
-                            break;
-                        }
-                        G_Printf("Mapname in mappool: %s\n",mapnames[count]);
-                        count++;
-                    }
-                    trap_FS_FCloseFile(file);
-                    //It is possible that the maps in the file read are flawed, so we try up to ten times:
-                    for(i=0;i<10;i++) {
-                        choice = (count > 0)? rand()%count : 0;
-                        if(Q_strequal(mapnames[choice],Info_ValueForKey(serverinfo,"mapname")))
-                            continue;
-                        //Now check that the map exists:
-                        trap_FS_FOpenFile(va("maps/%s.bsp",mapnames[choice]),&mapfile,FS_READ);
-                        if(mapfile) {
-                            G_Printf("Picked map number %i - %s\n",choice,mapnames[choice]);
-                            Q_strncpyz(nextmap,va("map %s",mapnames[choice]),sizeof(nextmap));
-                            trap_Cvar_Set("nextmap",nextmap);
-                            trap_FS_FCloseFile(mapfile);
-                            break;
-                        }
-                    }
-                }
-            }
-        }
+	//Here the game finds the nextmap if g_autonextmap is set
+	if(g_autonextmap.integer ) {
+		char filename[MAX_FILEPATH];
+		fileHandle_t file,mapfile;
+		//Look in g_mappools.string for the file to look for maps in
+		Q_strncpyz(filename,Info_ValueForKey(g_mappools.string, va("%i",g_gametype.integer)),MAX_FILEPATH);
+		//If we found a filename:
+		if(filename[0]) {
+			//Read the file:
+			/*int len =*/ trap_FS_FOpenFile(filename, &file, FS_READ);
+			if(!file)
+				trap_FS_FOpenFile(va("%s.org",filename), &file, FS_READ);
+			if(file) {
+				char  buffer[4*1024]; // buffer to read file into
+				char mapnames[1024][20]; // Array of mapnames in the map pool
+				char *pointer;
+				int choice, count=0; //The random choice from mapnames and count of mapnames
+				int i;
+				memset(&buffer,0,sizeof(buffer));
+				trap_FS_Read(&buffer,sizeof(buffer),file);
+				pointer = buffer;
+				while ( qtrue ) {
+					Q_strncpyz(mapnames[count],COM_Parse( &pointer ),20);
+					if ( !mapnames[count][0] ) {
+						break;
+					}
+					G_Printf("Mapname in mappool: %s\n",mapnames[count]);
+					count++;
+				}
+				trap_FS_FCloseFile(file);
+				//It is possible that the maps in the file read are flawed, so we try up to ten times:
+				for(i=0;i<10;i++) {
+					choice = (count > 0)? rand()%count : 0;
+					if(Q_strequal(mapnames[choice],Info_ValueForKey(serverinfo,"mapname")))
+						continue;
+					//Now check that the map exists:
+					trap_FS_FOpenFile(va("maps/%s.bsp",mapnames[choice]),&mapfile,FS_READ);
+					if(mapfile) {
+						G_Printf("Picked map number %i - %s\n",choice,mapnames[choice]);
+						Q_strncpyz(nextmap,va("map %s",mapnames[choice]),sizeof(nextmap));
+						trap_Cvar_Set("nextmap",nextmap);
+						trap_FS_FCloseFile(mapfile);
+						break;
+					}
+				}
+			}
+		}
+	}
 
 	if( !Q_stricmp( nextmap, "map_restart 0" ) && Q_stricmp( d1, "" ) ) {
 		trap_Cvar_Set( "nextmap", "vstr d2" );
@@ -2004,7 +1996,7 @@ can see the last frag.
 =================
 */
 void CheckExitRules( void ) {
- 	int			i;
+	int			i;
 	gclient_t	*cl;
 	// if at the intermission, wait for all non-bots to
 	// signal ready, then go to next level
@@ -2012,15 +2004,15 @@ void CheckExitRules( void ) {
 		CheckIntermissionExit ();
 		return;
 	} else {
-            //sago: Find the reason for this to be neccesary.
-            for (i=0 ; i< g_maxclients.integer ; i++) {
-		cl = level.clients + i;
-		if ( cl->pers.connected != CON_CONNECTED ) {
-			continue;
-                }
-                cl->ps.stats[STAT_CLIENTS_READY] = 0;
-            }
-        }
+		//sago: Find the reason for this to be neccesary.
+		for (i=0 ; i< g_maxclients.integer ; i++) {
+			cl = level.clients + i;
+			if ( cl->pers.connected != CON_CONNECTED ) {
+				continue;
+			}
+			cl->ps.stats[STAT_CLIENTS_READY] = 0;
+		}
+	}
 
 	if ( level.intermissionQueued ) {
 #ifdef MISSIONPACK
@@ -2117,8 +2109,8 @@ void StartLMSRound(void) {
 	//If we are enough to start a round:
 	level.roundNumberStarted = level.roundNumber; //Set numbers
 
-        G_LogPrintf( "LMS: %i %i %i: Round %i has started!\n", level.roundNumber, -1, 0, level.roundNumber );
-        
+	G_LogPrintf( "LMS: %i %i %i: Round %i has started!\n", level.roundNumber, -1, 0, level.roundNumber );
+
 	SendEliminationMessageToAllClients();
 	EnableWeapons();
 }
@@ -2149,11 +2141,11 @@ void StartEliminationRound(void) {
 		Team_ReturnFlag( TEAM_RED );
 		Team_ReturnFlag( TEAM_BLUE );
 	}
-        if(g_gametype.integer == GT_ELIMINATION) {
-            G_LogPrintf( "ELIMINATION: %i %i %i: Round %i has started!\n", level.roundNumber, -1, 0, level.roundNumber );
-        } else if(g_gametype.integer == GT_CTF_ELIMINATION) {
-            G_LogPrintf( "CTF_ELIMINATION: %i %i %i %i: Round %i has started!\n", level.roundNumber, -1, -1, 4, level.roundNumber );
-        }
+	if(g_gametype.integer == GT_ELIMINATION) {
+		G_LogPrintf( "ELIMINATION: %i %i %i: Round %i has started!\n", level.roundNumber, -1, 0, level.roundNumber );
+	} else if(g_gametype.integer == GT_CTF_ELIMINATION) {
+		G_LogPrintf( "CTF_ELIMINATION: %i %i %i %i: Round %i has started!\n", level.roundNumber, -1, -1, 4, level.roundNumber );
+	}
 	SendEliminationMessageToAllClients();
 	if(g_elimination_ctf_oneway.integer)
 		SendAttackingTeamMessageToAllClients(); //Ensure that evaryone know who should attack.
@@ -2167,7 +2159,7 @@ void EndEliminationRound(void)
 	level.roundNumber++;
 	level.roundStartTime = level.time+1000*g_elimination_warmup.integer;
 	SendEliminationMessageToAllClients();
-        CalculateRanks();
+	CalculateRanks();
 	level.roundRespawned = qfalse;
 	if(g_elimination_ctf_oneway.integer)
 		SendAttackingTeamMessageToAllClients();
@@ -2178,8 +2170,8 @@ void RestartEliminationRound(void) {
 	DisableWeapons();
 	level.roundNumberStarted = level.roundNumber-1;
 	level.roundStartTime = level.time+1000*g_elimination_warmup.integer;
-        if(!level.intermissiontime)
-            SendEliminationMessageToAllClients();
+	if(!level.intermissiontime)
+		SendEliminationMessageToAllClients();
 	level.roundRespawned = qfalse;
 	if(g_elimination_ctf_oneway.integer)
 		SendAttackingTeamMessageToAllClients();
@@ -2214,15 +2206,15 @@ void CheckDoubleDomination( void ) {
 	}
 
 	if ( level.warmupTime != 0) {
-            if( ((level.pointStatusA == TEAM_BLUE && level.pointStatusB == TEAM_BLUE) ||
-                 (level.pointStatusA == TEAM_RED && level.pointStatusB == TEAM_RED)) &&
-                    level.timeTaken + 10*1000 <= level.time ) {
-                        Team_RemoveDoubleDominationPoints();
-                        level.roundStartTime = level.time + 10*1000;
-                        SendScoreboardMessageToAllClients();
-            }
-            return;
-        }
+		if( ((level.pointStatusA == TEAM_BLUE && level.pointStatusB == TEAM_BLUE) ||
+			 (level.pointStatusA == TEAM_RED && level.pointStatusB == TEAM_RED)) &&
+				level.timeTaken + 10*1000 <= level.time ) {
+					Team_RemoveDoubleDominationPoints();
+					level.roundStartTime = level.time + 10*1000;
+					SendScoreboardMessageToAllClients();
+		}
+		return;
+	}
 
 	if(g_gametype.integer != GT_DOUBLE_D)
 		return;
@@ -2235,7 +2227,7 @@ void CheckDoubleDomination( void ) {
 		//Red scores
 		trap_SendServerCommand( -1, "print \"Red team scores!\n\"");
 		AddTeamScore(level.intermission_origin,TEAM_RED,1);
-                G_LogPrintf( "DD: %i %i %i: %s scores!\n", -1, TEAM_RED, 2, TeamName(TEAM_RED) );
+		G_LogPrintf( "DD: %i %i %i: %s scores!\n", -1, TEAM_RED, 2, TeamName(TEAM_RED) );
 		Team_ForceGesture(TEAM_RED);
 		Team_DD_bonusAtPoints(TEAM_RED);
 		Team_RemoveDoubleDominationPoints();
@@ -2249,7 +2241,7 @@ void CheckDoubleDomination( void ) {
 		//Blue scores
 		trap_SendServerCommand( -1, "print \"Blue team scores!\n\"");
 		AddTeamScore(level.intermission_origin,TEAM_BLUE,1);
-                G_LogPrintf( "DD: %i %i %i: %s scores!\n", -1, TEAM_BLUE, 2, TeamName(TEAM_BLUE) );
+		G_LogPrintf( "DD: %i %i %i: %s scores!\n", -1, TEAM_BLUE, 2, TeamName(TEAM_BLUE) );
 		Team_ForceGesture(TEAM_BLUE);
 		Team_DD_bonusAtPoints(TEAM_BLUE);
 		Team_RemoveDoubleDominationPoints();
@@ -2404,11 +2396,11 @@ void CheckElimination(void) {
 				//Blue team has been eliminated!
 				trap_SendServerCommand( -1, "print \"Blue Team eliminated!\n\"");
 				AddTeamScore(level.intermission_origin,TEAM_RED,1);
-                                if(g_gametype.integer == GT_ELIMINATION) {
-                                    G_LogPrintf( "ELIMINATION: %i %i %i: %s wins round %i by eleminating the enemy team!\n", level.roundNumber, TEAM_RED, 1, TeamName(TEAM_RED), level.roundNumber );
-                                } else {
-                                    G_LogPrintf( "CTF_ELIMINATION: %i %i %i %i: %s wins round %i by eleminating the enemy team!\n", level.roundNumber, -1, TEAM_RED, 6, TeamName(TEAM_RED), level.roundNumber );
-                                }
+				if(g_gametype.integer == GT_ELIMINATION) {
+					G_LogPrintf( "ELIMINATION: %i %i %i: %s wins round %i by eleminating the enemy team!\n", level.roundNumber, TEAM_RED, 1, TeamName(TEAM_RED), level.roundNumber );
+				} else {
+					G_LogPrintf( "CTF_ELIMINATION: %i %i %i %i: %s wins round %i by eleminating the enemy team!\n", level.roundNumber, -1, TEAM_RED, 6, TeamName(TEAM_RED), level.roundNumber );
+				}
 				EndEliminationRound();
 				Team_ForceGesture(TEAM_RED);
 			}
@@ -2417,11 +2409,11 @@ void CheckElimination(void) {
 				//Red team eliminated!
 				trap_SendServerCommand( -1, "print \"Red Team eliminated!\n\"");
 				AddTeamScore(level.intermission_origin,TEAM_BLUE,1);
-                                if(g_gametype.integer == GT_ELIMINATION) {
-                                    G_LogPrintf( "ELIMINATION: %i %i %i: %s wins round %i by eleminating the enemy team!\n", level.roundNumber, TEAM_BLUE, 1, TeamName(TEAM_BLUE), level.roundNumber );
-                                } else {
-                                    G_LogPrintf( "CTF_ELIMINATION: %i %i %i %i: %s wins round %i by eleminating the enemy team!\n", level.roundNumber, -1, TEAM_BLUE, 6, TeamName(TEAM_BLUE), level.roundNumber );
-                                }
+				if(g_gametype.integer == GT_ELIMINATION) {
+					G_LogPrintf( "ELIMINATION: %i %i %i: %s wins round %i by eleminating the enemy team!\n", level.roundNumber, TEAM_BLUE, 1, TeamName(TEAM_BLUE), level.roundNumber );
+				} else {
+					G_LogPrintf( "CTF_ELIMINATION: %i %i %i %i: %s wins round %i by eleminating the enemy team!\n", level.roundNumber, -1, TEAM_BLUE, 6, TeamName(TEAM_BLUE), level.roundNumber );
+				}
 				EndEliminationRound();
 				Team_ForceGesture(TEAM_BLUE);
 			}
@@ -2438,12 +2430,12 @@ void CheckElimination(void) {
 					if ( (level.eliminationSides+level.roundNumber)%2 == 0 ) { //Red was attacking
 						trap_SendServerCommand( -1, "print \"Blue team defended the base\n\"");
 						AddTeamScore(level.intermission_origin,TEAM_BLUE,1);
-                                                G_LogPrintf( "CTF_ELIMINATION: %i %i %i %i: %s wins round %i by defending the flag!\n", level.roundNumber, -1, TEAM_BLUE, 5, TeamName(TEAM_BLUE), level.roundNumber );
+						G_LogPrintf( "CTF_ELIMINATION: %i %i %i %i: %s wins round %i by defending the flag!\n", level.roundNumber, -1, TEAM_BLUE, 5, TeamName(TEAM_BLUE), level.roundNumber );
 					}
 					else {
 						trap_SendServerCommand( -1, "print \"Red team defended the base\n\"");
 						AddTeamScore(level.intermission_origin,TEAM_RED,1);
-                                                G_LogPrintf( "CTF_ELIMINATION: %i %i %i %i: %s wins round %i by defending the flag!\n", level.roundNumber, -1, TEAM_RED, 5, TeamName(TEAM_RED), level.roundNumber );
+						G_LogPrintf( "CTF_ELIMINATION: %i %i %i %i: %s wins round %i by defending the flag!\n", level.roundNumber, -1, TEAM_RED, 5, TeamName(TEAM_RED), level.roundNumber );
 					}
 				}
 				else if(((double)countsLiving[TEAM_RED])/((double)level.roundRedPlayers)>((double)countsLiving[TEAM_BLUE])/((double)level.roundBluePlayers))
@@ -2451,52 +2443,52 @@ void CheckElimination(void) {
 					//Red team has higher procentage survivors
 					trap_SendServerCommand( -1, "print \"Red team has most survivers!\n\"");
 					AddTeamScore(level.intermission_origin,TEAM_RED,1);
-                                        if(g_gametype.integer == GT_ELIMINATION) {
-                                            G_LogPrintf( "ELIMINATION: %i %i %i: %s wins round %i due to more survivors!\n", level.roundNumber, TEAM_RED, 2, TeamName(TEAM_RED), level.roundNumber );
-                                        } else {
-                                            G_LogPrintf( "CTF_ELIMINATION: %i %i %i %i: %s wins round %i due to more survivors!\n", level.roundNumber, -1, TEAM_RED, 7, TeamName(TEAM_RED), level.roundNumber );
-                                        }
+					if(g_gametype.integer == GT_ELIMINATION) {
+						G_LogPrintf( "ELIMINATION: %i %i %i: %s wins round %i due to more survivors!\n", level.roundNumber, TEAM_RED, 2, TeamName(TEAM_RED), level.roundNumber );
+					} else {
+						G_LogPrintf( "CTF_ELIMINATION: %i %i %i %i: %s wins round %i due to more survivors!\n", level.roundNumber, -1, TEAM_RED, 7, TeamName(TEAM_RED), level.roundNumber );
+					}
 				}
 				else if(((double)countsLiving[TEAM_RED])/((double)level.roundRedPlayers)<((double)countsLiving[TEAM_BLUE])/((double)level.roundBluePlayers))
 				{
 					//Blue team has higher procentage survivors
 					trap_SendServerCommand( -1, "print \"Blue team has most survivers!\n\"");
 					AddTeamScore(level.intermission_origin,TEAM_BLUE,1);	
-                                        if(g_gametype.integer == GT_ELIMINATION) {
-                                            G_LogPrintf( "ELIMINATION: %i %i %i: %s wins round %i due to more survivors!\n", level.roundNumber, TEAM_BLUE, 2, TeamName(TEAM_BLUE), level.roundNumber );
-                                        } else {
-                                            G_LogPrintf( "CTF_ELIMINATION: %i %i %i %i: %s wins round %i due to more survivors!\n", level.roundNumber, -1, TEAM_BLUE, 7, TeamName(TEAM_BLUE), level.roundNumber );
-                                        }
+					if(g_gametype.integer == GT_ELIMINATION) {
+						G_LogPrintf( "ELIMINATION: %i %i %i: %s wins round %i due to more survivors!\n", level.roundNumber, TEAM_BLUE, 2, TeamName(TEAM_BLUE), level.roundNumber );
+					} else {
+						G_LogPrintf( "CTF_ELIMINATION: %i %i %i %i: %s wins round %i due to more survivors!\n", level.roundNumber, -1, TEAM_BLUE, 7, TeamName(TEAM_BLUE), level.roundNumber );
+					}
 				}
 				else if(countsHealth[TEAM_RED]>countsHealth[TEAM_BLUE])
 				{
 					//Red team has more health
 					trap_SendServerCommand( -1, "print \"Red team has more health left!\n\"");
 					AddTeamScore(level.intermission_origin,TEAM_RED,1);
-                                        if(g_gametype.integer == GT_ELIMINATION) {
-                                            G_LogPrintf( "ELIMINATION: %i %i %i: %s wins round %i due to more health left!\n", level.roundNumber, TEAM_RED, 3, TeamName(TEAM_RED), level.roundNumber );
-                                        } else {
-                                            G_LogPrintf( "CTF_ELIMINATION: %i %i %i %i: %s wins round %i due to more health left!\n", level.roundNumber, -1, TEAM_RED, 8, TeamName(TEAM_RED), level.roundNumber );
-                                        }
+					if(g_gametype.integer == GT_ELIMINATION) {
+						G_LogPrintf( "ELIMINATION: %i %i %i: %s wins round %i due to more health left!\n", level.roundNumber, TEAM_RED, 3, TeamName(TEAM_RED), level.roundNumber );
+					} else {
+						G_LogPrintf( "CTF_ELIMINATION: %i %i %i %i: %s wins round %i due to more health left!\n", level.roundNumber, -1, TEAM_RED, 8, TeamName(TEAM_RED), level.roundNumber );
+					}
 				}
 				else if(countsHealth[TEAM_RED]<countsHealth[TEAM_BLUE])
 				{
 					//Blue team has more health
 					trap_SendServerCommand( -1, "print \"Blue team has more health left!\n\"");
 					AddTeamScore(level.intermission_origin,TEAM_BLUE,1);
-                                        if(g_gametype.integer == GT_ELIMINATION) {
-                                            G_LogPrintf( "ELIMINATION: %i %i %i: %s wins round %i due to more health left!\n", level.roundNumber, TEAM_BLUE, 3, TeamName(TEAM_BLUE), level.roundNumber );
-                                        } else {
-                                            G_LogPrintf( "CTF_ELIMINATION: %i %i %i %i: %s wins round %i due to more health left!\n", level.roundNumber, -1, TEAM_BLUE, 8, TeamName(TEAM_BLUE), level.roundNumber );
-                                        }
+					if(g_gametype.integer == GT_ELIMINATION) {
+						G_LogPrintf( "ELIMINATION: %i %i %i: %s wins round %i due to more health left!\n", level.roundNumber, TEAM_BLUE, 3, TeamName(TEAM_BLUE), level.roundNumber );
+					} else {
+						G_LogPrintf( "CTF_ELIMINATION: %i %i %i %i: %s wins round %i due to more health left!\n", level.roundNumber, -1, TEAM_BLUE, 8, TeamName(TEAM_BLUE), level.roundNumber );
+					}
 				}
 			}
-                        //Draw
-                        if(g_gametype.integer == GT_ELIMINATION) {
-                            G_LogPrintf( "ELIMINATION: %i %i %i: Round %i ended in a draw!\n", level.roundNumber, -1, 4, level.roundNumber );
-                        } else {
-                            G_LogPrintf( "CTF_ELIMINATION: %i %i %i %i: Round %i ended in a draw!\n", level.roundNumber, -1, -1, 9, level.roundNumber );
-                        }
+			//Draw
+			if(g_gametype.integer == GT_ELIMINATION) {
+				G_LogPrintf( "ELIMINATION: %i %i %i: Round %i ended in a draw!\n", level.roundNumber, -1, 4, level.roundNumber );
+			} else {
+				G_LogPrintf( "CTF_ELIMINATION: %i %i %i %i: Round %i ended in a draw!\n", level.roundNumber, -1, -1, 9, level.roundNumber );
+			}
 			EndEliminationRound();
 		}
 
@@ -2548,7 +2540,7 @@ CheckDomination
 */
 void CheckDomination(void) {
 	int i;
-        int scoreFactor = 1;
+	int scoreFactor = 1;
 
 	if ( (level.numPlayingClients < 1) || (g_gametype.integer != GT_DOMINATION) ) {
 		return;
@@ -2571,9 +2563,9 @@ void CheckDomination(void) {
 				AddTeamScore(level.intermission_origin,TEAM_RED,1);
 			if ( level.pointStatusDom[i] == TEAM_BLUE )
 				AddTeamScore(level.intermission_origin,TEAM_BLUE,1);
-                        G_LogPrintf( "DOM: %i %i %i %i: %s holds point %s for 1 point!\n",
-                                    -1,i,1,level.pointStatusDom[i],
-                                    TeamName(level.pointStatusDom[i]),level.domination_points_names[i]);
+			G_LogPrintf( "DOM: %i %i %i %i: %s holds point %s for 1 point!\n",
+						-1,i,1,level.pointStatusDom[i],
+						TeamName(level.pointStatusDom[i]),level.domination_points_names[i]);
 		}
 		level.dom_scoreGiven++;
 		while(level.time>level.dom_scoreGiven*DOM_SECSPERPOINT*scoreFactor)
@@ -2913,21 +2905,21 @@ void G_RunFrame( int levelTime ) {
 	// get any cvar changes
 	G_UpdateCvars();
 
-        if( (g_gametype.integer==GT_ELIMINATION || g_gametype.integer==GT_CTF_ELIMINATION) && !(g_elimflags.integer & EF_NO_FREESPEC) && g_elimination_lockspectator.integer>1)
-            trap_Cvar_Set("elimflags",va("%i",g_elimflags.integer|EF_NO_FREESPEC));
-        else
-        if( (g_elimflags.integer & EF_NO_FREESPEC) && g_elimination_lockspectator.integer<2)
-            trap_Cvar_Set("elimflags",va("%i",g_elimflags.integer&(~EF_NO_FREESPEC) ) );
+	if( (g_gametype.integer==GT_ELIMINATION || g_gametype.integer==GT_CTF_ELIMINATION) && !(g_elimflags.integer & EF_NO_FREESPEC) && g_elimination_lockspectator.integer>1)
+		trap_Cvar_Set("elimflags",va("%i",g_elimflags.integer|EF_NO_FREESPEC));
+	else
+	if( (g_elimflags.integer & EF_NO_FREESPEC) && g_elimination_lockspectator.integer<2)
+		trap_Cvar_Set("elimflags",va("%i",g_elimflags.integer&(~EF_NO_FREESPEC) ) );
 
-        if( g_elimination_ctf_oneway.integer && !(g_elimflags.integer & EF_ONEWAY) ) {
-            trap_Cvar_Set("elimflags",va("%i",g_elimflags.integer|EF_ONEWAY ) );
-            //If the server admin has enabled it midgame imidiantly braodcast attacking team
-            SendAttackingTeamMessageToAllClients();
-        }
-        else
-        if( !g_elimination_ctf_oneway.integer && (g_elimflags.integer & EF_ONEWAY) ) {
-            trap_Cvar_Set("elimflags",va("%i",g_elimflags.integer&(~EF_ONEWAY) ) );
-        }
+	if( g_elimination_ctf_oneway.integer && !(g_elimflags.integer & EF_ONEWAY) ) {
+		trap_Cvar_Set("elimflags",va("%i",g_elimflags.integer|EF_ONEWAY ) );
+		//If the server admin has enabled it midgame imidiantly braodcast attacking team
+		SendAttackingTeamMessageToAllClients();
+	}
+	else
+	if( !g_elimination_ctf_oneway.integer && (g_elimflags.integer & EF_ONEWAY) ) {
+		trap_Cvar_Set("elimflags",va("%i",g_elimflags.integer&(~EF_ONEWAY) ) );
+	}
 
 	//
 	// go through all allocated objects

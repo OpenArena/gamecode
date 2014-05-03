@@ -985,62 +985,62 @@ void G_admin_namelog_cleanup( )
 
 void G_admin_namelog_update( gclient_t *client, qboolean disconnect )
 {
-  int i, j;
-  g_admin_namelog_t *namelog;
-  char n1[ MAX_NAME_LENGTH ];
-  char n2[ MAX_NAME_LENGTH ];
-  int clientNum = ( client - level.clients );
+	int i, j;
+	g_admin_namelog_t *namelog;
+	char n1[ MAX_NAME_LENGTH ];
+	char n2[ MAX_NAME_LENGTH ];
+	int clientNum = ( client - level.clients );
 
-  G_SanitiseString( client->pers.netname, n1, sizeof( n1 ) );
-  for( i = 0; i < MAX_ADMIN_NAMELOGS && g_admin_namelog[ i ]; i++ )
-  {
-    if( disconnect && g_admin_namelog[ i ]->slot != clientNum )
-      continue;
+	G_SanitiseString( client->pers.netname, n1, sizeof( n1 ) );
+	for( i = 0; i < MAX_ADMIN_NAMELOGS && g_admin_namelog[ i ]; i++ )
+	{
+		if( disconnect && g_admin_namelog[ i ]->slot != clientNum )
+			continue;
 
-    if( !disconnect && !( g_admin_namelog[ i ]->slot == clientNum ||
-                          g_admin_namelog[ i ]->slot == -1 ) )
-    {
-      continue;
-    }
+		if( !disconnect && !( g_admin_namelog[ i ]->slot == clientNum ||
+							  g_admin_namelog[ i ]->slot == -1 ) )
+		{
+			continue;
+		}
 
-    if( !Q_stricmp( client->pers.ip, g_admin_namelog[ i ]->ip ) &&
-      !Q_stricmp( client->pers.guid, g_admin_namelog[ i ]->guid ) )
-    {
-      for( j = 0; j < MAX_ADMIN_NAMELOG_NAMES &&
-         g_admin_namelog[ i ]->name[ j ][ 0 ]; j++ )
-      {
-        G_SanitiseString( g_admin_namelog[ i ]->name[ j ], n2, sizeof( n2 ) );
-        if( !Q_stricmp( n1, n2 ) )
-          break;
-      }
-      if( j == MAX_ADMIN_NAMELOG_NAMES )
-        j = MAX_ADMIN_NAMELOG_NAMES - 1;
-      Q_strncpyz( g_admin_namelog[ i ]->name[ j ], client->pers.netname,
-        sizeof( g_admin_namelog[ i ]->name[ j ] ) );
-      g_admin_namelog[ i ]->slot = ( disconnect ) ? -1 : clientNum;
+		if( !Q_stricmp( client->pers.ip, g_admin_namelog[ i ]->ip ) &&
+		  !Q_stricmp( client->pers.guid, g_admin_namelog[ i ]->guid ) )
+		{
+			for( j = 0; j < MAX_ADMIN_NAMELOG_NAMES &&
+				g_admin_namelog[ i ]->name[ j ][ 0 ]; j++ )
+			{
+				G_SanitiseString( g_admin_namelog[ i ]->name[ j ], n2, sizeof( n2 ) );
+				if( !Q_stricmp( n1, n2 ) )
+					break;
+			}
+			if( j == MAX_ADMIN_NAMELOG_NAMES )
+				j = MAX_ADMIN_NAMELOG_NAMES - 1;
+			Q_strncpyz( g_admin_namelog[ i ]->name[ j ], client->pers.netname,
+				sizeof( g_admin_namelog[ i ]->name[ j ] ) );
+			g_admin_namelog[ i ]->slot = ( disconnect ) ? -1 : clientNum;
 
-      // if this player is connecting, they are no longer banned
-      if( !disconnect )
-        g_admin_namelog[ i ]->banned = qfalse;
+			// if this player is connecting, they are no longer banned
+			if( !disconnect )
+				g_admin_namelog[ i ]->banned = qfalse;
 
-      return;
-    }
-  }
-  if( i >= MAX_ADMIN_NAMELOGS )
-  {
-    G_Printf( "G_admin_namelog_update: warning, g_admin_namelogs overflow\n" );
-    return;
-  }
-  namelog = BG_Alloc( sizeof( g_admin_namelog_t ) );
-  memset( namelog, 0, sizeof( namelog ) );
-  for( j = 0; j < MAX_ADMIN_NAMELOG_NAMES; j++ )
-    namelog->name[ j ][ 0 ] = '\0';
-  Q_strncpyz( namelog->ip, client->pers.ip, sizeof( namelog->ip ) );
-  Q_strncpyz( namelog->guid, client->pers.guid, sizeof( namelog->guid ) );
-  Q_strncpyz( namelog->name[ 0 ], client->pers.netname,
-    sizeof( namelog->name[ 0 ] ) );
-  namelog->slot = ( disconnect ) ? -1 : clientNum;
-  g_admin_namelog[ i ] = namelog;
+			return;
+		}
+	}
+	if( i >= MAX_ADMIN_NAMELOGS )
+	{
+	  G_Printf( "G_admin_namelog_update: warning, g_admin_namelogs overflow\n" );
+	  return;
+	}
+	namelog = BG_Alloc( sizeof( g_admin_namelog_t ) );
+	memset( namelog, 0, sizeof( namelog ) );
+	for( j = 0; j < MAX_ADMIN_NAMELOG_NAMES; j++ )
+		namelog->name[ j ][ 0 ] = '\0';
+	Q_strncpyz( namelog->ip, client->pers.ip, sizeof( namelog->ip ) );
+	Q_strncpyz( namelog->guid, client->pers.guid, sizeof( namelog->guid ) );
+	Q_strncpyz( namelog->name[ 0 ], client->pers.netname,
+		sizeof( namelog->name[ 0 ] ) );
+	namelog->slot = ( disconnect ) ? -1 : clientNum;
+	g_admin_namelog[ i ] = namelog;
 }
 
 //KK-OAX Added Parsing Warnings

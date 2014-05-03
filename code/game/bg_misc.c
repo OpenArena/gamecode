@@ -1775,15 +1775,15 @@ KK-OAX Copied from Tremulous
 */
 const char *BG_TeamName( team_t team )
 {
-  if( team == TEAM_NONE )
-    return "spectator";
-  if( team == TEAM_RED )
-    return "Red";
-  if( team == TEAM_BLUE )
-    return "Blue";
-  if( team == TEAM_FREE )
-    return "Free For All";
-  return "<team>";
+	if( team == TEAM_NONE )
+		return "spectator";
+	if( team == TEAM_RED )
+		return "Red";
+	if( team == TEAM_BLUE )
+		return "Blue";
+	if( team == TEAM_FREE )
+		return "Free For All";
+	return "<team>";
 }
 
 int		trap_FS_FOpenFile( const char *qpath, fileHandle_t *f, fsMode_t mode );
@@ -1792,36 +1792,36 @@ void trap_FS_FCloseFile( fileHandle_t f );
 
 void MapInfoGet(const char* mapname, int gametype, mapinfo_result_t *result) {
 	fileHandle_t	file;
-    char            buffer[4*1024];
-    char	*token,*pointer;
+	char buffer[4*1024];
+	char *token,*pointer;
 	int mayRead;
 	
 	memset(result,0,sizeof(*result));
 	Com_sprintf(buffer,sizeof(buffer),"maps/%s.info",mapname);
 	Q_strlwr(buffer);
 
-    trap_FS_FOpenFile(buffer,&file,FS_READ);
+	trap_FS_FOpenFile(buffer,&file,FS_READ);
 
-    if(!file) {
+	if(!file) {
 		Com_Printf("File %s not found\n",buffer);
-        return;
+		return;
 	}
 	
 	memset(&buffer,0,sizeof(buffer));
 
-    trap_FS_Read(&buffer,sizeof(buffer),file);
-    
-    pointer = buffer;
+	trap_FS_Read(&buffer,sizeof(buffer),file);
+
+	pointer = buffer;
 	mayRead = qtrue;
 	
 	while ( qtrue ) {
 		token = COM_Parse( &pointer );
 		if ( !token[0] ) {
-            break;
+			break;
 		}
 
-        if ( Q_strequal( token, "gametype" ) ) {
-            token = COM_Parse( &pointer );
+		if ( Q_strequal( token, "gametype" ) ) {
+			token = COM_Parse( &pointer );
 			mayRead = qfalse; 
 			if ( !token[0] ) {
 				break;
@@ -1872,15 +1872,15 @@ void MapInfoGet(const char* mapname, int gametype, mapinfo_result_t *result) {
 			}
 		}
 		if ( Q_strequal( token, "auther" ) ) {
-            token = COM_Parse( &pointer );
+			token = COM_Parse( &pointer );
 			if (mayRead) Q_strncpyz(result->auther,token,sizeof(result->auther));
 		}
 		if ( Q_strequal( token, "description" ) ) {
-            token = COM_Parse( &pointer );
+			token = COM_Parse( &pointer );
 			if (mayRead) Q_strncpyz(result->description,token,sizeof(result->description));
 		}
 		if ( Q_strequal( token, "mpBots" ) ) {
-            token = COM_Parse( &pointer );
+			token = COM_Parse( &pointer );
 			if (mayRead) Q_strncpyz(result->mpBots,token,sizeof(result->mpBots));
 		}
 		if ( Q_strequal( token, "captureLimit" ) ) {
@@ -1915,7 +1915,7 @@ void MapInfoGet(const char* mapname, int gametype, mapinfo_result_t *result) {
 			token = COM_Parse( &pointer );
 			if (mayRead) result->timeLimit = atoi(token);
 		}
-    }
+	}
 
-    trap_FS_FCloseFile(file);
+	trap_FS_FCloseFile(file);
 }

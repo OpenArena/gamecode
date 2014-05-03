@@ -2240,39 +2240,39 @@ ShuffleTeams
 ================
 */
 void ShuffleTeams(void) {
-    int i;
-    int assignedClients=1, nextTeam=TEAM_RED;
+	int i;
+	int assignedClients=1, nextTeam=TEAM_RED;
 
-    if ( g_gametype.integer < GT_TEAM || g_ffa_gt==1)
-        return; //Can only shuffle team games!
+	if ( g_gametype.integer < GT_TEAM || g_ffa_gt==1)
+		return; //Can only shuffle team games!
 
-    for( i=0;i < level.numConnectedClients; i++ ) {
-        if( g_entities[ &level.clients[level.sortedClients[i]] - level.clients].r.svFlags & SVF_BOT)
-            continue; //Don't sort bots... they are always equal
-        
-        if(level.clients[level.sortedClients[i]].sess.sessionTeam==TEAM_RED || level.clients[level.sortedClients[i]].sess.sessionTeam==TEAM_BLUE ) {
-            //For every second client we chenge team. But we do it a little of to make it slightly more fair
-            if(assignedClients>1) {
-                assignedClients=0;
-                if(nextTeam == TEAM_RED)
-                    nextTeam = TEAM_BLUE;
-                else
-                    nextTeam = TEAM_RED;
-            }
+	for( i=0;i < level.numConnectedClients; i++ ) {
+		if( g_entities[ &level.clients[level.sortedClients[i]] - level.clients].r.svFlags & SVF_BOT)
+			continue; //Don't sort bots... they are always equal
 
-            //Set the team
-            //We do not run all the logic because we shall run map_restart in a moment.
-            level.clients[level.sortedClients[i]].sess.sessionTeam = nextTeam;
+		if(level.clients[level.sortedClients[i]].sess.sessionTeam==TEAM_RED || level.clients[level.sortedClients[i]].sess.sessionTeam==TEAM_BLUE ) {
+			//For every second client we chenge team. But we do it a little of to make it slightly more fair
+			if(assignedClients>1) {
+				assignedClients=0;
+				if(nextTeam == TEAM_RED)
+					nextTeam = TEAM_BLUE;
+				else
+					nextTeam = TEAM_RED;
+			}
 
-            ClientUserinfoChanged( level.sortedClients[i] );
-            ClientBegin( level.sortedClients[i] );
+			//Set the team
+			//We do not run all the logic because we shall run map_restart in a moment.
+			level.clients[level.sortedClients[i]].sess.sessionTeam = nextTeam;
 
-            assignedClients++;
-        }
-    }
+			ClientUserinfoChanged( level.sortedClients[i] );
+			ClientBegin( level.sortedClients[i] );
 
-    //Restart!
-    trap_SendConsoleCommand( EXEC_APPEND, "map_restart 0\n" );
+			assignedClients++;
+		}
+	}
+
+	//Restart!
+	trap_SendConsoleCommand( EXEC_APPEND, "map_restart 0\n" );
 
 }
 
