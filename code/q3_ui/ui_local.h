@@ -302,6 +302,13 @@ typedef struct {
 	char mapname[10][MAX_MAPNAME_LENGTH];
 } t_mappage;
 
+#define MAX_NAMELENGTH_INFO 20
+
+typedef struct {
+	char mapname[MAX_NAMELENGTH_INFO];
+	mapinfo_result_t mapinfo;
+} t_mapinfo;
+
 extern t_mappage mappage;
 
 extern void			Menu_Cache( void );
@@ -348,6 +355,8 @@ extern vec4_t		text_color_highlight;
 extern char	*ui_medalNames[];
 extern char	*ui_medalPicNames[];
 extern char	*ui_medalSounds[];
+
+extern t_mapinfo*	GetMapInfoUI( void );
 
 //
 // ui_mfield.c

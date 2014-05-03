@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 //
 
 #include "g_local.h"
+#include "bg_public.h"
 
 level_locals_t	level;
 
@@ -200,6 +201,8 @@ vmCvar_t        g_timestamp_startgame;
 vmCvar_t		g_execute_gametype_script;
 vmCvar_t		g_emptyCommand;
 vmCvar_t		g_emptyTime;
+
+mapinfo_result_t mapinfo;
 
 // bk001129 - made static to avoid aliasing
 static cvarTable_t		gameCvarTable[] = {
@@ -786,6 +789,8 @@ void G_InitGame( int levelTime, int randomSeed, int restart ) {
 	} else {
 		G_Printf( "Not logging to disk.\n" );
 	}
+	
+	
 
         //Parse the custom vote names:
         VoteParseCustomVotes();
@@ -918,6 +923,10 @@ void G_InitGame( int levelTime, int randomSeed, int restart ) {
 		G_CheckGametypeScripts();
 		
 		trap_Cvar_VariableStringBuffer("mapname",mapname,sizeof(mapname));
+		
+		
+	MapInfoGet(mapname,g_gametype.integer,&mapinfo);
+	MapInfoPrint(&mapinfo);
 		
 		if(G_RunScript(va("mapscripts/g_%s.cfg",mapname)))
 			G_RunScript("mapscripts/g_default.cfg");
@@ -3075,3 +3084,10 @@ void G_RunFrame( int levelTime ) {
 //unlagged - backward reconciliation #4
 }
 
+
+void MapInfoPrint(mapinfo_result_t *info) {
+	G_Printf("Auther: %s\n",info->auther);
+	G_Printf("Fraglimit: %i\n",info->fragLimit);
+	G_Printf("Capturelimit: %i\n",info->captureLimit);
+	G_Printf("minTeamSize: %i\n",info->minTeamSize);
+}

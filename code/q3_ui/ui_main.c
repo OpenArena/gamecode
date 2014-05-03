@@ -191,6 +191,7 @@ vmCvar_t        ui_browserOnlyHumans;
 //new in beta 37:
 vmCvar_t        ui_setupchecked;
 
+
 // bk001129 - made static to avoid aliasing.
 static cvarTable_t		cvarTable[] = {
 	{ &ui_ffa_fraglimit, "ui_ffa_fraglimit", "20", CVAR_ARCHIVE },
@@ -328,4 +329,3 @@ void UI_SetDefaultCvar(const char* cvar, const char* value) {
     if(strlen(UI_Cvar_VariableString(cvar)) == 0)
         trap_Cvar_Set(cvar,value);
 }
-

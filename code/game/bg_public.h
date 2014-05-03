@@ -821,4 +821,21 @@ qboolean	BG_PlayerTouchesItem( playerState_t *ps, entityState_t *item, int atTim
 //bg_misc.c
 const char *BG_TeamName( team_t team );
 
+typedef struct mapinfo_result_s {
+	int minPlayers;
+	int maxPlayers;
+	int recommentedPlayers;
+	int minTeamSize;
+	int maxTeamSize;
+	int timeLimit;
+	int fragLimit;
+	int captureLimit;
+	char mpBots[1024];
+	char auther[64];
+	char description[8192];
+} mapinfo_result_t;
+
+void MapInfoGet(const char* mapname, int gametype, mapinfo_result_t *result);
+
+
 #endif

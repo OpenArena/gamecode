@@ -1786,3 +1786,136 @@ const char *BG_TeamName( team_t team )
   return "<team>";
 }
 
+int		trap_FS_FOpenFile( const char *qpath, fileHandle_t *f, fsMode_t mode );
+void trap_FS_Read( void *buffer, int len, fileHandle_t f );
+void trap_FS_FCloseFile( fileHandle_t f );
+
+void MapInfoGet(const char* mapname, int gametype, mapinfo_result_t *result) {
+	fileHandle_t	file;
+    char            buffer[4*1024];
+    char	*token,*pointer;
+	int mayRead;
+	
+	memset(result,0,sizeof(*result));
+	Com_sprintf(buffer,sizeof(buffer),"maps/%s.info",mapname);
+	Q_strlwr(buffer);
+
+    trap_FS_FOpenFile(buffer,&file,FS_READ);
+
+    if(!file) {
+		Com_Printf("File %s not found\n",buffer);
+        return;
+	}
+	
+	memset(&buffer,0,sizeof(buffer));
+
+    trap_FS_Read(&buffer,sizeof(buffer),file);
+    
+    pointer = buffer;
+	mayRead = qtrue;
+	
+	while ( qtrue ) {
+		token = COM_Parse( &pointer );
+		if ( !token[0] ) {
+            break;
+		}
+
+        if ( Q_strequal( token, "gametype" ) ) {
+            token = COM_Parse( &pointer );
+			mayRead = qfalse; 
+			if ( !token[0] ) {
+				break;
+			}
+			if (Q_strequal(token,"*")) {
+				mayRead = qtrue; 
+			} 
+			else {
+				switch (gametype) {
+					case GT_FFA:
+						if (Q_strequal(token,"dm")) mayRead = qtrue;
+						break;
+					case GT_TEAM:
+						if (Q_strequal(token,"team")) mayRead = qtrue;
+						break;
+					case GT_TOURNAMENT:
+						if (Q_strequal(token,"tourney")) mayRead = qtrue;
+						break;
+					case GT_CTF:
+						if (Q_strequal(token,"ctf")) mayRead = qtrue;
+						break;
+					case GT_1FCTF:
+						if (Q_strequal(token,"1fctf")) mayRead = qtrue;
+						break;
+					case GT_OBELISK:
+						if (Q_strequal(token,"obelisk")) mayRead = qtrue;
+						break;
+					case GT_HARVESTER:
+						if (Q_strequal(token,"harvester")) mayRead = qtrue;
+						break;
+					case GT_ELIMINATION:
+						if (Q_strequal(token,"elimination")) mayRead = qtrue;
+						break;
+					case GT_CTF_ELIMINATION:
+						if (Q_strequal(token,"ctfelim")) mayRead = qtrue;
+						break;
+					case GT_LMS:
+						if (Q_strequal(token,"lms")) mayRead = qtrue;
+						break;
+					case GT_DOUBLE_D:
+						if (Q_strequal(token,"dd")) mayRead = qtrue;
+						break;
+					case GT_DOMINATION:
+						if (Q_strequal(token,"dom")) mayRead = qtrue;
+						break;
+						
+				};
+			}
+		}
+		if ( Q_strequal( token, "auther" ) ) {
+            token = COM_Parse( &pointer );
+			if (mayRead) Q_strncpyz(result->auther,token,sizeof(result->auther));
+		}
+		if ( Q_strequal( token, "description" ) ) {
+            token = COM_Parse( &pointer );
+			if (mayRead) Q_strncpyz(result->description,token,sizeof(result->description));
+		}
+		if ( Q_strequal( token, "mpBots" ) ) {
+            token = COM_Parse( &pointer );
+			if (mayRead) Q_strncpyz(result->mpBots,token,sizeof(result->mpBots));
+		}
+		if ( Q_strequal( token, "captureLimit" ) ) {
+			token = COM_Parse( &pointer );
+			if (mayRead) result->captureLimit = atoi(token);
+		}
+		if ( Q_strequal( token, "fragLimit" ) ) {
+			token = COM_Parse( &pointer );
+			if (mayRead) result->fragLimit = atoi(token);
+		}
+		if ( Q_strequal( token, "maxPlayers" ) ) {
+			token = COM_Parse( &pointer );
+			if (mayRead) result->maxPlayers = atoi(token);
+		}
+		if ( Q_strequal( token, "maxTeamSize" ) ) {
+			token = COM_Parse( &pointer );
+			if (mayRead) result->maxTeamSize = atoi(token);
+		}
+		if ( Q_strequal( token, "minPlayers" ) ) {
+			token = COM_Parse( &pointer );
+			if (mayRead) result->minPlayers = atoi(token);
+		}
+		if ( Q_strequal( token, "minTeamSize" ) ) {
+			token = COM_Parse( &pointer );
+			if (mayRead) result->minTeamSize = atoi(token);
+		}
+		if ( Q_strequal( token, "recommentedPlayers" ) ) {
+			token = COM_Parse( &pointer );
+			if (mayRead) result->recommentedPlayers = atoi(token);
+		}
+		if ( Q_strequal( token, "timeLimit" ) ) {
+			token = COM_Parse( &pointer );
+			if (mayRead) result->timeLimit = atoi(token);
+		}
+    }
+
+    trap_FS_FCloseFile(file);
+}

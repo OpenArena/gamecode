@@ -73,7 +73,7 @@ typedef struct {
 	menubitmap_s	framer;
 
 	menulist_s		gametype;
-        menuradiobutton_s       autonextmap;
+	menuradiobutton_s       autonextmap;
 	menubitmap_s	mappics[MAX_MAPSPERPAGE];
 	menubitmap_s	mapbuttons[MAX_MAPSPERPAGE];
 	menubitmap_s	arrows;
@@ -94,20 +94,21 @@ typedef struct {
 } startserver_t;
 
 static startserver_t s_startserver;
+static mapinfo_result_t mapinfo;
 
 static const char *gametype_items[] = {
 	"Free For All",
 	"Team Deathmatch",
 	"Tournament",
 	"Capture the Flag",
-        "One Flag Capture",
-        "Overload",
-        "Harvester",
+	"One Flag Capture",
+	"Overload",
+	"Harvester",
 	"Elimination",
 	"CTF Elimination",
 	"Last Man Standing",
 	"Double Domination",
-        "Domination",
+	"Domination",
 	NULL
 };
 
@@ -126,19 +127,19 @@ static int gametype_remap[] = {
                 GT_DOMINATION };		
 
 static int gametype_remap2[] = {
-		0, 
-		2, 
-		0, 
-		1, 
-		3, 
-		4,
-		5,
-		6,
-		7, 
-		8, 
-		9, 
-		10,
-                11 };		//this works and should increment for more gametypes
+	0, 
+	2, 
+	0, 
+	1, 
+	3, 
+	4,
+	5,
+	6,
+	7, 
+	8, 
+	9, 
+	10,
+	11 };		//this works and should increment for more gametypes
 
 static void UI_ServerOptionsMenu( qboolean multiplayer );
 
@@ -220,11 +221,11 @@ static int GametypeBits( char *string ) {
 			continue;
 		}
                 
-                if( Q_stricmp( token, "dom" ) == 0 ) {
+		if( Q_stricmp( token, "dom" ) == 0 ) {
 			bits |= 1 << GT_DOMINATION;
 			continue;
 		}
-}
+	}
 	return bits;
 }
 
@@ -1350,26 +1351,32 @@ static void ServerOptions_InitBotNames( void ) {
 		Q_strncpyz( s_serveroptions.playerNameBuffers[1], "gargoyle", 16 );
 		Q_strncpyz( s_serveroptions.playerNameBuffers[2], "kyonshi", 16 );
 		Q_strncpyz( s_serveroptions.playerNameBuffers[3], "grism", 16 );
-                if( s_serveroptions.gametype != GT_TEAM ) {
+		if( s_serveroptions.gametype != GT_TEAM && mapinfo.minTeamSize < 4 ) {
 			s_serveroptions.playerType[3].curvalue = 2;
 		}
-                Q_strncpyz( s_serveroptions.playerNameBuffers[4], "merman", 16 );
-		s_serveroptions.playerType[4].curvalue = 2;
-                Q_strncpyz( s_serveroptions.playerNameBuffers[5], "skelebot", 16 );
+		Q_strncpyz( s_serveroptions.playerNameBuffers[4], "merman", 16 );
+		if (mapinfo.minTeamSize < 5) {		
+			s_serveroptions.playerType[4].curvalue = 2;
+		}
+		Q_strncpyz( s_serveroptions.playerNameBuffers[5], "skelebot", 16 );
 		s_serveroptions.playerType[5].curvalue = 2;
-
 		Q_strncpyz( s_serveroptions.playerNameBuffers[6], "sergei", 16 );
 		Q_strncpyz( s_serveroptions.playerNameBuffers[7], "assassin", 16 );
 		Q_strncpyz( s_serveroptions.playerNameBuffers[8], "grunt", 16 );
-                Q_strncpyz( s_serveroptions.playerNameBuffers[9], "skelebot", 16 );
-		if( s_serveroptions.gametype != GT_TEAM ) {
+		Q_strncpyz( s_serveroptions.playerNameBuffers[9], "skelebot", 16 );
+		if( s_serveroptions.gametype != GT_TEAM && mapinfo.minTeamSize < 4 ) {
 			s_serveroptions.playerType[9].curvalue = 2;
 		}
-                Q_strncpyz( s_serveroptions.playerNameBuffers[10], "merman", 16 );
-		s_serveroptions.playerType[10].curvalue = 2;
-                Q_strncpyz( s_serveroptions.playerNameBuffers[11], "skelebot", 16 );
+		else {
+			s_serveroptions.playerType[9].curvalue = 1;
+		}
+		Q_strncpyz( s_serveroptions.playerNameBuffers[10], "merman", 16 );
+		if (mapinfo.minTeamSize < 5) {
+			s_serveroptions.playerType[10].curvalue = 2;
+		}
+		Q_strncpyz( s_serveroptions.playerNameBuffers[11], "skelebot", 16 );
 		s_serveroptions.playerType[11].curvalue = 2;
-
+		trap_Print(va("minTeamSize: %i\n",mapinfo.minTeamSize));
 		return;
 	}
 
@@ -1449,7 +1456,7 @@ ServerOptions_SetMenuItems
 */
 static void ServerOptions_SetMenuItems( void ) {
 	static char picname[64];
-        const char *info;
+    const char *info;
 
 	switch( s_serveroptions.gametype ) {
 	case GT_FFA:
@@ -1526,18 +1533,18 @@ static void ServerOptions_SetMenuItems( void ) {
 
 	Q_strncpyz( s_serveroptions.hostname.field.buffer, UI_Cvar_VariableString( "sv_hostname" ), sizeof( s_serveroptions.hostname.field.buffer ) );
 	s_serveroptions.pure.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "sv_pure" ) );
-        s_serveroptions.lan.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "sv_lanforcerate" ) );
-        s_serveroptions.instantgib.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_instantgib" ) );
-        s_serveroptions.rockets.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_rockets" ) );
-        s_serveroptions.lmsMode.curvalue = Com_Clamp( 0, 3, trap_Cvar_VariableValue("g_lms_mode") );
-        s_serveroptions.oneway.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "elimination_ctf_oneway" ) );
-        s_serveroptions.pmove.curvalue = 0;
-        if(trap_Cvar_VariableValue( "pmove_fixed" ))
-            s_serveroptions.pmove.curvalue = 1;
-        if(trap_Cvar_VariableValue( "pmove_fixed" ) && trap_Cvar_VariableValue( "pmove_msec" )==11)
-            s_serveroptions.pmove.curvalue = 2;
-        if(trap_Cvar_VariableValue( "pmove_float" ))
-            s_serveroptions.pmove.curvalue = 3;
+	s_serveroptions.lan.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "sv_lanforcerate" ) );
+	s_serveroptions.instantgib.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_instantgib" ) );
+	s_serveroptions.rockets.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_rockets" ) );
+	s_serveroptions.lmsMode.curvalue = Com_Clamp( 0, 3, trap_Cvar_VariableValue("g_lms_mode") );
+	s_serveroptions.oneway.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "elimination_ctf_oneway" ) );
+	s_serveroptions.pmove.curvalue = 0;
+	if(trap_Cvar_VariableValue( "pmove_fixed" ))
+		s_serveroptions.pmove.curvalue = 1;
+	if(trap_Cvar_VariableValue( "pmove_fixed" ) && trap_Cvar_VariableValue( "pmove_msec" )==11)
+		s_serveroptions.pmove.curvalue = 2;
+	if(trap_Cvar_VariableValue( "pmove_float" ))
+		s_serveroptions.pmove.curvalue = 3;
 
 	// set the map pic
         info = UI_GetArenaInfoByNumber(s_startserver.maplist[s_startserver.currentmap]);
@@ -1547,7 +1554,9 @@ static void ServerOptions_SetMenuItems( void ) {
 	// set the map name
 	strcpy( s_serveroptions.mapnamebuffer, s_startserver.mapname.string );
 	Q_strupr( s_serveroptions.mapnamebuffer );
-
+	
+	MapInfoGet(s_startserver.mapname.string,s_serveroptions.gametype,&mapinfo);
+	
 	// get the player selections initialized
 	ServerOptions_InitPlayerItems();
 	ServerOptions_SetPlayerItems();

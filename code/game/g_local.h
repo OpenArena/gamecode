@@ -1400,3 +1400,5 @@ void Svcmd_MessageWrapper( void );
 
 #include "g_killspree.h"
 #include "g_admin.h"
+
+void MapInfoPrint(mapinfo_result_t *info);
