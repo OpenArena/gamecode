@@ -217,8 +217,10 @@ gentity_t *SelectRandomFurthestSpawnPoint ( vec3_t avoidPoint, vec3_t origin, ve
 	}
 	if (!numSpots) {
 		spot = G_Find( NULL, FOFS(classname), "info_player_deathmatch");
-		if (!spot)
-			G_Error( "Couldn't find a spawn point" );
+		if (!spot) {
+			spot = &g_entities[0];
+			//G_Error( "Couldn't find a spawn point" );
+		}
 		VectorCopy (spot->s.origin, origin);
 		origin[2] += 9;
 		VectorCopy (spot->s.angles, angles);
@@ -263,7 +265,8 @@ gentity_t *SelectSpawnPoint ( vec3_t avoidPoint, vec3_t origin, vec3_t angles ) 
 
 	// find a single player start spot
 	if (!spot) {
-		G_Error( "Couldn't find a spawn point" );
+		//G_Error( "Couldn't find a spawn point" );
+		spot = &g_entities[0];
 	}
 
 	VectorCopy (spot->s.origin, origin);
