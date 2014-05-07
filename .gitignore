@@ -1,4 +1,6 @@
 build
 linux_scripts/supermake.local
 Makefile.local
+*~
+nbproject
 
