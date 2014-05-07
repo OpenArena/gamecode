@@ -11,7 +11,9 @@ BUILD_GAME_SO=1
 BUILD_GAME_QVM=1
 BUILD_BASEGAME=1
 BUILD_MISSIONPACK=1
+#ifndef BASEGAME
 BASEGAME=oax
+#endif
 VERSION=1.36+0.8.8
 
 # OpenArena doesn't use opus yet
