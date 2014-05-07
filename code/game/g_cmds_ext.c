@@ -434,6 +434,8 @@ void Cmd_PrivateMessage_f( gentity_t *ent )
 }
 */
 
+static void QDECL G_AdminMessage( const char *prefix, const char *fmt, ... )  __attribute__ ((format (gnu_printf, 2, 3)));
+
 /*
 =================
 G_AdminMessage
@@ -442,7 +444,7 @@ Print to all active server admins, and to the logfile, and to the server console
 Prepend *prefix, or '[SERVER]' if no *prefix is given
 =================
 */
-void QDECL G_AdminMessage( const char *prefix, const char *fmt, ... )
+static void QDECL G_AdminMessage( const char *prefix, const char *fmt, ... ) 
 {
 	va_list argptr;
 	char    string[ 1024 ];
