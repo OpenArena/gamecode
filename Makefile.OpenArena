@@ -1,0 +1,50 @@
+# Avoid making updates to this file unless you want to change defaults.
+# Create a Makefile.local which is ignored by git for your local overrides
+# that you don't want committed to git.
+
+# Defaults for OpenArena.  You shouldn't need to modify this section
+# This is only the client/server engine so we don't build the QVM here.
+BUILD_STANDALONE=1
+BUILD_CLIENT=0
+BUILD_SERVER=0
+BUILD_GAME_SO=1
+BUILD_GAME_QVM=1
+BUILD_BASEGAME=1
+BUILD_MISSIONPACK=1
+#ifndef BASEGAME
+BASEGAME=oax
+#endif
+VERSION=1.36+0.8.8
+
+# OpenArena doesn't use opus yet
+
+# This doesn't work with OpenArena yet
+BUILD_RENDERER_OPENGL2=0
+# You can disable the renderer libraries and build in the OA renderer by default
+USE_RENDERER_DLOPEN=1
+
+# You can change these although you probably don't need to
+CLIENTBIN=openarena
+SERVERBIN=oa_ded
+COPYDIR=/usr/local/games/openarena
+
+# Cross compiling: 64-bit Windows
+# PLATFORM=mingw32
+# ARCH=x86_64
+# USE_CODEC_VORBIS=0
+#
+# Cross compiling: 32-bit Windows
+# PLATFORM=mingw32
+# ARCH=x86
+# USE_CODEC_VORBIS=0
+
+# DEBUG_CFLAGS=-ggdb -O0
+
+# You normally pass these on the command line (e.g. make V=1)
+# rather than setting them for all builds.
+#
+# Verbose build
+# V=1
+#
+# Build a zip -r9 file or Mac OSX release zip (make-macosx-app.sh)
+# ARCHIVE=1
