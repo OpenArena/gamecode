@@ -1,7 +1,11 @@
 # OpenArena gamecode #
 
 ## Description ##
-This is the gamecode part of OpenArena. In mod form it is referred as OpenArenaExpanded (OAX).
+This is the game code part of OpenArena. In mod form it is referred as OpenArenaExpanded (OAX).
+
+## Building ##
+
+See http://openarena.wikia.com/wiki/OpenArena_eXpanded for detailed build instructions
 
 ## Links ##
 Development documentation is still located on Google code here: https://code.google.com/p/oax/w/list

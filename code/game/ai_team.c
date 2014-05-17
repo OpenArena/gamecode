@@ -501,15 +501,9 @@ void BotCTFOrders_FlagNotAtBase(bot_state_t *bs) {
 	int numteammates, defenders, attackers, i;
 	int teammates[MAX_CLIENTS];
 	char name[MAX_NETNAME];
-	qboolean weAreAttacking;
-
-        if (bot_nochat.integer>2) return;
-
+	if (bot_nochat.integer>2) return;
 	numteammates = BotSortTeamMatesByBaseTravelTime(bs, teammates, sizeof(teammates));
 	BotSortTeamMatesByTaskPreference(bs, teammates, numteammates);
-
-	weAreAttacking = qfalse;
-
 	//In oneway ctf we must all move out of the base (only one strategi, maybe we can also send some to the enemy base  to meet the flag carier?)
 	//We must be defending
 	if(g_elimination_ctf_oneway.integer > 0) {

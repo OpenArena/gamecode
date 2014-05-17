@@ -116,18 +116,13 @@ UI_DemosMenu_Key
 =================
 */
 static sfxHandle_t UI_DemosMenu_Key( int key ) {
-	menucommon_s	*item;
-
-        item = Menu_ItemAtCursor( &s_demos.menu );
-
-        if( key == K_MWHEELUP ) {
-            ScrollList_Key( &s_demos.list, K_UPARROW );
-        }
-
-        if( key == K_MWHEELDOWN ) {
-            ScrollList_Key( &s_demos.list, K_DOWNARROW );
-        }
-
+	Menu_ItemAtCursor( &s_demos.menu );
+	if( key == K_MWHEELUP ) {
+		ScrollList_Key( &s_demos.list, K_UPARROW );
+	}
+	if( key == K_MWHEELDOWN ) {
+		ScrollList_Key( &s_demos.list, K_DOWNARROW );
+	}
 	return Menu_DefaultKey( &s_demos.menu, key );
 }
 

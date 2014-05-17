@@ -5109,7 +5109,6 @@ UI_Init
 */
 void _UI_Init( qboolean inGameLoad ) {
 	const char *menuSet;
-	int start;
 
 	//uiInfo.inGameLoad = inGameLoad;
 
@@ -5192,8 +5191,6 @@ void _UI_Init( qboolean inGameLoad ) {
 	uiInfo.uiDC.whiteShader = trap_R_RegisterShaderNoMip( "white" );
 
 	AssetCache();
-
-	start = trap_Milliseconds();
 
   uiInfo.teamCount = 0;
   uiInfo.characterCount = 0;

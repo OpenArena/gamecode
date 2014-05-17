@@ -407,7 +407,6 @@ static void CG_LeiSmokeTrail( centity_t *ent, const weaponInfo_t *wi ) {
 	vec3_t	up;
 	localEntity_t	*smoke;
 	int		therando;
-	int		theradio;
 
 	if ( cg_noProjectileTrail.integer ) {
 		return;
@@ -447,8 +446,6 @@ static void CG_LeiSmokeTrail( centity_t *ent, const weaponInfo_t *wi ) {
 	for ( ; t <= ent->trailTime ; t += step ) {
 		BG_EvaluateTrajectory( &es->pos, t, lastPos );
 		therando = crandom() * 4;
-		
-		theradio =  wi->trailRadius * (rand() * 0.7); // what is this doing here
 	if (therando == 3)		smoke = CG_SmokePuff( lastPos, up, 27, 1, 1, 1, 0.9f, wi->wiTrailTime,  t, 0, 0,  cgs.media.lsmkShader1 );
 	else if (therando == 1)		smoke = CG_SmokePuff( lastPos, up, 27, 1, 1, 1, 0.9f, wi->wiTrailTime,  t, 0, 0,  cgs.media.lsmkShader2 );
 	else	if (therando == 2)	smoke = CG_SmokePuff( lastPos, up, 27, 1, 1, 1, 0.9f, wi->wiTrailTime,  t, 0, 0,  cgs.media.lsmkShader3 );
@@ -466,7 +463,6 @@ static void CG_LeiPlasmaTrail( centity_t *ent, const weaponInfo_t *wi ) {
 	vec3_t	origin, lastPos;
 	int		t;
 	int		startTime, contents;
-	int		lastContents;
 	entityState_t	*es;
 	vec3_t	up;
 	localEntity_t	*smoke;
@@ -495,7 +491,7 @@ static void CG_LeiPlasmaTrail( centity_t *ent, const weaponInfo_t *wi ) {
 	}
 
 	BG_EvaluateTrajectory( &es->pos, ent->trailTime, lastPos );
-	lastContents = CG_PointContents( lastPos, -1 );
+	CG_PointContents( lastPos, -1 );
 
 	ent->trailTime = cg.time;
 
@@ -596,19 +592,13 @@ static void CG_OldPlasmaTrail( centity_t *cent, const weaponInfo_t *wi ) {
 	vec3_t			velocity, xvelocity, origin;
 	vec3_t			offset, xoffset;
 	vec3_t			v[3];
-	int				t, startTime, step;
 
 	float	waterScale = 1.0f;
 
 	if ( cg_noProjectileTrail.integer || cg_oldPlasma.integer ) {
 		return;
 	}
-
-	step = 50;
-
 	es = &cent->currentState;
-	startTime = cent->trailTime;
-	t = step * ( (startTime + step) / step );
 
 	BG_EvaluateTrajectory( &es->pos, cg.time, origin );
 
@@ -1168,7 +1158,7 @@ static void CG_LightningBolt( centity_t *cent, vec3_t origin ) {
 //unlagged - true lightning
 
 		for (i = 0; i < 3; i++) {
-			float a = cent->lerpAngles[i] - cg.refdefViewAngles[i];
+			float a = cent->lerpAngles[i] - viewangles[i]; //unlagged: was cg.refdefViewAngles[i];
 			if (a > 180) {
 				a -= 360;
 			}
@@ -1176,7 +1166,7 @@ static void CG_LightningBolt( centity_t *cent, vec3_t origin ) {
 				a += 360;
 			}
 
-			angle[i] = cg.refdefViewAngles[i] + a * (1.0 - cg_trueLightning.value);
+			angle[i] = viewangles[i] /*unlagged: was cg.refdefViewAngles[i]*/ + a * (1.0 - cg_trueLightning.value);
 			if (angle[i] < 0) {
 				angle[i] += 360;
 			}
@@ -3180,7 +3170,6 @@ static void CG_ShotgunPellet( vec3_t start, vec3_t end, int skipNum ) {
 	int sourceContentType, destContentType;
 
 // LEILEI ENHACNEMENT
-	localEntity_t	*smoke;
 	vec3_t  kapow;
 
 
@@ -3209,9 +3198,9 @@ static void CG_ShotgunPellet( vec3_t start, vec3_t end, int skipNum ) {
 					kapow[0] = kapow[0] * (crandom() * 22);
 					kapow[1] = kapow[1] * (crandom() * 22);
 					kapow[2] = kapow[2] * (crandom() * 65 + 37);
-					smoke = CG_SmokePuff( trace.endpos, kapow, 14, 1, 1, 1, 1.0f, 400, cg.time, 0, 0,  cgs.media.lsplShader );
-					smoke = CG_SmokePuff( trace.endpos, kapow, 6, 1, 1, 1, 1.0f, 200, cg.time, 0, 0,  cgs.media.lsplShader );
-					smoke = CG_SmokePuff( trace.endpos, kapow, 10, 1, 1, 1, 1.0f, 300, cg.time, 0, 0,  cgs.media.lsplShader );
+					CG_SmokePuff( trace.endpos, kapow, 14, 1, 1, 1, 1.0f, 400, cg.time, 0, 0,  cgs.media.lsplShader );
+					CG_SmokePuff( trace.endpos, kapow, 6, 1, 1, 1, 1.0f, 200, cg.time, 0, 0,  cgs.media.lsplShader );
+					CG_SmokePuff( trace.endpos, kapow, 10, 1, 1, 1, 1.0f, 300, cg.time, 0, 0,  cgs.media.lsplShader );
 						
 				}
 // END LEIHANCMENET
@@ -3229,9 +3218,9 @@ static void CG_ShotgunPellet( vec3_t start, vec3_t end, int skipNum ) {
 					kapow[0] = kapow[0] * (crandom() * 22);
 					kapow[1] = kapow[1] * (crandom() * 22);
 					kapow[2] = kapow[2] * (crandom() * 65 + 37);
-					smoke = CG_SmokePuff( trace.endpos, kapow, 14, 1, 1, 1, 1.0f, 400, cg.time, 0, 0,  cgs.media.lsplShader );
-					smoke = CG_SmokePuff( trace.endpos, kapow, 6, 1, 1, 1, 1.0f, 200, cg.time, 0, 0,  cgs.media.lsplShader );
-					smoke = CG_SmokePuff( trace.endpos, kapow, 10, 1, 1, 1, 1.0f, 300, cg.time, 0, 0,  cgs.media.lsplShader );
+					CG_SmokePuff( trace.endpos, kapow, 14, 1, 1, 1, 1.0f, 400, cg.time, 0, 0,  cgs.media.lsplShader );
+					CG_SmokePuff( trace.endpos, kapow, 6, 1, 1, 1, 1.0f, 200, cg.time, 0, 0,  cgs.media.lsplShader );
+					CG_SmokePuff( trace.endpos, kapow, 10, 1, 1, 1, 1.0f, 300, cg.time, 0, 0,  cgs.media.lsplShader );
 				}
 // END LEIHANCMENET
 	}
@@ -3275,8 +3264,8 @@ static void CG_ShotgunPellet( vec3_t start, vec3_t end, int skipNum ) {
 					CG_LeiSparks(tr.endpos, tr.plane.normal, 800, 0, 0, 7);
 					CG_LeiSparks(tr.endpos, tr.plane.normal, 800, 0, 0, 2);
 					
-					smoke = CG_SmokePuff( tr.endpos, kapow, 21, 1, 1, 1, 0.9f, 1200, cg.time, 0, 0,  cgs.media.lsmkShader2 );
-					//smoke = CG_SmokePuff( tr.endpos, kapow, 21, 1, 1, 1, 0.9f, 1200, cg.time, 0, 0,  cgs.media.lbumShader1 );
+					CG_SmokePuff( tr.endpos, kapow, 21, 1, 1, 1, 0.9f, 1200, cg.time, 0, 0,  cgs.media.lsmkShader2 );
+					//CG_SmokePuff( tr.endpos, kapow, 21, 1, 1, 1, 0.9f, 1200, cg.time, 0, 0,  cgs.media.lbumShader1 );
 #if 0
 					CG_LeiPuff(tr.endpos, kapow, 500, 0, 0, 177, 6);
 					CG_LeiPuff(tr.endpos, tr.plane.normal, 500, 0, 0, 127, 12);
@@ -3518,7 +3507,6 @@ void CG_Bullet( vec3_t end, int sourceEntityNum, vec3_t normal, qboolean flesh, 
 	int sourceContentType, destContentType;
 	vec3_t		start;
 // LEILEI ENHACNEMENT
-	localEntity_t	*smoke;
 	vec3_t	kapew;	
 	vec3_t  kapow;
 
@@ -3549,9 +3537,9 @@ void CG_Bullet( vec3_t end, int sourceEntityNum, vec3_t normal, qboolean flesh, 
 					kapow[0] = kapow[0] * (crandom() * 22);
 					kapow[1] = kapow[1] * (crandom() * 22);
 					kapow[2] = kapow[2] * (crandom() * 65 + 37);
-					smoke = CG_SmokePuff( trace.endpos, kapow, 14, 1, 1, 1, 1.0f, 400, cg.time, 0, 0,  cgs.media.lsplShader );
-					smoke = CG_SmokePuff( trace.endpos, kapow, 6, 1, 1, 1, 1.0f, 200, cg.time, 0, 0,  cgs.media.lsplShader );
-					smoke = CG_SmokePuff( trace.endpos, kapow, 10, 1, 1, 1, 1.0f, 300, cg.time, 0, 0,  cgs.media.lsplShader );
+					CG_SmokePuff( trace.endpos, kapow, 14, 1, 1, 1, 1.0f, 400, cg.time, 0, 0,  cgs.media.lsplShader );
+					CG_SmokePuff( trace.endpos, kapow, 6, 1, 1, 1, 1.0f, 200, cg.time, 0, 0,  cgs.media.lsplShader );
+					CG_SmokePuff( trace.endpos, kapow, 10, 1, 1, 1, 1.0f, 300, cg.time, 0, 0,  cgs.media.lsplShader );
 				//	CG_LeiSplash2(trace.endpos, kapow, 900, 0, 0, 444);
 						
 				}
@@ -3572,9 +3560,9 @@ void CG_Bullet( vec3_t end, int sourceEntityNum, vec3_t normal, qboolean flesh, 
 					kapow[0] = kapow[0] * (crandom() * 22);
 					kapow[1] = kapow[1] * (crandom() * 22);
 					kapow[2] = kapow[2] * (crandom() * 65 + 37);
-					smoke = CG_SmokePuff( trace.endpos, kapow, 14, 1, 1, 1, 1.0f, 400, cg.time, 0, 0,  cgs.media.lsplShader );
-					smoke = CG_SmokePuff( trace.endpos, kapow, 6, 1, 1, 1, 1.0f, 200, cg.time, 0, 0,  cgs.media.lsplShader );
-					smoke = CG_SmokePuff( trace.endpos, kapow, 10, 1, 1, 1, 1.0f, 300, cg.time, 0, 0,  cgs.media.lsplShader );
+					CG_SmokePuff( trace.endpos, kapow, 14, 1, 1, 1, 1.0f, 400, cg.time, 0, 0,  cgs.media.lsplShader );
+					CG_SmokePuff( trace.endpos, kapow, 6, 1, 1, 1, 1.0f, 200, cg.time, 0, 0,  cgs.media.lsplShader );
+					CG_SmokePuff( trace.endpos, kapow, 10, 1, 1, 1, 1.0f, 300, cg.time, 0, 0,  cgs.media.lsplShader );
 			//CG_LeiSplash2(trace.endpos, kapow, 500, 0, 0, 1);
 				}
 // END LEIHANCMENET
@@ -3638,7 +3626,7 @@ if (cg_leiSuperGoreyAwesome.integer) {
 					kapew[2] = kapew[2] * (crandom() * 65 + 37);
 
 
-					smoke = CG_SmokePuff( end, kapow, 14, 1, 1, 1, 1.0f, 600, cg.time, 0, 0,  cgs.media.lsmkShader1 );
+					CG_SmokePuff( end, kapow, 14, 1, 1, 1, 1.0f, 600, cg.time, 0, 0,  cgs.media.lsmkShader1 );
 			//		CG_LeiSparks(end, normal, 600, 0, 0, 177);
 			//		CG_LeiSparks(end, normal, 600, 0, 0, 155);
 			//		CG_LeiSparks(end, normal, 600, 0, 0, 444);

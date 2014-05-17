@@ -1072,7 +1072,7 @@ static float CG_DrawEliminationTimer( float y ) {
 	int			mins, seconds, tens, sec;
 	int			msec;
 	vec4_t			color;
-	const char	*st;
+	const char	*st; //Currently gives warning for missionpack
 	float scale __attribute__((unused));
 	int cw __attribute__((unused));
 	int rst;
