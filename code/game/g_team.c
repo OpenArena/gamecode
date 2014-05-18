@@ -1866,14 +1866,14 @@ void CheckTeamStatus(void) {
 
 /*-----------------------------------------------------------------*/
 
-/*QUAKED team_CTF_redplayer (1 0 0) (-16 -16 -16) (16 16 32)
+/*QUAKED team_CTF_redplayer (1 0 0) (-16 -16 -24) (16 16 32)
 Only in CTF games.  Red players spawn here at game start.
 */
 void SP_team_CTF_redplayer( gentity_t *ent ) {
 }
 
 
-/*QUAKED team_CTF_blueplayer (0 0 1) (-16 -16 -16) (16 16 32)
+/*QUAKED team_CTF_blueplayer (0 0 1) (-16 -16 -24) (16 16 32)
 Only in CTF games.  Blue players spawn here at game start.
 */
 void SP_team_CTF_blueplayer( gentity_t *ent ) {
@@ -1893,6 +1893,25 @@ Targets will be fired when someone spawns in on them.
 */
 void SP_team_CTF_bluespawn(gentity_t *ent) {
 }
+
+/*QUAKED info_player_dd (1 1 0) (-16 -16 -24) (16 16 32)
+Spawn point used in Double Domination if no team specific spawn points exists
+Usually placed in the middle of CTF maps
+See info_player_red and info_player_blue for team specific versions
+*/
+
+/*QUAKED info_player_red (1 1 0) (-16 -16 -24) (16 16 32)
+Spawn point used in Double Domination by the red team
+*/
+
+/*QUAKED info_player_blue (1 1 0) (-16 -16 -24) (16 16 32)
+Spawn point used in Double Domination by the blue team
+*/
+
+/*QUAKED domination_point (1 0 .5) (-16 -16 -16) (16 16 16)
+Place to spawn domination points in Standard domination.
+The message-key gives the point a name that is showed while playing (MAX length: 19 chars)
+*/
 
 /*
 ================

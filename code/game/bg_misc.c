@@ -917,7 +917,7 @@ Only in One Flag CTF games
 	},
 //#endif
 
-/*QUAKED team_DD_point
+/*team_DD_point - NOT USED IN THE EDITOR
 Only in DD games
 */
 	{
@@ -934,7 +934,7 @@ Only in DD games
 /* sounds */ ""
 	},
 
-/*QUAKED team_DD_point
+/*team_DD_point - NOT USED IN THE EDITOR
 Only in DD games
 */
 	{
@@ -951,7 +951,7 @@ Only in DD games
 /* sounds */ ""
 	},
 
-/*QUAKED team_DD_point
+/*team_DD_point - NOT USED IN THE EDITOR
 Only in DD games
 */
 	{
@@ -968,7 +968,7 @@ Only in DD games
 /* sounds */ ""
 	},
 
-/*QUAKED team_DD_point
+/*team_DD_point - NOT USED IN THE EDITOR
 Only in DD games
 */
 	{
@@ -985,7 +985,7 @@ Only in DD games
 /* sounds */ ""
 	},
 
-/*QUAKED team_DD_point
+/*team_DD_point - NOT USED IN THE EDITOR
 Only in DD games
 */
 	{
@@ -1002,7 +1002,7 @@ Only in DD games
 /* sounds */ ""
 	},
 
-/*QUAKED team_DD_point
+/*team_DD_point - NOT USED IN THE EDITOR
 Only in DD games
 */
 	{
@@ -1022,7 +1022,7 @@ Only in DD games
 //Now things for standard domination:
 
 
-/*QUAKED 
+/*team_dom_pointWhite - NOT USED IN THE EDITOR
 Only in Domination games
 */
 	{
@@ -1039,7 +1039,7 @@ Only in Domination games
 /* sounds */ ""
 	},
 
-/*QUAKED 
+/*team_dom_pointWhite - NOT USED IN THE EDITOR
 Only in Domination games
 */
 	{
@@ -1056,7 +1056,7 @@ Only in Domination games
 /* sounds */ ""
 	},
 
-/*QUAKED 
+/*team_dom_pointBlue - NOT USED IN THE EDITOR
 Only in Domination games
 */
 	{
