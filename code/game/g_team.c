@@ -1897,14 +1897,14 @@ void SP_team_CTF_bluespawn(gentity_t *ent) {
 /*QUAKED info_player_dd (1 1 0) (-16 -16 -24) (16 16 32)
 Spawn point used in Double Domination if no team specific spawn points exists
 Usually placed in the middle of CTF maps
-See info_player_red and info_player_blue for team specific versions
+See info_player_dd_red and info_player_dd_blue for team specific versions
 */
 
-/*QUAKED info_player_red (1 1 0) (-16 -16 -24) (16 16 32)
+/*QUAKED info_player_dd_red (1 1 0) (-16 -16 -24) (16 16 32)
 Spawn point used in Double Domination by the red team
 */
 
-/*QUAKED info_player_blue (1 1 0) (-16 -16 -24) (16 16 32)
+/*QUAKED info_player_dd_blue (1 1 0) (-16 -16 -24) (16 16 32)
 Spawn point used in Double Domination by the blue team
 */
 
