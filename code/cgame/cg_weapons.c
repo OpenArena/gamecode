@@ -491,7 +491,6 @@ static void CG_LeiPlasmaTrail( centity_t *ent, const weaponInfo_t *wi ) {
 	}
 
 	BG_EvaluateTrajectory( &es->pos, ent->trailTime, lastPos );
-	CG_PointContents( lastPos, -1 );
 
 	ent->trailTime = cg.time;
 
@@ -514,7 +513,7 @@ static void CG_LeiPlasmaTrail( centity_t *ent, const weaponInfo_t *wi ) {
 //#ifdef MISSIONPACK
 /*
 ==========================
-CG_NailTrail
+CG_PlasmaTrail
 ==========================
 */
 static void CG_NailTrail( centity_t *ent, const weaponInfo_t *wi ) {
