@@ -4533,6 +4533,9 @@ open, which buttons to activate etc.
 ==================
 */
 void BotAIBlocked(bot_state_t *bs, bot_moveresult_t *moveresult, int activate) {
+#ifdef OBSTACLEDEBUG
+	char netname[MAX_NETNAME];
+#endif
 	int movetype, bspent;
 	vec3_t hordir, start, sideward, angles, up = {0, 0, 1};
 	aas_entityinfo_t entinfo;
