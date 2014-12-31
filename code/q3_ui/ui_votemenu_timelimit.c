@@ -22,11 +22,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "ui_local.h"
 
-#define VOTEMENU_BACK0          "menu/art_blueish/back_0"
-#define VOTEMENU_BACK1          "menu/art_blueish/back_1"
-#define ART_FIGHT0		"menu/art_blueish/accept_0"
-#define ART_FIGHT1		"menu/art_blueish/accept_1"
-#define ART_BACKGROUND          "menu/art_blueish/addbotframe"
+#define VOTEMENU_BACK0          "menu/" MENU_ART_DIR "/back_0"
+#define VOTEMENU_BACK1          "menu/" MENU_ART_DIR "/back_1"
+#define ART_FIGHT0		"menu/" MENU_ART_DIR "/accept_0"
+#define ART_FIGHT1		"menu/" MENU_ART_DIR "/accept_1"
+#define ART_BACKGROUND          "menu/" MENU_ART_DIR "/addbotframe"
 
 static char* votemenu_Timelmit_artlist[] =
 {

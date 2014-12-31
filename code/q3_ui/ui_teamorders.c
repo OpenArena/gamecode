@@ -32,9 +32,9 @@ TEAM ORDERS MENU
 #include "ui_local.h"
 
 
-#define ART_FRAME		"menu/art_blueish/addbotframe"
-#define ART_BACK0		"menu/art_blueish/back_0"
-#define ART_BACK1		"menu/art_blueish/back_1"
+#define ART_FRAME		"menu/" MENU_ART_DIR "/addbotframe"
+#define ART_BACK0		"menu/" MENU_ART_DIR "/back_0"
+#define ART_BACK1		"menu/" MENU_ART_DIR "/back_1"
 
 #define ID_LIST_BOTS		10
 #define ID_LIST_CTF_ORDERS	11

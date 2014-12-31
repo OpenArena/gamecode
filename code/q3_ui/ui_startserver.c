@@ -32,20 +32,20 @@ START SERVER MENU *****
 #include "ui_local.h"
 
 
-#define GAMESERVER_BACK0		"menu/art_blueish/back_0"
-#define GAMESERVER_BACK1		"menu/art_blueish/back_1"
-#define GAMESERVER_NEXT0		"menu/art_blueish/next_0"
-#define GAMESERVER_NEXT1		"menu/art_blueish/next_1"
-#define GAMESERVER_FRAMEL		"menu/art_blueish/frame2_l"
-#define GAMESERVER_FRAMER		"menu/art_blueish/frame1_r"
-#define GAMESERVER_SELECT		"menu/art_blueish/maps_select"
-#define GAMESERVER_SELECTED		"menu/art_blueish/maps_selected"
-#define GAMESERVER_FIGHT0		"menu/art_blueish/fight_0"
-#define GAMESERVER_FIGHT1		"menu/art_blueish/fight_1"
+#define GAMESERVER_BACK0		"menu/" MENU_ART_DIR "/back_0"
+#define GAMESERVER_BACK1		"menu/" MENU_ART_DIR "/back_1"
+#define GAMESERVER_NEXT0		"menu/" MENU_ART_DIR "/next_0"
+#define GAMESERVER_NEXT1		"menu/" MENU_ART_DIR "/next_1"
+#define GAMESERVER_FRAMEL		"menu/" MENU_ART_DIR "/frame2_l"
+#define GAMESERVER_FRAMER		"menu/" MENU_ART_DIR "/frame1_r"
+#define GAMESERVER_SELECT		"menu/" MENU_ART_DIR "/maps_select"
+#define GAMESERVER_SELECTED		"menu/" MENU_ART_DIR "/maps_selected"
+#define GAMESERVER_FIGHT0		"menu/" MENU_ART_DIR "/fight_0"
+#define GAMESERVER_FIGHT1		"menu/" MENU_ART_DIR "/fight_1"
 #define GAMESERVER_UNKNOWNMAP           "menu/art/unknownmap"
-#define GAMESERVER_ARROWS		"menu/art_blueish/gs_arrows_0"
-#define GAMESERVER_ARROWSL		"menu/art_blueish/gs_arrows_l"
-#define GAMESERVER_ARROWSR		"menu/art_blueish/gs_arrows_r"
+#define GAMESERVER_ARROWS		"menu/" MENU_ART_DIR "/gs_arrows_0"
+#define GAMESERVER_ARROWSL		"menu/" MENU_ART_DIR "/gs_arrows_l"
+#define GAMESERVER_ARROWSR		"menu/" MENU_ART_DIR "/gs_arrows_r"
 
 #define MAX_MAPROWS		4
 #define MAX_MAPCOLS		2
@@ -1945,15 +1945,15 @@ BOT SELECT MENU *****
 */
 
 
-#define BOTSELECT_BACK0			"menu/art_blueish/back_0"
-#define BOTSELECT_BACK1			"menu/art_blueish/back_1"
-#define BOTSELECT_ACCEPT0		"menu/art_blueish/accept_0"
-#define BOTSELECT_ACCEPT1		"menu/art_blueish/accept_1"
+#define BOTSELECT_BACK0			"menu/" MENU_ART_DIR "/back_0"
+#define BOTSELECT_BACK1			"menu/" MENU_ART_DIR "/back_1"
+#define BOTSELECT_ACCEPT0		"menu/" MENU_ART_DIR "/accept_0"
+#define BOTSELECT_ACCEPT1		"menu/" MENU_ART_DIR "/accept_1"
 #define BOTSELECT_SELECT		"menu/art/opponents_select"
 #define BOTSELECT_SELECTED		"menu/art/opponents_selected"
-#define BOTSELECT_ARROWS		"menu/art_blueish/gs_arrows_0"
-#define BOTSELECT_ARROWSL		"menu/art_blueish/gs_arrows_l"
-#define BOTSELECT_ARROWSR		"menu/art_blueish/gs_arrows_r"
+#define BOTSELECT_ARROWS		"menu/" MENU_ART_DIR "/gs_arrows_0"
+#define BOTSELECT_ARROWSL		"menu/" MENU_ART_DIR "/gs_arrows_l"
+#define BOTSELECT_ARROWSR		"menu/" MENU_ART_DIR "/gs_arrows_r"
 
 #define PLAYERGRID_COLS			4
 #define PLAYERGRID_ROWS			4

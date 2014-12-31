@@ -34,12 +34,12 @@ SINGLE PLAYER POSTGAME MENU
 
 #define AWARD_PRESENTATION_TIME		2000
 
-#define ART_MENU0		"menu/art_blueish/menu_0"
-#define ART_MENU1		"menu/art_blueish/menu_1"
-#define ART_REPLAY0		"menu/art_blueish/replay_0"
-#define ART_REPLAY1		"menu/art_blueish/replay_1"
-#define ART_NEXT0		"menu/art_blueish/next_0"
-#define ART_NEXT1		"menu/art_blueish/next_1"
+#define ART_MENU0		"menu/" MENU_ART_DIR "/menu_0"
+#define ART_MENU1		"menu/" MENU_ART_DIR "/menu_1"
+#define ART_REPLAY0		"menu/" MENU_ART_DIR "/replay_0"
+#define ART_REPLAY1		"menu/" MENU_ART_DIR "/replay_1"
+#define ART_NEXT0		"menu/" MENU_ART_DIR "/next_0"
+#define ART_NEXT1		"menu/" MENU_ART_DIR "/next_1"
 
 #define ID_AGAIN		10
 #define ID_NEXT			11

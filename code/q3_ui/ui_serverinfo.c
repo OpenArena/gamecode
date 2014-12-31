@@ -22,10 +22,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 //
 #include "ui_local.h"
 
-#define SERVERINFO_FRAMEL	"menu/art_blueish/frame2_l"
-#define SERVERINFO_FRAMER	"menu/art_blueish/frame1_r"
-#define SERVERINFO_BACK0	"menu/art_blueish/back_0"
-#define SERVERINFO_BACK1	"menu/art_blueish/back_1"
+#define SERVERINFO_FRAMEL	"menu/" MENU_ART_DIR "/frame2_l"
+#define SERVERINFO_FRAMER	"menu/" MENU_ART_DIR "/frame1_r"
+#define SERVERINFO_BACK0	"menu/" MENU_ART_DIR "/back_0"
+#define SERVERINFO_BACK1	"menu/" MENU_ART_DIR "/back_1"
 
 static char* serverinfo_artlist[] =
 {
