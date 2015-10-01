@@ -10,15 +10,15 @@ See http://openarena.wikia.com/wiki/OpenArena_eXpanded for detailed build instru
 ## Extracting entities ##
 It is possible to extract entity definition for use with GtkRadiant 1.6 like this:
 
-'''
+```
 cd code/game
 ./extract_entities.sh > openarena.def
-'''
+```
 
 Note that these entities will not work with GtkRadiant 1.5 and NetRadiant 1.5 because they use a XML-based format (although there are not that much XML information in it)
 
 ## Links ##
-Development documentation is still located on Google code here: https://code.google.com/p/oax/w/list
+Development documentation is located here: https://github.com/OpenArena/gamecode/wiki
 
 The development board on the OpenArena forum: http://openarena.ws/board/index.php?board=30.0
 
