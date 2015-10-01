@@ -3,10 +3,7 @@ language: c
 
 compiler:
   - gcc
-# These fail because ioquake3 is missing vorbis
-# Re-enable after they add vorbis or OA imports it
-# - i686-w64-mingw32-gcc
-# - x86_64-w64-mingw32-gcc
+  - clang
 
 script: make
 
