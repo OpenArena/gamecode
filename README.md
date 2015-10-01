@@ -1,4 +1,5 @@
-# OpenArena gamecode #
+# OpenArena gamecode 
+[![Build Status](https://travis-ci.org/OpenArena/gamecode.svg?branch=master)](https://travis-ci.org/OpenArena/gamecode)
 
 ## Description ##
 This is the game code part of OpenArena. In mod form it is referred as OpenArenaExpanded (OAX).
