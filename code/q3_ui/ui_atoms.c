@@ -1006,47 +1006,47 @@ qboolean UI_ConsoleCommand( int realTime ) {
 	// ensure minimum menu data is available
 	Menu_Cache();
 
-	if ( Q_stricmp (cmd, "levelselect") == 0 ) {
+	if ( Q_strequal(cmd, "levelselect") ) {
 		UI_SPLevelMenu_f();
 		return qtrue;
 	}
 
-	if ( Q_stricmp (cmd, "postgame") == 0 ) {
+	if ( Q_strequal(cmd, "postgame") ) {
 		UI_SPPostgameMenu_f();
 		return qtrue;
 	}
 
-	if ( Q_stricmp (cmd, "ui_cache") == 0 ) {
+	if ( Q_strequal(cmd, "ui_cache") ) {
 		UI_Cache_f();
 		return qtrue;
 	}
 
-	if ( Q_stricmp (cmd, "ui_cinematics") == 0 ) {
+	if ( Q_strequal(cmd, "ui_cinematics") ) {
 		UI_CinematicsMenu_f();
 		return qtrue;
 	}
 
-	if ( Q_stricmp (cmd, "ui_teamOrders") == 0 ) {
+	if ( Q_strequal(cmd, "ui_teamOrders") ) {
 		UI_TeamOrdersMenu_f();
 		return qtrue;
 	}
 
-	if ( Q_stricmp (cmd, "iamacheater") == 0 ) {
+	if ( Q_strequal(cmd, "iamacheater") ) {
 		UI_SPUnlock_f();
 		return qtrue;
 	}
 
-	if ( Q_stricmp (cmd, "iamamonkey") == 0 ) {
+	if ( Q_strequal(cmd, "iamamonkey") ) {
 		UI_SPUnlockMedals_f();
 		return qtrue;
 	}
 
-	if ( Q_stricmp (cmd, "ui_cdkey") == 0 ) {
+	if ( Q_strequal(cmd, "ui_cdkey") ) {
 		UI_CDKeyMenu_f();
 		return qtrue;
 	}
 
-        if ( Q_stricmp (cmd, "ui_mappage") == 0 ) {
+        if ( Q_strequal(cmd, "ui_mappage") ) {
 		mappage.pagenumber = atoi(UI_Argv( 1 ));
                 Q_strncpyz(mappage.mapname[0],UI_Argv(2),32);
                 Q_strncpyz(mappage.mapname[1],UI_Argv(3),32);
@@ -1063,7 +1063,7 @@ qboolean UI_ConsoleCommand( int realTime ) {
 		return qtrue;
 	}
         
-        if ( Q_stricmp (cmd, "ui_writemappools") == 0) {
+        if ( Q_strequal(cmd, "ui_writemappools") ) {
             WriteMapList();
             return qtrue;
         }

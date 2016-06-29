@@ -427,7 +427,7 @@ static void PlayerModel_BuildList( void )
 			COM_StripExtension(fileptr,skinname, sizeof(skinname));
 
 			// look for icon_????
-			if (!Q_stricmpn(skinname,"icon_",5))
+			if (Q_strequaln(skinname,"icon_",5))
 			{
 				Com_sprintf( s_playermodel.modelnames[s_playermodel.nummodels++],
 					sizeof( s_playermodel.modelnames[s_playermodel.nummodels] ),
@@ -488,7 +488,7 @@ static void PlayerModel_SetMenuItems( void )
 		else
 			continue;
 
-		if (!Q_stricmp( s_playermodel.modelskin, modelskin ))
+		if (Q_strequal( s_playermodel.modelskin, modelskin ))
 		{
 			// found pic, set selection here		
 			s_playermodel.selectedmodel = i;

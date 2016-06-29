@@ -325,7 +325,7 @@ void Cmd_PrivateMessage_f( gentity_t *ent )
   }
 
   G_SayArgv( 0, cmd, sizeof( cmd ) );
-  if( !Q_stricmp( cmd, "say" ) || !Q_stricmp( cmd, "say_team" ) )
+  if( Q_strequal( cmd, "say" ) || Q_strequal( cmd, "say_team" ) )
   {
     skipargs = 1;
     G_SayArgv( 1, cmd, sizeof( cmd ) );
@@ -336,7 +336,7 @@ void Cmd_PrivateMessage_f( gentity_t *ent )
     return;
   }
 
-  if( !Q_stricmp( cmd, "mt" ) || !Q_stricmp( cmd, "/mt" ) )
+  if( Q_strequal( cmd, "mt" ) || Q_strequal( cmd, "/mt" ) )
     teamonly = qtrue;
 
   G_SayArgv( 1+skipargs, name, sizeof( name ) );
@@ -517,7 +517,7 @@ void Cmd_AdminMessage_f( gentity_t *ent )
 
 	// Skip say/say_team if this was used from one of those
 	G_SayArgv( 0, cmd, sizeof( cmd ) );
-	if( !Q_stricmp( cmd, "say" ) || !Q_stricmp( cmd, "say_team" ) )
+	if( Q_strequal( cmd, "say" ) || Q_strequal( cmd, "say_team" ) )
 	{
 		skiparg = 1;
 		G_SayArgv( 1, cmd, sizeof( cmd ) );
@@ -552,7 +552,7 @@ Currently Unused until I figure out how to implement it with voice chats.
   qboolean ignore = qfalse;
 
   trap_Argv( 0, cmd, sizeof( cmd ) );
-  if( Q_stricmp( cmd, "ignore" ) == 0 )
+  if( Q_strequal( cmd, "ignore" ) )
     ignore = qtrue;
 
   if( trap_Argc() < 2 )

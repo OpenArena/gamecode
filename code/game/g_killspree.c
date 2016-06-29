@@ -126,7 +126,7 @@ qboolean G_ReadAltKillSettings( gentity_t *ent, int skiparg )
 		t = COM_Parse( &cnf );
 		if( !*t )
 			break;
-		if( !Q_stricmp( t, "[kspree]" ) ) {
+		if( Q_strequal( t, "[kspree]" ) ) {
 
 			if( ksc >= MAX_KSPREE )
 				return qfalse;
@@ -136,7 +136,7 @@ qboolean G_ReadAltKillSettings( gentity_t *ent, int skiparg )
 			dspree_read = qfalse;
 			mkill_read = qfalse;
 
-		} else if ( !Q_stricmp( t, "[dspree]" ) ) {
+		} else if ( Q_strequal( t, "[dspree]" ) ) {
 
 			if( dsc >= MAX_DSPREE )
 				return qfalse;
@@ -145,7 +145,7 @@ qboolean G_ReadAltKillSettings( gentity_t *ent, int skiparg )
 			dspree_read = qtrue;
 			kspree_read = qfalse;
 			mkill_read = qfalse;
-		} else if ( !Q_stricmp( t, "[mkill]" ) ) {
+		} else if ( Q_strequal( t, "[mkill]" ) ) {
 
 			if( mc >= MAX_MULTIKILLS )
 				return qfalse;
@@ -156,39 +156,39 @@ qboolean G_ReadAltKillSettings( gentity_t *ent, int skiparg )
 			dspree_read = qfalse; 
 		//Parse a killing spree    
 		} else if ( kspree_read ) {
-			if( !Q_stricmp( t, "level" ) ) {
+			if( Q_strequal( t, "level" ) ) {
 				readFile_int( &cnf, &k->spreeLevel );
 				//Let's take the spreeLevel and multiply it by the spreeDivisor to give us our count
 				k->streakCount = ( ( k->spreeLevel ) * ( spreeDivisor ) );
-			} else if ( !Q_stricmp( t, "message" ) ) {
+			} else if ( Q_strequal( t, "message" ) ) {
 				readFile_string( &cnf, k->spreeMsg, sizeof( k->spreeMsg ) );
-			} else if ( !Q_stricmp( t, "printpos" ) ) {
+			} else if ( Q_strequal( t, "printpos" ) ) {
 				readFile_int( &cnf, &k->position );
-			} else if ( !Q_stricmp( t, "sound" ) ) {
+			} else if ( Q_strequal( t, "sound" ) ) {
 				readFile_string( &cnf, k->sound2Play, sizeof( k->sound2Play ) );
 			} else {
 				COM_ParseError( "Killing Spree unrecognized token \"%s\"", t );
 			}
 		} else if ( dspree_read ) {
-			if( !Q_stricmp( t, "level" ) ) {
+			if( Q_strequal( t, "level" ) ) {
 				readFile_int( &cnf, &d->spreeLevel );
 				//Let's take the spreeLevel and multiply it by the spreeDivisor to give us our count
 				d->streakCount = ( ( d->spreeLevel ) * ( spreeDivisor ) );
-			} else if ( !Q_stricmp( t, "message" ) ) {
+			} else if ( Q_strequal( t, "message" ) ) {
 				readFile_string( &cnf, d->spreeMsg, sizeof( d->spreeMsg ) );
-			} else if ( !Q_stricmp( t, "printpos" ) ) {
+			} else if ( Q_strequal( t, "printpos" ) ) {
 				readFile_int( &cnf, &d->position );
-			} else if ( !Q_stricmp( t, "sound" ) ) {
+			} else if ( Q_strequal( t, "sound" ) ) {
 				readFile_string( &cnf, d->sound2Play, sizeof( d->sound2Play ) );
 			} else {
 				COM_ParseError( "Death Spree unrecognized token \"%s\"", t );
 			}
 		} else if ( mkill_read ) {
-			if ( !Q_stricmp( t, "kills" ) ) {
+			if ( Q_strequal( t, "kills" ) ) {
 				readFile_int( &cnf, &m->kills );
-			} else if ( !Q_stricmp( t, "message" ) ) {
+			} else if ( Q_strequal( t, "message" ) ) {
 				readFile_string( &cnf, m->killMsg, sizeof( m->killMsg ) );
-			} else if ( !Q_stricmp( t, "sound" ) ) {
+			} else if ( Q_strequal( t, "sound" ) ) {
 				readFile_string( &cnf, m->sound2Play, sizeof( m->sound2Play ) );
 			} else {
 				COM_ParseError( "Multikill unrecognized token \"%s\"", t );

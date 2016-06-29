@@ -493,7 +493,7 @@ qboolean PC_Script_Parse(int handle, const char **out) {
   
 	if (!trap_PC_ReadToken(handle, &token))
 		return qfalse;
-	if (Q_stricmp(token.string, "{") != 0) {
+	if ( !Q_strequal(token.string, "{") ) {
 	    return qfalse;
 	}
 
@@ -501,7 +501,7 @@ qboolean PC_Script_Parse(int handle, const char **out) {
 		if (!trap_PC_ReadToken(handle, &token))
 			return qfalse;
 
-		if (Q_stricmp(token.string, "}") == 0) {
+		if (Q_strequal(token.string, "}") ) {
 			*out = String_Alloc(script);
 			return qtrue;
 		}
@@ -796,7 +796,7 @@ int Menu_ItemsMatchingGroup(menuDef_t *menu, const char *name) {
   int i;
   int count = 0;
   for (i = 0; i < menu->itemCount; i++) {
-    if (Q_stricmp(menu->items[i]->window.name, name) == 0 || (menu->items[i]->window.group && Q_stricmp(menu->items[i]->window.group, name) == 0)) {
+    if (Q_strequal(menu->items[i]->window.name, name) || (menu->items[i]->window.group && Q_strequal(menu->items[i]->window.group, name) )) {
       count++;
     } 
   }
@@ -807,7 +807,7 @@ itemDef_t *Menu_GetMatchingItemByNumber(menuDef_t *menu, int index, const char *
   int i;
   int count = 0;
   for (i = 0; i < menu->itemCount; i++) {
-    if (Q_stricmp(menu->items[i]->window.name, name) == 0 || (menu->items[i]->window.group && Q_stricmp(menu->items[i]->window.group, name) == 0)) {
+    if (Q_strequal(menu->items[i]->window.name, name) || (menu->items[i]->window.group && Q_strequal(menu->items[i]->window.group, name) )) {
       if (count == index) {
         return menu->items[i];
       }
@@ -827,13 +827,13 @@ void Script_SetColor(itemDef_t *item, char **args) {
   // expecting type of color to set and 4 args for the color
   if (String_Parse(args, &name)) {
       out = NULL;
-      if (Q_stricmp(name, "backcolor") == 0) {
+      if (Q_strequal(name, "backcolor") ) {
         out = &item->window.backColor;
         item->window.flags |= WINDOW_BACKCOLORSET;
-      } else if (Q_stricmp(name, "forecolor") == 0) {
+      } else if (Q_strequal(name, "forecolor") ) {
         out = &item->window.foreColor;
         item->window.flags |= WINDOW_FORECOLORSET;
-      } else if (Q_stricmp(name, "bordercolor") == 0) {
+      } else if (Q_strequal(name, "bordercolor") ) {
         out = &item->window.borderColor;
       }
 
@@ -876,7 +876,7 @@ itemDef_t *Menu_FindItemByName(menuDef_t *menu, const char *p) {
   }
 
   for (i = 0; i < menu->itemCount; i++) {
-    if (Q_stricmp(p, menu->items[i]->window.name) == 0) {
+    if (Q_strequal(p, menu->items[i]->window.name) ) {
       return menu->items[i];
     }
   }
@@ -915,12 +915,12 @@ void Script_SetItemColor(itemDef_t *item, char **args) {
       item2 = Menu_GetMatchingItemByNumber(item->parent, j, itemname);
       if (item2 != NULL) {
         out = NULL;
-        if (Q_stricmp(name, "backcolor") == 0) {
+        if (Q_strequal(name, "backcolor") ) {
           out = &item2->window.backColor;
-        } else if (Q_stricmp(name, "forecolor") == 0) {
+        } else if (Q_strequal(name, "forecolor") ) {
           out = &item2->window.foreColor;
           item2->window.flags |= WINDOW_FORECOLORSET;
-        } else if (Q_stricmp(name, "bordercolor") == 0) {
+        } else if (Q_strequal(name, "bordercolor") ) {
           out = &item2->window.borderColor;
         }
 
@@ -977,7 +977,7 @@ void Menu_FadeItemByName(menuDef_t *menu, const char *p, qboolean fadeOut) {
 menuDef_t *Menus_FindByName(const char *p) {
   int i;
   for (i = 0; i < menuCount; i++) {
-    if (Q_stricmp(Menus[i].window.name, p) == 0) {
+    if (Q_strequal(Menus[i].window.name, p) ) {
       return &Menus[i];
     } 
   }
@@ -1261,7 +1261,7 @@ void Item_RunScript(itemDef_t *item, const char *s) {
 
       bRan = qfalse;
       for (i = 0; i < scriptCommandCount; i++) {
-        if (Q_stricmp(command, commandList[i].name) == 0) {
+        if (Q_strequal(command, commandList[i].name) ) {
           (commandList[i].handler(item, &p));
           bRan = qtrue;
           break;
@@ -1298,12 +1298,12 @@ qboolean Item_EnableShowViaCvar(itemDef_t *item, int flag) {
 
 			// enable it if any of the values are true
 			if (item->cvarFlags & flag) {
-        if (Q_stricmp(buff, val) == 0) {
+        if (Q_strequal(buff, val) ) {
 					return qtrue;
 				}
 			} else {
 				// disable it if any of the values are true
-        if (Q_stricmp(buff, val) == 0) {
+        if (Q_strequal(buff, val) ) {
 					return qfalse;
 				}
 			}
@@ -1935,7 +1935,7 @@ int Item_Multi_FindCvarByValue(itemDef_t *item) {
 		}
 		for (i = 0; i < multiPtr->count; i++) {
 			if (multiPtr->strDef) {
-				if (Q_stricmp(buff, multiPtr->cvarStr[i]) == 0) {
+				if (Q_strequal(buff, multiPtr->cvarStr[i]) ) {
 					return i;
 				}
 			} else {
@@ -1961,7 +1961,7 @@ const char *Item_Multi_Setting(itemDef_t *item) {
 		}
 		for (i = 0; i < multiPtr->count; i++) {
 			if (multiPtr->strDef) {
-				if (Q_stricmp(buff, multiPtr->cvarStr[i]) == 0) {
+				if (Q_strequal(buff, multiPtr->cvarStr[i]) ) {
 					return multiPtr->cvarList[i];
 				}
 			} else {
@@ -3205,7 +3205,7 @@ static void Controls_GetKeyAssignment (char *command, int *twokeys)
 		if ( *b == 0 ) {
 			continue;
 		}
-		if ( !Q_stricmp( b, command ) ) {
+		if ( Q_strequal( b, command ) ) {
 			twokeys[count] = j;
 			count++;
 			if (count == 2) {
@@ -3313,7 +3313,7 @@ int BindingIDFromName(const char *name) {
 	int i;
   for (i=0; i < g_bindCount; i++)
 	{
-		if (Q_stricmp(name, g_bindings[i].command) == 0) {
+		if (Q_strequal(name, g_bindings[i].command) ) {
 			return i;
 		}
 	}
@@ -3329,7 +3329,7 @@ void BindingFromName(const char *cvar) {
 	// iterate each command, set its default binding
 	for (i=0; i < g_bindCount; i++)
 	{
-		if (Q_stricmp(cvar, g_bindings[i].command) == 0) {
+		if (Q_strequal(cvar, g_bindings[i].command) ) {
 			b1 = g_bindings[i].bind1;
 			if (b1 == -1) {
 				break;
@@ -4108,7 +4108,7 @@ menuDef_t *Menus_ActivateByName(const char *p) {
   menuDef_t *m = NULL;
 	menuDef_t *focus = Menu_GetFocused();
   for (i = 0; i < menuCount; i++) {
-    if (Q_stricmp(Menus[i].window.name, p) == 0) {
+    if (Q_strequal(Menus[i].window.name, p) ) {
 	    m = &Menus[i];
 			Menus_Activate(m);
 			if (openMenuCount < MAX_OPEN_MENUS && focus != NULL) {
@@ -4323,7 +4323,7 @@ keywordHash_t *KeywordHash_Find(keywordHash_t *table[], char *keyword)
 
 	hash = KeywordHash_Key(keyword);
 	for (key = table[hash]; key; key = key->next) {
-		if (!Q_stricmp(key->keyword, keyword))
+		if (Q_strequal(key->keyword, keyword))
 			return key;
 	}
 	return NULL;
@@ -5201,7 +5201,7 @@ qboolean MenuParse_name( itemDef_t *item, int handle ) {
 	if (!PC_String_Parse(handle, &menu->window.name)) {
 		return qfalse;
 	}
-	if (Q_stricmp(menu->window.name, "main") == 0) {
+	if (Q_strequal(menu->window.name, "main") ) {
 		// default main as having focus
 		//menu->window.flags |= WINDOW_HASFOCUS;
 	}

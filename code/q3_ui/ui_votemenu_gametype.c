@@ -337,7 +337,7 @@ void UI_VoteGametypeMenu( void ) {
 	memset( &s_votemenu_Gametype, 0 ,sizeof(votemenu_t) );
         trap_GetConfigString( CS_SERVERINFO, serverinfo, MAX_INFO_STRING );
         gametypeinfo = Info_ValueForKey(serverinfo,"g_voteGametypes");
-        if(!Q_stricmp(gametypeinfo,"*")) {
+        if (Q_strequal(gametypeinfo,"*")) {
             s_votemenu_Gametype.FFA = qtrue;
             s_votemenu_Gametype.Tourney = qtrue;
             s_votemenu_Gametype.TDM = qtrue;

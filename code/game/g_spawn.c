@@ -32,7 +32,7 @@ qboolean	G_SpawnString( const char *key, const char *defaultString, char **out )
 	}
 
 	for ( i = 0 ; i < level.numSpawnVars ; i++ ) {
-		if ( !Q_stricmp( key, level.spawnVars[i][0] ) ) {
+		if ( Q_strequal( key, level.spawnVars[i][0] ) ) {
 			*out = level.spawnVars[i][1];
 			return qtrue;
 		}
@@ -383,7 +383,7 @@ void G_ParseField( const char *key, const char *value, gentity_t *ent ) {
 	vec3_t	vec;
 
 	for ( f=fields ; f->name ; f++ ) {
-		if ( !Q_stricmp(f->name, key) ) {
+		if ( Q_strequal(f->name, key) ) {
 			// found it
 			b = (byte *)ent;
 
@@ -606,7 +606,7 @@ void SP_worldspawn( void ) {
 	char	*s;
 
 	G_SpawnString( "classname", "", &s );
-	if ( Q_stricmp( s, "worldspawn" ) ) {
+	if ( !Q_strequal( s, "worldspawn" ) ) {
 		G_Error( "SP_worldspawn: The first entity isn't 'worldspawn'" );
 	}
 
@@ -615,7 +615,7 @@ void SP_worldspawn( void ) {
 
 	trap_SetConfigstring( CS_LEVEL_START_TIME, va("%i", level.startTime ) );
 
-	if ( *g_music.string && Q_stricmp( g_music.string, "none" ) ) {
+	if ( *g_music.string && !Q_strequal( g_music.string, "none" ) ) {
 		trap_SetConfigstring( CS_MUSIC, g_music.string );
 	} else {
 		G_SpawnString( "music", "", &s );   

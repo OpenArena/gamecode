@@ -76,7 +76,7 @@ void Favorites_Add( void )
 	for (i=0; i<MAX_FAVORITESERVERS; i++)
 	{
 		trap_Cvar_VariableStringBuffer( va("server%d",i+1), adrstr, sizeof(adrstr) );
-		if (!Q_stricmp(serverbuff,adrstr))
+		if (Q_strequal(serverbuff,adrstr))
 		{
 			// already in list
 			return;

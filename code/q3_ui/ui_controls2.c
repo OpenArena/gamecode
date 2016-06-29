@@ -829,7 +829,7 @@ static void Controls_GetKeyAssignment (char *command, int *twokeys)
 		if ( *b == 0 ) {
 			continue;
 		}
-		if ( !Q_stricmp( b, command ) ) {
+		if ( Q_strequal( b, command ) ) {
 			twokeys[count] = j;
 			count++;
 			if (count == 2)

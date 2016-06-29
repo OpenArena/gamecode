@@ -3053,31 +3053,31 @@ CG_DrawProxWarning
 static void CG_DrawProxWarning( void ) {
 	char s [32];
 	int			w;
-  static int proxTime;
-  static int proxCounter;
-  static int proxTick;
+	static int proxTime;
+	static int proxCounter;
+	static int proxTick;
 
 	if( !(cg.snap->ps.eFlags & EF_TICKING ) ) {
-    proxTime = 0;
+		proxTime = 0;
 		return;
 	}
 
-  if (proxTime == 0) {
-    proxTime = cg.time + 5000;
-    proxCounter = 5;
-    proxTick = 0;
-  }
+	if (proxTime == 0) {
+		proxTime = cg.time + 5000;
+		proxCounter = 5;
+		proxTick = 0;
+	}
 
-  if (cg.time > proxTime) {
-    proxTick = proxCounter--;
-    proxTime = cg.time + 1000;
-  }
+	if (cg.time > proxTime) {
+		proxTick = proxCounter--;
+		proxTime = cg.time + 1000;
+	}
 
-  if (proxTick != 0) {
-    Com_sprintf(s, sizeof(s), "INTERNAL COMBUSTION IN: %i", proxTick);
-  } else {
-    Com_sprintf(s, sizeof(s), "YOU HAVE BEEN MINED");
-  }
+	if (proxTick != 0) {
+		Com_sprintf(s, sizeof(s), "INTERNAL COMBUSTION IN: %i", proxTick);
+	} else {
+		Com_sprintf(s, sizeof(s), "YOU HAVE BEEN MINED");
+	}
 
 	w = CG_DrawStrlen( s ) * BIGCHAR_WIDTH;
 	CG_DrawBigStringColor( 320 - w / 2, 64 + BIGCHAR_HEIGHT, s, g_color_table[ColorIndex(COLOR_RED)] );

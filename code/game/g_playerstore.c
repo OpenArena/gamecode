@@ -75,7 +75,7 @@ void PlayerStore_store(const char* guid, playerState_t ps) {
         return;
     }
     for(i=0;i<MAX_PLAYERS_STORED;i++) {
-        if(!Q_stricmp(guid,playerstore[i].guid)) {
+        if(Q_strequal(guid,playerstore[i].guid)) {
             place2store=i;
         }
     }
@@ -108,7 +108,7 @@ void PlayerStore_restore(const char* guid, playerState_t *ps)  {
         return;
     }
     for(i=0;i<MAX_PLAYERS_STORED;i++) {
-        if(!Q_stricmpn(guid,playerstore[i].guid,GUID_SIZE) && playerstore[i].age != -1) {
+        if(Q_strequaln(guid,playerstore[i].guid,GUID_SIZE) && playerstore[i].age != -1) {
             memcpy(ps->persistant,playerstore[i].persistant,sizeof(int[MAX_PERSISTANT]));
             memcpy(level.clients[ps->clientNum].accuracy, playerstore[i].accuracy,sizeof(playerstore[0].accuracy) );
             level.clients[ps->clientNum].pers.enterTime = level.time - playerstore[i].timePlayed;

@@ -1405,7 +1405,7 @@ void CG_StartMusic( void ) {
 	char	parm1[MAX_QPATH], parm2[MAX_QPATH];
 
 	// start the background music
-	if ( *cg_music.string && Q_stricmp( cg_music.string, "none" ) ) {
+	if ( *cg_music.string && !Q_strequal( cg_music.string, "none" ) ) {
 		s = (char *)cg_music.string;
 	} else {
 		s = (char *)CG_ConfigString( CS_MUSIC );
@@ -1448,9 +1448,10 @@ qboolean CG_Asset_Parse(int handle) {
 	pc_token_t token;
 	const char *tempStr;
 
-	if (!trap_PC_ReadToken(handle, &token))
+	if ( !trap_PC_ReadToken(handle, &token) ) {
 		return qfalse;
-	if (Q_stricmp(token.string, "{") != 0) {
+	}
+	if ( !Q_strequal(token.string, "{") ) {
 		return qfalse;
 	}
     
@@ -1458,12 +1459,12 @@ qboolean CG_Asset_Parse(int handle) {
 		if (!trap_PC_ReadToken(handle, &token))
 			return qfalse;
 
-		if (Q_stricmp(token.string, "}") == 0) {
+		if ( Q_strequal(token.string, "}") ) {
 			return qtrue;
 		}
 
 		// font
-		if (Q_stricmp(token.string, "font") == 0) {
+		if (Q_strequal(token.string, "font")) {
 			int pointSize;
 			if (!PC_String_Parse(handle, &tempStr) || !PC_Int_Parse(handle, &pointSize)) {
 				return qfalse;
@@ -1473,7 +1474,7 @@ qboolean CG_Asset_Parse(int handle) {
 		}
 
 		// smallFont
-		if (Q_stricmp(token.string, "smallFont") == 0) {
+		if ( Q_strequal(token.string, "smallFont") ) {
 			int pointSize;
 			if (!PC_String_Parse(handle, &tempStr) || !PC_Int_Parse(handle, &pointSize)) {
 				return qfalse;
@@ -1483,7 +1484,7 @@ qboolean CG_Asset_Parse(int handle) {
 		}
 
 		// font
-		if (Q_stricmp(token.string, "bigfont") == 0) {
+		if ( Q_strequal(token.string, "bigfont") ) {
 			int pointSize;
 			if (!PC_String_Parse(handle, &tempStr) || !PC_Int_Parse(handle, &pointSize)) {
 				return qfalse;
@@ -1493,7 +1494,7 @@ qboolean CG_Asset_Parse(int handle) {
 		}
 
 		// gradientbar
-		if (Q_stricmp(token.string, "gradientbar") == 0) {
+		if ( Q_strequal(token.string, "gradientbar") ) {
 			if (!PC_String_Parse(handle, &tempStr)) {
 				return qfalse;
 			}
@@ -1502,7 +1503,7 @@ qboolean CG_Asset_Parse(int handle) {
 		}
 
 		// enterMenuSound
-		if (Q_stricmp(token.string, "menuEnterSound") == 0) {
+		if ( Q_strequal(token.string, "menuEnterSound") ) {
 			if (!PC_String_Parse(handle, &tempStr)) {
 				return qfalse;
 			}
@@ -1511,7 +1512,7 @@ qboolean CG_Asset_Parse(int handle) {
 		}
 
 		// exitMenuSound
-		if (Q_stricmp(token.string, "menuExitSound") == 0) {
+		if ( Q_strequal(token.string, "menuExitSound") ) {
 			if (!PC_String_Parse(handle, &tempStr)) {
 				return qfalse;
 			}
@@ -1520,7 +1521,7 @@ qboolean CG_Asset_Parse(int handle) {
 		}
 
 		// itemFocusSound
-		if (Q_stricmp(token.string, "itemFocusSound") == 0) {
+		if ( Q_strequal(token.string, "itemFocusSound") ) {
 			if (!PC_String_Parse(handle, &tempStr)) {
 				return qfalse;
 			}
@@ -1529,7 +1530,7 @@ qboolean CG_Asset_Parse(int handle) {
 		}
 
 		// menuBuzzSound
-		if (Q_stricmp(token.string, "menuBuzzSound") == 0) {
+		if (Q_strequal(token.string, "menuBuzzSound") ) {
 			if (!PC_String_Parse(handle, &tempStr)) {
 				return qfalse;
 			}
@@ -1537,7 +1538,7 @@ qboolean CG_Asset_Parse(int handle) {
 			continue;
 		}
 
-		if (Q_stricmp(token.string, "cursor") == 0) {
+		if ( Q_strequal(token.string, "cursor") ) {
 			if (!PC_String_Parse(handle, &cgDC.Assets.cursorStr)) {
 				return qfalse;
 			}
@@ -1545,42 +1546,42 @@ qboolean CG_Asset_Parse(int handle) {
 			continue;
 		}
 
-		if (Q_stricmp(token.string, "fadeClamp") == 0) {
+		if ( Q_strequal(token.string, "fadeClamp") ) {
 			if (!PC_Float_Parse(handle, &cgDC.Assets.fadeClamp)) {
 				return qfalse;
 			}
 			continue;
 		}
 
-		if (Q_stricmp(token.string, "fadeCycle") == 0) {
+		if ( Q_strequal(token.string, "fadeCycle") ) {
 			if (!PC_Int_Parse(handle, &cgDC.Assets.fadeCycle)) {
 				return qfalse;
 			}
 			continue;
 		}
 
-		if (Q_stricmp(token.string, "fadeAmount") == 0) {
+		if ( Q_strequal(token.string, "fadeAmount") ) {
 			if (!PC_Float_Parse(handle, &cgDC.Assets.fadeAmount)) {
 				return qfalse;
 			}
 			continue;
 		}
 
-		if (Q_stricmp(token.string, "shadowX") == 0) {
+		if ( Q_strequal(token.string, "shadowX") ) {
 			if (!PC_Float_Parse(handle, &cgDC.Assets.shadowX)) {
 				return qfalse;
 			}
 			continue;
 		}
 
-		if (Q_stricmp(token.string, "shadowY") == 0) {
+		if ( Q_strequal(token.string, "shadowY") ) {
 			if (!PC_Float_Parse(handle, &cgDC.Assets.shadowY)) {
 				return qfalse;
 			}
 			continue;
 		}
 
-		if (Q_stricmp(token.string, "shadowColor") == 0) {
+		if ( Q_strequal(token.string, "shadowColor") ) {
 			if (!PC_Color_Parse(handle, &cgDC.Assets.shadowColor)) {
 				return qfalse;
 			}
@@ -1606,7 +1607,7 @@ void CG_ParseMenu(const char *menuFile) {
 			break;
 		}
 
-		//if ( Q_stricmp( token, "{" ) ) {
+		//if ( !Q_strequal( token, "{" ) ) {
 		//	Com_Printf( "Missing { in menu file\n" );
 		//	break;
 		//}
@@ -1620,7 +1621,7 @@ void CG_ParseMenu(const char *menuFile) {
 			break;
 		}
 
-		if (Q_stricmp(token.string, "assetGlobalDef") == 0) {
+		if ( Q_strequal(token.string, "assetGlobalDef") ) {
 			if (CG_Asset_Parse(handle)) {
 				continue;
 			} else {
@@ -1629,7 +1630,7 @@ void CG_ParseMenu(const char *menuFile) {
 		}
 
 
-		if (Q_stricmp(token.string, "menudef") == 0) {
+		if ( Q_strequal(token.string, "menudef") ) {
 			// start a new menu
 			Menu_New(handle);
 		}
@@ -1650,7 +1651,7 @@ qboolean CG_Load_Menu(char **p) {
 
 		token = COM_ParseExt(p, qtrue);
     
-		if (Q_stricmp(token, "}") == 0) {
+		if ( Q_strequal(token, "}") ) {
 			return qtrue;
 		}
 
@@ -1705,21 +1706,11 @@ void CG_LoadMenus(const char *menuFile) {
 			break;
 		}
 
-		//if ( Q_stricmp( token, "{" ) ) {
-		//	Com_Printf( "Missing { in menu file\n" );
-		//	break;
-		//}
-
-		//if ( menuCount == MAX_MENUS ) {
-		//	Com_Printf( "Too many menus!\n" );
-		//	break;
-		//}
-
-		if ( Q_stricmp( token, "}" ) == 0 ) {
+		if ( Q_strequal( token, "}" ) ) {
 			break;
 		}
 
-		if (Q_stricmp(token, "loadmenu") == 0) {
+		if ( Q_strequal(token, "loadmenu") ) {
 			if (CG_Load_Menu(&p)) {
 				continue;
 			} else {

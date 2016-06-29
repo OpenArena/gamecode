@@ -34,7 +34,7 @@ int allowedVote(const char *commandStr) {
 	int length;
 	char voteNames[MAX_CVAR_VALUE_STRING];
 	trap_Cvar_VariableStringBuffer( "g_voteNames", voteNames, sizeof( voteNames ) );
-	if(!Q_stricmp(voteNames, "*" ))
+	if(Q_strequal(voteNames, "*" ))
 		return qtrue; //if star, everything is allowed
 	length = strlen(commandStr);
 	if(length>MAX_VOTENAME_LENGTH-3)
@@ -156,7 +156,7 @@ int allowedMap(const char *mapname) {
 	pointer = buffer;
 	token = COM_Parse(&pointer);
 	while(token[0]!=0 && !found) {
-		if(!Q_stricmp(token,mapname))
+		if(Q_strequal(token,mapname))
 			found = qtrue;
 		token = COM_Parse(&pointer);
 	}
@@ -177,7 +177,7 @@ int allowedGametype(const char *gametypeStr) {
 	int length;
 	char voteGametypes[MAX_CVAR_VALUE_STRING];
 	trap_Cvar_VariableStringBuffer( "g_voteGametypes", voteGametypes, sizeof( voteGametypes ) );
-	if(!Q_stricmp(voteGametypes, "*" ))
+	if(Q_strequal(voteGametypes, "*" ))
 		return qtrue; //if star, everything is allowed
 	length = strlen(gametypeStr);
 	if(length>MAX_GAMETYPENAME_LENGTH-3)
@@ -336,11 +336,11 @@ t_customvote getCustomVote(char* votecommand) {
 			if ( !token[0] ) {
 				Com_Printf("Invalid/missing argument to %s in customvote.cfg\n",key);
 			}
-			if(!Q_stricmp(key,"votecommand")) {
+			if(Q_strequal(key,"votecommand")) {
 				Q_strncpyz(result.votename,token,sizeof(result.votename));
-			} else if(!Q_stricmp(key,"displayname")) {
+			} else if(Q_strequal(key,"displayname")) {
 				Q_strncpyz(result.displayname,token,sizeof(result.displayname));
-			} else if(!Q_stricmp(key,"command")) {
+			} else if(Q_strequal(key,"command")) {
 				Q_strncpyz(result.command,token,sizeof(result.command));
 			} else {
 				Com_Printf("Unknown key in customvote.cfg: %s\n",key);
@@ -348,7 +348,7 @@ t_customvote getCustomVote(char* votecommand) {
 
 	}
 
-		if(!Q_stricmp(result.votename,votecommand)) {
+		if(Q_strequal(result.votename,votecommand)) {
 			return result;
 		}
 	}

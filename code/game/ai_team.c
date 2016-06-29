@@ -247,10 +247,13 @@ BotGetTeamMateTaskPreference
 */
 int BotGetTeamMateTaskPreference(bot_state_t *bs, int teammate) {
 	char teammatename[MAX_NETNAME];
-
-	if (!ctftaskpreferences[teammate].preference) return 0;
+	if ( !ctftaskpreferences[teammate].preference) {
+		return 0;
+	}
 	ClientName(teammate, teammatename, sizeof(teammatename));
-	if (Q_stricmp(teammatename, ctftaskpreferences[teammate].name)) return 0;
+	if ( !Q_strequal(teammatename, ctftaskpreferences[teammate].name)) {
+		return 0;
+	}
 	return ctftaskpreferences[teammate].preference;
 }
 
@@ -2144,7 +2147,9 @@ void BotTeamAI(bot_state_t *bs) {
 
 	//return if this bot is NOT the team leader
 	ClientName(bs->client, netname, sizeof(netname));
-	if (Q_stricmp(netname, bs->teamleader) != 0) return;
+	if ( !Q_strequal(netname, bs->teamleader) ) {
+		return;
+	}
 	//
 	numteammates = BotNumTeamMates(bs);
 	//give orders

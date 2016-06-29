@@ -957,13 +957,13 @@ static qboolean UI_ParseAnimationFile( const char *filename, animation_t *animat
 		if ( !token ) {
 			break;
 		}
-		if ( !Q_stricmp( token, "footsteps" ) ) {
+		if ( Q_strequal( token, "footsteps" ) ) {
 			token = COM_Parse( &text_p );
 			if ( !token ) {
 				break;
 			}
 			continue;
-		} else if ( !Q_stricmp( token, "headoffset" ) ) {
+		} else if ( Q_strequal( token, "headoffset" ) ) {
 			for ( i = 0 ; i < 3 ; i++ ) {
 				token = COM_Parse( &text_p );
 				if ( !token ) {
@@ -971,7 +971,7 @@ static qboolean UI_ParseAnimationFile( const char *filename, animation_t *animat
 				}
 			}
 			continue;
-		} else if ( !Q_stricmp( token, "sex" ) ) {
+		} else if ( Q_strequal( token, "sex" ) ) {
 			token = COM_Parse( &text_p );
 			if ( !token ) {
 				break;

@@ -1547,7 +1547,7 @@ int ClientFromName(char *name) {
 	for (i = 0; i < maxclients && i < MAX_CLIENTS; i++) {
 		trap_GetConfigstring(CS_PLAYERS+i, buf, sizeof(buf));
 		Q_CleanStr( buf );
-		if (!Q_stricmp(Info_ValueForKey(buf, "n"), name)) return i;
+		if (Q_strequal(Info_ValueForKey(buf, "n"), name)) return i;
 	}
 	return -1;
 }
@@ -1569,7 +1569,7 @@ int ClientOnSameTeamFromName(bot_state_t *bs, char *name) {
 			continue;
 		trap_GetConfigstring(CS_PLAYERS+i, buf, sizeof(buf));
 		Q_CleanStr( buf );
-		if (!Q_stricmp(Info_ValueForKey(buf, "n"), name)) return i;
+		if (Q_strequal(Info_ValueForKey(buf, "n"), name)) return i;
 	}
 	return -1;
 }
@@ -2249,7 +2249,7 @@ bot_waypoint_t *BotFindWayPoint(bot_waypoint_t *waypoints, char *name) {
 	bot_waypoint_t *wp;
 
 	for (wp = waypoints; wp; wp = wp->next) {
-		if (!Q_stricmp(wp->name, name)) return wp;
+		if (Q_strequal(wp->name, name)) return wp;
 	}
 	return NULL;
 }
@@ -3790,7 +3790,7 @@ void BotMapScripts(bot_state_t *bs) {
 	strncpy(mapname, Info_ValueForKey( info, "mapname" ), sizeof(mapname)-1);
 	mapname[sizeof(mapname)-1] = '\0';
 
-	if (!Q_stricmp(mapname, "q3tourney6")) {
+	if (Q_strequal(mapname, "q3tourney6")) {
 		vec3_t mins = {700, 204, 672}, maxs = {964, 468, 680};
 		vec3_t buttonorg = {304, 352, 920};
 		//NOTE: NEVER use the func_bobbing in q3tourney6
@@ -3845,7 +3845,7 @@ void BotMapScripts(bot_state_t *bs) {
 			}
 		}
 	}
-	else if (!Q_stricmp(mapname, "mpq3tourney6")) {
+	else if (Q_strequal(mapname, "mpq3tourney6")) {
 		//NOTE: NEVER use the func_bobbing in mpq3tourney6
 		bs->tfl &= ~TFL_FUNCBOB;
 	}
@@ -5437,7 +5437,7 @@ void BotSetEntityNumForGoal(bot_goal_t *goal, char *classname) {
 		if ( !ent->inuse ) {
 			continue;
 		}
-		if ( !Q_stricmp(ent->classname, classname) ) {
+		if ( Q_strequal(ent->classname, classname) ) {
 			continue;
 		}
 		VectorSubtract(goal->origin, ent->s.origin, dir);

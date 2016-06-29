@@ -877,7 +877,7 @@ const char *Q_stristr( const char *s, const char *find)
           sc -= ('a' - 'A');
         }
       } while (sc != c);
-    } while (Q_stricmpn(s, find, len) != 0);
+    } while ( !Q_strequaln(s, find, len) );
     s--;
   }
   return s;
@@ -1068,7 +1068,7 @@ char *Info_ValueForKey( const char *s, const char *key ) {
 		}
 		*o = 0;
 
-		if (!Q_stricmp (key, pkey) )
+		if (Q_strequal(key, pkey) )
 			return value[valueindex];
 
 		if (!*s)

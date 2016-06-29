@@ -22,7 +22,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 //
 #include "g_local.h"
 
-#include "../../ui/menudef.h"			// for the voice chats
+#include "../../ui/menudef.h"
 
 /*
 ==================
@@ -1239,18 +1239,18 @@ static void Cmd_Say_f( gentity_t *ent ){
     // KK-OAX Disabled until PM'ing is added
     // support parsing /m out of say text since some people have a hard
     // time figuring out what the console is.
-    /*if( !Q_stricmpn( args, "say /m ", 7 ) ||
-      !Q_stricmpn( args, "say_team /m ", 12 ) ||
-      !Q_stricmpn( args, "say /mt ", 8 ) ||
-      !Q_stricmpn( args, "say_team /mt ", 13 ) )
+    /*if( Q_strequaln( args, "say /m ", 7 ) ||
+      Q_strequaln( args, "say_team /m ", 12 ) ||
+      Q_strequaln( args, "say /mt ", 8 ) ||
+      Q_strequaln( args, "say_team /mt ", 13 ) )
     {
         Cmd_PrivateMessage_f( ent );
         return;
     }
 
     // support parsing /a out of say text for the same reason
-    if( !Q_stricmpn( args, "say /a ", 7 ) ||
-    !Q_stricmpn( args, "say_team /a ", 12 ) )
+    if( Q_strequaln( args, "say /a ", 7 ) ||
+    Q_strequaln( args, "say_team /a ", 12 ) )
     {
         Cmd_AdminMessage_f( ent );
         return;
@@ -1651,17 +1651,17 @@ void Cmd_CallVote_f( gentity_t *ent ) {
         }
         
 
-	if ( !Q_stricmp( arg1, "map_restart" ) ) {
-	} else if ( !Q_stricmp( arg1, "nextmap" ) ) {
-	} else if ( !Q_stricmp( arg1, "map" ) ) {
-	} else if ( !Q_stricmp( arg1, "g_gametype" ) ) {
-	} else if ( !Q_stricmp( arg1, "kick" ) ) {
-	} else if ( !Q_stricmp( arg1, "clientkick" ) ) {
-	} else if ( !Q_stricmp( arg1, "g_doWarmup" ) ) {
-	} else if ( !Q_stricmp( arg1, "timelimit" ) ) {
-	} else if ( !Q_stricmp( arg1, "fraglimit" ) ) {
-        } else if ( !Q_stricmp( arg1, "custom" ) ) {
-        } else if ( !Q_stricmp( arg1, "shuffle" ) ) {
+	if ( Q_strequal( arg1, "map_restart" ) ) {
+	} else if ( Q_strequal( arg1, "nextmap" ) ) {
+	} else if ( Q_strequal( arg1, "map" ) ) {
+	} else if ( Q_strequal( arg1, "g_gametype" ) ) {
+	} else if ( Q_strequal( arg1, "kick" ) ) {
+	} else if ( Q_strequal( arg1, "clientkick" ) ) {
+	} else if ( Q_strequal( arg1, "g_doWarmup" ) ) {
+	} else if ( Q_strequal( arg1, "timelimit" ) ) {
+	} else if ( Q_strequal( arg1, "fraglimit" ) ) {
+        } else if ( Q_strequal( arg1, "custom" ) ) {
+        } else if ( Q_strequal( arg1, "shuffle" ) ) {
 	} else {
 		trap_SendServerCommand( ent-g_entities, "print \"Invalid vote string.\n\"" );
 		//trap_SendServerCommand( ent-g_entities, "print \"Vote commands are: map_restart, nextmap, map <mapname>, g_gametype <n>, kick <player>, clientkick <clientnum>, g_doWarmup, timelimit <time>, fraglimit <frags>.\n\"" );
@@ -1737,7 +1737,7 @@ void Cmd_CallVote_f( gentity_t *ent ) {
         level.voteKickType = 0; //not a ban
 
 	// special case for g_gametype, check for bad values
-	if ( !Q_stricmp( arg1, "g_gametype" ) ) {
+	if ( Q_strequal( arg1, "g_gametype" ) ) {
                 char	s[MAX_STRING_CHARS];
 		i = atoi( arg2 );
 		if( i == GT_SINGLE_PLAYER || i < GT_FFA || i >= GT_MAX_GAME_TYPE) {
@@ -1763,7 +1763,7 @@ void Cmd_CallVote_f( gentity_t *ent ) {
                     Com_sprintf( level.voteString, sizeof( level.voteString ), "%s %d; map_restart", arg1, i );
                     Com_sprintf( level.voteDisplayString, sizeof( level.voteDisplayString ), "Change gametype to: %s?", gameNames[i] );
                 }
-	} else if ( !Q_stricmp( arg1, "map" ) ) {
+	} else if ( Q_strequal( arg1, "map" ) ) {
 		// special case for map changes, we want to reset the nextmap setting
 		// this allows a player to change maps, but not upset the map rotation
 		char	s[MAX_STRING_CHARS];
@@ -1781,7 +1781,7 @@ void Cmd_CallVote_f( gentity_t *ent ) {
 		}
 		//Com_sprintf( level.voteDisplayString, sizeof( level.voteDisplayString ), "%s", level.voteString );
                 Com_sprintf( level.voteDisplayString, sizeof( level.voteDisplayString ), "Change map to: %s?", arg2 );
-	} else if ( !Q_stricmp( arg1, "nextmap" ) ) {
+	} else if ( Q_strequal( arg1, "nextmap" ) ) {
 		char	s[MAX_STRING_CHARS];
 
                 //Sago: Needs to think about this, we miss code to parse if nextmap has arg2
@@ -1803,7 +1803,7 @@ void Cmd_CallVote_f( gentity_t *ent ) {
 
 		//Com_sprintf( level.voteDisplayString, sizeof( level.voteDisplayString ), "%s", level.voteString );
                 Com_sprintf( level.voteDisplayString, sizeof( level.voteDisplayString ), "%s", "Next map?" );
-        } else if ( !Q_stricmp( arg1, "fraglimit" ) ) {
+        } else if ( Q_strequal( arg1, "fraglimit" ) ) {
                 i = atoi(arg2);
                 if(!allowedFraglimit(i)) {
                     trap_SendServerCommand( ent-g_entities, "print \"Cannot set fraglimit.\n\"" );
@@ -1815,7 +1815,7 @@ void Cmd_CallVote_f( gentity_t *ent ) {
                     Com_sprintf( level.voteDisplayString, sizeof( level.voteDisplayString ), "Change fraglimit to: %d", i );
                 else
                     Com_sprintf( level.voteDisplayString, sizeof( level.voteDisplayString ), "Remove fraglimit?");
-        } else if ( !Q_stricmp( arg1, "timelimit" ) ) {
+        } else if ( Q_strequal( arg1, "timelimit" ) ) {
                 i = atoi(arg2);
                 if(!allowedTimelimit(i)) {
                     trap_SendServerCommand( ent-g_entities, "print \"Cannot set timelimit.\n\"" );
@@ -1827,10 +1827,10 @@ void Cmd_CallVote_f( gentity_t *ent ) {
                     Com_sprintf( level.voteDisplayString, sizeof( level.voteDisplayString ), "Change timelimit to: %d", i );
                 else
                     Com_sprintf( level.voteDisplayString, sizeof( level.voteDisplayString ), "Remove timelimit?" );
-        } else if ( !Q_stricmp( arg1, "map_restart" ) ) {
+        } else if ( Q_strequal( arg1, "map_restart" ) ) {
                 Com_sprintf( level.voteString, sizeof( level.voteString ), "map_restart" );
 		Com_sprintf( level.voteDisplayString, sizeof( level.voteDisplayString ), "Restart map?" );
-        } else if ( !Q_stricmp( arg1, "g_doWarmup" ) ) {
+        } else if ( Q_strequal( arg1, "g_doWarmup" ) ) {
                 i = atoi(arg2);
                 if(i) {
                     Com_sprintf( level.voteString, sizeof( level.voteString ), "g_doWarmup \"1\"" );
@@ -1840,7 +1840,7 @@ void Cmd_CallVote_f( gentity_t *ent ) {
                     Com_sprintf( level.voteString, sizeof( level.voteString ), "g_doWarmup \"0\"" );
                     Com_sprintf( level.voteDisplayString, sizeof( level.voteDisplayString ), "Disable warmup?" );
                 }
-        } else if ( !Q_stricmp( arg1, "clientkick" ) ) {
+        } else if ( Q_strequal( arg1, "clientkick" ) ) {
                 i = atoi(arg2);
 
                 if(i>=MAX_CLIENTS) { //Only numbers <128 is clients
@@ -1855,7 +1855,7 @@ void Cmd_CallVote_f( gentity_t *ent ) {
                     level.voteKickType = 1; //ban
                 }
 		Com_sprintf( level.voteDisplayString, sizeof( level.voteDisplayString ), "Kick %s?" , level.clients[i].pers.netname );
-        } else if ( !Q_stricmp( arg1, "shuffle" ) ) {
+        } else if ( Q_strequal( arg1, "shuffle" ) ) {
                 if(g_gametype.integer<GT_TEAM || g_ffa_gt==1) { //Not a team game
                     trap_SendServerCommand( ent-g_entities, "print \"Can only be used in team games.\n\"" );
                     return;
@@ -1863,9 +1863,9 @@ void Cmd_CallVote_f( gentity_t *ent ) {
 
                 Com_sprintf( level.voteString, sizeof( level.voteString ), "shuffle" );
 		Com_sprintf( level.voteDisplayString, sizeof( level.voteDisplayString ), "Shuffle teams?" );
-        } else if ( !Q_stricmp( arg1, "kick" ) ) {
+        } else if ( Q_strequal( arg1, "kick" ) ) {
                 i = 0;
-                while( !(g_entities+i) || !((g_entities+i)->client) || Q_stricmp(arg2,(g_entities+i)->client->pers.netname)) {
+                while( !(g_entities+i) || !((g_entities+i)->client) || !Q_strequal(arg2,(g_entities+i)->client->pers.netname)) {
                     //Not client i, try next
                     i++;
                     if(i>=MAX_CLIENTS){ //Only numbers <128 is clients
@@ -1881,7 +1881,7 @@ void Cmd_CallVote_f( gentity_t *ent ) {
                     level.voteKickType = 1; //ban
                 }
 		Com_sprintf( level.voteDisplayString, sizeof( level.voteDisplayString ), "Kick %s?" , level.clients[i].pers.netname );
-        } else if ( !Q_stricmp( arg1, "custom" ) ) {
+        } else if ( Q_strequal( arg1, "custom" ) ) {
                 t_customvote customvote;
                 //Sago: There must always be a test to ensure that length(arg2) is non-zero or the client might be able to execute random commands.
                 if(strlen(arg2)<1) {
@@ -1889,15 +1889,17 @@ void Cmd_CallVote_f( gentity_t *ent ) {
                     return;
                 }
                 customvote = getCustomVote(arg2);
-                if(Q_stricmp(customvote.votename,arg2)) {
+                if( !Q_strequal(customvote.votename, arg2)) {
                     trap_SendServerCommand( ent-g_entities, "print \"Command could not be found\n\"" );
                     return;
                 }
                 Com_sprintf( level.voteString, sizeof( level.voteString ), "%s", customvote.command );
-                if(strlen(customvote.displayname))
+                if(strlen(customvote.displayname)) {
                     Com_sprintf( level.voteDisplayString, sizeof( level.voteDisplayString ), "%s", customvote.displayname );
-                else
+				}
+                else {
                     Com_sprintf( level.voteDisplayString, sizeof( level.voteDisplayString ), "%s", customvote.command );
+				}
 	} else {
 		//Com_sprintf( level.voteString, sizeof( level.voteString ), "%s \"%s\"", arg1, arg2 );
 		//Com_sprintf( level.voteDisplayString, sizeof( level.voteDisplayString ), "%s", level.voteString );
@@ -1905,7 +1907,7 @@ void Cmd_CallVote_f( gentity_t *ent ) {
                 return;
 	}
 
-        ent->client->pers.voteCount++;
+	ent->client->pers.voteCount++;
 	trap_SendServerCommand( -1, va("print \"%s called a vote.\n\"", ent->client->pers.netname ) );
 
 	// start the voting, the caller automatically votes yes
@@ -2018,7 +2020,7 @@ void Cmd_CallTeamVote_f( gentity_t *ent ) {
 		return;
 	}
 
-	if ( !Q_stricmp( arg1, "leader" ) ) {
+	if ( Q_strequal( arg1, "leader" ) ) {
 		char netname[MAX_NETNAME], leader[MAX_NETNAME];
 
 		if ( !arg2[0] ) {
@@ -2052,7 +2054,7 @@ void Cmd_CallTeamVote_f( gentity_t *ent ) {
 						continue;
 					Q_strncpyz(netname, level.clients[i].pers.netname, sizeof(netname));
 					Q_CleanStr(netname);
-					if ( !Q_stricmp(netname, leader) ) {
+					if ( Q_strequal(netname, leader) ) {
 						break;
 					}
 				}
@@ -2293,7 +2295,7 @@ void ClientCommand( int clientNum )
 
     for( i = 0; i < numCmds; i++ )
     {
-        if( Q_stricmp( cmd, cmds[ i ].cmdName ) == 0 )
+        if( Q_strequal( cmd, cmds[ i ].cmdName ) )
             break;
     }
     

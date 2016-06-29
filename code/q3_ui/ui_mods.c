@@ -133,7 +133,7 @@ static void UI_Mods_LoadModsFromFile( char *filename ) {
 	trap_FS_FCloseFile( f );
 
 	len = strlen( filename );
-	if( !Q_stricmp(filename +  len - 4,".mod") ) {
+	if( Q_strequal(filename +  len - 4,".mod") ) {
 		filename[len-4] = '\0';
 	}
 

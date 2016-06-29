@@ -98,7 +98,7 @@ static void VoteMapMenu_Event( void* ptr, int event )
                 }
                 if(!s_votemenu_map.selected || mappage.mapname[s_votemenu_map.selected-ID_MAPNAME0][0] == 0)
                     return;
-                if(!Q_stricmp(mappage.mapname[s_votemenu_map.selected-ID_MAPNAME0],"---"))
+                if(Q_strequal(mappage.mapname[s_votemenu_map.selected-ID_MAPNAME0],"---"))
                     return; //Blank spaces have string "---"
                 trap_Cmd_ExecuteText( EXEC_APPEND, va("callvote map %s", mappage.mapname[s_votemenu_map.selected-ID_MAPNAME0]) );
                 UI_PopMenu();

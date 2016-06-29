@@ -251,7 +251,7 @@ int FindClientByName(char *name) {
 		maxclients = trap_Cvar_VariableIntegerValue("sv_maxclients");
 	for (i = 0; i < maxclients && i < MAX_CLIENTS; i++) {
 		ClientName(i, buf, sizeof(buf));
-		if (!Q_stricmp(buf, name)) return i;
+		if (Q_strequal(buf, name)) return i;
 	}
 	for (i = 0; i < maxclients && i < MAX_CLIENTS; i++) {
 		ClientName(i, buf, sizeof(buf));
@@ -275,7 +275,7 @@ int FindEnemyByName(bot_state_t *bs, char *name) {
 	for (i = 0; i < maxclients && i < MAX_CLIENTS; i++) {
 		if (BotSameTeam(bs, i)) continue;
 		ClientName(i, buf, sizeof(buf));
-		if (!Q_stricmp(buf, name)) return i;
+		if (Q_strequal(buf, name)) return i;
 	}
 	for (i = 0; i < maxclients && i < MAX_CLIENTS; i++) {
 		if (BotSameTeam(bs, i)) continue;
@@ -1119,7 +1119,9 @@ void BotMatch_TaskPreference(bot_state_t *bs, bot_match_t *match) {
 	int teammate, preference;
 
 	ClientName(bs->client, netname, sizeof(netname));
-	if (Q_stricmp(netname, bs->teamleader) != 0) return;
+	if ( !Q_strequal(netname, bs->teamleader)) {
+		return;
+	}
 
 	trap_BotMatchVariable(match, NETNAME, teammatename, sizeof(teammatename));
 	teammate = ClientFromName(teammatename);
@@ -1436,7 +1438,7 @@ void BotMatch_StopTeamLeaderShip(bot_state_t *bs, bot_match_t *match) {
 		client = FindClientByName(teammate);
 	} //end else
 	if (client >= 0) {
-		if (!Q_stricmp(bs->teamleader, ClientName(client, netname, sizeof(netname)))) {
+		if (Q_strequal(bs->teamleader, ClientName(client, netname, sizeof(netname)))) {
 			bs->teamleader[0] = '\0';
 			notleader[client] = qtrue;
 		}
@@ -1455,7 +1457,7 @@ void BotMatch_WhoIsTeamLeader(bot_state_t *bs, bot_match_t *match) {
 
 	ClientName(bs->client, netname, sizeof(netname));
 	//if this bot IS the team leader
-	if (!Q_stricmp(netname, bs->teamleader)) {
+	if (Q_strequal(netname, bs->teamleader)) {
 		trap_EA_SayTeam(bs->client, "I'm the team leader\n");
 	}
 }
@@ -1572,7 +1574,9 @@ void BotMatch_WhatIsMyCommand(bot_state_t *bs, bot_match_t *match) {
 	char netname[MAX_NETNAME];
 
 	ClientName(bs->client, netname, sizeof(netname));
-	if (Q_stricmp(netname, bs->teamleader) != 0) return;
+	if ( !Q_strequal(netname, bs->teamleader) ) {
+		return;
+	}
 	bs->forceorders = qtrue;
 }
 
@@ -1594,8 +1598,9 @@ float BotNearestVisibleItem(bot_state_t *bs, char *itemname, bot_goal_t *goal) {
 	do {
 		i = trap_BotGetLevelItemGoal(i, itemname, &tmpgoal);
 		trap_BotGoalName(tmpgoal.number, name, sizeof(name));
-		if (Q_stricmp(itemname, name) != 0)
+		if ( !Q_strequal(itemname, name) ) {
 			continue;
+		}
 		VectorSubtract(tmpgoal.origin, bs->origin, dir);
 		dist = VectorLength(dir);
 		if (dist < bestdist) {
@@ -1825,7 +1830,7 @@ void BotMatch_CTF(bot_state_t *bs, bot_match_t *match) {
 	if (gametype == GT_CTF || gametype == GT_CTF_ELIMINATION) {
 		trap_BotMatchVariable(match, FLAG, flag, sizeof(flag));
 		if (match->subtype & ST_GOTFLAG) {
-			if (!Q_stricmp(flag, "red")) {
+			if (Q_strequal(flag, "red")) {
 				bs->redflagstatus = 1;
 				if (BotTeam(bs) == TEAM_BLUE) {
 					trap_BotMatchVariable(match, NETNAME, netname, sizeof(netname));
@@ -1849,7 +1854,7 @@ void BotMatch_CTF(bot_state_t *bs, bot_match_t *match) {
 			bs->flagstatuschanged = 1;
 		}
 		else if (match->subtype & ST_RETURNEDFLAG) {
-			if (!Q_stricmp(flag, "red")) bs->redflagstatus = 0;
+			if (Q_strequal(flag, "red")) bs->redflagstatus = 0;
 			else bs->blueflagstatus = 0;
 			bs->flagstatuschanged = 1;
 		}

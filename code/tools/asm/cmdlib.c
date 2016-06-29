@@ -605,7 +605,7 @@ int CheckParm (const char *check)
 
 	for (i = 1;i<myargc;i++)
 	{
-		if ( !Q_stricmp(check, myargv[i]) )
+		if ( Q_strequal(check, myargv[i]) )
 			return i;
 	}
 

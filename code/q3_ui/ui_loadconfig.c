@@ -225,7 +225,7 @@ static void LoadConfig_MenuInit( void ) {
 		
 		// strip extension
 		len = strlen( configname );
-		if (!Q_stricmp(configname +  len - 4,".cfg"))
+		if (Q_strequal(configname +  len - 4,".cfg"))
 			configname[len-4] = '\0';
 
 		Q_strupr(configname);
