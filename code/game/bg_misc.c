@@ -1150,7 +1150,7 @@ gitem_t	*BG_FindItem( const char *pickupName ) {
 	gitem_t	*it;
 	
 	for ( it = bg_itemlist + 1 ; it->classname ; it++ ) {
-		if ( !Q_stricmp( it->pickup_name, pickupName ) )
+		if ( Q_strequal( it->pickup_name, pickupName ) )
 			return it;
 	}
 

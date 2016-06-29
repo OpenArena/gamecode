@@ -1722,7 +1722,7 @@ void ExitLevel (void) {
 		}
 	}
 
-	if( !Q_stricmp( nextmap, "map_restart 0" ) && Q_stricmp( d1, "" ) ) {
+	if( Q_strequal( nextmap, "map_restart 0" ) && !Q_strequal( d1, "" ) ) {
 		trap_Cvar_Set( "nextmap", "vstr d2" );
 		trap_SendConsoleCommand( EXEC_APPEND, "vstr d1\n" );
 	} else {
@@ -2846,7 +2846,7 @@ void CheckCvars( void ) {
 
 	if ( g_password.modificationCount != lastMod ) {
 		lastMod = g_password.modificationCount;
-		if ( *g_password.string && Q_stricmp( g_password.string, "none" ) ) {
+		if ( *g_password.string && !Q_strequal( g_password.string, "none" ) ) {
 			trap_Cvar_Set( "g_needpass", "1" );
 		} else {
 			trap_Cvar_Set( "g_needpass", "0" );

@@ -25,7 +25,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 // be a valid snapshot this frame
 
 #include "cg_local.h"
-#include "../../ui/menudef.h" // bk001205 - for Q3_ui as well
+#include "../../ui/menudef.h"
 
 typedef struct {
 	const char *order;
@@ -50,7 +50,7 @@ static const int numValidOrders = sizeof(validOrders) / sizeof(orderTask_t);
 static int CG_ValidOrder(const char *p) {
 	int i;
 	for (i = 0; i < numValidOrders; i++) {
-		if (Q_stricmp(p, validOrders[i].order) == 0) {
+		if (Q_strequal(p, validOrders[i].order) ) {
 			return validOrders[i].taskNum;
 		}
 	}
@@ -773,13 +773,13 @@ int CG_ParseVoiceChats( const char *filename, voiceChatList_t *voiceChatList, in
 	if (!token || token[0] == 0) {
 		return qtrue;
 	}
-	if (!Q_stricmp(token, "female")) {
+	if (Q_strequal(token, "female")) {
 		voiceChatList->gender = GENDER_FEMALE;
 	}
-	else if (!Q_stricmp(token, "male")) {
+	else if (Q_strequal(token, "male")) {
 		voiceChatList->gender = GENDER_MALE;
 	}
-	else if (!Q_stricmp(token, "neuter")) {
+	else if (Q_strequal(token, "neuter")) {
 		voiceChatList->gender = GENDER_NEUTER;
 	}
 	else {
@@ -795,7 +795,7 @@ int CG_ParseVoiceChats( const char *filename, voiceChatList_t *voiceChatList, in
 		}
 		Com_sprintf(voiceChats[voiceChatList->numVoiceChats].id, sizeof( voiceChats[voiceChatList->numVoiceChats].id ), "%s", token);
 		token = COM_ParseExt(p, qtrue);
-		if (Q_stricmp(token, "{")) {
+		if ( !Q_strequal(token, "{")) {
 			trap_Print( va( S_COLOR_RED "expected { found %s in voice chat file: %s\n", token, filename ) );
 			return qfalse;
 		}
@@ -805,7 +805,7 @@ int CG_ParseVoiceChats( const char *filename, voiceChatList_t *voiceChatList, in
 			if (!token || token[0] == 0) {
 				return qtrue;
 			}
-			if (!Q_stricmp(token, "}"))
+			if (Q_strequal(token, "}"))
 				break;
 			sound = trap_S_RegisterSound( token, compress );
 			voiceChats[voiceChatList->numVoiceChats].sounds[voiceChats[voiceChatList->numVoiceChats].numSounds] = sound;
@@ -883,7 +883,7 @@ int CG_HeadModelVoiceChats( char *filename ) {
 	}
 
 	for ( i = 0; i < MAX_VOICEFILES; i++ ) {
-		if ( !Q_stricmp(token, voiceChatLists[i].name) ) {
+		if ( Q_strequal(token, voiceChatLists[i].name) ) {
 			return i;
 		}
 	}
@@ -903,7 +903,7 @@ int CG_GetVoiceChat( voiceChatList_t *voiceChatList, const char *id, sfxHandle_t
 	int i, rnd;
 
 	for ( i = 0; i < voiceChatList->numVoiceChats; i++ ) {
-		if ( !Q_stricmp( id, voiceChatList->voiceChats[i].id ) ) {
+		if ( Q_strequal( id, voiceChatList->voiceChats[i].id ) ) {
 			rnd = random() * voiceChatList->voiceChats[i].numSounds;
 			*snd = voiceChatList->voiceChats[i].sounds[rnd];
 			*chat = voiceChatList->voiceChats[i].chats[rnd];
@@ -947,7 +947,7 @@ voiceChatList_t *CG_VoiceChatListForClient( int clientNum ) {
 		}
 		// find the voice file for the head model the client uses
 		for ( i = 0; i < MAX_HEADMODELS; i++ ) {
-			if (!Q_stricmp(headModelVoiceChat[i].headmodel, headModelName)) {
+			if (Q_strequal(headModelVoiceChat[i].headmodel, headModelName)) {
 				break;
 			}
 		}
@@ -1220,9 +1220,9 @@ static void CG_ServerCommand( void ) {
 #ifdef MISSIONPACK
 		cmd = CG_Argv(1);			// yes, this is obviously a hack, but so is the way we hear about
 									// votes passing or failing
-		if ( !Q_stricmpn( cmd, "vote failed", 11 ) || !Q_stricmpn( cmd, "team vote failed", 16 )) {
+		if ( Q_strequaln( cmd, "vote failed", 11 ) || Q_strequaln( cmd, "team vote failed", 16 )) {
 			trap_S_StartLocalSound( cgs.media.voteFailed, CHAN_ANNOUNCER );
-		} else if ( !Q_stricmpn( cmd, "vote passed", 11 ) || !Q_stricmpn( cmd, "team vote passed", 16 ) ) {
+		} else if ( Q_strequaln( cmd, "vote passed", 11 ) || Q_strequaln( cmd, "team vote passed", 16 ) ) {
 			trap_S_StartLocalSound( cgs.media.votePassed, CHAN_ANNOUNCER );
 		}
 #endif
@@ -1231,8 +1231,9 @@ static void CG_ServerCommand( void ) {
 
 	if ( !strcmp( cmd, "chat" ) ) {
 		if ( !cg_teamChatsOnly.integer ) {
-                        if( cg_chatBeep.integer )
-                                trap_S_StartLocalSound( cgs.media.talkSound, CHAN_LOCAL_SOUND );
+			if( cg_chatBeep.integer ) {
+				trap_S_StartLocalSound( cgs.media.talkSound, CHAN_LOCAL_SOUND );
+			}
 			Q_strncpyz( text, CG_Argv(1), MAX_SAY_TEXT );
 			CG_RemoveChatEscapeChar( text );
 			CG_Printf( "%s\n", text );
@@ -1316,7 +1317,7 @@ static void CG_ServerCommand( void ) {
 		return;
 	}
 
-	if ( Q_stricmp (cmd, "remapShader") == 0 )
+	if ( Q_strequal (cmd, "remapShader") )
 	{
 		if (trap_Argc() == 4)
 		{

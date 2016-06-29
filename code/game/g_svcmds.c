@@ -400,7 +400,7 @@ gclient_t	*ClientForString( const char *s ) {
 		if ( cl->pers.connected == CON_DISCONNECTED ) {
 			continue;
 		}
-		if ( !Q_stricmp( cl->pers.netname, s ) ) {
+		if ( Q_strequal( cl->pers.netname, s ) ) {
 			return cl;
 		}
 	}
@@ -526,7 +526,7 @@ qboolean  ConsoleCommand( void )
 
   for( i = 0; i < sizeof( svcmds ) / sizeof( svcmds[ 0 ] ); i++ )
   {
-    if( !Q_stricmp( cmd, svcmds[ i ].cmd ) )
+    if( Q_strequal( cmd, svcmds[ i ].cmd ) )
     {
       if( svcmds[ i ].dedicated && !g_dedicated.integer )
         return qfalse;

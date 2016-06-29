@@ -199,7 +199,7 @@ const char *G_GetArenaInfoByMap( const char *map ) {
 	int			n;
 
 	for( n = 0; n < g_numArenas; n++ ) {
-		if( Q_stricmp( Info_ValueForKey( g_arenaInfos[n], "map" ), map ) == 0 ) {
+		if( Q_strequal( Info_ValueForKey( g_arenaInfos[n], "map" ), map ) ) {
 			return g_arenaInfos[n];
 		}
 	}
@@ -226,7 +226,7 @@ static void PlayerIntroSound( const char *modelAndSkin ) {
 		skin = model;
 	}
 
-	if( Q_stricmp( skin, "default" ) == 0 ) {
+	if( Q_strequal( skin, "default" ) ) {
 		skin = model;
 	}
 
@@ -262,7 +262,7 @@ void G_AddRandomBot( int team ) {
 			if ( team >= 0 && cl->sess.sessionTeam != team ) {
 				continue;
 			}
-			if ( !Q_stricmp( value, cl->pers.netname ) ) {
+			if ( Q_strequal( value, cl->pers.netname ) ) {
 				break;
 			}
 		}
@@ -285,7 +285,7 @@ void G_AddRandomBot( int team ) {
 			if ( team >= 0 && cl->sess.sessionTeam != team ) {
 				continue;
 			}
-			if ( !Q_stricmp( value, cl->pers.netname ) ) {
+			if ( Q_strequal( value, cl->pers.netname ) ) {
 				break;
 			}
 		}
@@ -956,7 +956,7 @@ char *G_GetBotInfoByName( const char *name ) {
 
 	for ( n = 0; n < g_numBots ; n++ ) {
 		value = Info_ValueForKey( g_botInfos[n], "name" );
-		if ( !Q_stricmp( value, name ) ) {
+		if ( Q_strequal( value, name ) ) {
 			return g_botInfos[n];
 		}
 	}
@@ -1017,7 +1017,7 @@ void G_InitBots( qboolean restart ) {
 
 		basedelay = BOT_BEGIN_DELAY_BASE;
 		strValue = Info_ValueForKey( arenainfo, "special" );
-		if( Q_stricmp( strValue, "training" ) == 0 ) {
+		if( Q_strequal( strValue, "training" ) ) {
 			basedelay += 10000;
 		}
 

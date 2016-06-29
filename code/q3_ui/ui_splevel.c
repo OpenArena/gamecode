@@ -140,7 +140,7 @@ static void PlayerIcon( const char *modelAndSkin, char *iconName, int iconNameMa
 
 	Com_sprintf(iconName, iconNameMaxSize, "models/players/%s/icon_%s.tga", model, skin );
 
-	if( !trap_R_RegisterShaderNoMip( iconName ) && Q_stricmp( skin, "default" ) != 0 ) {
+	if( !trap_R_RegisterShaderNoMip( iconName ) && !Q_strequal( skin, "default" ) ) {
 		Com_sprintf(iconName, iconNameMaxSize, "models/players/%s/icon_default.tga", model );
 	}
 }
@@ -562,7 +562,7 @@ static void UI_SPLevelMenu_MenuDraw( void ) {
 
 	// check for model changes
 	trap_Cvar_VariableStringBuffer( "model", buf, sizeof(buf) );
-	if( Q_stricmp( buf, levelMenuInfo.playerModel ) != 0 ) {
+	if( !Q_strequal( buf, levelMenuInfo.playerModel ) ) {
 		Q_strncpyz( levelMenuInfo.playerModel, buf, sizeof(levelMenuInfo.playerModel) );
 		PlayerIcon( levelMenuInfo.playerModel, levelMenuInfo.playerPicName, sizeof(levelMenuInfo.playerPicName) );
 		levelMenuInfo.item_player.shader = 0;

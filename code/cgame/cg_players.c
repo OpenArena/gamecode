@@ -131,26 +131,26 @@ static qboolean	CG_ParseAnimationFile( const char *filename, clientInfo_t *ci ) 
 		if ( !token ) {
 			break;
 		}
-		if ( !Q_stricmp( token, "footsteps" ) ) {
+		if ( Q_strequal( token, "footsteps" ) ) {
 			token = COM_Parse( &text_p );
 			if ( !token ) {
 				break;
 			}
-			if ( !Q_stricmp( token, "default" ) || !Q_stricmp( token, "normal" ) ) {
+			if ( Q_strequal( token, "default" ) || Q_strequal( token, "normal" ) ) {
 				ci->footsteps = FOOTSTEP_NORMAL;
-			} else if ( !Q_stricmp( token, "boot" ) ) {
+			} else if ( Q_strequal( token, "boot" ) ) {
 				ci->footsteps = FOOTSTEP_BOOT;
-			} else if ( !Q_stricmp( token, "flesh" ) ) {
+			} else if ( Q_strequal( token, "flesh" ) ) {
 				ci->footsteps = FOOTSTEP_FLESH;
-			} else if ( !Q_stricmp( token, "mech" ) ) {
+			} else if ( Q_strequal( token, "mech" ) ) {
 				ci->footsteps = FOOTSTEP_MECH;
-			} else if ( !Q_stricmp( token, "energy" ) ) {
+			} else if ( Q_strequal( token, "energy" ) ) {
 				ci->footsteps = FOOTSTEP_ENERGY;
 			} else {
 				CG_Printf( "Bad footsteps parm in %s: %s\n", filename, token );
 			}
 			continue;
-		} else if ( !Q_stricmp( token, "headoffset" ) ) {
+		} else if ( Q_strequal( token, "headoffset" ) ) {
 			for ( i = 0 ; i < 3 ; i++ ) {
 				token = COM_Parse( &text_p );
 				if ( !token ) {
@@ -159,7 +159,7 @@ static qboolean	CG_ParseAnimationFile( const char *filename, clientInfo_t *ci ) 
 				ci->headOffset[i] = atof( token );
 			}
 			continue;
-		} else if ( !Q_stricmp( token, "sex" ) ) {
+		} else if ( Q_strequal( token, "sex" ) ) {
 			token = COM_Parse( &text_p );
 			if ( !token ) {
 				break;
@@ -172,10 +172,10 @@ static qboolean	CG_ParseAnimationFile( const char *filename, clientInfo_t *ci ) 
 				ci->gender = GENDER_MALE;
 			}
 			continue;
-		} else if ( !Q_stricmp( token, "fixedlegs" ) ) {
+		} else if ( Q_strequal( token, "fixedlegs" ) ) {
 			ci->fixedlegs = qtrue;
 			continue;
-		} else if ( !Q_stricmp( token, "fixedtorso" ) ) {
+		} else if ( Q_strequal( token, "fixedtorso" ) ) {
 			ci->fixedtorso = qtrue;
 			continue;
 		}
@@ -774,12 +774,12 @@ static qboolean CG_ScanForExistingClientInfo( clientInfo_t *ci ) {
 		if ( match->deferred ) {
 			continue;
 		}
-		if ( !Q_stricmp( ci->modelName, match->modelName )
-			&& !Q_stricmp( ci->skinName, match->skinName )
-			&& !Q_stricmp( ci->headModelName, match->headModelName )
-			&& !Q_stricmp( ci->headSkinName, match->headSkinName ) 
-			&& !Q_stricmp( ci->blueTeam, match->blueTeam ) 
-			&& !Q_stricmp( ci->redTeam, match->redTeam )
+		if ( Q_strequal( ci->modelName, match->modelName )
+			&& Q_strequal( ci->skinName, match->skinName )
+			&& Q_strequal( ci->headModelName, match->headModelName )
+			&& Q_strequal( ci->headSkinName, match->headSkinName ) 
+			&& Q_strequal( ci->blueTeam, match->blueTeam ) 
+			&& Q_strequal( ci->redTeam, match->redTeam )
 			&& (cgs.gametype < GT_TEAM || cgs.ffa_gt==1 || ci->team == match->team) ) {
 			// this clientinfo is identical, so use it's handles
 
@@ -814,10 +814,8 @@ static void CG_SetDeferredClientInfo( int clientNum, clientInfo_t *ci ) {
 		if ( !match->infoValid || match->deferred ) {
 			continue;
 		}
-		if ( Q_stricmp( ci->skinName, match->skinName ) ||
-			 Q_stricmp( ci->modelName, match->modelName ) ||
-//			 Q_stricmp( ci->headModelName, match->headModelName ) ||
-//			 Q_stricmp( ci->headSkinName, match->headSkinName ) ||
+		if ( !Q_strequal( ci->skinName, match->skinName ) ||
+			 !Q_strequal( ci->modelName, match->modelName ) ||
 			 (cgs.gametype >= GT_TEAM && cgs.ffa_gt!=1 && ci->team != match->team) ) {
 			continue;
 		}
@@ -833,7 +831,7 @@ static void CG_SetDeferredClientInfo( int clientNum, clientInfo_t *ci ) {
 			if ( !match->infoValid || match->deferred ) {
 				continue;
 			}
-			if ( Q_stricmp( ci->skinName, match->skinName ) ||
+			if ( !Q_strequal( ci->skinName, match->skinName ) ||
 				(cgs.gametype >= GT_TEAM && cgs.ffa_gt != 1 && ci->team != match->team) ) {
 				continue;
 			}

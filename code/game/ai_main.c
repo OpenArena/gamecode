@@ -282,8 +282,12 @@ void BotReportStatus(bot_state_t *bs) {
 	char *leader, flagstatus[32];
 	//
 	ClientName(bs->client, netname, sizeof(netname));
-	if (Q_stricmp(netname, bs->teamleader) == 0) leader = "L";
-	else leader = " ";
+	if ( Q_strequal(netname, bs->teamleader) ) {
+		leader = "L";
+	}
+	else {
+		leader = " ";
+	}
 
 	strcpy(flagstatus, "  ");
 	if (gametype == GT_CTF || gametype == GT_CTF_ELIMINATION) {
@@ -440,8 +444,12 @@ void BotSetInfoConfigString(bot_state_t *bs) {
 	bot_goal_t goal;
 	//
 	ClientName(bs->client, netname, sizeof(netname));
-	if (Q_stricmp(netname, bs->teamleader) == 0) leader = "L";
-	else leader = " ";
+	if ( Q_strequal(netname, bs->teamleader) ) {
+		leader = "L";
+	}
+	else {
+		leader = " ";
+	}
 
 	strcpy(carrying, "  ");
 	if (gametype == GT_CTF || gametype == GT_CTF_ELIMINATION) {
@@ -1018,42 +1026,42 @@ int BotAI(int client, float thinktime) {
 		//remove color espace sequences from the arguments
 		RemoveColorEscapeSequences( args );
 
-		if (!Q_stricmp(buf, "cp "))
+		if (Q_strequal(buf, "cp "))
 			{ /*CenterPrintf*/ }
-		else if (!Q_stricmp(buf, "cs"))
+		else if (Q_strequal(buf, "cs"))
 			{ /*ConfigStringModified*/ }
-		else if (!Q_stricmp(buf, "print")) {
+		else if (Q_strequal(buf, "print")) {
 			//remove first and last quote from the chat message
 			memmove(args, args+1, strlen(args));
 			args[strlen(args)-1] = '\0';
 			trap_BotQueueConsoleMessage(bs->cs, CMS_NORMAL, args);
 		}
-		else if (!Q_stricmp(buf, "chat")) {
+		else if (Q_strequal(buf, "chat")) {
 			//remove first and last quote from the chat message
 			memmove(args, args+1, strlen(args));
 			args[strlen(args)-1] = '\0';
 			trap_BotQueueConsoleMessage(bs->cs, CMS_CHAT, args);
 		}
-		else if (!Q_stricmp(buf, "tchat")) {
+		else if (Q_strequal(buf, "tchat")) {
 			//remove first and last quote from the chat message
 			memmove(args, args+1, strlen(args));
 			args[strlen(args)-1] = '\0';
 			trap_BotQueueConsoleMessage(bs->cs, CMS_CHAT, args);
 		}
 #ifdef MISSIONPACK
-		else if (!Q_stricmp(buf, "vchat")) {
+		else if (Q_strequal(buf, "vchat")) {
 			BotVoiceChatCommand(bs, SAY_ALL, args);
 		}
-		else if (!Q_stricmp(buf, "vtchat")) {
+		else if (Q_strequal(buf, "vtchat")) {
 			BotVoiceChatCommand(bs, SAY_TEAM, args);
 		}
-		else if (!Q_stricmp(buf, "vtell")) {
+		else if (Q_strequal(buf, "vtell")) {
 			BotVoiceChatCommand(bs, SAY_TELL, args);
 		}
 #endif
-		else if (!Q_stricmp(buf, "scores"))
+		else if (Q_strequal(buf, "scores"))
 			{ /*FIXME: parse scores?*/ }
-		else if (!Q_stricmp(buf, "clientLevelShot"))
+		else if (Q_strequal(buf, "clientLevelShot"))
 			{ /*ignore*/ }
 	}
 	//add the delta angles to the bot's current view angles

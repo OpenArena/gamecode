@@ -1504,7 +1504,7 @@ void CG_ParticleExplosion (char *animStr, vec3_t origin, vec3_t vel, int duratio
 
 	// find the animation string
 	for (anim=0; shaderAnimNames[anim]; anim++) {
-		if (!Q_stricmp( animStr, shaderAnimNames[anim] ))
+		if ( Q_strequal( animStr, shaderAnimNames[anim] ))
 			break;
 	}
 	if (!shaderAnimNames[anim]) {

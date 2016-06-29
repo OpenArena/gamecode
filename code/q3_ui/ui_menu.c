@@ -263,7 +263,7 @@ static qboolean UI_TeamArenaExists( void ) {
 	for( i = 0; i < numdirs; i++ ) {
 		dirlen = strlen( dirptr ) + 1;
     descptr = dirptr + dirlen;
-		if (Q_stricmp(dirptr, "missionpack") == 0) {
+		if ( Q_strequal(dirptr, "missionpack") ) {
 			return qtrue;
 		}
     dirptr += dirlen + strlen(descptr) + 1;

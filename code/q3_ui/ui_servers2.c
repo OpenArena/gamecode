@@ -821,7 +821,7 @@ static void ArenaServers_Remove( void )
         // find address in master list
 	for (i=0; i<g_arenaservers.numfavoriteaddresses; i++)
 	{
-		if (!Q_stricmp(g_arenaservers.favoriteaddresses[i],servernodeptr->adrstr))
+		if (Q_strequal(g_arenaservers.favoriteaddresses[i],servernodeptr->adrstr))
 		{
 			// delete address from master list
  			if (i < g_arenaservers.numfavoriteaddresses-1)
@@ -910,7 +910,7 @@ static void ArenaServers_Insert( char* adrstr, char* info, int pingtime )
 			servernodeptr->nettype = 0;
 			break;
 		}
-		else if (!Q_stricmp( netnames[i], s ))
+		else if (Q_strequal( netnames[i], s ))
 		{
 			servernodeptr->nettype = i;
 			break;
@@ -959,7 +959,7 @@ void ArenaServers_InsertFavorites( void )
 	{
 		// find favorite address in refresh list
 		for (j=0; j<g_numfavoriteservers; j++)
-			if (!Q_stricmp(g_arenaservers.favoriteaddresses[i],g_favoriteserverlist[j].adrstr))
+			if (Q_strequal(g_arenaservers.favoriteaddresses[i],g_favoriteserverlist[j].adrstr))
 				break;
 
 		if ( j >= g_numfavoriteservers)
@@ -1017,7 +1017,7 @@ void ArenaServers_LoadFavorites( void )
 
 		// find this server in the old list
 		for (j=0; j<numtempitems; j++)
-			if (!Q_stricmp( templist[j].adrstr, adrstr ))
+			if (Q_strequal( templist[j].adrstr, adrstr ))
 				break;
 
 		if (j < numtempitems)
@@ -1131,7 +1131,7 @@ static void ArenaServers_DoRefresh( void )
 
 		// find ping result in our local list
 		for (j=0; j<MAX_PINGREQUESTS; j++)
-			if (!Q_stricmp( adrstr, g_arenaservers.pinglist[j].adrstr ))
+			if (Q_strequal( adrstr, g_arenaservers.pinglist[j].adrstr ))
 				break;
 
 		if (j < MAX_PINGREQUESTS)

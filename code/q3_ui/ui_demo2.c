@@ -251,7 +251,7 @@ static void Demos_MenuInit( void ) {
 
 		// strip extension
 		len = strlen( demoname );
-		if (!Q_stricmp(demoname +  len - 4,".dm3"))
+		if (Q_strequal(demoname +  len - 4,".dm3"))
 			demoname[len-4] = '\0';
 
 //		Q_strupr(demoname);

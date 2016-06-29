@@ -625,8 +625,9 @@ void TeamCvarSet( void )
 		}
 	}
 
-    if(Q_stricmp(g_redTeamClientNumbers.string,temp))
+    if ( !Q_strequal(g_redTeamClientNumbers.string, temp)) {
         redChanged = qtrue;
+	}
     trap_Cvar_Set("g_redTeamClientNumbers",temp); //Set it right
     first= qtrue;
 
@@ -643,8 +644,9 @@ void TeamCvarSet( void )
                         temp = va("%s,%i",temp,i);
 		}
 	}
-    if(Q_stricmp(g_blueTeamClientNumbers.string,temp))
+    if ( !Q_strequal(g_blueTeamClientNumbers.string,temp)) {
         blueChanged = qtrue;
+	}
     trap_Cvar_Set("g_blueTeamClientNumbers",temp);
 
     //Note: We need to force update of the cvar or SendYourTeamMessage will send the old cvar value!
@@ -1272,9 +1274,9 @@ void ClientUserinfoChanged( int clientNum ) {
 	// bots set their team a few frames later
 	if (g_gametype.integer >= GT_TEAM && g_ffa_gt==0 && g_entities[clientNum].r.svFlags & SVF_BOT) {
 		s = Info_ValueForKey( userinfo, "team" );
-		if ( !Q_stricmp( s, "red" ) || !Q_stricmp( s, "r" ) ) {
+		if ( Q_strequal( s, "red" ) || Q_strequal( s, "r" ) ) {
 			team = TEAM_RED;
-		} else if ( !Q_stricmp( s, "blue" ) || !Q_stricmp( s, "b" ) ) {
+		} else if ( Q_strequal( s, "blue" ) || Q_strequal( s, "b" ) ) {
 			team = TEAM_BLUE;
 		} else {
 			// pick the team with the least number of players
@@ -1427,7 +1429,7 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 	value = Info_ValueForKey (userinfo, "ip");
 	Q_strncpyz( client->pers.ip, value, sizeof( client->pers.ip ) );
 	
-	if ( G_FilterPacket( value ) && !Q_stricmp(value,"localhost") ) {
+	if ( G_FilterPacket( value ) && Q_strequal(value,"localhost") ) {
             G_Printf("Player with IP: %s is banned\n",value);
 		return "You are banned from this server.";
 	}
@@ -1443,7 +1445,7 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 	if ( !isBot && (strcmp(value, "localhost") != 0)) {
 		// check for a password
 		value = Info_ValueForKey (userinfo, "password");
-		if ( g_password.string[0] && Q_stricmp( g_password.string, "none" ) &&
+		if ( g_password.string[0] && !Q_strequal( g_password.string, "none" ) &&
 			strcmp( g_password.string, value) != 0) {
 			return "Invalid password";
 		}
@@ -1457,7 +1459,7 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 		    if( level.clients[ i ].pers.connected == CON_DISCONNECTED )
 		        continue;
 		        
-		    if( !Q_stricmp( client->pers.guid, level.clients[ i ].pers.guid ) ) {
+		    if( Q_strequal( client->pers.guid, level.clients[ i ].pers.guid ) ) {
 		        if( !G_ClientIsLagging( level.clients + i ) ) {
 		            trap_SendServerCommand( i, "cp \"Your GUID is not secure\"" );
 		                return "Duplicate GUID";

@@ -314,7 +314,7 @@ char *UI_GetBotInfoByName( const char *name ) {
 
 	for ( n = 0; n < ui_numBots ; n++ ) {
 		value = Info_ValueForKey( ui_botInfos[n], "name" );
-		if ( !Q_stricmp( value, name ) ) {
+		if ( Q_strequal( value, name ) ) {
 			return ui_botInfos[n];
 		}
 	}

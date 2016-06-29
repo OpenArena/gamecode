@@ -162,66 +162,66 @@ static int GametypeBits( char *string ) {
 			break;
 		}
 
-		if( Q_stricmp( token, "ffa" ) == 0 ) {
+		if( Q_strequal( token, "ffa" ) ) {
 			bits |= 1 << GT_FFA;
 			continue;
 		}
 
-		if( Q_stricmp( token, "tourney" ) == 0 ) {
+		if( Q_strequal( token, "tourney" ) ) {
 			bits |= 1 << GT_TOURNAMENT;
 			continue;
 		}
 
-		if( Q_stricmp( token, "single" ) == 0 ) {
+		if( Q_strequal( token, "single" ) ) {
 			bits |= 1 << GT_SINGLE_PLAYER;
 			continue;
 		}
 
-		if( Q_stricmp( token, "team" ) == 0 ) {
+		if( Q_strequal( token, "team" ) ) {
 			bits |= 1 << GT_TEAM;
 			continue;
 		}
 
-		if( Q_stricmp( token, "ctf" ) == 0 ) {
+		if( Q_strequal( token, "ctf" ) ) {
 			bits |= 1 << GT_CTF;
 			continue;
 		}
                 
-                if( Q_stricmp( token, "oneflag" ) == 0 ) {
+		if( Q_strequal( token, "oneflag" ) ) {
 			bits |= 1 << GT_1FCTF;
 			continue;
 		}
                 
-                if( Q_stricmp( token, "overload" ) == 0 ) {
+		if( Q_strequal( token, "overload" ) ) {
 			bits |= 1 << GT_OBELISK;
 			continue;
 		}
                 
-                if( Q_stricmp( token, "harvester" ) == 0 ) {
+		if( Q_strequal( token, "harvester" ) ) {
 			bits |= 1 << GT_HARVESTER;
 			continue;
 		}
 
-		if( Q_stricmp( token, "elimination" ) == 0 ) {
+		if( Q_strequal( token, "elimination" ) ) {
 			bits |= 1 << GT_ELIMINATION;
 			continue;
 		}
 
-		if( Q_stricmp( token, "ctfelimination" ) == 0 ) {
+		if( Q_strequal( token, "ctfelimination" ) ) {
 			bits |= 1 << GT_CTF_ELIMINATION;
 			continue;
 		}
 
-		if( Q_stricmp( token, "lms" ) == 0 ) {
+		if( Q_strequal( token, "lms" ) ) {
 			bits |= 1 << GT_LMS;
 			continue;
 		}
-		if( Q_stricmp( token, "dd" ) == 0 ) {
+		if( Q_strequal( token, "dd" ) ) {
 			bits |= 1 << GT_DOUBLE_D;
 			continue;
 		}
                 
-		if( Q_stricmp( token, "dom" ) == 0 ) {
+		if( Q_strequal( token, "dom" ) ) {
 			bits |= 1 << GT_DOMINATION;
 			continue;
 		}
@@ -874,7 +874,7 @@ static qboolean BotAlreadySelected( const char *checkName ) {
 			(s_serveroptions.playerTeam[n].curvalue != s_serveroptions.playerTeam[s_serveroptions.newBotIndex].curvalue ) ) {
 			continue;
 		}
-		if( Q_stricmp( checkName, s_serveroptions.playerNameBuffers[n] ) == 0 ) {
+		if( Q_strequal( checkName, s_serveroptions.playerNameBuffers[n] ) ) {
 			return qtrue;
 		}
 	}
@@ -1411,8 +1411,9 @@ static void ServerOptions_InitBotNames( void ) {
 		botInfo = UI_GetBotInfoByName( bot );
 		bot = Info_ValueForKey( botInfo, "name" );
                 
-                if(!Q_stricmp(bot,""))
-                    bot = "Sarge"; 
+		if (Q_strequal(bot,"")) {
+			bot = "Sarge"; 
+		}
 
 		Q_strncpyz( s_serveroptions.playerNameBuffers[count], bot, sizeof(s_serveroptions.playerNameBuffers[count]) );
 		count++;
@@ -2056,7 +2057,7 @@ static void ServerPlayerIcon( const char *modelAndSkin, char *iconName, int icon
 
 	Com_sprintf(iconName, iconNameMaxSize, "models/players/%s/icon_%s.tga", model, skin );
 
-	if( !trap_R_RegisterShaderNoMip( iconName ) && Q_stricmp( skin, "default" ) != 0 ) {
+	if( !trap_R_RegisterShaderNoMip( iconName ) && !Q_strequal( skin, "default" ) ) {
 		Com_sprintf(iconName, iconNameMaxSize, "models/players/%s/icon_default.tga", model );
 	}
 }
@@ -2142,7 +2143,7 @@ static void UI_BotSelectMenu_Default( char *bot ) {
 	for( n = 0; n < botSelectInfo.numBots; n++ ) {
 		botInfo = UI_GetBotInfoByNumber( n );
 		test = Info_ValueForKey( botInfo, "name" );
-		if( Q_stricmp( bot, test ) == 0 ) {
+		if( Q_strequal( bot, test ) ) {
 			break;
 		}
 	}

@@ -295,7 +295,7 @@ const char *UI_GetArenaInfoByMap( const char *map ) {
 	int			n;
 
 	for( n = 0; n < ui_numArenas; n++ ) {
-		if( Q_stricmp( Info_ValueForKey( ui_arenaInfos[n], "map" ), map ) == 0 ) {
+		if( Q_strequal( Info_ValueForKey( ui_arenaInfos[n], "map" ), map ) ) {
 			return ui_arenaInfos[n];
 		}
 	}
@@ -313,7 +313,7 @@ const char *UI_GetSpecialArenaInfo( const char *tag ) {
 	int			n;
 
 	for( n = 0; n < ui_numArenas; n++ ) {
-		if( Q_stricmp( Info_ValueForKey( ui_arenaInfos[n], "special" ), tag ) == 0 ) {
+		if( Q_strequal( Info_ValueForKey( ui_arenaInfos[n], "special" ), tag ) ) {
 			return ui_arenaInfos[n];
 		}
 	}
@@ -412,7 +412,7 @@ char *UI_GetBotInfoByName( const char *name ) {
 
 	for ( n = 0; n < ui_numBots ; n++ ) {
 		value = Info_ValueForKey( ui_botInfos[n], "name" );
-		if ( !Q_stricmp( value, name ) ) {
+		if ( Q_strequal( value, name ) ) {
 			return ui_botInfos[n];
 		}
 	}

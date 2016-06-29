@@ -972,7 +972,7 @@ double strtod( const char *nptr, const char **endptr )
 		nptr++;
 
 	// special string parsing
-	if( Q_stricmpn( nptr, "nan", 3 ) == 0 )
+	if( Q_strequaln( nptr, "nan", 3 ) )
 	{
 		floatint_t nan;
 		if( endptr == NULL )
@@ -1001,13 +1001,13 @@ double strtod( const char *nptr, const char **endptr )
 		nan.ui = 0x7fffffff;
 		return nan.f;
 	}
-	if( Q_stricmpn( nptr, "inf", 3 ) == 0 )
+	if( Q_strequaln( nptr, "inf", 3 ) )
 	{
 		floatint_t inf;
 		inf.ui = 0x7f800000;
 		if( endptr == NULL )
 			return inf.f;
-		if( Q_stricmpn( &nptr[3], "inity", 5 ) == 0 )
+		if( Q_strequaln( &nptr[3], "inity", 5 ) )
 			*endptr = &nptr[8];
 		else
 			*endptr = &nptr[3];
@@ -1024,7 +1024,7 @@ double strtod( const char *nptr, const char **endptr )
 	else if( *nptr == '+' )
 		nptr++;
 	// hex
-	if( Q_stricmpn( nptr, "0x", 2 ) == 0 )
+	if( Q_strequaln( nptr, "0x", 2 ) )
 	{
 		// track if we use any digits
 		const char *s = &nptr[1], *end = s;

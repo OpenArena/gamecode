@@ -1819,17 +1819,17 @@ void CG_KeyEvent(int key, qboolean down) {
 }
 
 int CG_ClientNumFromName(const char *p) {
-  int i;
-  for (i = 0; i < cgs.maxclients; i++) {
-    if (cgs.clientinfo[i].infoValid && Q_stricmp(cgs.clientinfo[i].name, p) == 0) {
-      return i;
-    }
-  }
-  return -1;
+	int i;
+	for (i = 0; i < cgs.maxclients; i++) {
+		if (cgs.clientinfo[i].infoValid && Q_strequal(cgs.clientinfo[i].name, p) ) {
+			return i;
+		}
+	}
+	return -1;
 }
 
 void CG_ShowResponseHead(void) {
-  Menus_OpenByName("voiceMenu");
+	Menus_OpenByName("voiceMenu");
 	trap_Cvar_Set("cl_conXOffset", "72");
 	cg.voiceTime = cg.time;
 }

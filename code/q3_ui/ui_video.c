@@ -385,7 +385,7 @@ static int GraphicsOptions_FindBuiltinResolution( int mode )
 
 	for( i = 0; builtinResolutions[ i ]; i++ )
 	{
-		if( !Q_stricmp( builtinResolutions[ i ], detectedResolutions[ mode ] ) )
+		if( Q_strequal( builtinResolutions[ i ], detectedResolutions[ mode ] ) )
 			return i;
 	}
 
@@ -409,7 +409,7 @@ static int GraphicsOptions_FindDetectedResolution( int mode )
 
 	for( i = 0; detectedResolutions[ i ]; i++ )
 	{
-		if( !Q_stricmp( builtinResolutions[ mode ], detectedResolutions[ i ] ) )
+		if( Q_strequal( builtinResolutions[ mode ], detectedResolutions[ i ] ) )
 			return i;
 	}
 
@@ -443,7 +443,7 @@ static void GraphicsOptions_GetAspectRatios( void )
         
         // rename common ratios ("1.33:1" -> "4:3")
         for( i = 0; knownRatios[i][0]; i++ ) {
-            if( !Q_stricmp( str, knownRatios[i][0] ) ) {
+            if( Q_strequal( str, knownRatios[i][0] ) ) {
                 Q_strncpyz( str, knownRatios[i][1], sizeof( str ) );
                 break;
             }
@@ -453,7 +453,7 @@ static void GraphicsOptions_GetAspectRatios( void )
         // establish res/ratio relationship
         for( i = 0; ratioBuf[i][0]; i++ )
         {
-            if( !Q_stricmp( str, ratioBuf[i] ) )
+            if( Q_strequal( str, ratioBuf[i] ) )
                 break;
         }
         if( !ratioBuf[i][0] )
@@ -866,7 +866,7 @@ static void GraphicsOptions_SetMenuItems( void )
 
 			for(i = 0; detectedResolutions[i]; ++i)
 			{
-				if(!Q_stricmp(buf, detectedResolutions[i]))
+				if(Q_strequal(buf, detectedResolutions[i]))
 				{
 					s_graphicsoptions.mode.curvalue = i;
 					break;
@@ -913,7 +913,7 @@ static void GraphicsOptions_SetMenuItems( void )
 		break;
 	}
 
-	if ( !Q_stricmp( UI_Cvar_VariableString( "r_textureMode" ), "GL_LINEAR_MIPMAP_NEAREST" ) )
+	if ( Q_strequal( UI_Cvar_VariableString( "r_textureMode" ), "GL_LINEAR_MIPMAP_NEAREST" ) )
 	{
 		s_graphicsoptions.filter.curvalue = 0;
 	}

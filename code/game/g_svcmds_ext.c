@@ -237,12 +237,12 @@ void Svcmd_MessageWrapper( void )
 {
   char cmd[ 5 ];
   trap_Argv( 0, cmd, sizeof( cmd ) );
-  /*if( !Q_stricmp( cmd, "a" ) )
+  /*if( Q_strequal( cmd, "a" ) )
     Cmd_AdminMessage_f( NULL );
-  else if( !Q_stricmp( cmd, "m" ) )
+  else if( Q_strequal( cmd, "m" ) )
     Cmd_PrivateMessage_f( NULL );
   else*/
-  if( !Q_stricmp( cmd, "say" ) )
+  if( Q_strequal( cmd, "say" ) )
     G_Say( NULL, NULL, SAY_ALL, ConcatArgs( 1 ) );
 }
 

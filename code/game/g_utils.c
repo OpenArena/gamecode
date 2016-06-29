@@ -39,7 +39,7 @@ void AddRemap(const char *oldShader, const char *newShader, float timeOffset) {
 	int i;
 
 	for (i = 0; i < remapCount; i++) {
-		if (Q_stricmp(oldShader, remappedShaders[i].oldShader) == 0) {
+		if ( Q_strequal(oldShader, remappedShaders[i].oldShader) ) {
 			// found it, just update this one
 			strcpy(remappedShaders[i].newShader,newShader);
 			remappedShaders[i].timeOffset = timeOffset;
@@ -172,7 +172,7 @@ gentity_t *G_Find (gentity_t *from, int fieldofs, const char *match)
 		s = *(char **) ((byte *)from + fieldofs);
 		if (!s)
 			continue;
-		if (!Q_stricmp (s, match))
+		if (Q_strequal (s, match))
 			return from;
 	}
 
