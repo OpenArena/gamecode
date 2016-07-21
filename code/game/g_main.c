@@ -591,7 +591,7 @@ void G_RegisterCvars( void ) {
 	}
 
 	//set FFA status for high gametypes:
-	if ( g_gametype.integer == GT_LMS ) {
+	if ( g_gametype.integer == GT_LMS || g_gametype.integer == GT_POSSESSION ) {
 		g_ffa_gt = 1;	//Last Man standig is a FFA gametype
 	} else {
 		g_ffa_gt = 0;	//If >GT_CTF use bases

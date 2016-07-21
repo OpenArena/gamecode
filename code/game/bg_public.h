@@ -125,6 +125,7 @@ typedef enum {
 	GT_LMS,				// Last man standing
 	GT_DOUBLE_D,			// Double Domination
 	GT_DOMINATION,			// Standard domination 12
+	GT_POSSESSION,
 	GT_MAX_GAME_TYPE
 	
 } gametype_t;

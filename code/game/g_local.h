@@ -864,6 +864,7 @@ void ClientUserinfoChanged( int clientNum );
 void ClientDisconnect( int clientNum );
 void ClientBegin( int clientNum );
 void ClientCommand( int clientNum );
+gentity_t *SelectRandomDeathmatchSpawnPoint( void );
 
 //
 // g_active.c
