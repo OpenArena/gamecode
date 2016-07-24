@@ -838,7 +838,8 @@ void G_InitGame( int levelTime, int randomSeed, int restart ) {
 	G_FindTeams();
 
 	// make sure we have flags for CTF, etc
-	if( g_gametype.integer >= GT_TEAM && (g_ffa_gt!=1)) {
+	if ( g_gametype.integer == GT_POSSESSION || 
+			(g_gametype.integer >= GT_TEAM && g_ffa_gt!=1) ) {
 		G_CheckTeamItems();
 	}
 
@@ -3042,6 +3043,11 @@ void G_RunFrame( int levelTime ) {
 	//Sago: I just need to think why I placed this here... they should only spawn once
 	if(g_gametype.integer == GT_DOMINATION)
 		Team_Dom_SpawnPoints();
+	
+	
+	if (g_gametype.integer == GT_POSSESSION && level.time > 5000) {
+		Team_SpawnPosFlag();
+	}
 
 	// see if it is time to end the level
 	CheckExitRules();

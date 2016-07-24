@@ -69,6 +69,7 @@ void Team_InitGame( void ) {
 		dominationPointsSpawned = qfalse;
                 break;
 	case GT_1FCTF:
+	case GT_POSSESSION:
 		teamgame.flagStatus = -1; // Invalid to force update
 		Team_SetFlagStatus( TEAM_FREE, FLAG_ATBASE );
 		break;
@@ -387,7 +388,7 @@ void Team_FragBonuses(gentity_t *targ, gentity_t *inflictor, gentity_t *attacker
 		enemy_flag_pw = PW_REDFLAG;
 	}
 
-	if (g_gametype.integer == GT_1FCTF) {
+	if (g_gametype.integer == GT_1FCTF || g_gametype.integer == GT_POSSESSION) {
 		enemy_flag_pw = PW_NEUTRALFLAG;
 	} 
 
@@ -398,7 +399,9 @@ void Team_FragBonuses(gentity_t *targ, gentity_t *inflictor, gentity_t *attacker
 	}
 	if (targ->client->ps.powerups[enemy_flag_pw]) {
 		attacker->client->pers.teamState.lastfraggedcarrier = level.time;
-		AddScore(attacker, targ->r.currentOrigin, CTF_FRAG_CARRIER_BONUS);
+		if (g_gametype.integer != GT_POSSESSION) {
+			AddScore(attacker, targ->r.currentOrigin, CTF_FRAG_CARRIER_BONUS);
+		}
 		attacker->client->pers.teamState.fragcarrier++;
 		PrintMsg(NULL, "%s" S_COLOR_WHITE " fragged %s's flag carrier!\n",
 			attacker->client->pers.netname, TeamName(team));
@@ -852,6 +855,20 @@ void Team_DD_RemovePointBgfx( void ) {
 	}
 }
 
+static void Team_Pos_create_neutral_obelisk( gentity_t *target ) {
+	gitem_t			*it;
+	if (neutralObelisk) {
+		return;
+	}
+	it = BG_FindItem("Neutral Flag");
+	neutralObelisk = G_Spawn();
+	VectorCopy( target->r.currentOrigin, neutralObelisk->s.origin );
+	neutralObelisk->classname = it->classname;
+	G_SpawnItem(neutralObelisk, it);
+	FinishSpawningItem(neutralObelisk );
+	Team_SetFlagStatus( TEAM_FREE, FLAG_ATBASE );
+}
+
 void Team_DD_makeA2team( gentity_t *target, int team ) {
 	gitem_t			*it;
 	//gentity_t		*it_ent;
@@ -877,7 +894,7 @@ void Team_DD_makeA2team( gentity_t *target, int team ) {
 	FinishSpawningItem(ddA );
 }
 
-void Team_DD_makeB2team( gentity_t *target, int team ) {
+static void Team_DD_makeB2team( gentity_t *target, int team ) {
 	gitem_t			*it;
 	//gentity_t		*it_ent;
 	
@@ -903,12 +920,12 @@ void Team_DD_makeB2team( gentity_t *target, int team ) {
 	FinishSpawningItem(ddB );
 }
 
-void Team_ResetFlags( void ) {
+static void Team_ResetFlags( void ) {
 	if( g_gametype.integer == GT_CTF || g_gametype.integer == GT_CTF_ELIMINATION) {
 		Team_ResetFlag( TEAM_RED );
 		Team_ResetFlag( TEAM_BLUE );
 	}
-	else if( g_gametype.integer == GT_1FCTF ) {
+	else if( g_gametype.integer == GT_1FCTF || g_gametype.integer == GT_POSSESSION ) {
 		Team_ResetFlag( TEAM_FREE );
 	}
 }
@@ -1081,6 +1098,19 @@ int Team_SpawnDoubleDominationPoints ( void ) {
 	return 1;
 }
 
+void Team_SpawnPosFlag( void ) {
+	gentity_t	*ent = NULL;
+	if (neutralObelisk) {
+		return;
+	}
+	if ((ent = G_Find (ent, FOFS(classname), "info_player_deathmatch")) != NULL) {
+		Team_Pos_create_neutral_obelisk(ent);
+	}
+	else {
+		G_Printf("Failed to fint spawn point for white flag!");
+	}
+}
+
 /*
 ==============
 Team_RemoveDoubleDominationPoints
@@ -1199,7 +1229,7 @@ int Team_TouchOurFlag( gentity_t *ent, gentity_t *other, int team ) {
 	gclient_t	*cl = other->client;
 	int			enemy_flag;
 
-	if( g_gametype.integer == GT_1FCTF ) {
+	if( g_gametype.integer == GT_1FCTF || g_gametype.integer == GT_POSSESSION ) {
 		enemy_flag = PW_NEUTRALFLAG;
 	}
 	else {
@@ -1321,6 +1351,13 @@ int Team_TouchOurFlag( gentity_t *ent, gentity_t *other, int team ) {
 	return 0; // Do not respawn this automatically
 }
 
+int Team_TouchPossessionFlag (gentity_t *other) {
+	gclient_t *cl = other->client;
+	cl->ps.powerups[PW_NEUTRALFLAG] = INT_MAX; // flags never expire
+	cl->pers.teamState.flagsince = level.time;
+	return -1;
+}
+
 int Team_TouchEnemyFlag( gentity_t *ent, gentity_t *other, int team ) {
 	gclient_t *cl = other->client;
 
@@ -1405,6 +1442,9 @@ int Pickup_Team( gentity_t *ent, gentity_t *other ) {
 	else {
 		PrintMsg ( other, "Don't know what team the flag is on.\n");
 		return 0;
+	}
+	if (g_gametype.integer == GT_POSSESSION) {
+		return Team_TouchPossessionFlag( other );
 	}
 	if( g_gametype.integer == GT_1FCTF ) {
 		if( team == TEAM_FREE ) {
@@ -2184,7 +2224,7 @@ void SP_team_blueobelisk( gentity_t *ent ) {
 /*QUAKED team_neutralobelisk (0 0 1) (-16 -16 0) (16 16 88)
 */
 void SP_team_neutralobelisk( gentity_t *ent ) {
-	if ( g_gametype.integer != GT_1FCTF && g_gametype.integer != GT_HARVESTER ) {
+	if ( g_gametype.integer != GT_1FCTF && g_gametype.integer != GT_HARVESTER && g_gametype.integer != GT_POSSESSION ) {
 		G_FreeEntity(ent);
 		return;
 	}

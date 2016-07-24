@@ -3163,8 +3163,10 @@ static void CG_DrawWarmup( void ) {
 			s = "Overload";
 		} else if ( cgs.gametype == GT_HARVESTER ) {
 			s = "Harvester";
-                } else if ( cgs.gametype == GT_DOMINATION ) {
+		} else if ( cgs.gametype == GT_DOMINATION ) {
 			s = "Domination";
+		} else if ( cgs.gametype == GT_POSSESSION) {
+			s = "Possession";
 		} else {
 			s = "";
 		}

@@ -1275,6 +1275,11 @@ qboolean BG_CanItemBeGrabbed( int gametype, const entityState_t *ent, const play
 		return qtrue;
 
 	case IT_TEAM: // team items, such as flags	
+		if( gametype == GT_POSSESSION ) {
+			if( item->giTag == PW_NEUTRALFLAG ) {
+				return qtrue;
+			}
+		}
 		if( gametype == GT_1FCTF ) {
 			// neutral flag can always be picked up
 			if( item->giTag == PW_NEUTRALFLAG ) {
