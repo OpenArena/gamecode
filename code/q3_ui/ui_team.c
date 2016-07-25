@@ -170,6 +170,7 @@ void TeamMain_MenuInit( void ) {
 	case GT_SINGLE_PLAYER:
 	case GT_FFA:
 	case GT_LMS:
+	case GT_POSSESSION:
 	case GT_TOURNAMENT:
 		s_teammain.joinred.generic.flags  |= QMF_GRAYED;
 		s_teammain.joinblue.generic.flags |= QMF_GRAYED;
@@ -180,7 +181,6 @@ void TeamMain_MenuInit( void ) {
 	case GT_CTF:
 	case GT_ELIMINATION:
 	case GT_CTF_ELIMINATION:
-		//s_teammain.joingame.generic.flags |= QMF_GRAYED;
 		s_teammain.joingame.string           = "AUTO JOIN GAME";
 		break;
 	}

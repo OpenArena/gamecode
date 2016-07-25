@@ -135,14 +135,15 @@ static const char *servertype_items[] = {
 	"Team Deathmatch",
 	"Tournament",
 	"Capture the Flag",
-        "One Flag Capture",
-        "Overload",
-        "Harvester",
+	"One Flag Capture",
+	"Overload",
+	"Harvester",
 	"Elimination",
 	"CTF Elimination",
 	"Last Man Standing",
 	"Double Domination",
-        "Domination",
+	"Domination",
+	"Poseession",
 	NULL
 };
 
@@ -152,7 +153,7 @@ static const char *sortkey_items[] = {
 	"Open Player Spots",
 	"Game Type",
 	"Ping Time",
-        "Human Players",
+	"Human Players",
 	NULL
 };
 
@@ -169,7 +170,7 @@ static char* gamenames[] = {
 	"CTF Elimination",
 	"Last Man Standing",
 	"Double Domination",
-        "Domination",	// Dom replaces Rocket Arena 3
+	"Domination",	// Dom replaces Rocket Arena 3
 	"Q3F",						// Q3F
 	"Urban Terror",		// Urban Terror
 	"OSP",						// Orange Smoothie Productions
@@ -180,7 +181,7 @@ static char* gamenames[] = {
 static char* netnames[] = {
 	"???",
 	"IP4",
-        "IP6",
+	"IP6",
 	NULL
 };
 
@@ -197,8 +198,8 @@ typedef struct servernode_s {
 	char	hostname[MAX_HOSTNAMELENGTH+3];
 	char	mapname[MAX_MAPNAMELENGTH];
 	int		numclients;
-        int             humanclients;
-        qboolean        needPass;
+	int             humanclients;
+	qboolean        needPass;
 	int		maxclients;
 	int		pingtime;
 	int		gametype;

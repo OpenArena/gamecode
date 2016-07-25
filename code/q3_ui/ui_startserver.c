@@ -109,6 +109,7 @@ static const char *gametype_items[] = {
 	"Last Man Standing",
 	"Double Domination",
 	"Domination",
+	"Possession",
 	NULL
 };
 
@@ -117,14 +118,16 @@ static int gametype_remap[] = {
 		GT_TEAM, 		
 		GT_TOURNAMENT, 		
 		GT_CTF,
-                GT_1FCTF,
-                GT_OBELISK,
-                GT_HARVESTER,
+		GT_1FCTF,
+		GT_OBELISK,
+		GT_HARVESTER,
 		GT_ELIMINATION, 	
 		GT_CTF_ELIMINATION, 	
 		GT_LMS, 		
 		GT_DOUBLE_D,
-                GT_DOMINATION };		
+		GT_DOMINATION,
+		GT_POSSESSION
+};		
 
 static int gametype_remap2[] = {
 	0, 
@@ -139,7 +142,9 @@ static int gametype_remap2[] = {
 	8, 
 	9, 
 	10,
-	11 };		//this works and should increment for more gametypes
+	11,
+	12
+};		//this works and should increment for more gametypes
 
 static void UI_ServerOptionsMenu( qboolean multiplayer );
 
@@ -164,6 +169,7 @@ static int GametypeBits( char *string ) {
 
 		if( Q_strequal( token, "ffa" ) ) {
 			bits |= 1 << GT_FFA;
+			bits |= 1 << GT_POSSESSION;
 			continue;
 		}
 
@@ -998,6 +1004,11 @@ static void ServerOptions_Start( void ) {
 		trap_Cvar_SetValue( "ui_dd_timelimit", timelimit );
 		trap_Cvar_SetValue( "ui_dd_friendlt", friendlyfire );
 		break;
+		
+	case GT_POSSESSION:
+		trap_Cvar_SetValue( "ui_pos_scorelimit", fraglimit );
+		trap_Cvar_SetValue( "ui_pos_timelimit", timelimit );
+		break;
 	}
 
 	trap_Cvar_SetValue( "sv_maxclients", Com_Clamp( 0, 12, maxclients ) );
@@ -1054,7 +1065,7 @@ static void ServerOptions_Start( void ) {
 		if( s_serveroptions.playerNameBuffers[n][0] == '-' ) {
 			continue;
 		}
-		if( s_serveroptions.gametype >= GT_TEAM && s_serveroptions.gametype != GT_LMS ) {
+		if( s_serveroptions.gametype >= GT_TEAM && s_serveroptions.gametype != GT_LMS && s_serveroptions.gametype != GT_POSSESSION ) {
 			Com_sprintf( buf, sizeof(buf), "addbot %s %i %s\n", s_serveroptions.playerNameBuffers[n], skill,
 				playerTeam_list[s_serveroptions.playerTeam[n].curvalue] );
 		}
@@ -1065,7 +1076,8 @@ static void ServerOptions_Start( void ) {
 	}
 
 	// set player's team
-	if( /*dedicated == 0 &&*/ s_serveroptions.gametype >= GT_TEAM && s_serveroptions.gametype != GT_LMS ) {
+	if( /*dedicated == 0 &&*/ s_serveroptions.gametype >= GT_TEAM && s_serveroptions.gametype != GT_LMS 
+			&& s_serveroptions.gametype != GT_POSSESSION ) {
 		trap_Cmd_ExecuteText( EXEC_APPEND, va( "wait 5; team %s\n", playerTeam_list[s_serveroptions.playerTeam[0].curvalue] ) );
 	}
 }
@@ -1108,7 +1120,7 @@ static void ServerOptions_InitPlayerItems( void ) {
 //	}
 
 	// init teams
-	if( s_serveroptions.gametype >= GT_TEAM && s_serveroptions.gametype != GT_LMS ) {
+	if( s_serveroptions.gametype >= GT_TEAM && s_serveroptions.gametype != GT_LMS && s_serveroptions.gametype != GT_POSSESSION ) {
 		for( n = 0; n < (PLAYER_SLOTS / 2); n++ ) {
 			s_serveroptions.playerTeam[n].curvalue = 0;
 		}
@@ -1161,7 +1173,7 @@ static void ServerOptions_SetPlayerItems( void ) {
 	}
 
 	// teams
-	if( s_serveroptions.gametype < GT_TEAM || s_serveroptions.gametype == GT_LMS ) {
+	if( s_serveroptions.gametype < GT_TEAM || s_serveroptions.gametype == GT_LMS || s_serveroptions.gametype == GT_POSSESSION ) {
 		return;
 	}
 	for( n = start; n < PLAYER_SLOTS; n++ ) {
@@ -1347,7 +1359,7 @@ static void ServerOptions_InitBotNames( void ) {
 	char		bots[MAX_INFO_STRING];
 
 	//this SHOULD work
-	if( s_serveroptions.gametype >= GT_TEAM && s_serveroptions.gametype != GT_LMS ) {
+	if( s_serveroptions.gametype >= GT_TEAM && s_serveroptions.gametype != GT_LMS && s_serveroptions.gametype != GT_POSSESSION ) {
 		Q_strncpyz( s_serveroptions.playerNameBuffers[1], "gargoyle", 16 );
 		Q_strncpyz( s_serveroptions.playerNameBuffers[2], "kyonshi", 16 );
 		Q_strncpyz( s_serveroptions.playerNameBuffers[3], "grism", 16 );
@@ -1530,6 +1542,11 @@ static void ServerOptions_SetMenuItems( void ) {
 		s_serveroptions.friendlyfire.curvalue = (int)Com_Clamp( 0, 1, trap_Cvar_VariableValue( "ui_dom_friendly" ) );
 		break;
 
+	case GT_POSSESSION:
+		Com_sprintf( s_serveroptions.fraglimit.field.buffer, 4, "%i", (int)Com_Clamp( 0, 999, trap_Cvar_VariableValue( "ui_pos_scorelimit" ) ) );
+		Com_sprintf( s_serveroptions.timelimit.field.buffer, 4, "%i", (int)Com_Clamp( 0, 999, trap_Cvar_VariableValue( "ui_pos_timelimit" ) ) );
+		break;
+		
 	}
 
 	Q_strncpyz( s_serveroptions.hostname.field.buffer, UI_Cvar_VariableString( "sv_hostname" ), sizeof( s_serveroptions.hostname.field.buffer ) );
@@ -1548,7 +1565,7 @@ static void ServerOptions_SetMenuItems( void ) {
 		s_serveroptions.pmove.curvalue = 3;
 
 	// set the map pic
-        info = UI_GetArenaInfoByNumber(s_startserver.maplist[s_startserver.currentmap]);
+	info = UI_GetArenaInfoByNumber(s_startserver.maplist[s_startserver.currentmap]);
 	Com_sprintf( picname, 64, "levelshots/%s", Info_ValueForKey( info, "map") );
 	s_serveroptions.mappic.generic.name = picname;
 
@@ -1663,6 +1680,16 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 	if( s_serveroptions.gametype < GT_CTF || s_serveroptions.gametype== GT_LMS) {
 		s_serveroptions.fraglimit.generic.type       = MTYPE_FIELD;
 		s_serveroptions.fraglimit.generic.name       = "Frag Limit:";
+		s_serveroptions.fraglimit.generic.flags      = QMF_NUMBERSONLY|QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+		s_serveroptions.fraglimit.generic.x	         = OPTIONS_X;
+		s_serveroptions.fraglimit.generic.y	         = y;
+		s_serveroptions.fraglimit.generic.statusbar  = ServerOptions_StatusBar;
+		s_serveroptions.fraglimit.field.widthInChars = 3;
+		s_serveroptions.fraglimit.field.maxchars     = 3;
+	}
+	else if (s_serveroptions.gametype == GT_POSSESSION) {
+		s_serveroptions.fraglimit.generic.type       = MTYPE_FIELD;
+		s_serveroptions.fraglimit.generic.name       = "Seconds to win:";
 		s_serveroptions.fraglimit.generic.flags      = QMF_NUMBERSONLY|QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 		s_serveroptions.fraglimit.generic.x	         = OPTIONS_X;
 		s_serveroptions.fraglimit.generic.y	         = y;
@@ -1878,7 +1905,7 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 		}
 	}
 
-	if( s_serveroptions.gametype < GT_CTF || s_serveroptions.gametype == GT_LMS ) {
+	if( s_serveroptions.gametype < GT_CTF || s_serveroptions.gametype == GT_LMS || s_serveroptions.gametype == GT_POSSESSION ) {
 		Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.fraglimit );
 	}
 	else {
