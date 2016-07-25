@@ -48,6 +48,7 @@ gentity_t	*ddB;
 gentity_t	*dom_points[MAX_DOMINATION_POINTS];
 
 void Team_SetFlagStatus( int team, flagStatus_t status );
+static gentity_t* SelectRandomEntity (const char* classname);
 
 qboolean dominationPointsSpawned;
 
@@ -1103,12 +1104,21 @@ void Team_SpawnPosFlag( void ) {
 	if (neutralObelisk) {
 		return;
 	}
-	if ((ent = G_Find (ent, FOFS(classname), "info_player_deathmatch")) != NULL) {
-		Team_Pos_create_neutral_obelisk(ent);
+	//First see if there is a white falg
+	ent = SelectRandomEntity("team_CTF_neutralflag");
+	if (!ent) {
+		//If not pick a random domination point
+		ent = SelectRandomEntity("domination_point");
 	}
-	else {
-		G_Printf("Failed to fint spawn point for white flag!");
+	if (!ent) {
+		//Else pick a random deathmatch point
+		ent = SelectRandomEntity("info_player_deathmatch");
 	}
+	if (!ent) {
+		//If nothing found just use the first entity.
+		ent = &g_entities[0];
+	}
+	Team_Pos_create_neutral_obelisk(ent);
 }
 
 /*
@@ -1534,6 +1544,30 @@ qboolean Team_GetLocationMsg(gentity_t *ent, char *loc, int loclen)
 
 
 /*---------------------------------------------------------------------------*/
+
+#define MAX_RANDOM_SET_SIZE 32
+static gentity_t* SelectRandomEntity (const char* classname) {
+	gentity_t	*spot;
+	int			count;
+	int			selection;
+	gentity_t	*spots[MAX_RANDOM_SET_SIZE];
+	
+	count = 0;
+	spot = NULL;
+	
+	while ((spot = G_Find (spot, FOFS(classname), classname)) != NULL) {
+		spots[ count ] = spot;
+		if (++count == MAX_RANDOM_SET_SIZE)
+			break;
+	}
+	
+	if (!count) {
+		return NULL;
+	}
+	
+	selection = rand() % count;
+	return spots[ selection ];
+}
 
 /*
 ================
