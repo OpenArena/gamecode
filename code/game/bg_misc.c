@@ -1872,6 +1872,9 @@ void MapInfoGet(const char* mapname, int gametype, mapinfo_result_t *result) {
 					case GT_DOMINATION:
 						if (Q_strequal(token,"dom")) mayRead = qtrue;
 						break;
+					case GT_POSSESSION:
+						if (Q_strequal(token,"pos")) mayRead = qtrue;
+						break;
 						
 				};
 			}
