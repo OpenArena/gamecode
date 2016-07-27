@@ -476,7 +476,7 @@ static void ClientTimerActions( gentity_t *ent, int msec ) {
 		}
 		
 		if (g_gametype.integer == GT_POSSESSION && ent->health > 0 && client->ps.powerups[PW_NEUTRALFLAG] ) {
-			AddScore(ent, ent->pos1, 1);
+			AddScore(ent, ent->client->ps.origin, 1);
 		}
 	}
 	if( bg_itemlist[client->ps.stats[STAT_PERSISTANT_POWERUP]].giTag == PW_AMMOREGEN ) {

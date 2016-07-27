@@ -298,6 +298,12 @@ static void CG_TouchItem( centity_t *cent ) {
 			return;
 		}
 	}
+	if (cgs.gametype == GT_POSSESSION) {
+		if( item->giType == IT_TEAM && item->giTag == PW_NEUTRALFLAG ) {
+			canBePicked = qtrue;
+		}
+	}
+	
 	if( cgs.gametype == GT_CTF || cgs.gametype == GT_CTF_ELIMINATION || cgs.gametype == GT_HARVESTER ) {
 		if (cg.predictedPlayerState.persistant[PERS_TEAM] == TEAM_RED &&
 			item->giType == IT_TEAM && item->giTag == PW_REDFLAG)

@@ -776,7 +776,7 @@ static void CG_HarvesterSkulls(rectDef_t *rect, float scale, vec4_t color, qbool
 }
 
 static void CG_OneFlagStatus(rectDef_t *rect) {
-	if (cgs.gametype != GT_1FCTF) {
+	if (cgs.gametype != GT_1FCTF && cgs.gametype != GT_POSSESSION) {
 		return;
 	} else {
 		gitem_t *item = BG_FindItemForPowerup( PW_NEUTRALFLAG );
@@ -1203,6 +1203,10 @@ const char *CG_GameTypeString(void) {
 		return "Last Man Standing";
 	} else if ( cgs.gametype == GT_DOUBLE_D ) {
 		return "Double Domination";
+	} else if ( cgs.gametype == GT_DOMINATION ) {
+		return "Domination";
+	} else if ( cgs.gametype == GT_DOUBLE_D ) {
+		return "Possession";
 	}
 	return "";
 }
