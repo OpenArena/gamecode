@@ -404,15 +404,21 @@ void Team_FragBonuses(gentity_t *targ, gentity_t *inflictor, gentity_t *attacker
 			AddScore(attacker, targ->r.currentOrigin, CTF_FRAG_CARRIER_BONUS);
 		}
 		attacker->client->pers.teamState.fragcarrier++;
-		PrintMsg(NULL, "%s" S_COLOR_WHITE " fragged %s's flag carrier!\n",
-			attacker->client->pers.netname, TeamName(team));
-                if(g_gametype.integer == GT_CTF) {
-                    G_LogPrintf( "CTF: %i %i %i: %s fragged %s's flag carrier!\n", attacker->client->ps.clientNum, team, 3, attacker->client->pers.netname, TeamName(team) );
-                } else if(g_gametype.integer == GT_CTF_ELIMINATION) {
-                    G_LogPrintf( "CTF_ELIMINATION: %i %i %i %i: %s fragged %s's flag carrier!\n", level.roundNumber, attacker->client->ps.clientNum, team, 3, attacker->client->pers.netname, TeamName(team) );
-                } else if(g_gametype.integer == GT_1FCTF) {
-                    G_LogPrintf( "1fCTF: %i %i %i: %s fragged %s's flag carrier!\n", attacker->client->ps.clientNum, team, 3, attacker->client->pers.netname, TeamName(team) );
-                }
+		if (g_gametype.integer != GT_POSSESSION) {
+			PrintMsg(NULL, "%s" S_COLOR_WHITE " fragged %s's flag carrier!\n",
+				attacker->client->pers.netname, TeamName(team));
+		}
+		else {
+			PrintMsg(NULL, "%s" S_COLOR_WHITE " fragged the flag carrier!\n",
+				attacker->client->pers.netname);
+		}
+		if(g_gametype.integer == GT_CTF) {
+			G_LogPrintf( "CTF: %i %i %i: %s fragged %s's flag carrier!\n", attacker->client->ps.clientNum, team, 3, attacker->client->pers.netname, TeamName(team) );
+		} else if(g_gametype.integer == GT_CTF_ELIMINATION) {
+			G_LogPrintf( "CTF_ELIMINATION: %i %i %i %i: %s fragged %s's flag carrier!\n", level.roundNumber, attacker->client->ps.clientNum, team, 3, attacker->client->pers.netname, TeamName(team) );
+		} else if(g_gametype.integer == GT_1FCTF) {
+			G_LogPrintf( "1fCTF: %i %i %i: %s fragged %s's flag carrier!\n", attacker->client->ps.clientNum, team, 3, attacker->client->pers.netname, TeamName(team) );
+		}
                 
 
 		// the target had the flag, clear the hurt carrier
@@ -433,9 +439,9 @@ void Team_FragBonuses(gentity_t *targ, gentity_t *inflictor, gentity_t *attacker
 		PrintMsg(NULL, "%s" S_COLOR_WHITE " fragged %s's skull carrier!\n",
 			attacker->client->pers.netname, TeamName(team));
 
-                G_LogPrintf("HARVESTER: %i %i %i %i %i: %s fragged %s (%s) who had %i skulls.\n",
-                        attacker->client->ps.clientNum, team, 1, targ->client->ps.clientNum, tokens,
-                        attacker->client->pers.netname, targ->client->pers.netname,TeamName(team),tokens);
+		G_LogPrintf("HARVESTER: %i %i %i %i %i: %s fragged %s (%s) who had %i skulls.\n",
+			attacker->client->ps.clientNum, team, 1, targ->client->ps.clientNum, tokens,
+			attacker->client->pers.netname, targ->client->pers.netname,TeamName(team),tokens);
 
 		// the target had the flag, clear the hurt carrier
 		// field on the other team
@@ -458,9 +464,9 @@ void Team_FragBonuses(gentity_t *targ, gentity_t *inflictor, gentity_t *attacker
 		targ->client->pers.teamState.lasthurtcarrier = 0;
 
 		attacker->client->ps.persistant[PERS_DEFEND_COUNT]++;
-                G_LogPrintf( "Award: %i %i: %s gained the %s award!\n", attacker->client->ps.clientNum, 3, attacker->client->pers.netname, "DEFENCE" );
-                if(!level.hadBots)
-                    ChallengeMessage(attacker,AWARD_DEFENCE);
+		G_LogPrintf( "Award: %i %i: %s gained the %s award!\n", attacker->client->ps.clientNum, 3, attacker->client->pers.netname, "DEFENCE" );
+		if(!level.hadBots)
+			ChallengeMessage(attacker,AWARD_DEFENCE);
 		team = attacker->client->sess.sessionTeam;
 		// add the sprite over the player's head
 		attacker->client->ps.eFlags &= ~(EF_AWARD_IMPRESSIVE | EF_AWARD_EXCELLENT | EF_AWARD_GAUNTLET | EF_AWARD_ASSIST | EF_AWARD_DEFEND | EF_AWARD_CAP );
@@ -479,9 +485,9 @@ void Team_FragBonuses(gentity_t *targ, gentity_t *inflictor, gentity_t *attacker
 		targ->client->pers.teamState.lasthurtcarrier = 0;
 
 		attacker->client->ps.persistant[PERS_DEFEND_COUNT]++;
-                if(!level.hadBots)
-                    ChallengeMessage(attacker,AWARD_DEFENCE);
-                G_LogPrintf( "Award: %i %i: %s gained the %s award!\n", attacker->client->ps.clientNum, 3, attacker->client->pers.netname, "DEFENCE" );
+		if(!level.hadBots)
+			ChallengeMessage(attacker,AWARD_DEFENCE);
+		G_LogPrintf( "Award: %i %i: %s gained the %s award!\n", attacker->client->ps.clientNum, 3, attacker->client->pers.netname, "DEFENCE" );
 		team = attacker->client->sess.sessionTeam;
 		// add the sprite over the player's head
 		attacker->client->ps.eFlags &= ~(EF_AWARD_IMPRESSIVE | EF_AWARD_EXCELLENT | EF_AWARD_GAUNTLET | EF_AWARD_ASSIST | EF_AWARD_DEFEND | EF_AWARD_CAP );
@@ -513,10 +519,10 @@ void Team_FragBonuses(gentity_t *targ, gentity_t *inflictor, gentity_t *attacker
 				attacker->client->pers.teamState.basedefense++;
 
 				attacker->client->ps.persistant[PERS_DEFEND_COUNT]++;
-                                G_LogPrintf( "Award: %i %i: %s gained the %s award!\n", attacker->client->ps.clientNum, 3, attacker->client->pers.netname, "DEFENCE" );
-                                if(!level.hadBots)
-                                    ChallengeMessage(attacker,AWARD_DEFENCE);
-                                // add the sprite over the player's head
+				G_LogPrintf( "Award: %i %i: %s gained the %s award!\n", attacker->client->ps.clientNum, 3, attacker->client->pers.netname, "DEFENCE" );
+				if(!level.hadBots)
+					ChallengeMessage(attacker,AWARD_DEFENCE);
+				// add the sprite over the player's head
 				attacker->client->ps.eFlags &= ~(EF_AWARD_IMPRESSIVE | EF_AWARD_EXCELLENT | EF_AWARD_GAUNTLET | EF_AWARD_ASSIST | EF_AWARD_DEFEND | EF_AWARD_CAP );
 				attacker->client->ps.eFlags |= EF_AWARD_DEFEND;
 				attacker->client->rewardTime = level.time + REWARD_SPRITE_TIME;
@@ -549,9 +555,9 @@ void Team_FragBonuses(gentity_t *targ, gentity_t *inflictor, gentity_t *attacker
 				attacker->client->pers.teamState.basedefense++;
 
 				attacker->client->ps.persistant[PERS_DEFEND_COUNT]++;
-                                if(!level.hadBots)
-                                    ChallengeMessage(attacker,AWARD_DEFENCE);
-                                G_LogPrintf( "Award: %i %i: %s gained the %s award!\n", attacker->client->ps.clientNum, 3, attacker->client->pers.netname, "DEFENCE" );
+				if(!level.hadBots)
+					ChallengeMessage(attacker,AWARD_DEFENCE);
+				G_LogPrintf( "Award: %i %i: %s gained the %s award!\n", attacker->client->ps.clientNum, 3, attacker->client->pers.netname, "DEFENCE" );
 				// add the sprite over the player's head
 				attacker->client->ps.eFlags &= ~(EF_AWARD_IMPRESSIVE | EF_AWARD_EXCELLENT | EF_AWARD_GAUNTLET | EF_AWARD_ASSIST | EF_AWARD_DEFEND | EF_AWARD_CAP );
 				attacker->client->ps.eFlags |= EF_AWARD_DEFEND;
@@ -636,9 +642,9 @@ void Team_FragBonuses(gentity_t *targ, gentity_t *inflictor, gentity_t *attacker
 		attacker->client->pers.teamState.basedefense++;
 
 		attacker->client->ps.persistant[PERS_DEFEND_COUNT]++;
-                if(!level.hadBots)
-                                    ChallengeMessage(attacker,AWARD_DEFENCE);
-                G_LogPrintf( "Award: %i %i: %s gained the %s award!\n", attacker->client->ps.clientNum, 3, attacker->client->pers.netname, "DEFENCE" );
+		if(!level.hadBots)
+			ChallengeMessage(attacker,AWARD_DEFENCE);
+		G_LogPrintf( "Award: %i %i: %s gained the %s award!\n", attacker->client->ps.clientNum, 3, attacker->client->pers.netname, "DEFENCE" );
 		// add the sprite over the player's head
 		attacker->client->ps.eFlags &= ~(EF_AWARD_IMPRESSIVE | EF_AWARD_EXCELLENT | EF_AWARD_GAUNTLET | EF_AWARD_ASSIST | EF_AWARD_DEFEND | EF_AWARD_CAP );
 		attacker->client->ps.eFlags |= EF_AWARD_DEFEND;
@@ -660,9 +666,9 @@ void Team_FragBonuses(gentity_t *targ, gentity_t *inflictor, gentity_t *attacker
 			attacker->client->pers.teamState.carrierdefense++;
 
 			attacker->client->ps.persistant[PERS_DEFEND_COUNT]++;
-                        if(!level.hadBots)
-                                    ChallengeMessage(attacker,AWARD_DEFENCE);
-                        G_LogPrintf( "Award: %i %i: %s gained the %s award!\n", attacker->client->ps.clientNum, 3, attacker->client->pers.netname, "DEFENCE" );
+			if (!level.hadBots)
+				ChallengeMessage(attacker,AWARD_DEFENCE);
+			G_LogPrintf( "Award: %i %i: %s gained the %s award!\n", attacker->client->ps.clientNum, 3, attacker->client->pers.netname, "DEFENCE" );
 			// add the sprite over the player's head
 			attacker->client->ps.eFlags &= ~(EF_AWARD_IMPRESSIVE | EF_AWARD_EXCELLENT | EF_AWARD_GAUNTLET | EF_AWARD_ASSIST | EF_AWARD_DEFEND | EF_AWARD_CAP );
 			attacker->client->ps.eFlags |= EF_AWARD_DEFEND;
@@ -769,13 +775,13 @@ void Team_Dom_SpawnPoints( void ) {
 		if(i>=MAX_DOMINATION_POINTS)
 			break;
 		//domination_points_names[i] = flag->message;
-                if(flag->message) {
-                    Q_strncpyz(level.domination_points_names[i],flag->message,MAX_DOMINATION_POINTS_NAMES-1);
-                    PrintMsg( NULL, "Domination point \'%s\' found\n",level.domination_points_names[i]);
-                } else {
-                    Q_strncpyz(level.domination_points_names[i],va("Point %i",i),MAX_DOMINATION_POINTS_NAMES-1);
-                    PrintMsg( NULL, "Domination point \'%s\' found (autonamed)\n",level.domination_points_names[i]);
-                }
+		if(flag->message) {
+			Q_strncpyz(level.domination_points_names[i],flag->message,MAX_DOMINATION_POINTS_NAMES-1);
+			PrintMsg( NULL, "Domination point \'%s\' found\n",level.domination_points_names[i]);
+		} else {
+			Q_strncpyz(level.domination_points_names[i],va("Point %i",i),MAX_DOMINATION_POINTS_NAMES-1);
+			PrintMsg( NULL, "Domination point \'%s\' found (autonamed)\n",level.domination_points_names[i]);
+		}
 		dom_points[i] = G_Spawn();
 		VectorCopy( flag->r.currentOrigin, dom_points[i]->s.origin );
 		dom_points[i]->classname = it->classname;
@@ -814,8 +820,7 @@ void Team_Dom_TakePoint( gentity_t *point, int team, int clientnumber ) {
 	if(team == TEAM_RED) {
 		it = BG_FindItem ("Red domination point");
 		PrintMsg( NULL, "Red took \'%s\'\n",level.domination_points_names[i]);
-	} else
-	if(team == TEAM_BLUE) {
+	} else if(team == TEAM_BLUE) {
 		it = BG_FindItem ("Blue domination point");
 		PrintMsg( NULL, "Blue took \'%s\'\n",level.domination_points_names[i]);
 	}
@@ -834,9 +839,9 @@ void Team_Dom_TakePoint( gentity_t *point, int team, int clientnumber ) {
 	G_SpawnItem(point, it);
 	FinishSpawningItem( point );
 	level.pointStatusDom[i] = team;
-        G_LogPrintf( "DOM: %i %i %i %i: %s takes point %s!\n",
-                    clientnumber,i,0,team,
-                    TeamName(team),level.domination_points_names[i]);
+	G_LogPrintf( "DOM: %i %i %i %i: %s takes point %s!\n",
+				clientnumber,i,0,team,
+				TeamName(team),level.domination_points_names[i]);
 	SendDominationPointsStatusMessageToAllClients();
 }
 
@@ -935,7 +940,7 @@ void Team_ReturnFlagSound( gentity_t *ent, int team ) {
 	gentity_t	*te;
 
 	if (ent == NULL) {
-                G_Printf ("Warning:  NULL passed to Team_ReturnFlagSound\n");
+		G_Printf ("Warning:  NULL passed to Team_ReturnFlagSound\n");
 		return;
 	}
 
@@ -957,7 +962,7 @@ void Team_TakeFlagSound( gentity_t *ent, int team ) {
 	gentity_t	*te;
 
 	if (ent == NULL) {
-                G_Printf ("Warning:  NULL passed to Team_TakeFlagSound\n");
+		G_Printf ("Warning:  NULL passed to Team_TakeFlagSound\n");
 		return;
 	}
 
@@ -995,7 +1000,7 @@ void Team_CaptureFlagSound( gentity_t *ent, int team ) {
 	gentity_t	*te;
 
 	if (ent == NULL) {
-                G_Printf ("Warning:  NULL passed to Team_CaptureFlagSound\n");
+		G_Printf ("Warning:  NULL passed to Team_CaptureFlagSound\n");
 		return;
 	}
 
@@ -1013,18 +1018,17 @@ void Team_ReturnFlag( int team ) {
 	Team_ReturnFlagSound(Team_ResetFlag(team), team);
 	if( team == TEAM_FREE ) {
 		PrintMsg(NULL, "The flag has returned!\n" );
-                if(g_gametype.integer == GT_1FCTF) {
-                    G_LogPrintf( "1FCTF: %i %i %i: The flag was returned!\n", -1, -1, 2 );
-                }
+		if(g_gametype.integer == GT_1FCTF) {
+			G_LogPrintf( "1FCTF: %i %i %i: The flag was returned!\n", -1, -1, 2 );
+		}
 	}
 	else {
 		PrintMsg(NULL, "The %s flag has returned!\n", TeamName(team));
-                if(g_gametype.integer == GT_CTF_ELIMINATION) {
-                    G_LogPrintf( "CTF: %i %i %i: The %s flag was returned!\n", -1, team, 2, TeamName(team) );
-                } else
-                if(g_gametype.integer == GT_CTF_ELIMINATION) {
-                    G_LogPrintf( "CTF_ELIMINATION: %i %i %i %i: The %s flag was returned!\n", level.roundNumber, -1, team, 2, TeamName(team) );
-                }
+		if (g_gametype.integer == GT_CTF_ELIMINATION) {
+			G_LogPrintf( "CTF: %i %i %i: The %s flag was returned!\n", -1, team, 2, TeamName(team) );
+		} else if(g_gametype.integer == GT_CTF_ELIMINATION) {
+			G_LogPrintf( "CTF_ELIMINATION: %i %i %i %i: The %s flag was returned!\n", level.roundNumber, -1, team, 2, TeamName(team) );
+		}
 	}
 }
 
@@ -1092,7 +1096,7 @@ int Team_SpawnDoubleDominationPoints ( void ) {
 	if ((ent = G_Find (ent, FOFS(classname), "team_CTF_redflag")) != NULL) {
 		Team_DD_makeA2team( ent, TEAM_FREE );
 	}
-        ent = NULL;
+	ent = NULL;
 	if ((ent = G_Find (ent, FOFS(classname), "team_CTF_blueflag")) != NULL) {
 		Team_DD_makeB2team( ent, TEAM_FREE );
 	}
