@@ -882,6 +882,14 @@ qboolean CheckObeliskAttack( const gentity_t *obelisk, const gentity_t *attacker
 void ShuffleTeams(void);
 //KK-OAX Added for Command Handling Changes (r24)
 team_t G_TeamFromString( char *str );
+/**
+ * Picks a random location.
+ * This function can be given a filter. If the callback function returns 0 then the entity is not valid for selection
+ * @param classname Name of the class to choose
+ * @param filter The filter callback function or 0 for everything.
+ * @return A pointer to an enityt or NULL if not such entity could be found
+ */
+gentity_t* SelectRandomEntityFilter (const char* classname, qboolean (*filter)(const gentity_t*));
 gentity_t* SelectRandomEntity (const char* classname);
 void Team_SetFlagStatus( int team, flagStatus_t status );
 
@@ -936,8 +944,8 @@ void PlayerStore_restore(const char* guid, playerState_t *ps);
 
 // g_possession.c
 
-void Team_SpawnPosFlag( void );
-int Team_TouchPossessionFlag (gentity_t *other);
+void Possession_SpawnFlag( void );
+int Possession_TouchFlag(gentity_t *other);
 
 //
 // g_vote.c

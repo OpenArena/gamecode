@@ -9,7 +9,7 @@
 
 extern gentity_t	*neutralObelisk;
 
-static void Team_Pos_create_neutral_obelisk( gentity_t *target ) {
+static void Possession_create_neutral_obelisk( gentity_t *target ) {
 	gitem_t			*it;
 	if (neutralObelisk) {
 		return;
@@ -23,7 +23,15 @@ static void Team_Pos_create_neutral_obelisk( gentity_t *target ) {
 	Team_SetFlagStatus( TEAM_FREE, FLAG_ATBASE );
 }
 
-void Team_SpawnPosFlag( void ) {
+static qboolean EntityFilterNoBotsOrHumanOnly(const gentity_t* item) {
+	if (item->flags & FL_NO_BOTS || item->flags & FL_NO_HUMANS) {
+		//We cannot select a nobots or nohuman spawnpoint. These can be outside the map
+		return qfalse;
+	}
+	return qtrue;
+}
+
+void Possession_SpawnFlag( void ) {
 	gentity_t	*ent = NULL;
 	if (neutralObelisk) {
 		return;
@@ -36,16 +44,16 @@ void Team_SpawnPosFlag( void ) {
 	}
 	if (!ent) {
 		//Else pick a random deathmatch point
-		ent = SelectRandomEntity("info_player_deathmatch");
+		ent = SelectRandomEntityFilter("info_player_deathmatch", EntityFilterNoBotsOrHumanOnly);
 	}
 	if (!ent) {
 		//If nothing found just use the first entity.
 		ent = &g_entities[0];
 	}
-	Team_Pos_create_neutral_obelisk(ent);
+	Possession_create_neutral_obelisk(ent);
 }
 
-int Team_TouchPossessionFlag (gentity_t *other) {
+int Possession_TouchFlag(gentity_t *other) {
 	gclient_t *cl = other->client;
 	cl->ps.powerups[PW_NEUTRALFLAG] = INT_MAX; // flags never expire
 	cl->pers.teamState.flagsince = level.time;

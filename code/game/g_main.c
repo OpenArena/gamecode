@@ -3046,7 +3046,7 @@ void G_RunFrame( int levelTime ) {
 	
 	
 	if (g_gametype.integer == GT_POSSESSION && level.time > 5000) {
-		Team_SpawnPosFlag();
+		Possession_SpawnFlag();
 	}
 
 	// see if it is time to end the level

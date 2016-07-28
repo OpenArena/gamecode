@@ -1415,7 +1415,7 @@ int Pickup_Team( gentity_t *ent, gentity_t *other ) {
 		return 0;
 	}
 	if (g_gametype.integer == GT_POSSESSION) {
-		return Team_TouchPossessionFlag( other );
+		return Possession_TouchFlag( other );
 	}
 	if( g_gametype.integer == GT_1FCTF ) {
 		if( team == TEAM_FREE ) {
@@ -1506,8 +1506,8 @@ qboolean Team_GetLocationMsg(gentity_t *ent, char *loc, int loclen)
 
 /*---------------------------------------------------------------------------*/
 
-#define MAX_RANDOM_SET_SIZE 32
-gentity_t* SelectRandomEntity (const char* classname) {
+#define MAX_RANDOM_SET_SIZE 128
+gentity_t* SelectRandomEntityFilter (const char* classname, qboolean (*filter)(const gentity_t*)) {
 	gentity_t	*spot;
 	int			count;
 	int			selection;
@@ -1517,6 +1517,11 @@ gentity_t* SelectRandomEntity (const char* classname) {
 	spot = NULL;
 	
 	while ((spot = G_Find (spot, FOFS(classname), classname)) != NULL) {
+		if (filter) {
+			if (!filter(spot)) {
+				continue;
+			}
+		}
 		spots[ count ] = spot;
 		if (++count == MAX_RANDOM_SET_SIZE)
 			break;
@@ -1528,6 +1533,10 @@ gentity_t* SelectRandomEntity (const char* classname) {
 	
 	selection = rand() % count;
 	return spots[ selection ];
+}
+
+gentity_t* SelectRandomEntity (const char* classname) {
+	return SelectRandomEntityFilter(classname, 0);
 }
 
 /*
