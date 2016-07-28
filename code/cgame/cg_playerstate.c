@@ -438,7 +438,7 @@ void CG_CheckLocalSounds( playerState_t *ps, playerState_t *ops ) {
 						CG_AddBufferedSound(cgs.media.takenLeadSound);
 					} else if ( ps->persistant[PERS_RANK] == RANK_TIED_FLAG && cgs.gametype != GT_POSSESSION ) {
 						CG_AddBufferedSound(cgs.media.tiedLeadSound);
-					} else if ( ( ops->persistant[PERS_RANK] & ~RANK_TIED_FLAG ) == 0 ) {
+					} else if ( ps->persistant[PERS_RANK] != RANK_TIED_FLAG &&( ops->persistant[PERS_RANK] & ~RANK_TIED_FLAG ) == 0 ) {
 						CG_AddBufferedSound(cgs.media.lostLeadSound);
 					}
 				}
