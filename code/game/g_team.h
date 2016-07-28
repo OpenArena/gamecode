@@ -126,5 +126,3 @@ void Team_DD_bonusAtPoints(int team);
 //Added to make gcc happy (and because I use it in main)
 void Team_ForceGesture(int team);
 
-//Possession
-void Team_SpawnPosFlag( void );

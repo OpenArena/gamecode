@@ -47,9 +47,6 @@ gentity_t	*ddB;
 //Pointers for Standard Domination
 gentity_t	*dom_points[MAX_DOMINATION_POINTS];
 
-void Team_SetFlagStatus( int team, flagStatus_t status );
-static gentity_t* SelectRandomEntity (const char* classname);
-
 qboolean dominationPointsSpawned;
 
 void Team_InitGame( void ) {
@@ -861,19 +858,6 @@ void Team_DD_RemovePointBgfx( void ) {
 	}
 }
 
-static void Team_Pos_create_neutral_obelisk( gentity_t *target ) {
-	gitem_t			*it;
-	if (neutralObelisk) {
-		return;
-	}
-	it = BG_FindItem("Neutral Flag");
-	neutralObelisk = G_Spawn();
-	VectorCopy( target->r.currentOrigin, neutralObelisk->s.origin );
-	neutralObelisk->classname = it->classname;
-	G_SpawnItem(neutralObelisk, it);
-	FinishSpawningItem(neutralObelisk );
-	Team_SetFlagStatus( TEAM_FREE, FLAG_ATBASE );
-}
 
 void Team_DD_makeA2team( gentity_t *target, int team ) {
 	gitem_t			*it;
@@ -1103,27 +1087,7 @@ int Team_SpawnDoubleDominationPoints ( void ) {
 	return 1;
 }
 
-void Team_SpawnPosFlag( void ) {
-	gentity_t	*ent = NULL;
-	if (neutralObelisk) {
-		return;
-	}
-	//First see if there is a white falg
-	ent = SelectRandomEntity("team_CTF_neutralflag");
-	if (!ent) {
-		//If not pick a random domination point
-		ent = SelectRandomEntity("domination_point");
-	}
-	if (!ent) {
-		//Else pick a random deathmatch point
-		ent = SelectRandomEntity("info_player_deathmatch");
-	}
-	if (!ent) {
-		//If nothing found just use the first entity.
-		ent = &g_entities[0];
-	}
-	Team_Pos_create_neutral_obelisk(ent);
-}
+
 
 /*
 ==============
@@ -1365,13 +1329,6 @@ int Team_TouchOurFlag( gentity_t *ent, gentity_t *other, int team ) {
 	return 0; // Do not respawn this automatically
 }
 
-int Team_TouchPossessionFlag (gentity_t *other) {
-	gclient_t *cl = other->client;
-	cl->ps.powerups[PW_NEUTRALFLAG] = INT_MAX; // flags never expire
-	cl->pers.teamState.flagsince = level.time;
-	return -1;
-}
-
 int Team_TouchEnemyFlag( gentity_t *ent, gentity_t *other, int team ) {
 	gclient_t *cl = other->client;
 
@@ -1550,7 +1507,7 @@ qboolean Team_GetLocationMsg(gentity_t *ent, char *loc, int loclen)
 /*---------------------------------------------------------------------------*/
 
 #define MAX_RANDOM_SET_SIZE 32
-static gentity_t* SelectRandomEntity (const char* classname) {
+gentity_t* SelectRandomEntity (const char* classname) {
 	gentity_t	*spot;
 	int			count;
 	int			selection;

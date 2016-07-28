@@ -882,6 +882,8 @@ qboolean CheckObeliskAttack( const gentity_t *obelisk, const gentity_t *attacker
 void ShuffleTeams(void);
 //KK-OAX Added for Command Handling Changes (r24)
 team_t G_TeamFromString( char *str );
+gentity_t* SelectRandomEntity (const char* classname);
+void Team_SetFlagStatus( int team, flagStatus_t status );
 
 //KK-OAX Removed these in Code in favor of bg_alloc.c from Tremulous
 // g_mem.c
@@ -931,6 +933,11 @@ void LogAcc(int clientNum);
 void PlayerStoreInit( void );
 void PlayerStore_store(const char* guid, playerState_t ps);
 void PlayerStore_restore(const char* guid, playerState_t *ps);
+
+// g_possession.c
+
+void Team_SpawnPosFlag( void );
+int Team_TouchPossessionFlag (gentity_t *other);
 
 //
 // g_vote.c
