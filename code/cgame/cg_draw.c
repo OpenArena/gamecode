@@ -1072,7 +1072,7 @@ static float CG_DrawEliminationTimer( float y ) {
 	int			mins, seconds, tens, sec;
 	int			msec;
 	vec4_t			color;
-	const char	*st; //Currently gives warning for missionpack
+	const char	*st __attribute__((unused));
 	float scale __attribute__((unused));
 	int cw __attribute__((unused));
 	int rst;
@@ -2319,6 +2319,23 @@ static void CG_DrawCenterString( void ) {
 	trap_R_SetColor( NULL );
 }
 
+static void drawCenterString (const char* line, float* color) {
+	int		x, y, w;
+	y = 100;
+	
+	if (!line || !color ) {
+		return;
+	}
+    
+    
+    w = cg.centerPrintCharWidth * CG_DrawStrlen( line );
+
+    x = ( SCREEN_WIDTH - w ) / 2;
+
+    CG_DrawStringExt( x, y, line, color, qfalse, qtrue,
+		cg.centerPrintCharWidth, (int)(cg.centerPrintCharWidth * 1.5), 0 );
+}
+
 /*
 =====================
 CG_DrawCenter1FctfString
@@ -2326,12 +2343,11 @@ CG_DrawCenter1FctfString
 */
 static void CG_DrawCenter1FctfString( void ) {
     #ifndef MISSIONPACK
-    int		x, y, w;
     float       *color;
     char        *line;
     int status;
     
-    if(cgs.gametype != GT_1FCTF)
+    if(cgs.gametype != GT_1FCTF )
         return;
     
     status = cgs.flagStatus;
@@ -2355,19 +2371,43 @@ static void CG_DrawCenter1FctfString( void ) {
             return;
             
     };
-    y = 100;
     
-    
-    w = cg.centerPrintCharWidth * CG_DrawStrlen( line );
-
-    x = ( SCREEN_WIDTH - w ) / 2;
-
-    CG_DrawStringExt( x, y, line, color, qfalse, qtrue,
-		cg.centerPrintCharWidth, (int)(cg.centerPrintCharWidth * 1.5), 0 );
-    
+    drawCenterString(line, color);
     
     #endif
 }
+
+static void CG_DrawPossessionString ( void ) {
+	float       *color;
+	char        *line;
+	//int i;
+	//float distance;
+	
+	if (cgs.gametype != GT_POSSESSION ) {
+		return;
+	}
+    
+	line = NULL;
+	
+	if (cg.snap->ps.powerups[PW_NEUTRALFLAG]) {
+		line = va("Survive!");
+		color = colorYellow;
+	}
+#if 0
+	//Sago 2016-07-29: Find a way to calculate the distance to the flag from the player. This does not work. 
+	else {
+		for ( i = 0 ; i < MAX_GENTITIES ; i++ ) {
+			if ( cg_entities[i].currentState.eType == ET_PLAYER && cg_entities[i].currentState.powerups & ( 1 << PW_NEUTRALFLAG ) ) {
+				distance = Distance(cg_entities[i].currentState., cg.snap->ps.origin);
+				line = va("Flag carrier is near! %f", distance);
+				color = colorYellow;
+			}
+		}
+	}
+#endif
+    
+	drawCenterString(line, color);
+} 
 
 
 
@@ -3354,8 +3394,9 @@ static void CG_Draw2D(stereoFrame_t stereoFrame)
 	// don't draw center string if scoreboard is up
 	cg.scoreBoardShowing = CG_DrawScoreboard();
 	if ( !cg.scoreBoardShowing) {
-                CG_DrawCenterDDString();
-                CG_DrawCenter1FctfString();
+		CG_DrawCenterDDString();
+		CG_DrawPossessionString();
+		CG_DrawCenter1FctfString();
 		CG_DrawCenterString();
 	}
 
