@@ -36,8 +36,6 @@ void Possession_SpawnFlag( void ) {
 	if (neutralObelisk) {
 		return;
 	}
-	//First see if there is a white falg
-	ent = SelectRandomEntity("team_CTF_neutralflag");
 #if MAP_MUST_SPECIFY_THAT_IT_IS_OK
 	if (!ent) {
 		//If not pick a random domination point

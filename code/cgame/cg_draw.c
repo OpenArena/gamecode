@@ -2380,27 +2380,44 @@ static void CG_DrawCenter1FctfString( void ) {
 static void CG_DrawPossessionString ( void ) {
 	float       *color;
 	char        *line;
-	//int i;
-	//float distance;
+	int			timeUntilWon;
+	int i;
+	float distance;
 	
 	if (cgs.gametype != GT_POSSESSION ) {
 		return;
 	}
     
 	line = NULL;
+	timeUntilWon = -1;
+	if (cgs.fraglimit > 0 && cgs.fraglimit < 1000) {
+		timeUntilWon = cgs.fraglimit - cg.snap->ps.persistant[PERS_SCORE];
+	}
+	color = colorYellow;
 	
 	if (cg.snap->ps.powerups[PW_NEUTRALFLAG]) {
-		line = va("Survive!");
-		color = colorYellow;
+		if (timeUntilWon > 0) {
+			line = va("Survive %i:%02i", timeUntilWon / 60, timeUntilWon % 60);
+		}
+		else if (timeUntilWon == 0) {
+			line = va("You survived");
+			color = colorGreen;
+		}
+		else {
+			line = va("Survive!");
+		}
 	}
-#if 0
+#if 1
 	//Sago 2016-07-29: Find a way to calculate the distance to the flag from the player. This does not work. 
+	//Sago 2016-07-30: It does work now but it is too disturbing in the middle.
 	else {
 		for ( i = 0 ; i < MAX_GENTITIES ; i++ ) {
 			if ( cg_entities[i].currentState.eType == ET_PLAYER && cg_entities[i].currentState.powerups & ( 1 << PW_NEUTRALFLAG ) ) {
-				distance = Distance(cg_entities[i].currentState., cg.snap->ps.origin);
-				line = va("Flag carrier is near! %f", distance);
-				color = colorYellow;
+				if (cg_entities[i].lerpOrigin[0] || cg_entities[i].lerpOrigin[1] || cg_entities[i].lerpOrigin[2]) {
+					distance = Distance(cg_entities[i].lerpOrigin, cg.snap->ps.origin);
+					line = va("Flag carrier distace: %d0", ((int)distance)/10);
+					color = colorYellow;
+				}
 			}
 		}
 	}
