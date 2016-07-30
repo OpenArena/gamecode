@@ -119,7 +119,7 @@ void CG_CheckOrderPending(void) {
 	}
 }
 
-static void CG_SetSelectedPlayerName( void ) {
+void CG_SetSelectedPlayerName( void ) {
   if (cg_currentSelectedPlayer.integer >= 0 && cg_currentSelectedPlayer.integer < numSortedTeamPlayers) {
 		clientInfo_t *ci = cgs.clientinfo + sortedTeamPlayers[cg_currentSelectedPlayer.integer];
 	  if (ci) {
@@ -131,6 +131,7 @@ static void CG_SetSelectedPlayerName( void ) {
 		trap_Cvar_Set("cg_selectedPlayerName", "Everyone");
 	}
 }
+
 int CG_GetSelectedPlayer( void ) {
 	if (cg_currentSelectedPlayer.integer < 0 || cg_currentSelectedPlayer.integer >= numSortedTeamPlayers) {
 		cg_currentSelectedPlayer.integer = 0;
@@ -143,7 +144,7 @@ void CG_SelectNextPlayer( void ) {
 	cg_currentSelectedPlayer.integer +=1;
 	if (cg_currentSelectedPlayer.integer > numSortedTeamPlayers)
 		cg_currentSelectedPlayer.integer = 0;
-	}
+	
 	CG_SetSelectedPlayerName();
 }
 

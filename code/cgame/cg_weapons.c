@@ -3017,10 +3017,6 @@ void CG_MissileHitWall( int weapon, int clientNum, vec3_t origin, vec3_t dir, im
 		lightColor[0] = 1;
 		lightColor[1] = 0.75;
 		lightColor[2] = 0.0;
-		if (!cg_oldRocket.integer) {
-			// explosion sprite animation
-			VectorMA( origin, 24, dir, sprOrg );
-			VectorScale( dir, 64, sprVel );
 
 		if (cg_leiEnhancement.integer){ 
 			duration = 10;
@@ -3083,7 +3079,6 @@ void CG_MissileHitWall( int weapon, int clientNum, vec3_t origin, vec3_t dir, im
 		}
 		break;
 
-//#ifdef MISSIONPACK
 	case WP_CHAINGUN:
 		mod = cgs.media.bulletFlashModel;
 		if (cg_leiEnhancement.integer == 1996) {	// leilei - q effects
@@ -3109,20 +3104,17 @@ void CG_MissileHitWall( int weapon, int clientNum, vec3_t origin, vec3_t dir, im
 			sfx = cgs.media.sfx_ric2;
 		} else {
 			sfx = cgs.media.sfx_ric3;
-		}*/
+		}
 
 		radius = 8;
 		break;
-//#endif
 
+	// Shared with Vulcan/Chaingun
 	case WP_MACHINEGUN:
 		mod = cgs.media.bulletFlashModel;
 		shader = cgs.media.bulletExplosionShader;
 		mark = cgs.media.bulletMarkShader;
 
- }
-			}
-#endif
 		r = rand() & 3;
 		if ( r == 0 ) {
 			sfx = cgs.media.sfx_ric1;
@@ -3348,12 +3340,12 @@ void CG_ShotgunFire( entityState_t *es ) {
 		contents = CG_PointContents( es->pos.trBase, 0 );
 		if ( !( contents & CONTENTS_WATER ) ) {
 			VectorSet( up, 0, 0, 8 );
-		else
-			
-			
-CG_SmokePuff( v, up, 32, 1, 1, 1, 0.33f, 900, cg.time, 0, LEF_PUFF_DONT_SCALE, cgs.media.shotgunSmokePuffShader );
-
 		}
+		else			
+		{
+		CG_SmokePuff( v, up, 32, 1, 1, 1, 0.33f, 900, cg.time, 0, LEF_PUFF_DONT_SCALE, cgs.media.shotgunSmokePuffShader );
+		}
+		
 	}
 	CG_ShotgunPattern( es->pos.trBase, es->origin2, es->eventParm, es->otherEntityNum );
 }

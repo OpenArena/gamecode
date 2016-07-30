@@ -4541,7 +4541,8 @@ static void UI_RunMenuScript(char **args) {
 		else {
 			Com_Printf("unknown UI script %s\n", name);
 		}
-	}
+	
+	
 }
 
 static void UI_GetTeamColor(vec4_t *color) {

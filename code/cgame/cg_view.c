@@ -181,6 +181,8 @@ Sets the coordinates of the rendered window
 */
 static void CG_CalcVrect (void) {
 	int		size;
+	int		size2;
+	int 		compensate;
 
 	// the intermission should allways be full screen
 	if ( cg.snap->ps.pm_type == PM_INTERMISSION ) {

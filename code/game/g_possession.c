@@ -75,3 +75,6 @@ int Possession_TouchFlag(gentity_t *other) {
 	cl->pers.teamState.flagsince = level.time;
 	return -1;
 }
+
+
+// Need a blank line
