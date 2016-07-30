@@ -860,6 +860,56 @@ static float CG_DrawFPS( float y ) {
 	return y + BIGCHAR_HEIGHT + 4;
 }
 
+
+static float CG_DrawPossessionString ( float y ) {
+	vec4_t      *color;
+	char        *line;
+	int			timeUntilWon;
+	int i;
+	int w;
+	float distance;
+	
+	if (cgs.gametype != GT_POSSESSION ) {
+		return y;
+	}
+    
+	line = "Find the flag";
+	timeUntilWon = -1;
+	if (cgs.fraglimit > 0 && cgs.fraglimit < 1000) {
+		timeUntilWon = cgs.fraglimit - cg.snap->ps.persistant[PERS_SCORE];
+	}
+	color = &colorYellow;
+	
+	if (cg.snap->ps.powerups[PW_NEUTRALFLAG]) {
+		if (timeUntilWon > 0) {
+			line = va("Survive for %i:%02i", timeUntilWon / 60, timeUntilWon % 60);
+		}
+		else if (timeUntilWon == 0) {
+			line = va("You survived");
+			color = &colorGreen;
+		}
+		else {
+			line = va("Survive!");
+		}
+	}
+	else {
+		for ( i = 0 ; i < MAX_GENTITIES ; i++ ) {
+			if ( cg_entities[i].currentState.eType == ET_PLAYER && cg_entities[i].currentState.powerups & ( 1 << PW_NEUTRALFLAG ) ) {
+				if (cg_entities[i].lerpOrigin[0] || cg_entities[i].lerpOrigin[1] || cg_entities[i].lerpOrigin[2]) {
+					distance = Distance(cg_entities[i].lerpOrigin, cg.snap->ps.origin);
+					line = va("%d0 units to flag carrier", ((int)distance)/10);
+					color = &colorYellow;
+				}
+			}
+		}
+	}
+	
+	w = CG_DrawStrlen( line ) * SMALLCHAR_WIDTH;
+	CG_DrawSmallStringColor ( 635 - w, y + 2, line, *color);
+
+	return y + SMALLCHAR_HEIGHT+4;
+} 
+
 /*
 =================
 CG_DrawTimer
@@ -1398,6 +1448,9 @@ static void CG_DrawUpperRight(stereoFrame_t stereoFrame)
 	else
 	if ( cgs.gametype == GT_DOMINATION ) {
 		y = CG_DrawDomStatus(y);
+	}
+	else if (cgs.gametype == GT_POSSESSION ) {
+		y = CG_DrawPossessionString(y);
 	}
 	
 	if ( cg_drawSnapshot.integer ) {
@@ -2377,6 +2430,7 @@ static void CG_DrawCenter1FctfString( void ) {
     #endif
 }
 
+#if 0
 static void CG_DrawPossessionString ( void ) {
 	float       *color;
 	char        *line;
@@ -2425,6 +2479,7 @@ static void CG_DrawPossessionString ( void ) {
     
 	drawCenterString(line, color);
 } 
+#endif
 
 
 
@@ -3412,7 +3467,7 @@ static void CG_Draw2D(stereoFrame_t stereoFrame)
 	cg.scoreBoardShowing = CG_DrawScoreboard();
 	if ( !cg.scoreBoardShowing) {
 		CG_DrawCenterDDString();
-		CG_DrawPossessionString();
+		//CG_DrawPossessionString();
 		CG_DrawCenter1FctfString();
 		CG_DrawCenterString();
 	}
