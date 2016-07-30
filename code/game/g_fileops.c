@@ -22,8 +22,9 @@ along with Open Arena source code; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ===========================================================================
 */
-
 #include "g_local.h"
+
+
 
 /*
 ================
@@ -33,19 +34,19 @@ This parses an integer for the "tag" specified (cnf)
 */
 void readFile_int( char **cnf, int *v )
 {
-  char *t;
+	char *t;
 
-  //COM_MatchToken(cnf, "=");
-  t = COM_ParseExt( cnf, qfalse );
-  if( !strcmp( t, "=" ) )
-  {
-    t = COM_ParseExt( cnf, qfalse );
-  }
-  else
-  {
-    COM_ParseWarning( "expected '=' before \"%s\"", t );
-  }
-  *v = atoi( t );
+	//COM_MatchToken(cnf, "=");
+	t = COM_ParseExt( cnf, qfalse );
+	if( !strcmp( t, "=" ) )
+	{
+		t = COM_ParseExt( cnf, qfalse );
+	}
+	else
+	{
+		COM_ParseWarning( "expected '=' before \"%s\"", t );
+	}
+	*v = atoi( t );
 }
 
 /*
@@ -57,27 +58,28 @@ Color characters and escape sequences are parsed as well.
 */
 void readFile_string( char **cnf, char *s, int size )
 {
-  char *t;
+	char *t;
 
-  //COM_MatchToken(cnf, "=");
-  s[ 0 ] = '\0';
-  t = COM_ParseExt( cnf, qfalse );
-  if( strcmp( t, "=" ) )
-  {
-    COM_ParseWarning( "expected '=' before \"%s\"", t );
-    Q_strncpyz( s, t, size );
-  }
-  while( 1 )
-  {
-    t = COM_ParseExt( cnf, qfalse );
-    if( !*t )
-      break;
-    if( strlen( t ) + strlen( s ) >= size )
-      break;
-    if( *s )
-      Q_strcat( s, size, " " );
-    Q_strcat( s, size, t );
-  }
+	//COM_MatchToken(cnf, "=");
+	s[ 0 ] = '\0';
+	t = COM_ParseExt( cnf, qfalse );
+	if( strcmp( t, "=" ) )
+	{
+		COM_ParseWarning( "expected '=' before \"%s\"", t );
+		Q_strncpyz( s, t, size );
+	}
+	while( 1 )
+	{
+		t = COM_ParseExt( cnf, qfalse );
+		if ( !*t )
+			break;
+		if ( strlen( t ) + strlen( s ) >= size )
+			break;
+		if ( *s ) {
+			Q_strcat( s, size, " " );
+		}
+		Q_strcat( s, size, t );
+	}
 }
 
 /*
@@ -89,11 +91,11 @@ Since there is no logic as to where it writes, it must be called "just-in-time."
 */
 void writeFile_int( int v, fileHandle_t f )
 {
-  char buf[ 32 ];
+	char buf[ 32 ];
 
-  Com_sprintf( buf, sizeof( buf ), "%d", v );
-  trap_FS_Write( buf, strlen( buf ), f );
-  trap_FS_Write( "\n", 1, f );
+	Com_sprintf( buf, sizeof( buf ), "%d", v );
+	trap_FS_Write( buf, strlen( buf ), f );
+	trap_FS_Write( "\n", 1, f );
 }
 
 /*
@@ -105,15 +107,14 @@ Since there is no logic as to where it writes, it must be called "just-in-time."
 */
 void writeFile_string( char *s, fileHandle_t f )
 {
-  char buf[ MAX_STRING_CHARS ];
+	char buf[ MAX_STRING_CHARS ];
 
-  buf[ 0 ] = '\0';
-  if( s[ 0 ] )
-  {
-    //Q_strcat(buf, sizeof(buf), s);
-    Q_strncpyz( buf, s, sizeof( buf ) );
-    trap_FS_Write( buf, strlen( buf ), f );
-  }
-  trap_FS_Write( "\n", 1, f );
+	buf[ 0 ] = '\0';
+	if ( s[ 0 ] ) {
+		//Q_strcat(buf, sizeof(buf), s);
+		Q_strncpyz( buf, s, sizeof( buf ) );
+		trap_FS_Write( buf, strlen( buf ), f );
+	}
+	trap_FS_Write( "\n", 1, f );
 }
 

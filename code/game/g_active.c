@@ -364,10 +364,10 @@ void SpectatorThink( gentity_t *ent, usercmd_t *ucmd ) {
 
 	if ( ( client->buttons & BUTTON_USE_HOLDABLE ) && ! ( client->oldbuttons & BUTTON_USE_HOLDABLE ) ) {
 		if ( ( g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_CTF_ELIMINATION) &&
-                g_elimination_lockspectator.integer>1 &&
-                ent->client->sess.sessionTeam != TEAM_SPECTATOR ) {
-                    return;
-                }
+			g_elimination_lockspectator.integer>1 &&
+			ent->client->sess.sessionTeam != TEAM_SPECTATOR ) {
+			return;
+		}
 		StopFollowing(ent);
 	}
 }

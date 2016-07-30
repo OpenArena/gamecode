@@ -2372,22 +2372,24 @@ static void CG_DrawCenterString( void ) {
 	trap_R_SetColor( NULL );
 }
 
+#ifndef MISSIONPACK
 static void drawCenterString (const char* line, float* color) {
 	int		x, y, w;
 	y = 100;
-	
+
 	if (!line || !color ) {
 		return;
 	}
-    
-    
-    w = cg.centerPrintCharWidth * CG_DrawStrlen( line );
 
-    x = ( SCREEN_WIDTH - w ) / 2;
 
-    CG_DrawStringExt( x, y, line, color, qfalse, qtrue,
+	w = cg.centerPrintCharWidth * CG_DrawStrlen( line );
+
+	x = ( SCREEN_WIDTH - w ) / 2;
+
+	CG_DrawStringExt( x, y, line, color, qfalse, qtrue,
 		cg.centerPrintCharWidth, (int)(cg.centerPrintCharWidth * 1.5), 0 );
 }
+#endif
 
 /*
 =====================
@@ -2395,93 +2397,40 @@ CG_DrawCenter1FctfString
 =====================
 */
 static void CG_DrawCenter1FctfString( void ) {
-    #ifndef MISSIONPACK
-    float       *color;
-    char        *line;
-    int status;
-    
-    if(cgs.gametype != GT_1FCTF )
-        return;
-    
-    status = cgs.flagStatus;
-    
-    //Sago: TODO: Find the proper defines instead of hardcoded values.
-    switch(status)
-    {
-        case 2:
-            line = va("Red has the flag!");
-            color = colorRed;
-            break;
-        case 3:
-            line = va("Blue has the flag!");
-            color = colorBlue;
-            break;
-        case 4:
-            line = va("Flag dropped!");
-            color = colorWhite;
-            break;
-        default:
-            return;
-            
-    };
-    
-    drawCenterString(line, color);
-    
-    #endif
-}
-
-#if 0
-static void CG_DrawPossessionString ( void ) {
+	#ifndef MISSIONPACK
 	float       *color;
 	char        *line;
-	int			timeUntilWon;
-	int i;
-	float distance;
-	
-	if (cgs.gametype != GT_POSSESSION ) {
+	int status;
+
+	if(cgs.gametype != GT_1FCTF )
 		return;
-	}
-    
-	line = NULL;
-	timeUntilWon = -1;
-	if (cgs.fraglimit > 0 && cgs.fraglimit < 1000) {
-		timeUntilWon = cgs.fraglimit - cg.snap->ps.persistant[PERS_SCORE];
-	}
-	color = colorYellow;
-	
-	if (cg.snap->ps.powerups[PW_NEUTRALFLAG]) {
-		if (timeUntilWon > 0) {
-			line = va("Survive %i:%02i", timeUntilWon / 60, timeUntilWon % 60);
-		}
-		else if (timeUntilWon == 0) {
-			line = va("You survived");
-			color = colorGreen;
-		}
-		else {
-			line = va("Survive!");
-		}
-	}
-#if 1
-	//Sago 2016-07-29: Find a way to calculate the distance to the flag from the player. This does not work. 
-	//Sago 2016-07-30: It does work now but it is too disturbing in the middle.
-	else {
-		for ( i = 0 ; i < MAX_GENTITIES ; i++ ) {
-			if ( cg_entities[i].currentState.eType == ET_PLAYER && cg_entities[i].currentState.powerups & ( 1 << PW_NEUTRALFLAG ) ) {
-				if (cg_entities[i].lerpOrigin[0] || cg_entities[i].lerpOrigin[1] || cg_entities[i].lerpOrigin[2]) {
-					distance = Distance(cg_entities[i].lerpOrigin, cg.snap->ps.origin);
-					line = va("Flag carrier distace: %d0", ((int)distance)/10);
-					color = colorYellow;
-				}
-			}
-		}
-	}
-#endif
-    
+
+	status = cgs.flagStatus;
+
+	//Sago: TODO: Find the proper defines instead of hardcoded values.
+	switch(status)
+	{
+		case 2:
+			line = va("Red has the flag!");
+			color = colorRed;
+			break;
+		case 3:
+			line = va("Blue has the flag!");
+			color = colorBlue;
+			break;
+		case 4:
+			line = va("Flag dropped!");
+			color = colorWhite;
+			break;
+		default:
+			return;
+
+	};
+
 	drawCenterString(line, color);
-} 
-#endif
 
-
+	#endif
+}
 
 /*
 =====================
@@ -2489,71 +2438,72 @@ CG_DrawCenterDDString
 =====================
 */
 static void CG_DrawCenterDDString( void ) {
-    #ifndef MISSIONPACK
-    int		x, y, w;
-    float       *color;
-    char        *line;
-    int 		statusA, statusB;
-    int sec;
-    static int lastDDSec = -100;
+	#ifndef MISSIONPACK
+	int		x, y, w;
+	float       *color;
+	char        *line;
+	int 		statusA, statusB;
+	int sec;
+	static int lastDDSec = -100;
 
-    
-    if(cgs.gametype != GT_DOUBLE_D)
-        return;
-    
-    	statusA = cgs.redflag;
+
+	if(cgs.gametype != GT_DOUBLE_D)
+		return;
+
+	statusA = cgs.redflag;
 	statusB = cgs.blueflag;
-    
-    if( ( ( statusB == statusA ) && ( statusA == TEAM_RED ) ) ||
-            ( ( statusB == statusA ) && ( statusA == TEAM_BLUE ) ) ) {
-      }
-    else
-        return; //No team is dominating
-    
-    if(statusA == TEAM_BLUE) {
-        line = va("Blue scores in %i",(cgs.timetaken+10*1000-cg.time)/1000+1);
-        color = colorBlue;
-    } else if(statusA == TEAM_RED) {
-        line = va("Red scores in %i",(cgs.timetaken+10*1000-cg.time)/1000+1);
-        color = colorRed;
-    } else {
-        lastDDSec = -100;
-        return;
-    }
 
-    sec = (cgs.timetaken+10*1000-cg.time)/1000+1;
-    if(sec!=lastDDSec) {
-        //A new number is being displayed... play the sound!
-        switch ( sec ) {
-            case 1:
-                trap_S_StartLocalSound( cgs.media.count1Sound, CHAN_ANNOUNCER );
-                break;
-            case 2:
-                trap_S_StartLocalSound( cgs.media.count2Sound, CHAN_ANNOUNCER );
-                break;
-            case 3:
-                trap_S_StartLocalSound( cgs.media.count3Sound, CHAN_ANNOUNCER );
-                break;
-            case 10:
-                trap_S_StartLocalSound( cgs.media.doublerSound , CHAN_ANNOUNCER );
-                break;
-            default:
-                break;
-        }
-    }
-    lastDDSec = sec;
-    
-    y = 100;
-    
-    
-    w = cg.centerPrintCharWidth * CG_DrawStrlen( line );
+	if( ( ( statusB == statusA ) && ( statusA == TEAM_RED ) ) ||
+		( ( statusB == statusA ) && ( statusA == TEAM_BLUE ) ) ) {
+	}
+	else {
+		return; //No team is dominating
+	}
 
-    x = ( SCREEN_WIDTH - w ) / 2;
+	if(statusA == TEAM_BLUE) {
+		line = va("Blue scores in %i",(cgs.timetaken+10*1000-cg.time)/1000+1);
+		color = colorBlue;
+	} else if(statusA == TEAM_RED) {
+		line = va("Red scores in %i",(cgs.timetaken+10*1000-cg.time)/1000+1);
+		color = colorRed;
+	} else {
+		lastDDSec = -100;
+		return;
+	}
 
-    CG_DrawStringExt( x, y, line, color, qfalse, qtrue,
+	sec = (cgs.timetaken+10*1000-cg.time)/1000+1;
+	if(sec!=lastDDSec) {
+		//A new number is being displayed... play the sound!
+		switch ( sec ) {
+			case 1:
+				trap_S_StartLocalSound( cgs.media.count1Sound, CHAN_ANNOUNCER );
+				break;
+			case 2:
+				trap_S_StartLocalSound( cgs.media.count2Sound, CHAN_ANNOUNCER );
+				break;
+			case 3:
+				trap_S_StartLocalSound( cgs.media.count3Sound, CHAN_ANNOUNCER );
+				break;
+			case 10:
+				trap_S_StartLocalSound( cgs.media.doublerSound , CHAN_ANNOUNCER );
+				break;
+			default:
+				break;
+		}
+	}
+	lastDDSec = sec;
+
+	y = 100;
+
+
+	w = cg.centerPrintCharWidth * CG_DrawStrlen( line );
+
+	x = ( SCREEN_WIDTH - w ) / 2;
+
+	CG_DrawStringExt( x, y, line, color, qfalse, qtrue,
 		cg.centerPrintCharWidth, (int)(cg.centerPrintCharWidth * 1.5), 0 );
-    
-    #endif
+
+	#endif
 }
 
 
@@ -3467,7 +3417,6 @@ static void CG_Draw2D(stereoFrame_t stereoFrame)
 	cg.scoreBoardShowing = CG_DrawScoreboard();
 	if ( !cg.scoreBoardShowing) {
 		CG_DrawCenterDDString();
-		//CG_DrawPossessionString();
 		CG_DrawCenter1FctfString();
 		CG_DrawCenterString();
 	}

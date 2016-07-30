@@ -291,22 +291,22 @@ returning qfalse if not found
 qboolean G_CallSpawn( gentity_t *ent ) {
 	spawn_t	*s;
 	gitem_t	*item;
-        char cvarname[128];
-        char itemname[128];
+	char cvarname[128];
+	char itemname[128];
 
-        //Construct a replace cvar:
+		//Construct a replace cvar:
 	Com_sprintf(cvarname, sizeof(cvarname), "replace_%s", ent->classname);
 
-        //Look an alternative item up:
-        trap_Cvar_VariableStringBuffer(cvarname,itemname,sizeof(itemname));
-        if(itemname[0]==0) //If nothing found use original
-            Com_sprintf(itemname, sizeof(itemname), "%s", ent->classname);
-        else
-            G_Printf ("%s replaced by %s\n", ent->classname, itemname);
+		//Look an alternative item up:
+		trap_Cvar_VariableStringBuffer(cvarname,itemname,sizeof(itemname));
+		if(itemname[0]==0) //If nothing found use original
+			Com_sprintf(itemname, sizeof(itemname), "%s", ent->classname);
+		else
+			G_Printf ("%s replaced by %s\n", ent->classname, itemname);
 
 
 	if ( itemname[0]==0) {
-                G_Printf ("G_CallSpawn: NULL classname\n");
+		G_Printf ("G_CallSpawn: NULL classname\n");
 		return qfalse;
 	}
 
@@ -326,7 +326,7 @@ qboolean G_CallSpawn( gentity_t *ent ) {
 			return qtrue;
 		}
 	}
-        G_Printf ("%s doesn't have a spawn function\n", itemname);
+	G_Printf ("%s doesn't have a spawn function\n", itemname);
 	return qfalse;
 }
 
@@ -343,7 +343,7 @@ char *G_NewString( const char *string ) {
 	int		i,l;
 	
 	l = strlen(string) + 1;
-    //KK-OAX Changed to Tremulous's BG_Alloc
+	//KK-OAX Changed to Tremulous's BG_Alloc
 	newb = BG_Alloc( l );
 
 	new_p = newb;
@@ -480,7 +480,7 @@ void G_SpawnGEntityFromSpawnVars( void ) {
 	}
 #endif
 
-        if( G_SpawnString( "!gametype", NULL, &value ) ) {
+	if( G_SpawnString( "!gametype", NULL, &value ) ) {
 		if( g_gametype.integer >= GT_FFA && g_gametype.integer < GT_MAX_GAME_TYPE ) {
 			gametypeName = gametypeNames[g_gametype.integer];
 
@@ -638,13 +638,13 @@ void SP_worldspawn( void ) {
 	trap_Cvar_Set( "g_enableBreath", s );
 
 	g_entities[ENTITYNUM_WORLD].s.number = ENTITYNUM_WORLD;
-        g_entities[ENTITYNUM_WORLD].r.ownerNum = ENTITYNUM_NONE;
+	g_entities[ENTITYNUM_WORLD].r.ownerNum = ENTITYNUM_NONE;
 	g_entities[ENTITYNUM_WORLD].classname = "worldspawn";
 
-        g_entities[ENTITYNUM_NONE].s.number = ENTITYNUM_NONE;
-        g_entities[ENTITYNUM_NONE].r.ownerNum = ENTITYNUM_NONE;
-        g_entities[ENTITYNUM_NONE].classname = "nothing";
-        
+	g_entities[ENTITYNUM_NONE].s.number = ENTITYNUM_NONE;
+	g_entities[ENTITYNUM_NONE].r.ownerNum = ENTITYNUM_NONE;
+	g_entities[ENTITYNUM_NONE].classname = "nothing";
+
 	// see if we want a warmup time
 	trap_SetConfigstring( CS_WARMUP, "" );
 	if ( g_restarted.integer ) {

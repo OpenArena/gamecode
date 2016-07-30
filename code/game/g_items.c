@@ -84,11 +84,11 @@ int Pickup_Powerup( gentity_t *ent, gentity_t *other ) {
 			continue;
 		}
 
-    // if same team in team game, no sound
-    // cannot use OnSameTeam as it expects to g_entities, not clients
-  	if ( g_gametype.integer >= GT_TEAM && g_ffa_gt==0 && other->client->sess.sessionTeam == client->sess.sessionTeam  ) {
-      continue;
-    }
+	// if same team in team game, no sound
+	// cannot use OnSameTeam as it expects to g_entities, not clients
+	if ( g_gametype.integer >= GT_TEAM && g_ffa_gt==0 && other->client->sess.sessionTeam == client->sess.sessionTeam  ) {
+		continue;
+	}
 
 		// if too far away, no sound
 		VectorSubtract( ent->s.pos.trBase, client->ps.origin, delta );
@@ -277,9 +277,9 @@ int Pickup_Health (gentity_t *ent, gentity_t *other) {
 	int			max;
 	int			quantity;
 
-        if( !other->client)
-            return RESPAWN_HEALTH;
-        
+	if( !other->client)
+		return RESPAWN_HEALTH;
+
 	// small and mega healths will go over the max
 	if( other->client && bg_itemlist[other->client->ps.stats[STAT_PERSISTANT_POWERUP]].giTag == PW_GUARD ) {
 		max = other->client->ps.stats[STAT_MAX_HEALTH];
@@ -825,13 +825,12 @@ void ClearRegisteredItems( void ) {
 	memset( itemRegistered, 0, sizeof( itemRegistered ) );
 
 	if(g_instantgib.integer) {
-            if(g_instantgib.integer & 2)
-                RegisterItem( BG_FindItemForWeapon( WP_GAUNTLET ) );
-            //RegisterItem( BG_FindItemForWeapon( WP_MACHINEGUN ) );
-            RegisterItem( BG_FindItemForWeapon( WP_RAILGUN ) );
+		if(g_instantgib.integer & 2)
+			RegisterItem( BG_FindItemForWeapon( WP_GAUNTLET ) );
+		//RegisterItem( BG_FindItemForWeapon( WP_MACHINEGUN ) );
+		RegisterItem( BG_FindItemForWeapon( WP_RAILGUN ) );
 	}
-        else
-	if(g_rockets.integer) {
+	else if(g_rockets.integer) {
 		//RegisterItem( BG_FindItemForWeapon( WP_GAUNTLET ) );
 		//RegisterItem( BG_FindItemForWeapon( WP_MACHINEGUN ) );
 		RegisterItem( BG_FindItemForWeapon( WP_ROCKET_LAUNCHER ) );
@@ -920,7 +919,7 @@ void SaveRegisteredItems( void ) {
 		}
 	}
 	string[ bg_numItems ] = 0;
-        G_Printf( "%i items registered\n", count );
+	G_Printf( "%i items registered\n", count );
 	trap_SetConfigstring(CS_ITEMS, string);
 }
 
@@ -962,8 +961,8 @@ void G_SpawnItem (gentity_t *ent, gitem_t *item) {
 		if ( G_ItemDisabled(item) )
 			return;
 	}
-        if(!g_persistantpowerups.integer && item->giType == IT_PERSISTANT_POWERUP)
-            return;
+	if (!g_persistantpowerups.integer && item->giType == IT_PERSISTANT_POWERUP)
+		return;
 
 	ent->item = item;
 	// some movers spawn on the second frame, so delay item
@@ -976,8 +975,8 @@ void G_SpawnItem (gentity_t *ent, gitem_t *item) {
 	if (g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_LMS || 
 			( item->giType != IT_TEAM && (g_instantgib.integer || g_rockets.integer || g_elimination_allgametypes.integer || g_gametype.integer==GT_CTF_ELIMINATION) ) ) {
 		ent->s.eFlags |= EF_NODRAW; //Invisible in elimination
-                ent->r.svFlags |= SVF_NOCLIENT;  //Don't broadcast
-        }
+		ent->r.svFlags |= SVF_NOCLIENT;  //Don't broadcast
+	}
 
 	if(g_gametype.integer == GT_DOUBLE_D && (strcmp(ent->classname, "team_CTF_redflag")==0 || strcmp(ent->classname, "team_CTF_blueflag")==0 || strcmp(ent->classname, "team_CTF_neutralflag") == 0 || item->giType == IT_PERSISTANT_POWERUP  ))
 		ent->s.eFlags |= EF_NODRAW; //Don't draw the flag models/persistant powerups
@@ -985,8 +984,8 @@ void G_SpawnItem (gentity_t *ent, gitem_t *item) {
 	if( g_gametype.integer != GT_1FCTF && g_gametype.integer != GT_POSSESSION && strcmp(ent->classname, "team_CTF_neutralflag") == 0)
 		ent->s.eFlags |= EF_NODRAW; // Don't draw the flag in CTF_elimination
 
-        if(strcmp(ent->classname, "domination_point") == 0)
-                ent->s.eFlags |= EF_NODRAW; // Don't draw domination_point. It is just a pointer to where the Domination points should be placed
+	if(strcmp(ent->classname, "domination_point") == 0)
+		ent->s.eFlags |= EF_NODRAW; // Don't draw domination_point. It is just a pointer to where the Domination points should be placed
 	if ( item->giType == IT_POWERUP ) {
 		G_SoundIndex( "sound/items/poweruprespawn.wav" );
 		G_SpawnFloat( "noglobalsound", "0", &ent->speed);
