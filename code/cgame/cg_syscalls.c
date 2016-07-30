@@ -394,6 +394,12 @@ void trap_SnapVector( float *v ) {
 	syscall( CG_SNAPVECTOR, v );
 }
 
+// leilei - particles!
+void	trap_R_LFX_ParticleEffect( int effect, const vec3_t origin, const vec3_t velocity ) {
+	syscall( CG_R_LFX_PARTICLEEFFECT, effect, origin, velocity );
+}
+
+
 // this returns a handle.  arg0 is the name in the format "idlogo.roq", set arg1 to NULL, alteredstates to qfalse (do not alter gamestate)
 int trap_CIN_PlayCinematic( const char *arg0, int xpos, int ypos, int width, int height, int bits) {
   return syscall(CG_CIN_PLAYCINEMATIC, arg0, xpos, ypos, width, height, bits);

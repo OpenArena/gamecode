@@ -30,9 +30,18 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 static intptr_t (QDECL *syscall)( intptr_t arg, ... ) = (intptr_t (QDECL *)( intptr_t, ...))-1;
 
-void dllEntry( intptr_t (QDECL *syscallptr)( intptr_t arg,... ) ) {
+// rfactory change
+static long (QDECL *syscall)( long arg, ... ) = (long (QDECL *)( long, ...))-1;
+
+void dllEntry( long (QDECL *syscallptr)( long arg,... ) ) {
 	syscall = syscallptr;
 }
+
+//static intptr_t (QDECL *syscall)( intptr_t arg, ... ) = (intptr_t (QDECL *)( intptr_t, ...))-1;
+
+//void dllEntry( intptr_t (QDECL *syscallptr)( intptr_t arg,... ) ) {
+	//syscall = syscallptr;
+//}
 
 int PASSFLOAT( float x ) {
 	float	floatTemp;

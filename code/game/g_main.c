@@ -39,6 +39,8 @@ typedef struct {
 gentity_t		g_entities[MAX_GENTITIES];
 gclient_t		g_clients[MAX_CLIENTS];
 
+extern int	enableQ;
+
 vmCvar_t	g_gametype;
 vmCvar_t	g_dmflags;
 vmCvar_t        g_videoflags;
@@ -103,6 +105,8 @@ vmCvar_t	g_blueteam;
 vmCvar_t	g_singlePlayer;
 #endif
 vmCvar_t	g_enableDust;
+vmCvar_t	cg_enableQ;		// leilei
+vmCvar_t	g_enableFS;		// leilei
 vmCvar_t	g_enableBreath;
 vmCvar_t	g_proxMineTimeout;
 vmCvar_t	g_music;
@@ -298,6 +302,8 @@ static cvarTable_t		gameCvarTable[] = {
 	{ &g_singlePlayer, "ui_singlePlayerActive", "", 0, 0, qfalse, qfalse  },
 	#endif
 
+	{ &g_enableFS, "g_enableFS", "0", CVAR_SERVERINFO, 0, qtrue, qfalse },		// leilei - bikinis
+	{ &cg_enableQ, "g_enableQ", "0", CVAR_SERVERINFO, 0, qtrue, qfalse },		// leilei - q scale
 	{ &g_enableDust, "g_enableDust", "0", CVAR_SERVERINFO, 0, qtrue, qfalse },
 	{ &g_enableBreath, "g_enableBreath", "0", CVAR_SERVERINFO, 0, qtrue, qfalse },
 	{ &g_proxMineTimeout, "g_proxMineTimeout", "20000", 0, 0, qfalse },

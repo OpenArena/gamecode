@@ -308,6 +308,60 @@ void CG_Draw3DModel( float x, float y, float w, float h, qhandle_t model, qhandl
 	trap_R_RenderScene( &refdef );
 }
 
+
+void CG_Draw3DModelEyes( float x, float y, float w, float h, qhandle_t model, qhandle_t skin, vec3_t origin, vec3_t angles, vec3_t eyep ) {
+	refdef_t		refdef;
+	refEntity_t		ent;
+
+	if ( !cg_draw3dIcons.integer || !cg_drawIcons.integer ) {
+		return;
+	}
+
+	CG_AdjustFrom640( &x, &y, &w, &h );
+
+	memset( &refdef, 0, sizeof( refdef ) );
+
+	memset( &ent, 0, sizeof( ent ) );
+	AnglesToAxis( angles, ent.axis );
+	VectorCopy( origin, ent.origin );
+
+	// leilei - deal with the eyes here
+	VectorCopy( eyep, ent.eyepos );
+
+//	speed *= 0.05f;
+	{
+	vec3_t angers, right, fawed, awp, ah;
+	VectorCopy(angles, angers);
+	angers[0] *= 2;
+	angers[1] *= -2.0;
+	AngleVectors(angers, fawed, right, awp);
+	VectorMA(origin, 1024, fawed, ah );
+	VectorCopy( ah, ent.eyelook );
+	}
+
+	ent.hModel = model;
+	ent.customSkin = skin;
+	ent.renderfx = RF_NOSHADOW;		// no stencil shadows
+
+	refdef.rdflags = RDF_NOWORLDMODEL;
+
+	AxisClear( refdef.viewaxis );
+
+	refdef.fov_x = 30;
+	refdef.fov_y = 30;
+
+	refdef.x = x;
+	refdef.y = y;
+	refdef.width = w;
+	refdef.height = h;
+	
+	refdef.time = cg.time;
+
+	trap_R_ClearScene();
+	trap_R_AddRefEntityToScene( &ent );
+	trap_R_RenderScene( &refdef );
+}
+
 /*
 ================
 CG_DrawHead
@@ -343,8 +397,11 @@ void CG_DrawHead( float x, float y, float w, float h, int clientNum, vec3_t head
 
 		// allow per-model tweaking
 		VectorAdd( origin, ci->headOffset, origin );
+		
+		//CG_Draw3DModel( x, y, w, h, ci->headModel, ci->headSkin, origin, headAngles );
+		CG_Draw3DModelEyes( x, y, w, h, ci->headModel, ci->headSkin, origin, headAngles, ci->eyepos );
 
-		CG_Draw3DModel( x, y, w, h, ci->headModel, ci->headSkin, origin, headAngles );
+	//	CG_Draw3DModel( x, y, w, h, ci->headModel, ci->headSkin, origin, headAngles );
 	} else if ( cg_drawIcons.integer ) {
 		CG_DrawPic( x, y, w, h, ci->modelIcon );
 	}
@@ -2634,7 +2691,7 @@ static void CG_DrawCrosshair(void)
 		}
 	}
 
-	x = cg_crosshairX.integer;
+	x = cg_crosshairX.integer - wideAdjustX; // leilei - widescreen adjust
 	y = cg_crosshairY.integer;
 	CG_AdjustFrom640( &x, &y, &w, &h );
 
@@ -2901,7 +2958,7 @@ static void CG_DrawTeamVote(void) {
 static qboolean CG_DrawScoreboard( void ) {
 #ifdef MISSIONPACK
 	static qboolean firstTime = qtrue;
-	float *fadeColor;
+	float fade, *fadeColor;
 
 	if (menuScoreboard) {
 		menuScoreboard->window.flags &= ~WINDOW_FORCED;
@@ -2925,6 +2982,7 @@ static qboolean CG_DrawScoreboard( void ) {
 	}
 
 	if ( cg.showScores || cg.predictedPlayerState.pm_type == PM_DEAD || cg.predictedPlayerState.pm_type == PM_INTERMISSION ) {
+		fade = 1.0;
 		fadeColor = colorWhite;
 	} else {
 		fadeColor = CG_FadeColor( cg.scoreFadeTime, FADE_TIME );
@@ -2935,6 +2993,7 @@ static qboolean CG_DrawScoreboard( void ) {
 			firstTime = qtrue;
 			return qfalse;
 		}
+		fade = *fadeColor;
 	}																					  
 
 
@@ -3026,6 +3085,9 @@ qboolean CG_DrawAccboard( void ) {
 CG_DrawIntermission
 =================
 */
+
+void			trap_Cmd_ExecuteText( int exec_when, const char *text );	// leilei - for unlocks only...
+
 static void CG_DrawIntermission( void ) {
 //	int key;
 #ifdef MISSIONPACK
@@ -3442,6 +3504,14 @@ Perform all drawing needed to completely fill the screen
 void CG_DrawActive( stereoFrame_t stereoView ) {
 	// optionally draw the info screen instead
 	if ( !cg.snap ) {
+// loadingscreen
+#ifdef SCRIPTHUD
+		menuDef_t *loading = Menus_FindByName( "Loading" );
+		if(loading==NULL)
+	//	if(!loading)
+
+#endif
+// end loadingscreen
 		CG_DrawInformation();
 		return;
 	}
@@ -3466,5 +3536,55 @@ void CG_DrawActive( stereoFrame_t stereoView ) {
  	CG_Draw2D(stereoView);
 }
 
+
+
+// loadingscreen
+#ifdef SCRIPTHUD
+/*
+======================
+CG_UpdateMediaFraction
+======================
+*/
+void CG_UpdateMediaFraction( float newFract )
+{
+  cg.mediaFraction = newFract;
+  trap_UpdateScreen( );
+}
+/*
+======================
+CG_UpdateSoundFraction
+======================
+*/
+void CG_UpdateSoundFraction( float newFract )
+{
+  cg.soundFraction = newFract;
+  trap_UpdateScreen( );
+}
+/*
+======================
+CG_UpdateGraphicFraction
+======================
+*/
+void CG_UpdateGraphicFraction( float newFract )
+{
+  cg.graphicFraction = newFract;
+  trap_UpdateScreen( );
+}
+/*
+====================
+CG_DrawLoadingScreen
+====================
+*/
+void CG_DrawLoadingScreen( void )
+{
+	menuDef_t *loading = Menus_FindByName( "Loading" );
+	if(loading!=NULL) {
+//	if(loading) {
+		Menu_Paint( loading, qtrue );
+	} else {
+		CG_DrawInformation();
+	}
+}
+#endif
 
 

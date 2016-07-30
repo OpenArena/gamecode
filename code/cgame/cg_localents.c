@@ -144,9 +144,6 @@ void CG_BloodTrail( localEntity_t *le ) {
 		blood->leType = LE_FALL_SCALE_FADE;
 		// drop a total of 40 units over its lifetime
 		blood->pos.trDelta[2] = 40;
-		if ( cg_leiSuperGoreyAwesome.integer ) {
-//			blood = CG_SpurtBlood( newOrigin, vec3_origin, 3); // LEILEI more gore plz
-			}
 	}
 }
 

@@ -69,6 +69,8 @@ typedef enum {
 
 #define SP_PODIUM_MODEL		"models/mapobjects/podium/podium4.md3"
 
+extern int enableq;
+
 //============================================================================
 
 typedef struct gentity_s gentity_t;
@@ -1418,3 +1420,8 @@ void Svcmd_MessageWrapper( void );
 #include "g_admin.h"
 
 void MapInfoPrint(mapinfo_result_t *info);
+// leilei - monsters
+
+void monster_die (gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int damage, int mod);
+
+

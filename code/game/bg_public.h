@@ -59,6 +59,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define MAX_DOMINATION_POINTS 6
 #define MAX_DOMINATION_POINTS_NAMES 20
 
+// leilei - q scale game cvar
+
+#define QUACK_SCALE		0.85
+#define	QUACK_VIEWHEIGHT	22
+
 //
 // config strings are a general means of communicating variable length strings
 // from the server to all connected clients.
@@ -552,6 +557,23 @@ typedef enum {
 	TORSO_FOLLOWME,
 	TORSO_AFFIRMATIVE,
 	TORSO_NEGATIVE,
+
+	TORSO_RUN, 	// run with gun
+	TORSO_RUN2, 	// run with gauntlet
+	TORSO_RUN3, 	// run with flag in left hand, gun in right
+	TORSO_STAND3, 	// stand /w flag in left hand (if has flag)
+	TORSO_JUMP, 	// jump with gun
+	TORSO_JUMP2, 	// jump with gauntlet
+	TORSO_JUMP3, 	// jump with flag
+	TORSO_FALL, 	// fall with gun
+	TORSO_FALL2, 	// fall with gauntlet
+	TORSO_FALL3, 	// fall with flag
+	TORSO_TALK, 	// fall with flag
+//	TORSO_AIMUP, 	// aiming upward
+//	TORSO_AIMDOWN, 	// aiming downward
+	TORSO_STRAFE, 	// strafing sideways
+	LEGS_STRAFE_LEFT, // strafing to the player's left
+	LEGS_STRAFE_RIGHT, // strafing to the player's right
 
 //	BOTH_POSE,		// leilei - crappy ui posing code trying
 

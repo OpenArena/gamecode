@@ -48,6 +48,8 @@ float	pm_spectatorfriction = 5.0f;
 
 int		c_pmove = 0;
 
+extern int enableQ;
+extern	vmCvar_t	cg_enableQ;		// leilei - map changes player/weapons scale (for q1 adaptations)
 /*
 ===============
 PM_AddEvent
@@ -127,6 +129,16 @@ static void PM_ContinueTorsoAnim( int anim ) {
 	}
 	PM_StartTorsoAnim( anim );
 }
+
+
+static void PM_RunningTorsoAnim( int anim ) {
+	if ( ( pm->ps->torsoAnim & ~ANIM_TOGGLEBIT ) == anim ) {
+		return;
+	}
+	pm->ps->torsoTimer = pm->ps->legsTimer; // sync
+	PM_StartTorsoAnim( anim );
+}
+
 
 static void PM_ForceLegsAnim( int anim ) {
 	pm->ps->legsTimer = 0;
@@ -1534,6 +1546,12 @@ PM_TorsoAnimation
 
 ==============
 */
+
+
+
+
+/*
+
 static void PM_TorsoAnimation( void ) {
 	if ( pm->ps->weaponstate == WEAPON_READY ) {
 		if ( pm->ps->weapon == WP_GAUNTLET ) {
@@ -1541,9 +1559,97 @@ static void PM_TorsoAnimation( void ) {
 		} else {
 			PM_ContinueTorsoAnim( TORSO_STAND );
 		}
-		return;
+	return;
+	}
+	
+}
+
+
+
+
+
+
+
+*/
+
+// leilei - heavily improved version for OA3 player animations
+static void PM_TorsoAnimation( void ) {
+	if ( pm->ps->weaponstate == WEAPON_READY ) {
+
+
+
+
+//pml.walking && !(pml.groundTrace.surfaceFlags & SURF_SLICK)
+
+		// Falling Downward
+		if ( pm->ps->velocity[2] < 0 && !pml.groundPlane){
+				if ( pm->ps->weapon == WP_GAUNTLET )	PM_ContinueTorsoAnim( TORSO_FALL2 );
+				else if ( pm->ps->powerups[PW_REDFLAG] || pm->ps->powerups[PW_BLUEFLAG] || pm->ps->powerups[PW_NEUTRALFLAG])  PM_ContinueTorsoAnim( TORSO_FALL2 );
+				else					PM_ContinueTorsoAnim( TORSO_FALL );
+			}
+		// Falling Upward
+		else if ( pm->ps->velocity[2] > 0 && !pml.groundPlane){
+				if ( pm->ps->weapon == WP_GAUNTLET )	PM_ContinueTorsoAnim( TORSO_JUMP2 );
+				else if ( pm->ps->powerups[PW_REDFLAG] || pm->ps->powerups[PW_BLUEFLAG] || pm->ps->powerups[PW_NEUTRALFLAG])  PM_ContinueTorsoAnim( TORSO_JUMP2 );
+				else					PM_ContinueTorsoAnim( TORSO_JUMP );
+			}
+		// Sliding downward on a slick surface
+		else if ( pm->ps->velocity[2] < -7 && (pml.groundTrace.surfaceFlags & SURF_SLICK)){
+				if ( pm->ps->weapon == WP_GAUNTLET )	PM_ContinueTorsoAnim( TORSO_FALL2 );
+				else if ( pm->ps->powerups[PW_REDFLAG] || pm->ps->powerups[PW_BLUEFLAG] || pm->ps->powerups[PW_NEUTRALFLAG])  PM_ContinueTorsoAnim( TORSO_FALL2 );
+				else					PM_ContinueTorsoAnim( TORSO_FALL );
+			}	
+
+
+		// Running Forward
+		//if (  	pm->ps->legsAnim && LEGS_RUN ) {
+		else if (  	pm->cmd.forwardmove || pm->cmd.rightmove && pml.groundPlane && pm->xyspeed > 200 && !( pm->cmd.buttons & BUTTON_WALKING )){
+				if ( pm->ps->weapon == WP_GAUNTLET )	PM_ContinueTorsoAnim( TORSO_RUN2 );
+				else if ( pm->ps->powerups[PW_REDFLAG] || pm->ps->powerups[PW_BLUEFLAG] || pm->ps->powerups[PW_NEUTRALFLAG])  PM_ContinueTorsoAnim( TORSO_RUN3 );
+				else if ( pm->cmd.rightmove && !pm->cmd.forwardmove && pml.groundPlane && !( pm->cmd.buttons & BUTTON_WALKING )){
+						PM_ContinueTorsoAnim( TORSO_STRAFE ); }
+
+
+				else					PM_ContinueTorsoAnim( TORSO_RUN );
+			}
+		else
+
+			{
+				if ( pm->ps->weapon == WP_GAUNTLET ) {
+				PM_ContinueTorsoAnim( TORSO_STAND2 );
+				} else if ( pm->ps->powerups[PW_REDFLAG] || pm->ps->powerups[PW_BLUEFLAG] || pm->ps->powerups[PW_NEUTRALFLAG])  {
+					PM_ContinueTorsoAnim( TORSO_STAND3 );
+				} else {
+				PM_ContinueTorsoAnim( TORSO_STAND );
+			}
+		}
+	return;
 	}
 }
+
+
+
+/*
+==============
+PM_TorsoAnimation2
+
+
+Experimental torso run hack
+
+==============
+*/
+static void PM_TorsoAnimation2( void ) {
+	if ( pm->ps->weaponstate == WEAPON_READY ) {
+		if ( pm->ps->weapon == WP_GAUNTLET ) {
+			PM_RunningTorsoAnim( TORSO_RAISE );
+		} else {
+			PM_RunningTorsoAnim( TORSO_RUN );
+		}
+		return;
+		}
+	
+}
+
 
 
 /*
@@ -2016,11 +2122,18 @@ void PmoveSingle (pmove_t *pmove) {
 	if(!(pm->ps->pm_flags & PMF_ELIMWARMUP))
 	PM_Weapon();
 
-	// torso animation
-	PM_TorsoAnimation();
+
 
 	// footstep events / legs animations
 	PM_Footsteps();
+
+
+	// torso animation
+	PM_TorsoAnimation();
+
+	// torso animation
+	//PM_TorsoAnimation2();
+
 
 	// entering / leaving water splashes
 	PM_WaterEvents();

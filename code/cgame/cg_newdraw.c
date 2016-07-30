@@ -140,9 +140,8 @@ int CG_GetSelectedPlayer( void ) {
 
 void CG_SelectNextPlayer( void ) {
 	CG_CheckOrderPending();
-	if (cg_currentSelectedPlayer.integer >= 0 && cg_currentSelectedPlayer.integer < numSortedTeamPlayers) {
-		cg_currentSelectedPlayer.integer++;
-	} else {
+	cg_currentSelectedPlayer.integer +=1;
+	if (cg_currentSelectedPlayer.integer > numSortedTeamPlayers)
 		cg_currentSelectedPlayer.integer = 0;
 	}
 	CG_SetSelectedPlayerName();
@@ -1520,6 +1519,355 @@ void CG_DrawMedal(int ownerDraw, rectDef_t *rect, float scale, vec4_t color, qha
 
 }
 
+
+
+// loadingscreen
+// code based on rfactory's base on Tremulous source code 
+#ifdef SCRIPTHUD
+
+static void CG_DrawProgressBar( rectDef_t *rect, vec4_t color, float scale,
+   int align, int textStyle, int special, float progress )
+   {
+   float rimWidth = rect->h / 20.0f;
+   float doneWidth, leftWidth;
+   float tx, ty, tw, th;
+   char textBuffer[ 8 ];
+   
+   if( rimWidth < 0.6f )
+   rimWidth = 0.6f;
+
+ if( special >= 0.0f )
+   rimWidth = special;
+
+ if( progress < 0.0f )
+   progress = 0.0f;
+   else if( progress > 1.0f )
+   progress = 1.0f;
+   
+   doneWidth = ( rect->w - 2 * rimWidth ) * progress;
+   leftWidth = ( rect->w - 2 * rimWidth ) - doneWidth;
+   
+   trap_R_SetColor( color );
+   
+   //draw rim and bar
+   if( align == ITEM_ALIGN_RIGHT )
+   {
+   CG_DrawPic( rect->x, rect->y, rimWidth, rect->h, cgs.media.whiteShader );
+   CG_DrawPic( rect->x + rimWidth, rect->y,
+   leftWidth, rimWidth, cgs.media.whiteShader );
+   CG_DrawPic( rect->x + rimWidth, rect->y + rect->h - rimWidth,
+   leftWidth, rimWidth, cgs.media.whiteShader );
+   CG_DrawPic( rect->x + rimWidth + leftWidth, rect->y,
+   rimWidth + doneWidth, rect->h, cgs.media.whiteShader );
+   }
+   else
+   {
+   CG_DrawPic( rect->x, rect->y, rimWidth + doneWidth, rect->h, cgs.media.whiteShader );
+   CG_DrawPic( rimWidth + rect->x + doneWidth, rect->y,
+   leftWidth, rimWidth, cgs.media.whiteShader );
+   CG_DrawPic( rimWidth + rect->x + doneWidth, rect->y + rect->h - rimWidth,
+   leftWidth, rimWidth, cgs.media.whiteShader );
+   CG_DrawPic( rect->x + rect->w - rimWidth, rect->y, rimWidth, rect->h, cgs.media.whiteShader );
+   }
+
+ trap_R_SetColor( NULL );
+             
+   //draw text
+   if( scale > 0.0 )
+   {
+   Com_sprintf( textBuffer, sizeof( textBuffer ), "%d%%", (int)( progress * 100 ) );
+   tw = CG_Text_Width( textBuffer, scale, 0 );
+   th = scale * 40.0f;
+   
+   switch( align )
+   {
+   case ITEM_ALIGN_LEFT:
+   tx = rect->x + ( rect->w / 10.0f );
+   ty = rect->y + ( rect->h / 2.0f ) + ( th / 2.0f );
+   break;
+
+ case ITEM_ALIGN_RIGHT:
+   tx = rect->x + rect->w - ( rect->w / 10.0f ) - tw;
+   ty = rect->y + ( rect->h / 2.0f ) + ( th / 2.0f );
+   break;
+
+ case ITEM_ALIGN_CENTER:
+   tx = rect->x + ( rect->w / 2.0f ) - ( tw / 2.0f );
+   ty = rect->y + ( rect->h / 2.0f ) + ( th / 2.0f );
+   break;
+
+ default:
+   tx = ty = 0.0f;
+   }
+   
+   CG_Text_Paint( tx, ty, scale, color, textBuffer, 0, 0, textStyle );
+   }
+   }
+
+static void CG_DrawProgressLabel( rectDef_t *rect, float text_x, float text_y, vec4_t color,
+   float scale, int align, const char *s, float fraction )
+   {
+   vec4_t white = { 1.0f, 1.0f, 1.0f, 1.0f };
+   float tx, tw = CG_Text_Width( s, scale, 0 );
+
+ switch( align )
+   {
+   case ITEM_ALIGN_LEFT:
+   tx = 0.0f;
+   break;
+
+ case ITEM_ALIGN_RIGHT:
+   tx = rect->w - tw;
+   break;
+
+ case ITEM_ALIGN_CENTER:
+   tx = ( rect->w / 2.0f ) - ( tw / 2.0f );
+   break;
+
+ default:
+   tx = 0.0f;
+   }
+   
+   if( fraction < 1.0f )
+   CG_Text_Paint( rect->x + text_x + tx, rect->y + text_y, scale, white,
+   s, 0, 0, ITEM_TEXTSTYLE_NORMAL );
+   else
+   CG_Text_Paint( rect->x + text_x + tx, rect->y + text_y, scale, color,
+   s, 0, 0, ITEM_TEXTSTYLE_NEON );
+   }
+
+static void CG_DrawMediaProgress( rectDef_t *rect, vec4_t color, float scale,
+   int align, int textStyle, int special )
+   {
+   CG_DrawProgressBar( rect, color, scale, align, textStyle, special, cg.mediaFraction );
+   }
+
+static void CG_DrawMediaProgressLabel( rectDef_t *rect, float text_x, float text_y,
+   vec4_t color, float scale, int align )
+   {
+   CG_DrawProgressLabel( rect, text_x, text_y, color, scale, align, "Overall", cg.mediaFraction );
+   }
+
+static void CG_DrawSoundProgress( rectDef_t *rect, vec4_t color, float scale,
+   int align, int textStyle, int special )
+   {
+   CG_DrawProgressBar( rect, color, scale, align, textStyle, special, cg.soundFraction );
+   }
+
+static void CG_DrawSoundProgressLabel( rectDef_t *rect, float text_x, float text_y,
+   vec4_t color, float scale, int align )
+   {
+   CG_DrawProgressLabel( rect, text_x, text_y, color, scale, align, "Sound", cg.soundFraction );
+   }
+
+static void CG_DrawGraphicProgress( rectDef_t *rect, vec4_t color, float scale,
+   int align, int textStyle, int special )
+   {
+   CG_DrawProgressBar( rect, color, scale, align, textStyle, special, cg.graphicFraction );
+   }
+
+static void CG_DrawGraphicProgressLabel( rectDef_t *rect, float text_x, float text_y,
+   vec4_t color, float scale, int align )
+   {
+   CG_DrawProgressLabel( rect, text_x, text_y, color, scale, align, "Graphics", cg.graphicFraction );
+   }
+
+static void CG_DrawLevelShot( rectDef_t *rect )
+           {
+   const char *s;
+   const char *info;
+   qhandle_t levelshot;
+   qhandle_t detail;
+   
+   info = CG_ConfigString( CS_SERVERINFO );
+   s = Info_ValueForKey( info, "mapname" );
+   levelshot = trap_R_RegisterShaderNoMip( va( "levelshots/%s.tga", s ) );
+   
+   if( !levelshot )
+   levelshot = trap_R_RegisterShaderNoMip( "menu/art/unknownmap" );
+   
+   trap_R_SetColor( NULL );
+   CG_DrawPic( rect->x, rect->y, rect->w, rect->h, levelshot );
+   
+   // blend a detail texture over it
+   detail = trap_R_RegisterShader( "levelShotDetail" );
+   CG_DrawPic( rect->x, rect->y, rect->w, rect->h, detail );
+   }
+
+static void CG_DrawLoadingString( rectDef_t *rect, float text_x, float text_y, vec4_t color,
+   float scale, int align, int textStyle, const char *s )
+   {
+   float tw, th, tx;
+   int pos, i;
+   char buffer[ 1024 ];
+   char *end;
+   
+   if( !s[ 0 ] )
+   return;
+   
+   strcpy( buffer, s );
+   tw = CG_Text_Width( s, scale, 0 );
+   th = scale * 40.0f;
+
+ pos = i = 0;
+             
+   while( pos < strlen( s ) )
+   {
+   strcpy( buffer, &s[ pos ] );
+   tw = CG_Text_Width( buffer, scale, 0 );
+
+ while( tw > rect->w )
+   {
+   end = strrchr( buffer, ' ' );
+   
+   if( end == NULL )
+   break;
+   
+   *end = '\0';
+   tw = CG_Text_Width( buffer, scale, 0 );
+   }
+
+ switch( align )
+   {
+   case ITEM_ALIGN_LEFT:
+   tx = rect->x;
+   break;
+
+ case ITEM_ALIGN_RIGHT:
+   tx = rect->x + rect->w - tw;
+   break;
+
+ case ITEM_ALIGN_CENTER:
+   tx = rect->x + ( rect->w / 2.0f ) - ( tw / 2.0f );
+   break;
+
+ default:
+   tx = 0.0f;
+   }
+   
+   CG_Text_Paint( tx + text_x, rect->y + text_y + i * ( th + 3 ), scale, color,
+   buffer, 0, 0, textStyle );
+   
+   pos += strlen( buffer ) + 1;
+   i++;
+   }
+   }
+
+static void CG_DrawLevelName( rectDef_t *rect, float text_x, float text_y,
+   vec4_t color, float scale, int align, int textStyle )
+   {
+   const char *s;
+   
+   s = CG_ConfigString( CS_MESSAGE );
+
+ CG_DrawLoadingString( rect, text_x, text_y, color, scale, align, textStyle, s );
+           }
+
+static void CG_DrawMOTD( rectDef_t *rect, float text_x, float text_y,
+   vec4_t color, float scale, int align, int textStyle )
+   {
+   const char *s;
+   
+   s = CG_ConfigString( CS_MOTD );
+
+ CG_DrawLoadingString( rect, text_x, text_y, color, scale, align, textStyle, s );
+           }
+
+static void CG_DrawHostname( rectDef_t *rect, float text_x, float text_y,
+   vec4_t color, float scale, int align, int textStyle )
+   {
+   char buffer[ 1024 ];
+   const char *info;
+
+ info = CG_ConfigString( CS_SERVERINFO );
+             
+   Q_strncpyz( buffer, Info_ValueForKey( info, "sv_hostname" ), 1024 );
+   Q_CleanStr( buffer );
+
+ CG_DrawLoadingString( rect, text_x, text_y, color, scale, align, textStyle, buffer );
+           }
+
+// leilei - additions that were missing from the loaing screen
+static void CG_DrawPureServer( rectDef_t *rect, float text_x, float text_y, vec4_t color, float scale, int align, int textStyle )
+{
+   	char buffer[ 1024 ];
+  	 const char *info;
+	const char	*sysInfo;
+	const char	*s;
+	sysInfo = CG_ConfigString( CS_SYSTEMINFO );
+ 	info = Info_ValueForKey( sysInfo, "sv_pure" );
+   	if ( s[0] == '1' ) {          
+   	Q_strncpyz( buffer, "Pure Server", 1024 );
+   	Q_CleanStr( buffer );
+		
+
+ 	CG_DrawLoadingString( rect, text_x, text_y, color, scale, align, textStyle, buffer );
+	}
+}
+
+// leilei - additions that were missing from the loaing screen
+static void CG_DrawTimeLimit( rectDef_t *rect, float text_x, float text_y, vec4_t color, float scale, int align, int textStyle )
+{
+   	char buffer[ 1024 ];
+  	 const char *info;
+	int			value;
+	const char	*sysInfo;
+	const char	*s;
+	int minutes, seconds, time;
+	info = CG_ConfigString( CS_SERVERINFO );
+	value = atoi( Info_ValueForKey( info, "timelimit" ) );
+
+	if ( value ) {        
+	value *= 60;
+	minutes = value / 60;
+	seconds = value % 60;
+
+ 	CG_DrawLoadingString( rect, text_x, text_y, color, scale, align, textStyle, va("%01i:%02i", minutes, seconds));
+	}
+}
+
+
+
+static void CG_DrawFragLimit( rectDef_t *rect, float text_x, float text_y, vec4_t color, float scale, int align, int textStyle )
+{
+   	char buffer[ 1024 ];
+  	 const char *info;
+	int			value;
+	const char	*sysInfo;
+	const char	*s;
+	info = CG_ConfigString( CS_SERVERINFO );
+	value = atoi( Info_ValueForKey( info, "fraglimit" ) );
+
+	if ( value ) {        
+
+ 	CG_DrawLoadingString( rect, text_x, text_y, color, scale, align, textStyle, va( "%i", value ));
+	}
+}
+
+// leilei - additions that were missing from the loaing screen
+static void CG_DrawCaptureLimit( rectDef_t *rect, float text_x, float text_y, vec4_t color, float scale, int align, int textStyle )
+{
+   	char buffer[ 1024 ];
+  	 const char *info;
+	int			value;
+	const char	*sysInfo;
+	const char	*s;
+	info = CG_ConfigString( CS_SERVERINFO );
+	value = atoi( Info_ValueForKey( info, "capturelimit" ) );
+	if (cgs.gametype >= GT_CTF && cgs.ffa_gt == 0) 
+		value = atoi( Info_ValueForKey( info, "capturelimit" ) );
+	if (cgs.gametype < GT_CTF || cgs.ffa_gt>0) 
+		value = atoi( Info_ValueForKey( info, "fraglimit" ) );
+
+	if ( value ) {        
+
+ 	CG_DrawLoadingString( rect, text_x, text_y, color, scale, align, textStyle, va( "%i", value ));
+	}
+}
+
+
+#endif
+// end loadingscreen
 	
 //
 void CG_OwnerDraw(float x, float y, float w, float h, float text_x, float text_y, int ownerDraw, int ownerDrawFlags, int align, float special, float scale, vec4_t color, qhandle_t shader, int textStyle) {
@@ -1704,6 +2052,53 @@ void CG_OwnerDraw(float x, float y, float w, float h, float text_x, float text_y
   case CG_2NDPLACE:
     CG_Draw2ndPlace(&rect, scale, color, shader, textStyle);
 		break;
+// loadingscreen
+#ifdef SCRIPTHUD
+    case CG_LOAD_LEVELSHOT:
+      CG_DrawLevelShot( &rect );
+      break;
+    case CG_LOAD_MEDIA:
+      CG_DrawMediaProgress( &rect, color, scale, align, textStyle, special );
+      break;
+    case CG_LOAD_MEDIA_LABEL:
+      CG_DrawMediaProgressLabel( &rect, text_x, text_y, color, scale, align );
+      break;
+	case CG_LOAD_SOUND:
+      CG_DrawSoundProgress( &rect, color, scale, align, textStyle, special );
+      break;
+    case CG_LOAD_SOUND_LABEL:
+      CG_DrawSoundProgressLabel( &rect, text_x, text_y, color, scale, align );
+      break;
+	case CG_LOAD_GRAPHIC:
+      CG_DrawGraphicProgress( &rect, color, scale, align, textStyle, special );
+      break;
+    case CG_LOAD_GRAPHIC_LABEL:
+      CG_DrawGraphicProgressLabel( &rect, text_x, text_y, color, scale, align );
+      break;
+    case CG_LOAD_LEVELNAME:
+      CG_DrawLevelName( &rect, text_x, text_y, color, scale, align, textStyle );
+      break;
+    case CG_LOAD_MOTD:
+      CG_DrawMOTD( &rect, text_x, text_y, color, scale, align, textStyle );
+      break;
+    case CG_LOAD_HOSTNAME:
+      CG_DrawHostname( &rect, text_x, text_y, color, scale, align, textStyle );
+      break;
+    case CG_LOAD_TIMELIMIT:
+      CG_DrawTimeLimit( &rect, text_x, text_y, color, scale, align, textStyle );
+      break;
+    case CG_LOAD_FRAGLIMIT:
+      CG_DrawFragLimit( &rect, text_x, text_y, color, scale, align, textStyle );
+      break;
+    case CG_LOAD_CAPTURELIMIT:
+      CG_DrawCaptureLimit( &rect, text_x, text_y, color, scale, align, textStyle );
+      break;
+    case CG_LOAD_GAMETYPE:
+      CG_DrawHostname( &rect, text_x, text_y, color, scale, align, textStyle );
+      break;
+// leilei - additions
+#endif
+// end loadingscreen
   default:
     break;
   }

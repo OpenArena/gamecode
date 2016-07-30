@@ -382,6 +382,9 @@ static void UI_RunLerpFrame( playerInfo_t *ci, lerpFrame_t *lf, int newAnimation
 
 		// get the next frame based on the animation
 		anim = lf->animation;
+		if ( !anim->frameLerp ) {
+			return;		// shouldn't happen
+		}
 		if ( dp_realtime < lf->animationTime ) {
 			lf->frameTime = lf->animationTime;		// initial lerp
 		} else {
@@ -627,6 +630,122 @@ static void UI_PlayerAngles( playerInfo_t *pi, vec3_t legs[3], vec3_t torso[3], 
 }
 
 
+static void UI_PlayerAnglesBust( playerInfo_t *pi, vec3_t legs[3], vec3_t torso[3], vec3_t head[3] ) {
+	vec3_t		legsAngles, torsoAngles, headAngles;
+	float		dest;
+	float		adjust;
+	vec3_t		idler;
+	vec3_t		idler2;
+
+	VectorCopy( pi->viewAngles, headAngles );
+
+	//
+	// do some stuff involving idle turning
+	//
+	{
+		float frac;
+
+			if (  uiInfo.uiDC.realTime >= pi->headEndTime ) {
+
+			float randroll = 0;
+			//if ((random() * 4000) < 1455)
+			//	randroll = 16;
+
+			pi->headStartYaw = pi->headEndYaw;
+			pi->headStartPitch = pi->headEndPitch;
+			pi->torsoStartYaw = pi->torsoEndYaw;
+			pi->torsoStartPitch = pi->torsoEndPitch;
+			pi->headStartRoll = pi->headEndRoll;
+			pi->headStartTime = pi->headEndTime;
+			pi->headEndTime = uiInfo.uiDC.realTime + 100 + random() * 2000;
+
+			pi->headEndYaw = 180 + 55 * cos( crandom()*M_PI );
+			// only do rolls if the yaw is toward player
+
+
+			
+			pi->headEndPitch = 32 * cos( crandom()*M_PI );
+
+			if (pi->headEndPitch > 8) pi->headEndPitch = 8;
+			if ((pi->headEndYaw < 215 && pi->headEndYaw > 155) && pi->headEndPitch < 8 )				randroll = 8;
+			
+			pi->headEndRoll = randroll * cos( crandom()*M_PI );
+			}
+			frac = ( uiInfo.uiDC.realTime - pi->headStartTime ) / (float)( pi->headEndTime - pi->headStartTime );
+			frac = frac * frac * ( 3 - 2 * frac );
+			idler[YAW] = pi->headStartYaw + ( pi->headEndYaw - pi->headStartYaw ) * frac;
+			idler2[YAW] = pi->torsoStartYaw + ( pi->torsoEndYaw - pi->torsoStartYaw ) * frac;
+			idler2[PITCH] = pi->torsoStartPitch + ( pi->torsoEndPitch - pi->torsoStartPitch ) * frac;
+			idler[PITCH] = pi->headStartPitch + ( pi->headEndPitch - pi->headStartPitch ) * frac;
+			idler[ROLL] = pi->headStartRoll + ( pi->headEndRoll - pi->headStartRoll ) * frac;
+			//VectorCopy( idler , headAngles);
+		VectorAdd( idler , headAngles, headAngles);
+		}
+
+	
+	headAngles[YAW] = AngleMod( headAngles[YAW] );
+	VectorClear( legsAngles );
+	VectorClear( torsoAngles );
+
+
+
+
+
+	// --------- yaw -------------
+
+	// allow yaw to drift a bit
+/*	if ( ( pi->legsAnim & ~ANIM_TOGGLEBIT ) != LEGS_IDLE 
+		|| ( pi->torsoAnim & ~ANIM_TOGGLEBIT ) != TORSO_STAND  ) {
+		// if not standing still, always point all in the same direction
+		pi->torso.yawing = qtrue;	// always center
+		pi->torso.pitching = qtrue;	// always center
+		pi->legs.yawing = qtrue;	// always center
+	}
+*/
+	// adjust legs for movement dir
+	adjust = UI_MovedirAdjustment( pi );
+	//legsAngles[YAW] = headAngles[YAW] + adjust;
+	torsoAngles[YAW] = headAngles[YAW] + 0.25 * adjust;
+//	torsoAngles[YAW] = idler2[YAW] + 0.25 * adjust;
+
+	// torso
+	UI_SwingAngles( torsoAngles[YAW], 11, 30, 0.03f, &pi->torso.yawAngle, &pi->torso.yawing );
+	//UI_SwingAngles( legsAngles[YAW], 40, 90, 0.03f, &pi->legs.yawAngle, &pi->legs.yawing );
+
+	torsoAngles[YAW] = pi->torso.yawAngle;
+
+	//legsAngles[YAW] = pi->legs.yawAngle;
+
+	// --------- pitch -------------
+
+	// only show a fraction of the pitch angle in the torso
+	if ( headAngles[PITCH] > 180 ) {
+		dest = (-360 + headAngles[PITCH]) * 0.75;
+	} else {
+		dest = headAngles[PITCH] * 0.75;
+	}
+
+	
+	UI_SwingAngles( dest, 45, 60, 0.03f, &pi->torso.pitchAngle, &pi->torso.pitching );
+	torsoAngles[PITCH] = pi->torso.pitchAngle;
+
+	// fix the angles for the bust view
+
+	torsoAngles[YAW] += 180;
+	headAngles[YAW] += 180;
+
+	torsoAngles[ROLL] = headAngles[ROLL] * -1.8;
+
+	// pull the angles back out of the hierarchial chain
+	AnglesSubtract( headAngles, torsoAngles, headAngles );
+	AnglesSubtract( torsoAngles, legsAngles, torsoAngles );
+	AnglesToAxis( legsAngles, legs );
+	AnglesToAxis( torsoAngles, torso );
+	AnglesToAxis( headAngles, head );
+}
+
+
+
 /*
 ===============
 UI_PlayerFloatSprite
@@ -742,13 +861,13 @@ void UI_DrawPlayer( float x, float y, float w, float h, playerInfo_t *pi, int ti
 	refdef.width = w;
 	refdef.height = h;
 
-	refdef.fov_x = (int)((float)refdef.width / uiInfo.uiDC.xscale / 640.0f * 90.0f);
-	xx = refdef.width / uiInfo.uiDC.xscale / tan( refdef.fov_x / 360 * M_PI );
-	refdef.fov_y = atan2( refdef.height / uiInfo.uiDC.yscale, xx );
+	refdef.fov_x = (int)((float)refdef.width / 640.0f * 90.0f);
+	xx = refdef.width / tan( refdef.fov_x / 360 * M_PI );
+	refdef.fov_y = atan2( refdef.height, xx );
 	refdef.fov_y *= ( 360 / (float)M_PI );
 
 	// calculate distance so the player nearly fills the box
-	len = 0.7 * ( maxs[2] - mins[2] );
+	len = 0.7 * ( maxs[2] - mins[2] );		
 	origin[0] = len / tan( DEG2RAD(refdef.fov_x) * 0.5 );
 	origin[1] = 0.5 * ( mins[1] + maxs[1] );
 	origin[2] = -0.5 * ( mins[2] + maxs[2] );
@@ -834,7 +953,10 @@ void UI_DrawPlayer( float x, float y, float w, float h, playerInfo_t *pi, int ti
 	//
 	// add the spinning barrel
 	//
-	if ( pi->realWeapon == WP_MACHINEGUN || pi->realWeapon == WP_GAUNTLET || pi->realWeapon == WP_BFG ) {
+	// rfactory
+	// Changed RD
+	if (( pi->realWeapon == WP_MACHINEGUN || pi->realWeapon == WP_GAUNTLET || pi->realWeapon == WP_BFG ) && pi->barrelModel) {
+	// end changed RD
 		vec3_t	angles;
 
 		memset( &barrel, 0, sizeof(barrel) );
@@ -1053,7 +1175,10 @@ void UI_DrawPlayerII( float x, float y, float w, float h, playerInfo_t *pi, int 
 	//
 	// add the spinning barrel
 	//
-	if ( pi->realWeapon == WP_MACHINEGUN || pi->realWeapon == WP_GAUNTLET || pi->realWeapon == WP_BFG ) {
+	// rfactory
+	// Changed RD
+	if (( pi->realWeapon == WP_MACHINEGUN || pi->realWeapon == WP_GAUNTLET || pi->realWeapon == WP_BFG ) && pi->barrelModel) {
+	// end changed RD
 		vec3_t	angles;
 
 		memset( &barrel, 0, sizeof(barrel) );
@@ -1131,6 +1256,392 @@ void UI_DrawPlayerII( float x, float y, float w, float h, playerInfo_t *pi, int 
 
 	trap_R_RenderScene( &refdef );
 }
+
+// only their bust w/ head, focused on head, for less polygons showing in the menu when we
+// select maps and things
+#define	FOCUS_DISTANCE	512
+	float		focusDist;
+	float		forwardScale, sideScale;
+void UI_DrawPlayersBust( float x, float y, float w, float h, playerInfo_t *pi, int time ) {
+	refdef_t		refdef;
+	refEntity_t		legs;
+	refEntity_t		torso;
+	refEntity_t		head;
+	refEntity_t		gun;
+	refEntity_t		barrel;
+	refEntity_t		flash;
+	vec3_t			origin;
+	vec3_t			armbient;
+	vec3_t			rdorigin;
+	int				renderfx;
+	vec3_t			mins = {-16, -16, -24};
+	vec3_t			maxs = {16, 16, 32};
+	vec3_t			eyethis;
+	float			len;
+	float			xx;
+	vec3_t		focusPoint;
+	float		focusDist;
+	float		forwardScale, sideScale;
+	int weedth, haight;
+	vec3_t		idler;
+
+	weedth = uiInfo.uiDC.glconfig.vidWidth;
+	haight = uiInfo.uiDC.glconfig.vidHeight;
+
+
+
+
+
+
+	if ( !pi->legsModel || !pi->torsoModel || !pi->headModel || !pi->animations[0].numFrames ) {
+		return;
+	}
+
+	// this allows the ui to cache the player model on the main menu
+	if (w == 0 || h == 0) {
+		return;
+	}
+
+	dp_realtime = time;
+
+	armbient[0] = 0.1;
+	armbient[1] = 0.2;
+	armbient[2] = 0.5;
+
+	if ( pi->pendingWeapon != -1 && dp_realtime > pi->weaponTimer ) {
+		pi->weapon = pi->pendingWeapon;
+		pi->lastWeapon = pi->pendingWeapon;
+		pi->pendingWeapon = -1;
+		pi->weaponTimer = 0;
+		if( pi->currentWeapon != pi->weapon ) {
+			trap_S_StartLocalSound( weaponChangeSound, CHAN_LOCAL );
+		}
+	}
+
+	UI_AdjustFrom640( &x, &y, &w, &h );
+
+	y -= jumpHeight;
+
+	memset( &refdef, 0, sizeof( refdef ) );
+	memset( &legs, 0, sizeof(legs) );
+	memset( &torso, 0, sizeof(torso) );
+	memset( &head, 0, sizeof(head) );
+
+	refdef.rdflags = RDF_NOWORLDMODEL;
+
+	AxisClear( refdef.viewaxis );
+
+	refdef.x = x;
+	refdef.y = y;
+
+	refdef.width = w;
+	refdef.height = h;
+
+
+	refdef.fov_y = (int)((float)refdef.height / haight * 28.0f);
+	xx = refdef.height / tan( refdef.fov_y / 360 * M_PI );
+	refdef.fov_x = atan2( refdef.width, xx );
+	refdef.fov_x *= ( 360 / M_PI );
+
+	origin[0] = 0;
+	origin[1] = 0;
+	origin[2] = 0;
+
+
+	refdef.time = dp_realtime;
+
+	trap_R_ClearScene();
+
+	// get the rotation information
+	UI_PlayerAnglesBust( pi, legs.axis, torso.axis, head.axis );
+	
+	// get the animation state (after rotation, to allow feet shuffle)
+	UI_PlayerAnimation( pi, &legs.oldframe, &legs.frame, &legs.backlerp,
+		 &torso.oldframe, &torso.frame, &torso.backlerp );
+
+	renderfx = RF_LIGHTING_ORIGIN | RF_NOSHADOW;
+
+	//
+	// don't add the legs
+	//
+/*
+	legs.hModel = pi->legsModel;
+	legs.customSkin = pi->legsSkin;
+
+	VectorCopy( origin, legs.origin );
+
+	VectorCopy( origin, legs.lightingOrigin );
+	legs.renderfx = renderfx;
+	VectorCopy (legs.origin, legs.oldorigin);
+
+	trap_R_AddRefEntityToScene( &legs );
+
+	if (!legs.hModel) {
+		return;
+	}
+*/
+
+
+	//
+	// add the torso
+	//
+	torso.hModel = pi->torsoModel;
+	if (!torso.hModel) {
+		return;
+	}
+
+	torso.customSkin = pi->torsoSkin;
+	VectorCopy( origin, torso.origin );
+	VectorCopy( origin, torso.lightingOrigin );
+
+
+//	VectorCopy( idler , torso.axis);
+	//UI_PositionRotatedEntityOnTag( &torso, &legs, pi->legsModel, "tag_torso");
+
+	torso.renderfx = renderfx;
+
+	trap_R_AddRefEntityToScene( &torso );
+
+	//
+	// add the head
+	//
+	head.hModel = pi->headModel;
+	if (!head.hModel) {
+		return;
+	}
+	head.customSkin = pi->headSkin;
+
+	VectorCopy( origin, head.lightingOrigin );
+
+	UI_PositionRotatedEntityOnTag( &head, &torso, pi->torsoModel, "tag_head");
+
+	head.renderfx = renderfx;
+
+			VectorCopy( torso.origin, eyethis );
+	eyethis[0] += -91;
+	eyethis[1] += 0;
+	eyethis[2] += 14;	
+
+	VectorCopy( pi->eyepos, head.eyepos );
+	VectorCopy( eyethis , head.eyelook);
+
+
+
+	trap_R_AddRefEntityToScene( &head );
+
+	
+
+	//
+	// add an accent light
+	//
+
+	origin[0] -= 30;	// + = behind, - = in front
+	origin[1] += 30;	// + = left, - = right
+	origin[2] += 30;	// + = above, - = below
+	trap_R_AddLightToScene( origin, 175, 0.7, 0.6, 0.6 );
+
+
+	origin[0] = -525;
+	origin[1] = 532;
+	origin[2] += 200;
+	trap_R_AddLightToScene( origin, 175, 0.6, 0.7, 0.6  );
+
+	origin[0] -= 100;
+	origin[1] -= 100;
+	origin[2] -= 100;
+	trap_R_AddLightToScene( origin, 175, 0.6, 0.6, 0.7  );
+
+	// what I don't understand about the accent light? THE RENDERER ONLY DRAWS ONE OF THEM.
+
+	// lol
+
+			//VectorCopy( head.origin, rdorigin );
+/*
+	rdorigin[0] += -95;
+	rdorigin[1] += 0;
+	rdorigin[2] += 0;	
+*/
+			VectorCopy( torso.origin, rdorigin );
+	rdorigin[0] += -91;
+	rdorigin[1] += 0;
+	rdorigin[2] += 14;	
+
+
+		VectorCopy( rdorigin, refdef.vieworg );
+
+
+
+
+//	VectorCopy( refdef.vieworg );
+	trap_R_RenderScene( &refdef );
+}
+
+
+// reorganized or something.
+void UI_DrawPlayerOC( float x, float y, float w, float h, playerInfo_t *pi, int time ) {
+	refdef_t		refdef;
+	refEntity_t		legs;
+	refEntity_t		torso;
+	refEntity_t		head;
+	refEntity_t		gun;
+	refEntity_t		barrel;
+	refEntity_t		flash;
+
+	// OC parts!
+
+	refEntity_t		oc_shirt;
+	refEntity_t		oc_pants;
+
+	vec3_t			origin;
+	int				renderfx;
+	vec3_t			mins = {-16, -16, -24};
+	vec3_t			maxs = {16, 16, 32};
+	float			len;
+	float			xx;
+
+	if ( !pi->legsModel || !pi->torsoModel || !pi->headModel || !pi->animations[0].numFrames ) {
+		return;
+	}
+
+	// this allows the ui to cache the player model on the main menu
+	if (w == 0 || h == 0) {
+		return;
+	}
+
+	dp_realtime = time;
+
+	if ( pi->pendingWeapon != -1 && dp_realtime > pi->weaponTimer ) {
+		pi->weapon = pi->pendingWeapon;
+		pi->lastWeapon = pi->pendingWeapon;
+		pi->pendingWeapon = -1;
+		pi->weaponTimer = 0;
+		if( pi->currentWeapon != pi->weapon ) {
+			trap_S_StartLocalSound( weaponChangeSound, CHAN_LOCAL );
+		}
+	}
+
+	UI_AdjustFrom640( &x, &y, &w, &h );
+
+	y -= jumpHeight;
+
+	memset( &refdef, 0, sizeof( refdef ) );
+	memset( &legs, 0, sizeof(legs) );
+	memset( &torso, 0, sizeof(torso) );
+	memset( &head, 0, sizeof(head) );
+
+	// oc parts
+
+	memset( &oc_shirt, 0, sizeof(oc_shirt) );
+	memset( &oc_pants, 0, sizeof(oc_pants) );
+
+	refdef.rdflags = RDF_NOWORLDMODEL;
+
+	AxisClear( refdef.viewaxis );
+
+	refdef.x = x;
+	refdef.y = y;
+	refdef.width = w;
+	refdef.height = h;
+
+	refdef.fov_x = (int)((float)refdef.width / 640.0f * 90.0f);
+	xx = refdef.width / tan( refdef.fov_x / 360 * M_PI );
+	refdef.fov_y = atan2( refdef.height, xx );
+	refdef.fov_y *= ( 360 / (float)M_PI );
+
+	// calculate distance so the player nearly fills the box
+	len = 0.7 * ( maxs[2] - mins[2] );		
+	origin[0] = len / tan( DEG2RAD(refdef.fov_x) * 0.5 );
+	origin[1] = 0.5 * ( mins[1] + maxs[1] );
+	origin[2] = -0.5 * ( mins[2] + maxs[2] );
+
+	refdef.time = dp_realtime;
+
+	trap_R_ClearScene();
+
+	// get the rotation information
+	UI_PlayerAngles( pi, legs.axis, torso.axis, head.axis );
+	
+	// get the animation state (after rotation, to allow feet shuffle)
+	UI_PlayerAnimation( pi, &legs.oldframe, &legs.frame, &legs.backlerp,
+		 &torso.oldframe, &torso.frame, &torso.backlerp );
+
+	renderfx = RF_LIGHTING_ORIGIN | RF_NOSHADOW;
+
+	//
+	// add the legs
+	//
+	//legs.hModel = pi->legsModel;
+	legs.hModel = pi->oc_Pants.m;
+
+//	legs.customSkin = pi->legsSkin;
+
+	VectorCopy( origin, legs.origin );
+
+	VectorCopy( origin, legs.lightingOrigin );
+	legs.renderfx = renderfx;
+	VectorCopy (legs.origin, legs.oldorigin);
+
+	trap_R_AddRefEntityToScene( &legs );
+
+	if (!legs.hModel) {
+		return;
+	}
+
+	//
+	// add the torso
+	//
+	//torso.hModel = pi->torsoModel;
+	torso.hModel = pi->oc_Clothes.m;
+
+	if (!torso.hModel) {
+		return;
+	}
+
+	torso.customSkin = pi->torsoSkin;
+
+	VectorCopy( origin, torso.lightingOrigin );
+
+	UI_PositionRotatedEntityOnTag( &torso, &legs, pi->legsModel, "tag_torso");
+
+	torso.renderfx = renderfx;
+
+	trap_R_AddRefEntityToScene( &torso );
+
+	//
+	// add the head
+	//
+	head.hModel = pi->headModel;
+	if (!head.hModel) {
+		return;
+	}
+	head.customSkin = pi->headSkin;
+
+	VectorCopy( origin, head.lightingOrigin );
+
+	UI_PositionRotatedEntityOnTag( &head, &torso, pi->torsoModel, "tag_head");
+
+	head.renderfx = renderfx;
+
+	trap_R_AddRefEntityToScene( &head );
+
+	//
+	// add an accent light
+	//
+	origin[0] -= 100;	// + = behind, - = in front
+	origin[1] += 100;	// + = left, - = right
+	origin[2] += 100;	// + = above, - = below
+	trap_R_AddLightToScene( origin, 500, 1.0, 1.0, 1.0 );
+
+	origin[0] -= 100;
+	origin[1] -= 100;
+	origin[2] -= 100;
+	trap_R_AddLightToScene( origin, 500, 1.0, 0.0, 0.0 );
+
+	trap_R_RenderScene( &refdef );
+}
+
+
+
 
 
 /*
@@ -1373,6 +1884,63 @@ static qboolean UI_ParseAnimationFile( const char *filename, animation_t *animat
 	return qtrue;
 }
 
+
+static qboolean UI_ParseEyesFile( const char *filename, playerInfo_t *pai ) {
+	char		*text_p, *prev;
+	int			len;
+	int			i;
+	char		*token;
+	float		fps;
+	int			skip;
+	char		text[20000];
+	fileHandle_t	f;
+
+
+	// load the file
+	len = trap_FS_FOpenFile( filename, &f, FS_READ );
+	if ( len <= 0 ) {
+		return qfalse;
+	}
+	if ( len >= ( sizeof( text ) - 1 ) ) {
+		Com_Printf( "File %s too long\n", filename );
+		trap_FS_FCloseFile( f );
+		return qfalse;
+	}
+	trap_FS_Read( text, len, f );
+	text[len] = 0;
+	trap_FS_FCloseFile( f );
+
+	COM_Compress(text);
+
+	// parse the text
+	text_p = text;
+	skip = 0;	// quite the compiler warning
+
+	// read optional parameters
+	while ( 1 ) {
+		prev = text_p;	// so we can unget
+		token = COM_Parse( &text_p );
+		if ( !token ) {
+			break;
+		}
+		 if ( !Q_stricmp( token, "eyes" ) ) {
+			for ( i = 0 ; i < 3 ; i++ ) {
+				token = COM_Parse( &text_p );
+				if ( !token ) {
+					break;
+				}
+				pai->eyepos[i] = atof( token );
+			}
+			break;
+		}
+
+		Com_Printf( "unknown token '%s' is %s\n", token, filename );
+	}
+
+
+	return qtrue;
+}
+
 /*
 ==========================
 UI_RegisterClientModelname
@@ -1471,6 +2039,13 @@ qboolean UI_RegisterClientModelname( playerInfo_t *pi, const char *modelSkinName
 			Com_Printf( "Failed to load animation file %s\n", filename );
 			return qfalse;
 		}
+	}
+
+	// load eyes
+
+	Com_sprintf( filename, sizeof( filename ), "models/players/%s/eyes.cfg", modelName );
+	if ( !UI_ParseEyesFile( filename, pi ) ) {
+		//	Com_Printf( "Failed to load eyes %s\n", filename );
 	}
 
 	return qtrue;
