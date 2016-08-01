@@ -647,6 +647,7 @@ typedef struct {
 
 void UI_DrawPlayer( float x, float y, float w, float h, playerInfo_t *pi, int time );
 void UI_DrawPlayerII( float x, float y, float w, float h, playerInfo_t *pi, int time );
+void UI_DrawPlayerOC( float x, float y, float w, float h, playerInfo_t *pi, int time );
 void UI_DrawPlayersBust( float x, float y, float w, float h, playerInfo_t *pi, int time );
 void UI_PlayerInfo_SetModel( playerInfo_t *pi, const char *model, const char *headmodel, char *teamName );
 void UI_PlayerInfo_SetInfo( playerInfo_t *pi, int legsAnim, int torsoAnim, vec3_t viewAngles, vec3_t moveAngles, weapon_t weaponNum, qboolean chat );

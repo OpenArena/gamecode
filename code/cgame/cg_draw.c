@@ -326,7 +326,7 @@ void CG_Draw3DModelEyes( float x, float y, float w, float h, qhandle_t model, qh
 	VectorCopy( origin, ent.origin );
 
 	// leilei - deal with the eyes here
-	VectorCopy( eyep, ent.eyepos );
+	VectorCopy( eyep, ent.eyepos[0] );
 
 //	speed *= 0.05f;
 	{

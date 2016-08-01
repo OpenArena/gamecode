@@ -1422,7 +1422,7 @@ void UI_DrawPlayersBust( float x, float y, float w, float h, playerInfo_t *pi, i
 	eyethis[1] += 0;
 	eyethis[2] += 14;	
 
-	VectorCopy( pi->eyepos, head.eyepos );
+	VectorCopy( pi->eyepos, head.eyepos[0] );
 	VectorCopy( eyethis , head.eyelook);
 
 
