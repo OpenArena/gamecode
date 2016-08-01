@@ -37,8 +37,11 @@ void CG_AdjustFrom640( float *x, float *y, float *w, float *h ) {
 		*x += 0.5 * ( cgs.glconfig.vidWidth - ( cgs.glconfig.vidHeight * 640 / 480 ) );
 	}
 #endif
+
+
 	// scale for screen sizes
-	*x *= cgs.screenXScale;
+	//*x *= cgs.screenXScale;
+	*x = *x * cgs.screenXScale + cgs.screenXBias;	// leilei - widescreen adjust
 	*y *= cgs.screenYScale;
 	*w *= cgs.screenXScale;
 	*h *= cgs.screenYScale;

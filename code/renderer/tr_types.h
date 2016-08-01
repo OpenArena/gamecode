@@ -110,6 +110,14 @@ typedef struct {
 	// extra sprite information
 	float		radius;
 	float		rotation;
+
+
+	// leilei - eyes
+
+	vec3_t		eyepos[2];			// looking from
+	vec3_t		eyelook;			// looking from
+
+
 } refEntity_t;
 
 
@@ -132,6 +140,7 @@ typedef struct {
 
 	// text messages for deform text shaders
 	char		text[MAX_RENDER_STRINGS][MAX_RENDER_STRING_LENGTH];
+
 } refdef_t;
 
 
@@ -208,5 +217,8 @@ typedef struct {
 	qboolean				stereoEnabled;
 	qboolean				smpActive;		// dual processor
 } glconfig_t;
+
+
+
 
 #endif	// __TR_TYPES_H

@@ -32,7 +32,7 @@ qboolean	G_SpawnString( const char *key, const char *defaultString, char **out )
 	}
 
 	for ( i = 0 ; i < level.numSpawnVars ; i++ ) {
-		if ( Q_strequal( key, level.spawnVars[i][0] ) ) {
+		if ( !Q_stricmp( key, level.spawnVars[i][0] ) ) {
 			*out = level.spawnVars[i][1];
 			return qtrue;
 		}
@@ -631,11 +631,17 @@ void SP_worldspawn( void ) {
 	G_SpawnString( "gravity", "800", &s );
 	trap_Cvar_Set( "g_gravity", s );
 
+	G_SpawnString( "enableFS", "0", &s );
+	trap_Cvar_Set( "g_enableFS", s );
+
 	G_SpawnString( "enableDust", "0", &s );
 	trap_Cvar_Set( "g_enableDust", s );
 
 	G_SpawnString( "enableBreath", "0", &s );
 	trap_Cvar_Set( "g_enableBreath", s );
+
+	G_SpawnString( "enableQ", "0", &s );
+	trap_Cvar_Set( "g_enableQ", s );
 
 	g_entities[ENTITYNUM_WORLD].s.number = ENTITYNUM_WORLD;
 	g_entities[ENTITYNUM_WORLD].r.ownerNum = ENTITYNUM_NONE;

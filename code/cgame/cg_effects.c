@@ -646,12 +646,7 @@ void CG_LaunchGib( vec3_t origin, vec3_t velocity, qhandle_t hModel ) {
 
 	le->leBounceSoundType = LEBS_BLOOD;
 	le->leMarkType = LEMT_BLOOD;
-		if ( cg_leiSuperGoreyAwesome.integer ) {
-			CG_SpurtBlood( origin, velocity, 7); // LEILEI toss some extra juice
-			CG_SpurtBlood( origin, velocity, 22); 
-			CG_SpurtBlood( origin, velocity, 11); 
-			}
-	
+
 }
 
 

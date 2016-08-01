@@ -101,6 +101,7 @@ extern vmCvar_t	ui_serverFilterType;
 extern vmCvar_t	ui_dedicated;
 extern vmCvar_t	ui_opponentName;
 extern vmCvar_t	ui_menuFiles;
+extern vmCvar_t	ui_introFiles;
 extern vmCvar_t	ui_currentTier;
 extern vmCvar_t	ui_currentMap;
 extern vmCvar_t	ui_currentNetMap;
@@ -133,7 +134,7 @@ extern vmCvar_t ui_serverStatusTimeOut;
 
 extern vmCvar_t ui_humansonly;
 
-
+extern vmCvar_t	ui_introPlayed;
 
 //
 // ui_qmenu.c
@@ -146,7 +147,7 @@ extern vmCvar_t ui_humansonly;
 #define	MAX_EDIT_LINE			256
 
 #define MAX_MENUDEPTH			8
-#define MAX_MENUITEMS			96
+#define MAX_MENUITEMS			128	// was 96 - rfactory change
 
 #define MTYPE_NULL				0
 #define MTYPE_SLIDER			1	
@@ -362,6 +363,10 @@ int UI_AdjustTimeByGame(int time);
 void UI_ShowPostGame(qboolean newHigh);
 void UI_ClearScores( void );
 void UI_LoadArenas(void);
+// rfactory change
+// Changed RD
+qboolean SP_LoadGame(char *load_game, char *loadmap);
+// end changed RD
 
 //
 // ui_menu.c
@@ -521,6 +526,17 @@ typedef struct {
 	int			animationTime;		// time when the first frame of the animation will be exact
 } lerpFrame_t;
 
+
+// leilei - OC parts!
+typedef struct {
+
+	qhandle_t		m;			// model to use
+	char 			modelname[MAX_QPATH];	// path to model to use
+
+	vec3_t			col;			// color to use
+
+} ocpart_t;
+
 typedef struct {
 	// model info
 	qhandle_t		legsModel;
@@ -568,10 +584,71 @@ typedef struct {
 	int				barrelTime;
 
 	int				realWeapon;
+
+
+	// leilei - oc experiment
+		// Head
+	ocpart_t		oc_hairBack;	// Hair etc
+	ocpart_t		oc_hairFront;	// Locks etc
+	ocpart_t		oc_Hat;		// Hats etc
+	ocpart_t		oc_Ears;		// Ears etc
+	ocpart_t		oc_Face;		// Different shapes of faces
+	ocpart_t		oc_Glasses;	// Glasses, eypatches, etc
+		// Torso
+	ocpart_t		oc_Back;		// could be for cape, wings etc
+	ocpart_t		oc_Clothes;	// might be too synonymous with torso
+	ocpart_t		oc_Shoulder;	// pads
+	ocpart_t		oc_Arm;		// Blades and stuff like that
+
+		// Legs
+	ocpart_t		oc_Shoe;
+	ocpart_t		oc_Pants;
+	ocpart_t		oc_Skirt;
+	ocpart_t		oc_Tail;
+
+	// Colors
+
+	int 	shirtcolor1;
+	int 	shirtcolor2;
+
+	int 	pantscolor1;
+	int 	pantscolor2;
+
+	int 	haircolor1;
+	int 	haircolor2;
+
+	int 	skincolor;
+
+	qhandle_t		skinSkin;	// for race skin
+	qhandle_t		eyeSkin;	// for head's eye skin
+	qhandle_t		underSkin;	// for undergarment/swimsuit alpha shell skin
+	// leilei - oc experiment
+
+	vec3_t			eyepos;		// where our eyes at
+	vec3_t			eyelookat;	// what we seein'
+	lerpFrame_t		head;
+
+	// status bar head
+	float		headYaw;
+	float		headEndPitch;
+	float		headEndRoll;
+	float		headEndYaw;
+	int			headEndTime;
+	float		headStartPitch;
+	float		torsoStartPitch;
+	float		torsoStartYaw;
+	float		torsoEndPitch;
+	float		torsoEndYaw;
+	float		headStartRoll;
+	float		headStartYaw;
+	int			headStartTime;
+
 } playerInfo_t;
 
 void UI_DrawPlayer( float x, float y, float w, float h, playerInfo_t *pi, int time );
 void UI_DrawPlayerII( float x, float y, float w, float h, playerInfo_t *pi, int time );
+void UI_DrawPlayerOC( float x, float y, float w, float h, playerInfo_t *pi, int time );
+void UI_DrawPlayersBust( float x, float y, float w, float h, playerInfo_t *pi, int time );
 void UI_PlayerInfo_SetModel( playerInfo_t *pi, const char *model, const char *headmodel, char *teamName );
 void UI_PlayerInfo_SetInfo( playerInfo_t *pi, int legsAnim, int torsoAnim, vec3_t viewAngles, vec3_t moveAngles, weapon_t weaponNum, qboolean chat );
 qboolean UI_RegisterClientModelname( playerInfo_t *pi, const char *modelSkinName , const char *headName, const char *teamName);
@@ -612,8 +689,8 @@ typedef struct {
 #define MAX_HEADNAME  32
 #define MAX_TEAMS 64
 #define MAX_GAMETYPES 16
-#define MAX_MAPS 128
-#define MAX_SPMAPS 16
+#define MAX_MAPS 4096	// leilei - was 128
+#define MAX_SPMAPS 45
 #define PLAYERS_PER_TEAM 5
 #define MAX_PINGREQUESTS		32
 #define MAX_ADDRESSLENGTH		64
@@ -639,6 +716,11 @@ typedef struct {
 #define MAX_MOVIES 256
 //#define MAX_PLAYERMODELS 256
 #define MAX_PLAYERMODELS 1024
+
+// rfactory change
+// Changed RD
+#define MAX_SAVEGAMES 16
+// end changed RD
 
 
 
@@ -677,6 +759,12 @@ typedef struct {
   const char *mapLoadName;
 	const char *imageName;
 	const char *opponentName;
+// rfactory 
+// Changed RD
+	const char *botName;
+	const char *special;
+	int fraglimit;
+// end changed RD
 	int teamMembers;
   int typeBits;
 	int cinematic;
@@ -785,6 +873,12 @@ typedef struct {
 	int numJoinGameTypes;
 	gameTypeInfo joinGameTypes[MAX_GAMETYPES];
 
+	// rfactory change
+	// Changed RD
+	int maskGameTypes[MAX_GAMETYPES];
+	qboolean dorefresh;
+	// end changed RD
+
 	int redBlue;
 	int playerCount;
 	int myTeamCount;
@@ -814,6 +908,13 @@ typedef struct {
 	int demoCount;
 	int demoIndex;
 
+// rfactory 
+// Changed RD
+	const char *saveList[MAX_SAVEGAMES];
+	int saveCount;
+	int saveIndex;
+// end changed RD
+
 	const char *movieList[MAX_MOVIES];
 	int movieCount;
 	int movieIndex;
@@ -842,12 +943,20 @@ typedef struct {
 	int				q3HeadCount;
 	char			q3HeadNames[MAX_PLAYERMODELS][64];
 	qhandle_t	q3HeadIcons[MAX_PLAYERMODELS];
+	qhandle_t	q3HeadIcons2[MAX_PLAYERMODELS];
+	qhandle_t	q3Portraits[MAX_PLAYERMODELS];	// leilei - displaying portraits with deferred loading for some screens
 	int				q3SelectedHead;
 
 	int effectsColor;
 
 	qboolean inGameLoad;
 
+// rfactory change
+// Changed RD
+	playerInfo_t info;
+// end changed RD
+	int				q3HeadCount2;		// leilei - a complete list for the text list. for saving vram
+	char			q3HeadNames2[MAX_PLAYERMODELS][64];
 }	uiInfo_t;
 
 extern uiInfo_t uiInfo;
@@ -1110,7 +1219,8 @@ void UI_SignupMenu( void );
 //
 void RankStatus_Cache( void );
 void UI_RankStatusMenu( void );
-
+// leilei - wide hack
+extern int wideAdjustX;
 
 // new ui 
 

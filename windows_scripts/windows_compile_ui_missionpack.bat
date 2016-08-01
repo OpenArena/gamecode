@@ -13,7 +13,7 @@ copy windows_scripts\ui.q3asm windows\build\
 set LIBRARY=
 set INCLUDE=
 
-set cc=lcc -DMISSIONPACK -DQ3_VM -S -Wf-target=bytecode -Wf-g -I..\..\..\code\ui -I..\..\..\code\qcommon %1
+set cc=lcc -DMISSIONPACK -DSCRIPTHUD  -DQ3_VM -S -Wf-target=bytecode -Wf-g -I..\..\..\code\ui -I..\..\..\code\qcommon %1
 
 cd windows\build\ui
 

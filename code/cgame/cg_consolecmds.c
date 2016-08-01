@@ -196,6 +196,14 @@ static void CG_scrollScoresUp_f( void) {
 }
 
 
+static float CG_Cvar_Got(const char *cvar) {
+	char buff[128];
+	memset(buff, 0, sizeof(buff));
+	trap_Cvar_VariableStringBuffer(cvar, buff, sizeof(buff));
+	return atof(buff);
+}
+
+
 static void CG_spWin_f( void) {
 	trap_Cvar_Set("cg_cameraOrbit", "2");
 	trap_Cvar_Set("cg_cameraOrbitDelay", "35");
@@ -205,6 +213,70 @@ static void CG_spWin_f( void) {
 	CG_AddBufferedSound(cgs.media.winnerSound);
 	//trap_S_StartLocalSound(cgs.media.winnerSound, CHAN_ANNOUNCER);
 	CG_CenterPrint("YOU WIN!", SCREEN_HEIGHT * .30, 0);
+
+	// leilei - Unlock stuff!!! Trophies crap.
+		{
+		const char	*s;
+		char		berf[4];
+		const char	*info;
+		int		trophyearn;
+		int		trophyhad;
+
+		// trophyearn = 1 = GOLD!!!
+		// trophyearn = 2 = silver!!
+		// trophyearn = 3 = bronze...
+		// trophyearn = 5 = PLATINUM!!!!!!!!!!!!!!!!!!!!
+
+
+		trophyearn = 1;	// gold... if we're good
+
+
+		info = CG_ConfigString( CS_SERVERINFO );
+		//s = Info_ValueForKey( info, "mapname" );
+		trap_Cvar_VariableStringBuffer( "ui_currentMap", berf, sizeof(berf) );	// get map number instead for list consistency
+		
+		trophyhad = CG_Cvar_Got(va("ui_sp_unlock_%s", berf));
+
+		if (trophyhad > trophyearn)
+			trophyearn = 0;
+
+			// leilei - unlocking maps (for the SP UI) by setting a cvar
+		if (trophyearn){
+			if (trophyearn == 1)
+			CG_CenterPrint("Here the player\nhave a gold trophy!", SCREEN_HEIGHT * .40, 0);
+			else if (trophyearn == 2)
+			CG_CenterPrint("Here the player\nhave a silver trophy", SCREEN_HEIGHT * .40, 0);
+			else if (trophyearn == 3)
+			CG_CenterPrint("You earned bronze.\nNOT GOOD ENOUGH DAMMIT\nNOT GOOD ENOUGH", SCREEN_HEIGHT * .40, 0);
+			trap_Cvar_Set(va("ui_sp_unlock_%s", berf), va("%i",trophyearn));	// YA YUO DID IT!!!1
+		}
+
+			// leilei - get all the total trophies. Should really be done in the single player ui scripts, but
+			// 		doing it here could make a nice verifier for legitimacy :)
+			{
+			int tropees = 0;
+			int tropgold = 0;
+			int tropsilv = 0;
+			int tropbrnz = 0;
+
+			for (tropees=0; tropees < 42; tropees++)
+			{
+				int yeah;
+					yeah = CG_Cvar_Got(va("ui_sp_unlock_%i", tropees));
+				if (yeah == 1)
+					tropgold++;
+				if (yeah == 2)
+					tropsilv++;
+				if (yeah == 3)
+					tropbrnz++;
+			}
+
+				trap_Cvar_Set("ui_sp_trophies_gold", va("%i",tropgold));
+				trap_Cvar_Set("ui_sp_trophies_silver", va("%i",tropsilv));
+				trap_Cvar_Set("ui_sp_trophies_bronze", va("%i",tropbrnz));
+
+			}
+		}
 }
 
 static void CG_spLose_f( void) {

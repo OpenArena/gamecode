@@ -35,7 +35,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define MAX_MENUDEFFILE 4096
 #define MAX_MENUFILE 32768
 #define MAX_MENUS 64
-#define MAX_MENUITEMS 96
+// Changed RD
+#define MAX_MENUITEMS 128
+#define MAX_SCRIPTSIZE 4096
+// end changed RD
 #define MAX_COLOR_RANGES 10
 #define MAX_OPEN_MENUS 16
 
@@ -63,7 +66,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define WINDOW_POPUP					0x00200000	// popup
 #define WINDOW_BACKCOLORSET		0x00400000	// backcolor was explicitly set 
 #define WINDOW_TIMEDVISIBLE		0x00800000	// visibility timing ( NOT implemented )
-
+// Changed RD
+#define WINDOW_ENDTRANSITION		0x01000000
+#define WINDOW_NOTRANSITION			0x02000000
+#define WINDOW_FOCUSDISABLE			0x04000000
+// end changed RD
 
 // CGAME cursor type bits
 #define CURSOR_NONE					0x00000001
@@ -98,12 +105,23 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define ASSET_SCROLL_THUMB          "ui/assets/scrollbar_thumb.tga"
 #define ASSET_SLIDER_BAR						"ui/assets/slider2.tga"
 #define ASSET_SLIDER_THUMB					"ui/assets/sliderbutt_1.tga"
+// Changed RD
+#define ASSET_SLIDER_THUMB_SEL		"ui/assets/sliderbutt_1.tga"
+#define ASSET_CHECKBOX				"ui/assets/checkbox_unchecked.tga"
+#define ASSET_CHECKBOX_SEL			"ui/assets/checkbox_checked.tga"
+#define CHECKBOX_WIDTH	16.0
+#define CHECKBOX_HEIGHT 16.0
+#define ASSET_COMBO					"ui/assets/pulldownarrow.tga"
+#define ASSET_COMBO_SEL				"ui/assets/pulldownarrow_sel.tga"
+#define COMBO_WIDTH	16.0
+#define COMBO_HEIGHT 16.0
+// end changed RD
 #define SCROLLBAR_SIZE 16.0
 #define SLIDER_WIDTH 96.0
 #define SLIDER_HEIGHT 16.0
 #define SLIDER_THUMB_WIDTH 12.0
 #define SLIDER_THUMB_HEIGHT 20.0
-#define	NUM_CROSSHAIRS			99
+#define	NUM_CROSSHAIRS			10
 
 typedef struct {
   const char *command;
@@ -211,7 +229,35 @@ typedef struct modelDef_s {
 	float fov_x;
 	float fov_y;
 	int rotationSpeed;
+	// changed RD
+	int		animated;
+	int		startframe;
+	int		numframes;
+	int		fps;
+	
+	int		frame;
+	int		oldframe;
+	float	backlerp;
+	int		frameTime;
+	// end changed RD
 } modelDef_t;
+
+// Changed RD
+typedef struct comboDef_s {
+	qboolean combopen;
+	Rectangle ComboBox;
+	int comboItem;
+	vec4_t boxtextcolor;
+	vec4_t boxcolor;
+	float boxtextscale;
+	float maxheight;
+	float offsetx;
+	float offsety;
+} comboDef_t;
+
+#define BOXTEXTSTEP  4
+#define BOXTEXTOFFSET  4
+// end changed RD
 
 #define CVAR_ENABLE		0x00000001
 #define CVAR_DISABLE	0x00000002
@@ -238,6 +284,9 @@ typedef struct itemDef_s {
   const char *action;            // select script
   const char *onFocus;           // select script
   const char *leaveFocus;        // select script
+// Changed RD
+  const char *transitionEnd;     // select script
+// end changed RD
   const char *cvar;              // associated cvar 
   const char *cvarTest;          // associated cvar for enable actions
 	const char *enableCvar;			   // enable, disable, show, or hide based on value, this can contain a list
@@ -248,6 +297,20 @@ typedef struct itemDef_s {
 	float special;								 // used for feeder id's etc.. diff per type
   int cursorPos;                 // cursor position in characters
 	void *typeData;								 // type specific data ptr's	
+// Changed RD
+	void *multiData;
+	void *comboData;
+	int bindtype;
+	int bind2click;
+	qboolean clickstatus;
+	int nofocuscolor;
+	vec4_t fadeColor;
+// end changed RD
+  int mapnum;			// leilei - assigned map number for this button's behavior
+ int scralign;             	// leilei - alignment of ui element
+ float scralignfactor;          // leilei - factor of adjustment
+ int viewsizemin;             	// leilei - hide this if viewsize 
+ int viewsizemax;             	// leilei - hide this if viewsize 
 } itemDef_t;
 
 typedef struct {
@@ -263,6 +326,10 @@ typedef struct {
   const char *onOpen;								// run when the menu is first opened
   const char *onClose;							// run when the menu is closed
   const char *onESC;								// run when the menu is closed
+// Changed RD
+  const char *opentransitionEnd;				// select script
+  const char *esctransitionEnd;
+// end changed RD
 	const char *soundName;						// background loop sound for menu
 
   vec4_t focusColor;								// focus color for items
@@ -273,6 +340,19 @@ typedef struct {
 typedef struct {
   const char *fontStr;
   const char *cursorStr;
+// changed RD
+	const char *mainname;
+	const char *ingamename;
+	const char *errorname;
+	const char *connectname;
+	const char *endname;
+	const char *teamname;
+	float scrollbarsize;
+	float sliderwidth;
+	float sliderheight;
+	float sliderthumbwidth;
+	float sliderthumbheight;
+// end changed RD
   const char *gradientStr;
   fontInfo_t textFont;
   fontInfo_t smallFont;
@@ -283,6 +363,10 @@ typedef struct {
   qhandle_t scrollBarArrowDown;
   qhandle_t scrollBarArrowLeft;
   qhandle_t scrollBarArrowRight;
+// changed RD
+	qhandle_t scrollBarHorz;
+	qhandle_t scrollBarVert;
+// end changed RD
   qhandle_t scrollBar;
   qhandle_t scrollBarThumb;
   qhandle_t buttonMiddle;
@@ -290,6 +374,17 @@ typedef struct {
   qhandle_t solidBox;
   qhandle_t sliderBar;
   qhandle_t sliderThumb;
+// changed RD
+	qhandle_t sliderThumb_sel;
+	qhandle_t checkbox;
+	qhandle_t checkbox_sel;
+	float checkboxwidth;
+	float checkboxheight;
+	qhandle_t combo;
+	qhandle_t combo_sel;
+	float combowidth;
+	float comboheight;
+// end changed RD
   sfxHandle_t menuEnterSound;
   sfxHandle_t menuExitSound;
   sfxHandle_t menuBuzzSound;
@@ -354,8 +449,8 @@ typedef struct {
 	void (*getBindingBuf)( int keynum, char *buf, int buflen );
 	void (*setBinding)( int keynum, const char *binding );
 	void (*executeText)(int exec_when, const char *text );	
-	void (*Error)(int level, const char *error, ...) __attribute__((format(printf,2,3)));
-	void (*Print)(const char *msg, ...) __attribute__((format(printf,1,2)));
+	void (*Error)(int level, const char *error, ...);
+	void (*Print)(const char *msg, ...);
 	void (*Pause)(qboolean b);
 	int (*ownerDrawWidth)(int ownerDraw, float scale);
 	sfxHandle_t (*registerSound)(const char *name, qboolean compressed);
@@ -412,6 +507,10 @@ qboolean PC_Script_Parse(int handle, const char **out);
 int Menu_Count( void );
 void Menu_New(int handle);
 void Menu_PaintAll( void );
+// Changed RD
+void Menu_PaintEnd( void );
+qboolean Item_EnableShowViaCvar(itemDef_t *item, int flag);
+// end changed RD
 menuDef_t *Menus_ActivateByName(const char *p);
 void Menu_Reset( void );
 qboolean Menus_AnyFullScreenVisible( void );
@@ -448,5 +547,26 @@ int			trap_PC_LoadSource( const char *filename );
 int			trap_PC_FreeSource( int handle );
 int			trap_PC_ReadToken( int handle, pc_token_t *pc_token );
 int			trap_PC_SourceFileAndLine( int handle, char *filename, int *line );
+
+void Item_Text_AutoWrapped_Paint( itemDef_t *item );
+
+// Knightmare- screen item alignment types
+// Adapted from an i3d thread that applies this to the JK2 source http://forums.inside3d.com/viewtopic.php?f=1&t=5159&p=49084
+
+#define  ALIGN_STRETCH 		 0
+#define  ALIGN_CENTER		 1
+#define  ALIGN_LETTERBOX	 2
+#define  ALIGN_TOP		 3
+#define  ALIGN_BOTTOM		 4
+#define  ALIGN_RIGHT		 5
+#define  ALIGN_LEFT		 6
+#define  ALIGN_TOPRIGHT		 7
+#define  ALIGN_TOPLEFT		 8
+#define  ALIGN_BOTTOMRIGHT 	 9
+#define  ALIGN_BOTTOMLEFT	 10
+#define  ALIGN_TOP_STRETCH	 11
+#define  ALIGN_BOTTOM_STRETCH	 12
+
+
 
 #endif

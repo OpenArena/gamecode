@@ -13,7 +13,7 @@ copy windows_scripts\cgame_mp.q3asm windows\build\cgame.q3asm
 set LIBRARY=
 set INCLUDE=
 
-set cc=lcc -DMISSIONPACK -DQ3_VM -S -Wf-target=bytecode -Wf-g -I..\..\..\code\cgame -I..\..\..\code\ui -I..\..\..\code\qcommon %1
+set cc=lcc -DMISSIONPACK -DSCRIPTHUD -DQ3_VM -S -Wf-target=bytecode -Wf-g -I..\..\..\code\cgame -I..\..\..\code\ui -I..\..\..\code\qcommon %1
 
 cd windows\build\cgame
 

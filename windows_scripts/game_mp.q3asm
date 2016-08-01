@@ -30,6 +30,7 @@ g_misc
 g_missile
 g_mover
 g_playerstore
+g_possession
 g_session
 g_spawn
 g_svcmds

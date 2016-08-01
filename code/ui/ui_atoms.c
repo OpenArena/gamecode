@@ -327,7 +327,7 @@ qboolean UI_ConsoleCommand( int realTime ) {
 	// ensure minimum menu data is available
 	//Menu_Cache();
 
-	if ( Q_strequal(cmd, "ui_test") ) {
+	if ( Q_stricmp (cmd, "ui_test") == 0 ) {
 		UI_ShowPostGame(qtrue);
 	}
 
@@ -404,7 +404,8 @@ void UI_AdjustFrom640( float *x, float *y, float *w, float *h ) {
 	*h *= uiInfo.uiDC.scale;
 #endif
 
-	*x *= uiInfo.uiDC.xscale;
+//	*x *= uiInfo.uiDC.xscale;
+	*x = *x * uiInfo.uiDC.xscale + uiInfo.uiDC.bias;		// leilei - widescreen adjust
 	*y *= uiInfo.uiDC.yscale;
 	*w *= uiInfo.uiDC.xscale;
 	*h *= uiInfo.uiDC.yscale;

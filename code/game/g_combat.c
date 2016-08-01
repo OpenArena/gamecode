@@ -280,7 +280,7 @@ void GibEntity( gentity_t *self, int killer ) {
 	//if this entity still has kamikaze
 	if (self->s.eFlags & EF_KAMIKAZE) {
 		// check if there is a kamikaze timer around for this owner
-		for (i = 0; i < level.num_entities; i++) {
+		for (i = 0; i < MAX_GENTITIES; i++) {
 			ent = &g_entities[i];
 			if (!ent->inuse)
 				continue;
@@ -1465,3 +1465,92 @@ qboolean G_RadiusDamage ( vec3_t origin, gentity_t *attacker, float damage, floa
 
 	return hitClient;
 }
+
+
+
+
+
+// Monster code
+
+
+/*
+==================
+monster_die
+
+definitely mangled from player_die with less about the player
+==================
+*/
+
+void monster_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int damage, int meansOfDeath ) {
+	gentity_t	*ent;
+	int			anim;
+	int			contents;
+	int			killer;
+	int			i,counter2;
+	char		*killerName, *obit;
+
+	if (self->client && self->client->hook) {
+		Weapon_HookFree(self->client->hook);
+	}
+	if ((self->client->ps.eFlags & EF_TICKING) && self->activator) {
+		self->client->ps.eFlags &= ~EF_TICKING;
+		self->activator->think = G_FreeEntity;
+		self->activator->nextthink = level.time;
+	}
+	self->enemy = attacker;
+	self->takedamage = qtrue;	// can still be gibbed
+
+	self->s.weapon = WP_NONE;
+	self->s.powerups = 0;
+	self->r.contents = CONTENTS_CORPSE;
+
+	self->s.angles[0] = 0;
+	self->s.angles[2] = 0;
+	LookAtKiller (self, inflictor, attacker);
+
+	VectorCopy( self->s.angles, self->client->ps.viewangles );
+
+	self->s.loopSound = 0;
+
+	self->r.maxs[2] = -8;
+
+	
+	// never gib in a nodrop
+	contents = trap_PointContents( self->r.currentOrigin, -1 );
+
+	if ( (self->health <= GIB_HEALTH && !(contents & CONTENTS_NODROP) && g_blood.integer) || meansOfDeath == MOD_SUICIDE) {
+		// gib death
+		GibEntity( self, killer );
+	} else {
+		// normal death
+		static int i;
+
+		switch ( i ) {
+		case 0:
+			anim = BOTH_DEATH1;
+			break;
+		case 1:
+			anim = BOTH_DEATH2;
+			break;
+		case 2:
+		default:
+			anim = BOTH_DEATH3;
+			break;
+		}
+
+		// for the no-blood option, we need to prevent the health
+		// from going to gib level
+		if ( self->health <= GIB_HEALTH ) {
+			self->health = GIB_HEALTH+1;
+		}
+
+		// the body can still be gibbed
+		self->die = body_die;
+
+	}
+
+
+	trap_LinkEntity (self);
+
+}
+
