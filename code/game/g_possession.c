@@ -52,12 +52,10 @@ void Possession_SpawnFlag( void ) {
 	if (neutralObelisk) {
 		return;
 	}
-#if MAP_MUST_SPECIFY_THAT_IT_IS_OK
 	if (!ent) {
 		//If not pick a random domination point
 		ent = SelectRandomEntity("domination_point");
 	}
-#endif
 	if (!ent) {
 		//Else pick a random deathmatch point
 		ent = SelectRandomEntityFilter("info_player_deathmatch", EntityFilterNoBotsOrHumanOnly);
