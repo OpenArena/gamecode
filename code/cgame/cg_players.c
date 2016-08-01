@@ -703,11 +703,28 @@ static qboolean	CG_RegisterClientSkin( clientInfo_t *ci, const char *teamName, c
 		}
 	}
 	*/
+
+	if (ci->onepiece){
+		Com_sprintf( filename, sizeof( filename ), "models/playerfs/%s/%stris_%s.skin", modelName, teamName, skinName );
+		ci->legsSkin = trap_R_RegisterSkin( filename );
+		if (!ci->legsSkin) {
+			Com_Printf( "Onepieced model skin load failure: %s\n", filename );
+			}
+		
+
+	}
+
+	else
+
+	{
+
 	if ( CG_FindClientModelFile( filename, sizeof(filename), ci, teamName, modelName, skinName, "lower", "skin" ) ) {
 		ci->legsSkin = trap_R_RegisterSkin( filename );
 	}
 	if (!ci->legsSkin) {
 		Com_Printf( "Leg skin load failure: %s\n", filename );
+	}
+
 	}
 
 	if ( CG_FindClientModelFile( filename, sizeof(filename), ci, teamName, modelName, skinName, "upper", "skin" ) ) {
@@ -748,6 +765,37 @@ static qboolean CG_RegisterClientModelname( clientInfo_t *ci, const char *modelN
 	else {
 		headName = headModelName;
 	}
+
+	// leilei - onepiece model loading for certain maps or WIP animation debug
+	ci->onepiece = 0; 
+	if (cg_enableFS.integer){
+
+		Com_sprintf( filename, sizeof( filename ), "models/playerfs/%s/tris.mdr", modelName );
+		ci->legsModel = trap_R_RegisterModel( filename );
+			if ( ci->legsModel ){ 
+						FSloaded = 1;
+						ci->onepiece = 1;
+						
+					}
+		if ( !ci->legsModel ) 
+			FSloaded = 0; // just end it
+		
+
+		if (FSloaded)
+			Com_Printf( "%s is fanservice\n", filename );
+		else
+			Com_Printf( "%s can't provide fanservice\n", filename );
+	}
+
+	// load the usual model
+	if (FSloaded == 0)
+	{
+	Com_sprintf( filename, sizeof( filename ), "models/players/%s/lower.mdr", modelName );
+	ci->legsModel = trap_R_RegisterModel( filename );
+	if ( !ci->legsModel ) {
+		Com_sprintf( filename, sizeof( filename ), "models/players/characters/%s/lower.mdr", modelName );
+		ci->legsModel = trap_R_RegisterModel( filename );
+		if ( !ci->legsModel ) {
 	Com_sprintf( filename, sizeof( filename ), "models/players/%s/lower.md3", modelName );
 	ci->legsModel = trap_R_RegisterModel( filename );
 	if ( !ci->legsModel ) {
@@ -758,7 +806,15 @@ static qboolean CG_RegisterClientModelname( clientInfo_t *ci, const char *modelN
 			return qfalse;
 		}
 	}
+		}
+	}
 
+	Com_sprintf( filename, sizeof( filename ), "models/players/%s/upper.mdr", modelName );
+	ci->torsoModel = trap_R_RegisterModel( filename );
+	if ( !ci->torsoModel ) {
+		Com_sprintf( filename, sizeof( filename ), "models/players/characters/%s/upper.mdr", modelName );
+		ci->torsoModel = trap_R_RegisterModel( filename );
+		if ( !ci->torsoModel ) {
 	Com_sprintf( filename, sizeof( filename ), "models/players/%s/upper.md3", modelName );
 	ci->torsoModel = trap_R_RegisterModel( filename );
 	if ( !ci->torsoModel ) {
@@ -769,7 +825,24 @@ static qboolean CG_RegisterClientModelname( clientInfo_t *ci, const char *modelN
 			return qfalse;
 		}
 	}
+		}
+	}
 
+	}		// enableFS
+
+	if( headName[0] == '*' ) {
+		Com_sprintf( filename, sizeof( filename ), "models/players/heads/%s/%s.mdr", &headModelName[1], &headModelName[1] );
+	}
+	else {
+		Com_sprintf( filename, sizeof( filename ), "models/players/%s/head.mdr", headName );
+	}
+	ci->headModel = trap_R_RegisterModel( filename );
+	// if the head model could not be found and we didn't load from the heads folder try to load from there
+	if ( !ci->headModel && headName[0] != '*' ) {
+		Com_sprintf( filename, sizeof( filename ), "models/players/heads/%s/%s.mdr", headModelName, headModelName );
+		ci->headModel = trap_R_RegisterModel( filename );
+	}
+	if ( !ci->headModel ) {
 	if( headName[0] == '*' ) {
 		Com_sprintf( filename, sizeof( filename ), "models/players/heads/%s/%s.md3", &headModelName[1], &headModelName[1] );
 	}
@@ -785,6 +858,7 @@ static qboolean CG_RegisterClientModelname( clientInfo_t *ci, const char *modelN
 	if ( !ci->headModel ) {
 		Com_Printf( "Failed to load model file %s\n", filename );
 		return qfalse;
+	}
 	}
 
 	// if any skins failed to load, return failure
@@ -808,6 +882,15 @@ static qboolean CG_RegisterClientModelname( clientInfo_t *ci, const char *modelN
 	}
 
 	// load the animations
+	// leilei - load one piece animation
+	if (ci->onepiece) {
+	Com_sprintf( filename, sizeof( filename ), "models/playerfs/%s/animation.cfg", modelName );
+	if ( !CG_ParseAnimationFile( filename, ci ) ) {
+		Com_Printf( "Failed to load animation file %s\n", filename );
+		}
+	}
+	else
+	{
 	Com_sprintf( filename, sizeof( filename ), "models/players/%s/animation.cfg", modelName );
 	if ( !CG_ParseAnimationFile( filename, ci ) ) {
 		Com_sprintf( filename, sizeof( filename ), "models/players/characters/%s/animation.cfg", modelName );
@@ -816,6 +899,10 @@ static qboolean CG_RegisterClientModelname( clientInfo_t *ci, const char *modelN
 			return qfalse;
 		}
 	}
+	}
+
+
+
 
 	// leilei - load eyes
 	Com_sprintf( filename, sizeof( filename ), "models/players/%s/eyes.cfg", modelName );
@@ -1827,10 +1914,6 @@ static void CG_PlayerAngles( centity_t *cent, vec3_t legs[3], vec3_t torso[3], v
 
 	// offset from the model we have.
 	VectorClear(eyelookfrom);
-//	eyelookfrom[0] += 3.0; // cg_modelEyes_Up.value;		// TODO: Read from eeys.cfg or some eye parameter from animation.cfg
-//	eyelookfrom[1] += 1.4; // cg_modelEyes_Right.value;
-//	eyelookfrom[2] += 3.3; //cg_modelEyes_Fwd.value;
-
 	VectorCopy(ci->eyepos, cent->pe.eyepos);	
 	//VectorCopy(eyelookfrom, cent->pe.eyepos);			// leilei - copy eye poistion
 	}
@@ -2713,6 +2796,7 @@ void CG_Player( centity_t *cent ) {
 	// add the legs
 	//
 	legs.hModel = ci->legsModel;
+	if (!ci->onepiece) // onepiece uses internal model skins right now until skin loading is fixed later
 	legs.customSkin = ci->legsSkin;
 
 	VectorCopy( cent->lerpOrigin, legs.origin );
@@ -2755,6 +2839,103 @@ void CG_Player( centity_t *cent ) {
 	//
 	// add the torso
 	//
+	if (ci->onepiece) {
+
+		// skip all the further crap and put a head on the legs
+
+
+			//
+			// add the head
+			//
+			head.hModel = ci->headModel;
+			
+			if (!head.hModel) {
+				return;
+			}
+			head.customSkin = ci->headSkin;
+		
+			VectorCopy( cent->lerpOrigin, head.lightingOrigin );
+		
+			CG_PositionRotatedEntityOnTag( &head, &legs, ci->legsModel, "tag_head");
+		
+			// 
+			// add the eyes
+			//
+		
+			
+		
+			if (camereyes){
+			cent->eyesOrigin[0] = head.origin[0];
+			cent->eyesOrigin[1] = head.origin[1];
+			cent->eyesOrigin[2] = head.origin[2];
+			if (cg_cameraEyes.integer == 3){
+			vectoangles( head.axis[0], headang);
+			}
+			else
+			if (cg_cameraEyes.integer == 2){
+			vectoangles( head.axis[0], headang);
+			//VectorCopy(cent->lerpAngles, headang);
+			//headang[0] = cent->lerpAngles[0];
+			headang[1] = cent->lerpAngles[1];
+			}
+			else
+			{
+		
+			VectorCopy(cent->lerpAngles, headang);
+			}
+		
+		
+		
+		
+			if (cg_cameraEyes.integer){
+			VectorCopy(head.origin, cent->eyesOrigin);
+		
+			VectorSubtract(cent->eyesOrigin, cent->lerpOrigin, cent->eyesOrigin);
+			VectorCopy(cent->eyesOrigin, headpos);
+			}
+			}
+		
+			VectorCopy(cent->pe.eyepos, head.eyepos[0]);				// Copy it to our refdef for the renderer
+		
+			// HMM
+			{
+			vec3_t v, forwaad;
+			vec3_t	angles;
+			vec3_t	dir;
+			float len;
+			vec3_t orrg;
+			vec3_t av[3];
+			trace_t trace;
+			VectorCopy(cent->lerpAngles, v);
+			AngleVectors( v, forwaad, NULL, NULL );
+			VectorMA(cent->lerpOrigin, 1024, forwaad, v );
+			VectorCopy(head.origin, orrg);
+			CG_Trace (&trace, orrg, NULL, NULL, v, -1, CONTENTS_SOLID);
+					if (trace.fraction < 1)
+						VectorCopy(trace.endpos, v);				// look closer
+			VectorCopy(v, head.eyelook);				// Copy it to our refdef for the renderer
+			}
+		
+			head.shadowPlane = shadowPlane;
+		
+		
+			head.renderfx = renderfx;
+		
+		
+			if ((cg_cameraEyes.integer == 2) || (cg_cameraEyes.integer == 3)){
+				head.renderfx &= RF_FIRST_PERSON;
+			}
+			CG_AddRefEntityWithPowerups( &head, &cent->currentState, ci->team, qfalse );
+		
+			CG_BreathPuffs(cent, &head);
+		
+			CG_DustTrail(cent);
+	
+
+		return;
+	}
+
+
 	torso.hModel = ci->torsoModel;
 	if (!torso.hModel) {
 		return;

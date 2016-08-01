@@ -868,7 +868,9 @@ static void PM_NoclipMove( void ) {
 	vec3_t		wishdir;
 	float		wishspeed;
 	float		scale;
-
+	if (cg_enableQ.value)
+	pm->ps->viewheight = QUACK_VIEWHEIGHT;
+	else
 	pm->ps->viewheight = DEFAULT_VIEWHEIGHT;
 
 	// friction
@@ -1326,7 +1328,11 @@ static void PM_CheckDuck (void)
 	else
 	{
 		pm->maxs[2] = 32;
+		if (cg_enableQ.value)
+		pm->ps->viewheight = QUACK_VIEWHEIGHT;
+		else
 		pm->ps->viewheight = DEFAULT_VIEWHEIGHT;
+
 	}
 }
 
@@ -1405,6 +1411,12 @@ static void PM_Footsteps( void ) {
 			if ( pm->ps->pm_flags & PMF_BACKWARDS_RUN ) {
 				PM_ContinueLegsAnim( LEGS_BACK );
 			}
+			// leilei - new strafe animations for OA3
+			else if ( pm->cmd.rightmove < 0 && pm->cmd.forwardmove == 0 ) 
+						PM_ContinueLegsAnim( LEGS_STRAFE_LEFT );
+			else if ( pm->cmd.rightmove > 0 && pm->cmd.forwardmove == 0 ) 
+						PM_ContinueLegsAnim( LEGS_STRAFE_RIGHT );
+				
 			else {
 				PM_ContinueLegsAnim( LEGS_RUN );
 			}
