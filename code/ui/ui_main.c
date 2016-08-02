@@ -2111,11 +2111,10 @@ static void UI_DrawPlayerModel(rectDef_t *rect) {
 }
 */
 static void	UI_DrawPlayerPortrait(rectDef_t *rect) {
-  static playerInfo_t info;
-  char model[MAX_QPATH];
-	int randomtaunt;
+	static playerInfo_t info;
+	char model[MAX_QPATH];
 	float randomtaunter;
-  char team[256];
+	char team[256];
 	char head[256];
 	vec3_t	viewangles;
 	vec3_t	moveangles;
@@ -2133,30 +2132,27 @@ static void	UI_DrawPlayerPortrait(rectDef_t *rect) {
 	randomtaunter = random() * 2000;
 
 	if (randomtaunter < 1){
-		randomtaunt = 1; 
 		viewangles[YAW]   = 180;
 	  	viewangles[PITCH] = 0;
 	  	viewangles[ROLL]  = 0;
  		UI_PlayerInfo_SetInfo( &info, LEGS_IDLE, TORSO_GESTURE, viewangles, vec3_origin, WP_MACHINEGUN, qfalse );
 	}
-	else
-		randomtaunt = 0;
 
 
-  if (updateModel) {
-  	memset( &info, 0, sizeof(playerInfo_t) );
-  	//viewangles[YAW]   = 180 - 10 + sin(uiInfo.uiDC.realTime * 55 / PULSE_DIVISOR); // (sin(uiInfo.uiDC.realTime  * 75)  * 75);
-	viewangles[YAW]   = 180;
-  	viewangles[PITCH] = 0;
-  	viewangles[ROLL]  = 0;
- 	VectorClear( moveangles );
-    UI_PlayerInfo_SetModel( &info, model, head, team);
+	if (updateModel) {
+		memset( &info, 0, sizeof(playerInfo_t) );
+		//viewangles[YAW]   = 180 - 10 + sin(uiInfo.uiDC.realTime * 55 / PULSE_DIVISOR); // (sin(uiInfo.uiDC.realTime  * 75)  * 75);
+		viewangles[YAW]   = 180;
+		viewangles[PITCH] = 0;
+		viewangles[ROLL]  = 0;
+		VectorClear( moveangles );
+		UI_PlayerInfo_SetModel( &info, model, head, team);
 
 
-    UI_PlayerInfo_SetInfo( &info, LEGS_IDLE, TORSO_STAND, viewangles, vec3_origin, WP_MACHINEGUN, qfalse );
-//		UI_RegisterClientModelname( &info, model, head, team);
-    updateModel = qfalse;
-  }
+		UI_PlayerInfo_SetInfo( &info, LEGS_IDLE, TORSO_STAND, viewangles, vec3_origin, WP_MACHINEGUN, qfalse );
+		//		UI_RegisterClientModelname( &info, model, head, team);
+		updateModel = qfalse;
+	}
 	//viewangles[YAW] = (float)((float)uiInfo.uiDC.cursorx-16 * 0.00005f);
 	//viewangles[PITCH] = uiInfo.uiDC.cursory-16;
 
@@ -3228,11 +3224,6 @@ static qboolean UI_OpponentName_HandleKey(int flags, float *special, int key) {
   return qfalse;
 }
 
-static qboolean UI_MenuMapName_HandleKey(int flags, float *special, int key) {
-	// nothing to do, but this should like, i dunno, highlight something?
-  return qfalse;
-}
-
 static qboolean UI_BotName_HandleKey(int flags, float *special, int key) {
   if (key == K_MOUSE1 || key == K_MOUSE2 || key == K_ENTER || key == K_JOY1 || key == K_KP_ENTER) {
 		int game = trap_Cvar_VariableValue("g_gametype");
@@ -3610,20 +3601,6 @@ static void UI_LoadDemos( void ) {
 
 }
 
-// Changed RD
-/*
-===============
-UI_LoadSave
-===============
-*/
-static void UI_LoadSave( void ) {
-
-
-	// Blanked because of dubious code origin and no purpose.
-
-}
-
-
 static qboolean UI_SetNextMap(int actual, int index, char *name) {
 	int i;
 	for (i = actual + 1; i < uiInfo.mapCount; i++) {
@@ -3634,18 +3611,6 @@ static qboolean UI_SetNextMap(int actual, int index, char *name) {
 	}
 	return qfalse;
 }
-
-static qboolean UI_SetNextMapOld(int actual, int index) {
-	int i;
-	for (i = actual + 1; i < uiInfo.mapCount; i++) {
-		if (uiInfo.mapList[i].active) {
-			Menu_SetFeederSelection(NULL, FEEDER_MAPS, index + 1, "skirmish");
-			return qtrue;
-		}
-	}
-	return qfalse;
-}
-
 
 
 static void UI_StartSkirmish(qboolean next, char *name) {
@@ -3726,13 +3691,14 @@ static void UI_StartSkirmish(qboolean next, char *name) {
 		const char	*botInfo;
 		char		bots[MAX_INFO_STRING];
 		char		botnames[16][16];
-		int			count, n;
+		int			count;
 		// Make bot list from opponentName
 		trap_Cvar_Set("sv_maxClients", "16");
 		trap_Cvar_Set("g_warmup", "0");
 		Q_strncpyz( bots, uiInfo.mapList[ui_currentMap.integer].opponentName, sizeof(bots) );
 	        //        Com_sprintf( buff, sizeof(buff), "wait\n", bot, skill, delay);
 		p = &bots[0];
+		count = 0;
 		while( *p && count < 16 ) {
 
 			//skip spaces
@@ -3765,98 +3731,7 @@ static void UI_StartSkirmish(qboolean next, char *name) {
 		}
 
 
-		Com_sprintf( buff, sizeof(buff), "wait ; \n", uiInfo.mapList[ui_currentMap.integer].opponentName, skill, delay);
-		trap_Cmd_ExecuteText( EXEC_APPEND, buff );
-	} else {
-		temp = uiInfo.mapList[ui_currentMap.integer].teamMembers * 2;
-		trap_Cvar_Set("sv_maxClients", va("%d", temp));
-		for (i =0; i < uiInfo.mapList[ui_currentMap.integer].teamMembers; i++) {
-			Com_sprintf( buff, sizeof(buff), "addbot %s %f %s %i %s\n", UI_AIFromName(uiInfo.teamList[k].teamMembers[i]), skill, (g == GT_FFA) ? "" : "Blue", delay, uiInfo.teamList[k].teamMembers[i]);
-			trap_Cmd_ExecuteText( EXEC_APPEND, buff );
-			delay += 500;
-		}
-		k = UI_TeamIndexFromName(UI_Cvar_VariableString("ui_teamName"));
-		for (i =0; i < uiInfo.mapList[ui_currentMap.integer].teamMembers-1; i++) {
-			Com_sprintf( buff, sizeof(buff), "addbot %s %f %s %i %s\n", UI_AIFromName(uiInfo.teamList[k].teamMembers[i]), skill, (g == GT_FFA) ? "" : "Red", delay, uiInfo.teamList[k].teamMembers[i]);
-			trap_Cmd_ExecuteText( EXEC_APPEND, buff );
-			delay += 500;
-		}
-	}
-	if (g >= GT_TEAM ) {
-		trap_Cmd_ExecuteText( EXEC_APPEND, "wait 5; team Red\n" );
-	}
-}
-
-
-static void UI_StartSkirmishOld(qboolean next) {
-	int i, k, g, delay, temp;
-	float skill;
-	char buff[MAX_STRING_CHARS];
-
-	if (next) {
-		int actual;
-		int index = trap_Cvar_VariableValue("ui_mapIndex");
-	 	UI_MapCountByGameType(qtrue);
-		UI_SelectedMap(index, &actual);
-//		if (UI_SetNextMap(actual, index, Name)) {
-//		} else {
-//			UI_GameType_HandleKey(0, NULL, K_MOUSE1, qfalse);
-//			UI_MapCountByGameType(qtrue);
-//			Menu_SetFeederSelection(NULL, FEEDER_MAPS, 0, "skirmish");
-//		}
-	}
-
-	g = uiInfo.gameTypes[ui_gameType.integer].gtEnum;
-	trap_Cvar_SetValue( "g_gametype", g );
-	trap_Cmd_ExecuteText( EXEC_APPEND, va( "wait ; wait ; map %s\n", uiInfo.mapList[ui_currentMap.integer].mapLoadName) );
-	skill = trap_Cvar_VariableValue( "g_spSkill" );
-	trap_Cvar_Set("ui_scoreMap", uiInfo.mapList[ui_currentMap.integer].mapName);
-
-	k = UI_TeamIndexFromName(UI_Cvar_VariableString("ui_opponentName"));
-
-	trap_Cvar_Set("ui_singlePlayerActive", "1");
-
-	// set up sp overrides, will be replaced on postgame
-	temp = trap_Cvar_VariableValue( "capturelimit" );
-	trap_Cvar_Set("ui_saveCaptureLimit", va("%i", temp));
-	temp = trap_Cvar_VariableValue( "fraglimit" );
-	trap_Cvar_Set("ui_saveFragLimit", va("%i", temp));
-
-	UI_SetCapFragLimits(qfalse);
-
-	temp = trap_Cvar_VariableValue( "cg_drawTimer" );
-	trap_Cvar_Set("ui_drawTimer", va("%i", temp));
-	temp = trap_Cvar_VariableValue( "g_doWarmup" );
-	trap_Cvar_Set("ui_doWarmup", va("%i", temp));
-	temp = trap_Cvar_VariableValue( "g_friendlyFire" );
-	trap_Cvar_Set("ui_friendlyFire", va("%i", temp));
-	temp = trap_Cvar_VariableValue( "sv_maxClients" );
-	trap_Cvar_Set("ui_maxClients", va("%i", temp));
-	temp = trap_Cvar_VariableValue( "g_warmup" );
-	trap_Cvar_Set("ui_Warmup", va("%i", temp));
-	temp = trap_Cvar_VariableValue( "sv_pure" );
-	trap_Cvar_Set("ui_pure", va("%i", temp));
-
-	trap_Cvar_Set("cg_cameraOrbit", "0");
-	trap_Cvar_Set("cg_thirdPerson", "0");
-	trap_Cvar_Set("cg_drawTimer", "1");
-	trap_Cvar_Set("g_doWarmup", "1");
-	trap_Cvar_Set("g_warmup", "15");
-	trap_Cvar_Set("sv_pure", "0");
-	trap_Cvar_Set("g_friendlyFire", "0");
-	trap_Cvar_Set("g_redTeam", UI_Cvar_VariableString("ui_teamName"));
-	trap_Cvar_Set("g_blueTeam", UI_Cvar_VariableString("ui_opponentName"));
-
-	if (trap_Cvar_VariableValue("ui_recordSPDemo")) {
-		Com_sprintf(buff, MAX_STRING_CHARS, "%s_%i", uiInfo.mapList[ui_currentMap.integer].mapLoadName, g);
-		trap_Cvar_Set("ui_recordSPDemoName", buff);
-	}
-
-	delay = 500;
-
-	if (g == GT_TOURNAMENT) {
-		trap_Cvar_Set("sv_maxClients", "2");
-		Com_sprintf( buff, sizeof(buff), "wait ; addbot %s %f "", %i \n", uiInfo.mapList[ui_currentMap.integer].opponentName, skill, delay);
+		Com_sprintf( buff, sizeof(buff), "wait ;\n");
 		trap_Cmd_ExecuteText( EXEC_APPEND, buff );
 	} else {
 		temp = uiInfo.mapList[ui_currentMap.integer].teamMembers * 2;
@@ -6098,7 +5973,6 @@ UI_Init
 */
 void _UI_Init( qboolean inGameLoad ) {
 	const char *menuSet;
-	int start;
 	// Changed RD
 	char model[MAX_QPATH];
 	char team[256];
@@ -6128,10 +6002,9 @@ void _UI_Init( qboolean inGameLoad ) {
 	
 
 	{
-		float resbias, resbiasy;
-		float rex, rey, rias;
+		float resbias;
+		float rex, rey;
 		int newresx, newresy;
-		float adjustx, adjusty;
 
 		rex = 640.0f / realVidWidth;
 		rey = 480.0f / realVidHeight;
@@ -6143,8 +6016,6 @@ void _UI_Init( qboolean inGameLoad ) {
 		newresy = realVidHeight * rey;
 	
 		resbias  = 0.5 * ( newresx -  ( newresy * (640.0/480.0) ) );
-		resbiasy = 0.5 * ( newresy -  ( newresx * (640.0/480.0) ) );
-
 
 		wideAdjustX = resbias;
 
@@ -6223,11 +6094,9 @@ void _UI_Init( qboolean inGameLoad ) {
 
 	AssetCache();
 
-	start = trap_Milliseconds();
-
-  uiInfo.teamCount = 0;
-  uiInfo.characterCount = 0;
-  uiInfo.aliasCount = 0;
+	uiInfo.teamCount = 0;
+	uiInfo.characterCount = 0;
+	uiInfo.aliasCount = 0;
 
 #ifdef PRE_RELEASE_TADEMO
 	UI_ParseTeamInfo("demoteaminfo.txt");
