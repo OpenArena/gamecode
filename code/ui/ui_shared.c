@@ -256,32 +256,11 @@ void String_Init(void) {
 
 /*
 =================
-PC_SourceWarning
-=================
-*/
-void PC_SourceWarning(int handle, char *format, ...) {
-	int line;
-	char filename[128];
-	va_list argptr;
-	static char string[4096];
-
-	va_start (argptr, format);
-	Q_vsnprintf (string, sizeof(string), format, argptr);
-	va_end (argptr);
-
-	filename[0] = '\0';
-	line = 0;
-	trap_PC_SourceFileAndLine(handle, filename, &line);
-
-	Com_Printf(S_COLOR_YELLOW "WARNING: %s, line %d: %s\n", filename, line, string);
-}
-
-/*
-=================
 PC_SourceError
 =================
 */
-void PC_SourceError(int handle, char *format, ...) {
+static void PC_SourceError(int handle, const char *format, ...) __attribute__((format(printf,2,3)));
+static void PC_SourceError(int handle, const char *format, ...) {
 	int line;
 	char filename[128];
 	va_list argptr;
@@ -736,10 +715,11 @@ extern int realVidHeight;
 // no KM code was used in the end as that applied to renderer
 void Item_SetScreenCoords(itemDef_t *item, float x, float y) {
 
-	float resbias, resbiasy;
-	float rex, rey, rias;
+	float resbias;
+	float rex, rey;
 	int newresx, newresy;
-	float adjustx, adjusty;
+	float adjustx;
+	float adjusty = 0.0f;
 
 	rex = 640.0f / realVidWidth;
 	rey = 480.0f / realVidHeight;
@@ -751,7 +731,6 @@ void Item_SetScreenCoords(itemDef_t *item, float x, float y) {
 	newresy = realVidHeight * rey;
 
 	resbias  = 0.5 * ( newresx -  ( newresy * (640.0/480.0) ) );
-	resbiasy = 0.5 * ( newresy -  ( newresx * (640.0/480.0) ) );
 
 
   if (item == NULL) {
@@ -1801,12 +1780,8 @@ int Item_Slider_OverSlider(itemDef_t *item, float x, float y) {
 
 int Item_ListBox_OverLB(itemDef_t *item, float x, float y) {
 	rectDef_t r;
-	listBoxDef_t *listPtr;
 	int thumbstart;
-	int count;
-
-	count = DC->feederCount(item->special);
-	listPtr = (listBoxDef_t*)item->typeData;
+	
 	if (item->window.flags & WINDOW_HORIZONTAL) {
 		// check if on left arrow
 		r.x = item->window.rect.x;
@@ -3716,9 +3691,10 @@ void Item_Checkbox_Paint(itemDef_t *item) {
 }
 
 void Item_Combo_Paint(itemDef_t *item) {
-	float value, x, y, t;
+	float value = 0.0f;
+	float x, y, t;
 	char buff[1024];
-	const char *textPtr;
+	const char *textPtr = "";
 	comboDef_t *comboPtr = (comboDef_t*)item->comboData;
 	menuDef_t *parent = (menuDef_t*)item->parent;
 
@@ -4144,10 +4120,8 @@ void BindingFromName(const char *cvar, int bindtype) {
 
 void Item_Slider_Paint(itemDef_t *item) {
 	vec4_t newColor;
-	float x, y, value;
+	float x, y;
 	menuDef_t *parent = (menuDef_t*)item->parent;
-
-	value = (item->cvar) ? DC->getCVarValue(item->cvar) : 0;
 // Changed RD
 /*	if (item->window.flags & WINDOW_HASFOCUS) {
 		lowLight[0] = 0.8 * parent->focusColor[0]; 
@@ -4186,7 +4160,6 @@ void Item_Slider_Paint(itemDef_t *item) {
 
 void Item_Bind_Paint(itemDef_t *item) {
 	vec4_t newColor, lowLight;
-	float value;
 // Changed RD
 	float x, y, t;
 	int maxChars = 0;
@@ -4195,8 +4168,6 @@ void Item_Bind_Paint(itemDef_t *item) {
 	if (editPtr) {
 		maxChars = editPtr->maxPaintChars;
 	}
-
-	value = (item->cvar) ? DC->getCVarValue(item->cvar) : 0;
 
 	if (item->window.flags & WINDOW_HASFOCUS && !item->nofocuscolor) {
 		if (g_bindItem == item) {
@@ -4686,12 +4657,9 @@ void Item_ListBox_Paint(itemDef_t *item) {
 
 
 void Item_OwnerDraw_Paint(itemDef_t *item) {
-  menuDef_t *parent;
-
 	if (item == NULL) {
 		return;
 	}
-  parent = (menuDef_t*)item->parent;
 
 	if (DC->ownerDrawItem) {
 		vec4_t color, lowLight;

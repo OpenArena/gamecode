@@ -2958,7 +2958,7 @@ static void CG_DrawTeamVote(void) {
 static qboolean CG_DrawScoreboard( void ) {
 #ifdef MISSIONPACK
 	static qboolean firstTime = qtrue;
-	float fade, *fadeColor;
+	float *fadeColor;
 
 	if (menuScoreboard) {
 		menuScoreboard->window.flags &= ~WINDOW_FORCED;
@@ -2982,7 +2982,6 @@ static qboolean CG_DrawScoreboard( void ) {
 	}
 
 	if ( cg.showScores || cg.predictedPlayerState.pm_type == PM_DEAD || cg.predictedPlayerState.pm_type == PM_INTERMISSION ) {
-		fade = 1.0;
 		fadeColor = colorWhite;
 	} else {
 		fadeColor = CG_FadeColor( cg.scoreFadeTime, FADE_TIME );
@@ -2993,7 +2992,6 @@ static qboolean CG_DrawScoreboard( void ) {
 			firstTime = qtrue;
 			return qfalse;
 		}
-		fade = *fadeColor;
 	}																					  
 
 

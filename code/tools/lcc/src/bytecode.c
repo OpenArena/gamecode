@@ -263,6 +263,9 @@ static void LoadSourceFile( const char *filename ) {
 	if ( sourceFile ) {
 		size_t size;
 		size = fread( sourceFile, length, 1, f );
+		if (size != length) {
+			print( ";error reading %s\n", filename );
+		}
 		sourceFile[length] = 0;
 	}
 
