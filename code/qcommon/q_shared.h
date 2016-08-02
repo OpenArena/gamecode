@@ -709,6 +709,7 @@ int		Q_strncmp (const char *s1, const char *s2, int n);
 #define Q_strnequal(s1, s2, n) (Q_strncmp(s1, s2, n)==0)
 int		Q_stricmpn (const char *s1, const char *s2, int n);
 #define Q_strequaln(s1, s2, n) (Q_stricmpn(s1, s2, n)==0)
+#define strequals(s1, s2) (strcmp(s1, s2)==0)
 char	*Q_strlwr( char *s1 );
 char	*Q_strupr( char *s1 );
 const char	*Q_stristr( const char *s, const char *find);
