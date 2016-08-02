@@ -177,7 +177,7 @@ UINT wm_BroadcastCommand = -1;
 
 void _printf( const char *format, ... ) {
 	va_list argptr;
-  char text[4096];
+	char text[4096];
 #ifdef WIN32
   ATOM a;
 #endif
@@ -185,7 +185,7 @@ void _printf( const char *format, ... ) {
 	vsprintf (text, format, argptr);
 	va_end (argptr);
 
-  printf(text);
+	printf("%s", text);
 
 #ifdef WIN32
   if (!lookedForServer) {

@@ -1482,12 +1482,8 @@ definitely mangled from player_die with less about the player
 */
 
 void monster_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int damage, int meansOfDeath ) {
-	gentity_t	*ent;
-	int			anim;
 	int			contents;
-	int			killer;
-	int			i,counter2;
-	char		*killerName, *obit;
+	int			killer = 0;
 
 	if (self->client && self->client->hook) {
 		Weapon_HookFree(self->client->hook);
@@ -1523,21 +1519,7 @@ void monster_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, in
 		GibEntity( self, killer );
 	} else {
 		// normal death
-		static int i;
-
-		switch ( i ) {
-		case 0:
-			anim = BOTH_DEATH1;
-			break;
-		case 1:
-			anim = BOTH_DEATH2;
-			break;
-		case 2:
-		default:
-			anim = BOTH_DEATH3;
-			break;
-		}
-
+		
 		// for the no-blood option, we need to prevent the health
 		// from going to gib level
 		if ( self->health <= GIB_HEALTH ) {

@@ -130,16 +130,6 @@ static void PM_ContinueTorsoAnim( int anim ) {
 	PM_StartTorsoAnim( anim );
 }
 
-
-static void PM_RunningTorsoAnim( int anim ) {
-	if ( ( pm->ps->torsoAnim & ~ANIM_TOGGLEBIT ) == anim ) {
-		return;
-	}
-	pm->ps->torsoTimer = pm->ps->legsTimer; // sync
-	PM_StartTorsoAnim( anim );
-}
-
-
 static void PM_ForceLegsAnim( int anim ) {
 	pm->ps->legsTimer = 0;
 	PM_StartLegsAnim( anim );
@@ -1587,47 +1577,58 @@ static void PM_TorsoAnimation( void ) {
 // leilei - heavily improved version for OA3 player animations
 static void PM_TorsoAnimation( void ) {
 	if ( pm->ps->weaponstate == WEAPON_READY ) {
-
-
-
-
-//pml.walking && !(pml.groundTrace.surfaceFlags & SURF_SLICK)
-
-		// Falling Downward
-		if ( pm->ps->velocity[2] < 0 && !pml.groundPlane){
-				if ( pm->ps->weapon == WP_GAUNTLET )	PM_ContinueTorsoAnim( TORSO_FALL2 );
-				else if ( pm->ps->powerups[PW_REDFLAG] || pm->ps->powerups[PW_BLUEFLAG] || pm->ps->powerups[PW_NEUTRALFLAG])  PM_ContinueTorsoAnim( TORSO_FALL2 );
-				else					PM_ContinueTorsoAnim( TORSO_FALL );
+		if ( pm->ps->velocity[2] < 0 && !pml.groundPlane) {
+			// Falling Downward
+			if ( pm->ps->weapon == WP_GAUNTLET ) {
+				PM_ContinueTorsoAnim( TORSO_FALL2 );
+			} else if ( pm->ps->powerups[PW_REDFLAG] || pm->ps->powerups[PW_BLUEFLAG] || pm->ps->powerups[PW_NEUTRALFLAG]) {
+				PM_ContinueTorsoAnim( TORSO_FALL2 );
+			} else {
+				PM_ContinueTorsoAnim( TORSO_FALL );
 			}
-		// Falling Upward
-		else if ( pm->ps->velocity[2] > 0 && !pml.groundPlane){
-				if ( pm->ps->weapon == WP_GAUNTLET )	PM_ContinueTorsoAnim( TORSO_JUMP2 );
-				else if ( pm->ps->powerups[PW_REDFLAG] || pm->ps->powerups[PW_BLUEFLAG] || pm->ps->powerups[PW_NEUTRALFLAG])  PM_ContinueTorsoAnim( TORSO_JUMP2 );
-				else					PM_ContinueTorsoAnim( TORSO_JUMP );
+		}
+		else if ( pm->ps->velocity[2] > 0 && !pml.groundPlane) {
+			// Falling Upward
+			if ( pm->ps->weapon == WP_GAUNTLET ) { 
+				PM_ContinueTorsoAnim( TORSO_JUMP2 );
+			} else if ( pm->ps->powerups[PW_REDFLAG] || pm->ps->powerups[PW_BLUEFLAG] || pm->ps->powerups[PW_NEUTRALFLAG]) {
+				PM_ContinueTorsoAnim( TORSO_JUMP2 );
 			}
-		// Sliding downward on a slick surface
-		else if ( pm->ps->velocity[2] < -7 && (pml.groundTrace.surfaceFlags & SURF_SLICK)){
-				if ( pm->ps->weapon == WP_GAUNTLET )	PM_ContinueTorsoAnim( TORSO_FALL2 );
-				else if ( pm->ps->powerups[PW_REDFLAG] || pm->ps->powerups[PW_BLUEFLAG] || pm->ps->powerups[PW_NEUTRALFLAG])  PM_ContinueTorsoAnim( TORSO_FALL2 );
-				else					PM_ContinueTorsoAnim( TORSO_FALL );
-			}	
+			else {
+				PM_ContinueTorsoAnim( TORSO_JUMP );
+			}
+		}
+		else if ( pm->ps->velocity[2] < -7 && (pml.groundTrace.surfaceFlags & SURF_SLICK)) {
+			// Sliding downward on a slick surface
+			if ( pm->ps->weapon == WP_GAUNTLET ) {
+				PM_ContinueTorsoAnim( TORSO_FALL2 );
+			} else if ( pm->ps->powerups[PW_REDFLAG] || pm->ps->powerups[PW_BLUEFLAG] || pm->ps->powerups[PW_NEUTRALFLAG]) {
+				PM_ContinueTorsoAnim( TORSO_FALL2 );
+			}
+			else {
+				PM_ContinueTorsoAnim( TORSO_FALL );
+			}
+		}	
 
 
 		// Running Forward
 		//if (  	pm->ps->legsAnim && LEGS_RUN ) {
-		else if (  	pm->cmd.forwardmove || pm->cmd.rightmove && pml.groundPlane && pm->xyspeed > 200 && !( pm->cmd.buttons & BUTTON_WALKING )){
-				if ( pm->ps->weapon == WP_GAUNTLET )	PM_ContinueTorsoAnim( TORSO_RUN2 );
-				else if ( pm->ps->powerups[PW_REDFLAG] || pm->ps->powerups[PW_BLUEFLAG] || pm->ps->powerups[PW_NEUTRALFLAG])  PM_ContinueTorsoAnim( TORSO_RUN3 );
-				else if ( pm->cmd.rightmove && !pm->cmd.forwardmove && pml.groundPlane && !( pm->cmd.buttons & BUTTON_WALKING )){
-						PM_ContinueTorsoAnim( TORSO_STRAFE ); }
-
-
-				else					PM_ContinueTorsoAnim( TORSO_RUN );
+		else if (  	pm->cmd.forwardmove || (pm->cmd.rightmove && pml.groundPlane && pm->xyspeed > 200 && !( pm->cmd.buttons & BUTTON_WALKING ) ) ){
+			if ( pm->ps->weapon == WP_GAUNTLET ) {
+				PM_ContinueTorsoAnim( TORSO_RUN2 );
 			}
-		else
-
-			{
-				if ( pm->ps->weapon == WP_GAUNTLET ) {
+			else if ( pm->ps->powerups[PW_REDFLAG] || pm->ps->powerups[PW_BLUEFLAG] || pm->ps->powerups[PW_NEUTRALFLAG])  {
+				PM_ContinueTorsoAnim( TORSO_RUN3 );
+			}
+			else if ( pm->cmd.rightmove && !pm->cmd.forwardmove && pml.groundPlane && !( pm->cmd.buttons & BUTTON_WALKING )){
+				PM_ContinueTorsoAnim( TORSO_STRAFE ); 
+			}
+			else {
+				PM_ContinueTorsoAnim( TORSO_RUN );
+			}
+		}
+		else {
+			if ( pm->ps->weapon == WP_GAUNTLET ) {
 				PM_ContinueTorsoAnim( TORSO_STAND2 );
 				} else if ( pm->ps->powerups[PW_REDFLAG] || pm->ps->powerups[PW_BLUEFLAG] || pm->ps->powerups[PW_NEUTRALFLAG])  {
 					PM_ContinueTorsoAnim( TORSO_STAND3 );
@@ -1638,30 +1639,6 @@ static void PM_TorsoAnimation( void ) {
 	return;
 	}
 }
-
-
-
-/*
-==============
-PM_TorsoAnimation2
-
-
-Experimental torso run hack
-
-==============
-*/
-static void PM_TorsoAnimation2( void ) {
-	if ( pm->ps->weaponstate == WEAPON_READY ) {
-		if ( pm->ps->weapon == WP_GAUNTLET ) {
-			PM_RunningTorsoAnim( TORSO_RAISE );
-		} else {
-			PM_RunningTorsoAnim( TORSO_RUN );
-		}
-		return;
-		}
-	
-}
-
 
 
 /*

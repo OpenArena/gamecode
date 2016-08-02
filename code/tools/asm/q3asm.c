@@ -687,7 +687,9 @@ static qboolean Parse( void ) {
 	*token = 0;  /* Clear token. */
 
 	// skip whitespace
-	for (p = lineBuffer + lineParseOffset; *p && (*p <= ' '); p++) /* nop */ ;
+	for (p = lineBuffer + lineParseOffset; *p && (*p <= ' '); p++) {
+		/* nop */ 
+	}
 
 	// skip ; comments
 	/* die on end-of-string */
@@ -946,12 +948,11 @@ STAT("PROC");
 
 ASM(ENDPROC)
 {
-	int		v, v2;
 	if ( !strcmp( token, "endproc" ) ) {
 STAT("ENDPROC");
 		Parse();				// skip the function name
-		v = ParseValue();		// locals
-		v2 = ParseValue();		// arg marshalling
+		ParseValue();		// locals
+		ParseValue();		// arg marshalling
 
 		// all functions must leave something on the opstack
 		instructionCount++;

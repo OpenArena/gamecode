@@ -635,7 +635,6 @@ static void UI_PlayerAnglesBust( playerInfo_t *pi, vec3_t legs[3], vec3_t torso[
 	float		dest;
 	float		adjust;
 	vec3_t		idler;
-	vec3_t		idler2;
 
 	VectorCopy( pi->viewAngles, headAngles );
 
@@ -674,8 +673,6 @@ static void UI_PlayerAnglesBust( playerInfo_t *pi, vec3_t legs[3], vec3_t torso[
 			frac = ( uiInfo.uiDC.realTime - pi->headStartTime ) / (float)( pi->headEndTime - pi->headStartTime );
 			frac = frac * frac * ( 3 - 2 * frac );
 			idler[YAW] = pi->headStartYaw + ( pi->headEndYaw - pi->headStartYaw ) * frac;
-			idler2[YAW] = pi->torsoStartYaw + ( pi->torsoEndYaw - pi->torsoStartYaw ) * frac;
-			idler2[PITCH] = pi->torsoStartPitch + ( pi->torsoEndPitch - pi->torsoStartPitch ) * frac;
 			idler[PITCH] = pi->headStartPitch + ( pi->headEndPitch - pi->headStartPitch ) * frac;
 			idler[ROLL] = pi->headStartRoll + ( pi->headEndRoll - pi->headStartRoll ) * frac;
 			//VectorCopy( idler , headAngles);
@@ -1267,31 +1264,14 @@ void UI_DrawPlayersBust( float x, float y, float w, float h, playerInfo_t *pi, i
 	refEntity_t		legs;
 	refEntity_t		torso;
 	refEntity_t		head;
-	refEntity_t		gun;
-	refEntity_t		barrel;
-	refEntity_t		flash;
 	vec3_t			origin;
-	vec3_t			armbient;
 	vec3_t			rdorigin;
 	int				renderfx;
-	vec3_t			mins = {-16, -16, -24};
-	vec3_t			maxs = {16, 16, 32};
 	vec3_t			eyethis;
-	float			len;
 	float			xx;
-	vec3_t		focusPoint;
-	float		focusDist;
-	float		forwardScale, sideScale;
-	int weedth, haight;
-	vec3_t		idler;
+	int haight;
 
-	weedth = uiInfo.uiDC.glconfig.vidWidth;
 	haight = uiInfo.uiDC.glconfig.vidHeight;
-
-
-
-
-
 
 	if ( !pi->legsModel || !pi->torsoModel || !pi->headModel || !pi->animations[0].numFrames ) {
 		return;
@@ -1303,10 +1283,6 @@ void UI_DrawPlayersBust( float x, float y, float w, float h, playerInfo_t *pi, i
 	}
 
 	dp_realtime = time;
-
-	armbient[0] = 0.1;
-	armbient[1] = 0.2;
-	armbient[2] = 0.5;
 
 	if ( pi->pendingWeapon != -1 && dp_realtime > pi->weaponTimer ) {
 		pi->weapon = pi->pendingWeapon;
@@ -1417,15 +1393,13 @@ void UI_DrawPlayersBust( float x, float y, float w, float h, playerInfo_t *pi, i
 
 	head.renderfx = renderfx;
 
-			VectorCopy( torso.origin, eyethis );
+	VectorCopy( torso.origin, eyethis );
 	eyethis[0] += -91;
 	eyethis[1] += 0;
 	eyethis[2] += 14;	
 
 	VectorCopy( pi->eyepos, head.eyepos[0] );
 	VectorCopy( eyethis , head.eyelook);
-
-
 
 	trap_R_AddRefEntityToScene( &head );
 
@@ -1439,7 +1413,6 @@ void UI_DrawPlayersBust( float x, float y, float w, float h, playerInfo_t *pi, i
 	origin[1] += 30;	// + = left, - = right
 	origin[2] += 30;	// + = above, - = below
 	trap_R_AddLightToScene( origin, 175, 0.7, 0.6, 0.6 );
-
 
 	origin[0] = -525;
 	origin[1] = 532;
@@ -1461,16 +1434,12 @@ void UI_DrawPlayersBust( float x, float y, float w, float h, playerInfo_t *pi, i
 	rdorigin[1] += 0;
 	rdorigin[2] += 0;	
 */
-			VectorCopy( torso.origin, rdorigin );
+	VectorCopy( torso.origin, rdorigin );
 	rdorigin[0] += -91;
 	rdorigin[1] += 0;
 	rdorigin[2] += 14;	
 
-
-		VectorCopy( rdorigin, refdef.vieworg );
-
-
-
+	VectorCopy( rdorigin, refdef.vieworg );
 
 //	VectorCopy( refdef.vieworg );
 	trap_R_RenderScene( &refdef );
@@ -1483,9 +1452,6 @@ void UI_DrawPlayerOC( float x, float y, float w, float h, playerInfo_t *pi, int 
 	refEntity_t		legs;
 	refEntity_t		torso;
 	refEntity_t		head;
-	refEntity_t		gun;
-	refEntity_t		barrel;
-	refEntity_t		flash;
 
 	// OC parts!
 
@@ -1886,12 +1852,10 @@ static qboolean UI_ParseAnimationFile( const char *filename, animation_t *animat
 
 
 static qboolean UI_ParseEyesFile( const char *filename, playerInfo_t *pai ) {
-	char		*text_p, *prev;
+	char		*text_p;
 	int			len;
 	int			i;
 	char		*token;
-	float		fps;
-	int			skip;
 	char		text[20000];
 	fileHandle_t	f;
 
@@ -1914,11 +1878,9 @@ static qboolean UI_ParseEyesFile( const char *filename, playerInfo_t *pai ) {
 
 	// parse the text
 	text_p = text;
-	skip = 0;	// quite the compiler warning
 
 	// read optional parameters
 	while ( 1 ) {
-		prev = text_p;	// so we can unget
 		token = COM_Parse( &text_p );
 		if ( !token ) {
 			break;

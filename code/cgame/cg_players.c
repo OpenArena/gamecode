@@ -454,12 +454,10 @@ Read eyes definitions.  Maybe this should be done engine-side for mod compatibli
 ======================
 */
 static qboolean	CG_ParseEyesFile( const char *filename, clientInfo_t *ci ) {
-	char		*text_p, *prev;
+	char		*text_p;
 	int			len;
 	int			i;
 	char		*token;
-	float		fps;
-	int			skip;
 	char		text[20000];
 	fileHandle_t	f;
 	// load the file
@@ -478,12 +476,10 @@ static qboolean	CG_ParseEyesFile( const char *filename, clientInfo_t *ci ) {
 
 	// parse the text
 	text_p = text;
-	skip = 0;	// quite the compiler warning
 
 
 	// read optional parameters
 	while ( 1 ) {
-		prev = text_p;	// so we can unget
 		token = COM_Parse( &text_p );
 		if ( !token ) {
 			break;
@@ -1693,7 +1689,7 @@ static void CG_PlayerAngles( centity_t *cent, vec3_t legs[3], vec3_t torso[3], v
 	vec3_t		velocity;
 	float		speed;
 	int			dir, clientNum;
-	clientInfo_t	*ci;
+	clientInfo_t	*ci = NULL;
 	int		camereyes;
 
 
@@ -1756,10 +1752,8 @@ static void CG_PlayerAngles( centity_t *cent, vec3_t legs[3], vec3_t torso[3], v
 		VectorCopy( cent->currentState.pos.trDelta, velocity );
 		speed = VectorNormalize( velocity );
 		if ( speed ) {
-			vec3_t	axis[3];
 			vec3_t	veel;
-			vec3_t fwad, rait;			
-			float	side, frt, rrt;
+			vec3_t fwad, rait;
 			AngleVectors(veel, velocity, fwad, rait);
 			speed *= 0.05f;
 		}
@@ -1902,20 +1896,17 @@ static void CG_PlayerAngles( centity_t *cent, vec3_t legs[3], vec3_t torso[3], v
 	AnglesToAxis( legsAngles, legs );
 	AnglesToAxis( torsoAngles, torso );
 	AnglesToAxis( headAngles, head );
-
-	//VectorCopy( cent->lerpAngles, head.oldorigin );
 	
 	// eyes crap
 	{
-	vec3_t	eyelookat;
-	vec3_t	eyelookfrom;
-	vec3_t	forwaad;
-	trace_t		traced;
+		vec3_t	eyelookfrom;
 
-	// offset from the model we have.
-	VectorClear(eyelookfrom);
-	VectorCopy(ci->eyepos, cent->pe.eyepos);	
-	//VectorCopy(eyelookfrom, cent->pe.eyepos);			// leilei - copy eye poistion
+		// offset from the model we have.
+		VectorClear(eyelookfrom);
+		if (ci) {
+			VectorCopy(ci->eyepos, cent->pe.eyepos);	
+		}
+		//VectorCopy(eyelookfrom, cent->pe.eyepos);			// leilei - copy eye poistion
 	}
 
 }
@@ -2700,7 +2691,9 @@ void CG_Player( centity_t *cent ) {
 	vec3_t			dir, angles;
 	int camereyes = 0;
 	// leilei - chibi hack
-	float chibifactorbody, chibifactortorso, chibifactorhead = 0;
+	float chibifactorbody = 0.0f;
+	float chibifactortorso = 0.0f;
+	float chibifactorhead = 0.0f;
 
 	if (cg_leiChibi.integer > 0){
 
@@ -2900,11 +2893,7 @@ void CG_Player( centity_t *cent ) {
 			// HMM
 			{
 			vec3_t v, forwaad;
-			vec3_t	angles;
-			vec3_t	dir;
-			float len;
 			vec3_t orrg;
-			vec3_t av[3];
 			trace_t trace;
 			VectorCopy(cent->lerpAngles, v);
 			AngleVectors( v, forwaad, NULL, NULL );
@@ -3216,11 +3205,7 @@ void CG_Player( centity_t *cent ) {
 	// HMM
 	{
 	vec3_t v, forwaad;
-	vec3_t	angles;
-	vec3_t	dir;
-	float len;
 	vec3_t orrg;
-	vec3_t av[3];
 	trace_t trace;
 	VectorCopy(cent->lerpAngles, v);
 	AngleVectors( v, forwaad, NULL, NULL );

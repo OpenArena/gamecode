@@ -2404,10 +2404,9 @@ void CG_Init( int serverMessageNum, int serverCommandSequence, int clientNum ) {
 			// leilei - widescreen correction
 
 	{
-		float resbias, resbiasy;
-		float rex, rey, rias;
+		float resbias;
+		float rex, rey;
 		int newresx, newresy;
-		float adjustx, adjusty;
 
 		rex = 640.0f / realVidWidth;
 		rey = 480.0f / realVidHeight;
@@ -2419,7 +2418,6 @@ void CG_Init( int serverMessageNum, int serverCommandSequence, int clientNum ) {
 		newresy = realVidHeight * rey;
 	
 		resbias  = 0.5 * ( newresx -  ( newresy * (640.0/480.0) ) );
-		resbiasy = 0.5 * ( newresy -  ( newresx * (640.0/480.0) ) );
 
 
 		wideAdjustX = resbias;

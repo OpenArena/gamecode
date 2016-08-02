@@ -266,8 +266,9 @@ peektokens(Tokenrow *trp, char *str)
 	flushout();
 	if (str)
 		fprintf(stderr, "%s ", str);
-	if (tp<trp->bp || tp>trp->lp)
-		fprintf(stderr, "(tp offset %d) ", tp-trp->bp);
+	if (tp<trp->bp || tp>trp->lp) {
+		fprintf(stderr, "(tp offset %ld) ", tp-trp->bp);
+	}
 	for (tp=trp->bp; tp<trp->lp && tp<trp->bp+32; tp++) {
 		if (tp->type!=NL) {
 			int c = tp->t[tp->len];

@@ -182,7 +182,6 @@ Sets the coordinates of the rendered window
 static void CG_CalcVrect (void) {
 	int		size;
 	int		size2;
-	int 		compensate;
 
 	// the intermission should allways be full screen
 	if ( cg.snap->ps.pm_type == PM_INTERMISSION ) {
@@ -203,7 +202,6 @@ static void CG_CalcVrect (void) {
 
 	size2 = size;
 	if (size>100){
-		compensate = size - 100;
 		size = 100;	// leilei - size should actually be normal...
 	}
 	cg.refdef.width = cgs.glconfig.vidWidth*size/100;
@@ -250,9 +248,6 @@ static void CG_OffsetThirdPersonView( void ) {
 	vec3_t		forward, right, up;
 	vec3_t		view;
 	vec3_t		focusAngles;
-	trace_t		trace;
-	static vec3_t	mins = { -4, -4, -4 };
-	static vec3_t	maxs = { 4, 4, 4 };
 	vec3_t		focusPoint;
 	float		focusDist;
 	float		forwardScale, sideScale;
@@ -281,110 +276,106 @@ static void CG_OffsetThirdPersonView( void ) {
 	}
 
 	if (cg_cameramode.integer && (cg.predictedPlayerState.stats[STAT_HEALTH] > 0))		// leilei this mode is off to the player's right
-	{											// and should look towards a 3d crosshair
+	{											
+		// and should look towards a 3d crosshair
+		AngleVectors( focusAngles, forward, NULL, NULL );
+		VectorMA( cg.refdef.vieworg, FOCUS_DISTANCE, forward, focusPoint );
+		VectorCopy( cg.refdef.vieworg, view );
 
+		view[2] += 3;
 
-	AngleVectors( focusAngles, forward, NULL, NULL );
-	VectorMA( cg.refdef.vieworg, FOCUS_DISTANCE, forward, focusPoint );
-	VectorCopy( cg.refdef.vieworg, view );
+		cg.refdefViewAngles[PITCH] *= 0.5;
 
+		// hmm HMMhmmhHMHMHMhmhmh
 
-	view[2] += 3;
+		//cg.refdefViewAngles[YAW] -= cg_leiDebug.value;
+		AngleVectors( focusAngles, forward, NULL, NULL );
+		VectorMA( cg.refdef.vieworg, FOCUS_DISTANCE, forward, focusPoint );
+		VectorCopy( cg.refdef.vieworg, view );
 
-	cg.refdefViewAngles[PITCH] *= 0.5;
+		AngleVectors( cg.refdefViewAngles, forward, right, up );
 
-	// hmm HMMhmmhHMHMHMhmhmh
+		forwardScale = cos( 0 / 180 * M_PI );
+		sideScale = sin( 0 / 180 * M_PI ) - 0.465;
+		VectorMA( view, -range * forwardScale, forward, view );
+		VectorMA( view, -range * sideScale, right, view );
 
-	//cg.refdefViewAngles[YAW] -= cg_leiDebug.value;
-	AngleVectors( focusAngles, forward, NULL, NULL );
-	VectorMA( cg.refdef.vieworg, FOCUS_DISTANCE, forward, focusPoint );
-	VectorCopy( cg.refdef.vieworg, view );
+		VectorCopy( view, cg.refdef.vieworg );
 
+		// select pitch to look at focus point from vieword
+		VectorSubtract( focusPoint, cg.refdef.vieworg, focusPoint );
+		focusDist = sqrt( focusPoint[0] * focusPoint[0] + focusPoint[1] * focusPoint[1] );
+		if ( focusDist < 1 ) {
+			focusDist = 1;	// should never happen
+		}
+		cg.refdefViewAngles[PITCH] = -180 / M_PI * atan2( focusPoint[2], focusDist );
 
+		// leilei - make it look to a 3d cursor
 
-	AngleVectors( cg.refdefViewAngles, forward, right, up );
+		//cg.refdefViewAngles[YAW] -= cg_thirdPersonAngle.value;	 // can't do this right now.
 
-	forwardScale = cos( 0 / 180 * M_PI );
-	sideScale = sin( 0 / 180 * M_PI ) - 0.465;
-	VectorMA( view, -range * forwardScale, forward, view );
-	VectorMA( view, -range * sideScale, right, view );
+		{
+			vec3_t			forward, up;
 
-	VectorCopy( view, cg.refdef.vieworg );
-
-	// select pitch to look at focus point from vieword
-	VectorSubtract( focusPoint, cg.refdef.vieworg, focusPoint );
-	focusDist = sqrt( focusPoint[0] * focusPoint[0] + focusPoint[1] * focusPoint[1] );
-	if ( focusDist < 1 ) {
-		focusDist = 1;	// should never happen
-	}
-	cg.refdefViewAngles[PITCH] = -180 / M_PI * atan2( focusPoint[2], focusDist );
-
-	// leilei - make it look to a 3d cursor
-
-	//cg.refdefViewAngles[YAW] -= cg_thirdPersonAngle.value;	 // can't do this right now.
-
-	{
-	vec3_t			forward, up;
- 
-	cg.refdef.vieworg[2] -= 24;
-	AngleVectors( cg.refdefViewAngles, forward, NULL, up );
-	VectorMA( cg.refdef.vieworg, 1, forward, cg.refdef.vieworg );
-	VectorMA( cg.refdef.vieworg, 24, up, cg.refdef.vieworg );
-	}
+			cg.refdef.vieworg[2] -= 24;
+			AngleVectors( cg.refdefViewAngles, forward, NULL, up );
+			VectorMA( cg.refdef.vieworg, 1, forward, cg.refdef.vieworg );
+			VectorMA( cg.refdef.vieworg, 24, up, cg.refdef.vieworg );
+		}
 
 
 	}
 	else
 	{
-	if ( focusAngles[PITCH] > 45 ) {
-		focusAngles[PITCH] = 45;		// don't go too far overhead
-	}
-	AngleVectors( focusAngles, forward, NULL, NULL );
-
-	VectorMA( cg.refdef.vieworg, FOCUS_DISTANCE, forward, focusPoint );
-
-	VectorCopy( cg.refdef.vieworg, view );
-
-	view[2] += 8;
-
-	cg.refdefViewAngles[PITCH] *= 0.5;
-
-	AngleVectors( cg.refdefViewAngles, forward, right, up );
-
-	forwardScale = cos( cg_thirdPersonAngle.value / 180 * M_PI );
-	sideScale = sin( cg_thirdPersonAngle.value / 180 * M_PI );
-	VectorMA( view, -range * forwardScale, forward, view );
-	VectorMA( view, -range * sideScale, right, view );
-
-	// trace a ray from the origin to the viewpoint to make sure the view isn't
-	// in a solid block.  Use an 8 by 8 block to prevent the view from near clipping anything
-/*
-	if (!cg_cameraMode.integer) {
-		CG_Trace( &trace, cg.refdef.vieworg, mins, maxs, view, cg.predictedPlayerState.clientNum, MASK_SOLID );
-
-		if ( trace.fraction != 1.0 ) {
-			VectorCopy( trace.endpos, view );
-			view[2] += (1.0 - trace.fraction) * 32;
-			// try another trace to this position, because a tunnel may have the ceiling
-			// close enough that this is poking out
-
-			CG_Trace( &trace, cg.refdef.vieworg, mins, maxs, view, cg.predictedPlayerState.clientNum, MASK_SOLID );
-			VectorCopy( trace.endpos, view );
+		if ( focusAngles[PITCH] > 45 ) {
+			focusAngles[PITCH] = 45;		// don't go too far overhead
 		}
-	}
-*/
+		AngleVectors( focusAngles, forward, NULL, NULL );
+
+		VectorMA( cg.refdef.vieworg, FOCUS_DISTANCE, forward, focusPoint );
+
+		VectorCopy( cg.refdef.vieworg, view );
+
+		view[2] += 8;
+
+		cg.refdefViewAngles[PITCH] *= 0.5;
+
+		AngleVectors( cg.refdefViewAngles, forward, right, up );
+
+		forwardScale = cos( cg_thirdPersonAngle.value / 180 * M_PI );
+		sideScale = sin( cg_thirdPersonAngle.value / 180 * M_PI );
+		VectorMA( view, -range * forwardScale, forward, view );
+		VectorMA( view, -range * sideScale, right, view );
+
+		// trace a ray from the origin to the viewpoint to make sure the view isn't
+		// in a solid block.  Use an 8 by 8 block to prevent the view from near clipping anything
+	/*
+		if (!cg_cameraMode.integer) {
+			CG_Trace( &trace, cg.refdef.vieworg, mins, maxs, view, cg.predictedPlayerState.clientNum, MASK_SOLID );
+
+			if ( trace.fraction != 1.0 ) {
+				VectorCopy( trace.endpos, view );
+				view[2] += (1.0 - trace.fraction) * 32;
+				// try another trace to this position, because a tunnel may have the ceiling
+				// close enough that this is poking out
+
+				CG_Trace( &trace, cg.refdef.vieworg, mins, maxs, view, cg.predictedPlayerState.clientNum, MASK_SOLID );
+				VectorCopy( trace.endpos, view );
+			}
+		}
+	*/
 
 
-	VectorCopy( view, cg.refdef.vieworg );
+		VectorCopy( view, cg.refdef.vieworg );
 
-	// select pitch to look at focus point from vieword
-	VectorSubtract( focusPoint, cg.refdef.vieworg, focusPoint );
-	focusDist = sqrt( focusPoint[0] * focusPoint[0] + focusPoint[1] * focusPoint[1] );
-	if ( focusDist < 1 ) {
-		focusDist = 1;	// should never happen
-	}
-	cg.refdefViewAngles[PITCH] = -180 / M_PI * atan2( focusPoint[2], focusDist );
-	cg.refdefViewAngles[YAW] -= cg_thirdPersonAngle.value;
+		// select pitch to look at focus point from vieword
+		VectorSubtract( focusPoint, cg.refdef.vieworg, focusPoint );
+		focusDist = sqrt( focusPoint[0] * focusPoint[0] + focusPoint[1] * focusPoint[1] );
+		if ( focusDist < 1 ) {
+			focusDist = 1;	// should never happen
+		}
+		cg.refdefViewAngles[PITCH] = -180 / M_PI * atan2( focusPoint[2], focusDist );
+		cg.refdefViewAngles[YAW] -= cg_thirdPersonAngle.value;
 	}
 
 	
@@ -794,7 +785,7 @@ static int CG_CalcViewValues( void ) {
 
 	// leilei - View-from-the-model-eyes feature, aka "fullbody awareness" lol
 	if (cg_cameraEyes.integer && !cg.renderingThirdPerson){
-		vec3_t		forward, right, up;	
+		vec3_t		forward, up;	
 		cg.refdefViewAngles[ROLL] = headang[ROLL];
 		cg.refdefViewAngles[PITCH] = headang[PITCH];
 		cg.refdefViewAngles[YAW] = headang[YAW];
