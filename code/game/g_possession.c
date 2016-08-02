@@ -52,6 +52,12 @@ void Possession_SpawnFlag( void ) {
 	if (possessionFlag) {
 		return;
 	}
+	ent = SelectRandomEntity("team_CTF_neutralflag");
+	if (ent) {
+		possessionFlag = ent;
+		G_LogPrintf("Info: The map contains a white flag. We do not spawn a new one.\n");
+		return;
+	}
 	if (!ent) {
 		//If not pick a random domination point
 		ent = SelectRandomEntity("domination_point");
