@@ -221,7 +221,7 @@ CG_RailTrail
 ==========================
 */
 void CG_RailTrail (clientInfo_t *ci, vec3_t start, vec3_t end) {
-	vec3_t axis[36], move, move2, next_move, vec, temp;
+	vec3_t axis[36], move, move2, vec, temp;
 	float  len;
 	int    i, j, skip;
  
@@ -322,7 +322,6 @@ void CG_RailTrail (clientInfo_t *ci, vec3_t start, vec3_t end) {
 	}
 
 	VectorMA(move, 20, vec, move);
-	VectorCopy(move, next_move);
 	VectorScale (vec, SPACING, vec);
 
 	skip = -1;
@@ -455,8 +454,6 @@ static void CG_LeiSmokeTrail( centity_t *ent, const weaponInfo_t *wi ) {
 	int		lastContents;
 	entityState_t	*es;
 	vec3_t	up;
-	localEntity_t	*smoke;
-	int		therando;
 
 	if ( cg_noProjectileTrail.integer ) {
 		return;
@@ -1145,7 +1142,6 @@ static void CG_CalculateWeaponPosition( vec3_t origin, vec3_t angles ) {
 	{
 		vec3_t		forward, right, up;
 		float		bob;
-		float 		s =  cg.time * scale * 0.001;
 		//float		sinsin;
 	
 		//sinsin = fabs( sin( ( ps->bobCycle & 127 ) / 127.0 * M_PI ) );
@@ -2920,8 +2916,6 @@ void CG_MissileHitWall( int weapon, int clientNum, vec3_t origin, vec3_t dir, im
 	qboolean		alphaFade;
 	qboolean		isSprite;
 	int				duration;
-	vec3_t			sprOrg;
-	vec3_t			sprVel;
 
 	mark = 0;
 	radius = 32;
@@ -2951,8 +2945,6 @@ void CG_MissileHitWall( int weapon, int clientNum, vec3_t origin, vec3_t dir, im
 		mark = cgs.media.holeMarkShader;
 		radius = 12;
 		if (cg_leiEnhancement.integer){ 
-			VectorScale( dir, 2, sprVel );
-			VectorMA( origin, 2, dir, sprOrg );		
 			trap_R_LFX_ParticleEffect(10, origin, dir); // that was easy.
 		}
 		break;
@@ -2981,8 +2973,6 @@ void CG_MissileHitWall( int weapon, int clientNum, vec3_t origin, vec3_t dir, im
 		isSprite = qtrue;
 		if (cg_leiEnhancement.integer){ 
 			duration = 10;
-			VectorScale( dir, 2, sprVel );
-			VectorMA( origin, 2, dir, sprOrg );		
 			trap_R_LFX_ParticleEffect(11, origin, dir); // that was easy.
 		}
 		// LEILEI END enhancement
@@ -2999,8 +2989,6 @@ void CG_MissileHitWall( int weapon, int clientNum, vec3_t origin, vec3_t dir, im
 		isSprite = qtrue;
 		if (cg_leiEnhancement.integer){ 
 			duration = 10;
-			VectorScale( dir, 2, sprVel );
-			VectorMA( origin, 2, dir, sprOrg );		
 			trap_R_LFX_ParticleEffect(4, origin, dir); // that was easy.
 		}
 		// LEILEI END enhancement
@@ -3032,8 +3020,6 @@ void CG_MissileHitWall( int weapon, int clientNum, vec3_t origin, vec3_t dir, im
 		radius = 24;
 		if (cg_leiEnhancement.integer){ 
 			duration = 10;
-			VectorScale( dir, 2, sprVel );
-			VectorMA( origin, 2, dir, sprOrg );		
 			trap_R_LFX_ParticleEffect(30, origin, dir); // that was easy.
 		}
 		break;
@@ -3045,8 +3031,6 @@ void CG_MissileHitWall( int weapon, int clientNum, vec3_t origin, vec3_t dir, im
 		radius = 16;
 		if (cg_leiEnhancement.integer){ 
 			duration = 10;
-			VectorScale( dir, 2, sprVel );
-			VectorMA( origin, 2, dir, sprOrg );		
 			trap_R_LFX_ParticleEffect(6, origin, dir); // that was easy.
 		}
 
@@ -3060,8 +3044,6 @@ void CG_MissileHitWall( int weapon, int clientNum, vec3_t origin, vec3_t dir, im
 		isSprite = qtrue;
 		if (cg_leiEnhancement.integer){ 
 			duration = 10;
-			VectorScale( dir, 2, sprVel );
-			VectorMA( origin, 2, dir, sprOrg );		
 			trap_R_LFX_ParticleEffect(9, origin, dir); // that was easy.
 		}
 		break;
@@ -3073,8 +3055,6 @@ void CG_MissileHitWall( int weapon, int clientNum, vec3_t origin, vec3_t dir, im
 		radius = 4;
 		if (cg_leiEnhancement.integer){ 
 			duration = 10;
-			VectorScale( dir, 2, sprVel );
-			VectorMA( origin, 2, dir, sprOrg );		
 			trap_R_LFX_ParticleEffect(3, origin, dir); // that was easy.
 		}
 		break;
@@ -3127,8 +3107,6 @@ void CG_MissileHitWall( int weapon, int clientNum, vec3_t origin, vec3_t dir, im
 		radius = 8;
 		if (cg_leiEnhancement.integer){ 
 			duration = 10;
-			VectorScale( dir, 2, sprVel );
-			VectorMA( origin, 2, dir, sprOrg );		
 			trap_R_LFX_ParticleEffect(2, origin, dir); // that was easy.
 		}
 		break;
@@ -3335,7 +3313,6 @@ void CG_ShotgunFire( entityState_t *es ) {
 	if ( cgs.glconfig.hardwareType != GLHW_RAGEPRO ) {
 		// ragepro can't alpha fade, so don't even bother with smoke
 		vec3_t			up;
-		vec3_t			forward;
 
 		contents = CG_PointContents( es->pos.trBase, 0 );
 		if ( !( contents & CONTENTS_WATER ) ) {
@@ -3493,7 +3470,6 @@ void CG_Bullet( vec3_t end, int sourceEntityNum, vec3_t normal, qboolean flesh, 
 	int sourceContentType, destContentType;
 	vec3_t		start;
 // LEILEI ENHACNEMENT
-	vec3_t	kapew;	
 	vec3_t  kapow;
 
 
