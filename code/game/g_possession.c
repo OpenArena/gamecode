@@ -23,19 +23,19 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "g_local.h"
 
 
-extern gentity_t	*neutralObelisk;
+static gentity_t	*possessionFlag;
 
 static void Possession_create_neutral_obelisk( gentity_t *target ) {
 	gitem_t			*it;
-	if (neutralObelisk) {
+	if (possessionFlag) {
 		return;
 	}
 	it = BG_FindItem("Neutral Flag");
-	neutralObelisk = G_Spawn();
-	VectorCopy( target->r.currentOrigin, neutralObelisk->s.origin );
-	neutralObelisk->classname = it->classname;
-	G_SpawnItem(neutralObelisk, it);
-	FinishSpawningItem(neutralObelisk );
+	possessionFlag = G_Spawn();
+	VectorCopy( target->r.currentOrigin, possessionFlag->s.origin );
+	possessionFlag->classname = it->classname;
+	G_SpawnItem(possessionFlag, it);
+	FinishSpawningItem(possessionFlag );
 	Team_SetFlagStatus( TEAM_FREE, FLAG_ATBASE );
 }
 
@@ -49,7 +49,7 @@ static qboolean EntityFilterNoBotsOrHumanOnly(const gentity_t* item) {
 
 void Possession_SpawnFlag( void ) {
 	gentity_t	*ent = NULL;
-	if (neutralObelisk) {
+	if (possessionFlag) {
 		return;
 	}
 	if (!ent) {
