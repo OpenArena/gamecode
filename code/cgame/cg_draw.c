@@ -3185,14 +3185,16 @@ static void CG_DrawProxWarning( void ) {
 	}
 
 	if (proxTime == 0) {
+		//Timer was not set, set it
 		proxTime = cg.time + 5000;
 		proxCounter = 5;
 		proxTick = 0;
-	}
-
-	if (cg.time > proxTime) {
-		proxTick = proxCounter--;
-		proxTime = cg.time + 1000;
+	} else {
+		//Times was already set
+		if (cg.time > proxTime) {
+			proxTick = proxCounter--;
+			proxTime = cg.time + 1000;
+		}
 	}
 
 	if (proxTick != 0) {
