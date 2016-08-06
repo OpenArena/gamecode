@@ -856,8 +856,10 @@ typedef struct mapinfo_result_s {
 	char mpBots[1024];
 	char auther[64];
 	char description[8192];
+	char gametypeSupported[GT_MAX_GAME_TYPE]; //y/n
 } mapinfo_result_t;
 
+qboolean MatchesGametype(int gametype, const char* gametypeName);
 void MapInfoGet(const char* mapname, int gametype, mapinfo_result_t *result);
 
 

@@ -1795,11 +1795,59 @@ int		trap_FS_FOpenFile( const char *qpath, fileHandle_t *f, fsMode_t mode );
 void trap_FS_Read( void *buffer, int len, fileHandle_t f );
 void trap_FS_FCloseFile( fileHandle_t f );
 
+qboolean MatchesGametype(int gametype, const char* gametypeName) {
+	qboolean mayRead = qfalse;
+	switch (gametype) {
+		case GT_FFA:
+			if (Q_strequal(gametypeName,"dm")) mayRead = qtrue;
+			break;
+		case GT_TEAM:
+			if (Q_strequal(gametypeName,"team")) mayRead = qtrue;
+			break;
+		case GT_TOURNAMENT:
+			if (Q_strequal(gametypeName,"tourney")) mayRead = qtrue;
+			break;
+		case GT_CTF:
+			if (Q_strequal(gametypeName,"ctf")) mayRead = qtrue;
+			break;
+		case GT_1FCTF:
+			if (Q_strequal(gametypeName,"1fctf")) mayRead = qtrue;
+			break;
+		case GT_OBELISK:
+			if (Q_strequal(gametypeName,"obelisk")) mayRead = qtrue;
+			break;
+		case GT_HARVESTER:
+			if (Q_strequal(gametypeName,"harvester")) mayRead = qtrue;
+			break;
+		case GT_ELIMINATION:
+			if (Q_strequal(gametypeName,"elimination")) mayRead = qtrue;
+			break;
+		case GT_CTF_ELIMINATION:
+			if (Q_strequal(gametypeName,"ctfelim")) mayRead = qtrue;
+			break;
+		case GT_LMS:
+			if (Q_strequal(gametypeName,"lms")) mayRead = qtrue;
+			break;
+		case GT_DOUBLE_D:
+			if (Q_strequal(gametypeName,"dd")) mayRead = qtrue;
+			break;
+		case GT_DOMINATION:
+			if (Q_strequal(gametypeName,"dom")) mayRead = qtrue;
+			break;
+		case GT_POSSESSION:
+			if (Q_strequal(gametypeName,"pos")) mayRead = qtrue;
+			break;
+	};
+	return mayRead;
+}
+
 void MapInfoGet(const char* mapname, int gametype, mapinfo_result_t *result) {
 	fileHandle_t	file;
 	char buffer[4*1024];
-	char *token,*pointer;
+	char *token;
+	char *pointer;
 	int mayRead;
+	int i;
 	
 	memset(result,0,sizeof(*result));
 	Com_sprintf(buffer,sizeof(buffer),"maps/%s.info",mapname);
@@ -1807,7 +1855,7 @@ void MapInfoGet(const char* mapname, int gametype, mapinfo_result_t *result) {
 
 	trap_FS_FOpenFile(buffer,&file,FS_READ);
 
-	if(!file) {
+	if (!file) {
 		Com_Printf("File %s not found\n",buffer);
 		return;
 	}
@@ -1835,48 +1883,7 @@ void MapInfoGet(const char* mapname, int gametype, mapinfo_result_t *result) {
 				mayRead = qtrue; 
 			} 
 			else {
-				switch (gametype) {
-					case GT_FFA:
-						if (Q_strequal(token,"dm")) mayRead = qtrue;
-						break;
-					case GT_TEAM:
-						if (Q_strequal(token,"team")) mayRead = qtrue;
-						break;
-					case GT_TOURNAMENT:
-						if (Q_strequal(token,"tourney")) mayRead = qtrue;
-						break;
-					case GT_CTF:
-						if (Q_strequal(token,"ctf")) mayRead = qtrue;
-						break;
-					case GT_1FCTF:
-						if (Q_strequal(token,"1fctf")) mayRead = qtrue;
-						break;
-					case GT_OBELISK:
-						if (Q_strequal(token,"obelisk")) mayRead = qtrue;
-						break;
-					case GT_HARVESTER:
-						if (Q_strequal(token,"harvester")) mayRead = qtrue;
-						break;
-					case GT_ELIMINATION:
-						if (Q_strequal(token,"elimination")) mayRead = qtrue;
-						break;
-					case GT_CTF_ELIMINATION:
-						if (Q_strequal(token,"ctfelim")) mayRead = qtrue;
-						break;
-					case GT_LMS:
-						if (Q_strequal(token,"lms")) mayRead = qtrue;
-						break;
-					case GT_DOUBLE_D:
-						if (Q_strequal(token,"dd")) mayRead = qtrue;
-						break;
-					case GT_DOMINATION:
-						if (Q_strequal(token,"dom")) mayRead = qtrue;
-						break;
-					case GT_POSSESSION:
-						if (Q_strequal(token,"pos")) mayRead = qtrue;
-						break;
-						
-				};
+				mayRead = MatchesGametype(gametype, token);
 			}
 		}
 		if ( Q_strequal( token, "auther" ) ) {
@@ -1923,6 +1930,19 @@ void MapInfoGet(const char* mapname, int gametype, mapinfo_result_t *result) {
 			token = COM_Parse( &pointer );
 			if (mayRead) result->timeLimit = atoi(token);
 		}
+#define SUPPORT_GAMETYPE_PREFIX "support_"
+		if ( Q_strequaln( token, SUPPORT_GAMETYPE_PREFIX, sizeof(SUPPORT_GAMETYPE_PREFIX)-1) ) {
+			//Com_Printf("Saw %s, gametype part: %s\n", token, &token[sizeof(SUPPORT_GAMETYPE_PREFIX)-1]);
+			for (i = 0; i < GT_MAX_GAME_TYPE; ++i) {
+				if (MatchesGametype(i, &token[sizeof(SUPPORT_GAMETYPE_PREFIX)-1])) {
+					token = COM_Parse( &pointer );
+					//Com_Printf("Matched gametype %d, %s\n", i, token);
+					result->gametypeSupported[i] = token[0];
+					break;
+				}
+			}
+		}
+		
 	}
 
 	trap_FS_FCloseFile(file);

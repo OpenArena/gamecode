@@ -143,7 +143,8 @@ static int gametype_remap2[] = {
 	9, 
 	10,
 	11,
-	12
+	12,
+	13
 };		//this works and should increment for more gametypes
 
 static void UI_ServerOptionsMenu( qboolean multiplayer );
@@ -379,6 +380,7 @@ StartServer_GametypeEvent
 */
 static void StartServer_GametypeEvent( void* ptr, int event ) {
 	int			i;
+	int			j;
 	int			count;
 	int			gamebits;
 	int			matchbits;
@@ -396,8 +398,17 @@ static void StartServer_GametypeEvent( void* ptr, int event ) {
 	}
 	for( i = 0; i < count; i++ ) {
 		info = UI_GetArenaInfoByNumber( i );
+		MapInfoGet(Info_ValueForKey(info, "map"), gametype_remap[s_startserver.gametype.curvalue], &mapinfo);
 
 		gamebits = GametypeBits( Info_ValueForKey( info, "type") );
+		for ( j=0; j< GT_MAX_GAME_TYPE; ++j) {
+			if (mapinfo.gametypeSupported[j]=='y' || mapinfo.gametypeSupported[j]=='Y') {
+				gamebits |= (1 << j);
+			}
+			if (mapinfo.gametypeSupported[j]=='n' || mapinfo.gametypeSupported[j]=='N') {
+				gamebits = gamebits & (~(1 << j));
+			}
+		}
 		if( !( gamebits & matchbits ) ) {
 			continue;
 		}
