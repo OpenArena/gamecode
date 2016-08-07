@@ -847,7 +847,7 @@ const char *BG_TeamName( team_t team );
 typedef struct mapinfo_result_s {
 	int minPlayers;
 	int maxPlayers;
-	int recommentedPlayers;
+	int recommendedPlayers;
 	int minTeamSize;
 	int maxTeamSize;
 	int timeLimit;

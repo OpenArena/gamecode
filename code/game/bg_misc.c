@@ -1922,9 +1922,9 @@ void MapInfoGet(const char* mapname, int gametype, mapinfo_result_t *result) {
 			token = COM_Parse( &pointer );
 			if (mayRead) result->minTeamSize = atoi(token);
 		}
-		if ( Q_strequal( token, "recommentedPlayers" ) ) {
+		if ( Q_strequal( token, "recommendedPlayers" ) ) {
 			token = COM_Parse( &pointer );
-			if (mayRead) result->recommentedPlayers = atoi(token);
+			if (mayRead) result->recommendedPlayers = atoi(token);
 		}
 		if ( Q_strequal( token, "timeLimit" ) ) {
 			token = COM_Parse( &pointer );
