@@ -1844,6 +1844,7 @@ qboolean MatchesGametype(int gametype, const char* gametypeName) {
 void MapInfoGet(const char* mapname, int gametype, mapinfo_result_t *result) {
 	fileHandle_t	file;
 	char buffer[4*1024];
+	char keyBuffer[MAX_TOKEN_CHARS];
 	char *token;
 	char *pointer;
 	int mayRead;
@@ -1872,9 +1873,12 @@ void MapInfoGet(const char* mapname, int gametype, mapinfo_result_t *result) {
 		if ( !token[0] ) {
 			break;
 		}
+		Q_strncpyz(keyBuffer, token, sizeof(keyBuffer));
+		token = COM_Parse( &pointer );
+		
+		Com_Printf("Token \"%s\" found, with value: \"%s\"\n", keyBuffer, token);
 
-		if ( Q_strequal( token, "gametype" ) ) {
-			token = COM_Parse( &pointer );
+		if ( Q_strequal( keyBuffer, "gametype" ) ) {
 			mayRead = qfalse; 
 			if ( !token[0] ) {
 				break;
@@ -1886,56 +1890,44 @@ void MapInfoGet(const char* mapname, int gametype, mapinfo_result_t *result) {
 				mayRead = MatchesGametype(gametype, token);
 			}
 		}
-		if ( Q_strequal( token, "auther" ) ) {
-			token = COM_Parse( &pointer );
+		if ( Q_strequal( keyBuffer, "auther" ) ) {
 			if (mayRead) Q_strncpyz(result->auther,token,sizeof(result->auther));
 		}
-		if ( Q_strequal( token, "description" ) ) {
-			token = COM_Parse( &pointer );
+		if ( Q_strequal( keyBuffer, "description" ) ) {
 			if (mayRead) Q_strncpyz(result->description,token,sizeof(result->description));
 		}
-		if ( Q_strequal( token, "mpBots" ) ) {
-			token = COM_Parse( &pointer );
+		if ( Q_strequal( keyBuffer, "mpBots" ) ) {
 			if (mayRead) Q_strncpyz(result->mpBots,token,sizeof(result->mpBots));
 		}
-		if ( Q_strequal( token, "captureLimit" ) ) {
-			token = COM_Parse( &pointer );
+		if ( Q_strequal( keyBuffer, "captureLimit" ) ) {
 			if (mayRead) result->captureLimit = atoi(token);
 		}
-		if ( Q_strequal( token, "fragLimit" ) ) {
-			token = COM_Parse( &pointer );
+		if ( Q_strequal( keyBuffer, "fragLimit" ) ) {
 			if (mayRead) result->fragLimit = atoi(token);
 		}
-		if ( Q_strequal( token, "maxPlayers" ) ) {
-			token = COM_Parse( &pointer );
+		if ( Q_strequal( keyBuffer, "maxPlayers" ) ) {
 			if (mayRead) result->maxPlayers = atoi(token);
 		}
-		if ( Q_strequal( token, "maxTeamSize" ) ) {
-			token = COM_Parse( &pointer );
+		if ( Q_strequal( keyBuffer, "maxTeamSize" ) ) {
 			if (mayRead) result->maxTeamSize = atoi(token);
 		}
-		if ( Q_strequal( token, "minPlayers" ) ) {
-			token = COM_Parse( &pointer );
+		if ( Q_strequal( keyBuffer, "minPlayers" ) ) {
 			if (mayRead) result->minPlayers = atoi(token);
 		}
-		if ( Q_strequal( token, "minTeamSize" ) ) {
-			token = COM_Parse( &pointer );
+		if ( Q_strequal( keyBuffer, "minTeamSize" ) ) {
 			if (mayRead) result->minTeamSize = atoi(token);
 		}
-		if ( Q_strequal( token, "recommendedPlayers" ) ) {
-			token = COM_Parse( &pointer );
+		if ( Q_strequal( keyBuffer, "recommendedPlayers" ) ) {
 			if (mayRead) result->recommendedPlayers = atoi(token);
 		}
-		if ( Q_strequal( token, "timeLimit" ) ) {
-			token = COM_Parse( &pointer );
+		if ( Q_strequal( keyBuffer, "timeLimit" ) ) {
 			if (mayRead) result->timeLimit = atoi(token);
 		}
 #define SUPPORT_GAMETYPE_PREFIX "support_"
-		if ( Q_strequaln( token, SUPPORT_GAMETYPE_PREFIX, sizeof(SUPPORT_GAMETYPE_PREFIX)-1) ) {
+		if ( Q_strequaln( keyBuffer, SUPPORT_GAMETYPE_PREFIX, sizeof(SUPPORT_GAMETYPE_PREFIX)-1) ) {
 			//Com_Printf("Saw %s, gametype part: %s\n", token, &token[sizeof(SUPPORT_GAMETYPE_PREFIX)-1]);
 			for (i = 0; i < GT_MAX_GAME_TYPE; ++i) {
-				if (MatchesGametype(i, &token[sizeof(SUPPORT_GAMETYPE_PREFIX)-1])) {
-					token = COM_Parse( &pointer );
+				if (MatchesGametype(i, &keyBuffer[sizeof(SUPPORT_GAMETYPE_PREFIX)-1])) {
 					//Com_Printf("Matched gametype %d, %s\n", i, token);
 					result->gametypeSupported[i] = token[0];
 					break;

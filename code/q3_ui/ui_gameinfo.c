@@ -137,7 +137,7 @@ int UI_ParseInfos( char *buf, int max, char *infos[] ) {
 UI_LoadArenasFromFile
 ===============
 */
-static void UI_LoadArenasFromFile( char *filename ) {
+static void UI_LoadArenasFromFile( const char *filename ) {
 	int				len;
 	fileHandle_t	f;
 	char			buf[MAX_ARENAS_TEXT];
@@ -192,9 +192,9 @@ static void UI_LoadArenas( void ) {
 	dirptr  = dirlist;
 	for (i = 0; i < numdirs; i++, dirptr += dirlen+1) {
 		dirlen = strlen(dirptr);
-		strcpy(filename, "scripts/");
-		strcat(filename, dirptr);
+		Q_snprintf(filename, sizeof(filename), "scripts/%s", dirptr);
 		UI_LoadArenasFromFile(filename);
+		trap_Print( va( "Read %s\n", filename ) );
 	}
 	trap_Print( va( "%i arenas parsed\n", ui_numArenas ) );
 	if (outOfMemory) trap_Print(S_COLOR_YELLOW"WARNING: not anough memory in pool to load all arenas\n");
