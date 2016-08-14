@@ -286,7 +286,7 @@ void GibEntity( gentity_t *self, int killer ) {
 				continue;
 			if (ent->activator != self)
 				continue;
-			if (strcmp(ent->classname, "kamikaze timer"))
+			if ( !strequals(ent->classname, "kamikaze timer"))
 				continue;
 			G_FreeEntity(ent);
 			break;

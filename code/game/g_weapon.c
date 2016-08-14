@@ -1221,7 +1221,7 @@ void G_StartKamikaze( gentity_t *ent ) {
 		G_Damage( ent, ent, ent, NULL, NULL, 100000, DAMAGE_NO_PROTECTION, MOD_KAMIKAZE );
 	}
 	else {
-		if ( !strcmp(ent->activator->classname, "bodyque") ) {
+		if ( strequals(ent->activator->classname, "bodyque") ) {
 			explosion->activator = &g_entities[ent->activator->r.ownerNum];
 		}
 		else {

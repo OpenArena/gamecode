@@ -312,7 +312,7 @@ qboolean G_CallSpawn( gentity_t *ent ) {
 
 	// check item spawn functions
 	for ( item=bg_itemlist+1 ; item->classname ; item++ ) {
-		if ( !strcmp(item->classname, itemname) ) {
+		if ( strequals(item->classname, itemname) ) {
 			G_SpawnItem( ent, item );
 			return qtrue;
 		}
@@ -320,7 +320,7 @@ qboolean G_CallSpawn( gentity_t *ent ) {
 
 	// check normal spawn functions
 	for ( s=spawns ; s->name ; s++ ) {
-		if ( !strcmp(s->name, itemname) ) {
+		if ( strequals(s->name, itemname) ) {
 			// found it
 			s->spawn(ent);
 			return qtrue;

@@ -309,15 +309,15 @@ t_customvote getCustomVote(char* votecommand) {
 	pointer = buffer;
 
 	while ( qtrue ) {
-	token = COM_Parse( &pointer );
-		if ( !token[0] ) {
-			break;
-	}
+		token = COM_Parse( &pointer );
+			if ( !token[0] ) {
+				break;
+		}
 
-		if ( strcmp( token, "{" ) ) {
-		Com_Printf( "Missing { in votecustom.cfg\n" );
-		break;
-	}
+		if ( !strequals( token, "{" ) ) {
+			Com_Printf( "Missing { in votecustom.cfg\n" );
+			break;
+		}
 
 		memset(&result,0,sizeof(result));
 
@@ -327,8 +327,8 @@ t_customvote getCustomVote(char* votecommand) {
 					Com_Printf( "Unexpected end of customvote.cfg\n" );
 					break;
 			}
-			if ( !strcmp( token, "}" ) ) {
-					break;
+			if ( strequals( token, "}" ) ) {
+				break;
 			}
 			Q_strncpyz( key, token, sizeof( key ) );
 
@@ -345,8 +345,7 @@ t_customvote getCustomVote(char* votecommand) {
 			} else {
 				Com_Printf("Unknown key in customvote.cfg: %s\n",key);
 			}
-
-	}
+		}
 
 		if(Q_strequal(result.votename,votecommand)) {
 			return result;
@@ -435,25 +434,27 @@ void CountVotes( void ) {
 	level.numVotingClients=0;
 
 	for ( i = 0 ; i < level.maxclients ; i++ ) {
-			if ( level.clients[ i ].pers.connected != CON_CONNECTED )
-				continue; //Client was not connected
+		if ( level.clients[ i ].pers.connected != CON_CONNECTED ) {
+			continue; //Client was not connected
+		}
 
-			if (level.clients[i].sess.sessionTeam == TEAM_SPECTATOR)
-		continue; //Don't count spectators
+		if (level.clients[i].sess.sessionTeam == TEAM_SPECTATOR) {
+			continue; //Don't count spectators
+		}
 
-			if ( g_entities[i].r.svFlags & SVF_BOT )
-				continue; //Is a bot
+		if ( g_entities[i].r.svFlags & SVF_BOT )
+			continue; //Is a bot
 
-			//The client can vote
-			level.numVotingClients++;
+		//The client can vote
+		level.numVotingClients++;
 
-			//Did the client vote yes?
-			if(level.clients[i].vote>0)
-				yes++;
+		//Did the client vote yes?
+		if(level.clients[i].vote>0)
+			yes++;
 
-			//Did the client vote no?
-			if(level.clients[i].vote<0)
-				no++;
+		//Did the client vote no?
+		if(level.clients[i].vote<0)
+			no++;
 	}
 
 	//See if anything has changed

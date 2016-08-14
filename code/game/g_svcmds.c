@@ -448,7 +448,7 @@ void	ClientKick_f( void ) {
         idnum = atoi( str );
 
         //Local client
-        if( !strcmp( level.clients[idnum].pers.ip, "localhost" ) ) {
+        if ( strequals( level.clients[idnum].pers.ip, "localhost" ) ) {
             G_Printf("Kick failed - local player\n");
             return;
         }

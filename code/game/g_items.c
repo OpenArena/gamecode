@@ -445,12 +445,16 @@ void Touch_Item (gentity_t *ent, gentity_t *other, trace_t *trace) {
 
 	//In double DD we cannot "pick up" a flag we already got
 	if(g_gametype.integer == GT_DOUBLE_D) {
-		if( strcmp(ent->classname, "team_CTF_redflag") == 0 )
-			if(other->client->sess.sessionTeam == level.pointStatusA)
+		if( strequals(ent->classname, "team_CTF_redflag") ) {
+			if(other->client->sess.sessionTeam == level.pointStatusA) {
 				return;
-		if( strcmp(ent->classname, "team_CTF_blueflag") == 0 )
-			if(other->client->sess.sessionTeam == level.pointStatusB)
+			}
+		}
+		if( strequals(ent->classname, "team_CTF_blueflag") ) {
+			if(other->client->sess.sessionTeam == level.pointStatusB) {
 				return;
+			}
+		}
 	}
 
 	G_LogPrintf( "Item: %i %s\n", other->s.number, ent->item->classname );
@@ -482,9 +486,10 @@ void Touch_Item (gentity_t *ent, gentity_t *other, trace_t *trace) {
 		break;
 	case IT_TEAM:
 		respawn = Pickup_Team(ent, other);
-                //If touching a team item remove spawnprotection
-                if(other->client->spawnprotected)
-                    other->client->spawnprotected = qfalse;
+		//If touching a team item remove spawnprotection
+		if (other->client->spawnprotected) {
+			other->client->spawnprotected = qfalse;
+		}
 		break;
 	case IT_HOLDABLE:
 		respawn = Pickup_Holdable(ent, other);
@@ -978,7 +983,8 @@ void G_SpawnItem (gentity_t *ent, gitem_t *item) {
 		ent->r.svFlags |= SVF_NOCLIENT;  //Don't broadcast
 	}
 
-	if(g_gametype.integer == GT_DOUBLE_D && (strcmp(ent->classname, "team_CTF_redflag")==0 || strcmp(ent->classname, "team_CTF_blueflag")==0 || strcmp(ent->classname, "team_CTF_neutralflag") == 0 || item->giType == IT_PERSISTANT_POWERUP  )) {
+	if(g_gametype.integer == GT_DOUBLE_D && (strequals(ent->classname, "team_CTF_redflag") || strequals(ent->classname, "team_CTF_blueflag") 
+			|| strequals(ent->classname, "team_CTF_neutralflag") || item->giType == IT_PERSISTANT_POWERUP  )) {
 		ent->s.eFlags |= EF_NODRAW; //Don't draw the flag models/persistant powerups
 	}
 
@@ -990,8 +996,9 @@ void G_SpawnItem (gentity_t *ent, gitem_t *item) {
 		ent->s.eFlags |= EF_NODRAW; // Don't draw the flag colored flags in possession
 	}
 
-	if(strcmp(ent->classname, "domination_point") == 0)
+	if (strequals(ent->classname, "domination_point")) {
 		ent->s.eFlags |= EF_NODRAW; // Don't draw domination_point. It is just a pointer to where the Domination points should be placed
+	}
 	if ( item->giType == IT_POWERUP ) {
 		G_SoundIndex( "sound/items/poweruprespawn.wav" );
 		G_SpawnFloat( "noglobalsound", "0", &ent->speed);

@@ -652,7 +652,7 @@ int G_ClientNumberFromString( char *s )
 
 		G_SanitiseString( cl->pers.netname, n2, sizeof( n2 ) );
 
-		if( !strcmp( n2, s2 ) )
+		if( strequals( n2, s2 ) )
 			return i;
 	}
 

@@ -405,7 +405,7 @@ void G_MissileImpact( gentity_t *ent, trace_t *trace ) {
 		return;
 	}
 
-	if (!strcmp(ent->classname, "hook")) {
+	if (strequals(ent->classname, "hook")) {
 		gentity_t *nent;
 		vec3_t v;
 

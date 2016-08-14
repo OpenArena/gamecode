@@ -66,7 +66,7 @@ sfxHandle_t	CG_CustomSound( int clientNum, const char *soundName ) {
 	ci = &cgs.clientinfo[ clientNum ];
 
 	for ( i = 0 ; i < MAX_CUSTOM_SOUNDS && cg_customSoundNames[i] ; i++ ) {
-		if ( !strcmp( soundName, cg_customSoundNames[i] ) ) {
+		if ( strequals( soundName, cg_customSoundNames[i] ) ) {
 			return ci->sounds[i];
 		}
 	}

@@ -733,7 +733,7 @@ static void CG_RegisterItemSounds( int itemNum ) {
 			s++;
 		}
 
-		if ( !strcmp(data+len-3, "wav" )) {
+		if ( strequals(data+len-3, "wav" )) {
 			trap_S_RegisterSound( data, qfalse );
 		}
 	}
@@ -2440,7 +2440,7 @@ void CG_Init( int serverMessageNum, int serverCommandSequence, int clientNum ) {
 
 	// check version
 	s = CG_ConfigString( CS_GAME_VERSION );
-	if ( strcmp( s, GAME_VERSION ) ) {
+	if ( !strequals( s, GAME_VERSION ) ) {
 		CG_Error( "Client/Server game mismatch: %s/%s", GAME_VERSION, s );
 	}
 
