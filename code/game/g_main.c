@@ -2126,7 +2126,7 @@ static void CloseEliminationDoors( void ) {
 	gentity_t* next;
 	next = NULL;
 	for (next = G_Find(next, FOFS(classname), "func_door"); next ; next = G_Find(next, FOFS(classname), "func_door") ) {
-		if ( Q_strequal(next->targetname, "elimination_active") ) {
+		if ( strequals(next->targetname, ELIMINATION_ACTIVE_TARGETNAME) ) {
 			if (next->moverState != MOVER_2TO1 && next->moverState != MOVER_POS1 ) {
 				MatchTeam(next, MOVER_2TO1, level.time);
 			}
@@ -2138,7 +2138,7 @@ static void CloseEliminationDoorsInstantly( void ) {
 	gentity_t* next;
 	next = NULL;
 	for (next = G_Find(next, FOFS(classname), "func_door"); next ; next = G_Find(next, FOFS(classname), "func_door") ) {
-		if ( Q_strequal(next->targetname, "elimination_active") ) {
+		if ( strequals(next->targetname, ELIMINATION_ACTIVE_TARGETNAME) ) {
 			if ( next->moverState != MOVER_POS1 ) {
 				MatchTeam(next, MOVER_POS1, level.time);
 			}
@@ -2150,7 +2150,7 @@ static void OpenEliminationDoors( void ) {
 	gentity_t* next;
 	next = NULL;
 	for (next = G_Find(next, FOFS(classname), "func_door"); next ; next = G_Find(next, FOFS(classname), "func_door") ) {
-		if ( Q_strequal(next->targetname, "elimination_active") ) {
+		if ( strequals(next->targetname, ELIMINATION_ACTIVE_TARGETNAME) ) {
 			if (next->moverState != MOVER_1TO2 && next->moverState != MOVER_POS2 ) {
 				MatchTeam(next, MOVER_1TO2, level.time);
 			}

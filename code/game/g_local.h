@@ -69,6 +69,8 @@ typedef enum {
 
 #define SP_PODIUM_MODEL		"models/mapobjects/podium/podium4.md3"
 
+#define ELIMINATION_ACTIVE_TARGETNAME "elimination_active"
+
 extern int enableq;
 
 //============================================================================

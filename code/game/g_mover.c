@@ -962,6 +962,10 @@ void SP_func_door (gentity_t *ent) {
 	// leilei - HACK HACK HACK - indefinitely open door (from triggers, etc)
 	if (ent->wait == -1)
 		ent->wait = 99999999; 
+	
+	if ( strequals(ent->targetname, ELIMINATION_ACTIVE_TARGETNAME ) ) {
+		ent->wait = 99999999;
+	}
 
 	// default wait of 2 seconds
 	if (!ent->wait)
