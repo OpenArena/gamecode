@@ -2122,6 +2122,42 @@ void StartLMSRound(void) {
 	EnableWeapons();
 }
 
+static void CloseEliminationDoors( void ) {
+	gentity_t* next;
+	next = NULL;
+	for (next = G_Find(next, FOFS(classname), "func_door"); next ; next = G_Find(next, FOFS(classname), "func_door") ) {
+		if ( Q_strequal(next->targetname, "elimination_active") ) {
+			if (next->moverState != MOVER_2TO1 && next->moverState != MOVER_POS1 ) {
+				MatchTeam(next, MOVER_2TO1, level.time);
+			}
+		}
+	}
+}
+
+static void CloseEliminationDoorsInstantly( void ) {
+	gentity_t* next;
+	next = NULL;
+	for (next = G_Find(next, FOFS(classname), "func_door"); next ; next = G_Find(next, FOFS(classname), "func_door") ) {
+		if ( Q_strequal(next->targetname, "elimination_active") ) {
+			if ( next->moverState != MOVER_POS1 ) {
+				MatchTeam(next, MOVER_POS1, level.time);
+			}
+		}
+	}
+}
+
+static void OpenEliminationDoors( void ) {
+	gentity_t* next;
+	next = NULL;
+	for (next = G_Find(next, FOFS(classname), "func_door"); next ; next = G_Find(next, FOFS(classname), "func_door") ) {
+		if ( Q_strequal(next->targetname, "elimination_active") ) {
+			if (next->moverState != MOVER_1TO2 && next->moverState != MOVER_POS2 ) {
+				MatchTeam(next, MOVER_1TO2, level.time);
+			}
+		}
+	}
+}
+
 //the elimination start function
 void StartEliminationRound(void) {
 
@@ -2157,12 +2193,14 @@ void StartEliminationRound(void) {
 	if(g_elimination_ctf_oneway.integer)
 		SendAttackingTeamMessageToAllClients(); //Ensure that evaryone know who should attack.
 	EnableWeapons();
+	OpenEliminationDoors();
 }
 
 //things to do at end of round:
 void EndEliminationRound(void)
 {
 	DisableWeapons();
+	CloseEliminationDoors();
 	level.roundNumber++;
 	level.roundStartTime = level.time+1000*g_elimination_warmup.integer;
 	SendEliminationMessageToAllClients();
@@ -2175,6 +2213,7 @@ void EndEliminationRound(void)
 //Things to do if we don't want to move the roundNumber
 void RestartEliminationRound(void) {
 	DisableWeapons();
+	CloseEliminationDoors();
 	level.roundNumberStarted = level.roundNumber-1;
 	level.roundStartTime = level.time+1000*g_elimination_warmup.integer;
 	if(!level.intermissiontime)
@@ -2187,6 +2226,7 @@ void RestartEliminationRound(void) {
 //Things to do during match warmup
 void WarmupEliminationRound(void) {
 	EnableWeapons();
+	//OpenEliminationDoors();
 	level.roundNumberStarted = level.roundNumber-1;
 	level.roundStartTime = level.time+1000*g_elimination_warmup.integer;
 	SendEliminationMessageToAllClients();
@@ -2510,6 +2550,7 @@ void CheckElimination(void) {
 		{
 			level.roundRespawned = qtrue;
 			RespawnAll();
+			CloseEliminationDoorsInstantly();
 			SendEliminationMessageToAllClients();
 		}
 
@@ -2522,12 +2563,13 @@ void CheckElimination(void) {
 		if((level.roundNumber>level.roundNumberStarted)&&(level.time>=level.roundStartTime))
 			StartEliminationRound();
 	
-		if(level.time+1000*g_elimination_warmup.integer-500>level.roundStartTime)
-		if(counts[TEAM_BLUE]<1 || counts[TEAM_RED]<1)
-		{
-			RespawnDead(); //Allow players to run around anyway
-			WarmupEliminationRound(); //Start over
-			return;
+		if(level.time+1000*g_elimination_warmup.integer-500>level.roundStartTime) {
+			if(counts[TEAM_BLUE]<1 || counts[TEAM_RED]<1) {
+				RespawnDead(); //Allow players to run around anyway
+				OpenEliminationDoors();
+				WarmupEliminationRound(); //Start over
+				return;
+			}
 		}
 
 		if(level.warmupTime != 0) {

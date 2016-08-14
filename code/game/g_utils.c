@@ -197,7 +197,7 @@ gentity_t *G_PickTarget (char *targetname)
 
 	if (!targetname)
 	{
-                G_Printf("G_PickTarget called with NULL targetname\n");
+		G_Printf("G_PickTarget called with NULL targetname\n");
 		return NULL;
 	}
 
@@ -213,7 +213,7 @@ gentity_t *G_PickTarget (char *targetname)
 
 	if (!num_choices)
 	{
-                G_Printf("G_PickTarget: target %s not found\n", targetname);
+		G_Printf("G_PickTarget: target %s not found\n", targetname);
 		return NULL;
 	}
 

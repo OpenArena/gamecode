@@ -844,9 +844,9 @@ void DisableWeapons(void)
 		if ( level.clients[i].pers.connected == CON_DISCONNECTED ) {
 			continue;
 		}
-                if ( level.clients[i].pers.connected == CON_CONNECTING) {
-                        continue;
-                }
+			if ( level.clients[i].pers.connected == CON_CONNECTING) {
+				continue;
+			}
 
 		if ( level.clients[i].sess.sessionTeam == TEAM_SPECTATOR ) {
 			continue;
@@ -854,7 +854,7 @@ void DisableWeapons(void)
 		client = g_entities + i;
 		client->client->ps.pm_flags |= PMF_ELIMWARMUP;
 	}
-        ProximityMine_RemoveAll(); //Remove all the prox mines
+	ProximityMine_RemoveAll(); //Remove all the prox mines
 	return;
 }
 
@@ -879,10 +879,6 @@ void EnableWeapons(void)
 		if ( level.clients[i].sess.sessionTeam == TEAM_SPECTATOR ) {
 			continue;
 		}
-
-		/*if ( level.clients[i].isEliminated == qtrue ){
-			continue;
-		}*/
 
 		client = g_entities + i;
 		client->client->ps.pm_flags &= ~PMF_ELIMWARMUP;
@@ -917,16 +913,10 @@ void LMSpoint(void)
 		}
 		
 		client = g_entities + i;
-		/*
-		Not good in mode 2 & 3
-		if ( client->health <= 0 ){
-			continue;
-		}
-		*/
 	
 		client->client->ps.persistant[PERS_SCORE] += 1;
-                        G_LogPrintf("PlayerScore: %i %i: %s now has %d points\n",
-		i, client->client->ps.persistant[PERS_SCORE], client->client->pers.netname, client->client->ps.persistant[PERS_SCORE] );
+		G_LogPrintf("PlayerScore: %i %i: %s now has %d points\n",
+			i, client->client->ps.persistant[PERS_SCORE], client->client->pers.netname, client->client->ps.persistant[PERS_SCORE] );
 	}
 	
 	CalculateRanks();
@@ -991,25 +981,6 @@ team_t PickTeam( int ignoreClientNum ) {
     return TEAM_BLUE;
 }
 
-/*
-===========
-ForceClientSkin
-
-Forces a client's skin (for teamplay)
-===========
-*/
-/*
-static void ForceClientSkin( gclient_t *client, char *model, const char *skin ) {
-	char *p;
-
-	if ((p = strrchr(model, '/')) != 0) {
-		*p = 0;
-	}
-
-	Q_strcat(model, MAX_QPATH, "/");
-	Q_strcat(model, MAX_QPATH, skin);
-}
-*/
 
 /*
 ===========
@@ -1288,28 +1259,6 @@ void ClientUserinfoChanged( int clientNum ) {
 		team = client->sess.sessionTeam;
 	}
 
-/*	NOTE: all client side now
-Sago: I am not happy with this exception
- 
-	// team
-	switch( team ) {
-	case TEAM_RED:
-		ForceClientSkin(client, model, "red");
-//		ForceClientSkin(client, headModel, "red");
-		break;
-	case TEAM_BLUE:
-		ForceClientSkin(client, model, "blue");
-//		ForceClientSkin(client, headModel, "blue");
-		break;
-	}
-	// don't ever use a default skin in teamplay, it would just waste memory
-	// however bots will always join a team but they spawn in as spectator
-	if ( g_gametype.integer >= GT_TEAM && team == TEAM_SPECTATOR) {
-		ForceClientSkin(client, model, "red");
-//		ForceClientSkin(client, headModel, "red");
-	}
-*/
-
 	if (g_gametype.integer >= GT_TEAM && g_ffa_gt!=1) {
 		client->pers.teamInfo = qtrue;
 	} else {
@@ -1320,15 +1269,6 @@ Sago: I am not happy with this exception
 			client->pers.teamInfo = qfalse;
 		}
 	}
-	/*
-	s = Info_ValueForKey( userinfo, "cg_pmove_fixed" );
-	if ( !*s || atoi( s ) == 0 ) {
-		client->pers.pmoveFixed = qfalse;
-	}
-	else {
-		client->pers.pmoveFixed = qtrue;
-	}
-	*/
 
 	// team task (0 = none, 1 = offence, 2 = defence)
 	teamTask = atoi(Info_ValueForKey(userinfo, "teamtask"));
@@ -1572,9 +1512,9 @@ void ClientBegin( int clientNum ) {
 	gentity_t       *tent;
 	int			flags;
 	int		countRed, countBlue, countFree;
-        char		userinfo[MAX_INFO_STRING];
+	char		userinfo[MAX_INFO_STRING];
 
-        trap_GetUserinfo( clientNum, userinfo, sizeof( userinfo ) );
+	trap_GetUserinfo( clientNum, userinfo, sizeof( userinfo ) );
 
 	ent = g_entities + clientNum;
 
@@ -1637,8 +1577,9 @@ void ClientBegin( int clientNum ) {
 	// world to the new position
 	flags = client->ps.eFlags;
 	memset( &client->ps, 0, sizeof( client->ps ) );
-        if( client->sess.sessionTeam != TEAM_SPECTATOR )
-            PlayerStore_restore(Info_ValueForKey(userinfo,"cl_guid"),&(client->ps));
+	if( client->sess.sessionTeam != TEAM_SPECTATOR ) {
+		PlayerStore_restore(Info_ValueForKey(userinfo,"cl_guid"),&(client->ps));
+	}
 	client->ps.eFlags = flags;
 
 	// locate ent at a spawn point
@@ -1659,7 +1600,7 @@ void ClientBegin( int clientNum ) {
 		}
 	}
         
-        motd ( ent );
+	motd ( ent );
         
 	G_LogPrintf( "ClientBegin: %i\n", clientNum );
 
@@ -1669,14 +1610,15 @@ void ClientBegin( int clientNum ) {
 		DominationPointStatusMessage(ent);
 	}
 
-        TeamCvarSet();
+	TeamCvarSet();
 
 	// count current clients and rank for scoreboard
 	CalculateRanks();
 
-        //Send the list of custom vote options:
-        if(strlen(custom_vote_info))
-            SendCustomVoteCommands(clientNum);
+	//Send the list of custom vote options:
+	if(strlen(custom_vote_info)) {
+		SendCustomVoteCommands(clientNum);
+	}
 }
 
 /*
@@ -1903,89 +1845,86 @@ void ClientSpawn(gentity_t *ent) {
 	ent->watertype = 0;
 	ent->flags = 0;
         
-        //Sago: No one has hit the client yet!
-        client->lastSentFlying = -1;
+	//Sago: No one has hit the client yet!
+	client->lastSentFlying = -1;
 	
 	VectorCopy (playerMins, ent->r.mins);
 	VectorCopy (playerMaxs, ent->r.maxs);
 
 	client->ps.clientNum = index;
 
-if(g_gametype.integer != GT_ELIMINATION && g_gametype.integer != GT_CTF_ELIMINATION && g_gametype.integer != GT_LMS && !g_elimination_allgametypes.integer)
-{
-	client->ps.stats[STAT_WEAPONS] = ( 1 << WP_MACHINEGUN );
-	if ( g_gametype.integer == GT_TEAM ) {
-		client->ps.ammo[WP_MACHINEGUN] = 50;
-	} else {
-		client->ps.ammo[WP_MACHINEGUN] = 100;
-	}
+	if(g_gametype.integer != GT_ELIMINATION && g_gametype.integer != GT_CTF_ELIMINATION && g_gametype.integer != GT_LMS && !g_elimination_allgametypes.integer)
+	{
+		client->ps.stats[STAT_WEAPONS] = ( 1 << WP_MACHINEGUN );
+		if ( g_gametype.integer == GT_TEAM ) {
+			client->ps.ammo[WP_MACHINEGUN] = 50;
+		} else {
+			client->ps.ammo[WP_MACHINEGUN] = 100;
+		}
 
-	client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_GAUNTLET );
-	client->ps.ammo[WP_GAUNTLET] = -1;
-	client->ps.ammo[WP_GRAPPLING_HOOK] = -1;
+		client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_GAUNTLET );
+		client->ps.ammo[WP_GAUNTLET] = -1;
+		client->ps.ammo[WP_GRAPPLING_HOOK] = -1;
 
-	// health will count down towards max_health
-	ent->health = client->ps.stats[STAT_HEALTH] = client->ps.stats[STAT_MAX_HEALTH] + 25;
-}
-else
-{
-	client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_GAUNTLET );
-	client->ps.ammo[WP_GAUNTLET] = -1;
-	client->ps.ammo[WP_GRAPPLING_HOOK] = -1;
-	if (g_elimination_machinegun.integer > 0) {
-		client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_MACHINEGUN );
-		client->ps.ammo[WP_MACHINEGUN] = g_elimination_machinegun.integer;
+		// health will count down towards max_health
+		ent->health = client->ps.stats[STAT_HEALTH] = client->ps.stats[STAT_MAX_HEALTH] + 25;
 	}
-	if (g_elimination_shotgun.integer > 0) {
-		client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_SHOTGUN );
-		client->ps.ammo[WP_SHOTGUN] = g_elimination_shotgun.integer;
-	}
-	if (g_elimination_grenade.integer > 0) {	
-		client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_GRENADE_LAUNCHER );
-		client->ps.ammo[WP_GRENADE_LAUNCHER] = g_elimination_grenade.integer;
-	}
-	if (g_elimination_rocket.integer > 0) {
-		client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_ROCKET_LAUNCHER );
-		client->ps.ammo[WP_ROCKET_LAUNCHER] = g_elimination_rocket.integer;
-	}
-	if (g_elimination_lightning.integer > 0) {
-		client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_LIGHTNING );
-		client->ps.ammo[WP_LIGHTNING] = g_elimination_lightning.integer;
-	}
-	if (g_elimination_railgun.integer > 0) {
-		client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_RAILGUN );
-		client->ps.ammo[WP_RAILGUN] = g_elimination_railgun.integer;
-	}
-	if (g_elimination_plasmagun.integer > 0) {
-		client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_PLASMAGUN );
-		client->ps.ammo[WP_PLASMAGUN] = g_elimination_plasmagun.integer;
-	}
-	if (g_elimination_bfg.integer > 0) {
-		client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_BFG );
-		client->ps.ammo[WP_BFG] = g_elimination_bfg.integer;
-	}
-        if (g_elimination_grapple.integer) {
-		client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_GRAPPLING_HOOK );
-	}
-	if (g_elimination_nail.integer > 0) {
-		client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_NAILGUN );
-		client->ps.ammo[WP_NAILGUN] = g_elimination_nail.integer;
-	}
-	if (g_elimination_mine.integer > 0) {
-		client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_PROX_LAUNCHER );
-		client->ps.ammo[WP_PROX_LAUNCHER] = g_elimination_mine.integer;
-	}
-	if (g_elimination_chain.integer > 0) {
-		client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_CHAINGUN );
-		client->ps.ammo[WP_CHAINGUN] = g_elimination_chain.integer;
-	}
-	
-	ent->health = client->ps.stats[STAT_ARMOR] = g_elimination_startArmor.integer; //client->ps.stats[STAT_MAX_HEALTH]*2;
-	ent->health = client->ps.stats[STAT_HEALTH] = g_elimination_startHealth.integer; //client->ps.stats[STAT_MAX_HEALTH]*2;	
+	else
+	{
+		client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_GAUNTLET );
+		client->ps.ammo[WP_GAUNTLET] = -1;
+		client->ps.ammo[WP_GRAPPLING_HOOK] = -1;
+		if (g_elimination_machinegun.integer > 0) {
+			client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_MACHINEGUN );
+			client->ps.ammo[WP_MACHINEGUN] = g_elimination_machinegun.integer;
+		}
+		if (g_elimination_shotgun.integer > 0) {
+			client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_SHOTGUN );
+			client->ps.ammo[WP_SHOTGUN] = g_elimination_shotgun.integer;
+		}
+		if (g_elimination_grenade.integer > 0) {	
+			client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_GRENADE_LAUNCHER );
+			client->ps.ammo[WP_GRENADE_LAUNCHER] = g_elimination_grenade.integer;
+		}
+		if (g_elimination_rocket.integer > 0) {
+			client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_ROCKET_LAUNCHER );
+			client->ps.ammo[WP_ROCKET_LAUNCHER] = g_elimination_rocket.integer;
+		}
+		if (g_elimination_lightning.integer > 0) {
+			client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_LIGHTNING );
+			client->ps.ammo[WP_LIGHTNING] = g_elimination_lightning.integer;
+		}
+		if (g_elimination_railgun.integer > 0) {
+			client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_RAILGUN );
+			client->ps.ammo[WP_RAILGUN] = g_elimination_railgun.integer;
+		}
+		if (g_elimination_plasmagun.integer > 0) {
+			client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_PLASMAGUN );
+			client->ps.ammo[WP_PLASMAGUN] = g_elimination_plasmagun.integer;
+		}
+		if (g_elimination_bfg.integer > 0) {
+			client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_BFG );
+			client->ps.ammo[WP_BFG] = g_elimination_bfg.integer;
+		}
+			if (g_elimination_grapple.integer) {
+			client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_GRAPPLING_HOOK );
+		}
+		if (g_elimination_nail.integer > 0) {
+			client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_NAILGUN );
+			client->ps.ammo[WP_NAILGUN] = g_elimination_nail.integer;
+		}
+		if (g_elimination_mine.integer > 0) {
+			client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_PROX_LAUNCHER );
+			client->ps.ammo[WP_PROX_LAUNCHER] = g_elimination_mine.integer;
+		}
+		if (g_elimination_chain.integer > 0) {
+			client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_CHAINGUN );
+			client->ps.ammo[WP_CHAINGUN] = g_elimination_chain.integer;
+		}
 
-	
-	//	ent->health = client->ps.stats[STAT_HEALTH] = 0;
-}
+		ent->health = client->ps.stats[STAT_ARMOR] = g_elimination_startArmor.integer; //client->ps.stats[STAT_MAX_HEALTH]*2;
+		ent->health = client->ps.stats[STAT_HEALTH] = g_elimination_startHealth.integer; //client->ps.stats[STAT_MAX_HEALTH]*2;	
+	}
 	//Instantgib mode, replace weapons with rail (and maybe gauntlet)
 	if(g_instantgib.integer)
 	{
@@ -2018,11 +1957,6 @@ else
 
 	if ( (ent->client->sess.sessionTeam == TEAM_SPECTATOR) || ((client->ps.pm_type == PM_SPECTATOR || client->isEliminated) && 
 		(g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_CTF_ELIMINATION || g_gametype.integer == GT_LMS) ) ) {
-                //Sago: Lets see if this fixes the bots only bug - loose all point on dead bug. (It didn't)
-            /*if(g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_CTF_ELIMINATION || g_gametype.integer == GT_LMS) {
-                G_KillBox( ent );
-		trap_LinkEntity (ent);
-            }*/
 	} else {
 		G_KillBox( ent );
 		trap_LinkEntity (ent);
@@ -2130,47 +2064,30 @@ void ClientDisconnect( int clientNum ) {
 		}
 	}
 
-	// send effect if they were completely connected
-        /*
-         *Sago: I have removed this. A little dangerous but I make him suicide in a moment.
-         */
-	/*if ( ent->client->pers.connected == CON_CONNECTED
-		&& ent->client->sess.sessionTeam != TEAM_SPECTATOR ) {
-		tent = G_TempEntity( ent->client->ps.origin, EV_PLAYER_TELEPORT_OUT );
-		tent->s.clientNum = ent->s.clientNum;
-
-		// They don't get to take powerups with them!
-		// Especially important for stuff like CTF flags
-		TossClientItems( ent );
-		TossClientPersistantPowerups( ent );
-                if( g_gametype.integer == GT_HARVESTER ) {
-			TossClientCubes( ent );
+	//Is the player alive?
+	i = (ent->client->ps.stats[STAT_HEALTH]>0);
+	//Commit suicide!
+	if ( ent->client->pers.connected == CON_CONNECTED
+	&& ent->client->sess.sessionTeam != TEAM_SPECTATOR && i ) {
+		//Prevent a team from loosing point because of player leaving
+		int teamscore = 0;
+		if (g_gametype.integer == GT_TEAM) {
+			teamscore = level.teamScores[ ent->client->sess.sessionTeam ];
 		}
-//#endif
-
-	}*/
-
-        //Is the player alive?
-        i = (ent->client->ps.stats[STAT_HEALTH]>0);
-        //Commit suicide!
-        if ( ent->client->pers.connected == CON_CONNECTED
-		&& ent->client->sess.sessionTeam != TEAM_SPECTATOR && i ) {
-                //Prevent a team from loosing point because of player leaving
-                int teamscore = 0;
-                if(g_gametype.integer == GT_TEAM)
-                    teamscore = level.teamScores[ ent->client->sess.sessionTeam ];
 		// Kill him (makes sure he loses flags, etc)
 		ent->flags &= ~FL_GODMODE;
 		ent->client->ps.stats[STAT_HEALTH] = ent->health = 0;
 		player_die (ent, ent, g_entities + ENTITYNUM_WORLD, 100000, MOD_SUICIDE);
-                if(g_gametype.integer == GT_TEAM)
-                    level.teamScores[ ent->client->sess.sessionTeam ] = teamscore;
+		if (g_gametype.integer == GT_TEAM) {
+			level.teamScores[ ent->client->sess.sessionTeam ] = teamscore;
+		}
 	}
 
 
 
-        if ( ent->client->pers.connected == CON_CONNECTED && ent->client->sess.sessionTeam != TEAM_SPECTATOR)
-            PlayerStore_store(Info_ValueForKey(userinfo,"cl_guid"),ent->client->ps);
+	if ( ent->client->pers.connected == CON_CONNECTED && ent->client->sess.sessionTeam != TEAM_SPECTATOR) {
+		PlayerStore_store(Info_ValueForKey(userinfo,"cl_guid"),ent->client->ps);
+	}
 
 	G_LogPrintf( "ClientDisconnect: %i\n", clientNum );
 
@@ -2203,7 +2120,7 @@ void ClientDisconnect( int clientNum ) {
 	trap_SetConfigstring( CS_PLAYERS + clientNum, "");
 
 	CalculateRanks();
-        CountVotes();
+	CountVotes();
 
 	if ( ent->r.svFlags & SVF_BOT ) {
 		BotAIShutdownClient( clientNum, qfalse );
