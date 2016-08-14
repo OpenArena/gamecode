@@ -1063,17 +1063,19 @@ static float CG_DrawLMSmode( float y ) {
 
 	if(cgs.lms_mode == 0) {
 		s = va("LMS: Point/round + OT");
-	} else
-	if(cgs.lms_mode == 1) {
+	} 
+	else if(cgs.lms_mode == 1) {
 		s = va("LMS: Point/round - OT");
-	} else
-	if(cgs.lms_mode == 2) {
+	} 
+	else if(cgs.lms_mode == 2) {
 		s = va("LMS: Point/kill + OT");
-	} else
-	if(cgs.lms_mode == 3) {
+	} 
+	else if(cgs.lms_mode == 3) {
 		s = va("LMS: Point/kill - OT");
-	} else
+	} 
+	else {
 		s = va("LMS: Unknown mode");
+	}
 
 	w = CG_DrawStrlen( s ) * SMALLCHAR_WIDTH;
 	CG_DrawSmallString( 635 - w, y + 2, s, 1.0F);
@@ -1099,39 +1101,25 @@ static float CG_DrawCTFoneway( float y ) {
 
 	if( (cgs.elimflags&EF_ONEWAY)==0) {
 		return y; //nothing to draw
-	} else
-	if(cgs.attackingTeam == TEAM_BLUE) {
+	} 
+	else if(cgs.attackingTeam == TEAM_BLUE) {
 		memcpy(color,g_color_table[ColorIndex(COLOR_BLUE)],sizeof(color));
 		s = va("Blue team on offence");
-	} else
-	if(cgs.attackingTeam == TEAM_RED) {
+	} 
+	else if(cgs.attackingTeam == TEAM_RED) {
 		memcpy(color,g_color_table[ColorIndex(COLOR_RED)],sizeof(color));
 		s = va("Red team on offence");
-	} else
+	} 
+	else {
 		s = va("Unknown team on offence");
+	}
+	
 
 	w = CG_DrawStrlen( s ) * SMALLCHAR_WIDTH;
 	CG_DrawSmallStringColor( 635 - w, y + 2, s, color);
 
 	return y + SMALLCHAR_HEIGHT+4;
 }
-
-/*
-=================
-CG_DrawEliminationDeathMessage
-=================
-*/
-
-/*static float CG_DrawEliminationDeathMessage( float y ) {
-	char		*s;
-	int			w;
-
-	s = va("You are waiting for a new round");
-	w = CG_DrawStrlen( s ) * SMALLCHAR_WIDTH;
-	CG_DrawSmallString( 635 - w, y + 2, s, 1.0F);
-
-	return y + SMALLCHAR_HEIGHT+4;
-}*/
 
 /*
 =================
