@@ -963,8 +963,19 @@ void SP_func_door (gentity_t *ent) {
 	if (ent->wait == -1)
 		ent->wait = 99999999; 
 	
-	if ( strequals(ent->targetname, ELIMINATION_ACTIVE_TARGETNAME ) ) {
-		ent->wait = 99999999;
+	
+	if ( g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_CTF_ELIMINATION) {
+		char*	value;
+		if ( strequals(ent->targetname, ELIMINATION_ACTIVE_TARGETNAME ) ) {
+			ent->wait = 99999999;
+		}
+		
+		if (G_SpawnString("state_targetname","",&value)) {
+			if ( strequals(value, ELIMINATION_ACTIVE_TARGETNAME ) ) {
+				ent->wait = 99999999;
+				ent->targetname = value;  //A state targetname replaces any other target
+			}
+		}
 	}
 
 	// default wait of 2 seconds

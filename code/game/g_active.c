@@ -347,11 +347,6 @@ void SpectatorThink( gentity_t *ent, usercmd_t *ucmd ) {
 		G_TouchTriggers( ent );
 		trap_UnlinkEntity( ent );
 	}
-
-	/* Stopped players from going into follow mode in B5, should be fixed in B9
-	if(ent->client->sess.sessionTeam != TEAM_SPECTATOR && g_gametype.integer>=GT_ELIMINATION && g_gametype.integer<=GT_LMS)
-		return;
-	*/
 	
 	client->oldbuttons = client->buttons;
 	client->buttons = ucmd->buttons;
