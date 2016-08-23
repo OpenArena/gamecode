@@ -614,6 +614,15 @@ int         G_ClientNumberFromString( char *s );
 qboolean    G_ClientIsLagging( gclient_t *client );
 void        SanitizeString( char *in, char *out );
 
+
+// g_elimination.c
+void CheckElimination(void);
+void CheckLMS(void);
+void RestartEliminationRound(void);
+void SendAttackingTeamMessageToAllClients( void );
+void StartLMSRound(void);
+void WarmupEliminationRound(void);
+
 // KK-OAX Added this for common file stuff between Admin and Sprees.
 // g_fileops.c
 //

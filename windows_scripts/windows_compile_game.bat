@@ -36,6 +36,7 @@ cd windows\build\game
 %cc%  ../../../code/game/g_cmds.c
 %cc%  ../../../code/game/g_cmds_ext.c
 %cc%  ../../../code/game/g_combat.c
+%cc%  ../../../code/game/g_elimination.c^M
 %cc%  ../../../code/game/g_items.c
 %cc%  ../../../code/game/g_main.c
 %cc%  ../../../code/game/bg_alloc.c

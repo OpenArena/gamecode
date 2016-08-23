@@ -966,6 +966,7 @@ void SP_func_door (gentity_t *ent) {
 	
 	if ( g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_CTF_ELIMINATION) {
 		char*	value;
+		//Classic part to make the 
 		if ( strequals(ent->targetname, ELIMINATION_ACTIVE_TARGETNAME ) ) {
 			ent->wait = 99999999;
 		}

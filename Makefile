@@ -2404,6 +2404,7 @@ Q3GOBJ_ = \
   $(B)/$(BASEGAME)/game/g_cmds.o \
   $(B)/$(BASEGAME)/game/g_cmds_ext.o \
   $(B)/$(BASEGAME)/game/g_combat.o \
+  $(B)/$(BASEGAME)/game/g_elimination.o \
   $(B)/$(BASEGAME)/game/g_fileops.o \
   $(B)/$(BASEGAME)/game/g_items.o \
   $(B)/$(BASEGAME)/game/g_killspree.o \
@@ -2464,6 +2465,7 @@ MPGOBJ_ = \
   $(B)/$(MISSIONPACK)/game/g_cmds.o \
   $(B)/$(MISSIONPACK)/game/g_cmds_ext.o \
   $(B)/$(MISSIONPACK)/game/g_combat.o \
+  $(B)/$(MISSIONPACK)/game/g_elimination.o \
   $(B)/$(MISSIONPACK)/game/g_fileops.o \
   $(B)/$(MISSIONPACK)/game/g_items.o \
   $(B)/$(MISSIONPACK)/game/g_killspree.o \
