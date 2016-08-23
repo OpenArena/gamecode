@@ -116,17 +116,18 @@ typedef struct
 #define ID_CHAT3		36
 #define ID_CHAT4		37
 #define ID_VOIP_TALK		38
+#define ID_ACCURACY		39
 
 // all others
-#define ID_FREELOOK		39
-#define ID_INVERTMOUSE	40
-#define ID_ALWAYSRUN	41
-#define ID_AUTOSWITCH	42
-#define ID_MOUSESPEED	43
-#define ID_JOYENABLE	44
-#define ID_JOYTHRESHOLD	45
-#define ID_SMOOTHMOUSE	46
-#define ID_VOIP_TEAMONLY 47
+#define ID_FREELOOK		40
+#define ID_INVERTMOUSE	41
+#define ID_ALWAYSRUN	42
+#define ID_AUTOSWITCH	43
+#define ID_MOUSESPEED	44
+#define ID_JOYENABLE	45
+#define ID_JOYTHRESHOLD	46
+#define ID_SMOOTHMOUSE	47
+#define ID_VOIP_TEAMONLY 48
 
 
 
@@ -216,6 +217,7 @@ typedef struct
 	menuradiobutton_s	smoothmouse;
 	menuradiobutton_s	alwaysrun;
 	menuaction_s		showscores;
+	menuaction_s		showacc;
 	menulist_s              autoswitch;
 	menuaction_s		useitem;
 	playerInfo_t		playerinfo;
@@ -300,6 +302,7 @@ static bind_t g_bindings[] =
 	{"messagemode3", 	"chat - target",	ID_CHAT3,		ANIM_CHAT,		-1,				-1,		-1, -1},
 	{"messagemode4", 	"chat - attacker",	ID_CHAT4,		ANIM_CHAT,		-1,				-1,		-1, -1},
         {"+voiprecord", 	"voice chat",           ID_VOIP_TALK,		ANIM_CHAT,		'q',				-1,		-1, -1},
+	{"+acc",		"show accuracy",	ID_ACCURACY,	ANIM_IDLE,		-1,			-1,		-1, -1},
 	{(char*)NULL,		(char*)NULL,		0,				0,				-1,				-1,		-1,	-1},
 };
 
@@ -371,6 +374,7 @@ static menucommon_s *g_looking_controls[] = {
 
 static menucommon_s *g_misc_controls[] = {
 	(menucommon_s *)&s_controls.showscores, 
+	(menucommon_s *)&s_controls.showacc, 
 	(menucommon_s *)&s_controls.useitem,
 	(menucommon_s *)&s_controls.gesture,
 	(menucommon_s *)&s_controls.chat,
@@ -1548,6 +1552,13 @@ static void Controls_MenuInit( void )
 	s_controls.showscores.generic.callback  = Controls_ActionEvent;
 	s_controls.showscores.generic.ownerdraw = Controls_DrawKeyBinding;
 	s_controls.showscores.generic.id        = ID_SHOWSCORES;
+	
+	
+	s_controls.showacc.generic.type	    = MTYPE_ACTION;
+	s_controls.showacc.generic.flags     = QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS|QMF_GRAYED|QMF_HIDDEN;
+	s_controls.showacc.generic.callback  = Controls_ActionEvent;
+	s_controls.showacc.generic.ownerdraw = Controls_DrawKeyBinding;
+	s_controls.showacc.generic.id        = ID_ACCURACY;
 
 	s_controls.invertmouse.generic.type      = MTYPE_RADIOBUTTON;
 	s_controls.invertmouse.generic.flags	 = QMF_SMALLFONT;
@@ -1716,6 +1727,7 @@ static void Controls_MenuInit( void )
         Menu_AddItem( &s_controls.menu, &s_controls.chaingun );
 
 	Menu_AddItem( &s_controls.menu, &s_controls.showscores );
+	Menu_AddItem( &s_controls.menu, &s_controls.showacc );
 	Menu_AddItem( &s_controls.menu, &s_controls.useitem );
 	Menu_AddItem( &s_controls.menu, &s_controls.gesture );
 	Menu_AddItem( &s_controls.menu, &s_controls.chat );
