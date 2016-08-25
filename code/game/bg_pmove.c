@@ -923,6 +923,7 @@ static int PM_FootstepForSurface( void ) {
 	if ( pml.groundTrace.surfaceFlags & SURF_METALSTEPS ) {
 		return EV_FOOTSTEP_METAL;
 	}
+	// TODO: Sand, snow, wood footsteps?
 	return EV_FOOTSTEP;
 }
 
@@ -942,13 +943,6 @@ static void PM_CrashLand( void ) {
 	float		a, b, c, den;
 
 	// decide which landing animation to use
-	if ( pm->ps->pm_flags & PMF_BACKWARDS_JUMP ) {
-		PM_ForceLegsAnim( LEGS_LANDB );
-	} else {
-		PM_ForceLegsAnim( LEGS_LAND );
-	}
-
-	pm->ps->legsTimer = TIMER_LAND;
 
 	// calculate the exact velocity on landing
 	dist = pm->ps->origin[2] - pml.previous_origin[2];
@@ -988,6 +982,18 @@ static void PM_CrashLand( void ) {
 
 	if ( delta < 1 ) {
 		return;
+	}
+
+	// leilei - only do this for a high velocity
+	if (delta > 10){
+	if ( pm->ps->pm_flags & PMF_BACKWARDS_JUMP ) {
+		PM_ForceLegsAnim( LEGS_LANDB );
+	} else {
+		PM_ForceLegsAnim( LEGS_LAND );
+	}
+
+	pm->ps->legsTimer = TIMER_LAND;
+		//Com_Printf("i tried to fall\n");
 	}
 
 	// create a local entity event to play the sound
@@ -1095,6 +1101,8 @@ static void PM_GroundTraceMissed( void ) {
 		point[2] -= 64;
 
 		pm->trace (&trace, pm->ps->origin, pm->mins, pm->maxs, point, pm->ps->clientNum, pm->tracemask);
+
+		
 		if ( trace.fraction == 1.0 ) {
 			if ( pm->cmd.forwardmove >= 0 ) {
 				PM_ForceLegsAnim( LEGS_JUMP );
@@ -1103,7 +1111,9 @@ static void PM_GroundTraceMissed( void ) {
 				PM_ForceLegsAnim( LEGS_JUMPB );
 				pm->ps->pm_flags |= PMF_BACKWARDS_JUMP;
 			}
+
 		}
+		
 	}
 
 	pm->ps->groundEntityNum = ENTITYNUM_NONE;
@@ -1143,6 +1153,7 @@ static void PM_GroundTrace( void ) {
 	}
 
 	// check if getting thrown off the ground
+/*
 	if ( pm->ps->velocity[2] > 0 && DotProduct( pm->ps->velocity, trace.plane.normal ) > 10 ) {
 		if ( pm->debugLevel ) {
 			Com_Printf("%i:kickoff\n", c_pmove);
@@ -1161,6 +1172,7 @@ static void PM_GroundTrace( void ) {
 		pml.walking = qfalse;
 		return;
 	}
+	*/
 	
 	// slopes that are too steep will not be considered onground
 	if ( trace.plane.normal[2] < MIN_WALK_NORMAL ) {
@@ -1340,6 +1352,7 @@ static void PM_Footsteps( void ) {
 	float		bobmove;
 	int			old;
 	qboolean	footstep;
+	float	speedbase = 320;
 
 	//
 	// calculate speed and cycle to be used for
@@ -1347,6 +1360,17 @@ static void PM_Footsteps( void ) {
 	//
 	pm->xyspeed = sqrt( pm->ps->velocity[0] * pm->ps->velocity[0]
 		+  pm->ps->velocity[1] * pm->ps->velocity[1] );
+
+/*
+	speedbase /= (pm->xyspeed + 1);
+
+	speedbase = 320 - pm->xyspeed;
+
+	speedbase /= 320;
+
+
+	speedbase *= 4;
+*/
 
 	if ( pm->ps->groundEntityNum == ENTITYNUM_NONE ) {
 
@@ -1422,6 +1446,7 @@ static void PM_Footsteps( void ) {
 		}
 	}
 
+	//bobmove *= speedbase;
 	// check for footstep / splash sounds
 	old = pm->ps->bobCycle;
 	pm->ps->bobCycle = (int)( old + bobmove * pml.msec ) & 255;

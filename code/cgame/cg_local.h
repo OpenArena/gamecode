@@ -143,6 +143,11 @@ typedef struct {
 	int			animationNumber;	// may include ANIM_TOGGLEBIT
 	animation_t	*animation;
 	int			animationTime;		// time when the first frame of the animation will be exact
+	float			animprogress; 	// progress of animation from 0 (0%) to 1 (100%)
+	int			didblend;	// track if we did the tween
+	int			tweenframe;	// tween from this frame
+	int			tweenframe2;	// tween from this frame
+	int			tweentime;
 } lerpFrame_t;
 
 
@@ -166,6 +171,8 @@ typedef struct {
 	vec3_t			eyepos;		// where our eyes at
 	vec3_t			eyelookat;	// what we seein'
 	lerpFrame_t		head;
+	
+	// leilei - animation tween
 } playerEntity_t;
 
 //=================================================

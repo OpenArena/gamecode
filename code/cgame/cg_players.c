@@ -1420,6 +1420,10 @@ static void CG_SetLerpFrameAnimation( clientInfo_t *ci, lerpFrame_t *lf, int new
 	lf->animation = anim;
 	lf->animationTime = lf->frameTime + anim->initialLerp;
 
+	lf->tweenframe = lf->animprogress;
+	lf->tweenframe /= anim->numFrames;
+
+
 	if ( cg_debugAnim.integer ) {
 		CG_Printf( "Anim: %i\n", newAnimation );
 	}
@@ -1433,9 +1437,17 @@ Sets cg.snap, cg.oldFrame, and cg.backlerp
 cg.time should be between oldFrameTime and frameTime after exit
 ===============
 */
+
+float proog; 
+
 static void CG_RunLerpFrame( clientInfo_t *ci, lerpFrame_t *lf, int newAnimation, float speedScale ) {
 	int			f, numFrames;
+	float		tw;
+	int		blendy = 0;
+	float		prog = 0;
 	animation_t	*anim;
+	int		moveanim = 0;
+	float		scaleslow = 1.0f;
 
 	// debugging tool to get no animations
 	if ( cg_animSpeed.integer == 0 ) {
@@ -1443,10 +1455,34 @@ static void CG_RunLerpFrame( clientInfo_t *ci, lerpFrame_t *lf, int newAnimation
 		return;
 	}
 
+
+		
+	if (newAnimation != lf->animationNumber ){
+		prog = lf->animprogress;
+		blendy = 1;
+			//CG_Printf( "NEWANIMATION! boing prog %f\n", prog);
+			lf->didblend = 0;
+		}
+
+
+
+
 	// see if the animation sequence is switching
 	if ( newAnimation != lf->animationNumber || !lf->animation ) {
 		CG_SetLerpFrameAnimation( ci, lf, newAnimation );
+		lf->didblend = 0;
 	}
+
+	if (lf->animationNumber == LEGS_WALK)	moveanim = 1;
+	if (lf->animationNumber == LEGS_RUN)	moveanim = 1;
+	if (lf->animationNumber == LEGS_BACK)	moveanim = 1;
+	if (lf->animationNumber == LEGS_STRAFE_LEFT)	moveanim = 1;
+	if (lf->animationNumber == LEGS_STRAFE_RIGHT)	moveanim = 1;
+		if (!moveanim) lf->didblend = 1;
+
+		// store tween frame
+		tw = lf->tweenframe;
+		tw = proog;
 
 	// if we have passed the current frame, move it to
 	// oldFrame and calculate a new frame
@@ -1456,6 +1492,8 @@ static void CG_RunLerpFrame( clientInfo_t *ci, lerpFrame_t *lf, int newAnimation
 
 		// get the next frame based on the animation
 		anim = lf->animation;
+
+		{
 		if ( !anim->frameLerp ) {
 			return;		// shouldn't happen
 		}
@@ -1465,12 +1503,55 @@ static void CG_RunLerpFrame( clientInfo_t *ci, lerpFrame_t *lf, int newAnimation
 			lf->frameTime = lf->oldFrameTime + anim->frameLerp;
 		}
 		f = ( lf->frameTime - lf->animationTime ) / anim->frameLerp;
-		f *= speedScale;		// adjust for haste, etc
+		}
 
+
+		// leilei - new frame tween code to blend between two looping animations
+		//
+		//if (moveanim)
+		if (!lf->didblend){
+			tw *= anim->numFrames;
+			//tw += cg_leiDebug.integer;
+			//tw += -2;
+			if ( tw >= numFrames ) {
+				tw -= numFrames;
+				if ( anim->loopFrames ) {
+					
+					tw += anim->numFrames - anim->loopFrames;
+				} else {
+					tw = numFrames - 1;
+				}
+			}
+	
+			f = tw;	lf->didblend = 1;	
+			lf->oldFrame = lf->tweenframe2;
+			lf->oldFrameTime = lf->tweentime;
+			lf->frameTime = cg.time + 100;	// smooth
+		}
+		// tweenster
+		//
+		//
+
+		//	 TODO: Grab player velocity and scale speed of walk/run animations 
+
+
+		f *= (speedScale);		// adjust for haste, etc
+		if (speedScale < 1){
+		
+		scaleslow /= speedScale;
+		if (scaleslow < 0) scaleslow = 0;
+		//if (scaleslow > 2) scaleslow = 2;
+		//scaleslow = speedScale;
+
+		}
+		
 		numFrames = anim->numFrames;
 		if (anim->flipflop) {
 			numFrames *= 2;
 		}
+
+
+
 		if ( f >= numFrames ) {
 			f -= numFrames;
 			if ( anim->loopFrames ) {
@@ -1483,15 +1564,27 @@ static void CG_RunLerpFrame( clientInfo_t *ci, lerpFrame_t *lf, int newAnimation
 				lf->frameTime = cg.time;
 			}
 		}
+
+		// set global for tweens
+		proog = f;
+		proog /= anim->numFrames;
+
+		lf->animprogress = proog;
+
 		if ( anim->reversed ) {
 			lf->frame = anim->firstFrame + anim->numFrames - 1 - f;
 		}
+
 		else if (anim->flipflop && f>=anim->numFrames) {
 			lf->frame = anim->firstFrame + anim->numFrames - 1 - (f%anim->numFrames);
 		}
 		else {
 			lf->frame = anim->firstFrame + f;
 		}
+
+		lf->tweenframe2 = lf->oldFrame;
+		lf->tweentime = lf->frameTime;
+	
 		if ( cg.time > lf->frameTime ) {
 			lf->frameTime = cg.time;
 			if ( cg_debugAnim.integer ) {
@@ -1500,13 +1593,18 @@ static void CG_RunLerpFrame( clientInfo_t *ci, lerpFrame_t *lf, int newAnimation
 		}
 	}
 
-	if ( lf->frameTime > cg.time + 200 ) {
+	if (scaleslow < 1)
+	if ( lf->frameTime > cg.time + 500 ) {
 		lf->frameTime = cg.time;
 	}
 
 	if ( lf->oldFrameTime > cg.time ) {
 		lf->oldFrameTime = cg.time;
 	}
+	// Scale the diff
+
+		lf->frameTime = cg.time + ((lf->frameTime - cg.time) * scaleslow);
+
 	// calculate current lerp value
 	if ( lf->frameTime == lf->oldFrameTime ) {
 		lf->backlerp = 0;
@@ -1538,6 +1636,7 @@ static void CG_PlayerAnimation( centity_t *cent, int *legsOld, int *legs, float 
 	clientInfo_t	*ci;
 	int				clientNum;
 	float			speedScale;
+	float ahhh;
 
 	clientNum = cent->currentState.clientNum;
 
@@ -1552,14 +1651,73 @@ static void CG_PlayerAnimation( centity_t *cent, int *legsOld, int *legs, float 
 		speedScale = 1;
 	}
 
+
+
 	ci = &cgs.clientinfo[ clientNum ];
 
+	// leilei - HACK TODO: scale player walk/run speed with velocity from here.
+
+	{
+	int ah;
+	float ahh;
+	vec_t *vel;
+	//if (cg.predictedPlayerState.velocity)
+	vel = cg.predictedPlayerState.velocity;
+	//vel = cg.snap->ps.velocity;	// BUG - this affects *Everyone*
+	ah = sqrt(vel[0] * vel[0] + vel[1] * vel[1]);
+	ah += 1;
+	ahh = ah * -0.003125;
+	//ahh = 320.0f;
+	ahhh = ahh;
+	ahhh *= -1;
+	//speedScale = ahh;
+	if (ahhh > 1)
+		ahhh = 1;
+	if (ahhh < 0.2)
+		ahhh = 0.2;
+	}
+
+	// leilei - do leg movement speed
+	if ( 
+	   ( (cent->currentState.legsAnim & ~ANIM_TOGGLEBIT ) == LEGS_STRAFE_LEFT ) || 
+	   ( (cent->currentState.legsAnim & ~ANIM_TOGGLEBIT ) == LEGS_STRAFE_RIGHT ) || 
+	   ( (cent->currentState.legsAnim & ~ANIM_TOGGLEBIT ) == LEGS_BACK ) || 
+	   ( (cent->currentState.legsAnim & ~ANIM_TOGGLEBIT ) == LEGS_RUN  ) 
+		)
+		{
+			if (ahhh < 0.5){ // analog walking
+			ahhh *= 2;
+			speedScale = ahhh;
+			CG_RunLerpFrame( ci, &cent->pe.legs, LEGS_WALK, speedScale );
+			}
+			else
+			{
+			speedScale = ahhh;
+			CG_RunLerpFrame( ci, &cent->pe.legs, cent->currentState.legsAnim, speedScale );
+			}
+		}
+	else if ( 
+	   ( (cent->currentState.legsAnim & ~ANIM_TOGGLEBIT ) == LEGS_WALK  ) 
+		)
+		{
+			ahhh *= 2;
+			speedScale = ahhh;
+			CG_RunLerpFrame( ci, &cent->pe.legs, cent->currentState.legsAnim, speedScale );
+		}
+	else if ( cent->pe.legs.yawing && ( cent->currentState.legsAnim & ~ANIM_TOGGLEBIT ) == LEGS_IDLE ) {
+		CG_RunLerpFrame( ci, &cent->pe.legs, LEGS_TURN, speedScale );
+	} else {
+		CG_RunLerpFrame( ci, &cent->pe.legs, cent->currentState.legsAnim, speedScale );
+	}
+
 	// do the shuffle turn frames locally
+	/*
 	if ( cent->pe.legs.yawing && ( cent->currentState.legsAnim & ~ANIM_TOGGLEBIT ) == LEGS_IDLE ) {
 		CG_RunLerpFrame( ci, &cent->pe.legs, LEGS_TURN, speedScale );
 	} else {
 		CG_RunLerpFrame( ci, &cent->pe.legs, cent->currentState.legsAnim, speedScale );
 	}
+	*/
 
 	*legsOld = cent->pe.legs.oldFrame;
 	*legs = cent->pe.legs.frame;
