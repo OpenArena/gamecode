@@ -434,7 +434,7 @@ void Cmd_PrivateMessage_f( gentity_t *ent )
 }
 */
 
-static void QDECL G_AdminMessage( const char *prefix, const char *fmt, ... )  __attribute__ ((format (gnu_printf, 2, 3)));
+static void QDECL G_AdminMessage( const char *prefix, const char *fmt, ... )  __attribute__ ((format (printf, 2, 3)));
 
 /*
 =================

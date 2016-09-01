@@ -143,7 +143,7 @@ static void UI_StartServerRefresh(qboolean full);
 static void UI_StopServerRefresh( void );
 static void UI_DoServerRefresh( void );
 static void UI_FeederSelection(float feederID, int index);
-static void UI_BuildServerDisplayList(qboolean force);
+static void UI_BuildServerDisplayList(qboolean force, qboolean doReset);
 static void UI_BuildServerStatus(qboolean force);
 static void UI_BuildFindPlayerList(qboolean force);
 static int QDECL UI_ServersQsortCompare( const void *arg1, const void *arg2 );
@@ -3075,7 +3075,7 @@ static qboolean UI_JoinGameType_HandleKey(int flags, float *special, int key) {
 		}
 
 		trap_Cvar_Set( "ui_joinGameType", va("%d", ui_joinGameType.integer));
-		UI_BuildServerDisplayList(qtrue);
+		UI_BuildServerDisplayList(qtrue, qtrue);
 		return qtrue;
 	}
 	return qfalse;
@@ -3182,9 +3182,9 @@ static qboolean UI_NetSource_HandleKey(int flags, float *special, int key) {
       ui_netSource.integer = numNetSources - 1;
 		}
 
-		UI_BuildServerDisplayList(qtrue);
+		UI_BuildServerDisplayList(qtrue, qtrue);
 		if (ui_netSource.integer != AS_GLOBAL) {
-			UI_StartServerRefresh(qtrue);
+			UI_StartServerRefresh(qtrue, qtrue);
 		}
   	trap_Cvar_Set( "ui_netSource", va("%d", ui_netSource.integer));
     return qtrue;
@@ -3206,7 +3206,7 @@ static qboolean UI_NetFilter_HandleKey(int flags, float *special, int key) {
     } else if (ui_serverFilterType.integer < 0) {
       ui_serverFilterType.integer = numServerFilters - 1;
 		}
-		UI_BuildServerDisplayList(qtrue);
+		UI_BuildServerDisplayList(qtrue, qtrue);
     return qtrue;
   }
   return qfalse;
@@ -3881,7 +3881,7 @@ static void UI_Update(const char *name) {
 		ui_netSource.integer = (int)trap_Cvar_VariableValue("ui_netSource");
 		trap_Cvar_Set( "ui_netSource", va("%d",ui_netSource.integer));
 		uiInfo.serverStatusInfo.numLines = 0;
-		UI_BuildServerDisplayList(qtrue);
+		UI_BuildServerDisplayList(qtrue, qtrue);
 		UI_StartServerRefresh(qtrue);
 		uiInfo.serverStatus.currentServerPreview = 0;
 // end changed RD
@@ -4056,15 +4056,15 @@ static void UI_RunMenuScript(char **args) {
 			UI_ClearScores();
 		} else if (Q_stricmp(name, "RefreshServers") == 0) {
 			UI_StartServerRefresh(qtrue);
-			UI_BuildServerDisplayList(qtrue);
+			UI_BuildServerDisplayList(qtrue, qtrue);
 		} else if (Q_stricmp(name, "RefreshServerStatus") == 0) {
 			UI_StartServerRefresh(qtrue);
-			UI_BuildServerDisplayList(qtrue);
+			UI_BuildServerDisplayList(qtrue, qtrue);
 			trap_LAN_GetServerAddressString(ui_netSource.integer, uiInfo.serverStatus.displayServers[uiInfo.serverStatus.currentServer], uiInfo.serverStatusAddress, sizeof(uiInfo.serverStatusAddress));
 			UI_BuildServerStatus(qtrue);
 		} else if (Q_stricmp(name, "RefreshFilter") == 0) {
 			UI_StartServerRefresh(qfalse);
-			UI_BuildServerDisplayList(qtrue);
+			UI_BuildServerDisplayList(qtrue, qtrue);
 		} else if (Q_strequal(name, "RunSPDemo") ) {
 			if (uiInfo.demoAvailable) {
 			  trap_Cmd_ExecuteText( EXEC_APPEND, va("demo %s_%i\n", uiInfo.mapList[ui_currentMap.integer].mapLoadName, uiInfo.gameTypes[ui_gameType.integer].gtEnum));
@@ -4094,7 +4094,7 @@ static void UI_RunMenuScript(char **args) {
 				uiInfo.serverStatus.nextDisplayRefresh = 0;
 				uiInfo.nextServerStatusRefresh = 0;
 				uiInfo.nextFindPlayerRefresh = 0;
-				UI_BuildServerDisplayList(qtrue);
+				UI_BuildServerDisplayList(qtrue, qtrue);
 			} else {
 				Menus_CloseByName("joinserver");
 				Menus_OpenByName("main");
@@ -4108,7 +4108,7 @@ static void UI_RunMenuScript(char **args) {
 			if (ui_netSource.integer == AS_LOCAL) {
 				UI_StartServerRefresh(qtrue);
 			}
-			UI_BuildServerDisplayList(qtrue);
+			UI_BuildServerDisplayList(qtrue, qtrue);
 			Menu_SetFeederSelection(NULL, FEEDER_SERVERS, 0, NULL);
 			UI_FeederSelection(FEEDER_SERVERS, 0);
 		} else if (Q_strequal(name, "ServerStatus") ) {
@@ -4294,7 +4294,7 @@ static void UI_RunMenuScript(char **args) {
 					trap_LAN_RemoveServer(AS_FAVORITES, addr);
 				}
 				UI_StartServerRefresh(qtrue);
-				UI_BuildServerDisplayList(qtrue);
+				UI_BuildServerDisplayList(qtrue, qtrue);
 			} else {
 				char name[MAX_NAME_LENGTH];
 				char addr[MAX_NAME_LENGTH];
@@ -4611,7 +4611,7 @@ static void UI_BinaryServerInsertion(int num) {
 UI_BuildServerDisplayList
 ==================
 */
-static void UI_BuildServerDisplayList(qboolean force) {
+static void UI_BuildServerDisplayList(qboolean force, qboolean doReset) {
 	int i, count, clients, maxClients, ping, game, len, visible;
 	char info[MAX_STRING_CHARS];
 //	qboolean startRefresh = qtrue; TTimo: unused
@@ -4619,10 +4619,6 @@ static void UI_BuildServerDisplayList(qboolean force) {
 
 	if (!(force || uiInfo.uiDC.realTime > uiInfo.serverStatus.nextDisplayRefresh)) {
 		return;
-	}
-	// if we shouldn't reset
-	if ( force == 2 ) {
-		force = 0;
 	}
 
 	// do motd updates here too
@@ -4637,7 +4633,7 @@ static void UI_BuildServerDisplayList(qboolean force) {
 		uiInfo.serverStatus.motdWidth = -1;
 	} 
 
-	if (force) {
+	if (doReset) {
 		numinvisible = 0;
 		// clear number of displayed servers
 		uiInfo.serverStatus.numDisplayServers = 0;
@@ -7017,12 +7013,12 @@ static void UI_DoServerRefresh( void )
 		uiInfo.serverStatus.refreshtime = uiInfo.uiDC.realTime + 1000;
 	} else if (!wait) {
 		// get the last servers in the list
-		UI_BuildServerDisplayList(2);
+		UI_BuildServerDisplayList(qtrue, qfalse);
 		// stop the refresh
 		UI_StopServerRefresh();
 	}
 	//
-	UI_BuildServerDisplayList(qfalse);
+	UI_BuildServerDisplayList(qfalse, qfalse);
 }
 
 /*
