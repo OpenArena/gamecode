@@ -3184,7 +3184,7 @@ static qboolean UI_NetSource_HandleKey(int flags, float *special, int key) {
 
 		UI_BuildServerDisplayList(qtrue, qtrue);
 		if (ui_netSource.integer != AS_GLOBAL) {
-			UI_StartServerRefresh(qtrue, qtrue);
+			UI_StartServerRefresh(qtrue);
 		}
   	trap_Cvar_Set( "ui_netSource", va("%d", ui_netSource.integer));
     return qtrue;

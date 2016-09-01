@@ -367,7 +367,8 @@ typedef enum {
 	WP_PROX_LAUNCHER,
 	WP_CHAINGUN,
 
-	WP_NUM_WEAPONS
+	WP_NUM_WEAPONS,
+	WP_NUM_INVALID
 } weapon_t;
 
 
