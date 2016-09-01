@@ -2708,7 +2708,7 @@ void G_RunFrame( int levelTime ) {
 
 
 void MapInfoPrint(mapinfo_result_t *info) {
-	G_Printf("Auther: %s\n",info->auther);
+	G_Printf("Auther: %s\n",info->author);
 	G_Printf("Fraglimit: %i\n",info->fragLimit);
 	G_Printf("Capturelimit: %i\n",info->captureLimit);
 	G_Printf("minTeamSize: %i\n",info->minTeamSize);

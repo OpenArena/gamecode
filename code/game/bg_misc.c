@@ -1890,8 +1890,8 @@ void MapInfoGet(const char* mapname, int gametype, mapinfo_result_t *result) {
 				mayRead = MatchesGametype(gametype, token);
 			}
 		}
-		if ( Q_strequal( keyBuffer, "auther" ) ) {
-			if (mayRead) Q_strncpyz(result->auther,token,sizeof(result->auther));
+		if ( Q_strequal( keyBuffer, "author" ) ) {
+			if (mayRead) Q_strncpyz(result->author,token,sizeof(result->author));
 		}
 		if ( Q_strequal( keyBuffer, "description" ) ) {
 			if (mayRead) Q_strncpyz(result->description,token,sizeof(result->description));
