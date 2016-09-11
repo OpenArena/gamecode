@@ -1411,10 +1411,10 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 	}
 
     //Check for local client
-    if( strequals( client->pers.ip, "localhost" ) ) {
-        client->pers.localClient = qtrue;
-        client->pers.adminLevel = G_admin_level( ent );
+	if( strequals( client->pers.ip, "localhost" ) ) {
+		client->pers.localClient = qtrue;
 	}
+	client->pers.adminLevel = G_admin_level( ent );
 
 	client->pers.connected = CON_CONNECTING;
 
