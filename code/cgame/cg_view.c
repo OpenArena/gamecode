@@ -583,52 +583,57 @@ static int CG_CalcFov( void ) {
 			fov_x = cg_fov.value;
 			if ( fov_x < 1 ) {
 				fov_x = 1;
-			} else if ( fov_x > 160 ) {
+			} 
+			else if ( fov_x > 160 ) {
 				fov_x = 160;
 			}
-                        if( (cgs.videoflags & VF_LOCK_CVARS_BASIC) && fov_x>140 )
-                            fov_x = 140;
+			if( (cgs.videoflags & VF_LOCK_CVARS_BASIC) && fov_x>140 ) {
+				fov_x = 140;
+			}
 
 		}
 
-                if ( cgs.dmflags & DF_FIXED_FOV ) {
+		if ( cgs.dmflags & DF_FIXED_FOV ) {
 			// dmflag to prevent wide fov for all clients
 			zoomFov = 22.5;
-		} else {
-                        // account for zooms
-                        zoomFov = cg_zoomFov.value;
-                        if ( zoomFov < 1 ) {
-                                zoomFov = 1;
-                        } else if ( zoomFov > 160 ) {
-                                zoomFov = 160;
-                        }
+		} 
+		else {
+			// account for zooms
+			zoomFov = cg_zoomFov.value;
+			if ( zoomFov < 1 ) {
+				zoomFov = 1;
+			} 
+			else if ( zoomFov > 160 ) {
+				zoomFov = 160;
+			}
 
-                        if( (cgs.videoflags & VF_LOCK_CVARS_BASIC) && zoomFov>140 )
-                                zoomFov = 140;
-                }
+			if( (cgs.videoflags & VF_LOCK_CVARS_BASIC) && zoomFov>140 ) {
+				zoomFov = 140;
+			}
+		}
 
 		if ( cg.zoomed ) {
 			f = ( cg.time - cg.zoomTime ) / (float)ZOOM_TIME;
 			if ( f > 1.0 ) {
 				fov_x = zoomFov;
-			} else {
+			} 
+			else {
 				fov_x = fov_x + f * ( zoomFov - fov_x );
 			}
-		} else {
+		}
+		else {
 			f = ( cg.time - cg.zoomTime ) / (float)ZOOM_TIME;
 			if ( f > 1.0 ) {
-				fov_x = fov_x;
-			} else {
+			} 
+			else {
 				fov_x = zoomFov + f * ( fov_x - zoomFov );
 			}
 		}
 	}
 
 	if (cg_cameramode.integer == 1 && cg_thirdPerson.integer){
-	// fov scaling for the modern third person view
-
+		// fov scaling for the modern third person view
 		fov_x = fov_x * 0.93 * (cg.xyspeed * (0.0006) + 1);
-
 	}
 
 	x = cg.refdef.width / tan( fov_x / 360 * M_PI );
@@ -655,7 +660,8 @@ static int CG_CalcFov( void ) {
 
 	if ( !cg.zoomed ) {
 		cg.zoomSensitivity = 1;
-	} else {
+	} 
+	else {
 		cg.zoomSensitivity = cg.refdef.fov_y / 75.0;
 	}
 
@@ -991,13 +997,15 @@ void CG_DrawActiveFrame( int serverTime, stereoFrame_t stereoView, qboolean demo
 	if (cg_timescale.value != cg_timescaleFadeEnd.value) {
 		if (cg_timescale.value < cg_timescaleFadeEnd.value) {
 			cg_timescale.value += cg_timescaleFadeSpeed.value * ((float)cg.frametime) / 1000;
-			if (cg_timescale.value > cg_timescaleFadeEnd.value)
+			if (cg_timescale.value > cg_timescaleFadeEnd.value) {
 				cg_timescale.value = cg_timescaleFadeEnd.value;
+			}
 		}
 		else {
 			cg_timescale.value -= cg_timescaleFadeSpeed.value * ((float)cg.frametime) / 1000;
-			if (cg_timescale.value < cg_timescaleFadeEnd.value)
+			if (cg_timescale.value < cg_timescaleFadeEnd.value) {
 				cg_timescale.value = cg_timescaleFadeEnd.value;
+			}
 		}
 		if (cg_timescaleFadeSpeed.value) {
 			trap_Cvar_Set("timescale", va("%f", cg_timescale.value));

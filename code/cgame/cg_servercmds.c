@@ -129,9 +129,9 @@ static void CG_ParseAccuracy( void ) {
 	for ( i = WP_MACHINEGUN ; i < WP_NUM_WEAPONS ; i++ ) {
 		cg.accuracys[i-WP_MACHINEGUN][0] = atoi( CG_Argv( (i-WP_MACHINEGUN)*2 + 1 ) );
 		cg.accuracys[i-WP_MACHINEGUN][1] = atoi( CG_Argv( (i-WP_MACHINEGUN)*2 + 2 ) );
-                #if DEBUG
+#if DEBUG
 		CG_Printf("W: %i   shots: %i   Hits: %i\n", i,cg.accuracys[i][0], cg.accuracys[i][1]);
-                #endif
+#endif
 	}
 
 }
@@ -160,13 +160,13 @@ security holes are found
 =================
 */
 static void CG_ParseMappage( void ) {
-    char command[1024];
-    const char *temp;
-    const char*	c;
-    int i;
+	char command[1024];
+	const char *temp;
+	const char*	c;
+	int i;
 
-    temp = CG_Argv( 1 );
-    for( c = temp; *c; ++c) {
+	temp = CG_Argv( 1 );
+for( c = temp; *c; ++c) {
 		switch(*c) {
 			case '\n':
 			case '\r':
@@ -175,25 +175,26 @@ static void CG_ParseMappage( void ) {
 				return;
 			break;
 		}
-        }
-    Q_strncpyz(command,va("ui_mappage %s",temp),1024);
-    for(i=2;i<12;i++) {
-        temp = CG_Argv( i );
-        for( c = temp; *c; ++c) {
-                    switch(*c) {
-                            case '\n':
-                            case '\r':
-                            case ';':
-                                    //The server tried something bad!
-                                    return;
-                            break;
-                    }
-            }
-        if(strlen(temp)<1)
-            temp = "---";
-        Q_strcat(command,1024,va(" %s ",temp));
-    }
-    trap_SendConsoleCommand(command);
+	}
+	Q_strncpyz(command,va("ui_mappage %s",temp),1024);
+	for(i=2;i<12;i++) {
+		temp = CG_Argv( i );
+		for( c = temp; *c; ++c) {
+				switch(*c) {
+					case '\n':
+					case '\r':
+					case ';':
+						//The server tried something bad!
+						return;
+					break;
+				}
+			}
+		if(strlen(temp)<1) {
+			temp = "---";
+		}
+		Q_strcat(command,1024,va(" %s ",temp));
+	}
+	trap_SendConsoleCommand(command);
 
 }
 
@@ -216,8 +217,9 @@ CG_ParseDomPointNames
 static void CG_ParseDomPointNames( void ) {
 	int i,j;
 	cgs.domination_points_count = atoi( CG_Argv( 1 ) );
-	if(cgs.domination_points_count>=MAX_DOMINATION_POINTS)
+	if(cgs.domination_points_count>=MAX_DOMINATION_POINTS) {
 		cgs.domination_points_count = MAX_DOMINATION_POINTS;
+	}
 	for(i = 0;i<cgs.domination_points_count;i++) {
 		Q_strncpyz(cgs.domination_points_names[i],CG_Argv(2)+i*MAX_DOMINATION_POINTS_NAMES,MAX_DOMINATION_POINTS_NAMES-1);
 		for(j=MAX_DOMINATION_POINTS_NAMES-1; cgs.domination_points_names[i][j] < '0' && j>0; j--) {
@@ -254,15 +256,15 @@ static void CG_ParseChallenge( void ) {
 }
 
 static void CG_ParseObeliskHealth( void ) {
-    cg.redObeliskHealth = atoi( CG_Argv(1) );
-    cg.blueObeliskHealth = atoi( CG_Argv(2) );
+	cg.redObeliskHealth = atoi( CG_Argv(1) );
+cg.blueObeliskHealth = atoi( CG_Argv(2) );
 }
 
 /**
  * Sets the respawn counter for the client.
  */
 static void CG_ParseRespawnTime( void ) {
-    cg.respawnTime = atoi( CG_Argv(1) );
+	cg.respawnTime = atoi( CG_Argv(1) );
 }
 
 /*
@@ -272,9 +274,10 @@ CG_ParseTeam
 */
 
 static void CG_ParseTeam( void ) {
-    //TODO: Add code here
-    if(cg_voip_teamonly.integer)
-	trap_Cvar_Set("cl_voipSendTarget",CG_Argv(1));
+	//TODO: Add code here
+	if(cg_voip_teamonly.integer) {
+		trap_Cvar_Set("cl_voipSendTarget",CG_Argv(1));
+	}
 }
 
 /*
@@ -286,12 +289,15 @@ CG_ParseAttackingTeam
 static void CG_ParseAttackingTeam( void ) {
 	int temp;
 	temp = atoi( CG_Argv( 1 ) );
-	if(temp==TEAM_RED)
+	if(temp==TEAM_RED) {
 		cgs.attackingTeam = TEAM_RED;
-	else if (temp==TEAM_BLUE)
+	}
+	else if (temp==TEAM_BLUE) {
 		cgs.attackingTeam = TEAM_BLUE;
-	else
+	}
+	else {
 		cgs.attackingTeam = TEAM_NONE; //Should never happen.
+	}
 }
 
 /*
@@ -305,7 +311,7 @@ static void CG_ParseTeamInfo( void ) {
 	int		client;
 
 	numSortedTeamPlayers = atoi( CG_Argv( 1 ) );
-        if( numSortedTeamPlayers < 0 || numSortedTeamPlayers > TEAM_MAXOVERLAY )
+	if( numSortedTeamPlayers < 0 || numSortedTeamPlayers > TEAM_MAXOVERLAY )
 	{
 		CG_Error( "CG_ParseTeamInfo: numSortedTeamPlayers out of range (%d)",
 				numSortedTeamPlayers );
@@ -314,10 +320,9 @@ static void CG_ParseTeamInfo( void ) {
 
 	for ( i = 0 ; i < numSortedTeamPlayers ; i++ ) {
 		client = atoi( CG_Argv( i * 6 + 2 ) );
-                if( client < 0 || client >= MAX_CLIENTS )
-		{
-		  CG_Error( "CG_ParseTeamInfo: bad client number: %d", client );
-		  return;
+		if( client < 0 || client >= MAX_CLIENTS ) {
+			CG_Error( "CG_ParseTeamInfo: bad client number: %d", client );
+			return;
 		}
 
 
@@ -354,8 +359,8 @@ void CG_ParseServerinfo( void ) {
 	}
 	trap_Cvar_Set("g_gametype", va("%i", cgs.gametype));
 	cgs.dmflags = atoi( Info_ValueForKey( info, "dmflags" ) );
-        cgs.videoflags = atoi( Info_ValueForKey( info, "videoflags" ) );
-        cgs.elimflags = atoi( Info_ValueForKey( info, "elimflags" ) );
+	cgs.videoflags = atoi( Info_ValueForKey( info, "videoflags" ) );
+	cgs.elimflags = atoi( Info_ValueForKey( info, "elimflags" ) );
 	cgs.teamflags = atoi( Info_ValueForKey( info, "teamflags" ) );
 	cgs.fraglimit = atoi( Info_ValueForKey( info, "fraglimit" ) );
 	cgs.capturelimit = atoi( Info_ValueForKey( info, "capturelimit" ) );
@@ -378,8 +383,8 @@ void CG_ParseServerinfo( void ) {
 	trap_Cvar_Set("g_delagHitscan", va("%i", cgs.delagHitscan));
 //unlagged - server options
 
-        //Copy allowed votes directly to the client:
-        trap_Cvar_Set("cg_voteflags",Info_ValueForKey( info, "voteflags" ) );
+	//Copy allowed votes directly to the client:
+	trap_Cvar_Set("cg_voteflags",Info_ValueForKey( info, "voteflags" ) );
 }
 
 /*
@@ -638,8 +643,9 @@ static void CG_AddToTeamChat( const char *str ) {
 	cgs.teamChatMsgTimes[cgs.teamChatPos % chatHeight] = cg.time;
 	cgs.teamChatPos++;
 
-	if (cgs.teamChatPos - cgs.teamLastChatPos > chatHeight)
+	if (cgs.teamChatPos - cgs.teamLastChatPos > chatHeight) {
 		cgs.teamLastChatPos = cgs.teamChatPos - chatHeight;
+	}
 }
 
 /*
@@ -660,7 +666,6 @@ static void CG_MapRestart( void ) {
 
 	CG_InitLocalEntities();
 	CG_InitMarkPolys();
-//	CG_ClearParticles ();
 
 	// make sure the "3 frags left" warnings play again
 	cg.fraglimitWarnings = 0;
@@ -687,7 +692,7 @@ static void CG_MapRestart( void ) {
 #ifdef MISSIONPACK
 	if (cg_singlePlayerActive.integer) {
 		trap_Cvar_Set("ui_matchStartTime", va("%i", cg.time));
-		if (cg_recordSPDemo.integer && cg_recordSPDemoName.string && *cg_recordSPDemoName.string) {
+		if (cg_recordSPDemo.integer && cg_recordSPDemoName.string[0] ) {
 			trap_SendConsoleCommand(va("set g_synchronousclients 1 ; record %s \n", cg_recordSPDemoName.string));
 		}
 	}
@@ -1243,8 +1248,9 @@ static void CG_ServerCommand( void ) {
 	}
 
 	if ( !strcmp( cmd, "tchat" ) ) {
-                if( cg_teamChatBeep.integer )
-                        trap_S_StartLocalSound( cgs.media.talkSound, CHAN_LOCAL_SOUND );
+		if( cg_teamChatBeep.integer ) {
+			trap_S_StartLocalSound( cgs.media.talkSound, CHAN_LOCAL_SOUND );
+		}
 		Q_strncpyz( text, CG_Argv(1), MAX_SAY_TEXT );
 		CG_RemoveChatEscapeChar( text );
 		CG_AddToTeamChat( text );
@@ -1272,10 +1278,10 @@ static void CG_ServerCommand( void ) {
 	}
 
 
-        if ( !strcmp( cmd, "accs" ) ) {
-                CG_ParseAccuracy();
-                return;
-        }
+	if ( !strcmp( cmd, "accs" ) ) {
+		CG_ParseAccuracy();
+		return;
+	}
 
 
 	if ( !strcmp( cmd, "ddtaken" ) ) {
@@ -1354,32 +1360,32 @@ static void CG_ServerCommand( void ) {
 		CG_ParseChallenge();
 		return;
 	}
-        
-        if ( !strcmp (cmd, "oh") ) {
-            CG_ParseObeliskHealth();
-            return;
-        }
 
-        if ( !strcmp( cmd, "respawn" ) ) {
+	if ( !strcmp (cmd, "oh") ) {
+		CG_ParseObeliskHealth();
+		return;
+	}
+
+	if ( !strcmp( cmd, "respawn" ) ) {
 		CG_ParseRespawnTime();
 		return;
 	}
 
-        if ( !strcmp( cmd, "team" ) ) {
+	if ( !strcmp( cmd, "team" ) ) {
 		CG_ParseTeam();
 		return;
 	}
 
-        if ( !strcmp( cmd, "customvotes" ) ) {
-            char infoString[1024];
-            int i;
-            //TODO: Create a ParseCustomvotes function
-            memset(&infoString,0,sizeof(infoString));
-            for(i=1;i<=12;i++) {
-                Q_strcat(infoString,sizeof(infoString),CG_Argv( i ));
-                Q_strcat(infoString,sizeof(infoString)," ");
-            }
-            trap_Cvar_Set("cg_vote_custom_commands",infoString);
+	if ( !strcmp( cmd, "customvotes" ) ) {
+		char infoString[1024];
+		int i;
+		//TODO: Create a ParseCustomvotes function
+		memset(&infoString,0,sizeof(infoString));
+		for(i=1;i<=12;i++) {
+			Q_strcat(infoString,sizeof(infoString),CG_Argv( i ));
+			Q_strcat(infoString,sizeof(infoString)," ");
+		}
+		trap_Cvar_Set("cg_vote_custom_commands",infoString);
 		return;
 	}
 
