@@ -2315,10 +2315,9 @@ void ClientCommand( int clientNum )
 		return;   // not fully in game yet
 	}
 
-trap_Argv( 0, cmd, sizeof( cmd ) );
+	trap_Argv( 0, cmd, sizeof( cmd ) );
 
-	for( i = 0; i < numCmds; i++ )
-	{
+	for( i = 0; i < numCmds; i++ ) {
 		if( Q_strequal( cmd, cmds[ i ].cmdName ) ) {
 			break;
 		}
@@ -2359,8 +2358,7 @@ trap_Argv( 0, cmd, sizeof( cmd ) );
 	}
 
 	if( cmds[ i ].cmdFlags & CMD_RED &&
-		ent->client->sess.sessionTeam != TEAM_RED )
-	{
+		ent->client->sess.sessionTeam != TEAM_RED ) {
 		trap_SendServerCommand( clientNum,
 			"print \"Must be on the Red Team to use this command\n\"" );
 		return;

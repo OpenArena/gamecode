@@ -207,154 +207,94 @@ static qboolean	CG_ParseAnimationFile( const char *filename, clientInfo_t *ci ) 
 	for ( i = 0 ; i < MAX_ANIMATIONS ; i++ ) {
 
 		token = COM_Parse( &text_p );
-		if ( !*token ) {
+		if ( !token[0] ) {
 			if( i >= TORSO_GETFLAG && i <= TORSO_NEGATIVE ) {
-				animations[i].firstFrame = animations[TORSO_GESTURE].firstFrame;
-				animations[i].frameLerp = animations[TORSO_GESTURE].frameLerp;
-				animations[i].initialLerp = animations[TORSO_GESTURE].initialLerp;
-				animations[i].loopFrames = animations[TORSO_GESTURE].loopFrames;
-				animations[i].numFrames = animations[TORSO_GESTURE].numFrames;
+				animations[i] = animations[TORSO_GESTURE];
 				animations[i].reversed = qfalse;
 				animations[i].flipflop = qfalse;
 				continue;
 			}
 			// LEILEI - run animation fallback.
 			if( i == TORSO_RUN ) {
-				animations[i].firstFrame = animations[TORSO_STAND].firstFrame;
-				animations[i].frameLerp = animations[TORSO_STAND].frameLerp;
-				animations[i].initialLerp = animations[TORSO_STAND].initialLerp;
-				animations[i].loopFrames = animations[TORSO_STAND].loopFrames;
-				animations[i].numFrames = animations[TORSO_STAND].numFrames;
+				animations[i] = animations[TORSO_STAND];
 				animations[i].reversed = qfalse;
 				animations[i].flipflop = qfalse;
 				continue;
 			}
 			if( i == TORSO_RUN2 ) {
-				animations[i].firstFrame = animations[TORSO_STAND2].firstFrame;
-				animations[i].frameLerp = animations[TORSO_STAND2].frameLerp;
-				animations[i].initialLerp = animations[TORSO_STAND2].initialLerp;
-				animations[i].loopFrames = animations[TORSO_STAND2].loopFrames;
-				animations[i].numFrames = animations[TORSO_STAND2].numFrames;
+				animations[i] = animations[TORSO_STAND2];
 				animations[i].reversed = qfalse;
 				animations[i].flipflop = qfalse;
 				continue;
 			}
 			if( i == TORSO_RUN3 ) {
-				animations[i].firstFrame = animations[TORSO_STAND].firstFrame;
-				animations[i].frameLerp = animations[TORSO_STAND].frameLerp;
-				animations[i].initialLerp = animations[TORSO_STAND].initialLerp;
-				animations[i].loopFrames = animations[TORSO_STAND].loopFrames;
-				animations[i].numFrames = animations[TORSO_STAND].numFrames;
+				animations[i] = animations[TORSO_STAND];
 				animations[i].reversed = qfalse;
 				animations[i].flipflop = qfalse;
 				continue;
 			}
 			if( i == TORSO_STRAFE ) {
-				animations[i].firstFrame = animations[TORSO_STAND].firstFrame;
-				animations[i].frameLerp = animations[TORSO_STAND].frameLerp;
-				animations[i].initialLerp = animations[TORSO_STAND].initialLerp;
-				animations[i].loopFrames = animations[TORSO_STAND].loopFrames;
-				animations[i].numFrames = animations[TORSO_STAND].numFrames;
+				animations[i] = animations[TORSO_STAND];
 				animations[i].reversed = qfalse;
 				animations[i].flipflop = qfalse;
 				continue;
 			}
 			if( i == TORSO_STAND3 ) {
-				animations[i].firstFrame = animations[TORSO_STAND].firstFrame;
-				animations[i].frameLerp = animations[TORSO_STAND].frameLerp;
-				animations[i].initialLerp = animations[TORSO_STAND].initialLerp;
-				animations[i].loopFrames = animations[TORSO_STAND].loopFrames;
-				animations[i].numFrames = animations[TORSO_STAND].numFrames;
+				animations[i] = animations[TORSO_STAND];
 				animations[i].reversed = qfalse;
 				animations[i].flipflop = qfalse;
 				continue;
 			}
 			if( i == TORSO_JUMP ) {
-				animations[i].firstFrame = animations[TORSO_STAND].firstFrame;
-				animations[i].frameLerp = animations[TORSO_STAND].frameLerp;
-				animations[i].initialLerp = animations[TORSO_STAND].initialLerp;
-				animations[i].loopFrames = animations[TORSO_STAND].loopFrames;
-				animations[i].numFrames = animations[TORSO_STAND].numFrames;
+				animations[i] = animations[TORSO_STAND];
 				animations[i].reversed = qfalse;
 				animations[i].flipflop = qfalse;
 				continue;
 			}
 			if( i == TORSO_JUMP2 ) {
-				animations[i].firstFrame = animations[TORSO_STAND2].firstFrame;
-				animations[i].frameLerp = animations[TORSO_STAND2].frameLerp;
-				animations[i].initialLerp = animations[TORSO_STAND2].initialLerp;
-				animations[i].loopFrames = animations[TORSO_STAND2].loopFrames;
-				animations[i].numFrames = animations[TORSO_STAND2].numFrames;
+				animations[i] = animations[TORSO_STAND];
 				animations[i].reversed = qfalse;
 				animations[i].flipflop = qfalse;
 				continue;
 			}
 			if( i == TORSO_JUMP3 ) {
-				animations[i].firstFrame = animations[TORSO_STAND].firstFrame;
-				animations[i].frameLerp = animations[TORSO_STAND].frameLerp;
-				animations[i].initialLerp = animations[TORSO_STAND].initialLerp;
-				animations[i].loopFrames = animations[TORSO_STAND].loopFrames;
-				animations[i].numFrames = animations[TORSO_STAND].numFrames;
+				animations[i] = animations[TORSO_STAND];
 				animations[i].reversed = qfalse;
 				animations[i].flipflop = qfalse;
 				continue;
 			}
 			if( i == TORSO_FALL ) {
-				animations[i].firstFrame = animations[TORSO_STAND].firstFrame;
-				animations[i].frameLerp = animations[TORSO_STAND].frameLerp;
-				animations[i].initialLerp = animations[TORSO_STAND].initialLerp;
-				animations[i].loopFrames = animations[TORSO_STAND].loopFrames;
-				animations[i].numFrames = animations[TORSO_STAND].numFrames;
+				animations[i] = animations[TORSO_STAND];
 				animations[i].reversed = qfalse;
 				animations[i].flipflop = qfalse;
 				continue;
 			}
 			if( i == TORSO_FALL2 ) {
-				animations[i].firstFrame = animations[TORSO_STAND2].firstFrame;
-				animations[i].frameLerp = animations[TORSO_STAND2].frameLerp;
-				animations[i].initialLerp = animations[TORSO_STAND2].initialLerp;
-				animations[i].loopFrames = animations[TORSO_STAND2].loopFrames;
-				animations[i].numFrames = animations[TORSO_STAND2].numFrames;
+				animations[i] = animations[TORSO_STAND2];
 				animations[i].reversed = qfalse;
 				animations[i].flipflop = qfalse;
 				continue;
 			}
 			if( i == TORSO_FALL3 ) {
-				animations[i].firstFrame = animations[TORSO_STAND].firstFrame;
-				animations[i].frameLerp = animations[TORSO_STAND].frameLerp;
-				animations[i].initialLerp = animations[TORSO_STAND].initialLerp;
-				animations[i].loopFrames = animations[TORSO_STAND].loopFrames;
-				animations[i].numFrames = animations[TORSO_STAND].numFrames;
+				animations[i] = animations[TORSO_STAND];
 				animations[i].reversed = qfalse;
 				animations[i].flipflop = qfalse;
 				continue;
 			}
 			if( i == TORSO_TALK ) {
-				animations[i].firstFrame = animations[TORSO_STAND].firstFrame;
-				animations[i].frameLerp = animations[TORSO_STAND].frameLerp;
-				animations[i].initialLerp = animations[TORSO_STAND].initialLerp;
-				animations[i].loopFrames = animations[TORSO_STAND].loopFrames;
-				animations[i].numFrames = animations[TORSO_STAND].numFrames;
+				animations[i] = animations[TORSO_STAND];
 				animations[i].reversed = qfalse;
 				animations[i].flipflop = qfalse;
 				continue;
 			}
 			if( i == LEGS_STRAFE_LEFT ) {
-				animations[i].firstFrame = animations[LEGS_RUN].firstFrame;
-				animations[i].frameLerp = animations[LEGS_RUN].frameLerp;
-				animations[i].initialLerp = animations[LEGS_RUN].initialLerp;
-				animations[i].loopFrames = animations[LEGS_RUN].loopFrames;
-				animations[i].numFrames = animations[LEGS_RUN].numFrames;
+				animations[i] = animations[LEGS_RUN];
 				animations[i].reversed = qfalse;
 				animations[i].flipflop = qfalse;
 				continue;
 			}
 			if( i == LEGS_STRAFE_RIGHT ) {
-				animations[i].firstFrame = animations[LEGS_RUN].firstFrame;
-				animations[i].frameLerp = animations[LEGS_RUN].frameLerp;
-				animations[i].initialLerp = animations[LEGS_RUN].initialLerp;
-				animations[i].loopFrames = animations[LEGS_RUN].loopFrames;
-				animations[i].numFrames = animations[LEGS_RUN].numFrames;
+				animations[i] = animations[LEGS_RUN];
 				animations[i].reversed = qfalse;
 				animations[i].flipflop = qfalse;
 				continue;
@@ -811,16 +751,16 @@ static qboolean CG_RegisterClientModelname( clientInfo_t *ci, const char *modelN
 		Com_sprintf( filename, sizeof( filename ), "models/players/characters/%s/upper.mdr", modelName );
 		ci->torsoModel = trap_R_RegisterModel( filename );
 		if ( !ci->torsoModel ) {
-	Com_sprintf( filename, sizeof( filename ), "models/players/%s/upper.md3", modelName );
-	ci->torsoModel = trap_R_RegisterModel( filename );
-	if ( !ci->torsoModel ) {
-		Com_sprintf( filename, sizeof( filename ), "models/players/characters/%s/upper.md3", modelName );
-		ci->torsoModel = trap_R_RegisterModel( filename );
-		if ( !ci->torsoModel ) {
-			Com_Printf( "Failed to load model file %s\n", filename );
-			return qfalse;
-		}
-	}
+			Com_sprintf( filename, sizeof( filename ), "models/players/%s/upper.md3", modelName );
+			ci->torsoModel = trap_R_RegisterModel( filename );
+			if ( !ci->torsoModel ) {
+				Com_sprintf( filename, sizeof( filename ), "models/players/characters/%s/upper.md3", modelName );
+				ci->torsoModel = trap_R_RegisterModel( filename );
+				if ( !ci->torsoModel ) {
+					Com_Printf( "Failed to load model file %s\n", filename );
+					return qfalse;
+				}
+			}
 		}
 	}
 
@@ -839,22 +779,22 @@ static qboolean CG_RegisterClientModelname( clientInfo_t *ci, const char *modelN
 		ci->headModel = trap_R_RegisterModel( filename );
 	}
 	if ( !ci->headModel ) {
-	if( headName[0] == '*' ) {
-		Com_sprintf( filename, sizeof( filename ), "models/players/heads/%s/%s.md3", &headModelName[1], &headModelName[1] );
-	}
-	else {
-		Com_sprintf( filename, sizeof( filename ), "models/players/%s/head.md3", headName );
-	}
-	ci->headModel = trap_R_RegisterModel( filename );
-	// if the head model could not be found and we didn't load from the heads folder try to load from there
-	if ( !ci->headModel && headName[0] != '*' ) {
-		Com_sprintf( filename, sizeof( filename ), "models/players/heads/%s/%s.md3", headModelName, headModelName );
+		if( headName[0] == '*' ) {
+			Com_sprintf( filename, sizeof( filename ), "models/players/heads/%s/%s.md3", &headModelName[1], &headModelName[1] );
+		}
+		else {
+			Com_sprintf( filename, sizeof( filename ), "models/players/%s/head.md3", headName );
+		}
 		ci->headModel = trap_R_RegisterModel( filename );
-	}
-	if ( !ci->headModel ) {
-		Com_Printf( "Failed to load model file %s\n", filename );
-		return qfalse;
-	}
+		// if the head model could not be found and we didn't load from the heads folder try to load from there
+		if ( !ci->headModel && headName[0] != '*' ) {
+			Com_sprintf( filename, sizeof( filename ), "models/players/heads/%s/%s.md3", headModelName, headModelName );
+			ci->headModel = trap_R_RegisterModel( filename );
+		}
+		if ( !ci->headModel ) {
+			Com_Printf( "Failed to load model file %s\n", filename );
+			return qfalse;
+		}
 	}
 
 	// if any skins failed to load, return failure
@@ -880,21 +820,21 @@ static qboolean CG_RegisterClientModelname( clientInfo_t *ci, const char *modelN
 	// load the animations
 	// leilei - load one piece animation
 	if (ci->onepiece) {
-	Com_sprintf( filename, sizeof( filename ), "models/playerfs/%s/animation.cfg", modelName );
-	if ( !CG_ParseAnimationFile( filename, ci ) ) {
-		Com_Printf( "Failed to load animation file %s\n", filename );
+		Com_sprintf( filename, sizeof( filename ), "models/playerfs/%s/animation.cfg", modelName );
+		if ( !CG_ParseAnimationFile( filename, ci ) ) {
+			Com_Printf( "Failed to load animation file %s\n", filename );
 		}
 	}
 	else
 	{
-	Com_sprintf( filename, sizeof( filename ), "models/players/%s/animation.cfg", modelName );
-	if ( !CG_ParseAnimationFile( filename, ci ) ) {
-		Com_sprintf( filename, sizeof( filename ), "models/players/characters/%s/animation.cfg", modelName );
+		Com_sprintf( filename, sizeof( filename ), "models/players/%s/animation.cfg", modelName );
 		if ( !CG_ParseAnimationFile( filename, ci ) ) {
-			Com_Printf( "Failed to load animation file %s\n", filename );
-			return qfalse;
+			Com_sprintf( filename, sizeof( filename ), "models/players/characters/%s/animation.cfg", modelName );
+			if ( !CG_ParseAnimationFile( filename, ci ) ) {
+				Com_Printf( "Failed to load animation file %s\n", filename );
+				return qfalse;
+			}
 		}
-	}
 	}
 
 
@@ -1695,8 +1635,8 @@ static void CG_PlayerAngles( centity_t *cent, vec3_t legs[3], vec3_t torso[3], v
 
 	
 	{
-	VectorCopy( cent->lerpAngles, headAngles );
-	headAngles[YAW] = AngleMod( headAngles[YAW] );
+		VectorCopy( cent->lerpAngles, headAngles );
+		headAngles[YAW] = AngleMod( headAngles[YAW] );
 	}
 
 
@@ -1709,21 +1649,19 @@ static void CG_PlayerAngles( centity_t *cent, vec3_t legs[3], vec3_t torso[3], v
 
 	camereyes = 0;
 	if ( cent->currentState.number == cg.snap->ps.clientNum) {
-			camereyes = 1; // it's me!
-
-
-		}
+		camereyes = 1; // it's me!
+	}
 
 	// leilei -- new third person camera prep
 	cent->newcamrunning = 0;
 	if (cg_cameramode.integer == 1)
 	{
-	if ((cent->currentState.torsoAnim & ~ANIM_TOGGLEBIT) != TORSO_ATTACK) 
-	cent->newcamrunning = 1;
-	else
-	cent->newcamrunning = 0;
-
-
+		if ((cent->currentState.torsoAnim & ~ANIM_TOGGLEBIT) != TORSO_ATTACK) {
+			cent->newcamrunning = 1;
+		}
+		else {
+			cent->newcamrunning = 0;
+		}
 	}
 
 	// --------- yaw -------------
@@ -1776,16 +1714,13 @@ static void CG_PlayerAngles( centity_t *cent, vec3_t legs[3], vec3_t torso[3], v
 	
 	
 	// torso
-	if (cg_cameramode.integer == 1)
-	{
-	CG_SwingAngles( torsoAngles[YAW], 180, 90, cg_swingSpeed.value, &cent->pe.torso.yawAngle, &cent->pe.torso.yawing );
-	CG_SwingAngles( legsAngles[YAW], 180, 90, cg_swingSpeed.value, &cent->pe.legs.yawAngle, &cent->pe.legs.yawing );
-
+	if (cg_cameramode.integer == 1) {
+		CG_SwingAngles( torsoAngles[YAW], 180, 90, cg_swingSpeed.value, &cent->pe.torso.yawAngle, &cent->pe.torso.yawing );
+		CG_SwingAngles( legsAngles[YAW], 180, 90, cg_swingSpeed.value, &cent->pe.legs.yawAngle, &cent->pe.legs.yawing );
 	}
-	else
-	{
-	CG_SwingAngles( torsoAngles[YAW], 25, 90, cg_swingSpeed.value, &cent->pe.torso.yawAngle, &cent->pe.torso.yawing );
-	CG_SwingAngles( legsAngles[YAW], 40, 90, cg_swingSpeed.value, &cent->pe.legs.yawAngle, &cent->pe.legs.yawing );
+	else {
+		CG_SwingAngles( torsoAngles[YAW], 25, 90, cg_swingSpeed.value, &cent->pe.torso.yawAngle, &cent->pe.torso.yawing );
+		CG_SwingAngles( legsAngles[YAW], 40, 90, cg_swingSpeed.value, &cent->pe.legs.yawAngle, &cent->pe.legs.yawing );
 	}
 
 
@@ -1800,27 +1735,27 @@ static void CG_PlayerAngles( centity_t *cent, vec3_t legs[3], vec3_t torso[3], v
 	// only show a fraction of the pitch angle in the torso
 	
 	{
-	if ( headAngles[PITCH] > 180 ) {
-		dest = (-360 + headAngles[PITCH]) * 0.75f;
-	} else {
-		dest = headAngles[PITCH] * 0.75f;
-	}
+		if ( headAngles[PITCH] > 180 ) {
+			dest = (-360 + headAngles[PITCH]) * 0.75f;
+		} else {
+			dest = headAngles[PITCH] * 0.75f;
+		}
 	}
 	if (cg_cameramode.integer == 1)
 	{
-	CG_SwingAngles( dest, 15, 30, 0.1f, &cent->pe.torso.pitchAngle, &cent->pe.torso.pitching );
+		CG_SwingAngles( dest, 15, 30, 0.1f, &cent->pe.torso.pitchAngle, &cent->pe.torso.pitching );
 
-	headAngles[PITCH] = cent->pe.torso.pitchAngle;
-	//headAngles[YAW] = cent->pe.torso.yawAngle;
+		headAngles[PITCH] = cent->pe.torso.pitchAngle;
+		//headAngles[YAW] = cent->pe.torso.yawAngle;
 
-	headAngles[YAW] = torsoAngles[YAW] + 0.25 * movementOffsets[ dir ];
-	torsoAngles[PITCH] = cent->pe.torso.pitchAngle;
+		headAngles[YAW] = torsoAngles[YAW] + 0.25 * movementOffsets[ dir ];
+		torsoAngles[PITCH] = cent->pe.torso.pitchAngle;
 	}
 	else
 	{
-	CG_SwingAngles( dest, 15, 30, 0.1f, &cent->pe.torso.pitchAngle, &cent->pe.torso.pitching );
-	
-	torsoAngles[PITCH] = cent->pe.torso.pitchAngle;
+		CG_SwingAngles( dest, 15, 30, 0.1f, &cent->pe.torso.pitchAngle, &cent->pe.torso.pitching );
+
+		torsoAngles[PITCH] = cent->pe.torso.pitchAngle;
 	}
 
 	//
@@ -1871,9 +1806,9 @@ static void CG_PlayerAngles( centity_t *cent, vec3_t legs[3], vec3_t torso[3], v
 
 	// leilei - don't lean for our new strafe animations
 	if (( cent->currentState.legsAnim & ~ANIM_TOGGLEBIT ) == LEGS_STRAFE_LEFT || ( cent->currentState.legsAnim & ~ANIM_TOGGLEBIT ) == LEGS_STRAFE_RIGHT){
-				legsAngles[YAW] = torsoAngles[YAW];
-				//legsAngles[PITCH] = 0.0f;
-				legsAngles[ROLL] = 0.0f;
+			legsAngles[YAW] = torsoAngles[YAW];
+			//legsAngles[PITCH] = 0.0f;
+			legsAngles[ROLL] = 0.0f;
 		}
 
 	}
