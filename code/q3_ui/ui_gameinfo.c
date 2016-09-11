@@ -94,7 +94,7 @@ int UI_ParseInfos( char *buf, int max, char *infos[] ) {
 		if ( !token[0] ) {
 			break;
 		}
-		if ( strcmp( token, "{" ) ) {
+		if ( !strequals( token, "{" ) ) {
 			Com_Printf( "Missing { in info file\n" );
 			break;
 		}
@@ -111,7 +111,7 @@ int UI_ParseInfos( char *buf, int max, char *infos[] ) {
 				Com_Printf( "Unexpected end of info file\n" );
 				break;
 			}
-			if ( !strcmp( token, "}" ) ) {
+			if ( strequals( token, "}" ) ) {
 				break;
 			}
 			Q_strncpyz( key, token, sizeof( key ) );

@@ -414,7 +414,7 @@ static void PlayerModel_BuildList( void )
 		
 		if (dirlen && dirptr[dirlen-1]=='/') dirptr[dirlen-1]='\0';
 
-		if (!strcmp(dirptr,".") || !strcmp(dirptr,".."))
+		if (strequals(dirptr,".") || strequals(dirptr,".."))
 			continue;
 			
 		// iterate all skin files in directory

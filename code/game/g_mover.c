@@ -320,7 +320,7 @@ qboolean G_MoverPush( gentity_t *pusher, vec3_t move, vec3_t amove, gentity_t **
 
 		if ( check->s.eType == ET_MISSILE ) {
 			// if it is a prox mine
-			if ( !strcmp(check->classname, "prox mine") ) {
+			if ( strequals(check->classname, "prox mine") ) {
 				// if this prox mine is attached to this mover try to move it with the pusher
 				if ( check->enemy == pusher ) {
 					if (!G_TryPushingProxMine( check, pusher, move, amove )) {
@@ -1403,7 +1403,7 @@ void Think_SetupTrainTargets( gentity_t *ent ) {
 				vtos(path->s.origin) );
 				return;
 			}
-		} while ( strcmp( next->classname, "path_corner" ) );
+		} while ( !strequals( next->classname, "path_corner" ) );
 
 		path->nextTrain = next;
 	}

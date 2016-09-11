@@ -38,7 +38,7 @@ void readFile_int( char **cnf, int *v )
 
 	//COM_MatchToken(cnf, "=");
 	t = COM_ParseExt( cnf, qfalse );
-	if( !strcmp( t, "=" ) )
+	if( strequals( t, "=" ) )
 	{
 		t = COM_ParseExt( cnf, qfalse );
 	}
@@ -63,7 +63,7 @@ void readFile_string( char **cnf, char *s, int size )
 	//COM_MatchToken(cnf, "=");
 	s[ 0 ] = '\0';
 	t = COM_ParseExt( cnf, qfalse );
-	if( strcmp( t, "=" ) )
+	if( !strequals( t, "=" ) )
 	{
 		COM_ParseWarning( "expected '=' before \"%s\"", t );
 		Q_strncpyz( s, t, size );

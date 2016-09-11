@@ -422,7 +422,7 @@ void CopyToBodyQue( gentity_t *ent ) {
 				continue;
 			if (e->activator != ent)
 				continue;
-			if (strcmp(e->classname, "kamikaze timer"))
+			if (!strequals(e->classname, "kamikaze timer"))
 				continue;
 			e->activator = body;
 			break;
@@ -1095,7 +1095,7 @@ void ClientUserinfoChanged( int clientNum ) {
 
 	// check for local client
 	s = Info_ValueForKey( userinfo, "ip" );
-	if ( !strcmp( s, "localhost" ) ) {
+	if ( strequals( s, "localhost" ) ) {
 		client->pers.localClient = qtrue;
 	}
 
@@ -1148,7 +1148,7 @@ void ClientUserinfoChanged( int clientNum ) {
 	ClientCleanName( s, client->pers.netname, sizeof(client->pers.netname), clientNum );
 
     //KK-OAPub Added From Tremulous-Control Name Changes
-    if( strcmp( oldname, client->pers.netname ) )
+    if( !strequals( oldname, client->pers.netname ) )
     {
         if( client->pers.nameChangeTime &&
             ( level.time - client->pers.nameChangeTime )
@@ -1215,7 +1215,7 @@ void ClientUserinfoChanged( int clientNum ) {
 	}
 
 	if ( client->pers.connected == CON_CONNECTED ) {
-		if ( strcmp( oldname, client->pers.netname ) ) {
+		if ( !strequals( oldname, client->pers.netname ) ) {
 			trap_SendServerCommand( -1, va("print \"%s" S_COLOR_WHITE " renamed to %s\n\"", oldname, 
 				client->pers.netname) );
 		}
@@ -1382,15 +1382,15 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
   // we don't check GUID or password for bots and local client
   // NOTE: local client <-> "ip" "localhost"
   //   this means this client is not running in our current process
-	if ( !isBot && (strcmp(value, "localhost") != 0)) {
+	if ( !isBot && !strequals(value, "localhost") ) {
 		// check for a password
 		value = Info_ValueForKey (userinfo, "password");
 		if ( g_password.string[0] && !Q_strequal( g_password.string, "none" ) &&
-			strcmp( g_password.string, value) != 0) {
+			!strequals( g_password.string, value)) {
 			return "Invalid password";
 		}
 		for( i = 0; i < sizeof( client->pers.guid ) - 1 &&
-		    isxdigit( client->pers.guid[ i ] ); i++ );
+		    isxdigit( client->pers.guid[ i ] ); i++ ) {};
 		if( i < sizeof( client->pers.guid ) - 1 )
 		    return "Invalid GUID";
 		    
@@ -1402,7 +1402,7 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 		    if( Q_strequal( client->pers.guid, level.clients[ i ].pers.guid ) ) {
 		        if( !G_ClientIsLagging( level.clients + i ) ) {
 		            trap_SendServerCommand( i, "cp \"Your GUID is not secure\"" );
-		                return "Duplicate GUID";
+					return "Duplicate GUID";
 		        }
 		        trap_DropClient( i, "Ghost" );
 		    }
@@ -1411,9 +1411,10 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 	}
 
     //Check for local client
-    if( !strcmp( client->pers.ip, "localhost" ) )
+    if( strequals( client->pers.ip, "localhost" ) ) {
         client->pers.localClient = qtrue;
         client->pers.adminLevel = G_admin_level( ent );
+	}
 
 	client->pers.connected = CON_CONNECTING;
 
@@ -1484,15 +1485,18 @@ void motd (gentity_t *ent)
 		char * p;
 
 		motdLen = strlen(motd);
-		if((motdLen + fileLen) > (sizeof(motd) - 2))
+		if((motdLen + fileLen) > (sizeof(motd) - 2)) {
 			fileLen = (sizeof(motd) - 2 - motdLen);
+		}
 		trap_FS_Read(motd + motdLen, fileLen, motdFile);
 		motd[motdLen + fileLen] = '"';
 		motd[motdLen + fileLen + 1] = 0;
 		trap_FS_FCloseFile(motdFile);
 
-		while((p = strchr(motd, '\r'))) //Remove carrier return. 0x0D
-		memmove(p, p + 1, motdLen + fileLen - (p - motd));
+		while((p = strchr(motd, '\r'))) {
+			//Remove carrier return. 0x0D
+			memmove(p, p + 1, motdLen + fileLen - (p - motd));
+		}
 	}
 	trap_SendServerCommand(ent - g_entities, motd);
 }

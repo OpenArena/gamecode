@@ -5883,8 +5883,9 @@ static void UI_BuildQ3Model_List( void )
 		
 		if (dirlen && dirptr[dirlen-1]=='/') dirptr[dirlen-1]='\0';
 
-		if (!strcmp(dirptr,".") || !strcmp(dirptr,".."))
+		if ( strequals(dirptr,".") || strequals(dirptr,"..")) {
 			continue;
+		}
 			
 		// iterate all skin files in directory
 		numfiles = trap_FS_GetFileList( va("models/players/%s",dirptr), "tga", filelist, 2048 );
@@ -5914,7 +5915,7 @@ static void UI_BuildQ3Model_List( void )
 				}
 				if (!dirty) {
 					Com_sprintf( uiInfo.q3HeadNames[uiInfo.q3HeadCount], sizeof(uiInfo.q3HeadNames[uiInfo.q3HeadCount]), "%s", scratch);
-                                    uiInfo.q3HeadIcons[uiInfo.q3HeadCount++] = trap_R_RegisterShaderNoMip(va("models/players/%s/%s",dirptr,skinname));
+					uiInfo.q3HeadIcons[uiInfo.q3HeadCount++] = trap_R_RegisterShaderNoMip(va("models/players/%s/%s",dirptr,skinname));
 				}
 			}
 

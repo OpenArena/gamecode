@@ -254,7 +254,7 @@ static void PlayerSettings_DrawPlayer( void *self ) {
 	char			buf[MAX_QPATH];
 
 	trap_Cvar_VariableStringBuffer( "model", buf, sizeof( buf ) );
-	if ( strcmp( buf, s_playersettings.playerModel ) != 0 ) {
+	if ( !strequals( buf, s_playersettings.playerModel ) ) {
 		UI_PlayerInfo_SetModel( &s_playersettings.playerinfo, buf );
 		strcpy( s_playersettings.playerModel, buf );
 

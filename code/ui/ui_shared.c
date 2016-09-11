@@ -186,7 +186,7 @@ const char *String_Alloc(const char *p) {
 
 	str = strHandle[hash];
 	while (str) {
-		if (strcmp(p, str->str) == 0) {
+		if (strequals(p, str->str)) {
 			return str->str;
 		}
 		str = str->next;

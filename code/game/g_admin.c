@@ -1846,7 +1846,7 @@ qboolean G_admin_ban( gentity_t *ent, int skiparg )
       " level than you\n" );
     return qfalse;
   }
-  if( !strcmp( g_admin_namelog[ logmatch ]->ip, "localhost" ) )
+  if( strequals( g_admin_namelog[ logmatch ]->ip, "localhost" ) )
   {
     ADMP( "^3!ban: ^7disconnecting the host would end the game\n" );
     return qfalse;

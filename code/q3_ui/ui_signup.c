@@ -80,7 +80,7 @@ static void Signup_MenuEvent( void* ptr, int event ) {
 	switch( ((menucommon_s*)ptr)->id ) {
 	case ID_SIGNUP:
 		if( strcmp(s_signup.password_box.field.buffer, 
-			s_signup.again_box.field.buffer) != 0 )
+			s_signup.again_box.field.buffer) )
 		{
 			// GRANK_FIXME - password mismatch
 			break;

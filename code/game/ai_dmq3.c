@@ -4275,7 +4275,7 @@ int BotGetActivateGoal(bot_state_t *bs, int entitynum, bot_activategoal_t *activ
 	Com_sprintf(model, sizeof( model ), "*%d", entinfo.modelindex);
 	for (ent = trap_AAS_NextBSPEntity(0); ent; ent = trap_AAS_NextBSPEntity(ent)) {
 		if (!trap_AAS_ValueForBSPEpairKey(ent, "model", tmpmodel, sizeof(tmpmodel))) continue;
-		if (!strcmp(model, tmpmodel)) break;
+		if (strequals(model, tmpmodel)) break;
 	}
 	if (!ent) {
 		BotAI_Print(PRT_ERROR, "BotGetActivateGoal: no entity found with model %s\n", model);
@@ -4287,7 +4287,7 @@ int BotGetActivateGoal(bot_state_t *bs, int entitynum, bot_activategoal_t *activ
 		return 0;
 	}
 	//if it is a door
-	if (!strcmp(classname, "func_door")) {
+	if (strequals(classname, "func_door")) {
 		if (trap_AAS_FloatForBSPEpairKey(ent, "health", &health)) {
 			//if the door has health then the door must be shot to open
 			if (health) {
@@ -4344,7 +4344,7 @@ int BotGetActivateGoal(bot_state_t *bs, int entitynum, bot_activategoal_t *activ
 		}
 	}
 	// if the bot is blocked by or standing on top of a button
-	if (!strcmp(classname, "func_button")) {
+	if (strequals(classname, "func_button")) {
 		return 0;
 	}
 	// get the targetname so we can find an entity with a matching target
@@ -4359,7 +4359,7 @@ int BotGetActivateGoal(bot_state_t *bs, int entitynum, bot_activategoal_t *activ
 	for (i = 0; i >= 0 && i < 10;) {
 		for (ent = cur_entities[i]; ent; ent = trap_AAS_NextBSPEntity(ent)) {
 			if (!trap_AAS_ValueForBSPEpairKey(ent, "target", target, sizeof(target))) continue;
-			if (!strcmp(targetname[i], target)) {
+			if (strequals(targetname[i], target)) {
 				cur_entities[i] = trap_AAS_NextBSPEntity(ent);
 				break;
 			}
@@ -4378,7 +4378,7 @@ int BotGetActivateGoal(bot_state_t *bs, int entitynum, bot_activategoal_t *activ
 			continue;
 		}
 		// BSP button model
-		if (!strcmp(classname, "func_button")) {
+		if (strequals(classname, "func_button")) {
 			//
 			if (!BotFuncButtonActivateGoal(bs, ent, activategoal))
 				continue;
@@ -4403,7 +4403,7 @@ int BotGetActivateGoal(bot_state_t *bs, int entitynum, bot_activategoal_t *activ
 			return ent;
 		}
 		// invisible trigger multiple box
-		else if (!strcmp(classname, "trigger_multiple")) {
+		else if (strequals(classname, "trigger_multiple")) {
 			//
 			if (!BotTriggerMultipleActivateGoal(bs, ent, activategoal))
 				continue;
@@ -4427,12 +4427,12 @@ int BotGetActivateGoal(bot_state_t *bs, int entitynum, bot_activategoal_t *activ
 			}
 			return ent;
 		}
-		else if (!strcmp(classname, "func_timer")) {
+		else if (strequals(classname, "func_timer")) {
 			// just skip the func_timer
 			continue;
 		}
 		// the actual button or trigger might be linked through a target_relay or target_delay
-		else if (!strcmp(classname, "target_relay") || !strcmp(classname, "target_delay")) {
+		else if (strequals(classname, "target_relay") || strequals(classname, "target_delay")) {
 			if (trap_AAS_ValueForBSPEpairKey(ent, "targetname", targetname[i+1], sizeof(targetname[0]))) {
 				i++;
 				cur_entities[i] = trap_AAS_NextBSPEntity(0);
@@ -4940,23 +4940,23 @@ void BotCheckEvents(bot_state_t *bs, entityState_t *state) {
 			}
 			trap_GetConfigstring(CS_SOUNDS + state->eventParm, buf, sizeof(buf));
 			/*
-			if (!strcmp(buf, "sound/teamplay/flagret_red.wav")) {
+			if (strequals(buf, "sound/teamplay/flagret_red.wav")) {
 				//red flag is returned
 				bs->redflagstatus = 0;
 				bs->flagstatuschanged = qtrue;
 			}
-			else if (!strcmp(buf, "sound/teamplay/flagret_blu.wav")) {
+			else if (strequals(buf, "sound/teamplay/flagret_blu.wav")) {
 				//blue flag is returned
 				bs->blueflagstatus = 0;
 				bs->flagstatuschanged = qtrue;
 			}
 			else*/
-			if (!strcmp(buf, "sound/items/kamikazerespawn.wav" )) {
+			if (strequals(buf, "sound/items/kamikazerespawn.wav" )) {
 				//the kamikaze respawned so dont avoid it
 				BotDontAvoid(bs, "Kamikaze");
 			}
 			else
-				if (!strcmp(buf, "sound/items/poweruprespawn.wav")) {
+				if (strequals(buf, "sound/items/poweruprespawn.wav")) {
 				//powerup respawned... go get it
 				BotGoForPowerups(bs);
 			}
@@ -5047,7 +5047,7 @@ void BotCheckEvents(bot_state_t *bs, entityState_t *state) {
 				//check out the sound
 				trap_GetConfigstring(CS_SOUNDS + state->eventParm, buf, sizeof(buf));
 				//if falling into a death pit
-				if (!strcmp(buf, "*falling1.wav")) {
+				if (strequals(buf, "*falling1.wav")) {
 					//if the bot has a personal teleporter
 					if (bs->inventory[INVENTORY_TELEPORTER] > 0) {
 						//use the holdable item
@@ -5463,7 +5463,7 @@ int BotGoalForBSPEntity( char *classname, bot_goal_t *goal ) {
 	for (ent = trap_AAS_NextBSPEntity(0); ent; ent = trap_AAS_NextBSPEntity(ent)) {
 		if (!trap_AAS_ValueForBSPEpairKey(ent, "classname", value, sizeof(value)))
 			continue;
-		if (!strcmp(value, classname)) {
+		if (strequals(value, classname)) {
 			if (!trap_AAS_VectorForBSPEpairKey(ent, "origin", origin))
 				return qfalse;
 			VectorCopy(origin, goal->origin);

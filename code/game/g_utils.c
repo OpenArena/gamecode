@@ -94,7 +94,7 @@ int G_FindConfigstringIndex( char *name, int start, int max, qboolean create ) {
 		if ( !s[0] ) {
 			break;
 		}
-		if ( !strcmp( s, name ) ) {
+		if ( strequals( s, name ) ) {
 			return i;
 		}
 	}

@@ -269,7 +269,7 @@ int VoteParseCustomVotes( void ) {
 			break;
 	}
 
-		if ( !strcmp( token, "votecommand" ) ) {
+		if ( strequals( token, "votecommand" ) ) {
 			token = COM_Parse( &pointer );
 			Q_strcat(custom_vote_info,sizeof(custom_vote_info),va("%s ",token));
 			commands++;

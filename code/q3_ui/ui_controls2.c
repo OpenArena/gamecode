@@ -437,7 +437,7 @@ static float Controls_GetCvarDefault( char* name )
 		if (!cvarptr->name)
 			return (0);
 
-		if (!strcmp(cvarptr->name,name))
+		if (strequals(cvarptr->name,name))
 			break;
 	}
 
@@ -460,7 +460,7 @@ static float Controls_GetCvarValue( char* name )
 		if (!cvarptr->name)
 			return (0);
 
-		if (!strcmp(cvarptr->name,name))
+		if (strequals(cvarptr->name,name))
 			break;
 	}
 
@@ -802,7 +802,7 @@ static void Controls_DrawPlayer( void *self ) {
 	char			buf[MAX_QPATH];
 
 	trap_Cvar_VariableStringBuffer( "model", buf, sizeof( buf ) );
-	if ( strcmp( buf, s_controls.playerModel ) != 0 ) {
+	if ( !strequals( buf, s_controls.playerModel ) ) {
 		UI_PlayerInfo_SetModel( &s_controls.playerinfo, buf );
 		strcpy( s_controls.playerModel, buf );
 		Controls_UpdateModel( ANIM_IDLE );

@@ -1164,9 +1164,9 @@ void CG_VoiceChat( int mode ) {
 	cmd = CG_Argv(4);
 
 	if (cg_noTaunt.integer != 0) {
-		if (!strcmp(cmd, VOICECHAT_KILLINSULT)  || !strcmp(cmd, VOICECHAT_TAUNT) || \
-			!strcmp(cmd, VOICECHAT_DEATHINSULT) || !strcmp(cmd, VOICECHAT_KILLGAUNTLET) || \
-			!strcmp(cmd, VOICECHAT_PRAISE)) {
+		if (strequals(cmd, VOICECHAT_KILLINSULT)  || strequals(cmd, VOICECHAT_TAUNT) || 
+			strequals(cmd, VOICECHAT_DEATHINSULT) || strequals(cmd, VOICECHAT_KILLGAUNTLET) || 
+			strequals(cmd, VOICECHAT_PRAISE)) {
 			return;
 		}
 	}
@@ -1211,17 +1211,17 @@ static void CG_ServerCommand( void ) {
 		return;
 	}
 
-	if ( !strcmp( cmd, "cp" ) ) {
+	if ( strequals( cmd, "cp" ) ) {
 		CG_CenterPrint( CG_Argv(1), SCREEN_HEIGHT * 0.30, BIGCHAR_WIDTH );
 		return;
 	}
 
-	if ( !strcmp( cmd, "cs" ) ) {
+	if ( strequals( cmd, "cs" ) ) {
 		CG_ConfigStringModified();
 		return;
 	}
 
-	if ( !strcmp( cmd, "print" ) ) {
+	if ( strequals( cmd, "print" ) ) {
 		CG_Printf( "%s", CG_Argv(1) );
 #ifdef MISSIONPACK
 		cmd = CG_Argv(1);			// yes, this is obviously a hack, but so is the way we hear about
@@ -1235,7 +1235,7 @@ static void CG_ServerCommand( void ) {
 		return;
 	}
 
-	if ( !strcmp( cmd, "chat" ) ) {
+	if ( strequals( cmd, "chat" ) ) {
 		if ( !cg_teamChatsOnly.integer ) {
 			if( cg_chatBeep.integer ) {
 				trap_S_StartLocalSound( cgs.media.talkSound, CHAN_LOCAL_SOUND );
@@ -1247,7 +1247,7 @@ static void CG_ServerCommand( void ) {
 		return;
 	}
 
-	if ( !strcmp( cmd, "tchat" ) ) {
+	if ( strequals( cmd, "tchat" ) ) {
 		if( cg_teamChatBeep.integer ) {
 			trap_S_StartLocalSound( cgs.media.talkSound, CHAN_LOCAL_SOUND );
 		}
@@ -1257,69 +1257,69 @@ static void CG_ServerCommand( void ) {
 		CG_Printf( "%s\n", text );
 		return;
 	}
-	if ( !strcmp( cmd, "vchat" ) ) {
+	if ( strequals( cmd, "vchat" ) ) {
 		CG_VoiceChat( SAY_ALL );
 		return;
 	}
 
-	if ( !strcmp( cmd, "vtchat" ) ) {
+	if ( strequals( cmd, "vtchat" ) ) {
 		CG_VoiceChat( SAY_TEAM );
 		return;
 	}
 
-	if ( !strcmp( cmd, "vtell" ) ) {
+	if ( strequals( cmd, "vtell" ) ) {
 		CG_VoiceChat( SAY_TELL );
 		return;
 	}
 
-	if ( !strcmp( cmd, "scores" ) ) {
+	if ( strequals( cmd, "scores" ) ) {
 		CG_ParseScores();
 		return;
 	}
 
 
-	if ( !strcmp( cmd, "accs" ) ) {
+	if ( strequals( cmd, "accs" ) ) {
 		CG_ParseAccuracy();
 		return;
 	}
 
 
-	if ( !strcmp( cmd, "ddtaken" ) ) {
+	if ( strequals( cmd, "ddtaken" ) ) {
 		CG_ParseDDtimetaken();
 		return;
 	}
 
-	if ( !strcmp( cmd, "dompointnames" ) ) {
+	if ( strequals( cmd, "dompointnames" ) ) {
 		CG_ParseDomPointNames();
 		return;
 	}
 
-	if ( !strcmp( cmd, "domStatus" ) ) {
+	if ( strequals( cmd, "domStatus" ) ) {
 		CG_ParseDomStatus();
 		return;
 	}
 
-	if ( !strcmp( cmd, "elimination" ) ) {
+	if ( strequals( cmd, "elimination" ) ) {
 		CG_ParseElimination();
 		return;
 	}
 
-	if ( !strcmp( cmd, "mappage" ) ) {
+	if ( strequals( cmd, "mappage" ) ) {
 		CG_ParseMappage();
 		return;
 	}
 
-	if ( !strcmp( cmd, "attackingteam" ) ) {
+	if ( strequals( cmd, "attackingteam" ) ) {
 		CG_ParseAttackingTeam();
 		return;
 	}
 
-	if ( !strcmp( cmd, "tinfo" ) ) {
+	if ( strequals( cmd, "tinfo" ) ) {
 		CG_ParseTeamInfo();
 		return;
 	}
 
-	if ( !strcmp( cmd, "map_restart" ) ) {
+	if ( strequals( cmd, "map_restart" ) ) {
 		CG_MapRestart();
 		return;
 	}
@@ -1343,40 +1343,40 @@ static void CG_ServerCommand( void ) {
 	}
 
 	// loaddeferred can be both a servercmd and a consolecmd
-	if ( !strcmp( cmd, "loaddefered" ) ) {	// FIXME: spelled wrong, but not changing for demo
+	if ( strequals( cmd, "loaddefered" ) ) {	// FIXME: spelled wrong, but not changing for demo
 		CG_LoadDeferredPlayers();
 		return;
 	}
 
 	// clientLevelShot is sent before taking a special screenshot for
 	// the menu system during development
-	if ( !strcmp( cmd, "clientLevelShot" ) ) {
+	if ( strequals( cmd, "clientLevelShot" ) ) {
 		cg.levelShot = qtrue;
 		return;
 	}
 
 	// challenge completed is determened by the server. A client should consider this message valid:
-	if ( !strcmp( cmd, "ch" ) ) {
+	if ( strequals( cmd, "ch" ) ) {
 		CG_ParseChallenge();
 		return;
 	}
 
-	if ( !strcmp (cmd, "oh") ) {
+	if ( strequals (cmd, "oh") ) {
 		CG_ParseObeliskHealth();
 		return;
 	}
 
-	if ( !strcmp( cmd, "respawn" ) ) {
+	if ( strequals( cmd, "respawn" ) ) {
 		CG_ParseRespawnTime();
 		return;
 	}
 
-	if ( !strcmp( cmd, "team" ) ) {
+	if ( strequals( cmd, "team" ) ) {
 		CG_ParseTeam();
 		return;
 	}
 
-	if ( !strcmp( cmd, "customvotes" ) ) {
+	if ( strequals( cmd, "customvotes" ) ) {
 		char infoString[1024];
 		int i;
 		//TODO: Create a ParseCustomvotes function
