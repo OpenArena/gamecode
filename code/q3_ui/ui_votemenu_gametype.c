@@ -1,6 +1,6 @@
 /*
 ===========================================================================
-Copyright (C) 2009 Poul Sander
+Copyright (C) 2009-2016 Poul Sander
 
 This file is part of the Open Arena source code.
 
@@ -24,16 +24,16 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #define VOTEMENU_BACK0          "menu/" MENU_ART_DIR "/back_0"
 #define VOTEMENU_BACK1          "menu/" MENU_ART_DIR "/back_1"
-#define ART_FIGHT0		"menu/" MENU_ART_DIR "/accept_0"
-#define ART_FIGHT1		"menu/" MENU_ART_DIR "/accept_1"
+#define ART_FIGHT0              "menu/" MENU_ART_DIR "/accept_0"
+#define ART_FIGHT1              "menu/" MENU_ART_DIR "/accept_1"
 #define ART_BACKGROUND          "menu/" MENU_ART_DIR "/addbotframe"
 
 static char* votemenu_Gametype_artlist[] =
 {
 	VOTEMENU_BACK0,
 	VOTEMENU_BACK1,
-        ART_FIGHT0,
-        ART_FIGHT1,
+	ART_FIGHT0,
+	ART_FIGHT1,
 	NULL
 };
 
@@ -111,96 +111,76 @@ static void VoteMenu_Gametype_Event( void* ptr, int event )
 	switch (((menucommon_s*)ptr)->id)
 	{
 		case ID_BACK:
-			if (event != QM_ACTIVATED)
+			if (event != QM_ACTIVATED) {
 				break;
-
+			}
 			UI_PopMenu();
 			break;
-			/*
-            case ID_GO:
-                if( event != QM_ACTIVATED ) {
-                    return;
-                }
-                switch(s_votemenu_Gametype.selection) {
-            */
-                    case ID_FFA:
-                        trap_Cmd_ExecuteText( EXEC_APPEND, "callvote g_gametype 0" );
-                        UI_PopMenu();
-                        UI_PopMenu();
-                        break;
-                        case ID_Tourney:
-                        trap_Cmd_ExecuteText( EXEC_APPEND, "callvote g_gametype 1" );
-                        UI_PopMenu();
-                        UI_PopMenu();
-                        break;
-                        case ID_TDM:
-                        trap_Cmd_ExecuteText( EXEC_APPEND, "callvote g_gametype 3" );
-                        UI_PopMenu();
-                        UI_PopMenu();
-                        break;
-                        case ID_CTF:
-                        trap_Cmd_ExecuteText( EXEC_APPEND, "callvote g_gametype 4" );
-                        UI_PopMenu();
-                        UI_PopMenu();
-                        break;
-                        case ID_1FCTF:
-                        trap_Cmd_ExecuteText( EXEC_APPEND, "callvote g_gametype 5" );
-                        UI_PopMenu();
-                        UI_PopMenu();
-                        break;
-                        case ID_Overload:
-                        trap_Cmd_ExecuteText( EXEC_APPEND, "callvote g_gametype 6" );
-                        UI_PopMenu();
-                        UI_PopMenu();
-                        break;
-                        case ID_Harvester:
-                        trap_Cmd_ExecuteText( EXEC_APPEND, "callvote g_gametype 7" );
-                        UI_PopMenu();
-                        UI_PopMenu();
-                        break;
-                        case ID_Elimination:
-                        trap_Cmd_ExecuteText( EXEC_APPEND, "callvote g_gametype 8" );
-                        UI_PopMenu();
-                        UI_PopMenu();
-                        break;
-                        case ID_CTFe:
-                        trap_Cmd_ExecuteText( EXEC_APPEND, "callvote g_gametype 9" );
-                        UI_PopMenu();
-                        UI_PopMenu();
-                        break;
-                        case ID_LMS:
-                        trap_Cmd_ExecuteText( EXEC_APPEND, "callvote g_gametype 10" );
-                        UI_PopMenu();
-                        UI_PopMenu();
-                        break;
-                        case ID_DOUBLED:
-                        trap_Cmd_ExecuteText( EXEC_APPEND, "callvote g_gametype 11" );
-                        UI_PopMenu();
-                        UI_PopMenu();
-                        break;
-                        case ID_DOM:
-                        trap_Cmd_ExecuteText( EXEC_APPEND, "callvote g_gametype 12" );
-                        UI_PopMenu();
-                        UI_PopMenu();
-                        break;
+		case ID_FFA:
+			trap_Cmd_ExecuteText( EXEC_APPEND, "callvote g_gametype 0" );
+			UI_PopMenu();
+			UI_PopMenu();
+			break;
+		case ID_Tourney:
+			trap_Cmd_ExecuteText( EXEC_APPEND, "callvote g_gametype 1" );
+			UI_PopMenu();
+			UI_PopMenu();
+			break;
+		case ID_TDM:
+			trap_Cmd_ExecuteText( EXEC_APPEND, "callvote g_gametype 3" );
+			UI_PopMenu();
+			UI_PopMenu();
+			break;
+		case ID_CTF:
+			trap_Cmd_ExecuteText( EXEC_APPEND, "callvote g_gametype 4" );
+			UI_PopMenu();
+			UI_PopMenu();
+			break;
+		case ID_1FCTF:
+			trap_Cmd_ExecuteText( EXEC_APPEND, "callvote g_gametype 5" );
+			UI_PopMenu();
+			UI_PopMenu();
+			break;
+		case ID_Overload:
+			trap_Cmd_ExecuteText( EXEC_APPEND, "callvote g_gametype 6" );
+			UI_PopMenu();
+			UI_PopMenu();
+			break;
+		case ID_Harvester:
+			trap_Cmd_ExecuteText( EXEC_APPEND, "callvote g_gametype 7" );
+			UI_PopMenu();
+			UI_PopMenu();
+			break;
+		case ID_Elimination:
+			trap_Cmd_ExecuteText( EXEC_APPEND, "callvote g_gametype 8" );
+			UI_PopMenu();
+			UI_PopMenu();
+			break;
+		case ID_CTFe:
+			trap_Cmd_ExecuteText( EXEC_APPEND, "callvote g_gametype 9" );
+			UI_PopMenu();
+			UI_PopMenu();
+			break;
+		case ID_LMS:
+			trap_Cmd_ExecuteText( EXEC_APPEND, "callvote g_gametype 10" );
+			UI_PopMenu();
+			UI_PopMenu();
+			break;
+		case ID_DOUBLED:
+			trap_Cmd_ExecuteText( EXEC_APPEND, "callvote g_gametype 11" );
+			UI_PopMenu();
+			UI_PopMenu();
+			break;
+		case ID_DOM:
+			trap_Cmd_ExecuteText( EXEC_APPEND, "callvote g_gametype 12" );
+			UI_PopMenu();
+			UI_PopMenu();
+			break;
 		case ID_POS:
 			trap_Cmd_ExecuteText( EXEC_APPEND, "callvote g_gametype 13" );
 			UI_PopMenu();
 			UI_PopMenu();
 			break;
-            /*
-                };
-                break;
-            default:
-                if( event != QM_ACTIVATED ) {
-                    return;
-                }
-                if(s_votemenu_Gametype.selection != ((menucommon_s*)ptr)->id) {
-                    s_votemenu_Gametype.selection = ((menucommon_s*)ptr)->id;
-                    UI_VoteGametypeMenuInternal();
-                }
-                break;
-            */
 	}
 }
 
@@ -221,15 +201,6 @@ static void setGametypeMenutext(menutext_s *menu,int y,int id,qboolean active,ch
     menu->style               = UI_CENTER|UI_SMALLFONT;
 }
 
-/*
-=================
-VoteMenu_Gametype_MenuKey
-=================
-*/
-/*static sfxHandle_t VoteMenu_Gametype_MenuKey( int key )
-{
-	return ( Menu_DefaultKey( &s_votemenu_Gametype.menu, key ) );
-}*/
 
 /*
 =================
@@ -343,59 +314,58 @@ UI_VoteGametypeMenu
 =================
 */
 void UI_VoteGametypeMenu( void ) {
-        char serverinfo[MAX_INFO_STRING], *gametypeinfo;
-        // zero set all our globals
+	char serverinfo[MAX_INFO_STRING], *gametypeinfo;
+	// zero set all our globals
 	memset( &s_votemenu_Gametype, 0 ,sizeof(votemenu_t) );
-        trap_GetConfigString( CS_SERVERINFO, serverinfo, MAX_INFO_STRING );
-        gametypeinfo = Info_ValueForKey(serverinfo,"g_voteGametypes");
-        if (Q_strequal(gametypeinfo,"*")) {
-            s_votemenu_Gametype.FFA = qtrue;
-            s_votemenu_Gametype.Tourney = qtrue;
-            s_votemenu_Gametype.TDM = qtrue;
-            s_votemenu_Gametype.CTF = qtrue;
-            s_votemenu_Gametype._1FCTF = qtrue;
-            s_votemenu_Gametype.Overload = qtrue;
-            s_votemenu_Gametype.Harvester = qtrue;
-            s_votemenu_Gametype.Elimination = qtrue;
-            s_votemenu_Gametype.CTFe = qtrue;
-            s_votemenu_Gametype.LMS = qtrue;
-            s_votemenu_Gametype.DOUBLED = qtrue;
-            s_votemenu_Gametype.DOM = qtrue;
-            s_votemenu_Gametype.POS = qtrue;
-        } else {
-            s_votemenu_Gametype.FFA = (qboolean)Q_stristr(gametypeinfo,"/0/");
-            s_votemenu_Gametype.Tourney = (qboolean)Q_stristr(gametypeinfo,"/1/");
-            s_votemenu_Gametype.TDM = (qboolean)Q_stristr(gametypeinfo,"/3/");
-            s_votemenu_Gametype.CTF = (qboolean)Q_stristr(gametypeinfo,"/4/");
-            s_votemenu_Gametype._1FCTF = (qboolean)Q_stristr(gametypeinfo,"/5/");
-            s_votemenu_Gametype.Overload = (qboolean)Q_stristr(gametypeinfo,"/6/");
-            s_votemenu_Gametype.Harvester = (qboolean)Q_stristr(gametypeinfo,"/7/");
-            s_votemenu_Gametype.Elimination = (qboolean)Q_stristr(gametypeinfo,"/8/");
-            s_votemenu_Gametype.CTFe = (qboolean)Q_stristr(gametypeinfo,"/9/");
-            s_votemenu_Gametype.LMS = (qboolean)Q_stristr(gametypeinfo,"/10/");
-            s_votemenu_Gametype.DOUBLED = (qboolean)Q_stristr(gametypeinfo,"/11/");
-            s_votemenu_Gametype.DOM = (qboolean)Q_stristr(gametypeinfo,"/12/");
-            s_votemenu_Gametype.POS = (qboolean)Q_stristr(gametypeinfo,"/13/");
-        }
+	trap_GetConfigString( CS_SERVERINFO, serverinfo, MAX_INFO_STRING );
+	gametypeinfo = Info_ValueForKey(serverinfo,"g_voteGametypes");
+	if (Q_strequal(gametypeinfo,"*")) {
+		s_votemenu_Gametype.FFA = qtrue;
+		s_votemenu_Gametype.Tourney = qtrue;
+		s_votemenu_Gametype.TDM = qtrue;
+		s_votemenu_Gametype.CTF = qtrue;
+		s_votemenu_Gametype._1FCTF = qtrue;
+		s_votemenu_Gametype.Overload = qtrue;
+		s_votemenu_Gametype.Harvester = qtrue;
+		s_votemenu_Gametype.Elimination = qtrue;
+		s_votemenu_Gametype.CTFe = qtrue;
+		s_votemenu_Gametype.LMS = qtrue;
+		s_votemenu_Gametype.DOUBLED = qtrue;
+		s_votemenu_Gametype.DOM = qtrue;
+		s_votemenu_Gametype.POS = qtrue;
+	} else {
+		s_votemenu_Gametype.FFA = (qboolean)Q_stristr(gametypeinfo,"/0/");
+		s_votemenu_Gametype.Tourney = (qboolean)Q_stristr(gametypeinfo,"/1/");
+		s_votemenu_Gametype.TDM = (qboolean)Q_stristr(gametypeinfo,"/3/");
+		s_votemenu_Gametype.CTF = (qboolean)Q_stristr(gametypeinfo,"/4/");
+		s_votemenu_Gametype._1FCTF = (qboolean)Q_stristr(gametypeinfo,"/5/");
+		s_votemenu_Gametype.Overload = (qboolean)Q_stristr(gametypeinfo,"/6/");
+		s_votemenu_Gametype.Harvester = (qboolean)Q_stristr(gametypeinfo,"/7/");
+		s_votemenu_Gametype.Elimination = (qboolean)Q_stristr(gametypeinfo,"/8/");
+		s_votemenu_Gametype.CTFe = (qboolean)Q_stristr(gametypeinfo,"/9/");
+		s_votemenu_Gametype.LMS = (qboolean)Q_stristr(gametypeinfo,"/10/");
+		s_votemenu_Gametype.DOUBLED = (qboolean)Q_stristr(gametypeinfo,"/11/");
+		s_votemenu_Gametype.DOM = (qboolean)Q_stristr(gametypeinfo,"/12/");
+		s_votemenu_Gametype.POS = (qboolean)Q_stristr(gametypeinfo,"/13/");
+	}
 
-        UI_VoteGametypeMenuInternal();
+	UI_VoteGametypeMenuInternal();
 
 	Menu_AddItem( &s_votemenu_Gametype.menu, (void*) &s_votemenu_Gametype.banner );
 	Menu_AddItem( &s_votemenu_Gametype.menu, (void*) &s_votemenu_Gametype.back );
-        //Menu_AddItem( &s_votemenu_Gametype.menu, (void*) &s_votemenu_Gametype.go );
-        Menu_AddItem( &s_votemenu_Gametype.menu, (void*) &s_votemenu_Gametype.bFFA );
-        Menu_AddItem( &s_votemenu_Gametype.menu, (void*) &s_votemenu_Gametype.bTourney );
-        Menu_AddItem( &s_votemenu_Gametype.menu, (void*) &s_votemenu_Gametype.bTDM );
-        Menu_AddItem( &s_votemenu_Gametype.menu, (void*) &s_votemenu_Gametype.bCTF );
-        Menu_AddItem( &s_votemenu_Gametype.menu, (void*) &s_votemenu_Gametype.b1FCTF );
-        Menu_AddItem( &s_votemenu_Gametype.menu, (void*) &s_votemenu_Gametype.bOverload );
-        Menu_AddItem( &s_votemenu_Gametype.menu, (void*) &s_votemenu_Gametype.bHarvester );
-        Menu_AddItem( &s_votemenu_Gametype.menu, (void*) &s_votemenu_Gametype.bElimination );
-        Menu_AddItem( &s_votemenu_Gametype.menu, (void*) &s_votemenu_Gametype.bCTFe );
-        Menu_AddItem( &s_votemenu_Gametype.menu, (void*) &s_votemenu_Gametype.bLMS );
-        Menu_AddItem( &s_votemenu_Gametype.menu, (void*) &s_votemenu_Gametype.bDOUBLED );
-        Menu_AddItem( &s_votemenu_Gametype.menu, (void*) &s_votemenu_Gametype.bDOM );
-        Menu_AddItem( &s_votemenu_Gametype.menu, (void*) &s_votemenu_Gametype.bPOS );
+	Menu_AddItem( &s_votemenu_Gametype.menu, (void*) &s_votemenu_Gametype.bFFA );
+	Menu_AddItem( &s_votemenu_Gametype.menu, (void*) &s_votemenu_Gametype.bTourney );
+	Menu_AddItem( &s_votemenu_Gametype.menu, (void*) &s_votemenu_Gametype.bTDM );
+	Menu_AddItem( &s_votemenu_Gametype.menu, (void*) &s_votemenu_Gametype.bCTF );
+	Menu_AddItem( &s_votemenu_Gametype.menu, (void*) &s_votemenu_Gametype.b1FCTF );
+	Menu_AddItem( &s_votemenu_Gametype.menu, (void*) &s_votemenu_Gametype.bOverload );
+	Menu_AddItem( &s_votemenu_Gametype.menu, (void*) &s_votemenu_Gametype.bHarvester );
+	Menu_AddItem( &s_votemenu_Gametype.menu, (void*) &s_votemenu_Gametype.bElimination );
+	Menu_AddItem( &s_votemenu_Gametype.menu, (void*) &s_votemenu_Gametype.bCTFe );
+	Menu_AddItem( &s_votemenu_Gametype.menu, (void*) &s_votemenu_Gametype.bLMS );
+	Menu_AddItem( &s_votemenu_Gametype.menu, (void*) &s_votemenu_Gametype.bDOUBLED );
+	Menu_AddItem( &s_votemenu_Gametype.menu, (void*) &s_votemenu_Gametype.bDOM );
+	Menu_AddItem( &s_votemenu_Gametype.menu, (void*) &s_votemenu_Gametype.bPOS );
 
 	UI_PushMenu( &s_votemenu_Gametype.menu );
 }
