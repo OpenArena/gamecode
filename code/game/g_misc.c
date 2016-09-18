@@ -536,31 +536,34 @@ static int countCtfSpawnpoints(void) {
 
 	tmp = countItems("team_CTF_redplayer",qtrue);
 	if(!tmp){
-	tmp = countFfaSpawnpoints(); //tmp==0 -> Fallback to FFA spawnpoints!
+		tmp = countFfaSpawnpoints(); //tmp==0 -> Fallback to FFA spawnpoints!
 	}
-	if(tmp<mincount)
+	if(tmp<mincount) {
 		mincount=tmp;
+	}
 
 	tmp = countItems("team_CTF_blueplayer",qtrue);
 	if(!tmp){
-	tmp = countFfaSpawnpoints(); //tmp==0 -> Fallback to FFA spawnpoints!
+		tmp = countFfaSpawnpoints(); //tmp==0 -> Fallback to FFA spawnpoints!
 	}
-	if(tmp<mincount)
+	if(tmp<mincount) {
 		mincount=tmp;
+	}
 
 	tmp = countItems("team_CTF_redspawn",qtrue);
 	if(!tmp){
-	tmp = countFfaSpawnpoints(); //tmp==0 -> Fallback to FFA spawnpoints!
+		tmp = countFfaSpawnpoints(); //tmp==0 -> Fallback to FFA spawnpoints!
 	}
 	if(tmp<mincount)
 		mincount=tmp;
 
 	tmp = countItems("team_CTF_bluespawn",qtrue);
 	if(!tmp){
-	tmp = countFfaSpawnpoints(); //tmp==0 -> Fallback to FFA spawnpoints!
+		tmp = countFfaSpawnpoints(); //tmp==0 -> Fallback to FFA spawnpoints!
 	}
-	if(tmp<mincount)
+	if(tmp<mincount) {
 		mincount=tmp;
+	}
 
 	return mincount;
 }

@@ -305,7 +305,7 @@ void BotSayTeamOrderAlways(bot_state_t *bs, int toclient) {
 	char buf[MAX_MESSAGE_SIZE];
 	char name[MAX_NETNAME];
 
-        if (bot_nochat.integer>2) return;
+	if (bot_nochat.integer>2) return;
 
 	//if the bot is talking to itself
 	if (bs->client == toclient) {
@@ -343,12 +343,14 @@ BotVoiceChat
 */
 void BotVoiceChat(bot_state_t *bs, int toclient, char *voicechat) {
 #ifdef MISSIONPACK
-	if (toclient == -1)
+	if (toclient == -1) {
 		// voice only say team
 		trap_EA_Command(bs->client, va("vsay_team %s", voicechat));
-	else
+	}
+	else {
 		// voice only tell single player
 		trap_EA_Command(bs->client, va("vtell %d %s", toclient, voicechat));
+	}
 #endif
 }
 
@@ -360,12 +362,14 @@ BotVoiceChatOnly
 void BotVoiceChatOnly(bot_state_t *bs, int toclient, char *voicechat) {
 
 #ifdef MISSIONPACK
-	if (toclient == -1)
+	if (toclient == -1) {
 		// voice only say team
 		trap_EA_Command(bs->client, va("vosay_team %s", voicechat));
-	else
+	}
+	else {
 		// voice only tell single player
 		trap_EA_Command(bs->client, va("votell %d %s", toclient, voicechat));
+	}
 #endif
 }
 
