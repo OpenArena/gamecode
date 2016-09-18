@@ -32,8 +32,8 @@ static char* votemenu_artlist[] =
 {
 	VOTEMENU_BACK0,
 	VOTEMENU_BACK1,
-        ART_FIGHT0,
-        ART_FIGHT1,
+	ART_FIGHT0,
+	ART_FIGHT1,
 	NULL
 };
 
@@ -138,77 +138,57 @@ static void VoteMenu_Event( void* ptr, int event )
 
 			UI_PopMenu();
 			break;
-			/*
-            case ID_GO:
-                if( event != QM_ACTIVATED ) {
-                    return;
-                }
-                switch(s_votemenu.selection) {
-            */
-                    case ID_NEXTMAP:
-                        trap_Cmd_ExecuteText( EXEC_APPEND, "callvote nextmap" );
-                        UI_PopMenu();
-                        break;
-                    case ID_RESTART:
-                        trap_Cmd_ExecuteText( EXEC_APPEND, "callvote map_restart" );
-                        UI_PopMenu();
-                        break;
-                    case ID_DOWARMUP:
-                        if(s_votemenu.g_doWarmupEnabled)
-                            trap_Cmd_ExecuteText( EXEC_APPEND, "callvote g_doWarmup 0" );
-                        else
-                            trap_Cmd_ExecuteText( EXEC_APPEND, "callvote g_doWarmup 1" );
-                        UI_PopMenu();
-                        break;
-                    case ID_SHUFFLE:
-                        trap_Cmd_ExecuteText( EXEC_APPEND, "callvote shuffle" );
-                        UI_PopMenu();
-                        break;
-                    case ID_FRAG:
-                        UI_VoteFraglimitMenu();
-                        //Don't pop! It will do a double pop if successfull
-                        break;
-                    case ID_CUSTOM:
-                        UI_VoteCustomMenu();
-                        //Don't pop! It will do a double pop if successfull
-                        break;
-                    case ID_TIME:
-                        UI_VoteTimelimitMenu();
-                        //Don't pop! It will do a double pop if successfull
-                        break;
-                    case ID_GAMETYPE:
-                        UI_VoteGametypeMenu();
-                        //Don't pop! It will do a double pop if successfull
-                        break;
-                    case ID_KICK:
-                        UI_VoteKickMenu();
-                        //Don't pop! It will do a double pop if successfull
-                        break;
-                    case ID_MAP:
-                        UI_VoteMapMenu();
-                        //Don't pop! It will do a double pop if successfull
-                        break;
-                    case ID_YES:
-                        trap_Cmd_ExecuteText( EXEC_APPEND, "vote yes" );
-                        UI_PopMenu();
-                        break;
-                    case ID_NO:
-                        trap_Cmd_ExecuteText( EXEC_APPEND, "vote no" );
-                        UI_PopMenu();
-                        break;
-            /*
-                };
-                break;
-            default:
-                if( event != QM_ACTIVATED ) {
-                    return;
-                }
-                if(s_votemenu.selection != ((menucommon_s*)ptr)->id) {
-                    s_votemenu.selection = ((menucommon_s*)ptr)->id;
-                    UI_VoteMenuMenuInternal();
-                }
-                break;
-            */
+		case ID_NEXTMAP:
+			trap_Cmd_ExecuteText( EXEC_APPEND, "callvote nextmap" );
+			UI_PopMenu();
+			break;
+		case ID_RESTART:
+			trap_Cmd_ExecuteText( EXEC_APPEND, "callvote map_restart" );
+			UI_PopMenu();
+			break;
+		case ID_DOWARMUP:
+			if(s_votemenu.g_doWarmupEnabled)
+				trap_Cmd_ExecuteText( EXEC_APPEND, "callvote g_doWarmup 0" );
+			else
+				trap_Cmd_ExecuteText( EXEC_APPEND, "callvote g_doWarmup 1" );
+			UI_PopMenu();
+			break;
+		case ID_SHUFFLE:
+			trap_Cmd_ExecuteText( EXEC_APPEND, "callvote shuffle" );
+			UI_PopMenu();
+			break;
+		case ID_FRAG:
+			UI_VoteFraglimitMenu();
+			//Don't pop! It will do a double pop if successfull
+			break;
+		case ID_CUSTOM:
+			UI_VoteCustomMenu();
+			//Don't pop! It will do a double pop if successfull
+			break;
+		case ID_TIME:
+			UI_VoteTimelimitMenu();
+			//Don't pop! It will do a double pop if successfull
+			break;
+		case ID_GAMETYPE:
+			UI_VoteGametypeMenu();
+			//Don't pop! It will do a double pop if successfull
+			break;
+		case ID_KICK:
+			UI_VoteKickMenu();
+			//Don't pop! It will do a double pop if successfull
+			break;
+		case ID_MAP:
+			UI_VoteMapMenu();
+			//Don't pop! It will do a double pop if successfull
+			break;
+		case ID_YES:
+			trap_Cmd_ExecuteText( EXEC_APPEND, "vote yes" );
+			UI_PopMenu();
+			break;
+		case ID_NO:
+			trap_Cmd_ExecuteText( EXEC_APPEND, "vote no" );
+			UI_PopMenu();
+			break;
 	}
 }
 
@@ -229,8 +209,8 @@ static void VoteMenu_Cache( void )
 		trap_R_RegisterShaderNoMip(votemenu_artlist[i]);
 	}
 
-        //Check all names
-        VoteMenu_CheckVoteNames();
+	//Check all names
+	VoteMenu_CheckVoteNames();
 }
 
 /*
@@ -254,13 +234,13 @@ UI_VoteMenuMenuInternal
 */
 void UI_VoteMenuMenuInternal( void )
 {
-        int y;
+	int y;
 
 	VoteMenu_Cache();
 
 	s_votemenu.menu.wrapAround = qtrue;
 	s_votemenu.menu.fullscreen = qfalse;
-        s_votemenu.menu.draw = UI_VoteMenu_Draw;
+	s_votemenu.menu.draw = UI_VoteMenu_Draw;
 
 	s_votemenu.banner.generic.type  = MTYPE_BTEXT;
 	s_votemenu.banner.generic.x	  = 320;
@@ -269,194 +249,195 @@ void UI_VoteMenuMenuInternal( void )
 	s_votemenu.banner.color	      = color_white;
 	s_votemenu.banner.style	      = UI_CENTER;
 
-        y = 98;
-        s_votemenu.bNextmap.generic.type        = MTYPE_PTEXT;
-        s_votemenu.bNextmap.color               = color_red;
-        s_votemenu.bNextmap.generic.flags       = QMF_CENTER_JUSTIFY|QMF_PULSEIFFOCUS;
-        if(!s_votemenu.nextmap)
-            s_votemenu.bNextmap.generic.flags   |= QMF_INACTIVE|QMF_GRAYED;
-        else
-            if(s_votemenu.selection == ID_NEXTMAP)
-                s_votemenu.bNextmap.color       = color_orange;
-        s_votemenu.bNextmap.generic.x           = 320;
-        s_votemenu.bNextmap.generic.y           = y;
-        s_votemenu.bNextmap.generic.id          = ID_NEXTMAP;
-        s_votemenu.bNextmap.generic.callback    = VoteMenu_Event;
-        s_votemenu.bNextmap.string              = "Next map";
-        s_votemenu.bNextmap.style               = UI_CENTER|UI_SMALLFONT;
+	y = 98;
+	s_votemenu.bNextmap.generic.type        = MTYPE_PTEXT;
+	s_votemenu.bNextmap.color               = color_red;
+	s_votemenu.bNextmap.generic.flags       = QMF_CENTER_JUSTIFY|QMF_PULSEIFFOCUS;
+	if(!s_votemenu.nextmap) {
+		s_votemenu.bNextmap.generic.flags   |= QMF_INACTIVE|QMF_GRAYED;
+	}
+	else if(s_votemenu.selection == ID_NEXTMAP) {
+		s_votemenu.bNextmap.color       = color_orange;
+	}
+	s_votemenu.bNextmap.generic.x           = 320;
+	s_votemenu.bNextmap.generic.y           = y;
+	s_votemenu.bNextmap.generic.id          = ID_NEXTMAP;
+	s_votemenu.bNextmap.generic.callback    = VoteMenu_Event;
+	s_votemenu.bNextmap.string              = "Next map";
+	s_votemenu.bNextmap.style               = UI_CENTER|UI_SMALLFONT;
 
-        y+=VOTEMENU_MENU_VERTICAL_SPACING;
-        s_votemenu.bMapRestart.generic.type     = MTYPE_PTEXT;
-        s_votemenu.bMapRestart.color            = color_red;
-        s_votemenu.bMapRestart.generic.flags	= QMF_CENTER_JUSTIFY|QMF_PULSEIFFOCUS;
-        if(!s_votemenu.map_restart)
-            s_votemenu.bMapRestart.generic.flags |= QMF_INACTIVE|QMF_GRAYED;
-        else
-        if(s_votemenu.selection==ID_RESTART)
-            s_votemenu.bMapRestart.color        = color_orange;
-        s_votemenu.bMapRestart.generic.x        = 320;
-        s_votemenu.bMapRestart.generic.y        = y;
-        s_votemenu.bMapRestart.generic.id       = ID_RESTART;
-        s_votemenu.bMapRestart.generic.callback = VoteMenu_Event;
-        s_votemenu.bMapRestart.string           = "Restart match";
-        s_votemenu.bMapRestart.style            = UI_CENTER|UI_SMALLFONT;
+	y+=VOTEMENU_MENU_VERTICAL_SPACING;
+	s_votemenu.bMapRestart.generic.type     = MTYPE_PTEXT;
+	s_votemenu.bMapRestart.color            = color_red;
+	s_votemenu.bMapRestart.generic.flags	= QMF_CENTER_JUSTIFY|QMF_PULSEIFFOCUS;
+	if(!s_votemenu.map_restart)
+		s_votemenu.bMapRestart.generic.flags |= QMF_INACTIVE|QMF_GRAYED;
+	else
+	if(s_votemenu.selection==ID_RESTART)
+		s_votemenu.bMapRestart.color        = color_orange;
+	s_votemenu.bMapRestart.generic.x        = 320;
+	s_votemenu.bMapRestart.generic.y        = y;
+	s_votemenu.bMapRestart.generic.id       = ID_RESTART;
+	s_votemenu.bMapRestart.generic.callback = VoteMenu_Event;
+	s_votemenu.bMapRestart.string           = "Restart match";
+	s_votemenu.bMapRestart.style            = UI_CENTER|UI_SMALLFONT;
 
-        y+=VOTEMENU_MENU_VERTICAL_SPACING;
-        s_votemenu.bShuffle.generic.type     = MTYPE_PTEXT;
-        s_votemenu.bShuffle.color            = color_red;
-        s_votemenu.bShuffle.generic.flags	= QMF_CENTER_JUSTIFY|QMF_PULSEIFFOCUS;
-        if(!s_votemenu.map_restart)
-            s_votemenu.bShuffle.generic.flags |= QMF_INACTIVE|QMF_GRAYED;
-        else
-        if(s_votemenu.selection==ID_SHUFFLE)
-            s_votemenu.bShuffle.color        = color_orange;
-        s_votemenu.bShuffle.generic.x        = 320;
-        s_votemenu.bShuffle.generic.y        = y;
-        s_votemenu.bShuffle.generic.id       = ID_SHUFFLE;
-        s_votemenu.bShuffle.generic.callback = VoteMenu_Event;
-        s_votemenu.bShuffle.string           = "Shuffle teams";
-        s_votemenu.bShuffle.style            = UI_CENTER|UI_SMALLFONT;
+	y+=VOTEMENU_MENU_VERTICAL_SPACING;
+	s_votemenu.bShuffle.generic.type     = MTYPE_PTEXT;
+	s_votemenu.bShuffle.color            = color_red;
+	s_votemenu.bShuffle.generic.flags	= QMF_CENTER_JUSTIFY|QMF_PULSEIFFOCUS;
+	if(!s_votemenu.map_restart)
+		s_votemenu.bShuffle.generic.flags |= QMF_INACTIVE|QMF_GRAYED;
+	else
+	if(s_votemenu.selection==ID_SHUFFLE)
+		s_votemenu.bShuffle.color        = color_orange;
+	s_votemenu.bShuffle.generic.x        = 320;
+	s_votemenu.bShuffle.generic.y        = y;
+	s_votemenu.bShuffle.generic.id       = ID_SHUFFLE;
+	s_votemenu.bShuffle.generic.callback = VoteMenu_Event;
+	s_votemenu.bShuffle.string           = "Shuffle teams";
+	s_votemenu.bShuffle.style            = UI_CENTER|UI_SMALLFONT;
 
-        y+=VOTEMENU_MENU_VERTICAL_SPACING;
-        s_votemenu.bMap.generic.type        = MTYPE_PTEXT;
-        s_votemenu.bMap.color               = color_red;
-        s_votemenu.bMap.generic.flags       = QMF_CENTER_JUSTIFY|QMF_PULSEIFFOCUS;
-        if(!s_votemenu.map)
-            s_votemenu.bMap.generic.flags   |= QMF_INACTIVE|QMF_GRAYED;
-        else
-            if(s_votemenu.selection == ID_MAP)
-                s_votemenu.bMap.color       = color_orange;
-        s_votemenu.bMap.generic.x           = 320;
-        s_votemenu.bMap.generic.y           = y;
-        s_votemenu.bMap.generic.id          = ID_MAP;
-        s_votemenu.bMap.generic.callback    = VoteMenu_Event;
-        s_votemenu.bMap.string              = "Change map";
-        s_votemenu.bMap.style               = UI_CENTER|UI_SMALLFONT;
+	y+=VOTEMENU_MENU_VERTICAL_SPACING;
+	s_votemenu.bMap.generic.type        = MTYPE_PTEXT;
+	s_votemenu.bMap.color               = color_red;
+	s_votemenu.bMap.generic.flags       = QMF_CENTER_JUSTIFY|QMF_PULSEIFFOCUS;
+	if(!s_votemenu.map)
+		s_votemenu.bMap.generic.flags   |= QMF_INACTIVE|QMF_GRAYED;
+	else
+		if(s_votemenu.selection == ID_MAP)
+			s_votemenu.bMap.color       = color_orange;
+	s_votemenu.bMap.generic.x           = 320;
+	s_votemenu.bMap.generic.y           = y;
+	s_votemenu.bMap.generic.id          = ID_MAP;
+	s_votemenu.bMap.generic.callback    = VoteMenu_Event;
+	s_votemenu.bMap.string              = "Change map";
+	s_votemenu.bMap.style               = UI_CENTER|UI_SMALLFONT;
 
-        y+=VOTEMENU_MENU_VERTICAL_SPACING;
-        s_votemenu.bGametype.generic.type        = MTYPE_PTEXT;
-        s_votemenu.bGametype.color               = color_red;
-        s_votemenu.bGametype.generic.flags       = QMF_CENTER_JUSTIFY|QMF_PULSEIFFOCUS;
-        if(!s_votemenu.gametype)
-            s_votemenu.bGametype.generic.flags   |= QMF_INACTIVE|QMF_GRAYED;
-        else
-            if(s_votemenu.selection == ID_GAMETYPE)
-                s_votemenu.bGametype.color       = color_orange;
-        s_votemenu.bGametype.generic.x           = 320;
-        s_votemenu.bGametype.generic.y           = y;
-        s_votemenu.bGametype.generic.id          = ID_GAMETYPE;
-        s_votemenu.bGametype.generic.callback    = VoteMenu_Event;
-        s_votemenu.bGametype.string              = "Change gametype";
-        s_votemenu.bGametype.style               = UI_CENTER|UI_SMALLFONT;
+	y+=VOTEMENU_MENU_VERTICAL_SPACING;
+	s_votemenu.bGametype.generic.type        = MTYPE_PTEXT;
+	s_votemenu.bGametype.color               = color_red;
+	s_votemenu.bGametype.generic.flags       = QMF_CENTER_JUSTIFY|QMF_PULSEIFFOCUS;
+	if(!s_votemenu.gametype)
+		s_votemenu.bGametype.generic.flags   |= QMF_INACTIVE|QMF_GRAYED;
+	else
+		if(s_votemenu.selection == ID_GAMETYPE)
+			s_votemenu.bGametype.color       = color_orange;
+	s_votemenu.bGametype.generic.x           = 320;
+	s_votemenu.bGametype.generic.y           = y;
+	s_votemenu.bGametype.generic.id          = ID_GAMETYPE;
+	s_votemenu.bGametype.generic.callback    = VoteMenu_Event;
+	s_votemenu.bGametype.string              = "Change gametype";
+	s_votemenu.bGametype.style               = UI_CENTER|UI_SMALLFONT;
 
-        y+=VOTEMENU_MENU_VERTICAL_SPACING;
-        s_votemenu.bKick.generic.type        = MTYPE_PTEXT;
-        s_votemenu.bKick.color               = color_red;
-        s_votemenu.bKick.generic.flags       = QMF_CENTER_JUSTIFY|QMF_PULSEIFFOCUS;
-        if(!s_votemenu.clientkick)
-            s_votemenu.bKick.generic.flags   |= QMF_INACTIVE|QMF_GRAYED;
-        else
-            if(s_votemenu.selection == ID_KICK)
-                s_votemenu.bKick.color       = color_orange;
-        s_votemenu.bKick.generic.x           = 320;
-        s_votemenu.bKick.generic.y           = y;
-        s_votemenu.bKick.generic.id          = ID_KICK;
-        s_votemenu.bKick.generic.callback    = VoteMenu_Event;
-        s_votemenu.bKick.string              = "Kick player";
-        s_votemenu.bKick.style               = UI_CENTER|UI_SMALLFONT;
+	y+=VOTEMENU_MENU_VERTICAL_SPACING;
+	s_votemenu.bKick.generic.type        = MTYPE_PTEXT;
+	s_votemenu.bKick.color               = color_red;
+	s_votemenu.bKick.generic.flags       = QMF_CENTER_JUSTIFY|QMF_PULSEIFFOCUS;
+	if(!s_votemenu.clientkick)
+		s_votemenu.bKick.generic.flags   |= QMF_INACTIVE|QMF_GRAYED;
+	else
+		if(s_votemenu.selection == ID_KICK)
+			s_votemenu.bKick.color       = color_orange;
+	s_votemenu.bKick.generic.x           = 320;
+	s_votemenu.bKick.generic.y           = y;
+	s_votemenu.bKick.generic.id          = ID_KICK;
+	s_votemenu.bKick.generic.callback    = VoteMenu_Event;
+	s_votemenu.bKick.string              = "Kick player";
+	s_votemenu.bKick.style               = UI_CENTER|UI_SMALLFONT;
 
-        y+=VOTEMENU_MENU_VERTICAL_SPACING;
-        s_votemenu.bDoWarmup.generic.type        = MTYPE_PTEXT;
-        s_votemenu.bDoWarmup.color               = color_red;
-        s_votemenu.bDoWarmup.generic.flags       = QMF_CENTER_JUSTIFY|QMF_PULSEIFFOCUS;
-        if(!s_votemenu.g_doWarmup)
-            s_votemenu.bDoWarmup.generic.flags   |= QMF_INACTIVE|QMF_GRAYED;
-        else
-            if(s_votemenu.selection == ID_DOWARMUP)
-                s_votemenu.bDoWarmup.color       = color_orange;
-        s_votemenu.bDoWarmup.generic.x           = 320;
-        s_votemenu.bDoWarmup.generic.y           = y;
-        s_votemenu.bDoWarmup.generic.id          = ID_DOWARMUP;
-        s_votemenu.bDoWarmup.generic.callback    = VoteMenu_Event;
-        if(s_votemenu.g_doWarmupEnabled)
-            s_votemenu.bDoWarmup.string              = "Disable warmup";
-        else
-            s_votemenu.bDoWarmup.string              = "Enable warmup";
-        s_votemenu.bDoWarmup.style               = UI_CENTER|UI_SMALLFONT;
+	y+=VOTEMENU_MENU_VERTICAL_SPACING;
+	s_votemenu.bDoWarmup.generic.type        = MTYPE_PTEXT;
+	s_votemenu.bDoWarmup.color               = color_red;
+	s_votemenu.bDoWarmup.generic.flags       = QMF_CENTER_JUSTIFY|QMF_PULSEIFFOCUS;
+	if(!s_votemenu.g_doWarmup)
+		s_votemenu.bDoWarmup.generic.flags   |= QMF_INACTIVE|QMF_GRAYED;
+	else
+		if(s_votemenu.selection == ID_DOWARMUP)
+			s_votemenu.bDoWarmup.color       = color_orange;
+	s_votemenu.bDoWarmup.generic.x           = 320;
+	s_votemenu.bDoWarmup.generic.y           = y;
+	s_votemenu.bDoWarmup.generic.id          = ID_DOWARMUP;
+	s_votemenu.bDoWarmup.generic.callback    = VoteMenu_Event;
+	if(s_votemenu.g_doWarmupEnabled)
+		s_votemenu.bDoWarmup.string              = "Disable warmup";
+	else
+		s_votemenu.bDoWarmup.string              = "Enable warmup";
+	s_votemenu.bDoWarmup.style               = UI_CENTER|UI_SMALLFONT;
 
-        y+=VOTEMENU_MENU_VERTICAL_SPACING;
-        s_votemenu.bFraglimit.generic.type        = MTYPE_PTEXT;
-        s_votemenu.bFraglimit.color               = color_red;
-        s_votemenu.bFraglimit.generic.flags       = QMF_CENTER_JUSTIFY|QMF_PULSEIFFOCUS;
-        if(!s_votemenu.fraglimit)
-            s_votemenu.bFraglimit.generic.flags   |= QMF_INACTIVE|QMF_GRAYED;
-        else
-            if(s_votemenu.selection == ID_FRAG)
-                s_votemenu.bFraglimit.color       = color_orange;
-        s_votemenu.bFraglimit.generic.x           = 320;
-        s_votemenu.bFraglimit.generic.y           = y;
-        s_votemenu.bFraglimit.generic.id          = ID_FRAG;
-        s_votemenu.bFraglimit.generic.callback    = VoteMenu_Event;
-        s_votemenu.bFraglimit.string              = "Change fraglimit";
-        s_votemenu.bFraglimit.style               = UI_CENTER|UI_SMALLFONT;
+	y+=VOTEMENU_MENU_VERTICAL_SPACING;
+	s_votemenu.bFraglimit.generic.type        = MTYPE_PTEXT;
+	s_votemenu.bFraglimit.color               = color_red;
+	s_votemenu.bFraglimit.generic.flags       = QMF_CENTER_JUSTIFY|QMF_PULSEIFFOCUS;
+	if(!s_votemenu.fraglimit)
+		s_votemenu.bFraglimit.generic.flags   |= QMF_INACTIVE|QMF_GRAYED;
+	else
+		if(s_votemenu.selection == ID_FRAG)
+			s_votemenu.bFraglimit.color       = color_orange;
+	s_votemenu.bFraglimit.generic.x           = 320;
+	s_votemenu.bFraglimit.generic.y           = y;
+	s_votemenu.bFraglimit.generic.id          = ID_FRAG;
+	s_votemenu.bFraglimit.generic.callback    = VoteMenu_Event;
+	s_votemenu.bFraglimit.string              = "Change fraglimit";
+	s_votemenu.bFraglimit.style               = UI_CENTER|UI_SMALLFONT;
 
-        y+=VOTEMENU_MENU_VERTICAL_SPACING;
-        s_votemenu.bTimelimit.generic.type        = MTYPE_PTEXT;
-        s_votemenu.bTimelimit.color               = color_red;
-        s_votemenu.bTimelimit.generic.flags       = QMF_CENTER_JUSTIFY|QMF_PULSEIFFOCUS;
-        if(!s_votemenu.timelimit)
-            s_votemenu.bTimelimit.generic.flags   |= QMF_INACTIVE|QMF_GRAYED;
-        else
-            if(s_votemenu.selection == ID_TIME)
-                s_votemenu.bTimelimit.color       = color_orange;
-        s_votemenu.bTimelimit.generic.x           = 320;
-        s_votemenu.bTimelimit.generic.y           = y;
-        s_votemenu.bTimelimit.generic.id          = ID_TIME;
-        s_votemenu.bTimelimit.generic.callback    = VoteMenu_Event;
-        s_votemenu.bTimelimit.string              = "Change timelimit";
-        s_votemenu.bTimelimit.style               = UI_CENTER|UI_SMALLFONT;
+	y+=VOTEMENU_MENU_VERTICAL_SPACING;
+	s_votemenu.bTimelimit.generic.type        = MTYPE_PTEXT;
+	s_votemenu.bTimelimit.color               = color_red;
+	s_votemenu.bTimelimit.generic.flags       = QMF_CENTER_JUSTIFY|QMF_PULSEIFFOCUS;
+	if(!s_votemenu.timelimit)
+		s_votemenu.bTimelimit.generic.flags   |= QMF_INACTIVE|QMF_GRAYED;
+	else
+		if(s_votemenu.selection == ID_TIME)
+			s_votemenu.bTimelimit.color       = color_orange;
+	s_votemenu.bTimelimit.generic.x           = 320;
+	s_votemenu.bTimelimit.generic.y           = y;
+	s_votemenu.bTimelimit.generic.id          = ID_TIME;
+	s_votemenu.bTimelimit.generic.callback    = VoteMenu_Event;
+	s_votemenu.bTimelimit.string              = "Change timelimit";
+	s_votemenu.bTimelimit.style               = UI_CENTER|UI_SMALLFONT;
 
-        y+=VOTEMENU_MENU_VERTICAL_SPACING;
-        s_votemenu.bCustom.generic.type        = MTYPE_PTEXT;
-        s_votemenu.bCustom.color               = color_red;
-        s_votemenu.bCustom.generic.flags       = QMF_CENTER_JUSTIFY|QMF_PULSEIFFOCUS;
-        if(!s_votemenu.custom)
-            s_votemenu.bCustom.generic.flags   |= QMF_INACTIVE|QMF_GRAYED;
-        else
-            if(s_votemenu.selection == ID_CUSTOM)
-                s_votemenu.bCustom.color       = color_orange;
-        s_votemenu.bCustom.generic.x           = 320;
-        s_votemenu.bCustom.generic.y           = y;
-        s_votemenu.bCustom.generic.id          = ID_CUSTOM;
-        s_votemenu.bCustom.generic.callback    = VoteMenu_Event;
-        s_votemenu.bCustom.string              = "Custom vote";
-        s_votemenu.bCustom.style               = UI_CENTER|UI_SMALLFONT;
+	y+=VOTEMENU_MENU_VERTICAL_SPACING;
+	s_votemenu.bCustom.generic.type        = MTYPE_PTEXT;
+	s_votemenu.bCustom.color               = color_red;
+	s_votemenu.bCustom.generic.flags       = QMF_CENTER_JUSTIFY|QMF_PULSEIFFOCUS;
+	if(!s_votemenu.custom)
+		s_votemenu.bCustom.generic.flags   |= QMF_INACTIVE|QMF_GRAYED;
+	else
+		if(s_votemenu.selection == ID_CUSTOM)
+			s_votemenu.bCustom.color       = color_orange;
+	s_votemenu.bCustom.generic.x           = 320;
+	s_votemenu.bCustom.generic.y           = y;
+	s_votemenu.bCustom.generic.id          = ID_CUSTOM;
+	s_votemenu.bCustom.generic.callback    = VoteMenu_Event;
+	s_votemenu.bCustom.string              = "Custom vote";
+	s_votemenu.bCustom.style               = UI_CENTER|UI_SMALLFONT;
 
-        y+=VOTEMENU_MENU_VERTICAL_SPACING;
-        s_votemenu.bYes.generic.type     = MTYPE_PTEXT;
-        s_votemenu.bYes.color            = color_red;
-        s_votemenu.bYes.generic.flags    = QMF_CENTER_JUSTIFY|QMF_PULSEIFFOCUS;
-        if(s_votemenu.selection==ID_YES)
-            s_votemenu.bYes.color        = color_orange;
-        s_votemenu.bYes.generic.x        = 320;
-        s_votemenu.bYes.generic.y        = y;
-        s_votemenu.bYes.generic.id       = ID_YES;
-        s_votemenu.bYes.generic.callback = VoteMenu_Event;
-        s_votemenu.bYes.string           = "Vote yes";
-        s_votemenu.bYes.style            = UI_CENTER|UI_SMALLFONT;
+	y+=VOTEMENU_MENU_VERTICAL_SPACING;
+	s_votemenu.bYes.generic.type     = MTYPE_PTEXT;
+	s_votemenu.bYes.color            = color_red;
+	s_votemenu.bYes.generic.flags    = QMF_CENTER_JUSTIFY|QMF_PULSEIFFOCUS;
+	if(s_votemenu.selection==ID_YES)
+		s_votemenu.bYes.color        = color_orange;
+	s_votemenu.bYes.generic.x        = 320;
+	s_votemenu.bYes.generic.y        = y;
+	s_votemenu.bYes.generic.id       = ID_YES;
+	s_votemenu.bYes.generic.callback = VoteMenu_Event;
+	s_votemenu.bYes.string           = "Vote yes";
+	s_votemenu.bYes.style            = UI_CENTER|UI_SMALLFONT;
 
-        y+=VOTEMENU_MENU_VERTICAL_SPACING;
-        s_votemenu.bNo.generic.type     = MTYPE_PTEXT;
-        s_votemenu.bNo.color            = color_red;
-        s_votemenu.bNo.generic.flags    = QMF_CENTER_JUSTIFY|QMF_PULSEIFFOCUS;
-        if(s_votemenu.selection==ID_NO)
-            s_votemenu.bNo.color        = color_orange;
-        s_votemenu.bNo.generic.x        = 320;
-        s_votemenu.bNo.generic.y        = y;
-        s_votemenu.bNo.generic.id       = ID_NO;
-        s_votemenu.bNo.generic.callback = VoteMenu_Event;
-        s_votemenu.bNo.string           = "Vote no";
-        s_votemenu.bNo.style            = UI_CENTER|UI_SMALLFONT;
+	y+=VOTEMENU_MENU_VERTICAL_SPACING;
+	s_votemenu.bNo.generic.type     = MTYPE_PTEXT;
+	s_votemenu.bNo.color            = color_red;
+	s_votemenu.bNo.generic.flags    = QMF_CENTER_JUSTIFY|QMF_PULSEIFFOCUS;
+	if(s_votemenu.selection==ID_NO)
+		s_votemenu.bNo.color        = color_orange;
+	s_votemenu.bNo.generic.x        = 320;
+	s_votemenu.bNo.generic.y        = y;
+	s_votemenu.bNo.generic.id       = ID_NO;
+	s_votemenu.bNo.generic.callback = VoteMenu_Event;
+	s_votemenu.bNo.string           = "Vote no";
+	s_votemenu.bNo.style            = UI_CENTER|UI_SMALLFONT;
 
 	s_votemenu.back.generic.type	   = MTYPE_BITMAP;
 	s_votemenu.back.generic.name     = VOTEMENU_BACK0;
@@ -469,7 +450,7 @@ void UI_VoteMenuMenuInternal( void )
 	s_votemenu.back.height  		   = 64;
 	s_votemenu.back.focuspic         = VOTEMENU_BACK1;
 
-        s_votemenu.go.generic.type	   = MTYPE_BITMAP;
+	s_votemenu.go.generic.type	   = MTYPE_BITMAP;
 	s_votemenu.go.generic.name     = ART_FIGHT0;
 	s_votemenu.go.generic.flags    = QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS;
 	s_votemenu.go.generic.callback = VoteMenu_Event;
@@ -489,28 +470,27 @@ UI_VoteMenuMenu
 =================
 */
 void UI_VoteMenuMenu( void ) {
-        // zero set all our globals
-        char serverinfo[MAX_INFO_STRING];
+	// zero set all our globals
+	char serverinfo[MAX_INFO_STRING];
 	memset( &s_votemenu, 0 ,sizeof(votemenu_t) );
-        trap_GetConfigString( CS_SERVERINFO, serverinfo, MAX_INFO_STRING );
-        s_votemenu.g_doWarmupEnabled = atoi(Info_ValueForKey(serverinfo,"g_doWarmup"));
-        UI_VoteMenuMenuInternal();
+	trap_GetConfigString( CS_SERVERINFO, serverinfo, MAX_INFO_STRING );
+	s_votemenu.g_doWarmupEnabled = atoi(Info_ValueForKey(serverinfo,"g_doWarmup"));
+	UI_VoteMenuMenuInternal();
 
 	Menu_AddItem( &s_votemenu.menu, (void*) &s_votemenu.banner );
 	Menu_AddItem( &s_votemenu.menu, (void*) &s_votemenu.back );
-        //Menu_AddItem( &s_votemenu.menu, (void*) &s_votemenu.go );
 	Menu_AddItem( &s_votemenu.menu, (void*) &s_votemenu.bNextmap );
-        Menu_AddItem( &s_votemenu.menu, (void*) &s_votemenu.bMapRestart );
-        Menu_AddItem( &s_votemenu.menu, (void*) &s_votemenu.bShuffle );
-        Menu_AddItem( &s_votemenu.menu, (void*) &s_votemenu.bMap );
-        Menu_AddItem( &s_votemenu.menu, (void*) &s_votemenu.bGametype );
-        Menu_AddItem( &s_votemenu.menu, (void*) &s_votemenu.bKick );
-        Menu_AddItem( &s_votemenu.menu, (void*) &s_votemenu.bDoWarmup );
-        Menu_AddItem( &s_votemenu.menu, (void*) &s_votemenu.bFraglimit );
-        Menu_AddItem( &s_votemenu.menu, (void*) &s_votemenu.bTimelimit );
-        Menu_AddItem( &s_votemenu.menu, (void*) &s_votemenu.bCustom );
-        Menu_AddItem( &s_votemenu.menu, (void*) &s_votemenu.bYes );
-        Menu_AddItem( &s_votemenu.menu, (void*) &s_votemenu.bNo );
+	Menu_AddItem( &s_votemenu.menu, (void*) &s_votemenu.bMapRestart );
+	Menu_AddItem( &s_votemenu.menu, (void*) &s_votemenu.bShuffle );
+	Menu_AddItem( &s_votemenu.menu, (void*) &s_votemenu.bMap );
+	Menu_AddItem( &s_votemenu.menu, (void*) &s_votemenu.bGametype );
+	Menu_AddItem( &s_votemenu.menu, (void*) &s_votemenu.bKick );
+	Menu_AddItem( &s_votemenu.menu, (void*) &s_votemenu.bDoWarmup );
+	Menu_AddItem( &s_votemenu.menu, (void*) &s_votemenu.bFraglimit );
+	Menu_AddItem( &s_votemenu.menu, (void*) &s_votemenu.bTimelimit );
+	Menu_AddItem( &s_votemenu.menu, (void*) &s_votemenu.bCustom );
+	Menu_AddItem( &s_votemenu.menu, (void*) &s_votemenu.bYes );
+	Menu_AddItem( &s_votemenu.menu, (void*) &s_votemenu.bNo );
 
 	UI_PushMenu( &s_votemenu.menu );
 }

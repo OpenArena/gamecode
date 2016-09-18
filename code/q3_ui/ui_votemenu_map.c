@@ -55,8 +55,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 typedef struct {
 	menuframework_s	menu;
 	menubitmap_s	arrows;
-        menutext_s		banner;
-        menutext_s		info;
+	menutext_s		banner;
+	menutext_s		info;
 	menubitmap_s	up;
 	menubitmap_s	down;
 	menubitmap_s	go;
@@ -78,33 +78,32 @@ static void VoteMapMenu_Event( void* ptr, int event )
 {
 	switch (((menucommon_s*)ptr)->id)
 	{
-            case ID_BACK:
-		if (event != QM_ACTIVATED)
-                    return;
-                UI_PopMenu();
-                break;
-            default:
-                if( event != QM_ACTIVATED ) {
-                    return;
-                }
-                if(s_votemenu_map.selected != ((menucommon_s*)ptr)->id) {
-                    s_votemenu_map.selected = ((menucommon_s*)ptr)->id;
-                    UI_VoteMapMenuInternal();
-                }
-            //    break;
-            //case ID_GO:
-                if( event != QM_ACTIVATED ) {
-                    return;
-                }
-                if(!s_votemenu_map.selected || mappage.mapname[s_votemenu_map.selected-ID_MAPNAME0][0] == 0)
-                    return;
-                if(Q_strequal(mappage.mapname[s_votemenu_map.selected-ID_MAPNAME0],"---"))
-                    return; //Blank spaces have string "---"
-                trap_Cmd_ExecuteText( EXEC_APPEND, va("callvote map %s", mappage.mapname[s_votemenu_map.selected-ID_MAPNAME0]) );
-                UI_PopMenu();
-                UI_PopMenu();
-                break;
-         }
+	case ID_BACK:
+		if (event != QM_ACTIVATED) {
+			return;
+		}
+		UI_PopMenu();
+		break;
+	default:
+		if( event != QM_ACTIVATED ) {
+			return;
+		}
+		if(s_votemenu_map.selected != ((menucommon_s*)ptr)->id) {
+			s_votemenu_map.selected = ((menucommon_s*)ptr)->id;
+			UI_VoteMapMenuInternal();
+		}
+		if( event != QM_ACTIVATED ) {
+			return;
+		}
+		if(!s_votemenu_map.selected || mappage.mapname[s_votemenu_map.selected-ID_MAPNAME0][0] == 0)
+			return;
+		if(Q_strequal(mappage.mapname[s_votemenu_map.selected-ID_MAPNAME0],"---"))
+			return; //Blank spaces have string "---"
+		trap_Cmd_ExecuteText( EXEC_APPEND, va("callvote map %s", mappage.mapname[s_votemenu_map.selected-ID_MAPNAME0]) );
+		UI_PopMenu();
+		UI_PopMenu();
+		break;
+	}
 }
 
 /*
@@ -164,19 +163,20 @@ static void VoteMapMenu_Cache( void )
 }
 
 static void setMapMenutext(menutext_s *menu,int y,int id,char * text) {
-    menu->generic.type            = MTYPE_PTEXT;
-    menu->color               = color_red;
-    menu->generic.flags       = QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS;
-    if(s_votemenu_map.selected == id)
-         menu->color       = color_orange;
-    menu->generic.x           = 320-80;
-    menu->generic.left        = 320-80;
-    menu->generic.right       = 320+120;
-    menu->generic.y           = y;
-    menu->generic.id          = id;
-    menu->generic.callback    = VoteMapMenu_Event;
-    menu->string              = text;
-    menu->style               = UI_LEFT|UI_SMALLFONT;
+	menu->generic.type            = MTYPE_PTEXT;
+	menu->color               = color_red;
+	menu->generic.flags       = QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS;
+	if(s_votemenu_map.selected == id) {
+		menu->color       = color_orange;
+	}
+	menu->generic.x           = 320-80;
+	menu->generic.left        = 320-80;
+	menu->generic.right       = 320+120;
+	menu->generic.y           = y;
+	menu->generic.id          = id;
+	menu->generic.callback    = VoteMapMenu_Event;
+	menu->string              = text;
+	menu->style               = UI_LEFT|UI_SMALLFONT;
 }
 
 /*
