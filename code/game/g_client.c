@@ -219,7 +219,10 @@ gentity_t *SelectRandomFurthestSpawnPoint ( vec3_t avoidPoint, vec3_t origin, ve
 		spot = G_Find( NULL, FOFS(classname), "info_player_deathmatch");
 		if (!spot) {
 			spot = &g_entities[0];
-			//G_Error( "Couldn't find a spawn point" );
+			if (g_cheats.integer) {
+				//If cheats are enabled be a little more aggresive about missing spawnpoints
+				G_Error( "Couldn't find a spawn point" );
+			}
 		}
 		VectorCopy (spot->s.origin, origin);
 		origin[2] += 9;
@@ -397,22 +400,22 @@ void CopyToBodyQue( gentity_t *ent ) {
 	// if client is in a nodrop area, don't leave the body
 	contents = trap_PointContents( ent->s.origin, -1 );
 	if ( (contents & CONTENTS_NODROP) && !(ent->s.eFlags & EF_KAMIKAZE) ) { //the check for kamikaze is a workaround for ctf4ish
-            return;
+		return;
 	}
 
 	// grab a body que and cycle to the next one
 	body = level.bodyQue[ level.bodyQueIndex ];
 	level.bodyQueIndex = (level.bodyQueIndex + 1) % BODY_QUEUE_SIZE;
 
-        //Check if the next body has the kamikaze, in that case skip it.
-        for(i=0;(level.bodyQue[ level.bodyQueIndex ]->s.eFlags & EF_KAMIKAZE) && (i<10);i++) {
-            level.bodyQueIndex = (level.bodyQueIndex + 1) % BODY_QUEUE_SIZE;
-        }
+	//Check if the next body has the kamikaze, in that case skip it.
+	for(i=0;(level.bodyQue[ level.bodyQueIndex ]->s.eFlags & EF_KAMIKAZE) && (i<10);i++) {
+		level.bodyQueIndex = (level.bodyQueIndex + 1) % BODY_QUEUE_SIZE;
+	}
 
 	body->s = ent->s;
 	body->s.eFlags = EF_DEAD;		// clear EF_TALK, etc
 	if ( ent->s.eFlags & EF_KAMIKAZE ) {
-                ent->s.eFlags &= ~EF_KAMIKAZE;
+		ent->s.eFlags &= ~EF_KAMIKAZE;
 		body->s.eFlags |= EF_KAMIKAZE;
 
 		// check if there is a kamikaze timer around for this owner
@@ -524,10 +527,10 @@ void ClientRespawn( gentity_t *ent ) {
 		ent->client->isEliminated = qtrue; //must not be true in warmup
 		//Tried moving CopyToBodyQue
 	} else {
-                //Must always be false in other gametypes
-                ent->client->isEliminated = qfalse;
-        }
-        CopyToBodyQue (ent); //Unlinks ent
+		//Must always be false in other gametypes
+		ent->client->isEliminated = qfalse;
+	}
+	CopyToBodyQue (ent); //Unlinks ent
 
 	if(g_gametype.integer==GT_LMS) {
 		if(ent->client->pers.livesLeft>0)
@@ -541,11 +544,11 @@ void ClientRespawn( gentity_t *ent ) {
 				ent->client->isEliminated = qtrue;
 				if((g_lms_mode.integer == 2 || g_lms_mode.integer == 3) && level.roundNumber == level.roundNumberStarted)
 					LMSpoint();	
-                                //Sago: This is really bad
-                                //TODO: Try not to make people spectators here
+				//Sago: This is really bad
+				//TODO: Try not to make people spectators here
 				ent->client->sess.spectatorState = PM_SPECTATOR;
-                                //We have to force spawn imidiantly to prevent lag.
-                                ClientSpawn(ent);
+				//We have to force spawn imidiantly to prevent lag.
+				ClientSpawn(ent);
 			}
 			return;
 		}
@@ -554,14 +557,14 @@ void ClientRespawn( gentity_t *ent ) {
 	if((g_gametype.integer==GT_ELIMINATION || g_gametype.integer==GT_CTF_ELIMINATION || g_gametype.integer==GT_LMS) 
 			&& ent->client->ps.pm_type == PM_SPECTATOR && ent->client->ps.stats[STAT_HEALTH] > 0)
 		return;
-		ClientSpawn(ent);
+	ClientSpawn(ent);
 
-		// add a teleportation effect
-		if(g_gametype.integer!=GT_ELIMINATION && g_gametype.integer!=GT_CTF_ELIMINATION && g_gametype.integer!=GT_LMS)
-		{	
-			tent = G_TempEntity( ent->client->ps.origin, EV_PLAYER_TELEPORT_IN );
-			tent->s.clientNum = ent->s.clientNum;
-		}
+	// add a teleportation effect
+	if(g_gametype.integer!=GT_ELIMINATION && g_gametype.integer!=GT_CTF_ELIMINATION && g_gametype.integer!=GT_LMS)
+	{	
+		tent = G_TempEntity( ent->client->ps.origin, EV_PLAYER_TELEPORT_IN );
+		tent->s.clientNum = ent->s.clientNum;
+	}
 }
 
 /*
@@ -572,28 +575,19 @@ respawnRound
 void respawnRound( gentity_t *ent ) {
 	gentity_t	*tent;
 
-	//if(g_gametype.integer!=GT_ELIMINATION || !ent->client->isEliminated)
-	//{
-	//	ent->client->isEliminated  = qtrue;
-		//CopyToBodyQue (ent);
-	//}
-        
+	if(ent->client->hook)
+		Weapon_HookFree(ent->client->hook);
 
-	//if(g_gametype.integer==GT_ELIMINATION && ent->client->ps.pm_type == PM_SPECTATOR && ent->client->ps.stats[STAT_HEALTH] > 0)
-	//	return;
-        if(ent->client->hook)
-                Weapon_HookFree(ent->client->hook);
-
-        trap_UnlinkEntity (ent);
+	trap_UnlinkEntity (ent);
 
 	ClientSpawn(ent);
 
-        // add a teleportation effect
-        if(g_gametype.integer!=GT_ELIMINATION && g_gametype.integer!=GT_CTF_ELIMINATION && g_gametype.integer!=GT_LMS)
-        {
-                tent = G_TempEntity( ent->client->ps.origin, EV_PLAYER_TELEPORT_IN );
-                tent->s.clientNum = ent->s.clientNum;
-        }
+	// add a teleportation effect
+	if(g_gametype.integer!=GT_ELIMINATION && g_gametype.integer!=GT_CTF_ELIMINATION && g_gametype.integer!=GT_LMS)
+	{
+		tent = G_TempEntity( ent->client->ps.origin, EV_PLAYER_TELEPORT_IN );
+		tent->s.clientNum = ent->s.clientNum;
+	}
 }
 
 /*
@@ -605,59 +599,59 @@ Sets the red and blue team client number cvars.
  */
 void TeamCvarSet( void )
 {
-    int i;
-    qboolean redChanged = qfalse;
-    qboolean blueChanged = qfalse;
-    qboolean first = qtrue;
-    char* temp = NULL;
+	int i;
+	qboolean redChanged = qfalse;
+	qboolean blueChanged = qfalse;
+	qboolean first = qtrue;
+	char* temp = NULL;
 
-    for ( i = 0 ; i < level.maxclients ; i++ ) {
+	for ( i = 0 ; i < level.maxclients ; i++ ) {
 		if ( level.clients[i].pers.connected == CON_DISCONNECTED ) {
 			continue;
 		}
 		if ( level.clients[i].sess.sessionTeam == TEAM_RED ) {
-                    if(first) {
-                        temp = va("%i",i);
-                        first = qfalse;
-                    }
-                    else
-                        temp = va("%s,%i",temp,i);
+			if(first) {
+				temp = va("%i",i);
+				first = qfalse;
+			}
+			else
+				temp = va("%s,%i",temp,i);
 		}
 	}
 
-    if ( !Q_strequal(g_redTeamClientNumbers.string, temp)) {
-        redChanged = qtrue;
+	if ( !Q_strequal(g_redTeamClientNumbers.string, temp)) {
+		redChanged = qtrue;
 	}
-    trap_Cvar_Set("g_redTeamClientNumbers",temp); //Set it right
-    first= qtrue;
+	trap_Cvar_Set("g_redTeamClientNumbers",temp); //Set it right
+	first= qtrue;
 
-    for ( i = 0 ; i < level.maxclients ; i++ ) {
+	for ( i = 0 ; i < level.maxclients ; i++ ) {
 		if ( level.clients[i].pers.connected == CON_DISCONNECTED ) {
 			continue;
 		}
 		if ( level.clients[i].sess.sessionTeam == TEAM_BLUE ) {
-                    if(first) {
-                        temp = va("%i",i);
-                        first = qfalse;
-                    }
-                    else
-                        temp = va("%s,%i",temp,i);
+			if(first) {
+				temp = va("%i",i);
+				first = qfalse;
+			}
+			else
+				temp = va("%s,%i",temp,i);
 		}
 	}
-    if ( !Q_strequal(g_blueTeamClientNumbers.string,temp)) {
-        blueChanged = qtrue;
+	if ( !Q_strequal(g_blueTeamClientNumbers.string,temp)) {
+		blueChanged = qtrue;
 	}
-    trap_Cvar_Set("g_blueTeamClientNumbers",temp);
+	trap_Cvar_Set("g_blueTeamClientNumbers",temp);
 
-    //Note: We need to force update of the cvar or SendYourTeamMessage will send the old cvar value!
-    if(redChanged) {
-        trap_Cvar_Update(&g_redTeamClientNumbers); //Force update of CVAR
-        SendYourTeamMessageToTeam(TEAM_RED);
-    }
-    if(blueChanged) {
-        trap_Cvar_Update(&g_blueTeamClientNumbers);
-        SendYourTeamMessageToTeam(TEAM_BLUE); //Force update of CVAR
-    }
+	//Note: We need to force update of the cvar or SendYourTeamMessage will send the old cvar value!
+	if(redChanged) {
+		trap_Cvar_Update(&g_redTeamClientNumbers); //Force update of CVAR
+		SendYourTeamMessageToTeam(TEAM_RED);
+	}
+	if(blueChanged) {
+		trap_Cvar_Update(&g_blueTeamClientNumbers);
+		SendYourTeamMessageToTeam(TEAM_BLUE); //Force update of CVAR
+	}
 }
 
 /*
@@ -679,9 +673,9 @@ int TeamCount( int ignoreClientNum, team_t team ) {
 			continue;
 		}
 
-                if ( level.clients[i].pers.connected == CON_CONNECTING) {
-                        continue;
-                }
+		if ( level.clients[i].pers.connected == CON_CONNECTING) {
+				continue;
+		}
 
 		if ( level.clients[i].sess.sessionTeam == team ) {
 			count++;
@@ -711,9 +705,9 @@ team_t TeamLivingCount( int ignoreClientNum, int team ) {
 			continue;
 		}
 
-                if ( level.clients[i].pers.connected == CON_CONNECTING) {
-                        continue;
-                }
+		if ( level.clients[i].pers.connected == CON_CONNECTING) {
+			continue;
+		}
 		//crash if g_gametype.integer is used here, why?
 		if ( level.clients[i].sess.sessionTeam == team && (level.clients[i].ps.stats[STAT_HEALTH]>0 || LMS) && !(level.clients[i].isEliminated)) {
 			count++;
@@ -743,9 +737,9 @@ team_t TeamHealthCount(int ignoreClientNum, int team ) {
 			continue;
 		}
 
-                if ( level.clients[i].pers.connected == CON_CONNECTING) {
-                        continue;
-                }
+		if ( level.clients[i].pers.connected == CON_CONNECTING) {
+			continue;
+		}
 
 		//only count clients with positive health
 		if ( level.clients[i].sess.sessionTeam == team && (level.clients[i].ps.stats[STAT_HEALTH]>0)&& !(level.clients[i].isEliminated)) {
@@ -775,9 +769,9 @@ void RespawnAll(void)
 			continue;
 		}
 
-                if ( level.clients[i].pers.connected == CON_CONNECTING) {
-                        continue;
-                }
+		if ( level.clients[i].pers.connected == CON_CONNECTING) {
+			continue;
+		}
 
 		if ( level.clients[i].sess.sessionTeam == TEAM_SPECTATOR ) {
 			continue;
@@ -808,11 +802,11 @@ void RespawnDead(void)
 		if ( level.clients[i].pers.connected == CON_DISCONNECTED ) {
 			continue;
 		}
-                if ( level.clients[i].pers.connected == CON_CONNECTING) {
-                        continue;
-                }
-                client = g_entities + i;
-                client->client->pers.livesLeft = g_lms_lives.integer-1;
+		if ( level.clients[i].pers.connected == CON_CONNECTING) {
+			continue;
+		}
+		client = g_entities + i;
+		client->client->pers.livesLeft = g_lms_lives.integer-1;
 		if ( level.clients[i].isEliminated == qfalse ){
 			continue;
 		}
@@ -821,7 +815,7 @@ void RespawnDead(void)
 		}
 		
 		client->client->pers.livesLeft = g_lms_lives.integer;
-                
+         
 		respawnRound(client);
 	}
 	return;
@@ -958,12 +952,12 @@ team_t PickTeam( int ignoreClientNum ) {
 
 	counts[TEAM_BLUE] = TeamCount( ignoreClientNum, TEAM_BLUE );
 	counts[TEAM_RED] = TeamCount( ignoreClientNum, TEAM_RED );
-    
-    //KK-OAX Both Teams locked...forget about it, print an error message, keep as spec
-    if ( level.RedTeamLocked && level.BlueTeamLocked ) {
-        G_Printf( "Both teams have been locked by the Admin! \n" );
-        return TEAM_NONE;
-    }	
+
+	//KK-OAX Both Teams locked...forget about it, print an error message, keep as spec
+	if ( level.RedTeamLocked && level.BlueTeamLocked ) {
+		G_Printf( "Both teams have been locked by the Admin! \n" );
+		return TEAM_NONE;
+}	
 	if ( ( counts[TEAM_BLUE] > counts[TEAM_RED] ) && ( !level.RedTeamLocked ) ) {
 		return TEAM_RED;
 	}
@@ -975,10 +969,10 @@ team_t PickTeam( int ignoreClientNum ) {
 		return TEAM_RED;
 	}
 	if ( ( level.teamScores[TEAM_RED] > level.teamScores[TEAM_BLUE] ) && ( !level.BlueTeamLocked ) ) {  
-	    return TEAM_BLUE;
-    }
-    //KK-OAX Force Team Blue?
-    return TEAM_BLUE;
+		return TEAM_BLUE;
+	}
+	//KK-OAX Force Team Blue?
+	return TEAM_BLUE;
 }
 
 
@@ -989,67 +983,63 @@ ClientCleanName
 */
 static void ClientCleanName(const char *in, char *out, int outSize, int clientNum)
 {
-    int outpos = 0, colorlessLen = 0, spaces = 0, notblack=0;
-    qboolean black = qfalse;
+	int outpos = 0, colorlessLen = 0, spaces = 0, notblack=0;
+	qboolean black = qfalse;
 
-    // discard leading spaces
-    for(; *in == ' '; in++);
+	// discard leading spaces
+	for(; *in == ' '; in++) {};
 
-    for(; *in && outpos < outSize - 1; in++)
-    {
-        out[outpos] = *in;
+	for(; *in && outpos < outSize - 1; in++) {
+		out[outpos] = *in;
 
-        if(*in == ' ')
-        {
-            // don't allow too many consecutive spaces
-            if(spaces > 2)
-                continue;
+		if(*in == ' ') {
+			// don't allow too many consecutive spaces
+			if(spaces > 2) {
+				continue;
+			}
+			spaces++;
+		}
+		else if(outpos > 0 && out[outpos - 1] == Q_COLOR_ESCAPE) {
+			if(Q_IsColorString(&out[outpos - 1])) {
+				colorlessLen--;
 
-            spaces++;
-        }
-        else if(outpos > 0 && out[outpos - 1] == Q_COLOR_ESCAPE)
-        {
-            if(Q_IsColorString(&out[outpos - 1]))
-            {
-                colorlessLen--;
+				if(ColorIndex(*in) == 0) {
+					// Disallow color black in names to prevent players
+					// from getting advantage playing in front of black backgrounds
+					//outpos--;
+					//continue;
+					black = qtrue;
+				}
+				else {
+					black = qfalse;
+				}
+			}
+			else {
+				spaces = 0;
+				colorlessLen++;
+			}
+		}
+		else {
+			spaces = 0;
+			colorlessLen++;
+			if(!black && (Q_isalpha(*in) || (*in>='0' && *in<='9') ) ) {
+				notblack++;
+			}
+		}
 
-                if(ColorIndex(*in) == 0)
-                {
-                    // Disallow color black in names to prevent players
-                    // from getting advantage playing in front of black backgrounds
-                    //outpos--;
-                    //continue;
-                    black = qtrue;
-                }
-                else
-                    black = qfalse;
-            }
-            else
-            {
-                spaces = 0;
-                colorlessLen++;
-            }
-        }
-        else
-        {
-            spaces = 0;
-            colorlessLen++;
-            if(!black && (Q_isalpha(*in) || (*in>='0' && *in<='9') ) )
-                notblack++;
-        }
+		outpos++;
+	}
 
-        outpos++;
-    }
+	out[outpos] = '\0';
 
-    out[outpos] = '\0';
+	//There was none not-black alphanum chars. Remove all colors
+	if(notblack<1)
+		Q_CleanStr(out);
 
-    //There was none not-black alphanum chars. Remove all colors
-    if(notblack<1)
-        Q_CleanStr(out);
-
-    // don't allow empty names
-    if( *out == '\0' || colorlessLen == 0)
-        Q_strncpyz(out, va("Nameless%i",clientNum), outSize );
+	// don't allow empty names
+	if( *out == '\0' || colorlessLen == 0) {
+		Q_strncpyz(out, va("Nameless%i",clientNum), outSize );
+	}
 }
 
 
@@ -1147,64 +1137,58 @@ void ClientUserinfoChanged( int clientNum ) {
 	s = Info_ValueForKey (userinfo, "name");
 	ClientCleanName( s, client->pers.netname, sizeof(client->pers.netname), clientNum );
 
-    //KK-OAPub Added From Tremulous-Control Name Changes
-    if( !strequals( oldname, client->pers.netname ) )
-    {
-        if( client->pers.nameChangeTime &&
-            ( level.time - client->pers.nameChangeTime )
-            <= ( g_minNameChangePeriod.value * 1000 ) )
-        {
-            trap_SendServerCommand( ent - g_entities, va(
-            "print \"Name change spam protection (g_minNameChangePeriod = %d)\n\"",
-            g_minNameChangePeriod.integer ) );
-            revertName = qtrue;
-        }
-        else if( g_maxNameChanges.integer > 0
-            && client->pers.nameChanges >= g_maxNameChanges.integer  )
-        {
-            trap_SendServerCommand( ent - g_entities, va(
-                "print \"Maximum name changes reached (g_maxNameChanges = %d)\n\"",
-                g_maxNameChanges.integer ) );
-            revertName = qtrue;
-        }
-        else if( client->pers.muted )
-        {
-            trap_SendServerCommand( ent - g_entities,
-                "print \"You cannot change your name while you are muted\n\"" );
-            revertName = qtrue;
-        }
-        else if( !G_admin_name_check( ent, client->pers.netname, err, sizeof( err ) ) )
-        {
-            trap_SendServerCommand( ent - g_entities, va( "print \"%s\n\"", err ) );
-            revertName = qtrue;
-        }
+	//KK-OAPub Added From Tremulous-Control Name Changes
+	if( !strequals( oldname, client->pers.netname ) )
+	{
+		if( client->pers.nameChangeTime &&
+			( level.time - client->pers.nameChangeTime )
+			<= ( g_minNameChangePeriod.value * 1000 ) )
+		{
+			trap_SendServerCommand( ent - g_entities, va(
+			"print \"Name change spam protection (g_minNameChangePeriod = %d)\n\"",
+			g_minNameChangePeriod.integer ) );
+			revertName = qtrue;
+		}
+		else if( g_maxNameChanges.integer > 0
+			&& client->pers.nameChanges >= g_maxNameChanges.integer  )
+		{
+			trap_SendServerCommand( ent - g_entities, va(
+				"print \"Maximum name changes reached (g_maxNameChanges = %d)\n\"",
+				g_maxNameChanges.integer ) );
+			revertName = qtrue;
+		}
+		else if( client->pers.muted )
+		{
+			trap_SendServerCommand( ent - g_entities,
+				"print \"You cannot change your name while you are muted\n\"" );
+			revertName = qtrue;
+		}
+		else if( !G_admin_name_check( ent, client->pers.netname, err, sizeof( err ) ) )
+		{
+			trap_SendServerCommand( ent - g_entities, va( "print \"%s\n\"", err ) );
+			revertName = qtrue;
+		}
 
-        //Never revert a bots name... just to bad if it hapens... but the bot will always be expendeble :-)
-        if (ent->r.svFlags & SVF_BOT)
-            revertName = qfalse;
+		//Never revert a bots name... just to bad if it hapens... but the bot will always be expendeble :-)
+		if (ent->r.svFlags & SVF_BOT)
+			revertName = qfalse;
 
-        if( revertName )
-        {
-            Q_strncpyz( client->pers.netname, *oldname ? oldname : "UnnamedPlayer",
-                sizeof( client->pers.netname ) );
-            Info_SetValueForKey( userinfo, "name", oldname );
-            trap_SetUserinfo( clientNum, userinfo );
-        }
-        else
-        {
-            if( client->pers.connected == CON_CONNECTED )
-            {
-                client->pers.nameChangeTime = level.time;
-                client->pers.nameChanges++;
-            }
-        }
-    }
-	// N_G: this condition makes no sense to me and I'm not going to
-	// try finding out what it means, I've added parentheses according to
-	// evaluation rules of the original code so grab a
-	// parentheses pairing highlighting text editor and see for yourself
-	// if you got it right
-	//Sago: One redundant check and CTF Elim and LMS was missing. Not an important function and I might never have noticed, should properly be ||
+		if( revertName )
+		{
+			Q_strncpyz( client->pers.netname, *oldname ? oldname : "UnnamedPlayer",
+				sizeof( client->pers.netname ) );
+			Info_SetValueForKey( userinfo, "name", oldname );
+			trap_SetUserinfo( clientNum, userinfo );
+		}
+		else
+		{
+			if( client->pers.connected == CON_CONNECTED )
+			{
+				client->pers.nameChangeTime = level.time;
+				client->pers.nameChanges++;
+			}
+		}
+	}
 	if ( ( ( client->sess.sessionTeam == TEAM_SPECTATOR ) ||
 		( ( ( client->isEliminated ) /*||
 		( client->ps.pm_type == PM_SPECTATOR )*/ ) &&   //Sago: If this is true client.isEliminated or TEAM_SPECTATOR is true to and this is redundant
@@ -1253,7 +1237,7 @@ void ClientUserinfoChanged( int clientNum ) {
 			// pick the team with the least number of players
 			team = PickTeam( clientNum );
 		}
-                client->sess.sessionTeam = team;
+		client->sess.sessionTeam = team;
 	}
 	else {
 		team = client->sess.sessionTeam;
@@ -1276,27 +1260,27 @@ void ClientUserinfoChanged( int clientNum ) {
 	teamLeader = client->sess.teamLeader;
 
 	// colors
-        if( g_gametype.integer >= GT_TEAM && g_ffa_gt==0 && g_instantgib.integer) {
-            switch(team) {
-                case TEAM_RED:
-                    c1[0] = COLOR_BLUE;
-                    c2[0] = COLOR_BLUE;
-                    c1[1] = 0;
-                    c2[1] = 0;
-                    break;
-                case TEAM_BLUE:
-                    c1[0] = COLOR_RED;
-                    c2[0] = COLOR_RED;
-                    c1[1] = 0;
-                    c2[1] = 0;
-                    break;
-                default:
-                    break;
-            }
-        } else {
-            strcpy(c1, Info_ValueForKey( userinfo, "color1" ));
-            strcpy(c2, Info_ValueForKey( userinfo, "color2" ));
-        }
+	if( g_gametype.integer >= GT_TEAM && g_ffa_gt==0 && g_instantgib.integer) {
+		switch(team) {
+			case TEAM_RED:
+				c1[0] = COLOR_BLUE;
+				c2[0] = COLOR_BLUE;
+				c1[1] = 0;
+				c2[1] = 0;
+				break;
+			case TEAM_BLUE:
+				c1[0] = COLOR_RED;
+				c2[0] = COLOR_RED;
+				c1[1] = 0;
+				c2[1] = 0;
+				break;
+			default:
+				break;
+		}
+	} else {
+		strcpy(c1, Info_ValueForKey( userinfo, "color1" ));
+		strcpy(c2, Info_ValueForKey( userinfo, "color2" ));
+	}
 
 	strcpy(redTeam, Info_ValueForKey( userinfo, "g_redteam" ));
 	strcpy(blueTeam, Info_ValueForKey( userinfo, "g_blueteam" ));
@@ -1370,18 +1354,18 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 	Q_strncpyz( client->pers.ip, value, sizeof( client->pers.ip ) );
 	
 	if ( G_FilterPacket( value ) && Q_strequal(value,"localhost") ) {
-            G_Printf("Player with IP: %s is banned\n",value);
+		G_Printf("Player with IP: %s is banned\n",value);
 		return "You are banned from this server.";
 	}
 	
-    if( G_admin_ban_check( userinfo, reason, sizeof( reason ) ) ) {    
- 	    return va( "%s", reason );
+	if( G_admin_ban_check( userinfo, reason, sizeof( reason ) ) ) {    
+		return va( "%s", reason );
  	}
  	 
-  //KK-OAX
-  // we don't check GUID or password for bots and local client
-  // NOTE: local client <-> "ip" "localhost"
-  //   this means this client is not running in our current process
+//KK-OAX
+// we don't check GUID or password for bots and local client
+// NOTE: local client <-> "ip" "localhost"
+//   this means this client is not running in our current process
 	if ( !isBot && !strequals(value, "localhost") ) {
 		// check for a password
 		value = Info_ValueForKey (userinfo, "password");
@@ -1390,24 +1374,24 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 			return "Invalid password";
 		}
 		for( i = 0; i < sizeof( client->pers.guid ) - 1 &&
-		    isxdigit( client->pers.guid[ i ] ); i++ ) {};
+			isxdigit( client->pers.guid[ i ] ); i++ ) {};
 		if( i < sizeof( client->pers.guid ) - 1 )
-		    return "Invalid GUID";
-		    
+			return "Invalid GUID";
+
 		for( i = 0; i < level.maxclients; i++ ) {
 		
-		    if( level.clients[ i ].pers.connected == CON_DISCONNECTED )
-		        continue;
-		        
-		    if( Q_strequal( client->pers.guid, level.clients[ i ].pers.guid ) ) {
-		        if( !G_ClientIsLagging( level.clients + i ) ) {
-		            trap_SendServerCommand( i, "cp \"Your GUID is not secure\"" );
+			if( level.clients[ i ].pers.connected == CON_DISCONNECTED )
+				continue;
+
+			if( Q_strequal( client->pers.guid, level.clients[ i ].pers.guid ) ) {
+				if( !G_ClientIsLagging( level.clients + i ) ) {
+					trap_SendServerCommand( i, "cp \"Your GUID is not secure\"" );
 					return "Duplicate GUID";
-		        }
-		        trap_DropClient( i, "Ghost" );
-		    }
+				}
+				trap_DropClient( i, "Ghost" );
+			}
 		}
-		    
+		 
 	}
 
     //Check for local client
@@ -1648,7 +1632,7 @@ void ClientSpawn(gentity_t *ent) {
 	int		savedPing;
 //	char	*savedAreaBits;
 	int		accuracy_hits, accuracy_shots,vote;
-        int		accuracy[WP_NUM_WEAPONS][2];
+	int		accuracy[WP_NUM_WEAPONS][2];
 	int		eventSequence;
 	char	userinfo[MAX_INFO_STRING];
 
@@ -1678,10 +1662,11 @@ void ClientSpawn(gentity_t *ent) {
 		{	
 			client->sess.spectatorState = SPECTATOR_FREE;
 			client->isEliminated = qtrue;
-                        if(g_gametype.integer == GT_LMS)
-                                G_LogPrintf( "LMS: %i %i %i: Player \"%s^7\" eliminated!\n", level.roundNumber, index, 1, client->pers.netname );
+			if(g_gametype.integer == GT_LMS) {
+				G_LogPrintf( "LMS: %i %i %i: Player \"%s^7\" eliminated!\n", level.roundNumber, index, 1, client->pers.netname );
+			}
 			client->ps.pm_type = PM_SPECTATOR;
-                        CalculateRanks();
+			CalculateRanks();
 			return;
 		}
 		else
@@ -1690,15 +1675,15 @@ void ClientSpawn(gentity_t *ent) {
 			client->sess.spectatorState = SPECTATOR_NOT;
 			client->ps.pm_type = PM_NORMAL;
 			client->isEliminated = qfalse;
-                        CalculateRanks();
+			CalculateRanks();
 		}
 	} else {
-            //Force false.
-            if(client->isEliminated) {
-                client->isEliminated = qfalse;
-                CalculateRanks();
-            }
-        }
+		//Force false.
+		if(client->isEliminated) {
+			client->isEliminated = qfalse;
+			CalculateRanks();
+		}
+	}
 
 	if(g_gametype.integer == GT_LMS && client->sess.sessionTeam != TEAM_SPECTATOR && (!level.intermissiontime || level.warmupTime != 0))
 	{
@@ -1707,9 +1692,10 @@ void ClientSpawn(gentity_t *ent) {
 			client->sess.spectatorState = SPECTATOR_FREE;
 			if( ent->client->isEliminated!=qtrue) {
 				client->isEliminated = qtrue;
-				if((g_lms_mode.integer == 2 || g_lms_mode.integer == 3) && level.roundNumber == level.roundNumberStarted)
+				if((g_lms_mode.integer == 2 || g_lms_mode.integer == 3) && level.roundNumber == level.roundNumberStarted) {
 					LMSpoint();
-                                G_LogPrintf( "LMS: %i %i %i: Player \"%s^7\" eliminated!\n", level.roundNumber, index, 1, client->pers.netname );
+				}
+				G_LogPrintf( "LMS: %i %i %i: Player \"%s^7\" eliminated!\n", level.roundNumber, index, 1, client->pers.netname );
 			}
 			client->ps.pm_type = PM_SPECTATOR;
 			return;
@@ -1756,15 +1742,15 @@ void ClientSpawn(gentity_t *ent) {
 			// Tim needs to prevent bots from spawning at the initial point
 			// on q3dm0...
 			if ( ( spawnPoint->flags & FL_NO_BOTS ) && ( ent->r.svFlags & SVF_BOT ) ) {
-                            //Sago: The game has a tendency to select the furtest spawn point
-                            //This is a problem if the fursest spawnpoint keeps being NO_BOTS and it does!
-                            //This is a hot fix that seeks a spawn point faraway from the the currently found one
-                            vec3_t old_origin;
-                            VectorCopy(spawn_origin,old_origin);
-                            spawnPoint = SelectSpawnPoint (old_origin, spawn_origin, spawn_angles);
-                            if ( ( spawnPoint->flags & FL_NO_BOTS ) && ( ent->r.svFlags & SVF_BOT ) ) {
-				continue;	// try again
-                            }
+				//Sago: The game has a tendency to select the furtest spawn point
+				//This is a problem if the fursest spawnpoint keeps being NO_BOTS and it does!
+				//This is a hot fix that seeks a spawn point faraway from the the currently found one
+				vec3_t old_origin;
+				VectorCopy(spawn_origin,old_origin);
+				spawnPoint = SelectSpawnPoint (old_origin, spawn_origin, spawn_angles);
+				if ( ( spawnPoint->flags & FL_NO_BOTS ) && ( ent->r.svFlags & SVF_BOT ) ) {
+					continue;	// try again
+				}
 			}
 			// just to be symetric, we have a nohumans option...
 			if ( ( spawnPoint->flags & FL_NO_HUMANS ) && !( ent->r.svFlags & SVF_BOT ) ) {
@@ -1801,9 +1787,9 @@ void ClientSpawn(gentity_t *ent) {
 //	savedAreaBits = client->areabits;
 	accuracy_hits = client->accuracy_hits;
 	accuracy_shots = client->accuracy_shots;
-    memcpy(accuracy,client->accuracy,sizeof(accuracy));
+	memcpy(accuracy,client->accuracy,sizeof(accuracy));
 
-    memcpy(persistant,client->ps.persistant,sizeof(persistant));
+	memcpy(persistant,client->ps.persistant,sizeof(persistant));
 	eventSequence = client->ps.eventSequence;
 
 	Com_Memset (client, 0, sizeof(*client));
@@ -2020,10 +2006,10 @@ void ClientSpawn(gentity_t *ent) {
 	// clear entity state values
 	BG_PlayerStateToEntityState( &client->ps, &ent->s, qtrue );
 
-        if(g_spawnprotect.integer)
-            client->spawnprotected = qtrue;
+	if(g_spawnprotect.integer)
+		client->spawnprotected = qtrue;
 
-        RespawnTimeMessage(ent,0);
+	RespawnTimeMessage(ent,0);
 }
 
 
@@ -2042,7 +2028,7 @@ server system housekeeping.
 void ClientDisconnect( int clientNum ) {
 	gentity_t	*ent;
 	int			i;
-        char	userinfo[MAX_INFO_STRING];
+	char	userinfo[MAX_INFO_STRING];
 
 	// cleanup if we are kicking a bot that
 	// hasn't spawned yet
@@ -2053,11 +2039,11 @@ void ClientDisconnect( int clientNum ) {
 		return;
 	}
 
-        ClientLeaving( clientNum);
-    //KK-OAX Admin
-    G_admin_namelog_update( ent->client, qtrue );
-    
-        trap_GetUserinfo( clientNum, userinfo, sizeof( userinfo ) );
+	ClientLeaving( clientNum);
+	//KK-OAX Admin
+	G_admin_namelog_update( ent->client, qtrue );
+
+	trap_GetUserinfo( clientNum, userinfo, sizeof( userinfo ) );
 
 	// stop any following clients
 	for ( i = 0 ; i < level.maxclients ; i++ ) {

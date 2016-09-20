@@ -1673,7 +1673,7 @@ void ExitLevel (void) {
 		//If we found a filename:
 		if(filename[0]) {
 			//Read the file:
-			/*int len =*/ trap_FS_FOpenFile(filename, &file, FS_READ);
+			trap_FS_FOpenFile(filename, &file, FS_READ);
 			if(!file)
 				trap_FS_FOpenFile(va("%s.org",filename), &file, FS_READ);
 			if(file) {
@@ -1881,7 +1881,7 @@ void CheckIntermissionExit( void ) {
 	ready = 0;
 	notReady = 0;
 	readyMask = 0;
-        playerCount = 0;
+	playerCount = 0;
 	for (i=0 ; i< g_maxclients.integer ; i++) {
 		cl = level.clients + i;
 		if ( cl->pers.connected != CON_CONNECTED ) {
@@ -1959,13 +1959,13 @@ qboolean ScoreIsTied( void ) {
 		return qfalse;
 	}
         
-        //Sago: In Elimination and Oneway Flag Capture teams must win by two points.
-        if ( g_gametype.integer == GT_ELIMINATION || 
-                (g_gametype.integer == GT_CTF_ELIMINATION && g_elimination_ctf_oneway.integer)) {
-            return (level.teamScores[TEAM_RED] == level.teamScores[TEAM_BLUE] || 
-                    level.teamScores[TEAM_RED] == level.teamScores[TEAM_BLUE]+1 ||
-                    level.teamScores[TEAM_RED] == level.teamScores[TEAM_BLUE]-1);
-        }
+	//Sago: In Elimination and Oneway Flag Capture teams must win by two points.
+	if ( g_gametype.integer == GT_ELIMINATION || 
+			(g_gametype.integer == GT_CTF_ELIMINATION && g_elimination_ctf_oneway.integer)) {
+		return (level.teamScores[TEAM_RED] == level.teamScores[TEAM_BLUE] || 
+				level.teamScores[TEAM_RED] == level.teamScores[TEAM_BLUE]+1 ||
+				level.teamScores[TEAM_RED] == level.teamScores[TEAM_BLUE]-1);
+	}
 	
 	if ( g_gametype.integer >= GT_TEAM && g_ffa_gt!=1) {
 		return level.teamScores[TEAM_RED] == level.teamScores[TEAM_BLUE];
@@ -2108,9 +2108,9 @@ void CheckDoubleDomination( void ) {
 		if( ((level.pointStatusA == TEAM_BLUE && level.pointStatusB == TEAM_BLUE) ||
 			 (level.pointStatusA == TEAM_RED && level.pointStatusB == TEAM_RED)) &&
 				level.timeTaken + 10*1000 <= level.time ) {
-					Team_RemoveDoubleDominationPoints();
-					level.roundStartTime = level.time + 10*1000;
-					SendScoreboardMessageToAllClients();
+			Team_RemoveDoubleDominationPoints();
+			level.roundStartTime = level.time + 10*1000;
+			SendScoreboardMessageToAllClients();
 		}
 		return;
 	}
@@ -2180,21 +2180,25 @@ void CheckDomination(void) {
 		return;
 
 	//Sago: I use if instead of while, since if the server stops for more than 2 seconds people should not be allowed to score anyway
-	if(level.domination_points_count>3)
-            scoreFactor = 2; //score more slowly if there are many points
-        if(level.time>=level.dom_scoreGiven*DOM_SECSPERPOINT*scoreFactor) {
+	if(level.domination_points_count>3) {
+		scoreFactor = 2; //score more slowly if there are many points
+	}
+	if(level.time>=level.dom_scoreGiven*DOM_SECSPERPOINT*scoreFactor) {
 		for(i=0;i<level.domination_points_count;i++) {
-			if ( level.pointStatusDom[i] == TEAM_RED )
+			if ( level.pointStatusDom[i] == TEAM_RED ) {
 				AddTeamScore(level.intermission_origin,TEAM_RED,1);
-			if ( level.pointStatusDom[i] == TEAM_BLUE )
+			}
+			if ( level.pointStatusDom[i] == TEAM_BLUE ) {
 				AddTeamScore(level.intermission_origin,TEAM_BLUE,1);
+			}
 			G_LogPrintf( "DOM: %i %i %i %i: %s holds point %s for 1 point!\n",
 						-1,i,1,level.pointStatusDom[i],
 						TeamName(level.pointStatusDom[i]),level.domination_points_names[i]);
 		}
 		level.dom_scoreGiven++;
-		while(level.time>level.dom_scoreGiven*DOM_SECSPERPOINT*scoreFactor)
+		while(level.time>level.dom_scoreGiven*DOM_SECSPERPOINT*scoreFactor) {
 			level.dom_scoreGiven++;
+		}
 		CalculateRanks();
 	}
 }
@@ -2329,7 +2333,7 @@ void CheckTournament( void ) {
 PrintTeam
 ==================
 */
-void PrintTeam(int team, char *message) {
+void PrintTeam(int team, const char *message) {
 	int i;
 
 	for ( i = 0 ; i < level.maxclients ; i++ ) {
@@ -2356,8 +2360,9 @@ void SetLeader(int team, int client) {
 		return;
 	}
 	for ( i = 0 ; i < level.maxclients ; i++ ) {
-		if (level.clients[i].sess.sessionTeam != team)
+		if (level.clients[i].sess.sessionTeam != team) {
 			continue;
+		}
 		if (level.clients[i].sess.teamLeader) {
 			level.clients[i].sess.teamLeader = qfalse;
 			ClientUserinfoChanged(i);
@@ -2514,8 +2519,6 @@ Advances the non-player objects in the world
 void G_RunFrame( int levelTime ) {
 	int			i;
 	gentity_t	*ent;
-	//int			msec;
-//int start, end;
 
 	// if we are waiting for the level to restart, do nothing
 	if ( level.restarted ) {
