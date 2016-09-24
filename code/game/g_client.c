@@ -165,7 +165,7 @@ static gentity_t *SelectRandomDeathmatchSpawnPoint( int filter_flags ) {
 		count++;
 	}
 
-	if ( !count ) {	// no spots that won't telefrag
+	if ( count == 0 ) {	// no spots that won't telefrag
 		return last_valid_spot;
 	}
 
@@ -200,7 +200,7 @@ gentity_t *SelectSpawnPoint ( vec3_t avoidPoint, vec3_t origin, vec3_t angles, i
 	if (!spot) {
 		if (g_cheats.integer) {
 			//If in developer mode: Crash to ensure that the developer discovers the problem.
-			G_Error( "Couldn't find a spawn point" );
+			G_Error( "Couldn't find a spawn point.\nAny map must contain at least one \"info_player_deathmatch\" with no spawn restrictions" );
 		}
 		spot = &g_entities[0];
 	}
@@ -478,8 +478,9 @@ void ClientRespawn( gentity_t *ent ) {
 		{
 			if( ent->client->isEliminated!=qtrue) {
 				ent->client->isEliminated = qtrue;
-				if((g_lms_mode.integer == 2 || g_lms_mode.integer == 3) && level.roundNumber == level.roundNumberStarted)
+				if((g_lms_mode.integer == 2 || g_lms_mode.integer == 3) && level.roundNumber == level.roundNumberStarted) {
 					LMSpoint();	
+				}
 				//Sago: This is really bad
 				//TODO: Try not to make people spectators here
 				ent->client->sess.spectatorState = PM_SPECTATOR;
@@ -491,8 +492,9 @@ void ClientRespawn( gentity_t *ent ) {
 	}
 
 	if((g_gametype.integer==GT_ELIMINATION || g_gametype.integer==GT_CTF_ELIMINATION || g_gametype.integer==GT_LMS) 
-			&& ent->client->ps.pm_type == PM_SPECTATOR && ent->client->ps.stats[STAT_HEALTH] > 0)
+			&& ent->client->ps.pm_type == PM_SPECTATOR && ent->client->ps.stats[STAT_HEALTH] > 0) {
 		return;
+	}
 	ClientSpawn(ent);
 
 	// add a teleportation effect
@@ -550,8 +552,9 @@ void TeamCvarSet( void )
 				temp = va("%i",i);
 				first = qfalse;
 			}
-			else
+			else {
 				temp = va("%s,%i",temp,i);
+			}
 		}
 	}
 
@@ -610,7 +613,7 @@ int TeamCount( int ignoreClientNum, team_t team ) {
 		}
 
 		if ( level.clients[i].pers.connected == CON_CONNECTING) {
-				continue;
+			continue;
 		}
 
 		if ( level.clients[i].sess.sessionTeam == team ) {
