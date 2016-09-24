@@ -171,86 +171,12 @@ gentity_t *SelectRandomDeathmatchSpawnPoint( void ) {
 
 /*
 ===========
-SelectRandomFurthestSpawnPoint
-
-Chooses a player start, deathmatch start, etc
-============
-*/
-gentity_t *SelectRandomFurthestSpawnPoint ( vec3_t avoidPoint, vec3_t origin, vec3_t angles ) {
-	gentity_t	*spot;
-	vec3_t		delta;
-	float		dist;
-	float		list_dist[64];
-	gentity_t	*list_spot[64];
-	int			numSpots, rnd, i, j;
-
-	numSpots = 0;
-	spot = NULL;
-
-	while ((spot = G_Find (spot, FOFS(classname), "info_player_deathmatch")) != NULL) {
-		if ( SpotWouldTelefrag( spot ) ) {
-			continue;
-		}
-		VectorSubtract( spot->s.origin, avoidPoint, delta );
-		dist = VectorLength( delta );
-		for (i = 0; i < numSpots; i++) {
-			if ( dist > list_dist[i] ) {
-				if ( numSpots >= 64 )
-					numSpots = 64-1;
-				for (j = numSpots; j > i; j--) {
-					list_dist[j] = list_dist[j-1];
-					list_spot[j] = list_spot[j-1];
-				}
-				list_dist[i] = dist;
-				list_spot[i] = spot;
-				numSpots++;
-				if (numSpots > 64)
-					numSpots = 64;
-				break;
-			}
-		}
-		if (i >= numSpots && numSpots < 64) {
-			list_dist[numSpots] = dist;
-			list_spot[numSpots] = spot;
-			numSpots++;
-		}
-	}
-	if (!numSpots) {
-		spot = G_Find( NULL, FOFS(classname), "info_player_deathmatch");
-		if (!spot) {
-			spot = &g_entities[0];
-			if (g_cheats.integer) {
-				//If cheats are enabled be a little more aggresive about missing spawnpoints
-				G_Error( "Couldn't find a spawn point" );
-			}
-		}
-		VectorCopy (spot->s.origin, origin);
-		origin[2] += 9;
-		VectorCopy (spot->s.angles, angles);
-		return spot;
-	}
-
-	// select a random spot from the spawn points furthest away
-	rnd = random() * (numSpots / 2);
-
-	VectorCopy (list_spot[rnd]->s.origin, origin);
-	origin[2] += 9;
-	VectorCopy (list_spot[rnd]->s.angles, angles);
-
-	return list_spot[rnd];
-}
-
-/*
-===========
 SelectSpawnPoint
 
 Chooses a player start, deathmatch start, etc
 ============
 */
-gentity_t *SelectSpawnPoint ( vec3_t avoidPoint, vec3_t origin, vec3_t angles ) {
-	//return SelectRandomFurthestSpawnPoint( avoidPoint, origin, angles );
-
-	
+gentity_t *SelectSpawnPoint ( vec3_t avoidPoint, vec3_t origin, vec3_t angles ) {	
 	gentity_t	*spot;
 	gentity_t	*nearestSpot;
 
