@@ -240,7 +240,7 @@ static cvarTable_t		cvarTable[] = {
 	{ &ui_dom_timelimit, "ui_dom_timelimit", "30", CVAR_ARCHIVE },
 	{ &ui_dom_friendly, "ui_dom_friendly",  "0", CVAR_ARCHIVE },
 	
-	{ &ui_pos_scorelimit, "ui_pos_scorelimit", "300", CVAR_ARCHIVE },
+	{ &ui_pos_scorelimit, "ui_pos_scorelimit", "120", CVAR_ARCHIVE },
 	{ &ui_pos_timelimit, "ui_pos_timelimit", "20", CVAR_ARCHIVE },
         
 	{ &ui_arenasFile, "g_arenasFile", "", CVAR_INIT|CVAR_ROM },
