@@ -135,25 +135,29 @@ gentity_t *SelectNearestDeathmatchSpawnPoint( vec3_t from ) {
 	return nearestSpot;
 }
 
-
-/*
-================
-SelectRandomDeathmatchSpawnPoint
-
-go to a random point that doesn't telefrag
-================
-*/
 #define	MAX_SPAWN_POINTS	128
-gentity_t *SelectRandomDeathmatchSpawnPoint( void ) {
+/**
+ * Pick a random info_player_deathmatch spawnpoint
+ * Will prefer a spot that wont telefrag if such a point exist. 
+ * @param filter_flags Will NEVER pick a spawnpoint mathcing these flags.
+ * @return Returns a pointer to a spot or NULL if no spots exists. 
+ */
+static gentity_t *SelectRandomDeathmatchSpawnPoint( int filter_flags ) {
 	gentity_t	*spot;
 	int			count;
 	int			selection;
 	gentity_t	*spots[MAX_SPAWN_POINTS];
+	gentity_t	*last_valid_spot; //Last valid spot although it might telefrag; 
 
 	count = 0;
 	spot = NULL;
+	last_valid_spot = NULL;
 
 	while ((spot = G_Find (spot, FOFS(classname), "info_player_deathmatch")) != NULL) {
+		if (spot->flags & filter_flags) {
+			continue;
+		}
+		last_valid_spot = spot;
 		if ( SpotWouldTelefrag( spot ) ) {
 			continue;
 		}
@@ -162,7 +166,7 @@ gentity_t *SelectRandomDeathmatchSpawnPoint( void ) {
 	}
 
 	if ( !count ) {	// no spots that won't telefrag
-		return G_Find( NULL, FOFS(classname), "info_player_deathmatch");
+		return last_valid_spot;
 	}
 
 	selection = rand() % count;
@@ -176,25 +180,28 @@ SelectSpawnPoint
 Chooses a player start, deathmatch start, etc
 ============
 */
-gentity_t *SelectSpawnPoint ( vec3_t avoidPoint, vec3_t origin, vec3_t angles ) {	
+gentity_t *SelectSpawnPoint ( vec3_t avoidPoint, vec3_t origin, vec3_t angles, int filter_flags ) {	
 	gentity_t	*spot;
 	gentity_t	*nearestSpot;
 
 	nearestSpot = SelectNearestDeathmatchSpawnPoint( avoidPoint );
 
-	spot = SelectRandomDeathmatchSpawnPoint ( );
+	spot = SelectRandomDeathmatchSpawnPoint ( filter_flags );
 	if ( spot == nearestSpot ) {
 		// roll again if it would be real close to point of death
-		spot = SelectRandomDeathmatchSpawnPoint ( );
+		spot = SelectRandomDeathmatchSpawnPoint ( filter_flags );
 		if ( spot == nearestSpot ) {
 			// last try
-			spot = SelectRandomDeathmatchSpawnPoint ( );
+			spot = SelectRandomDeathmatchSpawnPoint ( filter_flags );
 		}		
 	}
 
 	// find a single player start spot
 	if (!spot) {
-		//G_Error( "Couldn't find a spawn point" );
+		if (g_cheats.integer) {
+			//If in developer mode: Crash to ensure that the developer discovers the problem.
+			G_Error( "Couldn't find a spawn point" );
+		}
 		spot = &g_entities[0];
 	}
 
@@ -213,18 +220,21 @@ Try to find a spawn point marked 'initial', otherwise
 use normal spawn selection.
 ============
 */
-gentity_t *SelectInitialSpawnPoint( vec3_t origin, vec3_t angles ) {
+static gentity_t *SelectInitialSpawnPoint( vec3_t origin, vec3_t angles, int filter_flags ) {
 	gentity_t	*spot;
 
 	spot = NULL;
 	while ((spot = G_Find (spot, FOFS(classname), "info_player_deathmatch")) != NULL) {
+		if (spot->flags & filter_flags) {
+			continue;
+		}
 		if ( spot->spawnflags & 1 ) {
 			break;
 		}
 	}
 
 	if ( !spot || SpotWouldTelefrag( spot ) ) {
-		return SelectSpawnPoint( vec3_origin, origin, angles );
+		return SelectSpawnPoint( vec3_origin, origin, angles, filter_flags );
 	}
 
 	VectorCopy (spot->s.origin, origin);
@@ -1653,39 +1663,23 @@ void ClientSpawn(gentity_t *ent) {
 						client->pers.teamState.state, 
 						spawn_origin, spawn_angles);
 	} else {
-		do {
-			// the first spawn should be at a good looking spot
-			if ( !client->pers.initialSpawn && client->pers.localClient ) {
-				client->pers.initialSpawn = qtrue;
-				spawnPoint = SelectInitialSpawnPoint( spawn_origin, spawn_angles );
-			} else {
-				// don't spawn near existing origin if possible
-				spawnPoint = SelectSpawnPoint ( 
-					client->ps.origin, 
-					spawn_origin, spawn_angles);
-			}
-
-			// Tim needs to prevent bots from spawning at the initial point
-			// on q3dm0...
-			if ( ( spawnPoint->flags & FL_NO_BOTS ) && ( ent->r.svFlags & SVF_BOT ) ) {
-				//Sago: The game has a tendency to select the furtest spawn point
-				//This is a problem if the fursest spawnpoint keeps being NO_BOTS and it does!
-				//This is a hot fix that seeks a spawn point faraway from the the currently found one
-				vec3_t old_origin;
-				VectorCopy(spawn_origin,old_origin);
-				spawnPoint = SelectSpawnPoint (old_origin, spawn_origin, spawn_angles);
-				if ( ( spawnPoint->flags & FL_NO_BOTS ) && ( ent->r.svFlags & SVF_BOT ) ) {
-					continue;	// try again
-				}
-			}
-			// just to be symetric, we have a nohumans option...
-			if ( ( spawnPoint->flags & FL_NO_HUMANS ) && !( ent->r.svFlags & SVF_BOT ) ) {
-				continue;	// try again
-			}
-
-			break;
-
-		} while ( 1 );
+		int filters;
+		if (ent->r.svFlags & SVF_BOT) {
+			filters = FL_NO_BOTS;
+		}
+		else {
+			filters = FL_NO_HUMANS;
+		}
+		// the first spawn should be at a good looking spot
+		if ( !client->pers.initialSpawn && client->pers.localClient ) {
+			client->pers.initialSpawn = qtrue;
+			spawnPoint = SelectInitialSpawnPoint( spawn_origin, spawn_angles, filters );
+		} else {
+			// don't spawn near existing origin if possible
+			spawnPoint = SelectSpawnPoint ( 
+				client->ps.origin, 
+				spawn_origin, spawn_angles, filters);
+		}
 	}
 	client->pers.teamState.state = TEAM_ACTIVE;
 

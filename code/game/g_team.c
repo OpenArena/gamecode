@@ -1541,7 +1541,7 @@ gentity_t* SelectRandomEntity (const char* classname) {
 
 /*
 ================
-SelectRandomDeathmatchSpawnPoint
+SelectRandomTeamSpawnPoint
 
 go to a random point that doesn't telefrag
 ================
@@ -1717,7 +1717,7 @@ gentity_t *SelectCTFSpawnPoint ( team_t team, int teamstate, vec3_t origin, vec3
 	spot = SelectRandomTeamSpawnPoint ( teamstate, team );
 
 	if (!spot) {
-		return SelectSpawnPoint( vec3_origin, origin, angles );
+		return SelectSpawnPoint( vec3_origin, origin, angles, 0 );
 	}
 
 	VectorCopy (spot->s.origin, origin);
@@ -1743,7 +1743,7 @@ gentity_t *SelectDoubleDominationSpawnPoint ( team_t team, vec3_t origin, vec3_t
         }
         
 	if (!spot) {
-		return SelectSpawnPoint( vec3_origin, origin, angles );
+		return SelectSpawnPoint( vec3_origin, origin, angles, 0 );
 	}
 
 	VectorCopy (spot->s.origin, origin);
@@ -1765,7 +1765,7 @@ gentity_t *SelectDominationSpawnPoint ( team_t team, vec3_t origin, vec3_t angle
 	spot = SelectRandomTeamDomSpawnPoint( team );
 
 	if (!spot) {
-		return SelectSpawnPoint( vec3_origin, origin, angles );
+		return SelectSpawnPoint( vec3_origin, origin, angles, 0 );
 	}
 
 	VectorCopy (spot->s.origin, origin);
