@@ -408,6 +408,7 @@ void Team_FragBonuses(gentity_t *targ, gentity_t *inflictor, gentity_t *attacker
 		else {
 			PrintMsg(NULL, "%s" S_COLOR_WHITE " fragged the flag carrier!\n",
 				attacker->client->pers.netname);
+			G_LogPrintf("POS: %i %i: %s^7 fragged the carrier\n", attacker->s.number, 2, attacker->client->pers.netname);
 		}
 		if(g_gametype.integer == GT_CTF) {
 			G_LogPrintf( "CTF: %i %i %i: %s fragged %s's flag carrier!\n", attacker->client->ps.clientNum, team, 3, attacker->client->pers.netname, TeamName(team) );

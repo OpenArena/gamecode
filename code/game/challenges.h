@@ -49,6 +49,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define GAMETYPES_LMS_WINS      110
 #define GAMETYPES_DD_WINS       111
 #define GAMETYPES_DOM_WINS      112
+#define GAMETYPES_POS_WINS      113
 
 //Weapons
 #define WEAPON_GAUNTLET_KILLS   201

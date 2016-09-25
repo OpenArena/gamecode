@@ -250,23 +250,11 @@ SelectSpectatorSpawnPoint
 
 ============
 */
-gentity_t *SelectSpectatorSpawnPoint( vec3_t origin, vec3_t angles ) {
-	//gentity_t	*spot;
-
+static gentity_t *SelectSpectatorSpawnPoint( vec3_t origin, vec3_t angles ) {
 	FindIntermissionPoint();
 
 	VectorCopy( level.intermission_origin, origin );
 	VectorCopy( level.intermission_angle, angles );
-
-
-
-	//for some reason we need to return an specific point in elimination (this might not be neccecary anymore but to be sure...)
-	//if(g_gametype.integer == GT_ELIMINATION)
-	//	return SelectSpawnPoint( vec3_origin, origin, angles );
-
-	//VectorCopy (origin,spot->s.origin);
-	//spot->s.origin[2] += 9;
-	//VectorCopy (angles, spot->s.angles);
 
 	return NULL; //spot;
 }
@@ -461,7 +449,6 @@ void ClientRespawn( gentity_t *ent ) {
 	if((g_gametype.integer!=GT_ELIMINATION && g_gametype.integer!=GT_CTF_ELIMINATION && g_gametype.integer !=GT_LMS) && !ent->client->isEliminated)
 	{
 		ent->client->isEliminated = qtrue; //must not be true in warmup
-		//Tried moving CopyToBodyQue
 	} else {
 		//Must always be false in other gametypes
 		ent->client->isEliminated = qfalse;
@@ -471,7 +458,6 @@ void ClientRespawn( gentity_t *ent ) {
 	if(g_gametype.integer==GT_LMS) {
 		if(ent->client->pers.livesLeft>0)
 		{
-			//ent->client->pers.livesLeft--; Coutned down somewhere else
 			ent->client->isEliminated = qfalse;
 		}
 		else //We have used all our lives
@@ -541,7 +527,7 @@ void TeamCvarSet( void )
 	qboolean redChanged = qfalse;
 	qboolean blueChanged = qfalse;
 	qboolean first = qtrue;
-	char* temp = NULL;
+	const char* temp = NULL;
 
 	for ( i = 0 ; i < level.maxclients ; i++ ) {
 		if ( level.clients[i].pers.connected == CON_DISCONNECTED ) {
@@ -634,7 +620,7 @@ Returns number of living players on a team
 team_t TeamLivingCount( int ignoreClientNum, int team ) {
 	int		i;
 	int		count = 0;
-	qboolean	LMS = (g_gametype.integer==GT_LMS);
+	qboolean	isLMS = (g_gametype.integer==GT_LMS);
 
 	for ( i = 0 ; i < level.maxclients ; i++ ) {
 		if ( i == ignoreClientNum ) {
@@ -648,7 +634,7 @@ team_t TeamLivingCount( int ignoreClientNum, int team ) {
 			continue;
 		}
 		//crash if g_gametype.integer is used here, why?
-		if ( level.clients[i].sess.sessionTeam == team && (level.clients[i].ps.stats[STAT_HEALTH]>0 || LMS) && !(level.clients[i].isEliminated)) {
+		if ( level.clients[i].sess.sessionTeam == team && (level.clients[i].ps.stats[STAT_HEALTH]>0 || isLMS) && !(level.clients[i].isEliminated)) {
 			count++;
 		}
 	}

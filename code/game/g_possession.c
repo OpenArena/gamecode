@@ -77,6 +77,7 @@ int Possession_TouchFlag(gentity_t *other) {
 	gclient_t *cl = other->client;
 	cl->ps.powerups[PW_NEUTRALFLAG] = INT_MAX; // flags never expire
 	cl->pers.teamState.flagsince = level.time;
+	G_LogPrintf("POS: %i %i: %s^7 took the flag\n", other->s.number, 3, cl->pers.netname);
 	return -1;
 }
 

@@ -1416,35 +1416,37 @@ static void SendVictoryChallenge( void ) {
 		case GT_DOMINATION:
 			award = GAMETYPES_DOM_WINS;
 			break;
+		case GT_POSSESSION:
+			award = GAMETYPES_POS_WINS;
+			break;
 		default:
 			return;
 	};
-//	for ( i = 0 ; i < level.maxclients ; i++ ) {
-//		if ( if ( level.clients[ i ].pers.connected == CON_CONNECTED ) {
-			if ( g_gametype.integer >= GT_TEAM && g_ffa_gt!=1) {
-				//Team games
-				for ( i = 0 ; i < level.maxclients ; i++ ) {
-					cl = &level.clients[i];
+	if ( g_gametype.integer >= GT_TEAM && g_ffa_gt!=1) {
+		//Team games
+		for ( i = 0 ; i < level.maxclients ; i++ ) {
+			cl = &level.clients[i];
 
-					if ( cl->sess.sessionTeam == TEAM_SPECTATOR ) {
-						continue;
-					}
-					if ( cl->pers.connected != CON_CONNECTED ) {
-						continue;
-					}
-					
-					if( cl->sess.sessionTeam == TEAM_RED && level.teamScores[TEAM_RED] > level.teamScores[TEAM_BLUE] )
-						ChallengeMessage(g_entities + cl->ps.clientNum,award);
-					
-					if( cl->sess.sessionTeam == TEAM_BLUE && level.teamScores[TEAM_RED] < level.teamScores[TEAM_BLUE] )
-						ChallengeMessage(g_entities + cl->ps.clientNum,award);
-				}
-			} else {
-				//FFA games
-				ChallengeMessage(g_entities + level.sortedClients[0],award);
+			if ( cl->sess.sessionTeam == TEAM_SPECTATOR ) {
+				continue;
 			}
-//		}
-//	}
+			if ( cl->pers.connected != CON_CONNECTED ) {
+				continue;
+			}
+
+			if( cl->sess.sessionTeam == TEAM_RED && level.teamScores[TEAM_RED] > level.teamScores[TEAM_BLUE] ) {
+				ChallengeMessage(g_entities + cl->ps.clientNum,award);
+			}
+
+			if( cl->sess.sessionTeam == TEAM_BLUE && level.teamScores[TEAM_RED] < level.teamScores[TEAM_BLUE] ) {
+				ChallengeMessage(g_entities + cl->ps.clientNum,award);
+			}
+		}
+	} 
+	else {
+		//FFA games
+		ChallengeMessage(g_entities + level.sortedClients[0],award);
+	}
 }
 
 /*
