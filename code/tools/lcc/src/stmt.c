@@ -51,7 +51,7 @@ void addlocal(Symbol p) {
 	if (!p->defined) {
 		code(Local)->u.var = p;
 		p->defined = 1;
-		p->scope = level;
+		p->scope = level_lcc;
 	}
 }
 void definept(Coordinate *p) {
@@ -328,7 +328,7 @@ static void swstmt(int loop, int lab, int lev) {
 		sw.sym = e->kids[0]->u.sym;
 		walk(NULL, 0, 0);
 	} else {
-		sw.sym = genident(REGISTER, e->type, level);
+		sw.sym = genident(REGISTER, e->type, level_lcc);
 		addlocal(sw.sym);
 		walk(asgn(sw.sym, e), 0, 0);
 	}
@@ -510,7 +510,7 @@ void retcode(Tree p) {
 		}
 	if (events.returns)
 		{
-			Symbol t1 = genident(AUTO, p->type, level);
+			Symbol t1 = genident(AUTO, p->type, level_lcc);
 			addlocal(t1);
 			walk(asgn(t1, p), 0, 0);
 			apply(events.returns, cfunc, idtree(t1));

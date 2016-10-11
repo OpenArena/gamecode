@@ -355,7 +355,7 @@ static Tree primary(void) {
 		   p = idtree(tsym->u.c.loc); break;
 	case ID:   if (tsym == NULL)
 		   	{
-				Symbol p = install(token, &identifiers, level, FUNC);
+				Symbol p = install(token, &identifiers, level_lcc, FUNC);
 				p->src = src;
 				if (getchr() == '(') {
 					Symbol q = lookup(token, externals);
@@ -398,7 +398,7 @@ static Tree primary(void) {
 		   	p = idtree(tsym);
 		   } break;
 	case FIRSTARG:
-		if (level > PARAM && cfunc && cfunc->u.f.callee[0])
+		if (level_lcc > PARAM && cfunc && cfunc->u.f.callee[0])
 			p = idtree(cfunc->u.f.callee[0]);
 		else {
 			error("illegal use of `%k'\n", FIRSTARG);

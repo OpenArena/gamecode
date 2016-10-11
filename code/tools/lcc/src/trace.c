@@ -128,7 +128,7 @@ static void tracecall(Symbol printer, Symbol f) {
 
 	defglobal(counter, BSS);
 	(*IR->space)(counter->type->size);
-	frameno = genident(AUTO, inttype, level);
+	frameno = genident(AUTO, inttype, level_lcc);
 	addlocal(frameno);
 	appendstr(f->name); appendstr("#");
 	tracevalue(asgn(frameno, incr(INCR, idtree(counter), consttree(1, inttype))), 0);

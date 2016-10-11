@@ -275,14 +275,14 @@ Type newstruct(int op, char *tag) {
 	if (*tag == 0)
 		tag = stringd(genlabel(1));
 	else
-		if ((p = lookup(tag, types)) != NULL && (p->scope == level
-		|| (p->scope == PARAM && level == PARAM+1))) {
+		if ((p = lookup(tag, types)) != NULL && (p->scope == level_lcc
+		|| (p->scope == PARAM && level_lcc == PARAM+1))) {
 			if (p->type->op == op && !p->defined)
 				return p->type;
 			error("redefinition of `%s' previously defined at %w\n",
 				p->name, &p->src);
 		}
-	p = install(tag, &types, level, PERM);
+	p = install(tag, &types, level_lcc, PERM);
 	p->type = type(op, NULL, 0, 0, p);
 	if (p->scope > maxlevel)
 		maxlevel = p->scope;
@@ -304,7 +304,7 @@ Field newfield(char *name, Type ty, Type fty) {
 	p->type = fty;
 	if (xref) {							/* omit */
 		if (ty->u.sym->u.s.ftab == NULL)			/* omit */
-			ty->u.sym->u.s.ftab = table(NULL, level);	/* omit */
+			ty->u.sym->u.s.ftab = table(NULL, level_lcc);	/* omit */
 		install(name, &ty->u.sym->u.s.ftab, 0, PERM)->src = src;/* omit */
 	}								/* omit */
 	return p;

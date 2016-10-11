@@ -25,7 +25,7 @@ Table identifiers = &ids;
 Table globals     = &ids;
 Table types       = &tys;
 Table labels;
-int level = GLOBAL;
+int level_lcc = GLOBAL;
 static int tempid;
 List loci, symbols;
 
@@ -55,18 +55,18 @@ void foreach(Table tp, int lev, void (*apply)(Symbol, void *), void *cl) {
 	}
 }
 void enterscope(void) {
-	if (++level == LOCAL)
+	if (++level_lcc == LOCAL)
 		tempid = 0;
 }
 void exitscope(void) {
-	rmtypes(level);
-	if (types->level == level)
+	rmtypes(level_lcc);
+	if (types->level == level_lcc)
 		types = types->previous;
-	if (identifiers->level == level) {
+	if (identifiers->level == level_lcc) {
 		if (Aflag >= 2) {
 			int n = 0;
 			Symbol p;
-			for (p = identifiers->all; p && p->scope == level; p = p->up)
+			for (p = identifiers->all; p && p->scope == level_lcc; p = p->up)
 				if (++n > 127) {
 					warning("more than 127 identifiers declared in a block\n");
 					break;
@@ -74,8 +74,8 @@ void exitscope(void) {
 		}
 		identifiers = identifiers->previous;
 	}
-	assert(level >= GLOBAL);
-	--level;
+	assert(level_lcc >= GLOBAL);
+	--level_lcc;
 }
 Symbol install(const char *name, Table *tpp, int level, int arena) {
 	Table tp = *tpp;
@@ -217,7 +217,7 @@ Symbol temporary(int scls, Type ty) {
 
 	NEW0(p, FUNC);
 	p->name = stringd(++tempid);
-	p->scope = level < LOCAL ? LOCAL : level;
+	p->scope = level_lcc < LOCAL ? LOCAL : level_lcc;
 	p->sclass = scls;
 	p->type = ty;
 	p->temporary = 1;

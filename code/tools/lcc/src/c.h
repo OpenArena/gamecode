@@ -523,7 +523,7 @@ extern Table globals;
 extern Table identifiers;
 extern Table labels;
 extern Table types;
-extern int level;
+extern int level_lcc;
 
 extern List loci, symbols;
 
