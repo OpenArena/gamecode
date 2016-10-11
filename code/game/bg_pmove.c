@@ -36,6 +36,8 @@ float	pm_duckScale = 0.25f;
 float	pm_swimScale = 0.50f;
 float	pm_wadeScale = 0.70f;
 
+const float	pm_swimFastScale = 5.0f;
+
 float	pm_accelerate = 10.0f;
 float	pm_airaccelerate = 1.0f;
 float	pm_wateraccelerate = 4.0f;
@@ -488,6 +490,7 @@ static void PM_WaterMove( void ) {
 	vec3_t	wishdir;
 	float	scale;
 	float	vel;
+	float	swimScale;
 
 	if ( PM_CheckWaterJump() ) {
 		PM_WaterJumpMove();
@@ -527,8 +530,13 @@ static void PM_WaterMove( void ) {
 	VectorCopy (wishvel, wishdir);
 	wishspeed = VectorNormalize(wishdir);
 
-	if ( wishspeed > pm->ps->speed * pm_swimScale ) {
-		wishspeed = pm->ps->speed * pm_swimScale;
+	swimScale = pm_swimScale;
+	if(pm->pmove_flags & DF_FAST_WATER_MOVE ) {
+		swimScale = pm_swimFastScale;
+	}
+	
+	if ( wishspeed > pm->ps->speed * swimScale ) {
+		wishspeed = pm->ps->speed * swimScale;
 	}
 
 	PM_Accelerate (wishdir, wishspeed, pm_wateraccelerate);
