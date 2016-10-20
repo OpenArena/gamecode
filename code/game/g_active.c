@@ -1134,9 +1134,9 @@ void ClientThink_real( gentity_t *ent ) {
 		return;
 	}
 
-        if ( pm.waterlevel <= 1 && pm.ps->groundEntityNum!=ENTITYNUM_NONE && client->lastSentFlyingTime+500>level.time) {
+        if ( g_awardpushing.integer < 2 && pm.waterlevel <= 1 && pm.ps->groundEntityNum!=ENTITYNUM_NONE && client->lastSentFlyingTime+500>level.time) {
 			if ( ! (pm.ps->pm_flags & PMF_TIME_KNOCKBACK) ) {
-                            client->lastSentFlying = -1;
+				client->lastSentFlying = -1;
 			}
 	}
         

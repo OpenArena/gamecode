@@ -325,22 +325,25 @@ static void CG_Obituary( entityState_t *ent ) {
 			message = "tried to invade";
 			message2 = "'s personal space";
 			break;
-                case MOD_LAVA:
-                        message = "was given a hot bath by";
-                        break;
-                case MOD_SLIME:
-                        message = "was given a acid bath by";
-                        break;
-                case MOD_FALLING:
-                        message = "was given a small push by";
-                        break;
-                case MOD_TRIGGER_HURT:
-                        message = "was helped on the way by";
-                        break;
-                case MOD_CRUSH:
-                        message = "was crushed in";
-                        message2 = "'s trap";
-                        break;
+		case MOD_LAVA:
+				message = "was given a hot bath by";
+				break;
+		case MOD_SLIME:
+				message = "was given a acid bath by";
+				break;
+		case MOD_FALLING:
+				message = "was given a small push by";
+				break;
+		case MOD_TRIGGER_HURT:
+				message = "was helped on the way by";
+				break;
+		case MOD_CRUSH:
+				message = "was crushed in";
+				message2 = "'s trap";
+				break;
+		case MOD_SUICIDE:
+				message = "was too eager against";
+				break;
 		default:
 			message = "was killed by";
 			break;

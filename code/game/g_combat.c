@@ -1058,25 +1058,28 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 			return;
 		}
 	}
-	//Sago: This was moved up
 	client = targ->client;
-
-	//Sago: See if the client was sent flying
-	//Check if damage is by somebody who is not a player!
-	if( (!attacker || attacker->s.eType != ET_PLAYER) && client && client->lastSentFlying>-1 && ( mod==MOD_FALLING || mod==MOD_LAVA || mod==MOD_SLIME || mod==MOD_TRIGGER_HURT || mod==MOD_SUICIDE) )  {
-		if( client->lastSentFlyingTime+5000<level.time) {
-			client->lastSentFlying = -1; //More than 5 seconds, not a kill!
-		} else {
-			//G_Printf("LastSentFlying %i\n",client->lastSentFlying);
-			attacker = &g_entities[client->lastSentFlying];
-		}
-	}
         
 	if ( !inflictor ) {
 		inflictor = &g_entities[ENTITYNUM_WORLD];
 	}
 	if ( !attacker ) {
 		attacker = &g_entities[ENTITYNUM_WORLD];
+	}
+	
+	if ( (attacker == &g_entities[ENTITYNUM_WORLD] || attacker == targ || attacker->s.eType != ET_PLAYER) && client && client->lastSentFlying>-1 && 
+			( mod==MOD_FALLING || mod==MOD_LAVA || mod==MOD_SLIME || mod==MOD_TRIGGER_HURT || mod==MOD_SUICIDE || g_awardpushing.integer > 1)) {
+		if( client->lastSentFlyingTime+5000<level.time) {
+			//More than 5 seconds, not a kill!
+			client->lastSentFlying = -1; 
+		} 
+		else {
+			attacker = &g_entities[client->lastSentFlying];
+			if (! ( mod==MOD_FALLING || mod==MOD_LAVA || mod==MOD_SLIME || mod==MOD_TRIGGER_HURT || mod==MOD_SUICIDE) ) {
+				//If non environmental kill then consider it a(n assisted) suicide. 
+				mod = MOD_SUICIDE;
+			}
+		}
 	}
 
 	// shootable doors / buttons don't actually have any health
@@ -1270,7 +1273,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 	if ( client ) {
 		if ( attacker ) {
 			client->ps.persistant[PERS_ATTACKER] = attacker->s.number;
-		} else if(client->lastSentFlying) {
+		} else if(client->lastSentFlying > -1) {
 			client->ps.persistant[PERS_ATTACKER] = client->lastSentFlying;
 		} else {
 			client->ps.persistant[PERS_ATTACKER] = ENTITYNUM_WORLD;
