@@ -435,13 +435,13 @@ static void CG_OffsetFirstPersonView( void ) {
 		ratio = cg.time - cg.damageTime;
 		if ( ratio < DAMAGE_DEFLECT_TIME ) {
 			ratio /= DAMAGE_DEFLECT_TIME;
-			angles[PITCH] += ratio * cg.v_dmg_pitch;
-			angles[ROLL] += ratio * cg.v_dmg_roll;
+			angles[PITCH] += ratio * cg.v_dmg_pitch * cg_kickScale.value;
+			angles[ROLL] += ratio * cg.v_dmg_roll * cg_kickScale.value;
 		} else {
 			ratio = 1.0 - ( ratio - DAMAGE_DEFLECT_TIME ) / DAMAGE_RETURN_TIME;
 			if ( ratio > 0 ) {
-				angles[PITCH] += ratio * cg.v_dmg_pitch;
-				angles[ROLL] += ratio * cg.v_dmg_roll;
+				angles[PITCH] += ratio * cg.v_dmg_pitch * cg_kickScale.value;
+				angles[ROLL] += ratio * cg.v_dmg_roll * cg_kickScale.value;
 			}
 		}
 	}
@@ -465,21 +465,21 @@ static void CG_OffsetFirstPersonView( void ) {
 
 	// add angles based on bob
 
-   if ( cg_bob.integer ) {
-      // make sure the bob is visible even at low speeds
-      speed = cg.xyspeed > 200 ? cg.xyspeed : 200;
+	if ( cg_bob.integer ) {
+		// make sure the bob is visible even at low speeds
+		speed = cg.xyspeed > 200 ? cg.xyspeed : 200;
 
-      delta = cg.bobfracsin * cg_bobpitch.value * speed;
-      if (cg.predictedPlayerState.pm_flags & PMF_DUCKED)
-         delta *= 3;		// crouching
-      angles[PITCH] += delta;
-      delta = cg.bobfracsin * cg_bobroll.value * speed;
-      if (cg.predictedPlayerState.pm_flags & PMF_DUCKED)
-         delta *= 3;		// crouching accentuates roll
-      if (cg.bobcycle & 1)
-         delta = -delta;
-      angles[ROLL] += delta;
-   }
+		delta = cg.bobfracsin * cg_bobpitch.value * speed;
+		if (cg.predictedPlayerState.pm_flags & PMF_DUCKED)
+			delta *= 3;		// crouching
+		angles[PITCH] += delta;
+		delta = cg.bobfracsin * cg_bobroll.value * speed;
+		if (cg.predictedPlayerState.pm_flags & PMF_DUCKED)
+			delta *= 3;		// crouching accentuates roll
+		if (cg.bobcycle & 1)
+			delta = -delta;
+		angles[ROLL] += delta;
+	}
 
 //===================================
 
@@ -493,14 +493,14 @@ static void CG_OffsetFirstPersonView( void ) {
 			* (DUCK_TIME - timeDelta) / DUCK_TIME;
 	}
 
-   if ( cg_bob.integer ) {
-      // add bob height
-      bob = cg.bobfracsin * cg.xyspeed * cg_bobup.value;
-      if (bob > 6) {
-         bob = 6;
-      }
-      origin[2] += bob;
-   }
+	if ( cg_bob.integer ) {
+		// add bob height
+		bob = cg.bobfracsin * cg.xyspeed * cg_bobup.value;
+		if (bob > 6) {
+			bob = 6;
+		}
+		origin[2] += bob;
+	}
 
 	// add fall height
 	delta = cg.time - cg.landTime;

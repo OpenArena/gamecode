@@ -347,6 +347,7 @@ static cvarTable_t cvarTable[] = { // bk001129
 	{ &cg_bobpitch, "cg_bobpitch", "0.002", CVAR_ARCHIVE },
 	{ &cg_bobroll, "cg_bobroll", "0.002", CVAR_ARCHIVE },
 	{ &cg_bobmodel , "cg_bobmodel", "0", CVAR_ARCHIVE },		// leilei
+	{ &cg_kickScale, "cg_kickScale", "1", CVAR_ARCHIVE },
 	{ &cg_swingSpeed, "cg_swingSpeed", "0.3", CVAR_CHEAT },
 	{ &cg_animSpeed, "cg_animspeed", "1", CVAR_CHEAT },
 	{ &cg_debugAnim, "cg_debuganim", "0", CVAR_CHEAT },
