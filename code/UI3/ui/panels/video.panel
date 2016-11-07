@@ -1,0 +1,194 @@
+/*
+===========================================================================
+Copyright (C) 2015 Open Arena Team
+
+This file is part of Open Arena.
+
+Open Arena is free software; you can redistribute it
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the License,
+or (at your option) any later version.
+
+Open Arena is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Foobar; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+===========================================================================
+*/
+
+
+itemDef {
+      	name res
+	type ITEM_TYPE_MULTI
+      	text "         Resolution:"
+	style 0
+	cvar "r_mode"
+	cvarFloatList { "320*240" 0 "400*300" 1 "512*384" 2 "640*480" 3 "800*600" 4 "960*720" 5 "1024*768" 6 "1152*864" 7 "1280*1024" 8 "1600*1200" 9 "2048*1536" 10 "856*480" 11 "Custom defined" -1 }
+	textstyle 0
+      	textscale SZTEXT
+     	rect 16 48 256 16
+     	textalignx	 56	
+	textaligny	 16      
+	forecolor MP_TEXTCOLOR
+	visible 1 
+}
+
+itemDef {
+      	name picmip
+	type ITEM_TYPE_MULTI
+      	text "     Texture Detail:"
+	style 0
+	cvar "r_picmip"
+	cvarFloatList { "Crap" 4 "Low" 3 "Okay" 2 "Good" 1 "Best" 0 }
+	textstyle 0
+      	textscale SZTEXT
+     	rect 16 64 256 16
+     	textalignx	 56	
+	textaligny	 16      
+	forecolor MP_TEXTCOLOR
+	visible 1 
+}
+
+itemDef {
+      	name picmip
+	type ITEM_TYPE_MULTI
+      	text " Screen Color Depth:"
+	style 0
+	cvar "r_depthBits"
+	cvarFloatList { "Default" 0 "16-bit" 16 "32-bit" 32}
+	textstyle 0
+      	textscale SZTEXT
+     	rect 16 80 256 16
+     	textalignx	 56	
+	textaligny	 16      
+	forecolor MP_TEXTCOLOR
+	visible 1 
+}
+
+itemDef {
+      	name texdepth
+	type ITEM_TYPE_MULTI
+      	text "Texture Color Depth:"
+	style 0
+	cvar "r_textureBits"
+	cvarFloatList { "Default" 0 "16-bit" 16 "32-bit" 32}
+	textstyle 0
+      	textscale SZTEXT
+     	rect 16 96 256 16
+     	textalignx	 56	
+	textaligny	 16      
+	forecolor MP_TEXTCOLOR
+	visible 1 
+}
+
+itemDef {
+      	name texdepth
+	type ITEM_TYPE_MULTI
+      	text "      Stencil Depth:"
+	style 0
+	cvar "r_stencilBits"
+	cvarFloatList { "Default" 0 "8-bit" 8 "32-bit" 32}
+	textstyle 0
+      	textscale SZTEXT
+     	rect 16 112 256 16
+     	textalignx	 56	
+	textaligny	 16      
+	forecolor MP_TEXTCOLOR
+	visible 1 
+}
+
+itemDef {
+      	name fs
+	type ITEM_TYPE_YESNO
+      	text "         Fullscreen:"
+	style 0
+	cvar "r_fullscreen"
+	textstyle 0
+      	textscale SZTEXT
+     	rect 16 128 256 16
+     	textalignx	 56	
+	textaligny	 16      
+	forecolor MP_TEXTCOLOR
+	visible 1 
+}
+
+itemDef {
+      	name fs
+	type ITEM_TYPE_YESNO
+      	text "   Detail Texturing:"
+	style 0
+	cvar "r_detailtextures"
+	textstyle 0
+      	textscale SZTEXT
+     	rect 16 144 256 16
+     	textalignx	 56	
+	textaligny	 16      
+	forecolor MP_TEXTCOLOR
+	visible 1 
+}
+
+itemDef {
+      	name texdepth
+	type ITEM_TYPE_MULTI
+      	text "   Bloom resolution:"
+	style 0
+	cvar "r_bloom_sample_size"
+	cvarFloatList { "Low" 128 "Medium" 256 "High" 512 "Insane" 1024}
+	textstyle 0
+      	textscale SZTEXT
+     	rect 16 160 256 16
+     	textalignx	 56	
+	textaligny	 16      
+	forecolor MP_TEXTCOLOR
+	visible 1 
+}
+
+itemDef {
+      	name fs
+	type ITEM_TYPE_YESNO
+      	text " Anisotropic Filter:"
+	style 0
+	cvar "r_ext_texture_filter_anisotropic"
+	textstyle 0
+      	textscale SZTEXT
+     	rect 16 176 256 16
+     	textalignx	 56	
+	textaligny	 16      
+	forecolor MP_TEXTCOLOR
+	visible 1 
+}
+
+itemDef {
+      	name texdepth
+	type ITEM_TYPE_MULTI
+      	text "    Max Anisotropy:"
+	style 0
+	cvar "r_ext_max_anisotropy"
+	cvarFloatList { "1" 1 "2" 2 "4" 4 "8" 8 "16" 16}
+	textstyle 0
+      	textscale SZTEXT
+     	rect 16 192 256 16
+     	textalignx	 56	
+	textaligny	 16      
+	forecolor MP_TEXTCOLOR
+	visible 1 
+}
+
+
+
+itemDef {
+      	name notice
+      	text "These changes will require restarting."
+	style 0
+	textstyle 0
+      	textscale SZTEXT
+     	rect 16 16 64 34
+     	textalignx	 56	
+	textaligny	 16      
+	forecolor MP_TEXTCOLOR
+	visible 1 
+}

@@ -1,0 +1,341 @@
+onOpen { 
+	//		hide uistuff;
+		//	xtransition windowone 16 -480 300 400   16 32 300 400 1 20; 
+	//		xtransition windowtwo 316 480 300 400  316 32 300 400 1 20; 
+	}
+
+     opentransitionEnd
+      {
+    //    show uistuff;
+      }
+// -----------------------------------------------------------
+// TAB 0 - SELECTING A "LADDER"
+// -----------------------------------------------------------
+
+itemDef {
+      	name windowone
+	text	"Ladder Selection"
+	background MP_DIALOGBG
+	style 1
+	type 0
+	textstyle 2
+      	textscale 0.5
+//	cvarTest "ui_sptab"
+//	showCVar { "0" }
+	decoration
+   	rect 16 32 300 400
+     	textalignx	 32	
+	scralign ALIGN_CENTER
+	textaligny	 24
+	border 1
+	backcolor 	MP_DIALOGBGCOLOR
+	bordercolor   MP_BOX_BORDER
+	visible 1 
+}
+
+itemDef {
+      	name button1
+      	text "Deathmatch"
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	group uistuff
+	textstyle 2
+      	textscale 0.5
+   	rect 32 128 256 32
+     	textalignx	 32	
+	textaligny	 24
+//	cvarTest "ui_sptab"
+//	showCVar { "0" }
+	forecolor MP_TEXTCOLOR
+	mouseEnter { setcvar ui_tip "Deathmatch ladder." fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	action	{  	
+			close singleplayercampaign;
+			
+			open singleplayercampaign_ffa;
+			setcvar ui_gametype 0;	
+			setcvar ui_sptab 0;	// reset the tabs
+			 play MP_SND_SELECT;  
+		}
+	visible 1 
+}
+
+itemDef {
+      	name button1
+      	text "Capture the Flag"
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+	group uistuff
+      	textscale 0.5
+   	rect 32 160 256 32
+     	textalignx	 32	
+	textaligny	 24
+//	cvarTest "ui_sptab"
+//	showCVar { "0" }
+//	cvarTest "ui_sp_unlock_ctf"
+//	showCVar { "1" }
+//	cvarTest "ui_sptab"
+//	showCVar { "0" }
+	forecolor MP_TEXTCOLOR
+	mouseEnter { setcvar ui_tip "CTF ladder." fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	action	{  	
+			close singleplayercampaign;
+			
+			open singleplayercampaign_ctf;
+			setcvar ui_gametype 3;	
+			setcvar ui_sptab 0;	// reset the tabs
+			 play MP_SND_SELECT;  
+		}
+
+	visible 1 
+}
+
+itemDef {
+      	name button1
+      	text "Domination"
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+	group uistuff
+      	textscale 0.5
+   	rect 32 192 256 32
+     	textalignx	 32	
+	textaligny	 24
+//	cvarTest "ui_sptab"
+//	showCVar { "0" }
+//	cvarTest "ui_sp_unlock_dom"
+//	showCVar { "1" }
+//	cvarTest "ui_sptab"
+//	showCVar { "0" }
+	forecolor MP_TEXTCOLOR
+	mouseEnter { setcvar ui_tip "Dominaiton ladder." fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	action	{  	
+			close singleplayercampaign;
+			
+			open singleplayercampaign_dom;
+			setcvar ui_gametype 11;	
+			setcvar ui_sptab 0;	// reset the tabs
+			 play MP_SND_SELECT;  
+		}
+	visible 1 
+}
+
+
+itemDef {
+      	name button1
+      	text "Overload"
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	group uistuff
+	textstyle 2
+      	textscale 0.5
+   	rect 32 224 256 32
+     	textalignx	 32	
+	textaligny	 24
+//	cvarTest "ui_sptab"
+//	showCVar { "0" }
+//	cvarTest "ui_sp_unlock_over"
+//	showCVar { "1" }
+//	cvarTest "ui_sptab"
+//	showCVar { "0" }
+	forecolor MP_TEXTCOLOR
+	mouseEnter { setcvar ui_tip "CTF ladder." fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	action	{  	
+			close singleplayercampaign;
+			
+			open singleplayercampaign_over;
+			setcvar ui_gametype 5;	
+			setcvar ui_sptab 0;	// reset the tabs
+			 play MP_SND_SELECT;  
+		}
+	visible 1 
+}
+
+itemDef {
+      	name button1
+      	text "Tournament"
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+	group uistuff
+   	rect 32 256 256 32
+     	textalignx	 32	
+	textaligny	 24
+//	cvarTest "ui_sptab"
+//	showCVar { "0" }
+//	cvarTest "ui_sp_unlock_ctf"
+//	showCVar { "1" }
+//	cvarTest "ui_sptab"
+//	showCVar { "0" }
+	forecolor MP_TEXTCOLOR
+	mouseEnter { setcvar ui_tip "It's the final show down!!!!!!!!!!!" fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	action	{  	
+			close singleplayercampaign;
+			
+			open singleplayercampaign_tourney;
+			setcvar ui_gametype 1;	
+			setcvar ui_sptab 0;	// reset the tabs
+			 play MP_SND_SELECT;  
+		}
+	visible 1 
+}
+
+
+// player's info and brief stats
+
+itemDef {
+      	name windowtwo
+	text	"You"
+	background MP_DIALOGBG
+	style 1
+	type 0
+	textstyle 2
+      	textscale 0.5
+//	cvarTest "ui_sptab"
+//	showCVar { "0" }
+	decoration
+   	rect 316 32 300 400
+     	textalignx	 32	
+	textaligny	 24
+	border 1
+	backcolor 	MP_DIALOGBGCOLOR
+	bordercolor   MP_BOX_BORDER
+	visible 1 
+}
+
+
+// Show trophies
+
+
+itemDef {
+      	name trophygold
+	background "trophy_gold"
+	group uistuff
+	style 1
+	text ""
+	cvar "ui_sp_trophies_gold"
+	type ITEM_TYPE_NUMERICFIELD
+	textstyle 2
+      	textscale 0.33
+	decoration
+     	textalignx	 32	
+	textaligny	 24
+	mouseEnter { setcvar ui_tip "Golden trophies earned" fadein tooltip; } mouseExit { fadeout tooltip;} 	
+   	rect 342 352 32 32
+	backcolor 1 0.6 0.3 1
+	visible 1 
+}
+
+itemDef {
+      	name trophygold
+	background "trophy_gold"
+	group uistuff
+	style 1
+	text ""
+	cvar "ui_sp_trophies_silver"
+	type ITEM_TYPE_NUMERICFIELD
+	textstyle 2
+      	textscale 0.33
+	decoration
+     	textalignx	 32	
+	textaligny	 24
+	mouseEnter { setcvar ui_tip "Silver trophies earned" fadein tooltip; } mouseExit { fadeout tooltip;} 	
+   	rect 400 352 32 32
+	backcolor 0.7 0.7 0.74 1
+	visible 1 
+}
+
+itemDef {
+      	name trophygold
+	background "trophy_gold"
+	group uistuff
+	style 1
+	text ""
+	cvar "ui_sp_trophies_bronze"
+	type ITEM_TYPE_NUMERICFIELD
+	textstyle 2
+      	textscale 0.33
+	decoration
+     	textalignx	 32	
+	textaligny	 24
+	mouseEnter { setcvar ui_tip "Bronze trophies earned" fadein tooltip; } mouseExit { fadeout tooltip;} 	
+   	rect 458 352 32 32
+	backcolor 0.6 0.2 0.1 1
+	visible 1 
+}
+
+itemDef {
+      	name trophygold
+	background "trophy_gold"
+	group uistuff
+	style 1
+	text ""
+	cvar "ui_sp_trophies_platinum"
+	type ITEM_TYPE_NUMERICFIELD
+	textstyle 2
+      	textscale 0.33
+	decoration
+     	textalignx	 32	
+	textaligny	 24
+	mouseEnter { setcvar ui_tip "Platinum trophies earned" fadein tooltip; } mouseExit { fadeout tooltip;} 	
+   	rect 512 352 32 32
+	backcolor 0.6 0.7 0.9 1
+	visible 1 
+}
+
+itemDef	{
+	name themodel
+	ownerdraw UI_PLAYERPORTRAIT	
+	group uistuff
+   	//rect 330 0 300 480
+//	rect 16 32 340 480
+	rect 382 64 180 280
+	style 1
+	decoration 
+	backcolor 0.6 0.7 0.9 0.2
+	visible 1
+	}
+
+
+
+// -----------------------------------------------------------
+// TAB 1 - DM MAPS
+// -----------------------------------------------------------
+
+// always have this button available
+
+itemDef {
+      	name button1
+      	text "Cancel"
+	background MP_WIDEBUTTONBG
+	group uistuff
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 32 384 256 32
+     	textalignx	 32	
+	textaligny	 24
+
+	forecolor MP_TEXTCOLOR
+	mouseEnter { setcvar ui_tip "Go back to main menu." fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	action	{  	
+			close singleplayercampaign;
+			
+			open mainmenu;
+	
+			setcvar ui_sptab 0;	// reset the tabs
+			 play MP_SND_SELECT;  
+		}
+	visible 1 
+}
+
+
+
+

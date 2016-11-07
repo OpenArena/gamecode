@@ -1,0 +1,275 @@
+/*
+===========================================================================
+Copyright (C) 2015 Open Arena Team
+
+This file is part of Open Arena.
+
+Open Arena is free software; you can redistribute it
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the License,
+or (at your option) any later version.
+
+Open Arena is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Foobar; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+===========================================================================
+*/
+//
+// MAIN - Console - for console systems.
+//		This menu will have no buttons and will automatically advance to the main menu. 
+//		It is one of those 'annoying copyright screens'
+//
+
+#include "ui/menudef.h"
+#define	GOBACKTOMAIN  "mainmenu"
+{
+  assetGlobalDef {
+    	smallFont "gfx/2d/bigchars" 	SMALLFONTSIZE
+    	font "gfx/2d/bigchars" 		MEDIUMFONTSIZE				
+    	bigFont "gfx/2d/bigchars" 	LARGEFONTSIZE				
+	cursor "ui/assets/cursor"			
+	itemFocusSound MP_SND_HOVER		
+	shadowColor 0.0 0.0 0.0 0.25	
+	focuscolor MP_FOCUSCOLOR
+   // 	fadeClamp 1.0	
+//	fadeCycle 1	
+//	fadeAmount 0.1
+  	}
+	
+
+menuDef {
+    	name "main"
+	background "black"
+    	fullScreen 1				
+	rect -1000 0 2000 480
+    	visible MENU_TRUE
+    	forecolor MP_FOCUSCOLOR			
+	focuscolor MP_TEXTCOLOR
+			
+
+ 	onEsc
+      { 
+	playLooped MP_MENUMUSIC
+       open mainmenu;close main
+      }
+	
+	onOpen { //open mainmenu;
+		setcvar timedemo 0; // always turn this off when entering the menu, may be an inconvenience to powerusers though
+
+		
+			//close main;
+			
+			//clearAlpha faderone;
+			clearAlpha fadey;
+		//	setitemcolor faderone backcolor 0 0 0 1 ; 
+			setitemcolor fadey backcolor 0 0 0 0.1 ; 
+			fadeout faderone;
+			fadein fadey;
+			xtransition loadingbit1 0 0 255 1 0 0 640 1 4 100 ;
+		}
+
+     opentransitionEnd
+      {
+		playLooped MP_MENUMUSIC
+  	    open mainmenu;close main
+      }
+
+
+/*					
+itemDef {
+      	name button1
+      	text "Start"
+	background "azurebuttonlong"
+	style 1
+	action	{ 	open mainmenu;close main	}
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 160 320 256 32
+     	textalignx	 32	
+	textaligny	 24
+	backcolor MP_BUTTONBGCOLOR
+	forecolor MP_TEXTCOLOR
+
+	visible 1 
+}
+*/
+#include "ui/common/symbol2.panel"	
+
+
+itemDef {
+      	name copyright
+	text "OpenArena EX Edition\n\nCopyright(C)2015 OA Team"
+	style 1
+	type 0
+	textstyle 3
+      	textscale 0.5
+	autowrapped
+	forecolor 0.7 0.7 0.7 1
+	decoration
+	textalign 1
+   	rect 300 350 400 330
+     	textalignx	0	
+	textaligny	 0
+	visible 1 
+}
+
+
+
+/*					
+
+itemDef {
+      	name title
+	text "fa"
+
+	style 1
+	type 0
+	textstyle 2
+      	textscale 2
+	decoration
+   	rect 32 124 50 50
+     	textalignx	 12	
+	textaligny	 16
+	visible 1 
+}
+itemDef {
+      	name copyright
+	text "Copyright (C)2005-2015 OA Team."
+	style 1
+	type 0
+	textstyle 2
+      	textscale 0.27
+	autowrapped
+	forecolor 0.7 0.7 0.7 1
+	decoration
+   	rect 200 250 400 330
+     	textalignx	 12	
+	textaligny	 16
+	visible 1 
+}
+
+itemDef {
+      	name gplblurb
+	text "This program is licensed under the GNU General Public License version 2. Read COPYING for more details."
+	style 1
+	type 0
+	textstyle 2
+      	textscale 0.27
+	autowrapped
+	forecolor 0.7 0.7 0.7 1
+	decoration
+   	rect 100 350 400 330
+     	textalignx	 12	
+	textaligny	 16
+	visible 1 
+}
+
+itemDef {
+      	name copyrightlibraries
+	text "Portions related to third-party libraries are Copyright (C)2005-2011 libSDL, (C)2015 libxmp, (C)1991-2015 International JPEG Group, (C)2000 Xiphorus"
+	style 1
+	type 0
+	textstyle 2
+      	textscale 0.23
+	autowrapped
+	forecolor 0.7 0.7 0.7 1
+	decoration
+   	rect 40 390 500 330
+     	textalignx	 12	
+	textaligny	 16
+	visible 1 
+}
+
+
+itemDef {
+      	name copyrightg
+	text "C"
+	style 1
+	ownerdraw UI_MENUMAPNAME
+	type 0
+	textstyle 2
+      	textscale 0.27
+	autowrapped
+	forecolor 0.4 0.4 0.5 1
+	decoration
+   	rect 0 350 639 130
+     	textalignx	 12	
+	textaligny	 16
+	visible 1 
+}
+
+
+// Fady Stuf
+
+itemDef {
+      	name faderone
+	style WINDOW_STYLE_FILLED
+//	action	{ 	open mainmenu;close main	}
+   	rect 0 0 640 480
+     	textalignx	 32	
+	textaligny	 24
+	backcolor 0 0 0 1
+	forecolor 0 0 0 1
+	decoration
+	visible 1 
+}
+itemDef {
+      	name loadingbit1
+	style 1
+	type 0
+	textstyle 2
+      	textscale 0.5
+   	rect 0 0 1 1
+     	textalignx	 32	
+	textaligny	 24
+	backcolor 0 0 0 0
+	forecolor 0 0 0 0
+
+	visible 1 
+}
+*/
+itemDef {
+      	name loadingbit1
+	style 1
+	type 0
+	textstyle 2
+      	textscale 0.5
+   	rect 0 0 1 1
+     	textalignx	 32	
+	textaligny	 24
+	backcolor 0 0 0 0
+	forecolor 0 0 0 0
+
+	visible 1 
+}
+itemDef {
+      	name fadey
+	style WINDOW_STYLE_FILLED
+	type 0
+	textstyle 2
+      	textscale 0.5
+   	rect -640 0 1280 480
+     	textalignx	 32	
+	textaligny	 24
+	backcolor 0 0 0 0.2
+	visible 1 
+	decoration
+}
+
+
+}
+
+}
+}
+}
+}
+
+
+
+
+}

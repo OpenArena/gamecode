@@ -1,0 +1,396 @@
+
+
+
+
+
+
+// -----------------------------------------------------------
+// TAB 0 - Profile
+// -----------------------------------------------------------
+
+itemDef {
+      	name videofield
+	text	"Profile"
+	background MP_DIALOGBG
+	style 1
+	type 0
+	textstyle 2
+      	textscale 0.5
+	cvarTest "ui_menutab"
+	showCVar { "0" }
+	decoration
+   	rect 16 32 600 400
+     	textalignx	 32	
+	textaligny	 24
+	border 1
+	bordercolor   MP_BOX_BORDER
+	backcolor 	MP_DIALOGBGCOLOR
+	visible 1 
+}
+/*
+itemDef {
+      	name button1
+      	text ""
+	background "azurebuttoncombo"
+	style 1
+	type ITEM_TYPE_MULTI
+	cvar "ui_q3model"
+	cvarFloatList { "Team Skin" 0 "Match Skin" 1 }
+	textstyle 2
+      	textscale 0.5
+   	rect 32 108 256 32
+     	textalignx	 8	
+	textaligny	 26
+	backcolor MP_BUTTON2BGCOLOR
+	forecolor MP_TEXTCOLOR
+	mouseEnter { setcvar ui_tip TIP_PROFILE_TEAMMODEL fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	visible 1 
+	cvarTest "ui_menutab"
+	showCVar { "0" }
+}
+*/
+
+itemDef	{
+	name playerlist
+   	rect 32 260 580 80
+	type ITEM_TYPE_LISTBOX
+	style WINDOW_STYLE_FILLED
+	elementwidth 64
+	elementheight 64
+
+	textscale .33
+	elementtype LISTBOX_IMAGE
+	feeder FEEDER_Q3HEADS
+	textalign 0
+	background MP_DIALOGBG
+	backcolor 	MP_DIALOGBGCOLOR
+	textaligny 16
+	border 1
+	bordercolor   MP_BOX_BORDER
+	forecolor     MP_BOX_FORE
+	backcolor     MP_BOX_BACK
+	outlinecolor  MP_BOX_OUTLINE
+	visible 1
+	columns 1 1 190 25
+	horizontalscroll
+	cvarTest "ui_menutab"
+	showCVar { "0" }
+	mouseEnter { setcvar ui_tip TIP_PROFILE_PLAYERLIST fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	}
+
+/*
+itemDef	{
+	name playerlist2
+   	rect 32 140 64 132
+	type ITEM_TYPE_LISTBOX
+	style WINDOW_STYLE_FILLED
+	elementwidth 32
+	elementheight 32
+	textscale .33
+	elementtype 1
+	feeder FEEDER_HEADS
+	textalign 0
+	background MP_DIALOGBG
+	backcolor 	MP_DIALOGBGCOLOR
+	textaligny 16
+	border 1
+	bordercolor   MP_BOX_BORDER
+	forecolor     MP_BOX_FORE
+	backcolor     MP_BOX_BACK
+	outlinecolor  MP_BOX_OUTLINE
+	visible 1
+	columns 1 2 190 25
+	cvarTest "ui_menutab"
+	showCVar { "0" }
+	cvarTest "ui_q3model"
+	hideCVar { "1" }
+
+	mouseEnter { setcvar ui_tip TIP_PROFILE_HEADLIST fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	}
+
+*/
+
+
+
+// Viewing the player model will be in another tab, for memory saving!!
+
+
+
+itemDef {
+      	name playersname
+      	text "Name"
+	background "azurebuttoncombo"
+	style 1
+	type 0
+	textstyle 2
+      	textscale 0.5
+   	rect 32 100 256 64
+	backcolor MP_BUTTON2BGCOLOR
+     	textalignx	16	
+	decoration
+	textaligny	 26
+	forecolor MP_TEXTCOLOR
+	cvarTest "ui_menutab"
+	showCVar { "0" }
+	visible 1 
+}
+itemDef {
+      	name settintheplayername
+	text ""
+	cvar "ui_Name"
+	style 0
+	type ITEM_TYPE_EDITFIELD
+	maxChars 40
+	maxPaintChars 10
+	textstyle 2
+      	textscale 0.5
+   	rect 32 132 256 32
+     	textalignx	 32	
+	textaligny	 26
+	forecolor MP_TEXTCOLOR
+	mouseEnter { setcvar ui_tip TIP_PROFILE_NAME fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	visible 1 
+	cvarTest "ui_menutab"
+	showCVar { "0" }
+}
+
+
+
+// -----------------------------------------------------------
+// TAB 1 - View character
+// -----------------------------------------------------------
+
+
+
+itemDef {
+      	name videofield
+	text	"View character"
+	background MP_DIALOGBG
+	backcolor 	MP_DIALOGBGCOLOR
+	style 1
+	type 0
+	textstyle 2
+      	textscale 0.5
+	cvarTest "ui_menutab"
+	showCVar { "1" }
+	decoration
+   	rect 16 32 600 400
+     	textalignx	 32	
+	textaligny	 24
+	border 1
+	bordercolor   MP_BOX_BORDER
+	visible 1 
+}
+
+
+itemDef	{
+	name themodel
+	ownerdraw UI_PLAYERMODEL	// playermodel2 should have less fov, and pickable for angles...
+   	//rect 330 0 300 480
+//	rect 16 32 340 480
+	rect 16 32 600 400
+	cvarTest "ui_menutab"
+	showCVar { "1" }
+	style 0
+	decoration 
+	visible 1
+	}
+
+/*
+itemDef {
+      	name camerga
+      	text "Camera "
+	type ITEM_TYPE_MULTI
+
+	cvar "ui_teamArenaFirstRun"
+	//cvarFloatList { "Overall" 0 "Side" 1 "Back" 2 "Backside" 3 "Crotch" 4 "Torso" 5 "Head" 6 }
+
+	background MP_FATBUTTONBG
+
+	style 1
+	textstyle 6
+      	textscale 0.333
+	cvarTest "ui_menutab"
+	showCVar { "1" }
+   	rect 288 364 256 32
+     	textalignx	32	
+	textaligny	 26
+	forecolor MP_TEXTCOLOR
+	//mouseEnter { setcvar ui_tip TIP_PROFILE_CAMERA fadein tooltip; } mouseExit { fadeout tooltip;}  
+	visible
+}
+*/
+itemDef {
+      	name fraglimt
+      	text "Camera "
+	type ITEM_TYPE_MULTI
+	cvar "ui_playerview"
+
+	cvarFloatList { "Overall" 4 "Torso" 3 "Head" 2 "Side" 1 "Back" 0}
+	background MP_FATBUTTONBG
+	style 1
+	textstyle 6
+      	textscale 0.333
+	cvarTest "ui_menutab"
+	showCVar { "1" }
+   	rect 32 288 256 32
+     	textalignx	32	
+	textaligny	 26
+	forecolor MP_TEXTCOLOR
+	mouseEnter { setcvar ui_tip TIP_PROFILE_CAMERA fadein tooltip; } mouseExit { fadeout tooltip;}  
+	visible 1 
+}
+// -----------------------------------------------------------
+// TAB 2 - Stats page 
+// -----------------------------------------------------------
+
+itemDef {
+      	name statsfield
+	text	"Statistics"
+	background MP_DIALOGBG
+	backcolor 	MP_DIALOGBGCOLOR
+	style 1
+	type 0
+	textstyle 2
+      	textscale 0.5
+	cvarTest "ui_menutab"
+	showCVar { "2" }
+	decoration
+   	rect 16 32 600 400
+     	textalignx	 32	
+	textaligny	 24
+	border 1
+	bordercolor   MP_BOX_BORDER
+	visible 1 
+
+}
+
+
+
+
+
+// -----------------------------------------------------------
+// TAB X - ALL
+// -----------------------------------------------------------
+
+
+
+itemDef {
+      	name tab1
+      	text "Info"
+	background "azuretablong"
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.33
+   	rect 16 16 128 16
+	cvarTest "ui_menutab"
+	hideCVar { "0" }
+     	textalignx	 16	
+	textaligny	 16
+	forecolor MP_TEXTCOLOR
+
+
+	action { setcvar ui_menutab 0;  play MP_SND_SELECT;   }
+	visible 1 
+}
+
+itemDef {
+      	name tab2
+      	text "View Model"
+	background "azuretablong"
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.33
+   	rect 144 16 128 16
+	cvarTest "ui_menutab"
+	hideCVar { "1" }
+     	textalignx	 16	
+	textaligny	 16
+	forecolor MP_TEXTCOLOR
+
+	action { setcvar ui_menutab 1;  play MP_SND_SELECT;  }
+	visible 1 
+}
+
+itemDef {
+      	name tab3
+      	text "Stats"
+	background "azuretablong"
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.33
+   	rect 272 16 128 16
+	cvarTest "ui_menutab"
+	hideCVar { "2" }
+     	textalignx	 16	
+	textaligny	 16
+	forecolor MP_TEXTCOLOR
+
+	action { setcvar ui_menutab 2;  play MP_SND_SELECT;  }
+	visible 1 
+}
+
+
+
+
+// pressed tabs
+
+
+itemDef {
+      	name tab1
+      	text "Info"
+	background "azureuntablong"
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.33
+   	rect 16 16 128 16
+	cvarTest "ui_menutab"
+	showCVar { "0" }
+     	textalignx	 16	
+	textaligny	 16
+	decoration
+
+	visible 1 
+}
+
+itemDef {
+      	name tab2
+      	text "View Model"
+	background "azureuntablong"
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.33
+   	rect 144 16 128 16
+	cvarTest "ui_menutab"
+	showCVar { "1" }
+	decoration
+     	textalignx	 16	
+	textaligny	 16
+
+	visible 1 
+}
+
+itemDef {
+      	name tab3
+      	text "Stats"
+	background "azureuntablong"
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.33
+   	rect 272 16 128 16
+	cvarTest "ui_menutab"
+	showCVar { "2" }
+	decoration
+     	textalignx	 16	
+	textaligny	 16
+
+	visible 1 
+}
+
+

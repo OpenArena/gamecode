@@ -1,0 +1,28 @@
+
+itemDef 
+      { 
+	name keybinder 
+	type ITEM_TYPE_BIND 
+	style 1
+      //  background MP_FATBUTTONBG
+	backcolor MP_BUTTONBGCOLOR
+        visible 1
+        noFocusColor 0
+
+        textalign ITEM_ALIGN_CENTER textscale 0.25
+
+   	
+
+     	textalignx	0	
+	textaligny	 12
+        textalign ITEM_ALIGN_RIGHT
+	textstyle 6
+	forecolor MP_TEXTCOLOR
+	mouseenter { show keybindstat }	mouseexit { hide keybindstat }
+
+
+	rect KEYBINDCENTER KEYBINDDOWN 256 16
+	cvarTest "ui_menutab" showCVar { KEYBINDCATEGORY }
+        text BINDTITLE
+	cvar THEACTION
+}

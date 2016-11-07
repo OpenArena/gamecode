@@ -1,0 +1,1428 @@
+
+
+
+// The "Simple" consolified game starting interface for easy selection
+// of setting up the game options and the like.
+// Designed for controllers really. Apologies if this is "too dumb"
+// but i'd like to make the interface less daunting by default.
+
+	onEsc	{  	
+			close playmaker;
+			
+			open mainmenu;
+	
+			setcvar ui_menutab 0;	// reset the tabs
+			 play MP_SND_BACK;  
+		}
+
+
+// -----------------------------------------------------------
+// TAB 0 - GAMETYPE MODES
+// -----------------------------------------------------------
+
+itemDef {
+      	name dmgamefield
+	text	"Free for All Modes"
+	background MP_DIALOGBG
+	backcolor 	MP_DIALOGBGCOLOR
+	style 1
+	type 0
+	textstyle 2
+      	textscale 0.5
+	cvarTest "ui_menutab"
+	showCVar { "0" }
+	decoration
+   	rect 16 32 300 400
+     	textalignx	 32	
+	textaligny	 24
+	border 1
+	bordercolor   MP_BOX_BORDER
+	visible 1 
+}
+
+itemDef {
+      	name teamgamefield
+	text	"Teamplay Modes"
+	background MP_DIALOGBG
+	backcolor 	MP_DIALOGBGCOLOR
+	style 1
+	type 0
+	textstyle 2
+      	textscale 0.5
+	decoration
+	cvarTest "ui_menutab"
+	showCVar { "0" }
+   	rect 316 32 300 400
+     	textalignx	 32	
+	textaligny	 24
+	border 1
+	bordercolor   MP_BOX_BORDER
+	visible 1 
+}
+
+
+
+itemDef {
+      	name button1
+      	text "Deathmatch"
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 32 96 256 32
+     	textalignx	 32	
+	textaligny	 24
+	cvarTest "ui_menutab"
+	showCVar { "0" }
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+	mouseEnter { setcvar ui_tip TIP_FFA fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	action	{ 	setcvar ui_menutab 1;	
+			 play MP_SND_SELECT;  
+			setcvar ui_netgametype 0;	}
+	visible 1 
+}
+
+
+
+itemDef {
+      	name ffa2
+      	text "Tournament"
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 32 128 256 32
+     	textalignx	 32	
+	textaligny	 24
+	cvarTest "ui_menutab"
+	showCVar { "0" }
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+	mouseEnter { setcvar ui_tip TIP_TOURNAMENT fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	action	{ 	setcvar ui_menutab 1;	
+			setcvar ui_netgametype 1;	
+			play MP_SND_SELECT;  
+				}
+	visible 1 
+}
+
+itemDef {
+      	name ffa3
+      	text "Last Man Standing"
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 32 160 256 32
+     	textalignx	 32	
+	textaligny	 24
+	cvarTest "ui_menutab"
+	showCVar { "0" }
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+	mouseEnter { setcvar ui_tip "Players must survive. Who lives last wins." fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	action	{ 	setcvar ui_menutab 1;	 play MP_SND_SELECT;  
+			setcvar ui_netgametype 10;	}
+	visible 1 
+}
+
+
+itemDef {
+      	name ffa4
+      	text "Possession"
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 32 192 256 32
+     	textalignx	 32	
+	textaligny	 24
+	cvarTest "ui_menutab"
+	showCVar { "0" }
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+	mouseEnter { setcvar ui_tip "Hold the neutral flag the longest to win." fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	action	{ 	setcvar ui_menutab 1;	 play MP_SND_SELECT;  
+			setcvar ui_netgametype 13;	}
+	visible 1 
+}
+
+
+// team types
+
+
+itemDef {
+      	name button1
+      	text "Team DM"
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 332 96 256 32
+     	textalignx	 32	
+	textaligny	 24
+	cvarTest "ui_menutab"
+	showCVar { "0" }
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+
+	action	{ 	setcvar ui_menutab 1;	 play MP_SND_SELECT;  
+			setcvar ui_netgametype 3;	}
+	visible 1 
+}
+
+
+
+itemDef {
+      	name ffa2
+      	text "Capture the Flag"
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 332 128 256 32
+     	textalignx	 32	
+	textaligny	 24
+	cvarTest "ui_menutab"
+	showCVar { "0" }
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+	mouseEnter { setcvar ui_tip "Team must protect their flag and take enemy's." fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	action	{ 	setcvar ui_menutab 1;	 play MP_SND_SELECT;  
+			setcvar ui_netgametype 4;	}
+	visible 1 
+}
+
+itemDef {
+      	name ffa3
+      	text "One Flag"
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 332 160 256 32
+     	textalignx	 32	
+	textaligny	 24
+	cvarTest "ui_menutab"
+	showCVar { "0" }
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+	mouseEnter { setcvar ui_tip "Teams must take neutral flag to their base." fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	action	{ 	setcvar ui_menutab 1;	 play MP_SND_SELECT;  
+			setcvar ui_netgametype 5;	}
+	visible 1 
+}
+
+
+itemDef {
+      	name ffa3
+      	text "Overload"
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 332 192 256 32
+     	textalignx	 32	
+	textaligny	 24
+	cvarTest "ui_menutab"
+	showCVar { "0" }
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+	mouseEnter { setcvar ui_tip "Cores in each base must be destroyed." fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	action	{ 	setcvar ui_menutab 1;	 play MP_SND_SELECT;  
+			setcvar ui_netgametype 6;	}
+	visible 1 
+}
+
+itemDef {
+      	name ffa3
+      	text "Harvester"
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 332 224 256 32
+     	textalignx	 32	
+	textaligny	 24
+	cvarTest "ui_menutab"
+	showCVar { "0" }
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+	mouseEnter { setcvar ui_tip "Players must kill and collect their orbs." fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	action	{ 	setcvar ui_menutab 1;	 play MP_SND_SELECT;  
+			setcvar ui_netgametype 7;	}
+	visible 1 
+}
+
+itemDef {
+      	name ffa3
+      	text "Elimination"
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 332 256 256 32
+     	textalignx	 32	
+	textaligny	 24
+	cvarTest "ui_menutab"
+	showCVar { "0" }
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+	mouseEnter { setcvar ui_tip "Teams must survive to win." fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	action	{ 	setcvar ui_menutab 1;	 play MP_SND_SELECT;  
+			setcvar ui_netgametype 8;	}
+	visible 1 
+}
+
+itemDef {
+      	name ffa3
+      	text "CTF Elimination"
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 332 288 256 32
+     	textalignx	 32	
+	textaligny	 24
+	cvarTest "ui_menutab"
+	showCVar { "0" }
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+	mouseEnter { setcvar ui_tip "Teams must capture or sruvive to win." fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	action	{ 	setcvar ui_menutab 1;	 play MP_SND_SELECT;  
+			setcvar ui_netgametype 9;	}
+	visible 1 
+}
+
+itemDef {
+      	name ffa3
+      	text "Double Domination"
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 332 320 256 32
+     	textalignx	 32	
+	textaligny	 24
+	cvarTest "ui_menutab"
+	showCVar { "0" }
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+	mouseEnter { setcvar ui_tip "A team must control two points for score." fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	action	{ 	setcvar ui_menutab 1;	 play MP_SND_SELECT;  
+			setcvar ui_netgametype 11;	}
+	visible 1 
+}
+
+itemDef {
+      	name ffa3
+      	text "Domination"
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 332 352 256 32
+     	textalignx	 32	
+	textaligny	 24
+	cvarTest "ui_menutab"
+	showCVar { "0" }
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+	mouseEnter { setcvar ui_tip "Score is raised depending on points controlled." fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	action	{ 	setcvar ui_menutab 1;	 play MP_SND_SELECT;  
+			setcvar ui_netgametype 12;	}
+	visible 1 
+}
+
+
+// -----------------------------------------------------------
+// TAB 1 - MAP SELECTION
+// -----------------------------------------------------------
+
+itemDef {
+      	name mapsfield
+	text	"Maps"
+	background MP_DIALOGBG
+	backcolor 	MP_DIALOGBGCOLOR
+	style 1
+	type 0
+	textstyle 2
+      	textscale 0.5
+	cvarTest "ui_menutab"
+	showCVar { "1" }
+	decoration
+   	rect 16 32 600 400
+     	textalignx	 32	
+	textaligny	 24
+	border 1
+	bordercolor   MP_BOX_BORDER
+	visible 1 
+}
+
+itemDef	{
+	name maplist
+   	rect 32 72 256 300
+	//type ITEM_TYPE_LISTBOX
+	type ITEM_TYPE_LISTBOX
+	style WINDOW_STYLE_FILLED
+	elementwidth 32
+	elementheight 18
+	textscale .333
+	elementtype LISTBOX_TEXT
+	feeder FEEDER_ALLMAPS
+	textalign 0
+	cvarTest "ui_menutab"
+	showCVar { "1" }
+	background "listbg_azure"
+	textaligny 16
+	border 1
+	bordercolor   MP_BOX_BORDER
+	forecolor     MP_BOX_FORE
+	backcolor     MP_BOX_BACK
+	outlinecolor  MP_BOX_OUTLINE
+	visible 1
+	mouseEnter { setcvar ui_tip "Select a map. TAB exits the list." fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	columns 1 2 190 25
+	}
+
+itemDef {
+      	name mappreview
+	ownerdraw UI_STARTMAPCINEMATIC
+	textstyle 2
+      	textscale 0.5
+	cvarTest "ui_menutab"
+	showCVar { "1" }
+	decoration
+   	rect 300 72 296 222
+     	textalignx	0	
+	textaligny	0
+	border 1
+	bordercolor   MP_BOX_BORDER
+	visible 1 
+}
+
+itemDef {
+      	name button1
+      	text "Close"
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 128 448 256 32
+     	textalignx	 32	
+	textaligny	 24
+	cvarTest "ui_menutab"
+	showCVar { "9" }
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+	mouseEnter { setcvar ui_tip "Change your mind?" fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	action	{  setcvar ui_menutab 1;	// reset the tabs
+		}
+	visible 1 
+}
+
+itemDef {
+      	name buttontonext
+      	text "Next"
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 332 384 256 32
+     	textalignx	 32	
+	textaligny	 24
+	cvarTest "ui_menutab"
+	showCVar { "1" }
+
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+	mouseEnter { setcvar ui_tip "Set up the rules." fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	action	{  	setcvar ui_menutab 2; 
+			 play MP_SND_SELECT;  
+		}
+	visible 1 
+}
+
+// -----------------------------------------------------------
+// TAB 2 - RULES SELECTION
+// -----------------------------------------------------------
+
+itemDef {
+      	name mapsfield
+	text	"Rules"
+	background MP_DIALOGBG
+	backcolor 	MP_DIALOGBGCOLOR
+	style 1
+	type 0
+	textstyle 2
+      	textscale 0.5
+	cvarTest "ui_menutab"
+	showCVar { "2" }
+	decoration
+   	rect 16 32 600 400
+     	textalignx	 32	
+	textaligny	 24
+	border 1
+	bordercolor   MP_BOX_BORDER
+	visible 1 
+}
+
+itemDef {
+      	name fraglimt
+      	text "Frag Limit          "
+	cvar "fraglimit"
+	type ITEM_TYPE_NUMERICFIELD
+	maxchars 3
+	background MP_FATBUTTONBG
+	style 1
+	textstyle 6
+      	textscale 0.333
+	cvarTest "ui_menutab"
+	showCVar { "2" }
+   	rect 32 64 256 64
+     	textalignx	32	
+	textaligny	 26
+	forecolor MP_TEXTCOLOR
+	mouseEnter { setcvar ui_tip "When this is hit, the match ends." fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	visible 1 
+}
+
+itemDef {
+      	name vampiret
+      	text "Vampire Damage   "
+	cvar "g_vampire"
+	type ITEM_TYPE_NUMERICFIELD
+	maxchars 3
+	background MP_FATBUTTONBG
+	style 1
+	textstyle 6
+      	textscale 0.333
+	cvarTest "ui_menutab"
+	showCVar { "2" }
+   	rect 332 64 256 64
+     	textalignx	32	
+	textaligny	 26
+	forecolor MP_TEXTCOLOR
+	mouseEnter { setcvar ui_tip "How much life is obtained on damaging." fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	visible 1 
+}
+
+itemDef {
+      	name timelimt
+      	text "Time Limit          "
+	background MP_FATBUTTONBG
+	cvar "timelimit"
+	type ITEM_TYPE_NUMERICFIELD
+	maxchars 3
+	style 1
+
+	textstyle 6
+      	textscale 0.333
+	cvarTest "ui_menutab"
+	showCVar { "2" }
+   	rect 32 128 256 64
+     	textalignx	32	
+	textaligny	 26
+	forecolor MP_TEXTCOLOR
+	mouseEnter { setcvar ui_tip "Amount of minutes allowed in the match." fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	visible 1 
+}
+
+
+itemDef {
+      	name instantlygibonimpactofarail
+      	text "Instant Gib         "
+	background MP_FATBUTTONBG
+	cvar "g_instantgib"
+	type ITEM_TYPE_YESNO
+	maxchars 3
+	style 1
+
+	textstyle 6
+      	textscale 0.333
+	cvarTest "ui_menutab"
+	showCVar { "2" }
+   	rect 332 128 256 64
+     	textalignx	32	
+	textaligny	 26
+	forecolor MP_TEXTCOLOR
+	mouseEnter { setcvar ui_tip "Players have instant death railguns" fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	visible 1 
+}
+
+
+itemDef {
+      	name capturelimt
+      	text "Capture Limit     "
+	background MP_FATBUTTONBG
+	cvar "capturelimit"
+	type ITEM_TYPE_NUMERICFIELD
+	ownerdrawflag UI_SHOW_NETANYTEAMGAME  
+	maxchars 3
+	style 1
+	textstyle 6
+      	textscale 0.333
+	cvarTest "ui_menutab"
+	showCVar { "2" }
+   	rect 32 192 256 64
+     	textalignx	32	
+	textaligny	 26
+	forecolor MP_TEXTCOLOR
+	mouseEnter { setcvar ui_tip "How many captures needed for victory" fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	visible 1 
+}
+
+
+itemDef {
+      	name capturelimt
+      	text "Rockets Only      "
+	background MP_FATBUTTONBG
+	cvar "g_rockets"
+	type ITEM_TYPE_YESNO
+	maxchars 3
+	style 1
+	textstyle 6
+      	textscale 0.333
+	cvarTest "ui_menutab"
+	showCVar { "2" }
+   	rect 332 192 256 64
+     	textalignx	32	
+	textaligny	 26
+	forecolor MP_TEXTCOLOR
+	mouseEnter { setcvar ui_tip "All players have rocket launcher." fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	visible 1 
+}
+
+
+
+itemDef {
+      	name puresever
+      	text "Pure Server       "
+	cvar "sv_pure"
+	background MP_FATBUTTONBG
+	style 1
+	type ITEM_TYPE_YESNO
+	textstyle 6
+      	textscale 0.333
+	cvarTest "ui_menutab"
+	showCVar { "2" }
+   	rect 32 256 256 64
+	
+     	textalignx	32	
+	textaligny	 26
+	forecolor MP_TEXTCOLOR
+	mouseEnter { setcvar ui_tip "If pure, extra files on players are disabled." fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	visible 1 
+}
+
+itemDef {
+      	name ffsever
+      	text "Friendly Fire       "
+	cvar "g_friendlyfire"
+	background MP_FATBUTTONBG
+	style 1
+	type ITEM_TYPE_YESNO
+	textstyle 6
+      	textscale 0.333
+	cvarTest "ui_menutab"
+	showCVar { "2" }
+   	rect 332 256 256 64
+	
+     	textalignx	32	
+	textaligny	 26
+	forecolor MP_TEXTCOLOR
+	mouseEnter { setcvar ui_tip "Percentage of friendly fire returned to attacker" fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	visible 1 
+}
+
+itemDef {
+      	name dedsever
+      	text ""
+	type ITEM_TYPE_MULTI
+	cvar "ui_dedicated"
+	background MP_FATBUTTONBG
+	style 1
+
+	cvarFloatList { "Listen Server" 0 "Dedicated LAN Server" 1 "Dedicated Internet Server" 2 }
+	textstyle 6
+      	textscale 0.333
+	cvarTest "ui_menutab"
+	showCVar { "2" }
+   	rect 32 320 256 64
+	
+     	textalignx	16	
+	textaligny	 26
+	forecolor MP_TEXTCOLOR
+	mouseEnter { setcvar ui_tip "Role of server. If YOU want to play, choose Listen" fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	visible 1 
+}
+
+
+itemDef {
+      	name forcejoin
+      	text "Auto Join           "
+	type ITEM_TYPE_YESNO
+	cvar "g_teamautojoin"
+	background MP_FATBUTTONBG
+	style 1
+	textstyle 6
+      	textscale 0.333
+	cvarTest "ui_menutab"
+	showCVar { "2" }
+   	rect 332 320 256 64
+	
+     	textalignx	32	
+	textaligny	 26
+	forecolor MP_TEXTCOLOR
+	mouseEnter { setcvar ui_tip "Force players to join teams" fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	visible 1 
+}
+
+itemDef {
+      	name buttontonext
+      	text "Next"
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 332 384 256 32
+     	textalignx	 32	
+	textaligny	 24
+	cvarTest "ui_menutab"
+	showCVar { "2" }
+	mouseEnter { setcvar ui_tip "Configure slots" fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+	action	{  	setcvar ui_menutab 3; 
+			 play MP_SND_SELECT;  
+		}
+	visible 1 
+}
+
+
+// -----------------------------------------------------------
+// TAB 3 - BOTS SELECTION
+// -----------------------------------------------------------
+
+// FFA Bots...
+itemDef {
+      	name mapsfield
+	text	"Slots and Bots"
+	background MP_DIALOGBG
+	backcolor 	MP_DIALOGBGCOLOR
+	style 1
+	type 0
+	textstyle 2
+	ownerdrawflag UI_SHOW_NETANYNONTEAMGAME 
+      	textscale 0.5
+	cvarTest "ui_menutab"
+	showCVar { "3" }
+	decoration
+   	rect 16 32 600 400
+     	textalignx	 32	
+	textaligny	 24
+	border 1
+	bordercolor   MP_BOX_BORDER
+	visible 1 
+}
+
+itemDef {
+      	name teenfield
+	text	"Blue Team"
+	background "$whiteimage"
+	ownerdrawflag UI_SHOW_NETANYTEAMGAME  
+	//ownerdraw UI_BLUETEAMNAME
+	style 1
+	type 0
+	backcolor 0.2 0.2 0.6 0.4
+	textstyle 2
+      	textscale 0.5
+	cvarTest "ui_menutab"
+	showCVar { "3" }
+	decoration
+   	rect 16 32 300 400
+     	textalignx	 32	
+	textaligny	 24
+	border 1
+	bordercolor   MP_BOX_BORDER
+	visible 1 
+}
+
+itemDef {
+      	name teenfield
+	text	"Red Team"
+	background "$whiteimage"
+	ownerdrawflag UI_SHOW_NETANYTEAMGAME  
+	//ownerdraw UI_REDTEAMNAME
+	style 1
+	type 0
+	backcolor 0.6 0.2 0.2 0.4
+	textstyle 2
+      	textscale 0.5
+	cvarTest "ui_menutab"
+	showCVar { "3" }
+	decoration
+   	rect 316 32 300 400
+     	textalignx	 32	
+	textaligny	 24
+	border 1
+	bordercolor   MP_BOX_BORDER
+	visible 1 
+}
+// Blue Team Bots ...
+itemDef {
+      	name bluebots
+      	text ""
+	ownerdraw UI_BLUETEAM1
+	background MP_FATBUTTONBG
+	style 1
+	textstyle 6
+      	textscale 0.5
+	cvarTest "ui_menutab"
+	showCVar { "3" }
+   	rect 32 64 256 64
+     	textalignx	32	
+	textaligny	 32
+	forecolor MP_TEXTCOLOR
+	mouseEnter { setcvar ui_tip "Choose bot." fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	visible 1 
+}
+itemDef {
+      	name bluebots
+      	text ""
+	ownerdraw UI_BLUETEAM2
+	background MP_FATBUTTONBG
+	style 1
+	textstyle 6
+      	textscale 0.5
+	cvarTest "ui_menutab"
+	showCVar { "3" }
+   	rect 32 128 256 64
+     	textalignx	32	
+	textaligny	 32
+	forecolor MP_TEXTCOLOR
+	mouseEnter { setcvar ui_tip "Choose bot." fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	visible 1 
+}
+itemDef {
+      	name bluebots
+      	text ""
+	ownerdraw UI_BLUETEAM3
+	background MP_FATBUTTONBG
+	style 1
+	textstyle 6
+      	textscale 0.5
+	cvarTest "ui_menutab"
+	showCVar { "3" }
+   	rect 32 192 256 64
+     	textalignx	32	
+	textaligny	 32
+	forecolor MP_TEXTCOLOR
+	mouseEnter { setcvar ui_tip "Choose bot." fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	visible 1 
+}
+itemDef {
+      	name bluebots
+      	text ""
+	ownerdraw UI_BLUETEAM4
+	background MP_FATBUTTONBG
+	style 1
+	textstyle 6
+      	textscale 0.5
+	cvarTest "ui_menutab"
+	showCVar { "3" }
+   	rect 32 256 256 64
+     	textalignx	32	
+	textaligny	 32
+	forecolor MP_TEXTCOLOR
+	mouseEnter { setcvar ui_tip "Choose bot." fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	visible 1 
+}
+itemDef {
+      	name bluebots
+      	text ""
+	ownerdraw UI_BLUETEAM5
+	background MP_FATBUTTONBG
+	style 1
+	textstyle 6
+      	textscale 0.5
+	cvarTest "ui_menutab"
+	showCVar { "3" }
+   	rect 32 320 256 64
+     	textalignx	32	
+	textaligny	 32
+	forecolor MP_TEXTCOLOR
+	mouseEnter { setcvar ui_tip "Choose bot." fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	visible 1 
+}
+
+// Red Team bots...
+
+itemDef {
+      	name redbots
+      	text ""
+	ownerdraw UI_REDTEAM1
+	background MP_FATBUTTONBG
+	style 1
+	textstyle 6
+      	textscale 0.5
+	cvarTest "ui_menutab"
+	showCVar { "3" }
+   	rect 332 64 256 64
+     	textalignx	32	
+	textaligny	 32
+	forecolor MP_TEXTCOLOR
+	mouseEnter { setcvar ui_tip "Choose bot." fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	visible 1 
+}
+itemDef {
+      	name redbots
+      	text ""
+	ownerdraw UI_REDTEAM2
+	background MP_FATBUTTONBG
+	style 1
+	textstyle 6
+      	textscale 0.5
+	cvarTest "ui_menutab"
+	showCVar { "3" }
+   	rect 332 128 256 64
+     	textalignx	32	
+	textaligny	 32
+	forecolor MP_TEXTCOLOR
+	mouseEnter { setcvar ui_tip "Choose bot." fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	visible 1 
+}
+itemDef {
+      	name redbots
+      	text ""
+	ownerdraw UI_REDTEAM3
+	background MP_FATBUTTONBG
+	style 1
+	textstyle 6
+      	textscale 0.5
+	cvarTest "ui_menutab"
+	showCVar { "3" }
+   	rect 332 192 256 64
+     	textalignx	32	
+	textaligny	32
+	forecolor MP_TEXTCOLOR
+	mouseEnter { setcvar ui_tip "Choose bot." fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	visible 1 
+}
+itemDef {
+      	name redbots
+      	text ""
+	ownerdraw UI_REDTEAM4
+	background MP_FATBUTTONBG
+	style 1
+	textstyle 6
+      	textscale 0.5
+	cvarTest "ui_menutab"
+	showCVar { "3" }
+   	rect 332 256 256 64
+     	textalignx	32	
+	textaligny	32
+	forecolor MP_TEXTCOLOR
+	mouseEnter { setcvar ui_tip "Choose bot." fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	visible 1 
+}
+itemDef {
+      	name redbots
+      	text ""
+	ownerdraw UI_REDTEAM5
+	background MP_FATBUTTONBG
+	style 1
+	textstyle 6
+      	textscale 0.5
+	cvarTest "ui_menutab"
+	showCVar { "3" }
+   	rect 332 320 256 64
+     	textalignx	32	
+	textaligny	32
+	forecolor MP_TEXTCOLOR
+	mouseEnter { setcvar ui_tip "Choose bot." fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	visible 1 
+}
+
+itemDef {
+      	name buttontonext
+      	text "Fight"
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 332 414 256 32
+     	textalignx	 32	
+	textaligny	 24
+	cvarTest "ui_menutab"
+	showCVar { "3" }
+	mouseEnter { setcvar ui_tip "LETS FIGHT" fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+	action	{  	setcvar ui_menutab 4; 
+			 play MP_SND_SELECT;  
+		}
+	visible 1 
+}
+
+// -----------------------------------------------------------
+// TAB 4 - CONFIRM START SUMMARY SELECTION
+// -----------------------------------------------------------
+
+
+itemDef {
+      	name mapprf
+	ownerdraw UI_STARTMAPCINEMATIC
+	textstyle 2
+      	textscale 0.5
+	cvarTest "ui_menutab"
+	showCVar { "4" }
+	decoration
+   	rect 16 32 600 400
+     	textalignx	0	
+	textaligny	0
+	border 1
+	bordercolor   MP_BOX_BORDER
+	visible 1 
+}
+
+
+itemDef {
+      	name mapsfield
+	text	"Confirm Match !"
+	background MP_DIALOGBG
+	style 1
+	type 0
+	textstyle 2
+      	textscale 0.5
+	cvarTest "ui_menutab"
+	showCVar { "4" }
+	decoration
+   	rect 16 32 600 400
+     	textalignx	 32	
+	textaligny	 24
+	border 1
+	backcolor 0.0 0.0 0.0 0.7
+	bordercolor   MP_BOX_BORDER
+	visible 1 
+}
+
+// The options summary. NON CLICKABLE!! and small.
+
+itemDef {
+      	name bluebots
+      	text ""
+	ownerdraw UI_BLUETEAM1
+	background MP_FATBUTTONBG
+	style 1
+	textstyle 6
+      	textscale 0.25
+	cvarTest "ui_menutab"
+	showCVar { "4" }
+   	rect 450 128 128 16
+     	textalignx	32	
+	textaligny	 32
+	forecolor MP_TEXTCOLOR
+	visible 1 
+	decoration
+}
+itemDef {
+      	name bluebots
+      	text ""
+	ownerdraw UI_BLUETEAM2
+	background MP_FATBUTTONBG
+	style 1
+	textstyle 6
+      	textscale 0.25
+	cvarTest "ui_menutab"
+	showCVar { "4" }
+   	rect 450 144 128 16
+     	textalignx	32	
+	textaligny	 32
+	forecolor MP_TEXTCOLOR
+	visible 1 
+	decoration
+}
+itemDef {
+      	name bluebots
+      	text ""
+	ownerdraw UI_BLUETEAM3
+	background MP_FATBUTTONBG
+	style 1
+	textstyle 6
+      	textscale 0.25
+	cvarTest "ui_menutab"
+	showCVar { "4" }
+   	rect 450 160 128 16
+     	textalignx	32	
+	textaligny	 32
+	forecolor MP_TEXTCOLOR
+	visible 1 
+	decoration
+}
+itemDef {
+      	name bluebots
+      	text ""
+	ownerdraw UI_BLUETEAM4
+	background MP_FATBUTTONBG
+	style 1
+	textstyle 6
+      	textscale 0.25
+	cvarTest "ui_menutab"
+	showCVar { "4" }
+   	rect 450 176 128 16
+     	textalignx	32	
+	textaligny	 32
+	forecolor MP_TEXTCOLOR
+	visible 1 
+	decoration
+}
+itemDef {
+      	name bluebots
+      	text ""
+	ownerdraw UI_BLUETEAM5
+	background MP_FATBUTTONBG
+	style 1
+	textstyle 6
+      	textscale 0.25
+	cvarTest "ui_menutab"
+	showCVar { "4" }
+   	rect 450 192 128 16
+     	textalignx	32	
+	textaligny	 32
+	forecolor MP_TEXTCOLOR
+	visible 1 
+	decoration
+}
+itemDef {
+      	name redbots
+      	text ""
+	ownerdraw UI_REDTEAM1
+	background MP_FATBUTTONBG
+	style 1
+	textstyle 6
+      	textscale 0.25
+	cvarTest "ui_menutab"
+	showCVar { "4" }
+   	rect 450 208 128 16
+     	textalignx	32	
+	textaligny	 32
+	forecolor MP_TEXTCOLOR
+	visible 1 
+	decoration
+}
+itemDef {
+      	name redbots
+      	text ""
+	ownerdraw UI_REDTEAM2
+	background MP_FATBUTTONBG
+	style 1
+	textstyle 6
+      	textscale 0.25
+	cvarTest "ui_menutab"
+	showCVar { "4" }
+   	rect 450 224 128 16
+     	textalignx	32	
+	textaligny	 32
+	forecolor MP_TEXTCOLOR
+	visible 1 
+	decoration
+}
+itemDef {
+      	name redbots
+      	text ""
+	ownerdraw UI_REDTEAM3
+	background MP_FATBUTTONBG
+	style 1
+	textstyle 6
+      	textscale 0.25
+	cvarTest "ui_menutab"
+	showCVar { "4" }
+   	rect 450 240 128 16
+     	textalignx	32	
+	textaligny	 32
+	forecolor MP_TEXTCOLOR
+	visible 1 
+	decoration
+}
+itemDef {
+      	name redbots
+      	text ""
+	ownerdraw UI_REDTEAM4
+	background MP_FATBUTTONBG
+	style 1
+	textstyle 6
+      	textscale 0.25
+	cvarTest "ui_menutab"
+	showCVar { "4" }
+   	rect 450 256 128 16
+     	textalignx	32	
+	textaligny	 32
+	forecolor MP_TEXTCOLOR
+	visible 1 
+	decoration
+}
+itemDef {
+      	name redbots
+      	text ""
+	ownerdraw UI_REDTEAM5
+	background MP_FATBUTTONBG
+	style 1
+	textstyle 6
+      	textscale 0.25
+	cvarTest "ui_menutab"
+	showCVar { "4" }
+   	rect 450 272 128 16
+     	textalignx	32	
+	textaligny	 32
+	forecolor MP_TEXTCOLOR
+	visible 1 
+	decoration
+}
+
+
+itemDef {
+      	name buttontofight
+      	text "Start"
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 1
+   	rect 214 404 256 32
+     	textalignx	 32	
+	textaligny	 24
+	cvarTest "ui_menutab"
+	showCVar { "4" }
+	mouseEnter { setcvar ui_tip "Create the server!" fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+	action	{  	uiScript StartServer 
+			 play MP_SND_SELECT;  
+		}
+	visible 1 
+}
+
+
+
+
+// -----------------------------------------------------------
+// TAB X - ALL
+// -----------------------------------------------------------
+
+
+
+itemDef {
+      	name tab1
+      	text "Gametype"
+	background "azuretablong"
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.333
+   	rect 16 16 128 16
+	cvarTest "ui_menutab"
+	hideCVar { "0" }
+     	textalignx	 16	
+	textaligny	 16
+	forecolor MP_TEXTCOLOR
+
+
+	action { setcvar ui_menutab 0;  play MP_SND_SELECT;   }
+	visible 1 
+}
+
+itemDef {
+      	name tab2
+      	text "Map"
+	background "azuretablong"
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.333
+   	rect 144 16 128 16
+	cvarTest "ui_menutab"
+	hideCVar { "1" }
+     	textalignx	 16	
+	textaligny	 16
+	forecolor MP_TEXTCOLOR
+
+	action { setcvar ui_menutab 1;  play MP_SND_SELECT;  }
+	visible 1 
+}
+
+itemDef {
+      	name tab3
+      	text "Rules"
+	background "azuretablong"
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.333
+   	rect 272 16 128 16
+	cvarTest "ui_menutab"
+	hideCVar { "2" }
+     	textalignx	 16	
+	textaligny	 16
+	forecolor MP_TEXTCOLOR
+
+	action { setcvar ui_menutab 2;  play MP_SND_SELECT;  }
+	visible 1 
+}
+
+itemDef {
+      	name tab4
+      	text "Slots"
+	background "azuretablong"
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.333
+   	rect 400 16 128 16
+	cvarTest "ui_menutab"
+	hideCVar { "3" }
+     	textalignx	 16	
+	textaligny	 16
+	forecolor MP_TEXTCOLOR
+
+	action { setcvar ui_menutab 3;  play MP_SND_SELECT;  }
+	visible 1 
+}
+
+
+
+
+
+
+
+
+
+// pressed tabs
+
+
+itemDef {
+      	name tab1
+      	text "Gametype"
+	background "azureuntablong"
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.333
+   	rect 16 16 128 16
+	cvarTest "ui_menutab"
+	showCVar { "0" }
+     	textalignx	 16	
+	textaligny	 16
+	decoration
+
+	visible 1 
+}
+
+itemDef {
+      	name tab2
+      	text "Map"
+	background "azureuntablong"
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.333
+   	rect 144 16 128 16
+	cvarTest "ui_menutab"
+	showCVar { "1" }
+	decoration
+     	textalignx	 16	
+	textaligny	 16
+
+	visible 1 
+}
+
+itemDef {
+      	name tab3
+      	text "Rules"
+	background "azureuntablong"
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.333
+   	rect 272 16 128 16
+	cvarTest "ui_menutab"
+	showCVar { "2" }
+	decoration
+     	textalignx	 16	
+	textaligny	 16
+
+	visible 1 
+}
+
+itemDef {
+      	name tab4
+      	text "Slots"
+	background "azureuntablong"
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.333
+   	rect 400 16 128 16
+	cvarTest "ui_menutab"
+	showCVar { "3" }
+	decoration
+     	textalignx	 16	
+	textaligny	 16
+
+	visible 1 
+}
+
+
+
+
+// always have this button available
+
+itemDef {
+      	name button1
+      	text "Cancel"
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 32 384 256 32
+     	textalignx	 32	
+	textaligny	 24
+	cvarTest "ui_menutab"
+	showCVar { "0" }
+
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+	mouseEnter { setcvar ui_tip "Go back to main menu." fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	action	{  	
+			close playmaker;
+			
+			open mainmenu;
+	
+			setcvar ui_menutab 0;	// reset the tabs
+			 play MP_SND_SELECT;  
+		}
+	visible 1 
+}
+
+
+
+

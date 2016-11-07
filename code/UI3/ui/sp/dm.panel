@@ -1,0 +1,252 @@
+
+
+#include "ui/sp/ladder.h"
+// -----------------------------------------------------------
+// TAB 0 - SELECTING MAP
+// -----------------------------------------------------------
+
+// MAP stats and info
+
+#include "ui/sp/mapinfo.panel"
+
+
+itemDef {
+      	name dmgamefield
+	ownerdraw UI_GAMETYPE
+	text	"Deathmatch"
+	background MP_DIALOGBG
+	style 1
+	type 0
+	textstyle 2
+      	textscale 0.5
+	decoration
+   	rect 16 32 300 400
+     	textalignx	 32	
+	textaligny	 24
+	border 1
+	bordercolor   MP_BOX_BORDER
+	backcolor 	MP_DIALOGBGCOLOR
+	visible 1 
+}
+
+
+itemDef {
+      	name button1
+      	text SPFFA_MAP1
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 32 128 256 32
+     	textalignx	 32	
+	textaligny	 24
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+	action	{  	setcvar ui_currentMap SPFFA_MAP1NUM;	
+			 play MP_SND_SELECT;  
+		}
+	visible 1 
+}
+
+
+itemDef {
+      	name button1
+      	text SPFFA_MAP2
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 32 160 256 32
+     	textalignx	 32	
+	textaligny	 24
+	cvarTest SPFFA_MAP2_UNLOCKCVAR
+	showCVar { "1" }
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+	mouseEnter { setcvar ui_tip "CTF ladder." fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	action	{  	setcvar ui_currentMap SPFFA_MAP2NUM;	
+			 play MP_SND_SELECT;  
+		}
+	visible 1 
+}
+
+itemDef {
+      	name button1
+      	text SPFFA_MAP3
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 32 192 256 32
+     	textalignx	 32	
+	textaligny	 24
+	cvarTest SPFFA_MAP3_UNLOCKCVAR
+	showCVar { "1" }
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+	mouseEnter { setcvar ui_tip "Dominaiton ladder." fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	action	{  	setcvar ui_currentMap SPFFA_MAP3NUM;	
+			 play MP_SND_SELECT;  
+		}
+	visible 1 
+}
+
+
+itemDef {
+      	name button1
+      	text SPFFA_MAP4
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 32 224 256 32
+     	textalignx	 32	
+	textaligny	 24
+	cvarTest SPFFA_MAP4_UNLOCKCVAR
+	showCVar { "1" }
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+	mouseEnter { setcvar ui_tip "CTF ladder." fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	action	{  	setcvar ui_currentMap SPFFA_MAP4NUM;	
+			 play MP_SND_SELECT;  
+		}
+	visible 1 
+}
+
+itemDef {
+      	name button1
+      	text SPFFA_MAP5
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 32 256 256 32
+     	textalignx	 32	
+	textaligny	 24
+	cvarTest SPFFA_MAP5_UNLOCKCVAR
+	showCVar { "1" }
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+	mouseEnter { setcvar ui_tip "It's the final show down!!!!!!!!!!!" fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	action	{  	setcvar ui_currentMap SPFFA_MAP5NUM;	
+			 play MP_SND_SELECT;  
+		}
+	visible 1 
+}
+
+itemDef {
+      	name button1
+      	text SPFFA_MAP6
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 32 288 256 32
+     	textalignx	 32	
+	textaligny	 24
+	cvarTest SPFFA_MAP6_UNLOCKCVAR
+	showCVar { "1" }
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+	action	{  	setcvar ui_currentMap SPFFA_MAP6NUM;	
+			 play MP_SND_SELECT;  
+		}
+	visible 1 
+}
+
+itemDef {
+      	name button1
+      	text SPFFA_MAP7
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 32 320 256 32
+     	textalignx	 32	
+	textaligny	 24
+	cvarTest SPFFA_MAP7_UNLOCKCVAR
+	showCVar { "1" }
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+	action	{  	setcvar ui_currentMap SPFFA_MAP7NUM;	
+			 play MP_SND_SELECT;  
+		}
+	visible 1 
+}
+
+
+itemDef {
+      	name button1
+      	text SPFFA_MAP8
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 32 352 256 32
+     	textalignx	 32	
+	textaligny	 24
+	cvarTest SPFFA_MAP8_UNLOCKCVAR
+	showCVar { "1" }
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+	action	{  	setcvar ui_currentMap SPFFA_MAP8NUM;	
+			 play MP_SND_SELECT;  
+		}
+	visible 1 
+}
+
+
+
+itemDef {
+      	name button1
+      	text "Cancel"
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 32 384 256 32
+     	textalignx	 32	
+	textaligny	 24
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+	mouseEnter { setcvar ui_tip "Go back to main menu." fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	action	{  	
+			close singleplayercampaign_ffa;
+			
+			open singleplayercampaign;
+	
+			setcvar ui_sptab 0;	// reset the tabs
+			 play MP_SND_SELECT;  
+		}
+	visible 1 
+}
+
+itemDef {
+      	name button1
+      	text "FIGHT"
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 384 384 256 32
+     	textalignx	 32	
+	textaligny	 24
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+	mouseEnter { setcvar ui_tip "WHAT THE BUTTON SAYS!" fadein tooltip; } mouseExit { fadeout tooltip;} 	
+      	action { uiScript skirmishStart }
+	visible 1 
+}
+
+
+

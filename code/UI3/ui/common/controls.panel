@@ -1,0 +1,393 @@
+
+
+
+// The "Simple" consolified game starting interface for easy selection
+// of setting up the game options and the like.
+// Designed for controllers really. Apologies if this is "too dumb"
+// but i'd like to make the interface less daunting by default.
+
+// -----------------------------------------------------------
+// TAB 0 - CONTROLS
+// -----------------------------------------------------------
+
+itemDef {
+      	name dmgamefield
+	text	"Controls"
+	background MP_DIALOGBG
+	backcolor 	MP_DIALOGBGCOLOR
+	style 1
+	type 0
+	textstyle 2
+      	textscale 0.5
+	decoration
+   	rect 16 32 600 400
+     	textalignx	 32	
+	textaligny	 24
+	border 1
+	bordercolor   MP_BOX_BORDER
+	visible 1 
+}
+
+
+itemDef {
+      	name keybindstat
+      	text " "
+	type ITEM_TYPE_CHECKBOX
+	ownerdraw UI_BIND2CLICK
+	style 1
+	textstyle 6
+      	textscale 0.255
+   	rect 86 366 256 20
+     	textalignx	24	
+	textaligny	 17
+	forecolor MP_TEXTCOLOR
+	visible 0
+	decoration
+}
+	
+
+
+// leilei - it's a bunch of includes, to keep this file looking small and readable. 
+// Because I am human and I am overwhelmed and I don't want others to be overwhelmed.
+
+#define	KEYBINDCENTER	256
+#define	KEYBINDCATEGORY	"0"
+
+
+
+#define	KEYBINDDOWN	100
+#define	BINDTITLE "MOVE forward"
+#define	ACTIONNAME "forwardact"
+#define	ALTNAME "forwardalt"
+#define	BINDNAME "forward"
+#define	THEACTION "+forward"
+#include "ui/panels/keybind2.bit"
+
+#define	KEYBINDDOWN	120
+#define	BINDTITLE "MOVE Backward"
+#define	ACTIONNAME "backact"
+#define	ALTNAME "backalt"
+#define	BINDNAME "back"
+#define	THEACTION "+back"
+#include "ui/panels/keybind2.bit"
+
+#define	KEYBINDDOWN	140
+#define	BINDTITLE "Step Left"
+#define	ACTIONNAME "stleftact"
+#define	ALTNAME "stleftalt"
+#define	BINDNAME "stleft"
+#define	THEACTION "+moveleft"
+#include "ui/panels/keybind2.bit"
+
+#define	KEYBINDDOWN	160
+#define	BINDTITLE "Step Right"
+#define	ACTIONNAME "strightact"
+#define	ALTNAME "strightalt"
+#define	BINDNAME "stright"
+#define	THEACTION "+moveright"
+#include "ui/panels/keybind2.bit"
+
+#define	KEYBINDDOWN	180
+#define	BINDTITLE "Jump"
+#define	ACTIONNAME "jumpact"
+#define	ALTNAME "jumpalt"
+#define	BINDNAME "jump"
+#define	THEACTION "+moveup"
+#include "ui/panels/keybind2.bit"
+
+#define	KEYBINDDOWN	200
+#define	BINDTITLE "Crotch"
+#define	ACTIONNAME "crouchact"
+#define	ALTNAME "crouchalt"
+#define	BINDNAME "crouch"
+#define	THEACTION "+movedown"
+#include "ui/panels/keybind2.bit"
+
+#define	KEYBINDDOWN	220
+#define	BINDTITLE "Turn Left"
+#define	ACTIONNAME "lefttact"
+#define	ALTNAME "lefttalt"
+#define	BINDNAME "leftt"
+#define	THEACTION "+left"
+#include "ui/panels/keybind2.bit"
+
+#define	KEYBINDDOWN	240
+#define	BINDTITLE "Turn Right"
+#define	ACTIONNAME "righttact"
+#define	ALTNAME "righttalt"
+#define	BINDNAME "rightt"
+#define	THEACTION "+right"
+#include "ui/panels/keybind2.bit"
+
+
+// Weapons
+#define	KEYBINDCATEGORY	"1"
+
+#define	KEYBINDDOWN	80
+#define	BINDTITLE "Attack"
+#define	ACTIONNAME "attackact"
+#define	ALTNAME "attackalt"
+#define	BINDNAME "attack"
+#define	THEACTION "+attack"
+#include "ui/panels/keybind2.bit"
+
+#define	KEYBINDDOWN	100
+#define	BINDTITLE "Previous Weapon"
+#define	ACTIONNAME "prevact"
+#define	ALTNAME "prevalt"
+#define	BINDNAME "prevwep"
+#define	THEACTION "weapprev"
+#include "ui/panels/keybind2.bit"
+
+#define	KEYBINDDOWN	120
+#define	BINDTITLE "Next Weapon"
+#define	ACTIONNAME "nextact"
+#define	ALTNAME "nextalt"
+#define	BINDNAME "nextwep"
+#define	THEACTION "weapnext"
+#include "ui/panels/keybind2.bit"
+
+
+#define	KEYBINDDOWN	140
+#define	BINDTITLE "Gauntlet"
+#define	ACTIONNAME "w1act"
+#define	ALTNAME "w1alt"
+#define	BINDNAME "w1wep"
+#define	THEACTION "weapon 1"
+#include "ui/panels/keybind2.bit"
+
+#define	KEYBINDDOWN	160
+#define	BINDTITLE "Machinegun"
+#define	ACTIONNAME "w2act"
+#define	ALTNAME "w2alt"
+#define	BINDNAME "w2wep"
+#define	THEACTION "weapon 2"
+#include "ui/panels/keybind2.bit"
+
+#define	KEYBINDDOWN	180
+#define	BINDTITLE "Shotgun"
+#define	ACTIONNAME "w3act"
+#define	ALTNAME "w3alt"
+#define	BINDNAME "w3wep"
+#define	THEACTION "weapon 3"
+#include "ui/panels/keybind2.bit"
+
+
+#define	KEYBINDDOWN	200
+#define	BINDTITLE "Grenade Launcher"
+#define	ACTIONNAME "w4act"
+#define	ALTNAME "w4alt"
+#define	BINDNAME "w4wep"
+#define	THEACTION "weapon 4"
+#include "ui/panels/keybind2.bit"
+
+#define	KEYBINDDOWN	220
+#define	BINDTITLE "Rocket Launcher"
+#define	ACTIONNAME "w5act"
+#define	ALTNAME "w5alt"
+#define	BINDNAME "w5wep"
+#define	THEACTION "weapon 5"
+#include "ui/panels/keybind2.bit"
+
+#define	KEYBINDDOWN	240
+#define	BINDTITLE "Lightning Gun"
+#define	ACTIONNAME "w6act"
+#define	ALTNAME "w6alt"
+#define	BINDNAME "w6wep"
+#define	THEACTION "weapon 6"
+#include "ui/panels/keybind2.bit"
+
+
+#define	KEYBINDDOWN	260
+#define	BINDTITLE "Railgun"
+#define	ACTIONNAME "w7act"
+#define	ALTNAME "w7alt"
+#define	BINDNAME "w7wep"
+#define	THEACTION "weapon 7"
+#include "ui/panels/keybind2.bit"
+
+#define	KEYBINDDOWN	280
+#define	BINDTITLE "Plasma Gun"
+#define	ACTIONNAME "w8act"
+#define	ALTNAME "w8alt"
+#define	BINDNAME "w8wep"
+#define	THEACTION "weapon 8"
+#include "ui/panels/keybind2.bit"
+
+#define	KEYBINDDOWN	300
+#define	BINDTITLE "Ballistic Faerie Gun"
+#define	ACTIONNAME "w9act"
+#define	ALTNAME "w9alt"
+#define	BINDNAME "w9wep"
+#define	THEACTION "weapon 9"
+#include "ui/panels/keybind2.bit"
+
+#define	KEYBINDDOWN	320
+#define	BINDTITLE "Nailgun"
+#define	ACTIONNAME "w10act"
+#define	ALTNAME "w10alt"
+#define	BINDNAME "w10wep"
+#define	THEACTION "weapon 11"
+#include "ui/panels/keybind2.bit"
+
+
+#define	KEYBINDDOWN	340
+#define	BINDTITLE "Proximity Mine Launcher"
+#define	ACTIONNAME "w11act"
+#define	ALTNAME "w11alt"
+#define	BINDNAME "w11wep"
+#define	THEACTION "weapon 12"
+#include "ui/panels/keybind2.bit"
+
+#define	KEYBINDDOWN	360
+#define	BINDTITLE "Chaingun"
+#define	ACTIONNAME "w12act"
+#define	ALTNAME "w12alt"
+#define	BINDNAME "w21wep"
+#define	THEACTION "weapon 13"
+#include "ui/panels/keybind2.bit"
+
+
+
+
+// Chat
+#define	KEYBINDCATEGORY	"2"
+
+#define	KEYBINDDOWN	80
+#define	BINDTITLE "Taunt"
+#define	ACTIONNAME "tauntact"
+#define	ALTNAME "tauntalt"
+#define	BINDNAME "tauntt"
+#define	THEACTION "+button3"
+#include "ui/panels/keybind2.bit"
+
+#define	KEYBINDDOWN	100
+#define	BINDTITLE "Chat"
+#define	ACTIONNAME "chatact"
+#define	ALTNAME "chattalt"
+#define	BINDNAME "chattt"
+#define	THEACTION "messagemode"
+#include "ui/panels/keybind2.bit"
+
+#define	KEYBINDDOWN	120
+#define	BINDTITLE "Team Chat"
+#define	ACTIONNAME "chattact"
+#define	ALTNAME "chatttalt"
+#define	BINDNAME "chatttt"
+#define	THEACTION "messagemode2"
+#include "ui/panels/keybind2.bit"
+
+
+#define	KEYBINDDOWN	140
+#define	BINDTITLE "Chat to Target"
+#define	ACTIONNAME "chatatact"
+#define	ALTNAME "chattatatalt"
+#define	BINDNAME "chatattt"
+#define	THEACTION "messagemode3"
+#include "ui/panels/keybind2.bit"
+
+
+#define	KEYBINDDOWN	160
+#define	BINDTITLE "Chat to Attacker"
+#define	ACTIONNAME "chatatact"
+#define	ALTNAME "chatattalt"
+#define	BINDNAME "chaatttt"
+#define	THEACTION "messagemode4"
+#include "ui/panels/keybind2.bit"
+
+#define	KEYBINDDOWN	180
+#define	BINDTITLE "Taunt by voice"
+#define	ACTIONNAME "tauntvact"
+#define	ALTNAME "tauntvalt"
+#define	BINDNAME "tauntvttt"
+#define	THEACTION "tauntTaunt"
+#include "ui/panels/keybind2.bit"
+
+#define	KEYBINDDOWN	200
+#define	BINDTITLE "Live Voice Chat"
+#define	ACTIONNAME "voipact"
+#define	ALTNAME "voipalt"
+#define	BINDNAME "voiptt"
+#define	THEACTION "+voiprecord"
+#include "ui/panels/keybind2.bit"
+
+
+
+// -----------------------------------------------------------
+// TAB X - ALL
+// -----------------------------------------------------------
+
+itemDef {
+      	name KeybindMenu
+      	text "Player"
+	type ITEM_TYPE_BUTTON
+	background "ui/assets5/keys_move"
+	backcolor MP_BUTTONBGCOLOR
+	style 1
+	textstyle 6
+      	textscale 0.23
+   	rect 48 80 64 64
+     	textalignx	4
+	textaligny	 64
+	forecolor MP_TEXTCOLOR
+	action { setcvar ui_menutab 0;  play MP_SND_SELECT;  }
+	mouseEnter { setcvar ui_tip TIP_KEYS_PLAYER fadein tooltip; } mouseExit { fadeout tooltip;}  
+	visible 1 
+}
+
+
+itemDef {
+      	name KeybindMenu
+      	text "Weapons"
+	type ITEM_TYPE_BUTTON
+	background "ui/assets5/keys_weapons"
+	backcolor MP_BUTTONBGCOLOR
+	style 1
+	textstyle 6
+      	textscale 0.23
+   	rect 48 144 64 64
+     	textalignx	4
+	textaligny	 64
+	forecolor MP_TEXTCOLOR
+	action { setcvar ui_menutab 1;  play MP_SND_SELECT;  }
+	mouseEnter { setcvar ui_tip TIP_KEYS_WEAPONS fadein tooltip; } mouseExit { fadeout tooltip;}  
+	visible 1 
+}
+
+itemDef {
+      	name KeybindMenu
+      	text "Chat"
+	type ITEM_TYPE_BUTTON
+	background "ui/assets5/keys_chat"
+	backcolor MP_BUTTONBGCOLOR
+	style 1
+	textstyle 6
+      	textscale 0.23
+   	rect 48 208 64 64
+     	textalignx	4
+	textaligny	 64
+	forecolor MP_TEXTCOLOR
+	action { setcvar ui_menutab 2;  play MP_SND_SELECT;  }
+	mouseEnter { setcvar ui_tip TIP_KEYS_WEAPONS fadein tooltip; } mouseExit { fadeout tooltip;}  
+	visible 1 
+}
+
+
+itemDef {
+      	name KeybindMenu
+      	text "Input"
+	type ITEM_TYPE_BUTTON
+	background "ui/assets5/keys_presets"
+	backcolor MP_BUTTONBGCOLOR
+	style 1
+	textstyle 6
+      	textscale 0.23
+   	rect 48 272 64 64
+     	textalignx	4
+	textaligny	 64
+	forecolor MP_TEXTCOLOR
+	action { setcvar ui_menutab 3;  play MP_SND_SELECT;  }
+	mouseEnter { setcvar ui_tip TIP_KEYS_WEAPONS fadein tooltip; } mouseExit { fadeout tooltip;}  
+	visible 1 
+}
+

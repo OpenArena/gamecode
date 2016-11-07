@@ -1,0 +1,172 @@
+
+
+//
+// The server joining system
+//
+
+// -----------------------------------------------------------
+// TAB 0 - SERVER LIST
+//
+// -----------------------------------------------------------
+
+itemDef {
+      	name dmgamefield
+	text	"PANEL!"
+	background MP_DIALOGBG
+	backcolor 	MP_DIALOGBGCOLOR
+	style 1
+	type 0
+	textstyle 2
+      	textscale 0.5
+	cvarTest "ui_menutab"
+	showCVar { "0" }
+	decoration
+   	rect 16 32 600 100
+     	textalignx	 32	
+	textaligny	 24
+	border 1
+	bordercolor   MP_BOX_BORDER
+	visible 1 
+}
+
+itemDef {
+      	name teamgamefield
+	text	"SERVERS!"
+	background MP_DIALOGBG
+	backcolor 	MP_DIALOGBGCOLOR
+	style 1
+	type 0
+	textstyle 2
+      	textscale 0.5
+	decoration
+	cvarTest "ui_menutab"
+	showCVar { "0" }
+   	rect 16 132 600 300
+     	textalignx	 32	
+	textaligny	 24
+	border 1
+	bordercolor   MP_BOX_BORDER
+	visible 1 
+}
+
+
+
+
+// -----------------------------------------------------------
+// TAB X - ALL
+// -----------------------------------------------------------
+
+
+
+itemDef {
+      	name tab1
+      	text "Server List"
+	background "azuretablong"
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.333
+   	rect 16 16 128 16
+	cvarTest "ui_menutab"
+	hideCVar { "0" }
+     	textalignx	 16	
+	textaligny	 16
+	forecolor MP_TEXTCOLOR
+
+
+	action { setcvar ui_menutab 0;  play MP_SND_SELECT;   }
+	visible 1 
+}
+
+itemDef {
+      	name tab2
+      	text "Info"
+	background "azuretablong"
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.333
+   	rect 144 16 128 16
+	cvarTest "ui_menutab"
+	hideCVar { "1" }
+     	textalignx	 16	
+	textaligny	 16
+	forecolor MP_TEXTCOLOR
+
+	action { setcvar ui_menutab 1;  play MP_SND_SELECT;  }
+	visible 1 
+}
+
+// pressed tabs
+
+
+itemDef {
+      	name tab1
+      	text "Server List"
+	background "azureuntablong"
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.333
+   	rect 16 16 128 16
+	cvarTest "ui_menutab"
+	showCVar { "0" }
+     	textalignx	 16	
+	textaligny	 16
+	decoration
+
+	visible 1 
+}
+
+itemDef {
+      	name tab2
+      	text "Info"
+	background "azureuntablong"
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.333
+   	rect 144 16 128 16
+	cvarTest "ui_menutab"
+	showCVar { "1" }
+	decoration
+     	textalignx	 16	
+	textaligny	 16
+
+	visible 1 
+}
+
+
+// always have this button available
+
+itemDef {
+      	name button1
+      	text "Cancel"
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 32 384 256 32
+     	textalignx	 32	
+	textaligny	 24
+	cvarTest "ui_menutab"
+	showCVar { "0" }
+
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+	mouseEnter { setcvar ui_tip "Go back to main menu." fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	action	{  	
+			close joinserver;
+			
+			open mainmenu;
+	
+			setcvar ui_menutab 0;	// reset the tabs
+			 play MP_SND_SELECT;  
+		}
+	visible 1 
+}
+
+
+
+

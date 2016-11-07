@@ -1,0 +1,802 @@
+
+
+
+// The "Simple" consolified game starting interface for easy selection
+// of setting up the game options and the like.
+// Designed for controllers really. Apologies if this is "too dumb"
+// but i'd like to make the interface less daunting by default.
+
+
+// Please note that this is the file for the SINGLE PLAYER
+// menu which is different since it just does 'beat your score' tracking.
+// which was popular in 2000 for some reason *cough*that skateboarder*cough*
+
+// -----------------------------------------------------------
+// TAB 0 - GAMETYPE MODES
+// -----------------------------------------------------------
+
+	onESC	{  	
+			close singleplayer;
+			
+			open mainmenu;
+	
+			setcvar ui_menutab 0;	// reset the tabs
+			play MP_SND_BACK;  
+		}
+
+itemDef {
+      	name dmgamefield
+	text	"Free for All Modes"
+	background MP_DIALOGBG
+	style 1
+	type 0
+	textstyle 2
+      	textscale 0.5
+	cvarTest "ui_menutab"
+	showCVar { "0" }
+	decoration
+   	rect 16 32 300 400
+     	textalignx	 32	
+	textaligny	 24
+	border 1
+	bordercolor   MP_BOX_BORDER
+	backcolor 	MP_DIALOGBGCOLOR
+	visible 1 
+}
+
+itemDef {
+      	name teamgamefield
+	text	"Teamplay Modes"
+	background MP_DIALOGBG
+	style 1
+	type 0
+	textstyle 2
+      	textscale 0.5
+	decoration
+	cvarTest "ui_menutab"
+	showCVar { "0" }
+   	rect 316 32 300 400
+     	textalignx	 32	
+	textaligny	 24
+	border 1
+	bordercolor   MP_BOX_BORDER
+	visible 1 
+}
+
+
+
+
+itemDef {
+      	name ffa2
+      	text "Tournament"
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 32 128 256 32
+     	textalignx	 32	
+	textaligny	 24
+	cvarTest "ui_menutab"
+	showCVar { "0" }
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+
+	action	{ 	setcvar ui_menutab 1;	
+			setcvar ui_gametype 1;	
+			play MP_SND_SELECT;  
+				}
+	visible 1 
+}
+
+// team types
+
+
+itemDef {
+      	name button1
+      	text "Team DM"
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 332 96 256 32
+     	textalignx	 32	
+	textaligny	 24
+	cvarTest "ui_menutab"
+	showCVar { "0" }
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+
+	action	{ 	setcvar ui_menutab 1;	 play MP_SND_SELECT;  
+			setcvar ui_gametype 3;	}
+	visible 1 
+}
+
+
+
+itemDef {
+      	name ffa2
+      	text "Capture the Flag"
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 332 128 256 32
+     	textalignx	 32	
+	textaligny	 24
+	cvarTest "ui_menutab"
+	showCVar { "0" }
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+	action	{ 	setcvar ui_menutab 1;	 play MP_SND_SELECT;  
+			setcvar ui_gametype 4;	}
+	visible 1 
+}
+
+itemDef {
+      	name ffa3
+      	text "One Flag"
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 332 160 256 32
+     	textalignx	 32	
+	textaligny	 24
+	cvarTest "ui_menutab"
+	showCVar { "0" }
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+
+	action	{ 	setcvar ui_menutab 1;	 play MP_SND_SELECT;  
+			setcvar ui_gametype 5;	}
+	visible 1 
+}
+
+
+itemDef {
+      	name ffa3
+      	text "Overload"
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 332 192 256 32
+     	textalignx	 32	
+	textaligny	 24
+	cvarTest "ui_menutab"
+	showCVar { "0" }
+	forecolor MP_TEXTCOLOR
+
+	backcolor MP_BUTTONBGCOLOR
+	action	{ 	setcvar ui_menutab 1;	 play MP_SND_SELECT;  
+			setcvar ui_gametype 6;	}
+	visible 1 
+}
+
+itemDef {
+      	name ffa3
+      	text "Harvester"
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 332 224 256 32
+     	textalignx	 32	
+	textaligny	 24
+	cvarTest "ui_menutab"
+	showCVar { "0" }
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+
+	action	{ 	setcvar ui_menutab 1;	 play MP_SND_SELECT;  
+			setcvar ui_gametype 7;	}
+	visible 1 
+}
+
+itemDef {
+      	name ffa3
+      	text "Elimination"
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 332 256 256 32
+     	textalignx	 32	
+	textaligny	 24
+	cvarTest "ui_menutab"
+	showCVar { "0" }
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+
+	action	{ 	setcvar ui_menutab 1;	 play MP_SND_SELECT;  
+			setcvar ui_gametype 8;	}
+	visible 1 
+}
+
+itemDef {
+      	name ffa3
+      	text "CTF Elimination"
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 332 288 256 32
+     	textalignx	 32	
+	textaligny	 24
+	cvarTest "ui_menutab"
+	showCVar { "0" }
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+
+	action	{ 	setcvar ui_menutab 1;	 play MP_SND_SELECT;  
+			setcvar ui_gametype 9;	}
+	visible 1 
+}
+
+itemDef {
+      	name ffa3
+      	text "Double Domination"
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 332 320 256 32
+     	textalignx	 32	
+	textaligny	 24
+	cvarTest "ui_menutab"
+	showCVar { "0" }
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+
+	action	{ 	setcvar ui_menutab 1;	 play MP_SND_SELECT;  
+			setcvar ui_gametype 11;	}
+	visible 1 
+}
+
+itemDef {
+      	name ffa3
+      	text "Domination"
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 332 352 256 32
+     	textalignx	 32	
+	textaligny	 24
+	cvarTest "ui_menutab"
+	showCVar { "0" }
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+
+	action	{ 	setcvar ui_menutab 1;	 play MP_SND_SELECT;  
+			setcvar ui_gametype 12;	}
+	visible 1 
+}
+
+
+// -----------------------------------------------------------
+// TAB 1 - MAP SELECTION
+// -----------------------------------------------------------
+
+itemDef {
+      	name mapsfield
+	text	"Maps"
+	background MP_DIALOGBG
+	style 1
+	type 0
+	textstyle 2
+      	textscale 0.5
+	cvarTest "ui_menutab"
+	showCVar { "1" }
+	decoration
+   	rect 16 32 600 400
+     	textalignx	 32	
+	textaligny	 24
+	border 1
+	bordercolor   MP_BOX_BORDER
+	visible 1 
+}
+
+itemDef	{
+	name maplist
+   	rect 32 72 256 300
+	type ITEM_TYPE_LISTBOX
+	style WINDOW_STYLE_FILLED
+	elementwidth 32
+	elementheight 18
+	textscale .333
+	elementtype LISTBOX_TEXT
+	feeder FEEDER_MAPS
+	textalign 0
+	cvarTest "ui_menutab"
+	showCVar { "1" }
+	background "listbg_azure"
+	textaligny 16
+	border 1
+	bordercolor   MP_BOX_BORDER
+	forecolor     MP_BOX_FORE
+	backcolor     MP_BOX_BACK
+	outlinecolor  MP_BOX_OUTLINE
+	visible 1
+	columns 1 2 190 25
+	}
+
+itemDef {
+      	name mappreview
+	ownerdraw UI_STARTMAPCINEMATIC
+	textstyle 2
+      	textscale 0.5
+	cvarTest "ui_menutab"
+	showCVar { "1" }
+	decoration
+   	rect 300 72 296 222
+     	textalignx	0	
+	textaligny	0
+	border 1
+	bordercolor   MP_BOX_BORDER
+	visible 1 
+}
+
+itemDef {
+      	name button1
+      	text "Close"
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 128 448 256 32
+     	textalignx	 32	
+	textaligny	 24
+	cvarTest "ui_menutab"
+	showCVar { "9" }
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+	action	{  setcvar ui_menutab 1;	// reset the tabs
+		}
+	visible 1 
+}
+
+itemDef {
+      	name buttontonext
+      	text "Next"
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 332 384 256 32
+     	textalignx	 32	
+	textaligny	 24
+	cvarTest "ui_menutab"
+	showCVar { "1" }
+	backcolor MP_BUTTONBGCOLOR
+	forecolor MP_TEXTCOLOR
+
+	action	{  	setcvar ui_menutab 2; uiScript updateSPMenu ;
+			 play MP_SND_SELECT;  
+		}
+	visible 1 
+}
+
+// -----------------------------------------------------------
+// TAB 2 - SCORE DISPLAY
+// -----------------------------------------------------------
+
+itemDef {
+      	name mapsfield
+	text	"Score"
+	background MP_DIALOGBG
+	style 1
+	type 0
+	textstyle 2
+      	textscale 0.5
+	cvarTest "ui_menutab"
+	showCVar { "2" }
+	decoration
+   	rect 16 32 600 400
+     	textalignx	 32	
+	textaligny	 24
+	border 1
+	bordercolor   MP_BOX_BORDER
+	visible 1 
+}
+
+itemDef {
+      	name fraglimt
+      	text "The Score           "
+	cvar "ui_scoreTeam"
+	type ITEM_TYPE_NUMERICFIELD
+	maxchars 5
+	style 1
+	textstyle 6
+      	textscale 0.333
+	cvarTest "ui_menutab"
+	showCVar { "2" }
+   	rect 32 64 256 32
+     	textalignx	32	
+	textaligny	 26
+	forecolor MP_TEXTCOLOR
+	decoration 1
+	visible 1 
+}
+
+// -----------------------------------------------------------
+// TAB 3 - BOTS SELECTION
+// -----------------------------------------------------------
+
+// FFA Bots...
+itemDef {
+      	name mapsfield
+	text	"Your Opponent..."
+	background MP_DIALOGBG
+	style 1
+	type 0
+	textstyle 2
+	ownerdrawflag UI_SHOW_NETANYNONTEAMGAME 
+      	textscale 0.5
+	cvarTest "ui_menutab"
+	showCVar { "3" }
+	decoration
+   	rect 16 32 600 400
+     	textalignx	 32	
+	textaligny	 24
+	border 1
+	bordercolor   MP_BOX_BORDER
+	visible 1 
+}
+
+itemDef {
+      	name teenfield
+	text	"Blue Team"
+	background "$whiteimage"
+	ownerdrawflag UI_SHOW_ANYTEAMGAME  
+	//ownerdraw UI_BLUETEAMNAME
+	style 1
+	type 0
+	backcolor 0.2 0.2 0.6 0.4
+	textstyle 2
+        ownerdraw UI_PLAYERLOGO_METAL
+      	textscale 0.5
+	cvarTest "ui_gametype"
+	hideCvar { "1" }
+	cvarTest "ui_menutab"
+	showCVar { "3" }
+
+	decoration
+   	rect 16 32 300 400
+     	textalignx	 32	
+	textaligny	 24
+	border 1
+	bordercolor   MP_BOX_BORDER
+	visible 1 
+}
+
+itemDef {
+      	name teenfield
+	text	"Red Team"
+	background "$whiteimage"
+	ownerdrawflag UI_SHOW_ANYTEAMGAME  
+	//ownerdraw UI_REDTEAMNAME
+	style 1
+	type 0
+	backcolor 0.6 0.2 0.2 0.4
+	textstyle 2
+      	textscale 0.5
+        ownerdraw UI_OPPONENTLOGO_METAL
+	cvarTest "ui_gametype"
+	hideCvar { "1" }
+	cvarTest "ui_menutab"
+	showCVar { "3" }
+	decoration
+   	rect 316 32 170 400
+     	textalignx	 32	
+	textaligny	 24
+	border 1
+	bordercolor   MP_BOX_BORDER
+	visible 1 
+}
+
+itemDef {
+      	name teenfield
+	text	"You"
+	ownerdrawflag UI_SHOW_ANYNONTEAMGAME  
+	//ownerdraw UI_REDTEAMNAME
+	style 1
+	type 0
+	textstyle 2
+      	textscale 0.5
+   	ownerdraw UI_PLAYERMODEL
+	cvarTest "ui_menutab"
+	showCVar { "3" }
+	decoration
+   	rect 16 32 166 500
+     	textalignx	 32	
+	textaligny	 24
+	border 1
+	bordercolor   MP_BOX_BORDER
+	visible 1 
+}
+
+
+itemDef {
+      	name teenfield
+	text	"Opponent"
+	ownerdrawflag UI_SHOW_ANYNONTEAMGAME  
+	//ownerdraw UI_REDTEAMNAME
+	style 1
+	type 0
+	textstyle 2
+      	textscale 0.5
+   	ownerdraw UI_OPPONENTMODEL 
+	cvarTest "ui_menutab"
+	showCVar { "3" }
+	decoration
+   	rect 316 32 320 400
+     	textalignx	 32	
+	textaligny	 24
+	border 1
+	bordercolor   MP_BOX_BORDER
+	visible 1 
+}
+
+
+// -----------------------------------------------------------
+// TAB 4 - CONFIRM START SUMMARY SELECTION
+// -----------------------------------------------------------
+
+itemDef {
+      	name mapsfield
+	text	"Confirm Match !"
+	background "azuredialog"
+	style 1
+	type 0
+	textstyle 2
+      	textscale 0.5
+	cvarTest "ui_menutab"
+	showCVar { "4" }
+	decoration
+   	rect 16 32 600 400
+     	textalignx	 32	
+	textaligny	 24
+	border 1
+	bordercolor   MP_BOX_BORDER
+	visible 1 
+}
+
+itemDef {
+      	name buttontofight
+      	text "Start"
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 1
+   	rect 214 224 256 32
+     	textalignx	 32	
+	textaligny	 24
+	cvarTest "ui_menutab"
+	showCVar { "4" }
+	backcolor MP_BUTTONBGCOLOR
+	forecolor MP_TEXTCOLOR
+
+	action	{  	uiScript skirmishStart; 
+			 play MP_SND_SELECT;  
+		}
+	visible 1 
+}
+
+
+
+
+// -----------------------------------------------------------
+// TAB X - ALL
+// -----------------------------------------------------------
+
+
+
+itemDef {
+      	name tab1
+      	text "Gametype"
+	background "azuretablong"
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.333
+   	rect 16 16 128 16
+	cvarTest "ui_menutab"
+	hideCVar { "0" }
+     	textalignx	 16	
+	textaligny	 16
+	forecolor MP_TEXTCOLOR
+
+
+	action { setcvar ui_menutab 0;  play MP_SND_SELECT;   }
+	visible 1 
+}
+
+itemDef {
+      	name tab2
+      	text "Map"
+	background "azuretablong"
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.333
+   	rect 144 16 128 16
+	cvarTest "ui_menutab"
+	hideCVar { "1" }
+     	textalignx	 16	
+	textaligny	 16
+	forecolor MP_TEXTCOLOR
+
+	action { setcvar ui_menutab 1;  play MP_SND_SELECT; uiScript updateSPMenu ; }
+	visible 1 
+}
+
+itemDef {
+      	name tab3
+      	text "Score"
+	background "azuretablong"
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.333
+   	rect 272 16 128 16
+	cvarTest "ui_menutab"
+	hideCVar { "2" }
+     	textalignx	 16	
+	textaligny	 16
+	forecolor MP_TEXTCOLOR
+
+	action { setcvar ui_menutab 2;  play MP_SND_SELECT;  }
+	visible 1 
+}
+
+itemDef {
+      	name tab4
+      	text "Opponent"
+	background "azuretablong"
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.333
+   	rect 400 16 128 16
+	cvarTest "ui_menutab"
+	hideCVar { "3" }
+     	textalignx	 16	
+	textaligny	 16
+	forecolor MP_TEXTCOLOR
+
+	action { setcvar ui_menutab 3;  play MP_SND_SELECT;  }
+	visible 1 
+}
+
+
+
+
+
+
+
+
+
+// pressed tabs
+
+
+itemDef {
+      	name tab1
+      	text "Gametype"
+	background "azureuntablong"
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.333
+   	rect 16 16 128 16
+	cvarTest "ui_menutab"
+	showCVar { "0" }
+     	textalignx	 16	
+	textaligny	 16
+	decoration
+
+	visible 1 
+}
+
+itemDef {
+      	name tab2
+      	text "Map"
+	background "azureuntablong"
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.333
+   	rect 144 16 128 16
+	cvarTest "ui_menutab"
+	showCVar { "1" }
+	decoration
+     	textalignx	 16	
+	textaligny	 16
+
+	visible 1 
+}
+
+itemDef {
+      	name tab3
+      	text "Score"
+	background "azureuntablong"
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.333
+   	rect 272 16 128 16
+	cvarTest "ui_menutab"
+	showCVar { "2" }
+	decoration
+     	textalignx	 16	
+	textaligny	 16
+
+	visible 1 
+}
+
+itemDef {
+      	name tab4
+      	text "Opponent"
+	background "azureuntablong"
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.333
+   	rect 400 16 128 16
+	cvarTest "ui_menutab"
+	showCVar { "3" }
+	decoration
+     	textalignx	 16	
+	textaligny	 16
+
+	visible 1 
+}
+
+
+
+
+// always have this button available
+
+itemDef {
+      	name button1
+      	text "Cancel"
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 32 384 256 32
+     	textalignx	 32	
+	textaligny	 24
+	cvarTest "ui_menutab"
+	showCVar { "0" }
+	backcolor MP_BUTTONBGCOLOR
+	forecolor MP_TEXTCOLOR
+
+	action	{  	
+			close singleplayer;
+			
+			open mainmenu;
+	
+			setcvar ui_menutab 0;	// reset the tabs
+			 play MP_SND_SELECT;  
+		}
+	visible 1 
+}
+
+
+
+

@@ -1,0 +1,119 @@
+// leilei - highly simplified from the rfactory.org site's graphical extensions page
+// because I don't need all those tint rectangles for where i'm going...
+
+  itemDef 
+      {
+        name ACTIONNAME
+        type ITEM_TYPE_BUTTON
+        group bind2click
+        style WINDOW_STYLE_FILLED
+        rect 136 KEYBINDDOWN 196 20
+        background "emptykey"
+        visible 1
+        noFocusColor MENU_TRUE
+        text BINDTITLE
+        textalign ITEM_ALIGN_CENTER
+        textalignx 96
+        textaligny 13    
+	backcolor MP_KEYBINDBGCOLOR 
+        textscale .2   
+	cvarTest "ui_menutab"
+	showCVar { KEYBINDCATEGORY }         
+        forecolor 1 1 1 1
+        action
+        {
+          clearclick bind2click
+	  setitemcolor bind2click backcolor MP_KEYBINDBGCOLOR ;
+          setitemcolor ACTIONNAME backcolor MP_KEYBINDSELCOLOR ;
+          setitemcolor BINDNAME backcolor MP_KEYBINDBGCOLOR ;
+          setitemcolor ALTNAME backcolor MP_KEYBINDBGCOLOR ;
+        }
+        mouseenter
+        {
+          show keybindstat ;
+        }
+        mouseexit
+        {
+          hide keybindstat ;
+        }
+      }
+
+      itemDef
+      {
+        name BINDNAME
+        group bind2click
+        style WINDOW_STYLE_FILLED
+        background "emptykey"
+        type ITEM_TYPE_BIND
+        bindType BIND_PRIMARY
+        bind2Click MENU_TRUE
+        noFocusColor MENU_TRUE
+	backcolor MP_KEYBINDBGCOLOR 
+        cvar THEACTION
+        rect 333 KEYBINDDOWN 128 20 
+        textalign ITEM_ALIGN_CENTER
+        textalignx 64
+        textaligny 13    
+        textscale .2            
+        forecolor 1 1 1 1
+	cvarTest "ui_menutab"
+	showCVar { KEYBINDCATEGORY }   
+        visible 1
+        mouseenter
+        {
+          show keybindstat ;
+        }
+        mouseexit
+        {
+          hide keybindstat ;
+        }
+        action
+        {
+          clearclick bind2click
+	  setitemcolor bind2click backcolor MP_KEYBINDBGCOLOR ;
+          setitemcolor ACTIONNAME backcolor MP_KEYBINDBGCOLOR ;
+          setitemcolor BINDNAME backcolor MP_KEYBINDSELCOLOR ;
+          setitemcolor ALTNAME backcolor MP_KEYBINDBGCOLOR ;
+        }
+    	}
+
+      itemDef
+      {
+        name ALTNAME
+        group bind2click
+        style WINDOW_STYLE_FILLED
+        background "emptykey"
+        type ITEM_TYPE_BIND
+        bindType BIND_ALTERNATE
+        bind2Click MENU_TRUE
+        noFocusColor MENU_TRUE
+	backcolor MP_KEYBINDBGCOLOR 
+        cvar THEACTION
+        rect 461 KEYBINDDOWN 128 20 
+        textalign ITEM_ALIGN_CENTER
+        textalignx 64
+        textaligny 13    
+        textscale .2            
+        forecolor 1 1 1 1
+	cvarTest "ui_menutab"
+	showCVar { KEYBINDCATEGORY }   
+        visible 1
+        mouseenter
+        {
+          show keybindstat ;
+        }
+        mouseexit
+        {
+          hide keybindstat ;
+        }
+        action
+        {
+          clearclick bind2click
+	  setitemcolor bind2click backcolor MP_KEYBINDBGCOLOR ;
+          setitemcolor ACTIONNAME backcolor MP_KEYBINDBGCOLOR ;
+          setitemcolor BINDNAME backcolor MP_KEYBINDBGCOLOR ;
+          setitemcolor ALTNAME backcolor MP_KEYBINDSELCOLOR ;
+        }
+
+    	}
+

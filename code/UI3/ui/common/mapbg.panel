@@ -1,0 +1,76 @@
+itemDef {
+      	name mappreviewblurpass1
+	ownerdraw UI_MAPCINEMATIC
+	textstyle 2
+      	textscale 0.5
+	backcolor 0 0 0 .0
+	forecolor 1 1 1 0.25
+	decoration
+   	rect -110 -110 880 660
+     	textalignx	0	
+	textaligny	0
+	border 0
+	bordercolor   MP_BOX_BORDER
+	visible 1 
+}
+
+itemDef {
+      	name mappreviewblurpass2
+	ownerdraw UI_MAPCINEMATIC
+	textstyle 2
+      	textscale 0.5
+	backcolor 0 0 0 .0
+	forecolor 1 1 1 0.25
+	decoration
+   	rect -100 -110 880 660
+     	textalignx	0	
+	textaligny	0
+	border 0
+	bordercolor   MP_BOX_BORDER
+	visible 1 
+}
+
+itemDef {
+      	name mappreviewblurpass3
+	ownerdraw UI_MAPCINEMATIC
+	textstyle 2
+      	textscale 0.5
+	backcolor 0 0 0 .0
+	forecolor 1 1 1 0.25
+	decoration
+   	rect -100 -100 880 660
+     	textalignx	0	
+	textaligny	0
+	border 0
+	bordercolor   MP_BOX_BORDER
+	visible 1 
+}
+
+itemDef {
+      	name mappreviewblurpass4
+	ownerdraw UI_MAPCINEMATIC
+	textstyle 2
+      	textscale 0.5
+	backcolor 0 0 0 .0
+	forecolor 1 1 1 0.25
+	decoration
+   	rect -110 -100 880 660
+     	textalignx	0	
+	textaligny	0
+	border 0
+	bordercolor   MP_BOX_BORDER
+	visible 1 
+}
+
+/*
+itemDef {
+      	name trophied
+	style 1
+	textstyle 2
+	decoration
+      	textscale 0.5
+ 	rect -110 -110 880 660
+	backcolor 0 0 0 .7
+	visible 1 
+}
+*/

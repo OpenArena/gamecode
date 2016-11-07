@@ -1,0 +1,382 @@
+/*
+===========================================================================
+Copyright (C) 2015 Open Arena Team
+
+This file is part of Open Arena.
+
+Open Arena is free software; you can redistribute it
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the License,
+or (at your option) any later version.
+
+Open Arena is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Foobar; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+===========================================================================
+*/
+
+// HM - hud in the style of laser shooting game by big crow software
+// using the far corners of the screen and a simple scifi esque design.
+
+
+#include "ui/menudef.h"
+#define	GOBACKTOMAIN  "open ingame";
+{
+  assetGlobalDef {
+    	smallFont "gfx/2d/bigchars" 	SMALLFONTSIZE
+    	font "gfx/2d/bigchars" 		MEDIUMFONTSIZE				
+    	bigFont "gfx/2d/bigchars" 	LARGEFONTSIZE								
+	cursor "ui/assets/cursor"			
+	itemFocusSound MP_SND_HOVER	
+	scrollbarSize 1		
+	scrollBarHorz  0	
+	shadowColor 0.0 0.0 0.0 0.25			
+  	}
+	
+
+menuDef {
+    	name "plafyer"
+    	fullScreen 0	
+    	visible 1			
+	rect 0 0 640 480
+
+itemDef {
+      	name scoreffatop
+	background "gradhorzv"
+	style 1
+	type 0
+	decoration
+	//backcolor   0.05 0.6 0.8 0.8
+	backcolor   0.0 0.0 0.0 0.9
+	scralign ALIGN_LEFT
+   	rect 0 428 128 52
+	visible 1 
+}
+
+itemDef {
+      	name bhabox
+	style 1
+	type 0
+	background "ui/hud/cornerbarsflipped"
+	decoration
+	scralign ALIGN_LEFT
+	scralignfactor 1.0
+	backcolor MP_TEXTCOLOR
+   	rect 0 416 64 64
+	visible 1 
+}
+
+itemDef {
+      	name scoreffatop
+	background "gradhorz"
+	style 1
+	type 0
+	decoration
+	//backcolor   0.05 0.6 0.8 0.8
+	backcolor   0.0 0.0 0.0 0.9
+	scralign ALIGN_RIGHT
+   	rect 512 428 128 52
+	visible 1 
+}
+
+
+itemDef {
+      	name bhabox
+	style 1
+	type 0
+	background "ui/hud/habar_top"
+	decoration
+	scralign ALIGN_LEFT
+	scralignfactor 1.0
+	backcolor 1.0 1.0 1.0 1.0
+   	rect 4 416 32 64
+	visible 1 
+}
+
+
+itemDef {
+      	name bhabox
+	style 1
+	type 0
+	background "ui/hud/cornerbars"
+	decoration
+	scralign ALIGN_RIGHT
+	scralignfactor 1.0
+	backcolor MP_TEXTCOLOR
+   	rect 576 416 64 64
+	visible 1 
+}
+
+itemDef {
+      	name bhabox
+	style 1
+	type 0
+	decoration
+	ownerdraw CG_PLAYER_AMMO_ICON2D
+	scralign ALIGN_RIGHT
+	scralignfactor 1.0
+   	rect 608 428 32 32
+	visible 1 
+}
+/*
+
+itemDef {
+      	name boxes
+	style 1
+	type 0
+	decoration
+	text "Yerp: Your a looser!!! I'm shoting u!!!\nSarge: oh nooooooooooo! \nYerp kills sarge with gun\n Yerp: Hhaahahahaha"
+	scralign ALIGN_LEFT
+	textstyle ITEM_TEXTSTYLE_SHADOWEDMORE
+	autowrapped
+	textscale 0.2
+	textaligny 10
+	scralignfactor 1.0
+	backcolor 0.0 0.0 0.0 0.5
+   	rect 92 428 256 48
+	visible 1 
+}
+*/
+itemDef {
+      	name armorvalue
+	style 1
+	type 0
+	decoration
+	textstyle 2
+ 	textalign ITEM_ALIGN_LEFT
+      	textscale 0.3
+	scralign ALIGN_LEFT
+	scralignfactor 1.0
+	ownerdraw CG_PLAYER_ARMOR_VALUE
+	addColorRange -1 50 1 0.3 0.3 1
+	addColorRange 50 100  1 1 1 1
+   	rect 22 444 64 32
+	visible 1 
+}
+
+
+
+itemDef {
+      	name harmorvalue
+	style 1
+	type 0
+	decoration
+	textstyle 2
+ 	align ITEM_ALIGN_LEFT
+      	textscale 0.6
+	scralign ALIGN_LEFT
+	scralignfactor 1.0
+	ownerdraw CG_PLAYER_HEALTH
+	addColorRange -1 50 1 0.3 0.3 1
+	addColorRange 50 100  1 1 1 1
+	addColorRange 101 999 	0.3 0.6 1 1
+   	rect 28 424 64 32
+	visible 1 
+}
+
+// ammo is a big number taking the 
+itemDef {
+      	name harmorvalue
+	style 1
+	type 0
+	decoration
+	textstyle 2
+ 	textalign ITEM_ALIGN_RIGHT
+      	textscale 0.6
+	scralign ALIGN_RIGHT
+	scralignfactor 1.0
+	ownerdraw CG_PLAYER_AMMO_VALUE
+	addColorRange -1 10 1 0.3 0.3 1
+	addColorRange 10 100  1 1 1 1
+   	rect 548 424 64 32
+	visible 1 
+}
+
+itemDef {
+      	name fargsarmorvalue
+	style 1
+	type 0
+	decoration
+	textstyle 2
+ 	textalign ITEM_ALIGN_LEFT
+      	textscale 0.35
+	scralign ALIGN_RIGHT
+	scralignfactor 1
+	ownerdraw CG_PLAYER_SCORE
+   	rect 590 400 64 32
+	visible 1 
+}
+
+
+itemDef {
+      	name fargsarmorvalue
+	style 1
+	type 0
+	decoration
+	textstyle 2
+ 	textalign ITEM_ALIGN_LEFT
+      	textscale 0.35
+	scralign ALIGN_RIGHT
+	scralignfactor 1
+	ownerdraw CG_1STPLACE
+  	rect 590 427 64 32
+	visible 1 
+}
+
+
+
+
+
+/*
+itemDef {
+      	name healthvalue
+	style 1
+	type 0
+	decoration
+	textstyle 3
+ 	textalign ITEM_ALIGN_CENTER
+      	textscale 1
+	scralign ALIGN_CENTER
+	ownerdraw CG_PLAYER_HEALTH
+	addColorRange -1 25 1 0.3 0.3 1
+	addColorRange 26 100  1 1 1 1
+	addColorRange 101 999 	0.3 0.6 1 1
+   	rect 180 448 155 16
+	visible 1 
+}
+*/
+/*
+itemDef {
+      	name ammovalue
+	style 1
+	type 0
+	decoration
+	textstyle 3
+ 	textalign ITEM_ALIGN_RIGHT
+      	textscale 1
+	scralign ALIGN_LEFT
+	scralignfactor 0.7
+	ownerdraw CG_PLAYER_AMMO_VALUE
+	addColorRange -1 25 1 0.3 0.3 1
+	addColorRange 26 100  1 1 1 1
+	addColorRange 101 999 	0.3 0.6 1 1
+   	rect 0 448 128 16
+	visible 1 
+}
+
+*/
+
+// AMMO box
+/*
+itemDef {
+      	name armo
+	background "hudarea2add"
+	style 1
+	type 0
+	decoration
+	scralign ALIGN_LEFT
+	scralignfactor 0.7
+	ownerdraw CG_PLAYER_AMMO_ICON2D
+   	rect 128 416 64 64
+	visible 1 
+}
+*/
+	
+
+// Neccessary teamstuff
+
+itemDef {
+      	name itstimetoscore
+	background "gradhorz"
+	style 1
+	type 0
+	decoration
+	//backcolor   0.05 0.6 0.8 0.8
+	backcolor   0.0 0.0 0.0 0.9
+	backcolor    0.01 0.4 0.78 1.0
+	scralign ALIGN_CENTER
+   	rect 128 0 192 48
+	forecolor 0 0 0 0
+	ownerdrawflag CG_SHOW_ANYTEAMGAME
+	visible 1 
+}
+
+itemDef {
+      	name itstimetoscore
+	background "gradhorzv"
+	style 1
+	type 0
+	decoration
+	//backcolor   0.05 0.6 0.8 0.8
+	backcolor   0.5 0.02 0.27 1.0
+	scralign ALIGN_CENTER
+   	rect 320 0 192 48
+	ownerdrawflag CG_SHOW_ANYTEAMGAME
+	visible 1 
+}
+
+itemDef {
+      	name bluescore
+      	textscale 0.8
+      	style 2					
+	text ""
+      	rect 278 0 36 40
+      	visible 1 
+	textalignx 0
+	textaligny 0 
+	textalign ITEM_ALIGN_RIGHT
+      	forecolor 1 1 1 1
+	textstyle 3
+	ownerdraw CG_BLUE_SCORE
+	ownerdrawflag CG_SHOW_ANYTEAMGAME
+	decoration	  
+	}
+
+itemDef {
+      	name redscore
+      	textscale 0.8
+      	style 2					
+	text ""
+      	rect 320 0 36 40
+      	visible 1 
+	textalignx 18
+	textaligny 0 
+	textalign ITEM_ALIGN_LEFT
+      	forecolor 1 1 1 1
+	textstyle 3
+	ownerdraw CG_RED_SCORE
+	ownerdrawflag CG_SHOW_ANYTEAMGAME
+	decoration	  
+	}	
+
+/*
+itemDef {
+      	name argh
+      	textscale 2
+      	style 1				
+	text "^1YOUR HURT!"
+      	rect 0 0 640 480
+      	visible 1 
+	textalignx 320
+	textaligny 240
+	textalign ITEM_ALIGN_CENTER
+      	forecolor 1 0 0 1.0
+	backcolor 1 0 0 0.3
+	textstyle 1
+	ownerdrawflag CG_SHOW_HEALTHCRITICAL    
+	decoration	  
+	}	
+*/
+
+
+}
+}
+}
+}
+}
+}

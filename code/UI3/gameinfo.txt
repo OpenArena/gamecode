@@ -1,0 +1,122 @@
+/*
+===========================================================================
+Copyright (C) 2008 Open Arena Team
+
+This file is part of Open Arena.
+
+Open Arena is free software; you can redistribute it
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the License,
+or (at your option) any later version.
+
+Open Arena is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Open Arena; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+===========================================================================
+*/
+
+gametypes {
+  { "Deathmatch" 0 }
+  { "Tournament" 1 }
+  { "Team Deathmatch" 3 } //any and all maps marked for ffa will be team
+  { "Capture the flag" 4 }
+  { "One flag" 5 }
+  { "Overload" 6 }
+  { "Harvester" 7 }
+  { "Elimination" 8 }
+  { "CTF Elimination" 9 }
+  { "Last Man Standing" 10 }
+  { "Double Domination" 11 }
+  { "Domination" 12 }
+  { "Possession" 13 }
+
+}
+
+joingametypes {
+  { "Don't care" -1 }
+  { "Deathmatch" 0 }
+  { "Tournament" 1 }
+  { "Team DM" 3 } //any and all maps marked for ffa will be team
+  { "CTF" 4 }
+  { "One flag" 5 }
+  { "Overload" 6 }
+  { "Harvester" 7 }
+  { "Elim" 8 }
+  { "CTF Elim" 9 }
+  { "LMS" 10 }
+  { "Double D" 11 }
+  { "Dom" 12 }
+  { "Possess" 13 }
+
+}
+
+// Single Player Maps
+maps	{
+
+// Column Info
+// Name - Name of the map, displayed under levelshot/cinematic
+// Mapname - the BSP to load of the map
+// Maximum amount of clients possible (for bots etc)
+// Bot?
+
+
+// NOTE: These map picks are not final.  They are temporary for testing the progress of the campaign.
+
+	// Mapname Mapfilename TeamMembers OpponentName ParTimeToBeatsPerGametype
+	// ffa maps 
+/*0 */	{ "Egyptian Trouble" "oacmpdm3" "4" "ssssss" 2 "4" 4 "110" 5 "110" 6 "120" 7 "110" 8 "110" 9 "110" 11 "110" }
+/*1 */	{ "Some Spacee" "oacmpdm4" "4" "ilara sorceress" 2 "4" 4 "110" 5 "110" 6 "120" 7 "110" 8 "110" 9 "110" 11 "110" }
+/*2 */	{ "Blitzkrieg Base" "blitzkrieg2" "4" "yon xyphr" 2 "4" 4 "110" 5 "110" 6 "120" 7 "110" 8 "110" 9 "110" 11 "110" }
+/*3 */	{ "The Other Side" "oacmpdm5" "4" "saki ilara yon" 2 "4" 4 "110" 5 "110" 6 "120" 7 "110" 8 "110" 9 "110" 11 "110" }
+/*4 */	{ "The Crypt" "oacmpdm1" "6" "xyphr sorceress ssssss" 2 "0" 4 "110" 5 "110" 6 "120" 7 "110" 8 "110" 9 "110" 11 "110" }
+/*5 */	{ "The Sanctuary" "oacmpdm9" "6" "saki ssssss yon" 2 "0" 4 "110" 5 "110" 6 "120" 7 "110" 8 "110" 9 "110" 11 "110" }
+/*6 */	{ "Subdivision" "oacmpdm8" "6" "ilara yon saki" 2 "0" 4 "110" 5 "110" 6 "120" 7 "110" 8 "110" 9 "110" 11 "110" }
+/*7 */	{ "nullmap" "pul1duel-oa" "6" "ilara" 2 "0" 4 "110" 5 "110" 6 "120" 7 "110" 8 "110" 9 "110" 11 "110" }
+
+	// ctf maps 
+/*8 */	{ "Uphill Battle" "oacmpctf2" "6" "ilara" 2 "0" 4 "110" 5 "110" 6 "120" 7 "110" 8 "110" 9 "110" 11 "110" }
+/*9 */	{ "Inner Yard" "ctF_inyard" "16" "ilara" 2 "0" 4 "110" 5 "110" 6 "120" 7 "110" 8 "110" 9 "110" 11 "110" }
+/*10*/	{ "OBEY 9" "ps9ctf" "10" "ilara" 2 "0" 4 "110" 5 "110" 6 "120" 7 "110" 8 "110" 9 "110" 11 "110" }
+/*11*/	{ "Turtles Forever" "oacmpctf1" "10" "ilara" 2 "0" 4 "110" 5 "110" 6 "120" 7 "110" 8 "110" 9 "110" 11 "110" }
+/*12*/	{ "Foul Compromise" "ctf_compromise" "16" "ilara" 2 "0" 4 "110" 5 "110" 6 "120" 7 "110" 8 "110" 9 "110" 11 "110" }
+/*13*/	{ "Encephalomalacia" "mlctf1beta" "10" "ilara" 2 "0" 4 "110" 5 "110" 6 "120" 7 "110" 8 "110" 9 "110" 11 "110" }
+/*14*/	{ "Where Fears Collide" "oa_spirit3" "10" "ilara" 2 "0" 4 "110" 5 "110" 6 "120" 7 "110" 8 "110" 9 "110" 11 "110" }
+/*15*/	{ "Facing Giants" "oacmpctf3" "24" "ilara" 2 "0" 4 "110" 5 "110" 6 "120" 7 "110" 8 "110" 9 "110" 11 "110" }
+
+	// DOM maps
+/*16*/	{ "Under Destruction" "oacmpdm10" "8" "ilara" 2 "0" 4 "110" 5 "110" 6 "120" 7 "110" 8 "110" 9 "110" 11 "110" }
+/*17*/	{ "Sleek grinder" "sleekgrinder" "8" "ilara" 2 "0" 4 "110" 5 "110" 6 "120" 7 "110" 8 "110" 9 "110" 11 "110" }
+/*18*/	{ "Floating Tower" "oa_koth2" "8" "ilara" 2 "0" 4 "110" 5 "110" 6 "120" 7 "110" 8 "110" 9 "110" 11 "110" }
+/*19*/	{ "Strange House" "oa_shouse" "8" "ilara" 2 "0" 4 "110" 5 "110" 6 "120" 7 "110" 8 "110" 9 "110" 11 "110" }
+/*20*/	{ "nullmap" "sleekgrinder" "8" "ilara" 2 "0" 4 "110" 5 "110" 6 "120" 7 "110" 8 "110" 9 "110" 11 "110" }
+/*21*/	{ "nullmap" "sleekgrinder" "8" "ilara" 2 "0" 4 "110" 5 "110" 6 "120" 7 "110" 8 "110" 9 "110" 11 "110" }
+/*22*/	{ "nullmap" "sleekgrinder" "8" "ilara" 2 "0" 4 "110" 5 "110" 6 "120" 7 "110" 8 "110" 9 "110" 11 "110" }
+/*23*/	{ "nullmap" "sleekgrinder" "8" "ilara" 2 "0" 4 "110" 5 "110" 6 "120" 7 "110" 8 "110" 9 "110" 11 "110" }
+	
+	// OVERLOAD maps
+
+/*24*/	{ "Factory" "oa_reptctf11" "8" "ilara" 2 "0" 4 "110" 5 "110" 6 "120" 7 "110" 8 "110" 9 "110" 11 "110" }
+/*25*/	{ "Obey 37" "ps37ctf2" "8" "ilara" 2 "0" 4 "110" 5 "110" 6 "120" 7 "110" 8 "110" 9 "110" 11 "110" }
+/*26*/	{ "Der Koberwascher" "pul1ctf" "8" "ilara" 2 "0" 4 "110" 5 "110" 6 "120" 7 "110" 8 "110" 9 "110" 11 "110" }
+/*27*/	{ "nullmap" "pul1ctf" "8" "ilara" 2 "0" 4 "110" 5 "110" 6 "120" 7 "110" 8 "110" 9 "110" 11 "110" }
+/*28*/	{ "nullmap" "pul1ctf" "8" "ilara" 2 "0" 4 "110" 5 "110" 6 "120" 7 "110" 8 "110" 9 "110" 11 "110" }
+/*29*/	{ "nullmap" "pul1ctf" "8" "ilara" 2 "0" 4 "110" 5 "110" 6 "120" 7 "110" 8 "110" 9 "110" 11 "110" }
+/*30*/	{ "nullmap" "pul1ctf" "8" "ilara" 2 "0" 4 "110" 5 "110" 6 "120" 7 "110" 8 "110" 9 "110" 11 "110" }
+/*31*/	{ "nullmap" "pul1ctf" "8" "ilara" 2 "0" 4 "110" 5 "110" 6 "120" 7 "110" 8 "110" 9 "110" 11 "110" }
+
+	// Tournament maps
+
+/*32*/	{ "Five Steps Ahead" "pul1duel-oa" "8" "ilara" 2 "0" 4 "110" 5 "110" 6 "120" 7 "110" 8 "110" 9 "110" 11 "110" }
+/*33*/	{ "Plan 6 from The" "oacmpdm7" "8" "ilara" 2 "0" 4 "110" 5 "110" 6 "120" 7 "110" 8 "110" 9 "110" 11 "110" }
+/*34*/	{ "Danger Arena" "oacmpdm2" "8" "ilara" 2 "0" 4 "110" 5 "110" 6 "120" 7 "110" 8 "110" 9 "110" 11 "110" }
+/*35*/	{ "Slime Facility" "slimefac" "8" "ilara" 2 "0" 4 "110" 5 "110" 6 "120" 7 "110" 8 "110" 9 "110" 11 "110" }
+/*36*/	{ "Big Fan of Death" "pxlfan" "8" "ilara" 2 "0" 4 "110" 5 "110" 6 "120" 7 "110" 8 "110" 9 "110" 11 "110" }
+/*37*/	{ "Aggressor" "Aggressor" "8" "ilara" 2 "0" 4 "110" 5 "110" 6 "120" 7 "110" 8 "110" 9 "110" 11 "110" }
+/*38*/	{ "Space Spire" "czest1tourney" "8" "ilara" 2 "0" 4 "110" 5 "110" 6 "120" 7 "110" 8 "110" 9 "110" 11 "110" }
+/*39*/	{ "nullmap" "pul1duel-oa" "8" "ilara" 2 "0" 4 "110" 5 "110" 6 "120" 7 "110" 8 "110" 9 "110" 11 "110" }
+}

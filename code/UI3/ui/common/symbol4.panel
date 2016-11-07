@@ -1,0 +1,26 @@
+// Because some old peecees hate that spinning symbol. :(
+itemDef	{
+	name backgroundwaved
+	background ingamemenublendbg
+
+	style 1
+	type ITEM_TYPE_BUTTON
+
+//	rect -320 0 1280 480
+	rect -835 0 2340 480 // ultra wide screen
+	decoration 
+	visible 1
+	backcolor 	MP_BUTTONBGCOLOR
+
+	}
+
+
+
+
+
+
+
+
+
+
+

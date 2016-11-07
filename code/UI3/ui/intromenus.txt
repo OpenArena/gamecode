@@ -1,0 +1,5 @@
+// menu defs - intro only, so we can load later.
+// 
+{	
+	loadMenu { "ui/intro.menu" }
+}

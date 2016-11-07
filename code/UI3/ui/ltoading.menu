@@ -1,0 +1,143 @@
+#include "ui/menudef.h"
+
+{
+  menuDef
+  {
+    name "Loading"
+    rect 0 0 640 480
+    fullScreen MENU_TRUE
+    visible MENU_FALSE
+
+    itemDef
+    {
+      name background
+      rect 0 0 640 480
+      style WINDOW_STYLE_FILLED
+      backcolor 0 0 0 1
+      visible MENU_TRUE
+    }
+
+    itemDef
+    {
+      name "levelname"
+      rect 20 20 260 20
+      visible MENU_TRUE
+      align ITEM_ALIGN_LEFT
+      textscale 0.4
+      textaligny 28
+      textalignx 0
+      ownerdraw CG_LOAD_LEVELNAME
+    }
+
+    itemDef
+    {
+      name "hostname"
+      rect 20 100 260 20
+      visible MENU_TRUE
+      align ITEM_ALIGN_LEFT
+      textscale 0.4
+      textaligny 28
+      textalignx 0
+      ownerdraw CG_LOAD_HOSTNAME
+    }
+    
+    itemDef
+    {
+      name "motd"
+      rect 20 180 260 20
+      visible MENU_TRUE
+      align ITEM_ALIGN_LEFT
+      textscale 0.4
+      textaligny 28
+      textalignx 0
+      ownerdraw CG_LOAD_MOTD
+    }
+
+    itemDef
+    {
+      name "levelshot"
+      rect 300 20 320 240
+      visible MENU_TRUE
+      ownerdraw CG_LOAD_LEVELSHOT
+    }
+    
+    itemDef
+    {
+      name "media"
+      rect 20 380 380 30
+      visible MENU_TRUE
+      forecolor 0.0 0.8 1 1
+      ownerdraw CG_LOAD_MEDIA
+      align ITEM_ALIGN_CENTER
+      textstyle 2
+      textscale 0.5
+      special 1.0
+    }
+    
+    itemDef
+    {
+      name "medialabel"
+      textscale 0.6
+      rect 420 380 200 40
+      align ITEM_ALIGN_RIGHT
+      textaligny 28
+      textalignx 0
+      forecolor 0.0 0.8 1 1
+      visible MENU_TRUE 
+      ownerdraw CG_LOAD_MEDIA_LABEL
+    }
+
+    itemDef
+    {
+      name "sound"
+      rect 20 300 380 30
+      visible MENU_TRUE
+      forecolor 0.0 0.8 1 1
+      ownerdraw CG_LOAD_SOUND
+      align ITEM_ALIGN_CENTER
+      textstyle 2
+      textscale 0.5
+      special 1.0
+    }
+    
+    itemDef
+    {
+      name "soundlabel"
+      textscale 0.6
+      rect 420 300 200 40
+      align ITEM_ALIGN_RIGHT
+      textaligny 28
+      textalignx 0
+      forecolor 0.0 0.8 1 1
+      visible MENU_TRUE 
+      ownerdraw CG_LOAD_SOUND_LABEL
+    }
+
+    itemDef
+    {
+      name "graphic"
+      rect 20 340 380 30
+      visible MENU_TRUE
+      forecolor 0.0 0.8 1 1
+      ownerdraw CG_LOAD_GRAPHIC
+      align ITEM_ALIGN_CENTER
+      textstyle 2
+      textscale 0.5
+      special 1.0
+    }
+    
+    itemDef
+    {
+      name "graphiclabel"
+      textscale 0.6
+      rect 420 340 200 40
+      align ITEM_ALIGN_RIGHT
+      textaligny 28
+      textalignx 0
+      forecolor 0.0 0.8 1 1
+      visible MENU_TRUE 
+      ownerdraw CG_LOAD_GRAPHIC_LABEL
+    }
+
+  }
+}

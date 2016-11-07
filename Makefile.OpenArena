@@ -28,6 +28,8 @@ CLIENTBIN=openarena
 SERVERBIN=oa_ded
 COPYDIR=/usr/local/games/openarena
 
+MISSIONPACK_CFLAGS=-DMISSIONPACK -DSCRIPTHUD
+
 # Cross compiling: 64-bit Windows
 # PLATFORM=mingw32
 # ARCH=x86_64

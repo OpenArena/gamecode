@@ -1,0 +1,81 @@
+
+
+// Stuff about the map, info box etc.
+
+
+
+
+itemDef {
+      	name mappreviewblur
+	ownerdraw UI_MAPCINEMATIC
+	textstyle 2
+      	textscale 0.5
+	backcolor 1 1 1 1
+	decoration
+   	rect 330 48 300 220
+     	textalignx	0	
+	textaligny	0
+	border 1
+	bordercolor   MP_BOX_BORDER
+	visible 1 
+}
+
+
+itemDef {
+      	name level_info
+	textstyle 2
+	ownerdraw UI_MAPS_SELECTION
+      	textscale 0.33
+	decoration
+	textalign ITEM_ALIGN_CENTER
+   	rect 400 266 127 32
+     	textalignx	0	
+	textaligny	0
+	border 0
+	visible 1 
+}
+
+itemDef {
+      	name mappar
+	ownerdraw UI_MAP_TIMETOBEAT
+	textstyle 2
+      	textscale 0.27
+	decoration
+	text "Par time:"
+	textalign ITEM_ALIGN_LEFT
+   	rect 360 296 127 32
+     	textalignx	0	
+	textaligny	0
+	border 0
+	visible 1 
+}
+
+itemDef {
+      	name mapparred
+	textstyle 2
+      	textscale 0.27
+	decoration
+	text "Yer time:"
+	cvar "ui_scoreTime" 
+	textalign ITEM_ALIGN_LEFT
+   	rect 360 316 127 32
+     	textalignx	0	
+	textaligny	0
+	border 0
+	visible 1 
+}
+
+itemDef {
+      	name mapparred
+	textstyle 2
+      	textscale 0.27
+	decoration
+	text "Yer time:"
+	cvar "ui_scoreTime" 
+	textalign ITEM_ALIGN_LEFT
+   	rect 360 316 127 32
+     	textalignx	0	
+	textaligny	0
+	border 0
+	visible 1 
+}

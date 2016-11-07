@@ -1,0 +1,154 @@
+/*
+===========================================================================
+Copyright (C) 2015-2016 Open Arena Team
+
+This file is part of Open Arena.
+
+Open Arena is free software; you can redistribute it
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the License,
+or (at your option) any later version.
+
+Open Arena is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Foobar; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+===========================================================================
+*/
+//
+// INTRO
+//	used to display the GPL notice and provide something to read while the rest of the menu
+//		loads
+//
+
+#include "ui/menudef.h"
+
+{
+  assetGlobalDef {
+    	smallFont "gfx/2d/bigchars" 	SMALLFONTSIZE
+    	font "gfx/2d/bigchars" 		MEDIUMFONTSIZE				
+    	bigFont "gfx/2d/bigchars" 	LARGEFONTSIZE				
+	cursor "ui/assets/cursor"			
+	itemFocusSound MP_SND_HOVER		
+	shadowColor 0.0 0.0 0.0 0.25	
+	focuscolor MP_FOCUSCOLOR
+  //	fadeClamp 1.0	
+//	fadeCycle 1	
+//	fadeAmount 0.1
+  	}
+	
+
+menuDef {
+    	name "main"
+	background "black"
+    	fullScreen 1				
+	rect -1000 0 2000 480
+    	visible MENU_TRUE
+    	forecolor MP_FOCUSCOLOR			
+	focuscolor MP_TEXTCOLOR
+			
+
+ 	onEsc
+      { 
+	playLooped MP_MENUMUSIC
+       open mainmenu;close main
+      }
+	
+	onOpen { //open mainmenu;
+		setcvar timedemo 0; // always turn this off when entering the menu, may be an inconvenience to powerusers though
+
+		}
+
+//     opentransitionEnd
+  ///    {
+//		playLooped MP_MENUMUSIC
+  //	    open mainmenu;close main
+    //  }
+
+
+
+itemDef {
+      	name copyright
+	text "OpenArena EX Edition\n\nCopyright(C)2016 OA Team"
+	style 1
+	type 0
+	textstyle 3
+      	textscale 0.5
+	autowrapped
+	forecolor 0.7 0.7 0.7 1
+	decoration
+	textalign 1
+   	rect 300 350 400 330
+     	textalignx	0	
+	textaligny	 0
+	visible 1 
+}
+
+itemDef {
+      	name gplblurb
+	text "This program is licensed under the GNU General Public License version 2. Read COPYING for more details."
+	style 1
+	type 0
+	textstyle 2
+      	textscale 0.27
+	autowrapped
+	forecolor 0.7 0.7 0.7 1
+	decoration
+   	rect 100 350 400 330
+     	textalignx	 12	
+	textaligny	 16
+	visible 1 
+}
+
+itemDef {
+      	name copyrightlibraries
+	text "Portions related to third-party libraries are Copyright (C)2005-2011 libSDL, (C)2016 libxmp, (C)1991-2016 International JPEG Group, (C)2000 Xiphorus"
+	style 1
+	type 0
+	textstyle 2
+      	textscale 0.23
+	autowrapped
+	forecolor 0.7 0.7 0.7 1
+	decoration
+   	rect 40 390 500 330
+     	textalignx	 12	
+	textaligny	 16
+	visible 1 
+}
+
+
+itemDef {
+      	name copyrightg
+	text "C"
+	style 1
+	ownerdraw UI_MENUMAPNAME
+	type 0
+	textstyle 2
+      	textscale 0.27
+	autowrapped
+	forecolor 0.4 0.4 0.5 1
+	decoration
+   	rect 0 350 639 130
+     	textalignx	 12	
+	textaligny	 16
+	visible 1 
+}
+
+
+
+
+}
+
+}
+}
+}
+}
+
+
+
+
+}

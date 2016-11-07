@@ -1,0 +1,189 @@
+itemDef {
+      	name button1
+      	text ""
+	background "azurebuttoncombo"
+	style 1
+	type ITEM_TYPE_MULTI
+	cvar "ui_q3model"
+	cvarFloatList { "Team Skin" 0 "Match Skin" 1 }
+	textstyle 2
+      	textscale 0.5
+   	rect 32 108 256 32
+     	textalignx	 8	
+	textaligny	 26
+	backcolor MP_BUTTON2BGCOLOR
+	forecolor MP_TEXTCOLOR
+	mouseEnter { setcvar ui_tip "Switch setting for Team or DM model." fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	visible 1 
+}
+
+itemDef	{
+	name playerlist
+   	rect 32 140 256 132
+	type ITEM_TYPE_LISTBOX
+	style WINDOW_STYLE_FILLED
+	elementwidth 32
+	elementheight 18
+	cvarTest "ui_q3model"
+	hideCVar { "0" }
+	textscale .33
+	elementtype LISTBOX_TEXT
+	feeder FEEDER_Q3HEADS
+	textalign 0
+	background MP_DIALOGBG
+	backcolor 	MP_DIALOGBGCOLOR
+	textaligny 16
+	border 1
+	bordercolor   MP_BOX_BORDER
+	forecolor     MP_BOX_FORE
+	backcolor     MP_BOX_BACK
+	outlinecolor  MP_BOX_OUTLINE
+	visible 1
+	columns 1 2 190 25
+	mouseEnter { setcvar ui_tip "Pick a character." fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	}
+
+
+itemDef	{
+	name playerlist2
+   	rect 32 140 64 132
+	type ITEM_TYPE_LISTBOX
+	style WINDOW_STYLE_FILLED
+	elementwidth 32
+	elementheight 32
+	cvarTest "ui_q3model"
+	hideCVar { "1" }
+	textscale .33
+	elementtype 2
+	feeder FEEDER_HEADS
+	textalign 0
+	background MP_DIALOGBG
+	backcolor 	MP_DIALOGBGCOLOR
+	textaligny 16
+	border 1
+	bordercolor   MP_BOX_BORDER
+	forecolor     MP_BOX_FORE
+	backcolor     MP_BOX_BACK
+	outlinecolor  MP_BOX_OUTLINE
+	visible 1
+	columns 1 2 190 25
+	mouseEnter { setcvar ui_tip "Pick a head." fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	}
+
+
+
+
+
+itemDef {
+      	name playery
+	background MP_DIALOGBG
+	backcolor 	MP_DIALOGBGCOLOR
+	style 1
+	type 0
+	textstyle 2
+      	textscale 0.5
+	decoration
+   	rect 330 80 300 320
+     	textalignx	 32	
+	textaligny	 24
+	border 1
+	bordercolor   MP_BOX_BORDER
+	visible 1 
+}
+
+itemDef {
+      	name playery
+	background "azuredisc"
+	style 1
+	type 0
+	textstyle 2
+      	textscale 0.5
+	decoration
+   	rect 350 320 256 64
+	bordercolor   MP_BOX_BORDER
+	visible 1 
+}
+
+
+
+itemDef	{
+	name themodel
+	ownerdraw UI_PLAYERMODEL
+   	rect 330 0 300 480
+	//rect 0 -270 950 1000
+	//type ITEM_TYPE_MODEL
+	model_rotation  5
+	cvarTest "ui_browserSortKey"
+	showCVar { "0" }
+	style 0
+	decoration 
+	visible 1
+	}
+
+itemDef	{
+	name themodel2
+	ownerdraw UI_PLAYERMODEL2
+   	rect 330 0 300 480
+	//rect 0 -270 950 1000
+	cvarTest "ui_browserSortKey"
+	showCVar { "1" }
+	style 0
+	decoration 
+	visible 1
+	}
+itemDef	{
+	name themodelf3
+	//ownerdraw UI_PLAYERMODEL
+   	rect 330 0 300 480
+	//rect -640 -480 1280 3280
+	cvarTest "ui_browserSortKey"
+	showCVar { "2" }
+	type ITEM_TYPE_MODEL
+	asset_model "models/misc/telep.md3"
+	model_fovx   90 
+	model_fovy   90 
+	model_rotation  5
+	style 0
+	decoration 
+	visible 1
+	}
+
+
+
+
+
+
+itemDef {
+      	name playersname
+      	text "Name"
+	background "azurebuttoncombo"
+	style 1
+	type 0
+	textstyle 2
+      	textscale 0.5
+   	rect 32 300 256 64
+     	textalignx	16	
+	decoration
+	textaligny	 26
+	backcolor MP_BUTTON2BGCOLOR
+	forecolor MP_TEXTCOLOR
+
+	visible 1 
+}
+itemDef {
+      	name settintheplayername
+	text ""
+	cvar "ui_Name"
+	style 0
+	type ITEM_TYPE_EDITFIELD
+	maxChars 40
+	maxPaintChars 10
+	textstyle 2
+      	textscale 0.5
+   	rect 32 332 256 32
+     	textalignx	 32	
+	textaligny	 26
+	forecolor MP_TEXTCOLOR
+	mouseEnter { setcvar ui_tip "TYPE the name you wish to use. ^1(No real names!)" fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	visible 1 
+}

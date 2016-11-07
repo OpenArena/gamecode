@@ -1,0 +1,835 @@
+/*
+===========================================================================
+Copyright (C) 2015 Open Arena Team
+
+This file is part of Open Arena.
+
+Open Arena is free software; you can redistribute it
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the License,
+or (at your option) any later version.
+
+Open Arena is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Foobar; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+===========================================================================
+*/
+
+#include "ui/menudef.h"
+#define	GOBACKTOMAIN  "open ingame";
+{
+  assetGlobalDef {
+    	smallFont "gfx/2d/bigchars" 	SMALLFONTSIZE
+    	font "gfx/2d/bigchars" 		MEDIUMFONTSIZE				
+    	bigFont "gfx/2d/bigchars" 	LARGEFONTSIZE								
+	cursor "ui/assets/cursor"	
+	scrollbarSize 1		
+	scrollBarHorz  0
+	itemFocusSound MP_SND_HOVER		
+	shadowColor 0.0 0.0 0.0 0.25			
+  	}
+	
+//
+// FFA GAMES
+// 
+
+menuDef {
+    	name "score_menu"
+    	fullScreen 0	
+    	visible 0			
+	rect 0 0 640 480
+
+
+// The Head Box!
+
+itemDef {
+      	name whaaaaa
+      	textscale .7
+      	style 2
+      	rect 77 32 378 54
+      	visible 1 
+	textalignx 0
+	textaligny 0 
+	textalign 2
+      	forecolor 1 1 1 0.7
+	ownerdraw CG_GAME_TYPE
+	decoration	  
+	}
+itemDef {
+      	name scoreffatop
+	background "gradv"
+	style 1
+	type 0
+	decoration
+	//backcolor   0.05 0.6 0.8 0.8
+	backcolor   0.1 0.1 0.1 0.9
+
+   	rect 64 33 513 64
+	visible 1 
+}
+
+	
+
+itemDef {
+      	name scoreffatop
+	style 1
+	type 0
+	decoration
+	border 1
+	bordercolor   0.05 0.6 0.8 0.8
+	backcolor   0.05 0.6 0.8 0.5
+	backcolor   0.05 0.1 0.2 0.8
+	bordercolor   0.1 0.1 0.1 0.9
+	backcolor   0.0 0.0 0.0 0.8
+   	rect 63 96 513 280
+	visible 1 
+}
+
+itemDef {
+      	name scoreffabtotom
+	background "grad"
+	style 1
+	type 0
+	decoration
+	backcolor   0.05 0.6 0.8 0.8
+	backcolor   0.1 0.1 0.1 0.9
+
+   	rect 64 376 513 64
+	visible 1 
+}
+
+itemDef {
+      	name thepersonthatfraggedyou
+      	textscale .5
+      	style 2
+ 	rect 422 349 36 54
+      //	rect 130 349 378 54
+      	visible 1 
+	textalignx 0
+	textaligny 0 
+	textalign ITEM_ALIGN_RIGHT
+      	forecolor 1 1 1 1
+	ownerdraw CG_KILLER
+	decoration	  
+	}	
+
+
+itemDef {
+      	name whatisit
+      	textscale .5
+      	style 2
+	text ""
+      	rect 577 32 36 54
+      	visible 1 
+	textalignx 0
+	textaligny 0 
+	textalign 2
+      	forecolor 1 1 1 1
+	ownerdraw CG_GAME_STATUS
+	decoration	  
+	}	
+/*
+
+
+itemDef {
+      	name whatisit
+      	textscale .5
+      	style 2
+	text ""
+      	rect 357 32 36 54
+      	visible 1 
+	textalignx 0
+	textaligny 0 
+	textalign 0
+      	forecolor 1 1 1 1
+	ownerdraw CG_PLAYER_SCORE
+	decoration	  
+	}	
+
+*/
+itemDef {
+      	name your_doublekills
+      	textscale .3
+      	style 2
+      	rect 72 380 32 32
+      	visible 1 
+	background "menu/medals/medal_excellent"
+	textalignx 0
+	textaligny 0 
+	textalign 0
+      	forecolor 1 1 1 1
+	ownerdraw CG_EXCELLENT
+	decoration	  
+	}	
+
+itemDef {
+      	name your_accuracy
+      	textscale .3
+      	style 2
+      	rect 112 380 32 32
+      	visible 1 
+	background "menu/medals/medal_accuracy"
+	textalignx 0
+	textaligny 0 
+	textalign 0
+      	forecolor 1 1 1 1
+	ownerdraw CG_ACCURACY
+	decoration	  
+	}	
+
+itemDef {
+      	name your_accuracy
+      	textscale .3
+      	style 2
+      	rect 152 380 32 32
+      	visible 1 
+	background "menu/medals/medal_impressive"
+	textalignx 0
+	textaligny 0 
+	textalign 0
+      	forecolor 1 1 1 1
+	ownerdraw CG_IMPRESSIVE
+	decoration	  
+	}	
+
+
+itemDef {
+      	name your_accuracy
+      	textscale .3
+      	style 2
+      	rect 192 380 32 32
+      	visible 1 
+	background "menu/medals/medal_gauntlet"
+	textalignx 0
+	textaligny 0 
+	textalign 0
+      	forecolor 1 1 1 1
+	ownerdraw CG_GAUNTLET
+	decoration	  
+	}	
+
+// OK THE TEAM LISTS BEIGN !
+
+itemDef	{
+	name ffascoreboardindex
+   	type 4
+//	text "Skill   Name                                       Frags    Ping   Time"
+	// TODO: Split this with actual labels over each column.
+	//text "Skill   Name                                         Frags    Ping   Time"
+	text "Status"
+	textscale .3
+	textalign 0
+	notselectable
+	textaligny 16
+	textalignx 16
+	border 0
+	forecolor     MP_BOX_FORE
+	forecolor     0.6 0.6 0.6 1
+	backcolor     MP_BOX_BACK
+	visible 1
+ 	rect 64 96 512 16
+}
+itemDef	{
+	name ffascoreboardindex
+   	type 4
+	text "Name"
+	textscale .3
+	textalign 0
+	notselectable
+	textaligny 16
+	textalignx 16
+	border 0
+	forecolor     MP_BOX_FORE
+	forecolor     0.6 0.6 0.6 1
+	backcolor     MP_BOX_BACK
+	visible 1
+ 	rect 117 96 512 16
+}
+
+itemDef	{
+	name ffascoreboardindex
+   	type 4
+	text "Frags"
+	textscale .3
+	textalign 0
+	notselectable
+	textaligny 16
+	textalignx 16
+	border 0
+	forecolor     MP_BOX_FORE
+	forecolor     0.6 0.6 0.6 1
+	backcolor     MP_BOX_BACK
+	visible 1
+ 	rect 373 96 512 16
+}
+
+itemDef	{
+	name ffascoreboardindex
+   	type 4
+	text "Ping"
+	textscale .3
+	textalign 0
+	notselectable
+	textaligny 16
+	textalignx 16
+	border 0
+	forecolor     MP_BOX_FORE
+	forecolor     0.6 0.6 0.6 1
+	backcolor     MP_BOX_BACK
+	visible 1
+ 	rect 443 96 512 16
+}
+
+
+itemDef	{
+	name ffascoreboardindex
+   	type 4
+	text "Time"
+	textscale .3
+	textalign 0
+	notselectable
+	textaligny 16
+	textalignx 16
+	border 0
+	forecolor     MP_BOX_FORE
+	forecolor     0.6 0.6 0.6 1
+	backcolor     MP_BOX_BACK
+	visible 1
+ 	rect 508 96 512 16
+}
+
+itemDef	{
+	name ffaffa
+   	type ITEM_TYPE_LISTBOX
+	//style WINDOW_STYLE_FILLED
+	elementwidth 315
+	elementheight 20
+	textscale .3
+	elementtype LISTBOX_TEXT
+	feeder FEEDER_SCOREBOARD
+	textalign 0
+//	background "listbg_azure"
+	notselectable
+	textaligny 0
+	textalignx 0
+	border 0
+	forecolor     MP_BOX_FORE
+	forecolor     1 1 1 1
+	backcolor     MP_BOX_BACK
+	//outlinecolor  MP_BOX_OUTLINE
+	visible 1
+ 	rect 64 112 512 240
+	//columns 5 8 16 16 64 16 16 16 16 16 16 16 16 16 16 16 16 16
+
+columns 7
+               16 16 16	// bot
+               16 16 16  // head
+               266 16 16	//  Tournament Position
+	       64 0 32	// Name
+               320 0 144  // score
+               447 0 240  // Time in the Game 
+	       377 0 320   // time
+	
+
+	}
+
+}
+
+//
+// TEAM GAMES
+//
+
+menuDef {
+    	name "teamscore_menu"
+    	fullScreen 0	
+    	visible 0			
+	rect 0 0 640 480
+
+
+
+itemDef {
+      	name scoreffatop
+	background "gradv"
+	style 1
+	type 0
+	decoration
+	//backcolor   0.05 0.6 0.8 0.8
+	backcolor    0.01 0.4 0.78 1.0
+
+   	rect 64 33 257 64
+	visible 1 
+}
+
+	
+
+itemDef {
+      	name scoreffatop
+	style 1
+	type 0
+	decoration
+	border 1
+	bordercolor  0.01 0.4 0.78 1.0
+	backcolor   0.0 0.0 0.0 0.8
+   	rect 63 96 257 280
+	visible 1 
+}
+/*
+itemDef {
+      	name scoreffabtotom
+	background "grad"
+	style 1
+	type 0
+	decoration
+	backcolor   0.01 0.4 0.78 1.0
+
+   	rect 64 376 257 64
+	visible 1 
+}
+*/
+
+itemDef {
+      	name specsandyourstuff
+	background "grad"
+	style 1
+	type 0
+	decoration
+	backcolor   0.0 0.0 0.0 1.0
+
+   	rect 64 377 513 96
+	visible 1 
+}
+//RED
+
+itemDef {
+      	name scoreffatop
+	background "gradv"
+	style 1
+	type 0
+	decoration
+	//backcolor   0.05 0.6 0.8 0.8
+	backcolor   0.5 0.02 0.27 1.0
+
+   	rect 320 33 257 64
+	visible 1 
+}
+
+	
+
+itemDef {
+      	name scoreffatop
+	style 1
+	type 0
+	decoration
+	border 1
+	bordercolor   0.5 0.02 0.27 1.0
+	backcolor   0.05 0.6 0.8 0.5
+	backcolor   0.05 0.1 0.2 0.8
+	backcolor   0.0 0.0 0.0 0.8
+   	rect 319 96 257 280
+	visible 1 
+}
+/*
+itemDef {
+      	name scoreffabtotom
+	background "grad"
+	style 1
+	type 0
+	decoration
+	backcolor   0.05 0.6 0.8 0.8
+	backcolor   0.5 0.02 0.27 1.0
+
+   	rect 320 376 257 64
+	visible 1 
+}
+*/
+itemDef {
+      	name thepersonthatfraggedyou
+      	textscale .5
+      	style 2
+ 	rect 422 349 36 54
+      //	rect 130 349 378 54
+      	visible 1 
+	textalignx 0
+	textaligny 0 
+	textalign ITEM_ALIGN_RIGHT
+      	forecolor 1 1 1 1
+	ownerdraw CG_KILLER
+	decoration	  
+	}	
+
+// MEDALS!!!!
+
+itemDef {
+      	name your_doublekills
+      	textscale .3
+      	style 2
+      	rect 72 380 32 32
+      	visible 1 
+	background "menu/medals/medal_excellent"
+	textalignx 0
+	textaligny 0 
+	textalign 0
+      	forecolor 1 1 1 1
+	ownerdraw CG_EXCELLENT
+	decoration	  
+	}	
+
+itemDef {
+      	name your_accuracy
+      	textscale .3
+      	style 2
+      	rect 112 380 32 32
+      	visible 1 
+	background "menu/medals/medal_accuracy"
+	textalignx 0
+	textaligny 0 
+	textalign 0
+      	forecolor 1 1 1 1
+	ownerdraw CG_ACCURACY
+	decoration	  
+	}	
+
+itemDef {
+      	name your_twoconsecutivehitswitharailgun
+      	textscale .3
+      	style 2
+      	rect 152 380 32 32
+      	visible 1 
+	background "menu/medals/medal_impressive"
+	textalignx 0
+	textaligny 0 
+	textalign 0
+      	forecolor 1 1 1 1
+	ownerdraw CG_IMPRESSIVE
+	decoration	  
+	}	
+
+
+itemDef {
+      	name your_killingsinvolvingafrickinghugedrill
+      	textscale .3
+      	style 2
+      	rect 192 380 32 32
+      	visible 1 
+	background "menu/medals/medal_gauntlet"
+	textalignx 0
+	textaligny 0 
+	textalign 0
+      	forecolor 1 1 1 1
+	ownerdraw CG_GAUNTLET
+	decoration	  
+	}	
+
+itemDef {
+      	name your_helpingofgettingyourcarriersbacksidecovered
+      	textscale .3
+      	style 2
+      	rect 232 380 32 32
+      	visible 1 
+	background "menu/medals/medal_assist"
+	textalignx 0
+	textaligny 0 
+	textalign 0
+      	forecolor 1 1 1 1
+	ownerdraw CG_ASSISTS
+	decoration	  
+	}	
+
+itemDef {
+      	name your_capturingoftheotherflag
+      	textscale .3
+      	style 2
+      	rect 272 380 32 32
+      	visible 1 
+	background "menu/medals/medal_capture"
+	textalignx 0
+	textaligny 0 
+	textalign 0
+      	forecolor 1 1 1 1
+	ownerdraw CG_CAPTURES
+	decoration	  
+	}
+
+itemDef {
+      	name your_defendingoftheflagbase
+      	textscale .3
+      	style 2
+      	rect 312 380 32 32
+      	visible 1 
+	background "menu/medals/medal_defend"
+	textalignx 0
+	textaligny 0 
+	textalign 0
+      	forecolor 1 1 1 1
+	ownerdraw CG_DEFEND
+	decoration	  
+	}
+
+// OK THE TEAM LISTS BEIGN !
+
+itemDef	{
+	name ffascoreboardindex
+   	type 4
+	text "Name"
+
+
+	textscale .26
+	textalign 0
+	notselectable
+	textaligny 16
+	textalignx 16
+	border 0
+	forecolor     MP_BOX_FORE
+	forecolor     0.6 0.6 0.6 1
+	backcolor     MP_BOX_BACK
+	//outlinecolor  MP_BOX_OUTLINE
+	visible 1
+	// add 256 to the red side
+ 	rect 77 98 512 16
+}
+itemDef	{
+	name ffascoreboardindex
+   	type 4
+	text "Frags"
+
+
+	textscale .26
+	textalign 0
+	notselectable
+	textaligny 16
+	textalignx 16
+	border 0
+	forecolor     MP_BOX_FORE
+	forecolor     0.6 0.6 0.6 1
+	backcolor     MP_BOX_BACK
+	//outlinecolor  MP_BOX_OUTLINE
+	visible 1
+	// add 256 to the red side
+ 	rect 220 98 512 16
+}
+itemDef	{
+	name ffascoreboardindex
+   	type 4
+	text "Ping"
+
+
+	textscale .26
+	textalign 0
+	notselectable
+	textaligny 16
+	textalignx 16
+	border 0
+	forecolor     MP_BOX_FORE
+	forecolor     0.6 0.6 0.6 1
+	backcolor     MP_BOX_BACK
+	//outlinecolor  MP_BOX_OUTLINE
+	visible 1
+	// add 256 to the red side
+ 	rect 261 98 512 16
+}
+
+itemDef	{
+	name ffascoreboardindex
+   	type 4
+	text "Name"
+
+
+	textscale .26
+	textalign 0
+	notselectable
+	textaligny 16
+	textalignx 16
+	border 0
+	forecolor     MP_BOX_FORE
+	forecolor     0.6 0.6 0.6 1
+	backcolor     MP_BOX_BACK
+	//outlinecolor  MP_BOX_OUTLINE
+	visible 1
+	// add 256 to the red side
+ 	rect 333 98 512 16
+}
+itemDef	{
+	name ffascoreboardindex
+   	type 4
+	text "Frags"
+
+
+	textscale .26
+	textalign 0
+	notselectable
+	textaligny 16
+	textalignx 16
+	border 0
+	forecolor     MP_BOX_FORE
+	forecolor     0.6 0.6 0.6 1
+	backcolor     MP_BOX_BACK
+	//outlinecolor  MP_BOX_OUTLINE
+	visible 1
+	// add 256 to the red side
+ 	rect 476 98 512 16
+}
+itemDef	{
+	name ffascoreboardindex
+   	type 4
+	text "Ping"
+
+
+	textscale .26
+	textalign 0
+	notselectable
+	textaligny 16
+	textalignx 16
+	border 0
+	forecolor     MP_BOX_FORE
+	forecolor     0.6 0.6 0.6 1
+	backcolor     MP_BOX_BACK
+	//outlinecolor  MP_BOX_OUTLINE
+	visible 1
+	// add 256 to the red side
+ 	rect 517 98 512 16
+}
+
+itemDef {
+      	name redscore
+      	textscale 1.0
+      	style 2					
+	text ""
+      	rect 385 38 36 54
+      	visible 1 
+	textalignx 0
+	textaligny 0 
+	textalign ITEM_ALIGN_LEFT
+      	forecolor 1 1 1 1
+	textstyle 3
+	ownerdraw CG_RED_SCORE
+	decoration	  
+	}	
+
+itemDef {
+      	name redname
+      	textscale .5
+      	style 2
+	text ""
+      	rect 566 32 36 54
+      	visible 1 
+	textalignx 0
+	textaligny 0 
+	textalign 2
+      	forecolor 1 1 1 0.3
+	ownerdraw CG_RED_NAME
+	decoration	  
+	}	
+
+itemDef {
+      	name bluescore
+      	textscale 1.0
+      	style 2
+	text ""
+      	rect 288 38 36 54
+      	visible 1 
+	textalignx 0
+	textaligny 0 
+	textalign 2
+	textstyle 3
+      	forecolor 1 1 1 1
+	ownerdraw CG_BLUE_SCORE
+	decoration	  
+	}	
+
+itemDef {
+      	name redname
+      	textscale .5
+      	style 2
+	text ""
+      	rect 73 32 36 54
+      	visible 1 
+	textalignx 0
+	textaligny 0 
+	textalign 0
+      	forecolor 1 1 1 0.3
+	ownerdraw CG_BLUE_NAME
+	decoration	  
+	}	
+
+
+itemDef	{
+	name ffaffa
+   	type ITEM_TYPE_LISTBOX
+	//style WINDOW_STYLE_FILLED
+	elementwidth 315
+	elementheight 20
+	textscale .26
+	elementtype LISTBOX_TEXT
+	feeder FEEDER_BLUETEAM_LIST
+	textalign 0
+	notselectable
+	textaligny 0
+	textalignx 0
+	border 0
+	forecolor     MP_BOX_FORE
+	forecolor     1 1 1 1
+	forecolor 	0.6 0.7 1.0 1.0
+	backcolor     MP_BOX_BACK
+	//outlinecolor  MP_BOX_OUTLINE
+	visible 1
+ 	rect 64 112 256 240
+
+columns 7
+               0 16 16	// bot
+               144 16 16  // Role
+               2 16 1	//  Leader?
+	       24 0 14	// Name
+               166 0 5  // score
+               9999 0 0 // Time in the Game (DISABLED)
+	       197 0 5  // Ping
+	
+
+	}
+
+
+itemDef	{
+	name ffaffa
+   	type ITEM_TYPE_LISTBOX
+	//style WINDOW_STYLE_FILLED
+	elementwidth 315
+	elementheight 20
+	textscale .26
+	elementtype LISTBOX_TEXT
+	feeder FEEDER_REDTEAM_LIST
+	textalign 0
+	notselectable
+	textaligny 0
+	textalignx 0
+	border 0
+	forecolor     MP_BOX_FORE
+	forecolor     1 1 1 1
+ 	forecolor 	1.0 0.6 0.7 1.0
+	backcolor     MP_BOX_BACK
+	//outlinecolor  MP_BOX_OUTLINE
+	visible 1
+ 	rect 320 112 256 240
+
+columns 7
+               0 16 16	// bot
+               144 16 16  // Role
+               2 16 1	//  Leader?
+	       24 0 14	// Name
+               166 0 5  // score
+               9999 0 0 // Time in the Game  (DISABLED)
+	       197 0 5  // Ping
+	
+
+	}
+
+
+}
+}
+}
+}
+}
+}

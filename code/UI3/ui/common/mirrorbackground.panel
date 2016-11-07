@@ -1,0 +1,73 @@
+// Like menubackground, but has the other half flipped, for a symmetrical background that may take less vram
+// Please do not use this for any ingame menus
+
+
+itemDef {
+      	name tes
+	background "ui/assets5/oalogoback1"
+	backcolor  1 1 1 1
+	style 1
+	type 0
+	decoration
+   	rect -64 0 256 256
+	visible 1 
+}
+
+itemDef {
+      	name tes
+	background "ui/assets5/oalogoback2"
+	backcolor  1 1 1 1
+	style 1
+	type 0
+	decoration
+   	rect -64 256 256 256
+	visible 1 
+}
+
+itemDef {
+      	name tes
+	background "ui/assets5/oalogoback1"
+	backcolor  1 1 1 1
+	style 1
+	type 0
+	decoration
+   	rect 384 0 -256 256
+	visible 1 
+}
+
+itemDef {
+      	name tes
+	background "ui/assets5/oalogoback2"
+	backcolor  1 1 1 1
+	style 1
+	type 0
+	decoration
+   	rect 384 256 -256 256
+	visible 1 
+}
+
+
+
+itemDef {
+      	name tes
+	background "ui/assets5/oalogoback3"
+	backcolor  1 1 1 1
+	style 1
+	type 0
+	decoration
+   	rect 192 0 256 256
+	visible 1 
+}
+
+itemDef {
+      	name tes
+	background "ui/assets5/oalogoback4"
+	backcolor  1 1 1 1
+	style 1
+	type 0
+	decoration
+   	rect 192 256 256 256
+	visible 1 
+}
+
+
