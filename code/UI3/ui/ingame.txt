@@ -1,0 +1,14 @@
+// menu defs
+// 
+{	
+	//loadMenu { "ui/ingame_menu.menu" }
+	loadMenu { "ui/ingame_menu_alt.menu" }
+
+	//loadMenu { "ui/main_menu.menu" }
+	loadMenu { "ui/ingame_options.menu" }
+	loadMenu { "ui/ingame_controls.menu" }
+	loadMenu { "ui/ingame_profile.menu" }
+	//loadMenu { "ui/main_play_maker.menu" }
+	loadMenu { "ui/connecting.menu" }
+ 	//loadMenu { "ui/error.menu" }
+}

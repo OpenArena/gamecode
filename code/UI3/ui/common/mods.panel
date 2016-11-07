@@ -1,0 +1,447 @@
+
+
+
+
+
+
+// -----------------------------------------------------------
+// TAB 0 - Mods
+// -----------------------------------------------------------
+
+itemDef {
+      	name videofield
+	text	"Mods"
+	background MP_DIALOGBG
+	backcolor 	MP_DIALOGBGCOLOR
+	style 1
+	type 0
+	textstyle 2
+      	textscale 0.5
+	decoration
+   	rect 16 32 600 400
+     	textalignx	 32	
+	textaligny	 24
+	border 1
+	bordercolor   MP_BOX_BORDER
+	visible 1 
+	cvarTest "ui_menutab"
+	showCVar { "0" }
+}
+
+itemDef
+{
+	name modlist
+   	rect 32 72 556 280
+	type ITEM_TYPE_LISTBOX
+	style WINDOW_STYLE_FILLED
+	elementwidth 32
+	elementheight 18
+	textscale .333
+	elementtype LISTBOX_TEXT
+	feeder FEEDER_MODS
+	textalign 0
+	background "listbg_azure"
+	textaligny 16
+	border 1
+	bordercolor   MP_BOX_BORDER
+	forecolor     MP_BOX_FORE
+	backcolor     MP_BOX_BACK
+	outlinecolor  MP_BOX_OUTLINE
+	visible 1
+	mouseEnter { setcvar ui_tip TIP_LIBRARY_MODLIST fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	columns 1 2 190 25
+	cvarTest "ui_menutab"
+	showCVar { "0" }
+}
+
+
+itemDef {
+      	name button1
+      	text "Load"
+	background "azurebuttonlong"
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 352 364 256 32
+     	textalignx	 32	
+	textaligny	 24
+	forecolor MP_TEXTCOLOR
+
+	action	{ uiScript runMod;	close mods; 
+			open mainmenu;
+			 play MP_SND_SELECT;  
+				}
+
+	visible 1 
+	cvarTest "ui_menutab"
+	showCVar { "0" }
+}
+
+// -----------------------------------------------------------
+// TAB 1 - Demos
+// -----------------------------------------------------------
+
+itemDef {
+      	name videofield
+	text	"Recorded Demos"
+	background MP_DIALOGBG
+	backcolor 	MP_DIALOGBGCOLOR
+	style 1
+	type 0
+	textstyle 2
+      	textscale 0.5
+	decoration
+   	rect 16 32 600 400
+     	textalignx	 32	
+	textaligny	 24
+	border 1
+	bordercolor   MP_BOX_BORDER
+	visible 1 
+	cvarTest "ui_menutab"
+	showCVar { "1" }
+}
+
+itemDef
+{
+	name modlist
+   	rect 32 72 556 224
+	type ITEM_TYPE_LISTBOX
+	style WINDOW_STYLE_FILLED
+	elementwidth 32
+	elementheight 18
+	textscale .333
+	elementtype LISTBOX_TEXT
+	feeder FEEDER_DEMOS
+	textalign 0
+	background "listbg_azure"
+	textaligny 16
+	border 1
+	bordercolor   MP_BOX_BORDER
+	forecolor     MP_BOX_FORE
+	backcolor     MP_BOX_BACK
+	outlinecolor  MP_BOX_OUTLINE
+	visible 1
+	mouseEnter { setcvar ui_tip TIP_LIBRARY_DEMOS fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	columns 1 2 190 25
+	cvarTest "ui_menutab"
+	showCVar { "1" }
+}
+
+
+
+itemDef {
+      	name button1
+      	text "Play"
+	background "azurebuttonlong"
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 352 364 256 32
+     	textalignx	 32	
+	textaligny	 24
+	forecolor MP_TEXTCOLOR
+
+	action	{ 
+setcvar timedemo 0;
+uiScript runDemo;	close mods; 
+			open mainmenu;
+
+			 play MP_SND_SELECT;  
+				}
+
+	visible 1 
+	cvarTest "ui_menutab"
+	showCVar { "1" }
+}
+
+itemDef {
+      	name button1
+      	text "Benchmark"
+	background "azurebuttonlong"
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 352 332 256 32
+     	textalignx	 32	
+	textaligny	 24
+	forecolor MP_TEXTCOLOR
+
+	action	{ 
+setcvar timedemo 1;
+uiScript runDemo;	close mods; 
+setcvar com_errorMessage "Benchmark result" 
+			open mainmenu;
+
+			 play MP_SND_SELECT;  
+				}
+
+	visible 1 
+	cvarTest "ui_menutab"
+	showCVar { "1" }
+}
+
+
+itemDef {
+      	name button1
+      //	text "tes"
+	cvar "ui_timedemoResult"
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.26
+   	rect 72 332 256 32
+     	textalignx	 32	
+	textaligny	 24
+	forecolor MP_TEXTCOLOR
+
+	decoration
+	visible 1 
+	cvarTest "ui_menutab"
+	showCVar { "1" }
+}
+
+
+// -----------------------------------------------------------
+// TAB 2 - Cinematics
+// -----------------------------------------------------------
+
+itemDef {
+      	name videofield
+	text	"Cinematics"
+	background MP_DIALOGBG
+	backcolor 	MP_DIALOGBGCOLOR
+	style 1
+	type 0
+	textstyle 2
+      	textscale 0.5
+	decoration
+   	rect 16 32 600 400
+     	textalignx	 32	
+	textaligny	 24
+	border 1
+	bordercolor   MP_BOX_BORDER
+	visible 1 
+	cvarTest "ui_menutab"
+	showCVar { "2" }
+}
+
+itemDef
+{
+	name modlist
+   	rect 32 72 556 280
+	type ITEM_TYPE_LISTBOX
+	style WINDOW_STYLE_FILLED
+	elementwidth 32
+	elementheight 18
+	textscale .333
+	elementtype LISTBOX_TEXT
+	feeder FEEDER_CINEMATICS
+	textalign 0
+	background "listbg_azure"
+	textaligny 16
+	border 1
+	bordercolor   MP_BOX_BORDER
+	forecolor     MP_BOX_FORE
+	backcolor     MP_BOX_BACK
+	outlinecolor  MP_BOX_OUTLINE
+	visible 1
+	mouseEnter { setcvar ui_tip TIP_LIBRARY_CINEMATICS fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	columns 1 2 190 25
+	cvarTest "ui_menutab"
+	showCVar { "2" }
+}
+itemDef {
+      	name button1
+      	text "Play"
+	background "azurebuttonlong"
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 352 364 256 32
+     	textalignx	 32	
+	textaligny	 24
+	forecolor MP_TEXTCOLOR
+
+	action	{ 
+
+uiScript runCinematic;	close mods; 
+			open mainmenu;
+
+			 play MP_SND_SELECT;  
+				}
+
+	visible 1 
+	cvarTest "ui_menutab"
+	showCVar { "2" }
+}
+
+
+// -----------------------------------------------------------
+// TAB X - ALL
+// -----------------------------------------------------------
+
+
+
+itemDef {
+      	name tab1
+      	text "Mods"
+	background "azuretablong"
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.33
+   	rect 16 16 128 16
+	cvarTest "ui_menutab"
+	hideCVar { "0" }
+     	textalignx	 16	
+	textaligny	 16
+	forecolor MP_TEXTCOLOR
+
+
+	action { setcvar ui_menutab 0;  play MP_SND_SELECT;   }
+	visible 1 
+}
+
+itemDef {
+      	name tab2
+      	text "Demos"
+	background "azuretablong"
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.33
+   	rect 144 16 128 16
+	cvarTest "ui_menutab"
+	hideCVar { "1" }
+     	textalignx	 16	
+	textaligny	 16
+	forecolor MP_TEXTCOLOR
+
+	action { setcvar ui_menutab 1;  play MP_SND_SELECT;  }
+	visible 1 
+}
+
+itemDef {
+      	name tab3
+      	text "Movies"
+	background "azuretablong"
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.33
+   	rect 272 16 128 16
+	cvarTest "ui_menutab"
+	hideCVar { "2" }
+     	textalignx	 16	
+	textaligny	 16
+	forecolor MP_TEXTCOLOR
+
+	action { setcvar ui_menutab 2;  play MP_SND_SELECT;  }
+	visible 1 
+}
+
+itemDef {
+      	name tab4
+      	text "Other"
+	background "azuretablong"
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.33
+   	rect 400 16 128 16
+	cvarTest "ui_menutab"
+	hideCVar { "3" }
+     	textalignx	 16	
+	textaligny	 16
+	forecolor MP_TEXTCOLOR
+
+	action { setcvar ui_menutab 3;  play MP_SND_SELECT;  }
+	visible 1 
+}
+
+
+
+
+
+
+
+
+
+// pressed tabs
+
+
+itemDef {
+      	name tab1
+      	text "Mods"
+	background "azureuntablong"
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.33
+   	rect 16 16 128 16
+	cvarTest "ui_menutab"
+	showCVar { "0" }
+     	textalignx	 16	
+	textaligny	 16
+	decoration
+
+	visible 1 
+}
+
+itemDef {
+      	name tab2
+      	text "Demos"
+	background "azureuntablong"
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.33
+   	rect 144 16 128 16
+	cvarTest "ui_menutab"
+	showCVar { "1" }
+	decoration
+     	textalignx	 16	
+	textaligny	 16
+
+	visible 1 
+}
+
+itemDef {
+      	name tab3
+      	text "Movies"
+	background "azureuntablong"
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.33
+   	rect 272 16 128 16
+	cvarTest "ui_menutab"
+	showCVar { "2" }
+	decoration
+     	textalignx	 16	
+	textaligny	 16
+
+	visible 1 
+}
+
+itemDef {
+      	name tab4
+      	text "Other"
+	background "azureuntablong"
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.33
+   	rect 400 16 128 16
+	cvarTest "ui_menutab"
+	showCVar { "3" }
+	decoration
+     	textalignx	 16	
+	textaligny	 16
+
+	visible 1 
+}

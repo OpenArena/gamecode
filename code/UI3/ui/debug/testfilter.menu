@@ -1,0 +1,417 @@
+/*
+===========================================================================
+Copyright (C) 2015 Open Arena Team
+
+This file is part of Open Arena.
+
+Open Arena is free software; you can redistribute it
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the License,
+or (at your option) any later version.
+
+Open Arena is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Foobar; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+===========================================================================
+*/
+
+#include "ui/menudef.h"
+
+// Filter test - used to gather data on 3dfx cards' DACs
+// by providing a bunch of shapes and textures where its filter will act upon
+
+{
+  assetGlobalDef {
+    	smallFont "gfx/2d/bigchars" 24 // 12
+    	font "gfx/2d/bigchars" 24 // 16				
+    	bigFont "gfx/2d/bigchars" 24				
+	cursor "ui/assets/cursor"			
+	itemFocusSound MP_SND_HOVER		
+	shadowColor 0.0 0.0 0.0 0.25	
+		
+  	}
+	
+
+menuDef {
+    	name "filtertest"
+    	fullScreen 1				
+	rect 0 0 640 480
+    	visible MENU_TRUE
+    	forecolor MP_FOCUSCOLOR	
+	backcolor 0.5 0.5 0.5 1
+	focuscolor MP_TEXTCOLOR
+		
+
+			
+itemDef {
+      	name bg
+	style 1
+	textstyle 2
+      	textscale 0.3
+   	rect 0 0 640 480
+        textalign 0
+     	textalignx	32	
+	textaligny	16
+	backcolor 0.5 0.5 0.5 1
+	visible 1 
+	decoration
+}
+
+			
+itemDef {
+      	name bg
+	style 1
+	textstyle 2
+      	textscale 0.3
+   	rect 0 200 640 80
+        textalign 0
+     	textalignx	32	
+	textaligny	16
+	backcolor 0.25 0.25 0.25 1
+	visible 1 
+	decoration
+}
+			
+itemDef {
+      	name bg
+	style 1
+	textstyle 2
+      	textscale 0.3
+   	rect 0 220 640 40
+        textalign 0
+     	textalignx	32	
+	textaligny	16
+	backcolor 0 0 0 1
+	visible 1 
+	decoration
+}
+
+			
+itemDef {
+      	name bg
+	style 1
+	background "ui/debug/dithering.tga"
+	text "120"
+	textstyle 2
+      	textscale 0.3
+   	rect 128 0 32 240
+        textalign 0
+     	textalignx	0	
+	textaligny	16
+	backcolor 0.46875 0.46875 0.46875 1
+	forecolor 0 0 0 1
+	visible 1 
+	decoration
+}
+
+itemDef {
+      	name bg
+	style 1
+	background "ui/debug/dithering.tga"
+	text "121"
+	textstyle 2
+      	textscale 0.3
+   	rect 192 0 32 240
+        textalign 0
+     	textalignx	0	
+	textaligny	16
+	backcolor 0.47265625 0.47265625 0.47265625 1
+	forecolor 0 0 0 1
+	visible 1 
+	decoration
+}
+
+itemDef {
+      	name bg
+	style 1
+	background "ui/debug/dithering.tga"
+	text "122"
+	textstyle 2
+      	textscale 0.3
+   	rect 256 0 32 240
+        textalign 0
+     	textalignx	0	
+	textaligny	16
+	backcolor 0.4765625 0.4765625 0.4765625 1
+	forecolor 0 0 0 1
+	visible 1 
+	decoration
+}
+
+itemDef {
+      	name bg
+	style 1
+	background "ui/debug/dithering.tga"
+	text "123"
+	textstyle 2
+      	textscale 0.3
+   	rect 320 0 32 240
+        textalign 0
+     	textalignx	0	
+	textaligny	16
+	backcolor 0.48046875 0.48046875 0.48046875 1
+	forecolor 0 0 0 1
+	visible 1 
+	decoration
+}
+
+itemDef {
+      	name bg
+	style 1
+	background "ui/debug/dithering.tga"
+	text "124"
+	textstyle 2
+      	textscale 0.3
+   	rect 384 0 32 240
+        textalign 0
+     	textalignx	0	
+	textaligny	16
+	backcolor 0.484375 0.484375 0.484375 1
+	forecolor 0 0 0 1
+	visible 1 
+	decoration
+}
+
+itemDef {
+      	name bg
+	style 1
+	background "ui/debug/dithering.tga"
+	text "125"
+	textstyle 2
+      	textscale 0.3
+   	rect 448 0 32 240
+        textalign 0
+     	textalignx	0	
+	textaligny	16
+	backcolor 0.48828125 0.48828125 0.48828125 1
+	forecolor 0 0 0 1
+	visible 1 
+	decoration
+}
+
+itemDef {
+      	name bg
+	style 1
+	background "ui/debug/dithering.tga"
+	text "126"
+	textstyle 2
+      	textscale 0.3
+   	rect 512 0 32 240
+        textalign 0
+     	textalignx	0	
+	textaligny	16
+	backcolor 0.4921875 0.4921875 0.4921875 1
+	forecolor 0 0 0 1
+	visible 1 
+	decoration
+}
+
+
+itemDef {
+      	name bg
+	style 1
+	background "ui/debug/dithering.tga"
+	text "127"
+	textstyle 2
+      	textscale 0.3
+   	rect 576 0 32 240
+        textalign 0
+     	textalignx	0	
+	textaligny	16
+	backcolor 0.49609375 0.49609375 0.49609375 1
+	forecolor 0 0 0 1
+	visible 1 
+	decoration
+}
+
+
+			
+itemDef {
+      	name bg
+	style 1
+	background "ui/debug/dithering.tga"
+	text "128"
+	textstyle 2
+      	textscale 0.3
+   	rect 128 240 32 240
+        textalign 0
+     	textalignx	0	
+	textaligny	16
+	backcolor 0.5 0.5 0.5 1
+	forecolor 0 0 0 1
+	visible 1 
+	decoration
+}
+
+
+itemDef {
+      	name bg
+	style 1
+	background "ui/debug/dithering.tga"
+	text "129"
+	textstyle 2
+      	textscale 0.3
+   	rect 192 240 32 240
+        textalign 0
+     	textalignx	0	
+	textaligny	16
+	backcolor 0.50390625 0.50390625 0.50390625 1
+	forecolor 0 0 0 1
+	visible 1 
+	decoration
+}
+
+itemDef {
+      	name bg
+	style 1
+	background "ui/debug/dithering.tga"
+	text "130"
+	textstyle 2
+      	textscale 0.3
+   	rect 256 240 32 240
+        textalign 0
+     	textalignx	0	
+	textaligny	16
+	backcolor 0.5078125 0.5078125 0.5078125 1
+	forecolor 0 0 0 1
+	visible 1 
+	decoration
+}
+
+itemDef {
+      	name bg
+	style 1
+	background "ui/debug/dithering.tga"
+	text "131"
+	textstyle 2
+      	textscale 0.3
+   	rect 320 240 32 240
+        textalign 0
+     	textalignx	0	
+	textaligny	16
+	backcolor 0.51171875 0.51171875 0.51171875 1
+	forecolor 0 0 0 1
+	visible 1 
+	decoration
+}
+
+itemDef {
+      	name bg
+	style 1
+	background "ui/debug/dithering.tga"
+	text "132"
+	textstyle 2
+      	textscale 0.3
+   	rect 384 240 32 240
+        textalign 0
+     	textalignx	0	
+	textaligny	16
+	backcolor 0.515625 0.515625 0.515625 1
+	forecolor 0 0 0 1
+	visible 1 
+	decoration
+}
+
+itemDef {
+      	name bg
+	style 1
+	background "ui/debug/dithering.tga"
+	text "133"
+	textstyle 2
+      	textscale 0.3
+   	rect 448 240 32 240
+        textalign 0
+     	textalignx	0	
+	textaligny	16
+	backcolor 0.51953125 0.51953125 0.51953125 1
+	forecolor 0 0 0 1
+	visible 1 
+	decoration
+}
+
+
+itemDef {
+      	name bg
+	style 1
+	background "ui/debug/dithering.tga"
+	text "134"
+	textstyle 2
+      	textscale 0.3
+   	rect 512 240 32 240
+        textalign 0
+     	textalignx	0	
+	textaligny	16
+	backcolor 0.5234375 0.5234375 0.5234375 1
+	forecolor 0 0 0 1
+	visible 1 
+	decoration
+}
+
+itemDef {
+      	name bg
+	style 1
+	background "ui/debug/dithering.tga"
+	text "135"
+	textstyle 2
+      	textscale 0.3
+   	rect 576 240 32 240
+        textalign 0
+     	textalignx	0	
+	textaligny	16
+	backcolor 0.52734375 0.52734375 0.52734375 1
+	forecolor 0 0 0 1
+	visible 1 
+	decoration
+}
+
+			
+itemDef {
+      	name buttonhmaina
+      	text "Exit"
+	background MP_LONGBUTTONBG
+
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.3
+   	rect 40 120 40 32
+        textalign 0
+     	textalignx	32	
+	textaligny	16
+	forecolor 1 1 1 0.7
+	action	{ 	close filtertest;
+			open debug;
+			setcvar ui_menutab "0"; // reset
+	}
+	visible 1 
+}
+
+			
+itemDef {
+      	name bg
+	text "For best results,\nturn off overbrights\n and have gamma\n set to 1.00"
+	style 1
+	textstyle 0
+      	textscale 0.2
+   	rect 0 280 128 256
+        textalign 0
+     	textalignx	8	
+	textaligny	16
+	visible 1 
+	forecolor 1 1 1 1
+	autowrapped
+	decoration
+}
+
+
+}
+}
+}
+}
+}
+}

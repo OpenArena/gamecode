@@ -1,0 +1,395 @@
+/*
+===========================================================================
+Copyright (C) 2015 Open Arena Team
+
+This file is part of Open Arena.
+
+Open Arena is free software; you can redistribute it
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the License,
+or (at your option) any later version.
+
+Open Arena is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Foobar; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+===========================================================================
+*/
+
+// This screen is for calibrating the screen brightness, it is separate from the options menus because
+// we need this to be presented as soon as possible, for the 'first time run'.  Most games do this, including
+// one particular laser shooting game by big crow software.
+//
+// But since SDL regressed color control on Linux leading to the common complaint of "game is too dark" 
+// this is one of my attempts at addressing this issue
+//
+
+#include "ui/menudef.h"
+#define	GOBACKTOMAIN  "mainmenu"
+{
+  assetGlobalDef {
+    	smallFont "gfx/2d/bigchars" 	SMALLFONTSIZE
+    	font "gfx/2d/bigchars" 		MEDIUMFONTSIZE				
+    	bigFont "gfx/2d/bigchars" 	LARGEFONTSIZE				
+	cursor "ui/assets/cursor"			
+	itemFocusSound MP_SND_HOVER		
+	shadowColor 0.0 0.0 0.0 0.25	
+    	fadeClamp 1.0	
+	fadeCycle 1	
+	fadeAmount 0.1
+  	}
+	
+
+menuDef {
+    	name "adjustyourscreen"
+	background MP_BACKGROUND1
+    	fullScreen 1				
+	rect 0 0 853 480
+    	visible MENU_TRUE
+    	forecolor MP_FOCUSCOLOR			
+	focuscolor MP_TEXTCOLOR
+				
+			
+itemDef {
+      	name button1
+      	text "Done"
+	background "azurebuttonlong"
+	style 1
+	action	{ 	open mainmenu;close adjustyourscreen	}
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 40 420 256 32
+     	textalignx	 32	
+	textaligny	 24
+	backcolor MP_BUTTONBGCOLOR
+	forecolor MP_TEXTCOLOR
+
+	visible 1 
+}
+
+itemDef 
+      {
+        name cubesofcolor
+        text ""
+	style 1
+        rect 16 146 16 16
+	backcolor 0.1 0.1 0.1 1.0
+	forecolor 1 1 1 1
+        visible MENU_TRUE
+	decoration 1
+}
+itemDef 
+      {
+        name cubesofcolor
+        text ""
+	style 1
+        rect 32 146 16 16
+	backcolor 0.2 0.2 0.2 1.0
+	forecolor 1 1 1 1
+        visible MENU_TRUE
+	decoration 1
+}
+
+itemDef 
+      {
+        name cubesofcolor
+        text ""
+	style 1
+        rect 48 146 16 16
+	backcolor 0.3 0.3 0.3 1.0
+	forecolor 1 1 1 1
+        visible MENU_TRUE
+	decoration 1
+}
+
+itemDef 
+      {
+        name cubesofcolor
+        text ""
+	style 1
+        rect 64 146 16 16
+	backcolor 0.4 0.4 0.4 1.0
+	forecolor 1 1 1 1
+        visible MENU_TRUE
+	decoration 1
+}
+
+
+itemDef 
+      {
+        name cubesofcolor
+        text ""
+	style 1
+        rect 80 146 16 16
+	backcolor 0.5 0.5 0.5 1.0
+	forecolor 1 1 1 1
+        visible MENU_TRUE
+	decoration 1
+}
+
+
+itemDef 
+      {
+        name cubesofcolor
+        text ""
+	style 1
+        rect 96 146 16 16
+	backcolor 0.6 0.6 0.6 1.0
+	forecolor 1 1 1 1
+        visible MENU_TRUE
+	decoration 1
+}
+
+itemDef 
+      {
+        name cubesofcolor
+        text ""
+	style 1
+        rect 112 146 16 16
+	backcolor 0.7 0.7 0.7 1.0
+	forecolor 1 1 1 1
+        visible MENU_TRUE
+	decoration 1
+}
+itemDef 
+      {
+        name cubesofcolor
+        text ""
+	style 1
+        rect 128 146 16 16
+	backcolor 0.8 0.8 0.8 1.0
+	forecolor 1 1 1 1
+        visible MENU_TRUE
+	decoration 1
+}
+itemDef 
+      {
+        name cubesofcolor
+        text ""
+	style 1
+        rect 144 146 16 16
+	backcolor 0.9 0.9 0.9 1.0
+	forecolor 1 1 1 1
+        visible MENU_TRUE
+	decoration 1
+}
+
+itemDef 
+{
+        name cubesofcolor
+        text ""
+	style 1
+        rect 160 146 16 16
+	backcolor 1.0 1.0 1.0 1.0
+	forecolor 1 1 1 1
+        visible MENU_TRUE
+	decoration 1
+}
+
+itemDef 
+{
+        name cubesofcolor
+        text ""
+	style 1
+	background "ui/adjust/gradient"
+        rect 16 124 160 16
+	backcolor 1.0 1.0 1.0 1.0
+	forecolor 1 1 1 1
+        visible MENU_TRUE
+	decoration 1
+}
+
+itemDef 
+{
+        name cubesofcolor
+        text ""
+	style 1
+	background "ui/assets/oa"
+        rect 210 116 64 64
+	backcolor 0.05 0.05 0.05 1.0
+	forecolor 1 1 1 1
+        visible MENU_TRUE
+	decoration 1
+}
+
+
+itemDef 
+{
+        name cubesofcolor
+        text ""
+	style 1
+	background "ui/adjust/picture"
+        rect 64 24 160 80
+	backcolor 1 1 1 1
+	forecolor 1 1 1 1
+        visible MENU_TRUE
+	decoration 1
+}
+
+
+itemDef 
+{
+        name overbrighttest
+        text ""
+	style 1
+	background "ui/adjust/overbright"
+        rect 420 340 64 128
+	backcolor 1.0 1.0 1.0 1.0
+	forecolor 1 1 1 1
+        visible MENU_TRUE
+	decoration 1
+}
+
+
+itemDef 
+{
+        name overbrighttest
+        text ""
+	style 1
+	background "ui/adjust/overbright2" // use a shader with rgbGen const, which is not adjusted by overbright settings
+        rect 340 340 64 128
+	backcolor 1.0 1.0 1.0 1.0
+	forecolor 1 1 1 1
+        visible MENU_TRUE
+	decoration 1
+}
+
+
+itemDef 
+      {
+        name effectsvol
+        type ITEM_TYPE_SLIDER
+        text "Adjust Brightness"
+        cvarfloat "r_gamma" 0 0.5 3
+        rect 96 186 400 24
+        textalign ITEM_ALIGN_LEFT
+        textalignx 0
+        textaligny 16
+        textscale 0.3
+	forecolor 1 1 1 1
+        visible MENU_TRUE
+}
+
+
+itemDef {
+      	name button1
+      	text "Use system brightness"
+	background "azurebuttonlong"
+	style 1
+	action	{ 	setcvar r_alternateBrightness 0;  exec "vid_restart"; open adjustyourscreen; close main;	}
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.3
+   	rect 400 232 256 32
+     	textalignx	 32	
+	textaligny	 24
+	backcolor MP_BUTTONBGCOLOR
+	forecolor MP_TEXTCOLOR
+
+	visible 1 
+}
+
+itemDef {
+      	name button1
+      	text "Use combine brightness"
+	background "azurebuttonlong"
+	style 1
+	action	{ 	setcvar r_alternateBrightness 1;  exec "vid_restart"; open adjustyourscreen; close main;	}
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.3
+   	rect 400 264 256 32
+     	textalignx	 32	
+	textaligny	 24
+	backcolor MP_BUTTONBGCOLOR
+	forecolor MP_TEXTCOLOR
+
+	visible 1 
+}
+
+itemDef {
+      	name button1
+      	text "Use shader brightness"
+	background "azurebuttonlong"
+	style 1
+	action	{ 	setcvar r_alternateBrightness 2;  exec "vid_restart"; open adjustyourscreen; close main;	}
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.3
+   	rect 400 296 256 32
+     	textalignx	 32	
+	textaligny	 24
+	backcolor MP_BUTTONBGCOLOR
+	forecolor MP_TEXTCOLOR
+
+	visible 1 
+}
+
+
+
+
+
+
+itemDef {
+      	name helpystuffs
+	text "Please adjust your brightness with the provided slider. Each shade should be a distinct shade. You should not be able to see the symbol."
+	style 1
+	type 0
+	textstyle 2
+      	textscale 0.3
+	autowrapped
+	forecolor 1.0 1.0 1.0 1
+	decoration
+   	rect 0 250 309 130
+     	textalignx	 12	
+	textaligny	 16
+	visible 1 
+}
+
+itemDef {
+      	name helpystuffs
+	text "If the brightest shade does not appear to be white, click one of the buttons below to change the method of brightness control to troubleshoot this issue.  The last two options may have a performance impact."
+	style 1
+	type 0
+	textstyle 2
+      	textscale 0.3
+	autowrapped
+	forecolor 1.0 1.0 1.0 1
+	decoration
+   	rect 360 70 230 330
+     	textalignx	 12	
+	textaligny	 16
+	visible 1 
+}
+
+
+itemDef {
+      	name obstuffs
+	text "If both pictures are not the same brightness, then overbrights are not working."
+	style 1
+	type 0
+	textstyle 2
+      	textscale 0.3
+	autowrapped
+	forecolor 1.0 1.0 1.0 1
+	decoration
+   	rect 480 350 128 330
+     	textalignx	 12	
+	textaligny	 16
+	visible 1 
+}
+
+
+
+}
+
+}
+}
+}
+}
+}

@@ -1,0 +1,47 @@
+/*itemDef	{
+	name backgroundstreamers
+   	rect 0 0 640 480
+	type ITEM_TYPE_MODEL
+	asset_model "models/ui/bg2.md3"
+	model_fovx   20 
+	model_fovy   20 
+	model_angle 0 0 0
+	style 0
+	decoration 
+	visible 1
+	}
+*/
+
+itemDef	{
+	name backgroundwave
+   	//rect 0 0 640 480
+	rect -320 0 1280 480
+
+	asset_model MP_BACKGROUNDMODEL
+	asset_model "models/ui/bg.md3"
+	model_fovx   15
+	model_fovy   15
+	model_angle 180 0 0
+	style 0
+	decoration 
+	visible 1
+	cvarTest "ui_no3dbg"
+	hideCVar { "1" }
+	}
+
+
+itemDef	{
+	name spinninglogo
+   	rect 0 0 640 480
+	type ITEM_TYPE_MODEL
+	asset_model "models/ui/oalogo.md3"
+	model_fovx   70 
+	model_fovy   50 
+	model_rotation  12
+	model_angle 0 0 0
+	style 0
+	decoration 
+	visible 1
+	cvarTest "ui_no3dbg"
+	hideCVar { "1" }
+	}

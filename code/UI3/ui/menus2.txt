@@ -1,0 +1,31 @@
+// menu defs
+// 
+{	
+	loadMenu { "ui/main.menu" }
+	loadMenu { "ui/menutest.menu" }
+	loadMenu { "ui/loading.menu" }
+	loadMenu { "ui/main_menu.menu" }
+	loadMenu { "ui/main_adjustyourscreen.menu" }
+	loadMenu { "ui/main_profile.menu" }
+	loadMenu { "ui/main_single_player.menu" }
+	loadMenu { "ui/main_instant.menu" }
+	loadMenu { "ui/main_campaign.menu" }
+	loadMenu { "ui/main_campaign_ffa.menu" }
+	loadMenu { "ui/main_campaign_ctf.menu" }
+	loadMenu { "ui/main_campaign_dom.menu" }
+	loadMenu { "ui/main_campaign_over.menu" }
+	loadMenu { "ui/main_campaign_tourney.menu" }
+	loadMenu { "ui/main_play_maker.menu" }
+	loadMenu { "ui/main_join_server.menu" }
+	loadMenu { "ui/main_controls.menu" }
+	loadMenu { "ui/main_options.menu" }
+	loadMenu { "ui/main_extras.menu" }
+	loadMenu { "ui/main_gallery.menu" }
+	loadMenu { "ui/main_mods.menu" }
+	loadMenu { "ui/main_bios.menu" }
+	loadMenu { "ui/main_credits.menu" }
+	loadMenu { "ui/main_popup_quit.menu" }
+	loadMenu { "ui/connecting.menu" }
+ 	loadMenu { "ui/error.menu" }
+	loadMenu { "ui/transition_campaign.menu" }
+}

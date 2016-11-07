@@ -1,0 +1,60 @@
+
+
+
+
+itemDef {
+      	name buttontip1
+	cvar "com_errorMessage"
+	autowrapped
+	//background MP_DIALOGBG
+
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.3
+   	rect 32 122 600 300
+	decoration
+     	textalignx	 32	
+	textaligny	 24
+	forecolor MP_TEXTCOLOR
+	backcolor 	MP_DIALOGBGCOLOR
+	visible 1 
+}
+itemDef {
+      	name buttonmain4
+      	text "Darnit!"
+	background MP_WIDEBUTTONBG
+
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 72 300 256 32
+     	textalignx	 32	
+	textaligny	 24
+	backcolor MP_BUTTONBGCOLOR
+	forecolor MP_TEXTCOLOR
+
+	action	{ 		close error_popmenu; open mainmenu;	play MP_SND_SELECT;  	}
+	visible 1 
+}
+
+itemDef {
+      	name buttonmain5
+      	text BUTTON_QUIT
+	background MP_WIDEBUTTONBG
+
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 332 300 256 32
+     	textalignx	 32	
+	textaligny	 24
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+	action	{ 	play MP_SND_SELECT;  
+			uiScript "quit";	}
+	visible 1 
+}
+

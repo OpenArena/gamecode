@@ -1,0 +1,8 @@
+// hud menu defs
+// 
+{
+	loadMenu { "ui/loading.menu" }
+	loadMenu { "ui/simple_hud.menu" }
+ 	loadMenu { "ui/score.menu" }
+	loadMenu { "ui/teamscore.menu" }
+}

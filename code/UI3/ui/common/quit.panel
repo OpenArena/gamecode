@@ -1,0 +1,104 @@
+// Credits scroller
+
+onOpen { 
+
+	transition creditse 32 480 400 1024 32 -2480 400 1024 1 2000; 
+	transition creditset 32 480 400 1024 32 -2480 400 1024 1 2000; 
+	transition creditseh 32 480 400 1024 32 -2480 400 1024 1 2000; 
+
+	
+	}
+
+
+onEsc	{  	close quitter; open mainmenu}
+
+itemDef {
+      	name creditse
+      	text "\n^7fromhell\nproject lead, 2D/3D artist, sound designer, additional engine programming, creative director\n\n^7Sago007\ngame programmer, cross-compiler\n\n^7hitchhiker\nshader programming\n\n^7Wayuki\nVoice acting\n\n^7fuzztooth\nVoice acting, hosting\n\n^7Willis\nMaster server provider\n\nMAP CONTRIBUTORS\n\n^7Neon_Knight\n^7Kit89\n^7Cosmo\n^7jangroothse\n^7pulchr\n^7Spirit\n^7Akom74\n^7Gig\n^7meisterlampf\n\n\n\n\n\n "
+	style 1
+	textstyle 2
+      	textscale 0.5
+   	rect 32 480 400 1024
+     	textalignx	 32	
+	textaligny	 24
+	backcolor 0 0 0 0
+	autowrapped
+	forecolor MP_TEXTCOLOR
+	visible 1 
+	decoration
+}
+
+itemDef {
+      	name creditseh
+      	text "\nSpecial thanks:\nStefan for pdsound.org\nFree Firearms SFX Project\bFree Medieval Weapons SFX project\nJonathan of BlenderCookie\n\n\n\n\nAND YOU!!!!!!!!!\n\n\n\n\n\n^1If I forgot someone who definitely contributed to OA3 please let me know\n"
+	style 1
+	textstyle 2
+      	textscale 0.5
+   	rect 32 480 400 1024
+     	textalignx	32	
+	textaligny	 824
+	backcolor 0 0 0 0
+	autowrapped
+	forecolor MP_TEXTCOLOR
+	visible 1 
+	decoration
+}
+
+
+itemDef {
+      	name creditset
+      	text "\n(C)2005-2015 OA Team\n\n\n\nThe engine is based on work of ioq3 which in turn is truthfully based on idTech 3 engine technology by id Software, released under the GNU GPL version 2. (C)1999-2000 id Software"
+	style 1
+	textstyle 2
+      	textscale 0.5
+   	rect 32 480 400 1024
+     	textalignx	32	
+	textaligny	 1924
+	backcolor 0 0 0 0
+	autowrapped
+	forecolor MP_TEXTCOLOR
+	visible 1 
+	decoration
+}
+
+
+
+
+itemDef {
+      	name button1
+      	text "ya rly"
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 235 236 256 32
+     	textalignx	 32	
+	textaligny	 24
+
+
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+	action	{  	uiScript "quit"; }
+	visible 1 
+}
+
+itemDef {
+      	name button1
+      	text "no wai"
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 235 268 256 32
+     	textalignx	 32	
+	textaligny	 24
+
+
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+	action	{  	close quitter; open mainmenu}
+	visible 1 
+}
+

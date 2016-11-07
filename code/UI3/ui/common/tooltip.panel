@@ -1,0 +1,57 @@
+// Tool tips
+#ifdef UICONTEXTUALTIPS
+itemDef {
+      	name tooltipb
+	style 1
+	type 0
+	textstyle 2
+	backcolor TIP_BG
+      	textscale 0.4
+	decoration
+   	//rect -1 440 640 40
+	//rect -321 440 1280 40
+	rect -835 440 2340 40	// modified for ultra wide screen (5760x1200)
+
+     	textalignx	 32	
+	textaligny	 16
+	border 1
+	bordercolor   MP_BOX_BORDER
+	visible 1 
+}
+
+itemDef {
+      	name ver
+	text OA3VERSION
+	style 1
+	type 0
+	textstyle 2
+      	textscale 0.2
+	decoration
+   	rect 0 457 639 32
+	scralign ALIGN_LEFT
+	forecolor TIP_SMALLTEXT
+     	textalignx	 12	
+	textaligny	 16
+	visible 1 
+}
+
+
+
+itemDef {
+      	name tooltip
+	cvar "ui_tip"
+	style 1
+	type 0
+	textstyle 2
+      	textscale 0.4
+	decoration
+   	rect 0 447 639 32
+	scralign ALIGN_LEFT
+	forecolor TIP_COLOR
+     	textalignx	 12	
+	textaligny	 16
+	visible 1 
+}
+#endif
+
+

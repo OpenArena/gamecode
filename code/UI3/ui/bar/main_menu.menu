@@ -1,0 +1,63 @@
+/*
+===========================================================================
+Copyright (C) 2007 Open Arena Team
+
+This file is part of Open Arena.
+
+Open Arena is free software; you can redistribute it
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the License,
+or (at your option) any later version.
+
+Open Arena is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Foobar; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+===========================================================================
+*/
+
+#include "ui/menudef.h"
+
+{
+  assetGlobalDef {
+    	smallFont "gfx/2d/bigchars" 24 // 12
+    	font "gfx/2d/bigchars" 24 // 16				
+    	bigFont "gfx/2d/bigchars" 24				
+	cursor "ui/assets/cursor"			
+	itemFocusSound MP_SND_HOVER		
+	shadowColor 0.0 0.0 0.0 0.25	
+		
+  	}
+	
+
+menuDef {
+    	name "mainmenu"
+	background MP_BACKGROUND1
+    	fullScreen 1				
+	rect 0 0 640 480
+    	visible MENU_TRUE
+    	forecolor MP_FOCUSCOLOR			
+	focuscolor MP_TEXTCOLOR
+					
+	onOpen { 
+			close main;
+		}
+				
+
+#include "ui/common/symbol2.panel"
+
+	   
+#include "ui/bar/mainmenu.panel"
+#include "ui/common/tooltip.panel"
+
+
+}
+}
+}
+}
+}
+}

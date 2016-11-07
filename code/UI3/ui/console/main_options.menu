@@ -1,0 +1,97 @@
+/*
+===========================================================================
+Copyright (C) 2015 Open Arena Team
+
+This file is part of Open Arena.
+
+Open Arena is free software; you can redistribute it
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the License,
+or (at your option) any later version.
+
+Open Arena is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Foobar; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+===========================================================================
+*/
+
+#include "ui/menudef.h"
+
+{
+  assetGlobalDef {
+    	smallFont "gfx/2d/bigchars" 12
+    	font "gfx/2d/bigchars" 16				
+    	bigFont "gfx/2d/bigchars" 24				
+	cursor "ui/assets/cursor"	
+	checkbox_checked "ui/assets/cursor"		
+	checkbox_unchecked "ui/assets/gs"		
+	itemFocusSound MP_SND_HOVER		
+	shadowColor 0.0 0.0 0.0 0.25			
+  	}
+	
+
+menuDef {
+    	name "optionsmenu"
+	background MP_BACKGROUND1
+    	fullScreen 1				
+	rect 0 0 640 480
+
+    	visible MENU_TRUE
+    	forecolor MP_FOCUSCOLOR			
+	focuscolor MP_TEXTCOLOR
+				
+	onOpen { 
+		//uiScript loadGameInfo ;
+		//uiScript updateSPMenu ;
+		close main;
+		}
+#include "ui/common/symbol2.panel"							   
+#include "ui/common/console_options.panel"
+
+
+// always have this button available
+
+itemDef {
+      	name button1
+      	text "Okay!"
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 32 384 256 32
+     	textalignx	 32	
+	textaligny	 24
+	cvarTest "ui_browserSortKey"
+	hideCVar { "9" }
+
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+	action	{  	
+			open mainmenu;	
+			setcvar ui_menutab 0;	// reset the tabs
+			close optionsmenu;
+			play MP_SND_SELECT;  
+		}
+	visible 1 
+}
+
+
+
+
+
+
+#include "ui/common/tooltip.panel"
+
+
+}
+}
+}
+}
+}
+}

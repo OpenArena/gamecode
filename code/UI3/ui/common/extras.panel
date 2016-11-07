@@ -1,0 +1,98 @@
+
+
+itemDef {
+      	name buttonhmain2
+      	text "Credits"
+	background MP_WIDEBUTTONBG
+
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 32 204 256 32
+     	textalignx	 32	
+	textaligny	 24
+	forecolor MP_TEXTCOLOR
+
+	action	{ //	close main;
+			close extras;
+			play MP_SND_SELECT;  
+			open credits;	
+	}
+	mouseEnter { setcvar ui_cdkeychecked "Contributors list!" fadein tooltip; } mouseExit { fadeout tooltip;} 
+	visible 1 
+}
+
+itemDef {
+      	name buttonhmain3
+      	text "Biography"
+	background MP_WIDEBUTTONBG
+
+	action	{ 	
+			play MP_SND_SELECT;  
+		//	close main;
+			close extras;
+			open bios;
+	
+		}
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 32 236 256 32
+     	textalignx	 32	
+	textaligny	 24
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+	mouseEnter { setcvar ui_cdkeychecked "Useless info for the player characters." fadein tooltip; } mouseExit { fadeout tooltip;} 
+	visible 1 
+}
+
+itemDef {
+      	name buttonhmain4
+      	text "Gallery"
+	background MP_WIDEBUTTONBG
+
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 32 268 256 32
+     	textalignx	 32	
+	textaligny	 24
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+	action	{ 	
+			play MP_SND_SELECT;  
+		//	close main;
+			close extras;
+			open gallery;
+	
+		}
+	visible 1 
+	mouseEnter { setcvar ui_cdkeychecked "Developmental image gallery!" fadein tooltip; } mouseExit { fadeout tooltip;} 
+}
+
+itemDef {
+      	name buttonhmain5
+      	text BUTTON_QUIT
+	background MP_WIDEBUTTONBG
+
+	action	{ 	play MP_SND_SELECT;  
+			//close main;
+			close extras;
+			open mainmenu;
+	}
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 32 300 256 32
+     	textalignx	 32	
+	textaligny	 24
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+	mouseEnter { setcvar ui_cdkeychecked "Return to main menu." fadein tooltip; } mouseExit { fadeout tooltip;} 
+	visible 1 
+}
+

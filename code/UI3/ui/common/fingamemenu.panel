@@ -1,0 +1,151 @@
+
+
+// Use transparency and don't do video.
+
+itemDef {
+      	name bgtitle
+	style 3
+	background "ui/assets4/titlebg"
+      	rect 0 0 640 76
+	backcolor MP_TEXTCOLOR
+	visible 1
+	decoration
+	}
+
+itemDef {
+      	name bgback
+	style 3
+	background MP_BACKGROUND1
+      	rect 0 102 640 378
+	backcolor MP_TEXTCOLOR
+	visible 1
+	decoration
+	}
+
+
+
+itemDef {
+      	name bgtitle2
+	style 3
+	background "multdown"
+      	rect 0 0 640 76
+	forecolor 0.14 0.70 0.63 1
+	visible 1
+	decoration
+	}
+
+itemDef {
+      	name bgbg2
+	style 3
+	background "multdown"
+      	rect 0 102 640 378
+	forecolor 0.07 0.30 0.47 1
+	visible 1
+	decoration
+	}
+
+itemDef {
+      	name bgtitle2
+	style 3
+	background "ui/assets4/title2"
+      	rect 0 12 256 64
+	backcolor MP_TEXTCOLOR
+	visible 1
+	decoration
+	}
+	
+// Our menu
+
+itemDef {
+      	name amenuarc
+	style 3
+	background "ui/assets4/menubar"
+      	rect 0 76 640 26
+	backcolor MP_TEXTCOLOR
+	visible 1
+	decoration
+	}
+itemDef {
+      	name button1
+      	text BUTTON_PLAY
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 5
+      	textscale 0.25
+   	rect 177 77 42 24
+     	textalignx	 8	
+	textaligny	 18      
+	forecolor MP_TEXTCOLOR
+	mouseEnter { play MP_SND_SELECT;  } 
+	action	{ 	
+			open play;	}
+	visible 1 
+}
+
+itemDef {
+      	name button1
+      	text BUTTON_OPTIONS
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 5
+      	textscale 0.25
+   	rect 239 77 42 24
+     	textalignx	 8	
+	textaligny	 18      
+	forecolor MP_TEXTCOLOR
+	mouseEnter { play MP_SND_SELECT;  } 
+	action	{ 	CLOSEITALL;
+			open options;	}
+	visible 1 
+}
+
+
+itemDef {
+      	name button1
+      	text "Mods"
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 5
+      	textscale 0.25
+   	rect 318 77 42 24
+     	textalignx	 8	
+	textaligny	 18      
+	forecolor MP_TEXTCOLOR
+	mouseEnter { play MP_SND_SELECT;  } 
+	action	{ 	CLOSEITALL;
+			open mods;	}
+	visible 1 
+}
+
+itemDef {
+      	name button1
+      	text "Help"
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 5
+      	textscale 0.25
+   	rect 381 77 42 24
+     	textalignx	 8	
+	textaligny	 18      
+	forecolor MP_TEXTCOLOR
+	mouseEnter { play MP_SND_SELECT;  } 
+	action	{ 	open play;	}
+	visible 1 
+}
+
+itemDef {
+      	name button1
+      	text BUTTON_QUIT
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 5
+      	textscale 0.25
+   	rect 437 77 42 24
+     	textalignx	 8	
+	textaligny	 18      
+	forecolor MP_TEXTCOLOR
+	mouseEnter { play MP_SND_SELECT;  } 
+	action	{ 	uiScript "quit";	}
+	visible 1 
+}
+

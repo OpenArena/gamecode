@@ -1,0 +1,34 @@
+#ifdef UICONTEXTUALTIPS
+// Tool tips
+// this one also notes severely unfinished area
+itemDef {
+      	name tooltipb
+	style 1
+	type 0
+	textstyle 2
+	backcolor 0.0 0.0 0.0 1.0
+      	textscale 0.4
+	decoration
+   	rect -1 440 640 40
+     	textalignx	 32	
+	textaligny	 16
+	border 1
+	bordercolor   MP_BOX_BORDER
+	visible 1 
+}
+
+itemDef {
+      	name tooltipped
+	cvar "^1UNDER CONSTRUCTION - FUNCTIONALITY MAY BE BROKEN"
+	style 1
+	type 0
+	textstyle 2
+      	textscale 0.5
+	decoration
+   	rect 0 447 639 32
+     	textalignx	 12	
+	textaligny	 16
+	visible 1 
+}
+
+#endif

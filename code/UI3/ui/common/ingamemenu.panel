@@ -1,0 +1,179 @@
+
+	// Slide in the buttons :D	
+
+onOpen { 
+
+	xtransition buttonhmain1 -256 172 256 32 32 172 256 32 1 20; 
+	xtransition buttonhmain2 -256 204 256 32 32 204 256 32 1 20; 
+	xtransition buttonhmain3 -256 236 256 32 32 236 256 32 1 20; 
+	xtransition buttonhmain4 -256 268 256 32 32 268 256 32 1 20; 
+	xtransition buttonhmain5 -256 300 256 32 32 300 256 32 1 20; 
+	xtransition gradienter   -256 172 256 160 0 172 640 160 1 20; 
+	}
+
+
+itemDef {
+      	name gradienter
+	background "gradhorzv"
+	group buttons
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 32 172 256 32
+     	textalignx	 32	
+	decoration
+	textaligny	 24
+	forecolor MP_TEXTCOLOR
+	backcolor 0.1 0.2 0.5 0.8
+	scralign ALIGN_LEFT
+	action	{ 	//close main;
+			close ingamemenu;
+			play MP_SND_SELECT;  
+			}
+	visible 1 
+}
+
+
+itemDef {
+      	name buttonhmain1
+      	text "Back to Game"
+	background MP_WIDEBUTTONBG
+	group buttons
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 32 172 256 32
+     	textalignx	 32	
+	textaligny	 24
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+	scralign ALIGN_LEFT
+	action	{ 	//close main;
+			close ingamemenu;
+			play MP_SND_SELECT;  
+			}
+	visible 1 
+}
+
+itemDef {
+      	name buttontip1
+      	text "Did you EVEN name yourself?"
+	group buttons
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.8
+   	rect 8 72 256 32
+	cvarTest "name"
+	showCVar { "UnnamedPlayer" }	// hide this option for people that have not named yet
+	decoration
+     	textalignx	 8	
+	scralign ALIGN_LEFT
+	textaligny	 8
+	forecolor MP_TEXTCOLOR
+
+	visible 1 
+}
+
+itemDef {
+      	name buttonhmain2
+      	text "Options"
+	background MP_WIDEBUTTONBG
+	group buttons
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 32 204 256 32
+     	textalignx	 32	
+	textaligny	 24
+	forecolor MP_TEXTCOLOR
+
+	scralign ALIGN_LEFT
+	backcolor MP_BUTTONBGCOLOR
+	action	{ //	close main;
+			close mainmenu;
+			close ingame;
+			play MP_SND_SELECT;  
+			setcvar ui_menutab "0";
+			open ingameoptionsmenu;	
+	}
+	visible 1 
+}
+
+itemDef {
+      	name buttonhmain3
+      	text "Profile"
+	background MP_WIDEBUTTONBG
+	group buttons
+	action	{ //	close main;
+			close mainmenu;
+			close ingame;
+			play MP_SND_SELECT;  
+			setcvar ui_menutab "0";
+			open ingameprofile;	
+	}
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+	scralign ALIGN_LEFT
+   	rect 32 236 256 32
+     	textalignx	 32	
+	textaligny	 24
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+	visible 1 
+}
+
+itemDef {
+      	name buttonhmain4
+      	text "Controls"
+	background MP_WIDEBUTTONBG
+	group buttons
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 32 268 256 32
+     	textalignx	 32	
+	textaligny	 24
+	scralign ALIGN_LEFT
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+	action	{ //	close main;
+			close mainmenu;
+			close ingame;
+			setcvar ui_menutab "0";
+			play MP_SND_SELECT;  
+			open ingamecontrolsmenu;	
+	}
+	visible 1 
+}
+
+itemDef {
+      	name buttonhmain5
+      	text BUTTON_QUIT
+	background MP_WIDEBUTTONBG
+	group buttons
+	action	{ 	play MP_SND_SELECT;  
+			//close main;
+			close mainmenu;
+			close ingame;
+			uiScript "quit";	}
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 32 300 256 32
+	scralign ALIGN_LEFT
+     	textalignx	 32	
+	textaligny	 24
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+	visible 1 
+}
+
+

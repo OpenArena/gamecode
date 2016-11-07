@@ -1,0 +1,86 @@
+// Internal workings that don't really need to be modified
+
+// DM
+#define SPFFA_MAP1NUM		0
+#define SPFFA_MAP2_UNLOCKCVAR 	"ui_sp_unlock_0"
+#define SPFFA_MAP2NUM		1
+#define SPFFA_MAP3_UNLOCKCVAR 	"ui_sp_unlock_1"
+#define SPFFA_MAP3NUM		2
+#define SPFFA_MAP4_UNLOCKCVAR 	"ui_sp_unlock_2"
+#define SPFFA_MAP4NUM		3
+#define SPFFA_MAP5_UNLOCKCVAR 	"ui_sp_unlock_3"
+#define SPFFA_MAP5NUM		4
+#define SPFFA_MAP6_UNLOCKCVAR 	"ui_sp_unlock_4"
+#define SPFFA_MAP6NUM		5
+#define SPFFA_MAP7_UNLOCKCVAR 	"ui_sp_unlock_5"
+#define SPFFA_MAP7NUM		6
+#define SPFFA_MAP8_UNLOCKCVAR 	"ui_sp_unlock_6"
+#define SPFFA_MAP8NUM		7
+
+#define SPCTF_MAP1_UNLOCKCVAR 	"ui_sp_unlock_7"
+#define SPCTF_MAP1NUM		8
+#define SPCTF_MAP2_UNLOCKCVAR 	"ui_sp_unlock_8"
+#define SPCTF_MAP2NUM		9
+#define SPCTF_MAP3_UNLOCKCVAR 	"ui_sp_unlock_9"
+#define SPCTF_MAP3NUM		10
+#define SPCTF_MAP4_UNLOCKCVAR 	"ui_sp_unlock_10"
+#define SPCTF_MAP4NUM		11
+#define SPCTF_MAP5_UNLOCKCVAR 	"ui_sp_unlock_11"
+#define SPCTF_MAP5NUM		12
+#define SPCTF_MAP6_UNLOCKCVAR 	"ui_sp_unlock_12"
+#define SPCTF_MAP6NUM		13
+#define SPCTF_MAP7_UNLOCKCVAR 	"ui_sp_unlock_13"
+#define SPCTF_MAP7NUM		14
+#define SPCTF_MAP8_UNLOCKCVAR 	"ui_sp_unlock_14"
+#define SPCTF_MAP8NUM		15
+
+#define SPDOM_MAP1_UNLOCKCVAR 	"ui_sp_unlock_15"
+#define SPDOM_MAP1NUM		16
+#define SPDOM_MAP2_UNLOCKCVAR 	"ui_sp_unlock_16"
+#define SPDOM_MAP2NUM		17
+#define SPDOM_MAP3_UNLOCKCVAR 	"ui_sp_unlock_17"
+#define SPDOM_MAP3NUM		18
+#define SPDOM_MAP4_UNLOCKCVAR 	"ui_sp_unlock_18"
+#define SPDOM_MAP4NUM		19
+#define SPDOM_MAP5_UNLOCKCVAR 	"ui_sp_unlock_19"
+#define SPDOM_MAP5NUM		20
+#define SPDOM_MAP6_UNLOCKCVAR 	"ui_sp_unlock_20"
+#define SPDOM_MAP6NUM		21
+#define SPDOM_MAP7_UNLOCKCVAR 	"ui_sp_unlock_21"
+#define SPDOM_MAP7NUM		22
+#define SPDOM_MAP8_UNLOCKCVAR 	"ui_sp_unlock_22"
+#define SPDOM_MAP8NUM		23
+
+#define SPOVER_MAP1_UNLOCKCVAR 	"ui_sp_unlock_23"
+#define SPOVER_MAP1NUM		24
+#define SPOVER_MAP2_UNLOCKCVAR 	"ui_sp_unlock_24"
+#define SPOVER_MAP2NUM		25
+#define SPOVER_MAP3_UNLOCKCVAR 	"ui_sp_unlock_25"
+#define SPOVER_MAP3NUM		26
+#define SPOVER_MAP4_UNLOCKCVAR 	"ui_sp_unlock_26"
+#define SPOVER_MAP4NUM		27
+#define SPOVER_MAP5_UNLOCKCVAR 	"ui_sp_unlock_27"
+#define SPOVER_MAP5NUM		28
+#define SPOVER_MAP6_UNLOCKCVAR 	"ui_sp_unlock_28"
+#define SPOVER_MAP6NUM		29
+#define SPOVER_MAP7_UNLOCKCVAR 	"ui_sp_unlock_29"
+#define SPOVER_MAP7NUM		30
+#define SPOVER_MAP8_UNLOCKCVAR 	"ui_sp_unlock_30"
+#define SPOVER_MAP8NUM		31
+
+#define SPTOURN_MAP1_UNLOCKCVAR 	"ui_sp_unlock_31"
+#define SPTOURN_MAP1NUM		32
+#define SPTOURN_MAP2_UNLOCKCVAR 	"ui_sp_unlock_32"
+#define SPTOURN_MAP2NUM		33
+#define SPTOURN_MAP3_UNLOCKCVAR 	"ui_sp_unlock_33"
+#define SPTOURN_MAP3NUM		34
+#define SPTOURN_MAP4_UNLOCKCVAR 	"ui_sp_unlock_34"
+#define SPTOURN_MAP4NUM		35
+#define SPTOURN_MAP5_UNLOCKCVAR 	"ui_sp_unlock_35"
+#define SPTOURN_MAP5NUM		36
+#define SPTOURN_MAP6_UNLOCKCVAR 	"ui_sp_unlock_36"
+#define SPTOURN_MAP6NUM		37
+#define SPTOURN_MAP7_UNLOCKCVAR 	"ui_sp_unlock_37"
+#define SPTOURN_MAP7NUM		38
+#define SPTOURN_MAP8_UNLOCKCVAR 	"ui_sp_unlock_38"
+#define SPTOURN_MAP8NUM		39

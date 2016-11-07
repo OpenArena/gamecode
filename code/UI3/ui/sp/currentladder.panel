@@ -1,0 +1,540 @@
+
+
+
+// -----------------------------------------------------------
+// TAB 0 - SELECTING MAP
+// -----------------------------------------------------------
+
+// MAP stats and info
+
+#include "ui/sp/mapinfo.panel"
+
+
+itemDef {
+      	name dmgamefield
+	ownerdraw UI_GAMETYPE
+	text	SPCUR_LADDERNAME
+	background MP_DIALOGBG
+	style 1
+	type 0
+	textstyle 2
+      	textscale 0.5
+	decoration
+   	rect 16 32 300 400
+     	textalignx	 32	
+	textaligny	 24
+	border 1
+	bordercolor   MP_BOX_BORDER
+	backcolor 	MP_DIALOGBGCOLOR
+	visible 1 
+}
+
+
+itemDef {
+      	name button1
+      //	text SPCUR_MAP1
+	ownerdraw UI_MENUMAPNAME
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 32 128 256 32
+     	textalignx	 32	
+	textaligny	 24
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+	mapnum SPCUR_MAP1NUM
+	action	{  	setcvar ui_currentMap SPCUR_MAP1NUM;	
+			 play MP_SND_SELECT;  
+		}
+	visible 1 
+}
+
+
+itemDef {
+      	name button1
+    //  	text SPCUR_MAP2
+	ownerdraw UI_MENUMAPNAME
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 32 160 256 32
+     	textalignx	 32	
+	textaligny	 24
+	cvarTest SPCUR_MAP2_UNLOCKCVAR
+	showCVar { "1" }
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+	mapnum SPCUR_MAP2NUM
+	action	{  	setcvar ui_currentMap SPCUR_MAP2NUM;	
+			 play MP_SND_SELECT;  
+		}
+	visible 1 
+}
+
+itemDef {
+      	name button1
+      //	text SPCUR_MAP3
+	ownerdraw UI_MENUMAPNAME
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 32 192 256 32
+     	textalignx	 32	
+	textaligny	 24
+	cvarTest SPCUR_MAP3_UNLOCKCVAR
+	showCVar { "1" }
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+	mapnum SPCUR_MAP3NUM
+
+	action	{  	setcvar ui_currentMap SPCUR_MAP3NUM;	
+			 play MP_SND_SELECT;  
+		}
+	visible 1 
+}
+
+
+itemDef {
+      	name button1
+     // 	text SPCUR_MAP4
+	ownerdraw UI_MENUMAPNAME
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 32 224 256 32
+     	textalignx	 32	
+	textaligny	 24
+	cvarTest SPCUR_MAP4_UNLOCKCVAR
+	showCVar { "1" }
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+	mapnum SPCUR_MAP4NUM
+	action	{  	setcvar ui_currentMap SPCUR_MAP4NUM;	
+			 play MP_SND_SELECT;  
+		}
+	visible 1 
+}
+
+itemDef {
+      	name button1
+   //   	text SPCUR_MAP5
+	ownerdraw UI_MENUMAPNAME
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 32 256 256 32
+     	textalignx	 32	
+	textaligny	 24
+	cvarTest SPCUR_MAP5_UNLOCKCVAR
+	showCVar { "1" }
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+	mapnum SPCUR_MAP5NUM
+	action	{  	setcvar ui_currentMap SPCUR_MAP5NUM;	
+			 play MP_SND_SELECT;  
+		}
+	visible 1 
+}
+
+itemDef {
+      	name button1
+     // 	text SPCUR_MAP6
+	ownerdraw UI_MENUMAPNAME
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 32 288 256 32
+     	textalignx	 32	
+	textaligny	 24
+	cvarTest SPCUR_MAP6_UNLOCKCVAR
+	showCVar { "1" }
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+	mapnum SPCUR_MAP6NUM
+	action	{  	setcvar ui_currentMap SPCUR_MAP6NUM;	
+			 play MP_SND_SELECT;  
+		}
+	visible 1 
+}
+
+itemDef {
+      	name button1
+      //	text SPCUR_MAP7
+	ownerdraw UI_MENUMAPNAME
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 32 320 256 32
+     	textalignx	 32	
+	textaligny	 24
+	cvarTest SPCUR_MAP7_UNLOCKCVAR
+	showCVar { "1" }
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+	mapnum SPCUR_MAP7NUM
+	action	{  	setcvar ui_currentMap SPCUR_MAP7NUM;	
+			 play MP_SND_SELECT;  
+		}
+	visible 1 
+}
+
+
+itemDef {
+      	name button1
+     // 	text SPCUR_MAP8
+	ownerdraw UI_MENUMAPNAME
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 32 352 256 32
+     	textalignx	 32	
+	textaligny	 24
+	cvarTest SPCUR_MAP8_UNLOCKCVAR
+	showCVar { "1" }
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+	mapnum SPCUR_MAP8NUM
+	action	{  	setcvar ui_currentMap SPCUR_MAP8NUM;	
+			 play MP_SND_SELECT;  
+		}
+	visible 1 
+}
+
+
+
+itemDef {
+      	name button1
+      	text "Cancel"
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+	group buttonsthatdostuff
+      	textscale 0.5
+   	rect 32 384 256 32
+     	textalignx	 32	
+	textaligny	 24
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+	mouseEnter { setcvar ui_tip "Go back to main menu." fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	action	{  	
+			close SPCUR_MENUNAME;
+			
+			open singleplayercampaign;
+	
+			setcvar ui_sptab 0;	// reset the tabs
+			 play MP_SND_SELECT;  
+		}
+	visible 1 
+}
+
+itemDef {
+      	name buttong
+      	text "FIGHT"
+	group buttonsthatdostuff
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 384 384 256 32
+     	textalignx	 32	
+	textaligny	 24
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+	mouseEnter { setcvar ui_tip "WHAT THE BUTTON SAYS!" fadein tooltip; } mouseExit { fadeout tooltip;} 	
+      	action { 
+//	xtransition fadlogo -640 -480 1920 1440 0 0 640 480 2 166 ;
+		show fadlogobg1;
+		show fadlogobg2;
+		show fadlogoside1;
+		show fadlogoside2;
+		show fadlogo;
+		show fadlogoup;
+		show fadlogodown;
+		hide buttonsthatdostuff;
+		playLooped null;
+		clearAlpha fadlogoblack;
+		fadein fadlogoblack;	
+
+	transition fadlogobg1 -1260 0 640 480 -940 0 940 480 2 66 ;
+	transition fadlogobg2 1260 0 640 480  640 0 940 480 2 66 ;
+
+	transition fadlogoside1 -960 0 640 480 0 0 240 480 2 66 ;	
+	transition fadlogoside2 960 0 640 480 400 0 240 480 2 66 ;
+	
+	transition fadlogoup 0 -720 640 480     0 0 640 180 2 66 ;
+	transition fadlogodown 0 720 640 480     0 300 640 480 2 66 ;
+
+	xtransition fadlogo -640 -480 1920 1440 240 180 160 120 2 66 ;
+		}
+	ontransitionend {	uiScript skirmishStart }
+	visible 1 
+}
+
+
+
+
+
+
+// here the jort have a tropy
+
+itemDef {
+      	name trophies
+	background "trophy_gold"
+	style 1
+	textstyle 2
+	decoration
+      	textscale 0.5
+   	rect 32 128 32 32
+	cvarTest SPCUR_MAP2_UNLOCKCVAR
+	showCVar { "1" }
+	backcolor 1 0.6 0.3 1
+	visible 1 
+}
+
+
+itemDef {
+      	name trophies
+	background "trophy_gold"
+	style 1
+	textstyle 2
+	decoration
+      	textscale 0.5
+   	rect 32 160 32 32
+	cvarTest SPCUR_MAP3_UNLOCKCVAR
+	showCVar { "1" }
+	backcolor 1 0.6 0.3 1
+	visible 1 
+}
+
+
+itemDef {
+      	name trophies
+	background "trophy_gold"
+	style 1
+	textstyle 2
+	decoration
+      	textscale 0.5
+   	rect 32 192 32 32
+	cvarTest SPCUR_MAP4_UNLOCKCVAR
+	showCVar { "1" }
+	backcolor 1 0.6 0.3 1
+	visible 1 
+}
+
+
+itemDef {
+      	name trophies
+	background "trophy_gold"
+	style 1
+	textstyle 2
+	decoration
+      	textscale 0.5
+   	rect 32 224 32 32
+	cvarTest SPCUR_MAP5_UNLOCKCVAR
+	showCVar { "1" }
+	backcolor 1 0.6 0.3 1
+	visible 1 
+}
+
+itemDef {
+      	name trophies
+	background "trophy_gold"
+	style 1
+	textstyle 2
+	decoration
+      	textscale 0.5
+   	rect 32 256 32 32
+	cvarTest SPCUR_MAP6_UNLOCKCVAR
+	showCVar { "1" }
+	backcolor 1 0.6 0.3 1
+	visible 1 
+}
+
+itemDef {
+      	name trophies
+	background "trophy_gold"
+	style 1
+	textstyle 2
+	decoration
+      	textscale 0.5
+   	rect 32 288 32 32
+	cvarTest SPCUR_MAP7_UNLOCKCVAR
+	showCVar { "1" }
+	backcolor 1 0.6 0.3 1
+	visible 1 
+}
+
+itemDef {
+      	name trophies
+	background "trophy_gold"
+	style 1
+	textstyle 2
+	decoration
+      	textscale 0.5
+   	rect 32 320 32 32
+	cvarTest SPCUR_MAP8_UNLOCKCVAR
+	showCVar { "1" }
+	backcolor 1 0.6 0.3 1
+	visible 1 
+}
+
+itemDef {
+      	name trophies
+	background "trophy_gold"
+	style 1
+	textstyle 2
+	decoration
+      	textscale 0.5
+   	rect 32 352 32 32
+	cvarTest SPCUR_MAP9_UNLOCKCVAR
+	showCVar { "1" }
+	backcolor 1 0.6 0.3 1
+	visible 1 
+}
+
+
+
+
+
+
+
+
+// This plays when you start a game and holds it up for a bit
+
+
+
+itemDef {
+      	name fadlogo
+	group logofade
+	background "gamestartingfade"
+	style 1
+	textstyle 2
+      	textscale 0.5
+   	rect 0 0 640 480
+     	textalignx	 32	
+	textaligny	 34
+	forecolor 0.2 0.5 1.0 1.0
+	backcolor 1 0.2 0.1 1.0
+	visible 0
+	decoration
+}
+
+
+
+
+itemDef {
+      	name fadlogobg1
+	group logofade
+	style 1
+	textstyle 2
+      	textscale 0.5
+   	rect 0 0 640 480
+     	textalignx	 32	
+	textaligny	 34
+	forecolor 0.0 0.0 0.0 1.0
+	backcolor 0.0 0.0 0.0 1.0
+	visible 0 
+	decoration
+}
+
+
+
+itemDef {
+      	name fadlogobg2
+	group logofade
+	style 1
+	textstyle 2
+      	textscale 0.5
+   	rect 0 0 640 480
+     	textalignx	 32	
+	textaligny	 34
+	forecolor 0.0 0.0 0.0 1.0
+	backcolor 0.0 0.0 0.0 1.0
+	visible 0 
+	decoration
+}
+
+
+
+
+
+itemDef {
+      	name fadlogoside1
+	group logofade
+	style 1
+	textstyle 2
+      	textscale 0.5
+   	rect 0 0 640 480
+     	textalignx	 32	
+	textaligny	 34
+	forecolor 0.0 0.0 0.0 1.0
+	backcolor 0.0 0.0 0.0 1.0
+	visible 0 
+	decoration
+}
+
+itemDef {
+      	name fadlogoside2
+	group logofade
+	style 1
+	textstyle 2
+      	textscale 0.5
+   	rect 0 0 640 480
+     	textalignx	 32	
+	textaligny	 34
+	forecolor 0.0 0.0 0.0 1.0
+	backcolor 0.0 0.0 0.0 1.0
+	visible 0 
+	decoration
+}
+
+itemDef {
+      	name fadlogoup
+	group logofade
+	style 1
+	textstyle 2
+      	textscale 0.5
+   	rect 0 0 640 480
+     	textalignx	 32	
+	textaligny	 34
+	forecolor 0.0 0.0 0.0 1.0
+	backcolor 0.0 0.0 0.0 1.0
+	visible 0 
+	decoration
+}
+
+itemDef {
+      	name fadlogodown
+	group logofade
+	style 1
+	textstyle 2
+      	textscale 0.5
+   	rect 0 0 640 480
+     	textalignx	 32	
+	textaligny	 34
+	forecolor 0.0 0.0 0.0 1.0
+	backcolor 0.0 0.0 0.0 1.0
+	visible 0 
+	decoration
+}
+
+
+

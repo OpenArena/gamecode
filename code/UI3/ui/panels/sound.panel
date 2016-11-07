@@ -1,0 +1,67 @@
+/*
+===========================================================================
+Copyright (C) 2015 Open Arena Team
+
+This file is part of Open Arena.
+
+Open Arena is free software; you can redistribute it
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the License,
+or (at your option) any later version.
+
+Open Arena is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Foobar; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+===========================================================================
+*/
+
+itemDef {
+      	name res
+	type ITEM_TYPE_MULTI
+      	text "Sampling Rate:"
+	style 0
+	cvar "s_khz"
+	cvarFloatList { "8000Hz (Crap)" 8 "11025Hz (Low)" 11 "22050Hz (Medium)" 22 "44100Hz (High)" 44 "48000Hz (High)" 48 "96000Hz (omg)" 96}
+	textstyle 0
+      	textscale SZTEXT
+     	rect 16 48 256 16
+     	textalignx	 56	
+	textaligny	 16      
+	forecolor MP_TEXTCOLOR
+	visible 1 
+}
+
+itemDef {
+      	name openal
+	type ITEM_TYPE_MULTI
+      	text "OpenAL Driver:"
+	style 0
+	cvar "s_useOpenAL"
+	cvarFloatList { "Disabled" 0 "Enabled" 1}
+	textstyle 0
+      	textscale SZTEXT
+     	rect 16 64 256 16
+     	textalignx	 56	
+	textaligny	 16      
+	forecolor MP_TEXTCOLOR
+	visible 1 
+}
+
+
+itemDef {
+      	name notice
+      	text "Some changes may require restarting."
+	style 0
+	textstyle 0
+      	textscale SZTEXT
+     	rect 16 16 64 34
+     	textalignx	 56	
+	textaligny	 16      
+	forecolor MP_TEXTCOLOR
+	visible 1 
+}

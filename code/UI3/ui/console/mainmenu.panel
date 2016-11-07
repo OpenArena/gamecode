@@ -1,0 +1,183 @@
+
+
+
+itemDef {
+      	name buttonhmaina
+      	text "Instant Action"
+	background MP_LONGBUTTONBG
+
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect MMENU_OFFSETITEMH 96 512 32
+        textalign MMENU_ALIGNITEM
+     	textalignx	 256	
+	textaligny	 24
+	forecolor MP_TEXTCOLOR
+
+	action	{ 	//close main;
+			close mainmenu;
+			play MP_SND_SELECT;  
+			setcvar ui_menutab "4"; // immediately go to the last screen.
+			//uiAction randomizer; // TODO: this
+			open playmaker;
+			//open instantaction;
+	}
+	visible 1 
+	mouseEnter { setcvar ui_tip "Play a totally random botmatch!" fadein tooltip;   setbackground MP_LONGBUTTONBGA } mouseExit { fadeout tooltip;  setbackground MP_LONGBUTTONBG} 
+}
+
+itemDef {
+      	name buttonhmain1
+      	text BUTTON_SPLAYER
+	background MP_LONGBUTTONBG
+
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect MMENU_OFFSETITEMH 128 512 32
+        textalign MMENU_ALIGNITEM
+     	textalignx	 256	
+	textaligny	 24
+	forecolor MP_TEXTCOLOR
+
+	action	{ 	//close main;
+			close mainmenu;
+			play MP_SND_SELECT;  
+			//open singleplayercampaign;
+			open transition_sp;
+	}
+	visible 1 
+	mouseEnter { setcvar ui_tip "Play the single player challenges." fadein tooltip;   setbackground MP_LONGBUTTONBGA } mouseExit { fadeout tooltip;  setbackground MP_LONGBUTTONBG} 
+}
+
+
+itemDef {
+      	name buttonhmain1
+      	text "Join Sever"
+	background MP_LONGBUTTONBG
+
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect MMENU_OFFSETITEMH 160 512 32
+	cvarTest "name"
+	hideCVar { "UnnamedPlayer" }	// hide this option for people that have not named yet
+         textalign MMENU_ALIGNITEM
+     	textalignx	 256	
+	textaligny	 24
+	forecolor MP_TEXTCOLOR
+	mouseEnter { setcvar ui_tip "Join an existing server on the internet or your network." fadein tooltip;  setbackground MP_LONGBUTTONBGA  } mouseExit { fadeout tooltip;  setbackground MP_LONGBUTTONBG} 
+	action	{ 	//close main;
+			close mainmenu;
+			setcvar ui_menutab "0";
+			play MP_SND_SELECT;  
+			open joinserver;	}
+	visible 1 
+}
+
+
+itemDef {
+      	name buttonhmain1
+      	text BUTTON_CUSTOM
+	background MP_LONGBUTTONBG
+
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect MMENU_OFFSETITEMH 192 512 32
+	cvarTest "name"
+	hideCVar { "UnnamedPlayer" }	// hide this option for people that have not named yet
+         textalign MMENU_ALIGNITEM
+     	textalignx	 256	
+	textaligny	 24
+	forecolor MP_TEXTCOLOR
+	mouseEnter { setcvar ui_tip "Play the darn game." fadein tooltip;  setbackground MP_LONGBUTTONBGA  } mouseExit { fadeout tooltip;  setbackground MP_LONGBUTTONBG} 
+	action	{ 	//close main;
+			close mainmenu;
+			setcvar ui_menutab "0";
+			play MP_SND_SELECT;  
+			open playmaker;	}
+	visible 1 
+}
+
+
+itemDef {
+      	name buttonhmain3
+      	text "Player"
+	background MP_LONGBUTTONBG
+
+	action	{ 	
+			play MP_SND_SELECT;  
+		//	close main;
+			setcvar ui_menutab "0";
+			close mainmenu;
+			open profile	
+			
+		}
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect MMENU_OFFSETITEMH 288 512 32
+        textalign MMENU_ALIGNITEM
+     	textalignx	 256	
+	textaligny	 24
+	forecolor MP_TEXTCOLOR
+	mouseEnter { setcvar ui_tip "Choose your character and set health handicap." fadein tooltip;  setbackground MP_LONGBUTTONBGA  } mouseExit { fadeout tooltip;  setbackground MP_LONGBUTTONBG} 
+	visible 1 
+}
+
+
+itemDef {
+      	name buttonhmain2
+      	text "Setup"
+	background MP_LONGBUTTONBG
+
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect MMENU_OFFSETITEMH 224 512 32
+        textalign MMENU_ALIGNITEM
+     	textalignx	 256		
+	textaligny	 24
+	forecolor MP_TEXTCOLOR
+
+	action	{ //	close main;
+			close mainmenu;
+			setcvar ui_menutab "0";
+			play MP_SND_SELECT;  
+			open optionsmenu;	
+	}
+
+	mouseEnter { setcvar ui_tip "Configure system options." fadein tooltip; setbackground MP_LONGBUTTONBGA } mouseExit { fadeout tooltip; setbackground MP_LONGBUTTONBG} 
+	visible 1 
+}
+
+itemDef {
+      	name buttonhmain5
+      	text BUTTON_QUIT
+	background MP_LONGBUTTONBG
+
+	action	{ 	play MP_SND_SELECT;  
+			//close main;
+			open quitter;
+			close mainmenu;
+				}
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect MMENU_OFFSETITEMH 352 512 32
+        textalign MMENU_ALIGNITEM
+     	textalignx	 256	
+	textaligny	 24
+	forecolor MP_TEXTCOLOR
+	mouseEnter { setcvar ui_tip "Quit the game. =(" fadein tooltip;  setbackground MP_LONGBUTTONBGA  } mouseExit { fadeout tooltip;  setbackground MP_LONGBUTTONBG} 
+	visible 1 
+}

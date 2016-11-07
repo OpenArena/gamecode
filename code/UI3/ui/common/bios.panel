@@ -1,0 +1,232 @@
+
+
+// -----------------------------------------------------------
+// SCREEN 0 - BIOGRAPHY SELECTION
+// -----------------------------------------------------------
+
+itemDef {
+      	name dmgamefield
+	text	"Biographies"
+	background MP_DIALOGBG
+	style 1
+	type 0
+	textstyle 2
+      	textscale 0.5
+	cvarTest "ui_browserSortKey"
+	showCVar { "0" }
+	decoration
+   	rect 16 32 300 400
+     	textalignx	 32	
+	textaligny	 24
+	border 1
+	backcolor 	MP_DIALOGBGCOLOR
+	bordercolor   MP_BOX_BORDER
+	visible 1 
+}
+
+itemDef {
+      	name teamgamefield
+	text	"Males"
+	background MP_DIALOGBG
+	style 1
+	type 0
+	textstyle 2
+      	textscale 0.5
+	decoration
+	cvarTest "ui_browserSortKey"
+	showCVar { "0" }
+   	rect 316 32 300 400
+     	textalignx	 32	
+	textaligny	 24
+	border 1
+	backcolor 	MP_DIALOGBGCOLOR
+	bordercolor   MP_BOX_BORDER
+	visible 1 
+}
+
+
+
+itemDef {
+      	name button1
+      	text "Deathmatch"
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 32 96 256 32
+     	textalignx	 32	
+	textaligny	 24
+	cvarTest "ui_browserSortKey"
+	showCVar { "0" }
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+	mouseEnter { setcvar ui_cdkeychecked "Free for all. Kill or be killed." fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	action	{ 	setcvar ui_browserSortKey 1;	
+			 play MP_SND_SELECT;  
+			setcvar ui_netgametype 0;	}
+	visible 1 
+}
+
+
+
+itemDef {
+      	name jrtjtr
+      	text "Sorceress"
+	background "ui/bios/sorcicon"
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.25
+   	rect 32 128 64 128
+     	textalignx	 32	
+	backcolor 1 1 1 1
+	textaligny	 24
+	cvarTest "ui_browserSortKey"
+	showCVar { "0" }
+	forecolor MP_TEXTCOLOR
+
+	action	{ 	setcvar ui_browserSortKey 1;	
+			setcvar ui_netgametype 1;	
+			play MP_SND_SELECT;  
+				}
+	visible 1 
+}
+
+
+
+
+
+
+// Sorceress
+
+itemDef {
+      	name sorcpic
+	background "ui/bios/sorcbio"
+	text ""
+	style 1
+	type 0
+	textstyle 2
+      	textscale 0.27
+	backcolor 1 1 1 1
+	cvarTest "ui_browserSortKey"
+	showCVar { "1" }
+	decoration
+   	rect 270 0 370 480
+     	textalignx	 12	
+	textaligny	 16
+	visible 1 
+}
+/*
+itemDef	{
+	name themodelf3
+	//ownerdraw UI_PLAYERMODEL
+    	rect 270 0 370 480
+	cvarTest "ui_browserSortKey"
+	showCVar { "1" }
+	type ITEM_TYPE_MODEL
+	asset_model "models/players/sorceress/bio-pose.md3"
+	model_fovx   11 
+	model_fovy   11
+	model_angle 177 0 0
+	style 0
+	decoration 
+	visible 1
+	}
+*/
+itemDef {
+      	name sorcquote
+
+	text "''all thing will die because gun`s''"
+	style 1
+	type 0
+	textstyle 2
+      	textscale 0.6
+	cvarTest "ui_browserSortKey"
+	showCVar { "1" }
+	decoration
+   	rect 0 32 640 370
+     	textalignx	 12	
+	textaligny	 16
+	visible 1 
+}
+
+itemDef {
+      	name sorcbio
+
+	text "Sorceress\nAge:28\nBlood Type: C\n	b:86 w:55 h:89 \n\n   An elven alchemist who forged the earliest pendants of mystical resurrection also more popular known as 'respawning'.\nShe enjoys violin.\n\n\nThere is nothing in the hat, so stop asking!"
+	style 1
+	type 0
+	textstyle 2
+      	textscale 0.27
+	autowrapped
+	cvarTest "ui_browserSortKey"
+	showCVar { "1" }
+	decoration
+   	rect 32 64 277 370
+     	textalignx	 12	
+	textaligny	 16
+	visible 1 
+}
+
+
+
+// -----------------------------------------------------------
+// TAB X - ALL
+// -----------------------------------------------------------
+
+
+itemDef {
+      	name ret
+      	text "Return"
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 32 384 256 32
+     	textalignx	 32	
+	textaligny	 24
+	cvarTest "ui_browserSortKey"
+	hideCVar { "0" }
+	forecolor MP_TEXTCOLOR
+	backcolor MP_BUTTONBGCOLOR
+	mouseEnter { setcvar ui_cdkeychecked "Return to biography selection" fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	action	{ 	setcvar ui_browserSortKey 0;	
+			play MP_SND_SELECT;  
+				}
+	visible 1 
+}
+
+// always have this button available
+
+itemDef {
+      	name button1
+      	text "Back"
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 32 384 256 32
+     	textalignx	 32	
+	textaligny	 24
+	cvarTest "ui_browserSortKey"
+	showCVar { "0" }
+	backcolor MP_BUTTONBGCOLOR
+	forecolor MP_TEXTCOLOR
+	mouseEnter { setcvar ui_cdkeychecked "Go back to extras menu." fadein tooltip; } mouseExit { fadeout tooltip;} 	
+	action	{  	
+			close bios;
+			
+			open extras;
+	
+			setcvar ui_browserSortKey 0;	// reset the tabs
+			 play MP_SND_SELECT;  
+		}
+	visible 1 
+}
+
+
+
+

@@ -1,0 +1,32 @@
+
+// MAKE IT HOW IT LOOKS!!!! This file is not to be pak'd
+
+
+
+#include "ui/theme_azure.h" 		
+
+//#include "ui/theme_moe.h" 		
+//#include "ui/theme_metal.h" 
+//#include "ui/theme_kewl.h" 
+//#include "ui/theme_greenie.h" 
+
+//#include "ui/theme_qlassic.h" 
+
+
+//
+//
+//	Change this to 0 to get editboxes, comboboxes, etc. 
+//	Change this to 1 to get multiple choice (less versatile, but allows the gamepad to drive the menu better)
+//	Hacky but unless someone knows TA UI workings this will have to do on short notice.
+//
+//
+
+#define	GAMEPAD_FRIENDLY 1
+
+//
+//	Change this to 1 to get the tips bar at the bottom
+//	Change this to 0 to not get the bar at the bottom.
+//
+//
+
+#define UICONTEXTUALTIPS 1

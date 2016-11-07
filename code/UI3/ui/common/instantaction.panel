@@ -1,0 +1,54 @@
+
+// -----------------------------------------------------------
+// TAB 0 - INSTANTACTION
+// -----------------------------------------------------------
+
+itemDef {
+      	name dmgamefield
+	text	"Instant Action"
+	background MP_DIALOGBG
+	backcolor 	MP_DIALOGBGCOLOR
+	style 1
+	type 0
+	textstyle 2
+      	textscale 0.5
+	decoration
+   	rect 16 32 600 400
+     	textalignx	 32	
+	textaligny	 24
+	border 1
+	bordercolor   MP_BOX_BORDER
+	visible 1 
+}
+
+
+
+
+// always have this button available
+
+itemDef {
+      	name button1
+      	text "Cancel"
+	background MP_WIDEBUTTONBG
+	style 1
+	type ITEM_TYPE_BUTTON
+	textstyle 2
+      	textscale 0.5
+   	rect 32 384 256 32
+     	textalignx	 32	
+	textaligny	 24
+	backcolor MP_BUTTONBGCOLOR
+	forecolor MP_TEXTCOLOR
+
+	action	{  	
+			close instantaction;
+			
+			open mainmenu;
+	
+			setcvar ui_menutab 0;	// reset the tabs
+			 play MP_SND_SELECT;  
+		}
+	visible 1 
+}
+
+
