@@ -1463,6 +1463,70 @@ static float CG_DrawFollowMessage( float y ) {
 	return y + SMALLCHAR_HEIGHT+4;
 }
 
+static void CG_DrawFragMessage( void ) {
+	vec4_t	hcolor;
+	int	i;
+	int	x = 20;
+	int	y = 300;
+	int	x_offset;
+	int	spacing = 3;
+
+	const int fadeTime = 7000;
+
+	hcolor[0] = 1.0f;
+	hcolor[1] = 1.0f;
+	hcolor[2] = 1.0f;
+	hcolor[3] = 0.33f;
+	trap_R_SetColor( hcolor );
+
+	for (i = FRAGMSG_MAX - 1; i >= 0; i--) {
+		// remove frag message after elapsed time
+		if (cgs.fragMsg[i].targetName[0] != '\0' &&
+				cg.time > cgs.fragMsg[i].fragTime + fadeTime) {
+			memset( &cgs.fragMsg[i], 0, sizeof(fragInfo_t) );
+		}
+
+		if (cg_obituaryOutput.integer == 1) {
+			if (cgs.fragMsg[i].targetName[0] != '\0') {
+				CG_DrawStringExt(x, y + (i * TINYCHAR_HEIGHT),
+						cgs.fragMsg[i].message, hcolor, qfalse, qfalse,
+						TINYCHAR_WIDTH, TINYCHAR_HEIGHT, 0);
+			}
+		}
+		else if (cg_obituaryOutput.integer == 2) {
+			CG_DrawStringExt(x, y + (i * TINYCHAR_HEIGHT),
+					cgs.fragMsg[i].attackerName, hcolor, qfalse, qfalse,
+					TINYCHAR_WIDTH, TINYCHAR_HEIGHT, 0);
+
+			if (cgs.fragMsg[i].attackerName[0] != '\0') {
+				x_offset = CG_DrawStrlen(cgs.fragMsg[i].attackerName)
+					* TINYCHAR_WIDTH + spacing;
+			} else x_offset = 0;
+
+			if (cgs.fragMsg[i].targetName[0] != '\0') {
+				CG_DrawPic(x + x_offset, y + (i * TINYCHAR_HEIGHT),
+						TINYCHAR_WIDTH, TINYCHAR_HEIGHT, cgs.fragMsg[i].causeShader);
+			}
+
+			x_offset += TINYCHAR_WIDTH + spacing;
+
+			CG_DrawStringExt(x + x_offset, y + (i * TINYCHAR_HEIGHT),
+					cgs.fragMsg[i].targetName, hcolor, qfalse, qfalse,
+					TINYCHAR_WIDTH, TINYCHAR_HEIGHT, 0);
+
+			x_offset += CG_DrawStrlen(cgs.fragMsg[i].targetName)
+				* TINYCHAR_WIDTH + spacing;
+
+			if (cgs.fragMsg[i].teamFrag) {
+				CG_DrawStringExt(x + x_offset, y + (i * TINYCHAR_HEIGHT),
+						"(^1TEAMMATE^7)", hcolor, qfalse, qfalse,
+						TINYCHAR_WIDTH, TINYCHAR_HEIGHT, 0);
+			}
+		}
+	}
+
+	trap_R_SetColor( NULL );
+}
 
 /*
 =====================
@@ -3458,6 +3522,8 @@ static void CG_Draw2D(stereoFrame_t stereoFrame)
 	CG_DrawLowerRight();
 	CG_DrawLowerLeft();
 #endif
+
+	CG_DrawFragMessage();
 
 	if ( !CG_DrawFollow() ) {
 		CG_DrawWarmup();

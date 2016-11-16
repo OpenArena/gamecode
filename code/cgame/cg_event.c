@@ -90,6 +90,10 @@ static void CG_Obituary( entityState_t *ent ) {
 	char		attackerName[32];
 	gender_t	gender;
 	clientInfo_t	*ci;
+	int		i;
+	char		*s;
+	qhandle_t	causeShader;
+	fragInfo_t *lastFrag = &cgs.fragMsg[FRAGMSG_MAX - 1];
 
 	target = ent->otherEntityNum;
 	attacker = ent->otherEntityNum2;
@@ -118,44 +122,56 @@ static void CG_Obituary( entityState_t *ent ) {
 
 	// check for single client messages
 
-        if(attacker != ENTITYNUM_WORLD)
-            message = NULL;
-        else
-            switch( mod ) {
-            case MOD_SUICIDE:
-                    message = "suicides";
-                    break;
-            case MOD_FALLING:
-                    message = "cratered";
-                    break;
-            case MOD_CRUSH:
-                    message = "was squished";
-                    break;
-            case MOD_WATER:
-                    message = "sank like a rock";
-                    break;
-            case MOD_SLIME:
-                    message = "melted";
-                    break;
-            case MOD_LAVA:
-                    message = "does a back flip into the lava";
-                    break;
-            case MOD_TARGET_LASER:
-                    message = "saw the light";
-                    break;
-            case MOD_TRIGGER_HURT:
-                    message = "was in the wrong place";
-                    break;
-            default:
-                    message = NULL;
-                    break;
-            }
+	if(attacker != ENTITYNUM_WORLD) {
+		message = NULL;
+		causeShader = cgs.media.skullShader;
+	}
+	else
+		switch( mod ) {
+		case MOD_SUICIDE:
+			message = "suicides";
+			causeShader = cgs.media.skullShader;
+			break;
+		case MOD_FALLING:
+			message = "cratered";
+			causeShader = cgs.media.skullShader;
+			break;
+		case MOD_CRUSH:
+			message = "was squished";
+			causeShader = cgs.media.skullShader;
+			break;
+		case MOD_WATER:
+			message = "sank like a rock";
+			causeShader = cgs.media.skullShader;
+			break;
+		case MOD_SLIME:
+			message = "melted";
+			causeShader = cgs.media.skullShader;
+			break;
+		case MOD_LAVA:
+			message = "does a back flip into the lava";
+			causeShader = cgs.media.skullShader;
+			break;
+		case MOD_TARGET_LASER:
+			message = "saw the light";
+			causeShader = cgs.media.skullShader;
+			break;
+		case MOD_TRIGGER_HURT:
+			message = "was in the wrong place";
+			causeShader = cgs.media.skullShader;
+			break;
+		default:
+			message = NULL;
+			causeShader = cgs.media.skullShader;
+			break;
+		}
 
 	if (attacker == target) {
 		gender = ci->gender;
 		switch (mod) {
 		case MOD_KAMIKAZE:
 			message = "goes out with a bang";
+			causeShader = cgs.media.kamikazeShader;
 			break;
 		case MOD_GRENADE_SPLASH:
 			if ( gender == GENDER_FEMALE )
@@ -164,6 +180,7 @@ static void CG_Obituary( entityState_t *ent ) {
 				message = "tripped on its own grenade";
 			else
 				message = "tripped on his own grenade";
+			causeShader = cgs.media.grenadeShader;
 			break;
 		case MOD_ROCKET_SPLASH:
 			if ( gender == GENDER_FEMALE )
@@ -172,6 +189,7 @@ static void CG_Obituary( entityState_t *ent ) {
 				message = "blew itself up";
 			else
 				message = "blew himself up";
+			causeShader = cgs.media.rocketShader;
 			break;
 		case MOD_PLASMA_SPLASH:
 			if ( gender == GENDER_FEMALE )
@@ -180,9 +198,11 @@ static void CG_Obituary( entityState_t *ent ) {
 				message = "melted itself";
 			else
 				message = "melted himself";
+			causeShader = cgs.media.plasmaShader;
 			break;
 		case MOD_BFG_SPLASH:
 			message = "should have used a smaller gun";
+			causeShader = cgs.media.bfgShader;
 			break;
 		case MOD_PROXIMITY_MINE:
 			if( gender == GENDER_FEMALE ) {
@@ -192,6 +212,7 @@ static void CG_Obituary( entityState_t *ent ) {
 			} else {
 				message = "found his prox mine";
 			}
+			causeShader = cgs.media.proxlauncherShader;
 			break;
 		default:
 			if ( gender == GENDER_FEMALE )
@@ -200,16 +221,34 @@ static void CG_Obituary( entityState_t *ent ) {
 				message = "killed itself";
 			else
 				message = "killed himself";
+			causeShader = cgs.media.skullShader;
 			break;
 		}
 	}
 
-        //If a suicide happens while disconnecting then we might not have a targetName
+	// If a suicide happens while disconnecting
+	// then we might not have a targetName
 	if (message && strlen(targetName)) {
-		CG_Printf( "%s %s.\n", targetName, message);
+		if (cg_obituaryOutput.integer == 0) {
+			CG_Printf("%s %s.\n", targetName, message);
+		}
+		else {
+			for (i = 0; i < FRAGMSG_MAX - 1; i++) {
+				cgs.fragMsg[i] = cgs.fragMsg[i + 1];
+			}
+			memset( &cgs.fragMsg[FRAGMSG_MAX - 1], 0, sizeof(fragInfo_t) );
+
+			Q_strncpyz(lastFrag->targetName, targetName,
+				sizeof(lastFrag->targetName));
+			lastFrag->causeShader = causeShader;
+			lastFrag->fragTime = cg.time;
+			lastFrag->teamFrag = qfalse;
+			s = va("%s %s.", targetName, message);
+			Q_strncpyz(lastFrag->message, s, sizeof(lastFrag->message));
+		}
+
 		return;
 	}
-        
 
 	// check for kill messages from the current clientNum
 	if ( attacker == cg.snap->ps.clientNum ) {
@@ -250,114 +289,175 @@ static void CG_Obituary( entityState_t *ent ) {
 	}
 
 	if ( attacker != ENTITYNUM_WORLD ) {
-
-                if(ent->generic1) {
-                    message = "was killed by ^1TEAMMATE^7";
-                }
-                else
 		switch (mod) {
 		case MOD_GRAPPLE:
 			message = "was caught by";
+			causeShader = cgs.media.grapplehookShader;
 			break;
 		case MOD_GAUNTLET:
 			message = "was pummeled by";
+			causeShader = cgs.media.gauntletShader;
 			break;
 		case MOD_MACHINEGUN:
 			message = "was machinegunned by";
+			causeShader = cgs.media.machinegunShader;
 			break;
 		case MOD_SHOTGUN:
 			message = "was gunned down by";
+			causeShader = cgs.media.shotgunShader;
 			break;
 		case MOD_GRENADE:
 			message = "ate";
 			message2 = "'s grenade";
+			causeShader = cgs.media.grenadeShader;
 			break;
 		case MOD_GRENADE_SPLASH:
 			message = "was shredded by";
 			message2 = "'s shrapnel";
+			causeShader = cgs.media.grenadeShader;
 			break;
 		case MOD_ROCKET:
 			message = "ate";
 			message2 = "'s rocket";
+			causeShader = cgs.media.rocketShader;
 			break;
 		case MOD_ROCKET_SPLASH:
 			message = "almost dodged";
 			message2 = "'s rocket";
+			causeShader = cgs.media.rocketShader;
 			break;
 		case MOD_PLASMA:
 			message = "was melted by";
 			message2 = "'s plasmagun";
+			causeShader = cgs.media.plasmaShader;
 			break;
 		case MOD_PLASMA_SPLASH:
 			message = "was melted by";
 			message2 = "'s plasmagun";
+			causeShader = cgs.media.plasmaShader;
 			break;
 		case MOD_RAILGUN:
 			message = "was railed by";
+			causeShader = cgs.media.railgunShader;
 			break;
 		case MOD_LIGHTNING:
 			message = "was electrocuted by";
+			causeShader = cgs.media.lightninggunShader;
 			break;
 		case MOD_BFG:
 		case MOD_BFG_SPLASH:
 			message = "was blasted by";
 			message2 = "'s BFG";
+			causeShader = cgs.media.bfgShader;
 			break;
 		case MOD_NAIL:
 			message = "was nailed by";
+			causeShader = cgs.media.nailgunShader;
 			break;
 		case MOD_CHAINGUN:
 			message = "got lead poisoning from";
 			message2 = "'s Chaingun";
+			causeShader = cgs.media.chaingunShader;
 			break;
 		case MOD_PROXIMITY_MINE:
 			message = "was too close to";
 			message2 = "'s Prox Mine";
+			causeShader = cgs.media.proxlauncherShader;
 			break;
 		case MOD_KAMIKAZE:
 			message = "falls to";
 			message2 = "'s Kamikaze blast";
+			causeShader = cgs.media.kamikazeShader;
 			break;
 		case MOD_JUICED:
 			message = "was juiced by";
+			causeShader = cgs.media.proxlauncherShader;
 			break;
 		case MOD_TELEFRAG:
 			message = "tried to invade";
 			message2 = "'s personal space";
+			causeShader = cgs.media.skullShader;
 			break;
 		case MOD_LAVA:
-				message = "was given a hot bath by";
-				break;
+			message = "was given a hot bath by";
+			causeShader = cgs.media.skullShader;
+			break;
 		case MOD_SLIME:
-				message = "was given a acid bath by";
-				break;
+			message = "was given a acid bath by";
+			causeShader = cgs.media.skullShader;
+			break;
 		case MOD_FALLING:
-				message = "was given a small push by";
-				break;
+			message = "was given a small push by";
+			causeShader = cgs.media.skullShader;
+			break;
 		case MOD_TRIGGER_HURT:
-				message = "was helped on the way by";
-				break;
+			message = "was helped on the way by";
+			causeShader = cgs.media.skullShader;
+			break;
 		case MOD_CRUSH:
-				message = "was crushed in";
-				message2 = "'s trap";
-				break;
+			message = "was crushed in";
+			message2 = "'s trap";
+			causeShader = cgs.media.skullShader;
+			break;
 		case MOD_SUICIDE:
-				message = "was too eager against";
-				break;
+			message = "was too eager against";
+			causeShader = cgs.media.skullShader;
+			break;
 		default:
 			message = "was killed by";
+			causeShader = cgs.media.skullShader;
 			break;
 		}
 
 		if (message) {
-			CG_Printf( "%s %s %s%s\n", 
-				targetName, message, attackerName, message2);
+			if (ent->generic1) {
+				message = "was killed by ^1TEAMMATE^7";
+				message2 = "";
+			}
+
+			if (cg_obituaryOutput.integer == 0) {
+				CG_Printf( "%s %s %s%s\n",
+					targetName, message, attackerName, message2);
+			}
+			else {
+				for (i = 0; i < FRAGMSG_MAX - 1; i++) {
+					cgs.fragMsg[i] = cgs.fragMsg[i + 1];
+				}
+				memset( &cgs.fragMsg[FRAGMSG_MAX - 1], 0, sizeof(fragInfo_t) );
+
+				lastFrag->teamFrag = ent->generic1;
+
+				Q_strncpyz(lastFrag->targetName, targetName,
+						sizeof(lastFrag->targetName));
+				Q_strncpyz(lastFrag->attackerName, attackerName,
+						sizeof(lastFrag->attackerName));
+				lastFrag->causeShader = causeShader;
+				lastFrag->fragTime = cg.time;
+				s = va("%s %s %s%s.", targetName, message, attackerName,
+						message2);
+				Q_strncpyz(lastFrag->message, s, sizeof(lastFrag->message));
+			}
+
 			return;
 		}
 	}
 
 	// we don't know what it was
-	CG_Printf( "%s died.\n", targetName );
+	if (cg_obituaryOutput.integer == 0) {
+		CG_Printf( "%s died.\n", targetName );
+	}
+	else {
+		for (i = 0; i < FRAGMSG_MAX - 1; i++) {
+			cgs.fragMsg[i] = cgs.fragMsg[i + 1];
+		}
+		memset( &cgs.fragMsg[FRAGMSG_MAX - 1], 0, sizeof(fragInfo_t) );
+
+		Q_strncpyz(lastFrag->targetName, targetName, 32);
+		Q_strncpyz(lastFrag->attackerName, attackerName, 32);
+		lastFrag->causeShader = cgs.media.skullShader;
+		lastFrag->fragTime = cg.time;
+		Q_strncpyz(lastFrag->message, va("%s died.", targetName), 200);
+	}
 }
 
 //==========================================================================

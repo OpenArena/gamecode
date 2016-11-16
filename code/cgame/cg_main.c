@@ -172,6 +172,7 @@ vmCvar_t	cg_noVoiceChats;
 vmCvar_t	cg_noVoiceText;
 vmCvar_t	cg_hudFiles;
 vmCvar_t 	cg_scorePlum;
+vmCvar_t	cg_obituaryOutput;
 //unlagged - smooth clients #2
 // this is done server-side now
 //vmCvar_t 	cg_smoothClients;
@@ -342,12 +343,12 @@ static cvarTable_t cvarTable[] = { // bk001129
 	{ &cg_centertime, "cg_centertime", "3", CVAR_CHEAT },
 	{ &cg_runpitch, "cg_runpitch", "0.002", CVAR_ARCHIVE},
 	{ &cg_runroll, "cg_runroll", "0.005", CVAR_ARCHIVE },
-	{ &cg_bob , "cg_bob", "1", CVAR_ARCHIVE },
+	{ &cg_bob, "cg_bob", "1", CVAR_ARCHIVE },
 	{ &cg_bobup , "cg_bobup", "0.005", CVAR_CHEAT },
 	{ &cg_bobpitch, "cg_bobpitch", "0.002", CVAR_ARCHIVE },
 	{ &cg_bobroll, "cg_bobroll", "0.002", CVAR_ARCHIVE },
 	{ &cg_bobmodel , "cg_bobmodel", "0", CVAR_ARCHIVE },		// leilei
-	{ &cg_kickScale, "cg_kickScale", "1", CVAR_ARCHIVE },
+	{ &cg_kickScale, "cg_kickScale", "1.0", CVAR_ARCHIVE },
 	{ &cg_swingSpeed, "cg_swingSpeed", "0.3", CVAR_CHEAT },
 	{ &cg_animSpeed, "cg_animspeed", "1", CVAR_CHEAT },
 	{ &cg_debugAnim, "cg_debuganim", "0", CVAR_CHEAT },
@@ -417,6 +418,7 @@ static cvarTable_t cvarTable[] = { // bk001129
 	{ &cg_timescaleFadeSpeed, "cg_timescaleFadeSpeed", "0", 0},
 	{ &cg_timescale, "timescale", "1", 0},
 	{ &cg_scorePlum, "cg_scorePlums", "1", CVAR_USERINFO | CVAR_ARCHIVE},
+	{ &cg_obituaryOutput, "cg_obituaryOutput", "2", CVAR_ARCHIVE},
 //unlagged - smooth clients #2
 // this is done server-side now
 //	{ &cg_smoothClients, "cg_smoothClients", "0", CVAR_USERINFO | CVAR_ARCHIVE},
@@ -1115,6 +1117,22 @@ static void CG_RegisterGraphics( void ) {
 
 	cgs.media.tracerShader = trap_R_RegisterShader( "gfx/misc/tracer" );
 	cgs.media.selectShader = trap_R_RegisterShader( "gfx/2d/select" );
+
+	cgs.media.bfgShader = trap_R_RegisterShader( "icons/iconw_bfg" );
+	cgs.media.chaingunShader = trap_R_RegisterShader( "icons/iconw_chaingun" );
+	cgs.media.gauntletShader = trap_R_RegisterShader( "icons/iconw_gauntlet" );
+	cgs.media.grapplehookShader = trap_R_RegisterShader( "icons/iconw_grapple" );
+	cgs.media.grenadeShader = trap_R_RegisterShader( "icons/iconw_grenade" );
+	cgs.media.kamikazeShader = trap_R_RegisterShader( "icons/iconw_kamikaze" );
+	cgs.media.lightninggunShader = trap_R_RegisterShader( "icons/iconw_lightning" );
+	cgs.media.machinegunShader = trap_R_RegisterShader( "icons/iconw_machinegun" );
+	cgs.media.nailgunShader = trap_R_RegisterShader( "icons/iconw_nailgun" );
+	cgs.media.plasmaShader = trap_R_RegisterShader( "icons/iconw_plasma" );
+	cgs.media.proxlauncherShader = trap_R_RegisterShader( "icons/iconw_proxlauncher" );
+	cgs.media.railgunShader = trap_R_RegisterShader( "icons/iconw_railgun" );
+	cgs.media.rocketShader = trap_R_RegisterShader( "icons/iconw_rocket" );
+	cgs.media.shotgunShader = trap_R_RegisterShader( "icons/iconw_shotgun" );
+	cgs.media.skullShader = trap_R_RegisterShader( "icons/skull_red" );
 
 	for (i = 0; i < NUM_CROSSHAIRS; i++ ) {
 		if (i < 10)
