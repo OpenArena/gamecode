@@ -46,7 +46,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 //======================================================================
 
-int Pickup_Powerup( gentity_t *ent, gentity_t *other ) {
+int Pickup_Powerup( gentity_t *ent, gentity_t *other )
+{
 	int			quantity;
 	int			i;
 	gclient_t	*client;
@@ -54,13 +55,14 @@ int Pickup_Powerup( gentity_t *ent, gentity_t *other ) {
 	if ( !other->client->ps.powerups[ent->item->giTag] ) {
 		// round timing to seconds to make multiple powerup timers
 		// count in sync
-		other->client->ps.powerups[ent->item->giTag] = 
-			level.time - ( level.time % 1000 );
+		other->client->ps.powerups[ent->item->giTag] =
+		    level.time - ( level.time % 1000 );
 	}
 
 	if ( ent->count ) {
 		quantity = ent->count;
-	} else {
+	}
+	else {
 		quantity = ent->item->quantity;
 	}
 
@@ -84,11 +86,11 @@ int Pickup_Powerup( gentity_t *ent, gentity_t *other ) {
 			continue;
 		}
 
-	// if same team in team game, no sound
-	// cannot use OnSameTeam as it expects to g_entities, not clients
-	if ( g_gametype.integer >= GT_TEAM && g_ffa_gt==0 && other->client->sess.sessionTeam == client->sess.sessionTeam  ) {
-		continue;
-	}
+		// if same team in team game, no sound
+		// cannot use OnSameTeam as it expects to g_entities, not clients
+		if ( g_gametype.integer >= GT_TEAM && g_ffa_gt==0 && other->client->sess.sessionTeam == client->sess.sessionTeam  ) {
+			continue;
+		}
 
 		// if too far away, no sound
 		VectorSubtract( ent->s.pos.trBase, client->ps.origin, delta );
@@ -117,7 +119,8 @@ int Pickup_Powerup( gentity_t *ent, gentity_t *other ) {
 
 //======================================================================
 
-int Pickup_PersistantPowerup( gentity_t *ent, gentity_t *other ) {
+int Pickup_PersistantPowerup( gentity_t *ent, gentity_t *other )
+{
 	int		clientNum;
 	char	userinfo[MAX_INFO_STRING];
 	float	handicap;
@@ -190,7 +193,8 @@ int Pickup_PersistantPowerup( gentity_t *ent, gentity_t *other ) {
 
 //======================================================================
 
-int Pickup_Holdable( gentity_t *ent, gentity_t *other ) {
+int Pickup_Holdable( gentity_t *ent, gentity_t *other )
+{
 
 	other->client->ps.stats[STAT_HOLDABLE_ITEM] = ent->item - bg_itemlist;
 
@@ -218,7 +222,8 @@ int Pickup_Ammo (gentity_t *ent, gentity_t *other)
 
 	if ( ent->count ) {
 		quantity = ent->count;
-	} else {
+	}
+	else {
 		quantity = ent->item->quantity;
 	}
 
@@ -230,15 +235,18 @@ int Pickup_Ammo (gentity_t *ent, gentity_t *other)
 //======================================================================
 
 
-int Pickup_Weapon (gentity_t *ent, gentity_t *other) {
+int Pickup_Weapon (gentity_t *ent, gentity_t *other)
+{
 	int		quantity;
 
 	if ( ent->count < 0 ) {
 		quantity = 0; // None for you, sir!
-	} else {
+	}
+	else {
 		if ( ent->count ) {
 			quantity = ent->count;
-		} else {
+		}
+		else {
 			quantity = ent->item->quantity;
 		}
 
@@ -248,7 +256,8 @@ int Pickup_Weapon (gentity_t *ent, gentity_t *other) {
 			// drop the quantity if the already have over the minimum
 			if ( other->client->ps.ammo[ ent->item->giTag ] < quantity ) {
 				quantity = quantity - other->client->ps.ammo[ ent->item->giTag ];
-			} else {
+			}
+			else {
 				quantity = 1;		// only add a single shot
 			}
 		}
@@ -273,7 +282,8 @@ int Pickup_Weapon (gentity_t *ent, gentity_t *other) {
 
 //======================================================================
 
-int Pickup_Health (gentity_t *ent, gentity_t *other) {
+int Pickup_Health (gentity_t *ent, gentity_t *other)
+{
 	int			max;
 	int			quantity;
 
@@ -284,16 +294,17 @@ int Pickup_Health (gentity_t *ent, gentity_t *other) {
 	if( other->client && bg_itemlist[other->client->ps.stats[STAT_PERSISTANT_POWERUP]].giTag == PW_GUARD ) {
 		max = other->client->ps.stats[STAT_MAX_HEALTH];
 	}
-	else
-	if ( ent->item->quantity != 5 && ent->item->quantity != 100 ) {
+	else if ( ent->item->quantity != 5 && ent->item->quantity != 100 ) {
 		max = other->client->ps.stats[STAT_MAX_HEALTH];
-	} else {
+	}
+	else {
 		max = other->client->ps.stats[STAT_MAX_HEALTH] * 2;
 	}
 
 	if ( ent->count ) {
 		quantity = ent->count;
-	} else {
+	}
+	else {
 		quantity = ent->item->quantity;
 	}
 
@@ -313,7 +324,8 @@ int Pickup_Health (gentity_t *ent, gentity_t *other) {
 
 //======================================================================
 
-int Pickup_Armor( gentity_t *ent, gentity_t *other ) {
+int Pickup_Armor( gentity_t *ent, gentity_t *other )
+{
 	int		upperBound;
 
 	other->client->ps.stats[STAT_ARMOR] += ent->item->quantity;
@@ -339,10 +351,11 @@ int Pickup_Armor( gentity_t *ent, gentity_t *other ) {
 RespawnItem
 ===============
 */
-void RespawnItem( gentity_t *ent ) {
-        //Don't spawn quad if quadfactor are 1.0 or less
-        if(ent->item->giType == IT_POWERUP && ent->item->giTag == PW_QUAD && g_quadfactor.value <= 1.0)
-            return;
+void RespawnItem( gentity_t *ent )
+{
+	//Don't spawn quad if quadfactor are 1.0 or less
+	if(ent->item->giType == IT_POWERUP && ent->item->giTag == PW_QUAD && g_quadfactor.value <= 1.0)
+		return;
 
 	// randomly select from teamed entities
 	if (ent->team) {
@@ -411,13 +424,14 @@ void RespawnItem( gentity_t *ent ) {
 Touch_Item
 ===============
 */
-void Touch_Item (gentity_t *ent, gentity_t *other, trace_t *trace) {
+void Touch_Item (gentity_t *ent, gentity_t *other, trace_t *trace)
+{
 	int			respawn;
 	qboolean	predict;
 
 	//instant gib
 	if ((g_instantgib.integer || g_rockets.integer || g_gametype.integer == GT_CTF_ELIMINATION || g_elimination_allgametypes.integer)
-                && ent->item->giType != IT_TEAM)
+	        && ent->item->giType != IT_TEAM)
 		return;
 
 	//Cannot touch flag before round starts
@@ -426,8 +440,8 @@ void Touch_Item (gentity_t *ent, gentity_t *other, trace_t *trace) {
 
 	//Cannot take ctf elimination oneway
 	if(g_gametype.integer == GT_CTF_ELIMINATION && g_elimination_ctf_oneway.integer!=0 && (
-			(other->client->sess.sessionTeam==TEAM_BLUE && (level.eliminationSides+level.roundNumber)%2 == 0 ) ||
-			(other->client->sess.sessionTeam==TEAM_RED && (level.eliminationSides+level.roundNumber)%2 != 0 ) ))
+	            (other->client->sess.sessionTeam==TEAM_BLUE && (level.eliminationSides+level.roundNumber)%2 == 0 ) ||
+	            (other->client->sess.sessionTeam==TEAM_RED && (level.eliminationSides+level.roundNumber)%2 != 0 ) ))
 		return;
 
 	if (g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_LMS)
@@ -505,7 +519,8 @@ void Touch_Item (gentity_t *ent, gentity_t *other, trace_t *trace) {
 	// play the normal pickup sound
 	if (predict) {
 		G_AddPredictableEvent( other, EV_ITEM_PICKUP, ent->s.modelindex );
-	} else {
+	}
+	else {
 		G_AddEvent( other, EV_ITEM_PICKUP, ent->s.modelindex );
 	}
 
@@ -518,7 +533,8 @@ void Touch_Item (gentity_t *ent, gentity_t *other, trace_t *trace) {
 			te = G_TempEntity( ent->s.pos.trBase, EV_GLOBAL_ITEM_PICKUP );
 			te->s.eventParm = ent->s.modelindex;
 			te->r.svFlags |= SVF_BROADCAST;
-		} else {
+		}
+		else {
 			gentity_t	*te;
 
 			te = G_TempEntity( ent->s.pos.trBase, EV_GLOBAL_ITEM_PICKUP );
@@ -567,13 +583,14 @@ void Touch_Item (gentity_t *ent, gentity_t *other, trace_t *trace) {
 	ent->r.contents = 0;
 
 	// ZOID
-	// A negative respawn times means to never respawn this item (but don't 
-	// delete it).  This is used by items that are respawned by third party 
+	// A negative respawn times means to never respawn this item (but don't
+	// delete it).  This is used by items that are respawned by third party
 	// events such as ctf flags
 	if ( respawn <= 0 ) {
 		ent->nextthink = 0;
 		ent->think = 0;
-	} else {
+	}
+	else {
 		ent->nextthink = level.time + respawn * 1000;
 		ent->think = RespawnItem;
 	}
@@ -590,7 +607,8 @@ LaunchItem
 Spawns an item and tosses it forward
 ================
 */
-gentity_t *LaunchItem( gitem_t *item, vec3_t origin, vec3_t velocity ) {
+gentity_t *LaunchItem( gitem_t *item, vec3_t origin, vec3_t velocity )
+{
 	gentity_t	*dropped;
 
 	dropped = G_Spawn();
@@ -613,13 +631,14 @@ gentity_t *LaunchItem( gitem_t *item, vec3_t origin, vec3_t velocity ) {
 	VectorCopy( velocity, dropped->s.pos.trDelta );
 
 	dropped->s.eFlags |= EF_BOUNCE_HALF;
-	if ((g_gametype.integer == GT_CTF || g_gametype.integer == GT_1FCTF || 
-			g_gametype.integer == GT_CTF_ELIMINATION || g_gametype.integer == GT_DOUBLE_D || g_gametype.integer == GT_POSSESSION)			
-			&& item->giType == IT_TEAM) { // Special case for CTF flags
+	if ((g_gametype.integer == GT_CTF || g_gametype.integer == GT_1FCTF ||
+	        g_gametype.integer == GT_CTF_ELIMINATION || g_gametype.integer == GT_DOUBLE_D || g_gametype.integer == GT_POSSESSION)
+	        && item->giType == IT_TEAM) { // Special case for CTF flags
 		dropped->think = Team_DroppedFlagThink;
 		dropped->nextthink = level.time + 30000;
 		Team_CheckDroppedItem( dropped );
-	} else { // auto-remove after 30 seconds
+	}
+	else {   // auto-remove after 30 seconds
 		dropped->think = G_FreeEntity;
 		dropped->nextthink = level.time + 30000;
 	}
@@ -638,7 +657,8 @@ Drop_Item
 Spawns an item and tosses it forward
 ================
 */
-gentity_t *Drop_Item( gentity_t *ent, gitem_t *item, float angle ) {
+gentity_t *Drop_Item( gentity_t *ent, gitem_t *item, float angle )
+{
 	vec3_t	velocity;
 	vec3_t	angles;
 
@@ -649,7 +669,7 @@ gentity_t *Drop_Item( gentity_t *ent, gitem_t *item, float angle ) {
 	AngleVectors( angles, velocity, NULL, NULL );
 	VectorScale( velocity, 150, velocity );
 	velocity[2] += 200 + crandom() * 50;
-	
+
 	return LaunchItem( item, ent->s.pos.trBase, velocity );
 }
 
@@ -661,7 +681,8 @@ Use_Item
 Respawn the item
 ================
 */
-void Use_Item( gentity_t *ent, gentity_t *other, gentity_t *activator ) {
+void Use_Item( gentity_t *ent, gentity_t *other, gentity_t *activator )
+{
 	RespawnItem( ent );
 }
 
@@ -675,7 +696,8 @@ Traces down to find where an item should rest, instead of letting them
 free fall from their spawn points
 ================
 */
-void FinishSpawningItem( gentity_t *ent ) {
+void FinishSpawningItem( gentity_t *ent )
+{
 	trace_t		tr;
 	vec3_t		dest;
 
@@ -694,7 +716,8 @@ void FinishSpawningItem( gentity_t *ent ) {
 	if ( ent->spawnflags & 1 ) {
 		// suspended
 		G_SetOrigin( ent, ent->s.origin );
-	} else {
+	}
+	else {
 		// drop to floor
 		VectorSet( dest, ent->s.origin[0], ent->s.origin[1], ent->s.origin[2] - 4096 );
 		trap_Trace( &tr, ent->s.origin, ent->r.mins, ent->r.maxs, dest, ent->s.number, MASK_SOLID );
@@ -717,20 +740,20 @@ void FinishSpawningItem( gentity_t *ent ) {
 		return;
 	}
 
-	
-	// powerups don't spawn in for a while (but not in elimination)
-	if(g_gametype.integer != GT_ELIMINATION && g_gametype.integer != GT_CTF_ELIMINATION && g_gametype.integer != GT_LMS 
-                && !g_instantgib.integer && !g_elimination_allgametypes.integer && !g_rockets.integer )
-	if ( ent->item->giType == IT_POWERUP ) {
-		float	respawn;
 
-		respawn = 45 + crandom() * 15;
-		ent->s.eFlags |= EF_NODRAW;
-		ent->r.contents = 0;
-		ent->nextthink = level.time + respawn * 1000;
-		ent->think = RespawnItem;
-		return;
-	}
+	// powerups don't spawn in for a while (but not in elimination)
+	if(g_gametype.integer != GT_ELIMINATION && g_gametype.integer != GT_CTF_ELIMINATION && g_gametype.integer != GT_LMS
+	        && !g_instantgib.integer && !g_elimination_allgametypes.integer && !g_rockets.integer )
+		if ( ent->item->giType == IT_POWERUP ) {
+			float	respawn;
+
+			respawn = 45 + crandom() * 15;
+			ent->s.eFlags |= EF_NODRAW;
+			ent->r.contents = 0;
+			ent->nextthink = level.time + respawn * 1000;
+			ent->think = RespawnItem;
+			return;
+		}
 
 
 	trap_LinkEntity (ent);
@@ -744,7 +767,8 @@ qboolean	itemRegistered[MAX_ITEMS];
 G_CheckTeamItems
 ==================
 */
-void G_CheckTeamItems( void ) {
+void G_CheckTeamItems( void )
+{
 
 	// Set up team stuff
 	Team_InitGame();
@@ -826,7 +850,8 @@ void G_CheckTeamItems( void ) {
 ClearRegisteredItems
 ==============
 */
-void ClearRegisteredItems( void ) {
+void ClearRegisteredItems( void )
+{
 	memset( itemRegistered, 0, sizeof( itemRegistered ) );
 
 	if(g_instantgib.integer) {
@@ -840,14 +865,12 @@ void ClearRegisteredItems( void ) {
 		//RegisterItem( BG_FindItemForWeapon( WP_MACHINEGUN ) );
 		RegisterItem( BG_FindItemForWeapon( WP_ROCKET_LAUNCHER ) );
 	}
-	else
-	{
+	else {
 		// players always start with the base weapon
 		RegisterItem( BG_FindItemForWeapon( WP_MACHINEGUN ) );
 		RegisterItem( BG_FindItemForWeapon( WP_GAUNTLET ) );
-		if(g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_CTF_ELIMINATION 
-                        || g_gametype.integer == GT_LMS || g_elimination_allgametypes.integer)
-		{
+		if(g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_CTF_ELIMINATION
+		        || g_gametype.integer == GT_LMS || g_elimination_allgametypes.integer) {
 			RegisterItem( BG_FindItemForWeapon( WP_SHOTGUN ) );
 			RegisterItem( BG_FindItemForWeapon( WP_GRENADE_LAUNCHER ) );
 			RegisterItem( BG_FindItemForWeapon( WP_ROCKET_LAUNCHER ) );
@@ -864,7 +887,7 @@ void ClearRegisteredItems( void ) {
 		RegisterItem( BG_FindItem( "Red Cube" ) );
 		RegisterItem( BG_FindItem( "Blue Cube" ) );
 	}
-        
+
 	if(g_gametype.integer == GT_DOUBLE_D ) {
 		RegisterItem( BG_FindItem( "Point A (Blue)" ) );
 		RegisterItem( BG_FindItem( "Point A (Red)" ) );
@@ -879,11 +902,11 @@ void ClearRegisteredItems( void ) {
 		RegisterItem( BG_FindItem( "Red domination point" ) );
 		RegisterItem( BG_FindItem( "Blue domination point" ) );
 	}
-	
+
 	if (g_gametype.integer == GT_POSSESSION) {
-		RegisterItem(BG_FindItem("Neutral Flag") ); 
+		RegisterItem(BG_FindItem("Neutral Flag") );
 	}
-	
+
 }
 
 /*
@@ -893,7 +916,8 @@ RegisterItem
 The item will be added to the precache list
 ===============
 */
-void RegisterItem( gitem_t *item ) {
+void RegisterItem( gitem_t *item )
+{
 	if ( !item ) {
 		G_Error( "RegisterItem: NULL" );
 	}
@@ -909,7 +933,8 @@ Write the needed items to a config string
 so the client will know which ones to precache
 ===============
 */
-void SaveRegisteredItems( void ) {
+void SaveRegisteredItems( void )
+{
 	char	string[MAX_ITEMS+1];
 	int		i;
 	int		count;
@@ -919,7 +944,8 @@ void SaveRegisteredItems( void ) {
 		if ( itemRegistered[i] ) {
 			count++;
 			string[i] = '1';
-		} else {
+		}
+		else {
 			string[i] = '0';
 		}
 	}
@@ -933,7 +959,8 @@ void SaveRegisteredItems( void ) {
 G_ItemDisabled
 ============
 */
-int G_ItemDisabled( gitem_t *item ) {
+int G_ItemDisabled( gitem_t *item )
+{
 
 	char name[128];
 
@@ -951,12 +978,12 @@ Items can't be immediately dropped to floor, because they might
 be on an entity that hasn't spawned yet.
 ============
 */
-void G_SpawnItem (gentity_t *ent, gitem_t *item) {
+void G_SpawnItem (gentity_t *ent, gitem_t *item)
+{
 	G_SpawnFloat( "random", "0", &ent->random );
 	G_SpawnFloat( "wait", "0", &ent->wait );
 
-	if((item->giType == IT_TEAM && (g_instantgib.integer || g_rockets.integer) ) || (!g_instantgib.integer && !g_rockets.integer) )
-	{
+	if((item->giType == IT_TEAM && (g_instantgib.integer || g_rockets.integer) ) || (!g_instantgib.integer && !g_rockets.integer) ) {
 		//Don't load pickups in Elimination (or maybe... gives warnings)
 		if (g_gametype.integer != GT_ELIMINATION && g_gametype.integer != GT_CTF_ELIMINATION && g_gametype.integer != GT_LMS)
 			RegisterItem( item );
@@ -977,21 +1004,21 @@ void G_SpawnItem (gentity_t *ent, gitem_t *item) {
 
 	ent->physicsBounce = 0.50;		// items are bouncy
 
-	if (g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_LMS || 
-			( item->giType != IT_TEAM && (g_instantgib.integer || g_rockets.integer || g_elimination_allgametypes.integer || g_gametype.integer==GT_CTF_ELIMINATION) ) ) {
+	if (g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_LMS ||
+	        ( item->giType != IT_TEAM && (g_instantgib.integer || g_rockets.integer || g_elimination_allgametypes.integer || g_gametype.integer==GT_CTF_ELIMINATION) ) ) {
 		ent->s.eFlags |= EF_NODRAW; //Invisible in elimination
 		ent->r.svFlags |= SVF_NOCLIENT;  //Don't broadcast
 	}
 
-	if(g_gametype.integer == GT_DOUBLE_D && (strequals(ent->classname, "team_CTF_redflag") || strequals(ent->classname, "team_CTF_blueflag") 
-			|| strequals(ent->classname, "team_CTF_neutralflag") || item->giType == IT_PERSISTANT_POWERUP  )) {
+	if(g_gametype.integer == GT_DOUBLE_D && (strequals(ent->classname, "team_CTF_redflag") || strequals(ent->classname, "team_CTF_blueflag")
+	        || strequals(ent->classname, "team_CTF_neutralflag") || item->giType == IT_PERSISTANT_POWERUP  )) {
 		ent->s.eFlags |= EF_NODRAW; //Don't draw the flag models/persistant powerups
 	}
 
 	if( g_gametype.integer != GT_1FCTF && g_gametype.integer != GT_POSSESSION && strequals(ent->classname, "team_CTF_neutralflag")) {
 		ent->s.eFlags |= EF_NODRAW; // Don't draw the flag in CTF_elimination
 	}
-	
+
 	if( g_gametype.integer == GT_POSSESSION && (strequals(ent->classname, "team_CTF_redflag") || strequals(ent->classname, "team_CTF_blueflag") ) ) {
 		ent->s.eFlags |= EF_NODRAW; // Don't draw the flag colored flags in possession
 	}
@@ -1016,7 +1043,8 @@ G_BounceItem
 
 ================
 */
-void G_BounceItem( gentity_t *ent, trace_t *trace ) {
+void G_BounceItem( gentity_t *ent, trace_t *trace )
+{
 	vec3_t	velocity;
 	float	dot;
 	int		hitTime;
@@ -1051,7 +1079,8 @@ G_RunItem
 
 ================
 */
-void G_RunItem( gentity_t *ent ) {
+void G_RunItem( gentity_t *ent )
+{
 	vec3_t		origin;
 	trace_t		tr;
 	int			contents;
@@ -1077,11 +1106,12 @@ void G_RunItem( gentity_t *ent ) {
 	// trace a line from the previous position to the current position
 	if ( ent->clipmask ) {
 		mask = ent->clipmask;
-	} else {
+	}
+	else {
 		mask = MASK_PLAYERSOLID & ~CONTENTS_BODY;//MASK_SOLID;
 	}
-	trap_Trace( &tr, ent->r.currentOrigin, ent->r.mins, ent->r.maxs, origin, 
-		ent->r.ownerNum, mask );
+	trap_Trace( &tr, ent->r.currentOrigin, ent->r.mins, ent->r.maxs, origin,
+	            ent->r.ownerNum, mask );
 
 	VectorCopy( tr.endpos, ent->r.currentOrigin );
 
@@ -1103,7 +1133,8 @@ void G_RunItem( gentity_t *ent ) {
 	if ( contents & CONTENTS_NODROP ) {
 		if (ent->item && ent->item->giType == IT_TEAM) {
 			Team_FreeEntity(ent);
-		} else {
+		}
+		else {
 			G_FreeEntity( ent );
 		}
 		return;

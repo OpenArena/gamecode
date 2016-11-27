@@ -32,30 +32,29 @@ Does Server Status from Console
 */
 void Svcmd_Status_f( void )
 {
-    int       i;
-    gclient_t *cl;
-    char      userinfo[ MAX_INFO_STRING ];
+	int       i;
+	gclient_t *cl;
+	char      userinfo[ MAX_INFO_STRING ];
 
-    G_Printf( "slot score ping address               rate     name\n" );
-    G_Printf( "---- ----- ---- -------               ----     ----\n" );
-    for( i = 0, cl = level.clients; i < level.maxclients; i++, cl++ )
-    {
-        if( cl->pers.connected == CON_DISCONNECTED )
-            continue;
+	G_Printf( "slot score ping address               rate     name\n" );
+	G_Printf( "---- ----- ---- -------               ----     ----\n" );
+	for( i = 0, cl = level.clients; i < level.maxclients; i++, cl++ ) {
+		if( cl->pers.connected == CON_DISCONNECTED )
+			continue;
 
-        G_Printf( "%-4d ", i );
-        G_Printf( "%-5d ", cl->ps.persistant[ PERS_SCORE ] );
+		G_Printf( "%-4d ", i );
+		G_Printf( "%-5d ", cl->ps.persistant[ PERS_SCORE ] );
 
-        if( cl->pers.connected == CON_CONNECTING )
-            G_Printf( "CNCT " );
-        else
-            G_Printf( "%-4d ", cl->ps.ping );
+		if( cl->pers.connected == CON_CONNECTING )
+			G_Printf( "CNCT " );
+		else
+			G_Printf( "%-4d ", cl->ps.ping );
 
-        trap_GetUserinfo( i, userinfo, sizeof( userinfo ) );
-        G_Printf( "%-21s ", Info_ValueForKey( userinfo, "ip" ) );
-        G_Printf( "%-8s ", Info_ValueForKey( userinfo, "rate" ) );
-        G_Printf( "%s\n", cl->pers.netname ); // Info_ValueForKey( userinfo, "name" )
-    }
+		trap_GetUserinfo( i, userinfo, sizeof( userinfo ) );
+		G_Printf( "%-21s ", Info_ValueForKey( userinfo, "ip" ) );
+		G_Printf( "%-8s ", Info_ValueForKey( userinfo, "rate" ) );
+		G_Printf( "%s\n", cl->pers.netname ); // Info_ValueForKey( userinfo, "name" )
+	}
 }
 
 /*
@@ -66,30 +65,28 @@ Sends a Chat Message to a Team from the Console
 */
 void Svcmd_TeamMessage_f( void )
 {
-  char   teamNum[ 2 ];
-  const char*   prefix;
-  team_t team;
+	char   teamNum[ 2 ];
+	const char*   prefix;
+	team_t team;
 
-  if( trap_Argc( ) < 3 )
-  {
-    G_Printf( "usage: say_team <team> <message>\n" );
-    return;
-  }
+	if( trap_Argc( ) < 3 ) {
+		G_Printf( "usage: say_team <team> <message>\n" );
+		return;
+	}
 
-  trap_Argv( 1, teamNum, sizeof( teamNum ) );
-  team = G_TeamFromString( teamNum );
+	trap_Argv( 1, teamNum, sizeof( teamNum ) );
+	team = G_TeamFromString( teamNum );
 
-  if( team == TEAM_NUM_TEAMS )
-  {
-    G_Printf( "say_team: invalid team \"%s\"\n", teamNum );
-    return;
-  }
+	if( team == TEAM_NUM_TEAMS ) {
+		G_Printf( "say_team: invalid team \"%s\"\n", teamNum );
+		return;
+	}
 
-  prefix = BG_TeamName( team );
-  prefix = va( "[%c] ", toupper( *prefix ) );
+	prefix = BG_TeamName( team );
+	prefix = va( "[%c] ", toupper( *prefix ) );
 
-  G_TeamCommand( team, va( "tchat \"(console): " S_COLOR_CYAN "%s\"", ConcatArgs( 2 ) ) );
-  G_LogPrintf( "sayteam: %sconsole: " S_COLOR_CYAN "%s\n", prefix, ConcatArgs( 2 ) );
+	G_TeamCommand( team, va( "tchat \"(console): " S_COLOR_CYAN "%s\"", ConcatArgs( 2 ) ) );
+	G_LogPrintf( "sayteam: %sconsole: " S_COLOR_CYAN "%s\n", prefix, ConcatArgs( 2 ) );
 }
 
 /*
@@ -100,13 +97,12 @@ Does a CenterPrint from the Console
 */
 void Svcmd_CenterPrint_f( void )
 {
-  if( trap_Argc( ) < 2 )
-  {
-    G_Printf( "usage: cp <message>\n" );
-    return;
-  }
+	if( trap_Argc( ) < 2 ) {
+		G_Printf( "usage: cp <message>\n" );
+		return;
+	}
 
-  trap_SendServerCommand( -1, va( "cp \"%s\"", ConcatArgs( 1 ) ) );
+	trap_SendServerCommand( -1, va( "cp \"%s\"", ConcatArgs( 1 ) ) );
 }
 /*
 ============
@@ -117,59 +113,53 @@ KK-OAX Commented out in g_svccmds.c, so right now it's useless.
 */
 void Svcmd_BannerPrint_f( void )
 {
-  if( trap_Argc( ) < 2 )
-  {
-    G_Printf( "usage: bp <message>\n" );
-    return;
-  }
+	if( trap_Argc( ) < 2 ) {
+		G_Printf( "usage: bp <message>\n" );
+		return;
+	}
 
-  trap_SendServerCommand( -1, va( "bp \"%s\"", ConcatArgs( 1 ) ) );
+	trap_SendServerCommand( -1, va( "bp \"%s\"", ConcatArgs( 1 ) ) );
 }
 /*
 ============
 Svcmd_EjectClient_f
 Kicks a Client from Console
-KK-OAX, I'm pretty sure this is also done in the "server" portion 
-of the engine code with "kick," but oh well. 
+KK-OAX, I'm pretty sure this is also done in the "server" portion
+of the engine code with "kick," but oh well.
 ============
 */
 void Svcmd_EjectClient_f( void )
 {
-  char *reason, name[ MAX_STRING_CHARS ];
+	char *reason, name[ MAX_STRING_CHARS ];
 
-  if( trap_Argc( ) < 2 )
-  {
-    G_Printf( "usage: eject <player|-1> <reason>\n" );
-    return;
-  }
+	if( trap_Argc( ) < 2 ) {
+		G_Printf( "usage: eject <player|-1> <reason>\n" );
+		return;
+	}
 
-  trap_Argv( 1, name, sizeof( name ) );
-  reason = ConcatArgs( 2 );
+	trap_Argv( 1, name, sizeof( name ) );
+	reason = ConcatArgs( 2 );
 
-  if( atoi( name ) == -1 )
-  {
-    int i;
-    for( i = 0; i < level.maxclients; i++ )
-    {
-      if( level.clients[ i ].pers.connected == CON_DISCONNECTED )
-        continue;
-      if( level.clients[ i ].pers.localClient )
-        continue;
-      trap_DropClient( i, reason );
-    }
-  }
-  else
-  {
-    gclient_t *cl = ClientForString( name );
-    if( !cl )
-      return;
-    if( cl->pers.localClient )
-    {
-      G_Printf( "eject: cannot eject local clients\n" );
-      return;
-    }
-    trap_DropClient( cl-level.clients, reason );
-  }
+	if( atoi( name ) == -1 ) {
+		int i;
+		for( i = 0; i < level.maxclients; i++ ) {
+			if( level.clients[ i ].pers.connected == CON_DISCONNECTED )
+				continue;
+			if( level.clients[ i ].pers.localClient )
+				continue;
+			trap_DropClient( i, reason );
+		}
+	}
+	else {
+		gclient_t *cl = ClientForString( name );
+		if( !cl )
+			return;
+		if( cl->pers.localClient ) {
+			G_Printf( "eject: cannot eject local clients\n" );
+			return;
+		}
+		trap_DropClient( cl-level.clients, reason );
+	}
 }
 
 /*
@@ -180,40 +170,38 @@ Shows User Info
 */
 void Svcmd_DumpUser_f( void )
 {
-  char name[ MAX_STRING_CHARS ], userinfo[ MAX_INFO_STRING ];
-  char key[ BIG_INFO_KEY ], value[ BIG_INFO_VALUE ];
-  const char *info;
-  gclient_t *cl;
+	char name[ MAX_STRING_CHARS ], userinfo[ MAX_INFO_STRING ];
+	char key[ BIG_INFO_KEY ], value[ BIG_INFO_VALUE ];
+	const char *info;
+	gclient_t *cl;
 
-  if( trap_Argc( ) != 2 )
-  {
-    G_Printf( "usage: dumpuser <player>\n" );
-    return;
-  }
+	if( trap_Argc( ) != 2 ) {
+		G_Printf( "usage: dumpuser <player>\n" );
+		return;
+	}
 
-  trap_Argv( 1, name, sizeof( name ) );
-  cl = ClientForString( name );
-  if( !cl )
-    return;
+	trap_Argv( 1, name, sizeof( name ) );
+	cl = ClientForString( name );
+	if( !cl )
+		return;
 
-  trap_GetUserinfo( cl-level.clients, userinfo, sizeof( userinfo ) );
-  info = &userinfo[ 0 ];
-  G_Printf( "userinfo\n--------\n" );
-  //Info_Print( userinfo );
-  while( 1 )
-  {
-    Info_NextPair( &info, key, value );
-    if( !*info )
-      return;
+	trap_GetUserinfo( cl-level.clients, userinfo, sizeof( userinfo ) );
+	info = &userinfo[ 0 ];
+	G_Printf( "userinfo\n--------\n" );
+	//Info_Print( userinfo );
+	while( 1 ) {
+		Info_NextPair( &info, key, value );
+		if( !*info )
+			return;
 
-    G_Printf( "%-20s%s\n", key, value );
-  }
+		G_Printf( "%-20s%s\n", key, value );
+	}
 }
 
 void Svcmd_Chat_f( void )
 {
-    trap_SendServerCommand( -1, va( "chat \"%s\"", ConcatArgs( 1 ) ) );
-    G_LogPrintf("chat: %s\n", ConcatArgs( 1 ) );
+	trap_SendServerCommand( -1, va( "chat \"%s\"", ConcatArgs( 1 ) ) );
+	G_LogPrintf("chat: %s\n", ConcatArgs( 1 ) );
 }
 
 /*
@@ -224,7 +212,7 @@ Dumb Wrapper for the trap_Send command
 */
 void Svcmd_ListIP_f( void )
 {
-    trap_SendConsoleCommand( EXEC_NOW, "g_banIPs\n" );
+	trap_SendConsoleCommand( EXEC_NOW, "g_banIPs\n" );
 }
 
 /*
@@ -235,14 +223,14 @@ Dumb wrapper for "a" and "m" and "say"
 */
 void Svcmd_MessageWrapper( void )
 {
-  char cmd[ 5 ];
-  trap_Argv( 0, cmd, sizeof( cmd ) );
-  /*if( Q_strequal( cmd, "a" ) )
-    Cmd_AdminMessage_f( NULL );
-  else if( Q_strequal( cmd, "m" ) )
-    Cmd_PrivateMessage_f( NULL );
-  else*/
-  if( Q_strequal( cmd, "say" ) )
-    G_Say( NULL, NULL, SAY_ALL, ConcatArgs( 1 ) );
+	char cmd[ 5 ];
+	trap_Argv( 0, cmd, sizeof( cmd ) );
+	/*if( Q_strequal( cmd, "a" ) )
+	  Cmd_AdminMessage_f( NULL );
+	else if( Q_strequal( cmd, "m" ) )
+	  Cmd_PrivateMessage_f( NULL );
+	else*/
+	if( Q_strequal( cmd, "say" ) )
+		G_Say( NULL, NULL, SAY_ALL, ConcatArgs( 1 ) );
 }
 

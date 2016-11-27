@@ -30,7 +30,8 @@ G_BounceMissile
 
 ================
 */
-void G_BounceMissile( gentity_t *ent, trace_t *trace ) {
+void G_BounceMissile( gentity_t *ent, trace_t *trace )
+{
 	vec3_t	velocity;
 	float	dot;
 	int		hitTime;
@@ -46,7 +47,7 @@ void G_BounceMissile( gentity_t *ent, trace_t *trace ) {
 		// check for stop
 		if ( trace->plane.normal[2] > 0.2 && VectorLength( ent->s.pos.trDelta ) < 40 ) {
 			G_SetOrigin( ent, trace->endpos );
-                        ent->s.time = level.time / 4;
+			ent->s.time = level.time / 4;
 			return;
 		}
 	}
@@ -64,7 +65,8 @@ G_ExplodeMissile
 Explode a missile without an impact
 ================
 */
-void G_ExplodeMissile( gentity_t *ent ) {
+void G_ExplodeMissile( gentity_t *ent )
+{
 	vec3_t		dir;
 	vec3_t		origin;
 
@@ -84,9 +86,9 @@ void G_ExplodeMissile( gentity_t *ent ) {
 	// splash damage
 	if ( ent->splashDamage ) {
 		if( G_RadiusDamage( ent->r.currentOrigin, ent->parent, ent->splashDamage, ent->splashRadius, ent
-			, ent->splashMethodOfDeath ) ) {
+		                    , ent->splashMethodOfDeath ) ) {
 			g_entities[ent->r.ownerNum].client->accuracy_hits++;
-                        g_entities[ent->r.ownerNum].client->accuracy[ent->s.weapon][1]++;
+			g_entities[ent->r.ownerNum].client->accuracy[ent->s.weapon][1]++;
 		}
 	}
 
@@ -98,7 +100,8 @@ void G_ExplodeMissile( gentity_t *ent ) {
 ProximityMine_Explode
 ================
 */
-static void ProximityMine_Explode( gentity_t *mine ) {
+static void ProximityMine_Explode( gentity_t *mine )
+{
 	G_ExplodeMissile( mine );
 	// if the prox mine has a trigger free it
 	if (mine->activator) {
@@ -112,7 +115,8 @@ static void ProximityMine_Explode( gentity_t *mine ) {
 ProximityMine_Die
 ================
 */
-static void ProximityMine_Die( gentity_t *ent, gentity_t *inflictor, gentity_t *attacker, int damage, int mod ) {
+static void ProximityMine_Die( gentity_t *ent, gentity_t *inflictor, gentity_t *attacker, int damage, int mod )
+{
 	ent->think = ProximityMine_Explode;
 	ent->nextthink = level.time + 1;
 }
@@ -122,7 +126,8 @@ static void ProximityMine_Die( gentity_t *ent, gentity_t *inflictor, gentity_t *
 ProximityMine_Trigger
 ================
 */
-void ProximityMine_Trigger( gentity_t *trigger, gentity_t *other, trace_t *trace ) {
+void ProximityMine_Trigger( gentity_t *trigger, gentity_t *other, trace_t *trace )
+{
 	vec3_t		v;
 	gentity_t	*mine;
 
@@ -163,45 +168,46 @@ void ProximityMine_Trigger( gentity_t *trigger, gentity_t *other, trace_t *trace
 ProximityMine_Activate
 ================
 */
-static void ProximityMine_Activate( gentity_t *ent ) {
+static void ProximityMine_Activate( gentity_t *ent )
+{
 	gentity_t	*trigger;
 	float		r;
-        vec3_t          v1;
-        gentity_t       *flag;
-        char            *c;
-        qboolean        nearFlag = qfalse;
+	vec3_t          v1;
+	gentity_t       *flag;
+	char            *c;
+	qboolean        nearFlag = qfalse;
 
-        // find the flag
-        switch (ent->s.generic1) {
-        case TEAM_RED:
-                c = "team_CTF_redflag";
-                break;
-        case TEAM_BLUE:
-                c = "team_CTF_blueflag";
-                break;
-        default:
-            c = NULL;
-        }
+	// find the flag
+	switch (ent->s.generic1) {
+	case TEAM_RED:
+		c = "team_CTF_redflag";
+		break;
+	case TEAM_BLUE:
+		c = "team_CTF_blueflag";
+		break;
+	default:
+		c = NULL;
+	}
 
-        if(c) {
-            flag = NULL;
-            while ((flag = G_Find (flag, FOFS(classname), c)) != NULL) {
-                    if (!(flag->flags & FL_DROPPED_ITEM))
-                            break;
-            }
+	if(c) {
+		flag = NULL;
+		while ((flag = G_Find (flag, FOFS(classname), c)) != NULL) {
+			if (!(flag->flags & FL_DROPPED_ITEM))
+				break;
+		}
 
-            if(flag) {
-                VectorSubtract(ent->r.currentOrigin,flag->r.currentOrigin , v1);
-                if(VectorLength(v1) < 500)
-                    nearFlag = qtrue;
-            }
-        }
+		if(flag) {
+			VectorSubtract(ent->r.currentOrigin,flag->r.currentOrigin , v1);
+			if(VectorLength(v1) < 500)
+				nearFlag = qtrue;
+		}
+	}
 
 	ent->think = ProximityMine_Explode;
-        if( nearFlag)
-            ent->nextthink = level.time + g_proxMineTimeout.integer/15;
-        else
-            ent->nextthink = level.time + g_proxMineTimeout.integer;
+	if( nearFlag)
+		ent->nextthink = level.time + g_proxMineTimeout.integer/15;
+	else
+		ent->nextthink = level.time + g_proxMineTimeout.integer;
 
 	ent->takedamage = qtrue;
 	ent->health = 1;
@@ -235,7 +241,8 @@ static void ProximityMine_Activate( gentity_t *ent ) {
 ProximityMine_ExplodeOnPlayer
 ================
 */
-static void ProximityMine_ExplodeOnPlayer( gentity_t *mine ) {
+static void ProximityMine_ExplodeOnPlayer( gentity_t *mine )
+{
 	gentity_t	*player;
 
 	player = mine->enemy;
@@ -260,7 +267,8 @@ static void ProximityMine_ExplodeOnPlayer( gentity_t *mine ) {
 ProximityMine_Player
 ================
 */
-static void ProximityMine_Player( gentity_t *mine, gentity_t *player ) {
+static void ProximityMine_Player( gentity_t *mine, gentity_t *player )
+{
 	if( mine->s.eFlags & EF_NODRAW ) {
 		return;
 	}
@@ -299,15 +307,16 @@ static void ProximityMine_Player( gentity_t *mine, gentity_t *player ) {
  *=================
  */
 
-void ProximityMine_RemoveAll() {
-    gentity_t	*mine;
-    
-    mine = NULL;
-    
-    while ((mine = G_Find (mine, FOFS(classname), "prox mine")) != NULL) {
-        mine->think = ProximityMine_Explode;
-	mine->nextthink = level.time + 1;
-    }
+void ProximityMine_RemoveAll()
+{
+	gentity_t	*mine;
+
+	mine = NULL;
+
+	while ((mine = G_Find (mine, FOFS(classname), "prox mine")) != NULL) {
+		mine->think = ProximityMine_Explode;
+		mine->nextthink = level.time + 1;
+	}
 }
 
 /*
@@ -315,7 +324,8 @@ void ProximityMine_RemoveAll() {
 G_MissileImpact
 ================
 */
-void G_MissileImpact( gentity_t *ent, trace_t *trace ) {
+void G_MissileImpact( gentity_t *ent, trace_t *trace )
+{
 	gentity_t		*other;
 	qboolean		hitClient = qfalse;
 	vec3_t			forward, impactpoint, bouncedir;
@@ -324,7 +334,7 @@ void G_MissileImpact( gentity_t *ent, trace_t *trace ) {
 
 	// check for bounce
 	if ( !other->takedamage &&
-		( ent->s.eFlags & ( EF_BOUNCE | EF_BOUNCE_HALF ) ) ) {
+	        ( ent->s.eFlags & ( EF_BOUNCE | EF_BOUNCE_HALF ) ) ) {
 		G_BounceMissile( ent, trace );
 		G_AddEvent( ent, EV_GRENADE_BOUNCE, 0 );
 		return;
@@ -333,7 +343,7 @@ void G_MissileImpact( gentity_t *ent, trace_t *trace ) {
 	if ( other->takedamage ) {
 		if ( ent->s.weapon != WP_PROX_LAUNCHER ) {
 			if ( other->client && other->client->invulnerabilityTime > level.time ) {
-              
+
 				//
 				VectorCopy( ent->s.pos.trDelta, forward );
 				VectorNormalize( forward );
@@ -358,15 +368,15 @@ void G_MissileImpact( gentity_t *ent, trace_t *trace ) {
 			if( LogAccuracyHit( other, &g_entities[ent->r.ownerNum] ) ) {
 				g_entities[ent->r.ownerNum].client->accuracy_hits++;
 				hitClient = qtrue;
-                                g_entities[ent->r.ownerNum].client->accuracy[ent->s.weapon][1]++;
+				g_entities[ent->r.ownerNum].client->accuracy[ent->s.weapon][1]++;
 			}
 			BG_EvaluateTrajectoryDelta( &ent->s.pos, level.time, velocity );
 			if ( VectorLength( velocity ) == 0 ) {
 				velocity[2] = 1;	// stepped on a grenade
 			}
 			G_Damage (other, ent, &g_entities[ent->r.ownerNum], velocity,
-				ent->s.origin, ent->damage, 
-				0, ent->methodOfDeath);
+			          ent->s.origin, ent->damage,
+			          0, ent->methodOfDeath);
 		}
 	}
 
@@ -422,7 +432,8 @@ void G_MissileImpact( gentity_t *ent, trace_t *trace ) {
 			v[2] = other->r.currentOrigin[2] + (other->r.mins[2] + other->r.maxs[2]) * 0.5;
 
 			SnapVectorTowards( v, ent->s.pos.trBase );	// save net bandwidth
-		} else {
+		}
+		else {
 			VectorCopy(trace->endpos, v);
 			G_AddEvent( nent, EV_MISSILE_MISS, DirToByte( trace->plane.normal ) );
 			ent->enemy = NULL;
@@ -456,9 +467,11 @@ void G_MissileImpact( gentity_t *ent, trace_t *trace ) {
 	if ( other->takedamage && other->client ) {
 		G_AddEvent( ent, EV_MISSILE_HIT, DirToByte( trace->plane.normal ) );
 		ent->s.otherEntityNum = other->s.number;
-	} else if( trace->surfaceFlags & SURF_METALSTEPS ) {
+	}
+	else if( trace->surfaceFlags & SURF_METALSTEPS ) {
 		G_AddEvent( ent, EV_MISSILE_MISS_METAL, DirToByte( trace->plane.normal ) );
-	} else {
+	}
+	else {
 		G_AddEvent( ent, EV_MISSILE_MISS, DirToByte( trace->plane.normal ) );
 	}
 
@@ -473,11 +486,11 @@ void G_MissileImpact( gentity_t *ent, trace_t *trace ) {
 
 	// splash damage (doesn't apply to person directly hit)
 	if ( ent->splashDamage ) {
-		if( G_RadiusDamage( trace->endpos, ent->parent, ent->splashDamage, ent->splashRadius, 
-			other, ent->splashMethodOfDeath ) ) {
+		if( G_RadiusDamage( trace->endpos, ent->parent, ent->splashDamage, ent->splashRadius,
+		                    other, ent->splashMethodOfDeath ) ) {
 			if( !hitClient ) {
 				g_entities[ent->r.ownerNum].client->accuracy_hits++;
-                                g_entities[ent->r.ownerNum].client->accuracy[ent->s.weapon][1]++;
+				g_entities[ent->r.ownerNum].client->accuracy[ent->s.weapon][1]++;
 			}
 		}
 	}
@@ -490,7 +503,8 @@ void G_MissileImpact( gentity_t *ent, trace_t *trace ) {
 G_RunMissile
 ================
 */
-void G_RunMissile( gentity_t *ent ) {
+void G_RunMissile( gentity_t *ent )
+{
 	vec3_t		origin;
 	trace_t		tr;
 	int			passent;
@@ -560,7 +574,8 @@ fire_plasma
 
 =================
 */
-gentity_t *fire_plasma (gentity_t *self, vec3_t start, vec3_t dir) {
+gentity_t *fire_plasma (gentity_t *self, vec3_t start, vec3_t dir)
+{
 	gentity_t	*bolt;
 
 	VectorNormalize (dir);
@@ -595,7 +610,7 @@ gentity_t *fire_plasma (gentity_t *self, vec3_t start, vec3_t dir) {
 	VectorCopy (start, bolt->r.currentOrigin);
 
 	return bolt;
-}	
+}
 
 //=============================================================================
 
@@ -605,7 +620,8 @@ gentity_t *fire_plasma (gentity_t *self, vec3_t start, vec3_t dir) {
 fire_grenade
 =================
 */
-gentity_t *fire_grenade (gentity_t *self, vec3_t start, vec3_t dir) {
+gentity_t *fire_grenade (gentity_t *self, vec3_t start, vec3_t dir)
+{
 	gentity_t	*bolt;
 
 	VectorNormalize (dir);
@@ -651,7 +667,8 @@ gentity_t *fire_grenade (gentity_t *self, vec3_t start, vec3_t dir) {
 fire_bfg
 =================
 */
-gentity_t *fire_bfg (gentity_t *self, vec3_t start, vec3_t dir) {
+gentity_t *fire_bfg (gentity_t *self, vec3_t start, vec3_t dir)
+{
 	gentity_t	*bolt;
 
 	VectorNormalize (dir);
@@ -695,7 +712,8 @@ gentity_t *fire_bfg (gentity_t *self, vec3_t start, vec3_t dir) {
 fire_rocket
 =================
 */
-gentity_t *fire_rocket (gentity_t *self, vec3_t start, vec3_t dir) {
+gentity_t *fire_rocket (gentity_t *self, vec3_t start, vec3_t dir)
+{
 	gentity_t	*bolt;
 
 	VectorNormalize (dir);
@@ -736,7 +754,8 @@ gentity_t *fire_rocket (gentity_t *self, vec3_t start, vec3_t dir) {
 fire_grapple
 =================
 */
-gentity_t *fire_grapple (gentity_t *self, vec3_t start, vec3_t dir) {
+gentity_t *fire_grapple (gentity_t *self, vec3_t start, vec3_t dir)
+{
 	gentity_t	*hook;
 //unlagged - grapple
 	int hooktime;
@@ -797,7 +816,8 @@ fire_nail
 */
 #define NAILGUN_SPREAD	500
 
-gentity_t *fire_nail( gentity_t *self, vec3_t start, vec3_t forward, vec3_t right, vec3_t up ) {
+gentity_t *fire_nail( gentity_t *self, vec3_t start, vec3_t forward, vec3_t right, vec3_t up )
+{
 	gentity_t	*bolt;
 	vec3_t		dir;
 	vec3_t		end;
@@ -841,7 +861,7 @@ gentity_t *fire_nail( gentity_t *self, vec3_t start, vec3_t forward, vec3_t righ
 	VectorCopy( start, bolt->r.currentOrigin );
 
 	return bolt;
-}	
+}
 
 
 /*
@@ -849,7 +869,8 @@ gentity_t *fire_nail( gentity_t *self, vec3_t start, vec3_t forward, vec3_t righ
 fire_prox
 =================
 */
-gentity_t *fire_prox( gentity_t *self, vec3_t start, vec3_t dir ) {
+gentity_t *fire_prox( gentity_t *self, vec3_t start, vec3_t dir )
+{
 	gentity_t	*bolt;
 
 	VectorNormalize (dir);

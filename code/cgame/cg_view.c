@@ -217,16 +217,16 @@ static void CG_CalcVrect (void) {
 		if (cg_viewnudge.integer) {
 			int nudged = 0;
 
-			if (size2 < 110)
+			if (size2 < 110) {
 				nudged = 48;
-
-			else if (size2 < 120)
+			}
+			else if (size2 < 120) {
 				nudged = 24;
+			}
 
 
-				nudged = nudged * (cgs.glconfig.vidHeight / 480.0);
-
-				cg.refdef.y = ( cgs.glconfig.vidHeight  - cg.refdef.height) /2 - nudged;
+			nudged = nudged * (cgs.glconfig.vidHeight / 480.0);
+			cg.refdef.y = ( cgs.glconfig.vidHeight  - cg.refdef.height) /2 - nudged;
 
 		}
 }
