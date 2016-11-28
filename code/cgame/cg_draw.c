@@ -1476,7 +1476,7 @@ static void CG_DrawFragMessage( void ) {
 	hcolor[0] = 1.0f;
 	hcolor[1] = 1.0f;
 	hcolor[2] = 1.0f;
-	hcolor[3] = 0.33f;
+	hcolor[3] = 1.00f;
 	trap_R_SetColor( hcolor );
 
 	for (i = FRAGMSG_MAX - 1; i >= 0; i--) {
@@ -1486,14 +1486,14 @@ static void CG_DrawFragMessage( void ) {
 			memset( &cgs.fragMsg[i], 0, sizeof(fragInfo_t) );
 		}
 
-		if (cg_obituaryOutput.integer == 1) {
+		if (cg_obituaryOutput.integer == 2) {
 			if (cgs.fragMsg[i].targetName[0] != '\0') {
 				CG_DrawStringExt(x, y + (i * TINYCHAR_HEIGHT),
 						cgs.fragMsg[i].message, hcolor, qfalse, qfalse,
 						TINYCHAR_WIDTH, TINYCHAR_HEIGHT, 0);
 			}
 		}
-		else if (cg_obituaryOutput.integer == 2) {
+		else if (cg_obituaryOutput.integer >= 3) {
 			CG_DrawStringExt(x, y + (i * TINYCHAR_HEIGHT),
 					cgs.fragMsg[i].attackerName, hcolor, qfalse, qfalse,
 					TINYCHAR_WIDTH, TINYCHAR_HEIGHT, 0);

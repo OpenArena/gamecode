@@ -229,10 +229,10 @@ static void CG_Obituary( entityState_t *ent ) {
 	// If a suicide happens while disconnecting
 	// then we might not have a targetName
 	if (message && strlen(targetName)) {
-		if (cg_obituaryOutput.integer == 0) {
+		if (cg_obituaryOutput.integer == 1 || cg_obituaryOutput.integer == 4) {
 			CG_Printf("%s %s.\n", targetName, message);
 		}
-		else {
+		if (cg_obituaryOutput.integer >= 2) {
 			for (i = 0; i < FRAGMSG_MAX - 1; i++) {
 				cgs.fragMsg[i] = cgs.fragMsg[i + 1];
 			}
@@ -415,11 +415,11 @@ static void CG_Obituary( entityState_t *ent ) {
 				message2 = "";
 			}
 
-			if (cg_obituaryOutput.integer == 0) {
+			if (cg_obituaryOutput.integer == 1 || cg_obituaryOutput.integer == 4) {
 				CG_Printf( "%s %s %s%s\n",
 					targetName, message, attackerName, message2);
 			}
-			else {
+			if (cg_obituaryOutput.integer >= 2) {
 				for (i = 0; i < FRAGMSG_MAX - 1; i++) {
 					cgs.fragMsg[i] = cgs.fragMsg[i + 1];
 				}
@@ -443,10 +443,10 @@ static void CG_Obituary( entityState_t *ent ) {
 	}
 
 	// we don't know what it was
-	if (cg_obituaryOutput.integer == 0) {
+	if (cg_obituaryOutput.integer == 1 || cg_obituaryOutput.integer == 4) {
 		CG_Printf( "%s died.\n", targetName );
 	}
-	else {
+	if (cg_obituaryOutput.integer >= 2) {
 		for (i = 0; i < FRAGMSG_MAX - 1; i++) {
 			cgs.fragMsg[i] = cgs.fragMsg[i + 1];
 		}
