@@ -134,6 +134,10 @@ vmCvar_t	cg_brassTime;
 vmCvar_t	cg_viewsize;
 vmCvar_t	cg_viewnudge; // leilei
 vmCvar_t	cg_drawGun;
+vmCvar_t	cg_gunFlash;	// leilei
+vmCvar_t	cg_gunArms;	// leilei
+vmCvar_t	cg_gunLean;	// leilei
+vmCvar_t	cg_gunFollow;	// leilei
 vmCvar_t	cg_gun_frame;
 vmCvar_t	cg_gun_x;
 vmCvar_t	cg_gun_y;
@@ -444,6 +448,11 @@ static cvarTable_t cvarTable[] = { // bk001129
 	{ &cg_modelEyes_Up, "cg_modelEyes_Up", "3", CVAR_ARCHIVE},				// LEILEI 
 	{ &cg_modelEyes_Right, "cg_modelEyes_Right", "3", CVAR_ARCHIVE},				// LEILEI 
 	{ &cg_modelEyes_Fwd, "cg_modelEyes_Fwd", "3", CVAR_ARCHIVE},				// LEILEI 
+
+	{ &cg_gunFlash, "cg_gunFlash", "2", CVAR_ARCHIVE },				// LEILEI
+	{ &cg_gunArms, "cg_gunArms", "1", CVAR_ARCHIVE },				// LEILEI
+	{ &cg_gunLean, "cg_gunLean", "0", CVAR_ARCHIVE },				// LEILEI
+	{ &cg_gunFollow, "cg_gunFollow", "0", CVAR_ARCHIVE },				// LEILEI
 
 	{ &cg_oldPlasma, "cg_oldPlasma", "1", CVAR_ARCHIVE},
 //unlagged - client options
