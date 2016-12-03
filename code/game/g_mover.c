@@ -814,6 +814,24 @@ targeted by another entity.
 ===============================================================================
 */
 
+static void RemoveAnythingButFlags(gentity_t *other) {
+	if( other->s.eType == ET_ITEM && other->item->giType == IT_TEAM ) {
+		Team_DroppedFlagThink( other );
+		return;
+	}
+	G_TempEntity( other->s.origin, EV_ITEM_POP );
+	G_FreeEntity( other );
+}
+
+static void DamagePlayer(gentity_t *ent, gentity_t *player) {
+	if(g_awardpushing.integer) {
+		G_Damage( player, ent, ent->activator, NULL, NULL, ent->damage, 0, MOD_CRUSH );
+	}
+	else {
+		G_Damage( player, ent, ent, NULL, NULL, ent->damage, 0, MOD_CRUSH );
+	}
+}
+
 /*
 ================
 Blocked_Door
@@ -821,24 +839,14 @@ Blocked_Door
 */
 void Blocked_Door( gentity_t *ent, gentity_t *other )
 {
-	// remove anything other than a client
+	// remove anything other than a client (and flags)
 	if ( !other->client ) {
-		// except CTF flags!!!!
-		if( other->s.eType == ET_ITEM && other->item->giType == IT_TEAM ) {
-			Team_DroppedFlagThink( other );
-			return;
-		}
-		G_TempEntity( other->s.origin, EV_ITEM_POP );
-		G_FreeEntity( other );
+		RemoveAnythingButFlags(other);
 		return;
 	}
 
 	if ( ent->damage ) {
-		if(g_awardpushing.integer)
-			G_Damage( other, ent, ent->activator, NULL, NULL, ent->damage, 0, MOD_CRUSH );
-		else
-			G_Damage( other, ent, ent, NULL, NULL, ent->damage, 0, MOD_CRUSH );
-
+		DamagePlayer(ent, other);
 	}
 	if ( ent->spawnflags & 4 ) {
 		return;		// crushers don't reverse
@@ -846,6 +854,19 @@ void Blocked_Door( gentity_t *ent, gentity_t *other )
 
 	// reverse direction
 	Use_BinaryMover( ent, ent, other );
+}
+
+
+static void Blocked_Train( gentity_t *ent, gentity_t *other )
+{
+	// remove anything other than a client (and flags)
+	if ( !other->client ) {
+		RemoveAnythingButFlags(other);
+		return;
+	}
+
+	//Trains always crush because they cannot reverse.
+	DamagePlayer(ent, other);
 }
 
 /*
@@ -1491,14 +1512,10 @@ void SP_func_train (gentity_t *self)
 {
 	VectorClear (self->s.angles);
 
-	if (self->spawnflags & TRAIN_BLOCK_STOPS) {
-		self->damage = 0;
-	}
-	else {
-		if (!self->damage) {
-			self->damage = 2;
-		}
-	}
+	self->blocked = Blocked_Train;
+
+	//There used to be a TRAIN_BLOCK_STOPS spawnflag here. But to my best knowledge it did not work properly and have been removed.
+	self->damage = 9999;
 
 	if ( !self->speed ) {
 		self->speed = 100;
