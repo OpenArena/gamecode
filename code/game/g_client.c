@@ -469,7 +469,8 @@ void ClientRespawn( gentity_t *ent ) {
 				}
 				//Sago: This is really bad
 				//TODO: Try not to make people spectators here
-				ent->client->sess.spectatorState = PM_SPECTATOR;
+				ent->client->sess.spectatorState = SPECTATOR_FOLLOW;
+				ent->client->ps.pm_type = PM_SPECTATOR;
 				//We have to force spawn imidiantly to prevent lag.
 				ClientSpawn(ent);
 			}
