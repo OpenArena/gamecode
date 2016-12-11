@@ -42,6 +42,7 @@ typedef struct {
 } pushed_t;
 pushed_t	pushed[MAX_GENTITIES], *pushed_p;
 
+static void Reached_Train( gentity_t *ent );
 
 /*
 ============
@@ -396,7 +397,8 @@ qboolean G_MoverPush( gentity_t *pusher, vec3_t move, vec3_t amove, gentity_t **
 		// the move was blocked an entity
 
 		// bobbing entities are instant-kill and never get blocked
-		if ( pusher->s.pos.trType == TR_SINE || pusher->s.apos.trType == TR_SINE ) {
+		// and so are train entities
+		if ( pusher->s.pos.trType == TR_SINE || pusher->s.apos.trType == TR_SINE || pusher->reached == Reached_Train ) {
 			G_Damage( check, pusher, pusher, NULL, NULL, 99999, 0, MOD_CRUSH );
 			continue;
 		}
@@ -854,19 +856,6 @@ void Blocked_Door( gentity_t *ent, gentity_t *other )
 
 	// reverse direction
 	Use_BinaryMover( ent, ent, other );
-}
-
-
-static void Blocked_Train( gentity_t *ent, gentity_t *other )
-{
-	// remove anything other than a client (and flags)
-	if ( !other->client ) {
-		RemoveAnythingButFlags(other);
-		return;
-	}
-
-	//Trains always crush because they cannot reverse.
-	DamagePlayer(ent, other);
 }
 
 /*
@@ -1352,7 +1341,7 @@ void Think_BeginMoving( gentity_t *ent )
 Reached_Train
 ===============
 */
-void Reached_Train( gentity_t *ent )
+static void Reached_Train( gentity_t *ent )
 {
 	gentity_t		*next;
 	float			speed;
@@ -1511,11 +1500,6 @@ The train spawns at the first target it is pointing at.
 void SP_func_train (gentity_t *self)
 {
 	VectorClear (self->s.angles);
-
-	self->blocked = Blocked_Train;
-
-	//There used to be a TRAIN_BLOCK_STOPS spawnflag here. But to my best knowledge it did not work properly and have been removed.
-	self->damage = 9999;
 
 	if ( !self->speed ) {
 		self->speed = 100;
