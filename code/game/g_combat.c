@@ -756,7 +756,8 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 	else {
 		if(g_gametype.integer!=GT_LMS && g_gametype.integer != GT_POSSESSION &&
 		        !((g_gametype.integer==GT_ELIMINATION || g_gametype.integer==GT_CTF_ELIMINATION) && level.time < level.roundStartTime)) {
-			if(self->client->ps.persistant[PERS_SCORE]>0 || level.numNonSpectatorClients<3) { //Cannot get negative scores by suicide
+			if(self->client->ps.persistant[PERS_SCORE]>0 || level.numNonSpectatorClients<3) { 
+				//Cannot get negative scores by suicide
 				AddScore( self, self->r.currentOrigin, -1 );
 			}
 		}
@@ -1092,17 +1093,13 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 	}
 
 	if ( (attacker == &g_entities[ENTITYNUM_WORLD] || attacker == targ || attacker->s.eType != ET_PLAYER) && client && client->lastSentFlying>-1 &&
-	        ( mod==MOD_FALLING || mod==MOD_LAVA || mod==MOD_SLIME || mod==MOD_TRIGGER_HURT || mod==MOD_SUICIDE || g_awardpushing.integer > 1)) {
+	        ( mod==MOD_FALLING || mod==MOD_LAVA || mod==MOD_SLIME || mod==MOD_TRIGGER_HURT || mod==MOD_SUICIDE)) {
 		if( client->lastSentFlyingTime+5000<level.time) {
 			//More than 5 seconds, not a kill!
 			client->lastSentFlying = -1;
 		}
 		else {
 			attacker = &g_entities[client->lastSentFlying];
-			if (! ( mod==MOD_FALLING || mod==MOD_LAVA || mod==MOD_SLIME || mod==MOD_TRIGGER_HURT || mod==MOD_SUICIDE) ) {
-				//If non environmental kill then consider it a(n assisted) suicide.
-				mod = MOD_SUICIDE;
-			}
 		}
 	}
 
@@ -1125,9 +1122,6 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 		}
 		damage = damage * max / 100;
 	}
-
-	//Sago: I have moved this up
-	//client = targ->client;
 
 	if ( client ) {
 		if ( client->noclip ) {
