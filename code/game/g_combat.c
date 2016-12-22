@@ -327,7 +327,7 @@ void body_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int d
 
 
 // these are just for logging, the client prints its own messages
-char	*modNames[] = {
+static const char *modNames[] = {
 	"MOD_UNKNOWN",
 	"MOD_SHOTGUN",
 	"MOD_GAUNTLET",
@@ -425,8 +425,7 @@ void CheckAlmostCapture( gentity_t *self, gentity_t *attacker )
 		ent = NULL;
 		do {
 			ent = G_Find(ent, FOFS(classname), classname);
-		}
-		while (ent && (ent->flags & FL_DROPPED_ITEM));
+		} while (ent && (ent->flags & FL_DROPPED_ITEM));
 		// if we found the destination flag and it's not picked up
 		if (ent && !(ent->r.svFlags & SVF_NOCLIENT) ) {
 			// if the player was *very* close
@@ -487,7 +486,8 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 	int			contents;
 	int			killer;
 	int			i,counter2;
-	char		*killerName, *obit;
+	const char	*killerName;
+	const char	*obit;
 
 	if ( !(self->client) || (self->client->ps.pm_type == PM_DEAD) ) {
 		return;
@@ -831,8 +831,6 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 
 		self->client->respawnTime = i*g_respawntime.integer*1000;
 	}
-	//For testing:
-	//G_Printf("Respawntime: %i\n",self->client->respawnTime);
 	//However during warm up, we should respawn quicker!
 	if(g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_CTF_ELIMINATION || g_gametype.integer == GT_LMS) {
 		if(level.time<=level.roundStartTime && level.time>level.roundStartTime-1000*g_elimination_activewarmup.integer) {

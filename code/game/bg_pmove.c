@@ -255,8 +255,6 @@ Handles user intended acceleration
 static void PM_Accelerate( vec3_t wishdir, float wishspeed, float accel )
 {
 	if(! (pm->pmove_flags & DF_NO_BUNNY) ) {
-//#if 1
-
 		// q2 style
 		int			i;
 		float		addspeed, accelspeed, currentspeed;
@@ -276,7 +274,6 @@ static void PM_Accelerate( vec3_t wishdir, float wishspeed, float accel )
 		}
 	}
 	else {
-		//#else
 		// proper way (avoids strafe jump maxspeed bug), but feels bad
 		vec3_t		wishVelocity;
 		vec3_t		pushDir;
@@ -294,7 +291,6 @@ static void PM_Accelerate( vec3_t wishdir, float wishspeed, float accel )
 
 		VectorMA( pm->ps->velocity, canPush, pushDir, pm->ps->velocity );
 	}
-//#endif
 }
 
 
@@ -524,22 +520,6 @@ static void PM_WaterMove( void )
 		PM_WaterJumpMove();
 		return;
 	}
-#if 0
-	// jump = head for surface
-	if ( pm->cmd.upmove >= 10 ) {
-		if (pm->ps->velocity[2] > -300) {
-			if ( pm->watertype == CONTENTS_WATER ) {
-				pm->ps->velocity[2] = 100;
-			}
-			else if (pm->watertype == CONTENTS_SLIME) {
-				pm->ps->velocity[2] = 80;
-			}
-			else {
-				pm->ps->velocity[2] = 50;
-			}
-		}
-	}
-#endif
 	PM_Friction ();
 
 	scale = PM_CmdScale( &pm->cmd );
@@ -799,8 +779,6 @@ static void PM_WalkMove( void )
 	for ( i = 0 ; i < 3 ; i++ ) {
 		wishvel[i] = pml.forward[i]*fmove + pml.right[i]*smove;
 	}
-	// when going up or down slopes the wish velocity should Not be zero
-//	wishvel[2] = 0;
 
 	VectorCopy (wishvel, wishdir);
 	wishspeed = VectorNormalize(wishdir);
@@ -835,15 +813,8 @@ static void PM_WalkMove( void )
 
 	PM_Accelerate (wishdir, wishspeed, accelerate);
 
-	//Com_Printf("velocity = %1.1f %1.1f %1.1f\n", pm->ps->velocity[0], pm->ps->velocity[1], pm->ps->velocity[2]);
-	//Com_Printf("velocity1 = %1.1f\n", VectorLength(pm->ps->velocity));
-
 	if ( ( pml.groundTrace.surfaceFlags & SURF_SLICK ) || pm->ps->pm_flags & PMF_TIME_KNOCKBACK ) {
 		pm->ps->velocity[2] -= pm->ps->gravity * pml.frametime;
-	}
-	else {
-		// don't reset the z velocity for slopes
-//		pm->ps->velocity[2] = 0;
 	}
 
 	vel = VectorLength(pm->ps->velocity);
@@ -862,9 +833,6 @@ static void PM_WalkMove( void )
 	}
 
 	PM_StepSlideMove( qfalse );
-
-	//Com_Printf("velocity2 = %1.1f\n", VectorLength(pm->ps->velocity));
-
 }
 
 
@@ -1070,22 +1038,6 @@ static void PM_CrashLand( void )
 
 /*
 =============
-PM_CheckStuck
-=============
-*/
-/*
-void PM_CheckStuck(void) {
-	trace_t trace;
-
-	pm->trace (&trace, pm->ps->origin, pm->mins, pm->maxs, pm->ps->origin, pm->ps->clientNum, pm->tracemask);
-	if (trace.allsolid) {
-		//int shit = qtrue;
-	}
-}
-*/
-
-/*
-=============
 PM_CorrectAllSolid
 =============
 */
@@ -1261,9 +1213,6 @@ static void PM_GroundTrace( void )
 	}
 
 	pm->ps->groundEntityNum = trace.entityNum;
-
-	// don't reset the z velocity for slopes
-//	pm->ps->velocity[2] = 0;
 
 	PM_AddTouchEnt( trace.entityNum );
 }
@@ -1442,17 +1391,6 @@ static void PM_Footsteps( void )
 		else {
 			PM_ContinueLegsAnim( LEGS_WALKCR );
 		}
-		// ducked characters never play footsteps
-		/*
-		} else 	if ( pm->ps->pm_flags & PMF_BACKWARDS_RUN ) {
-			if ( !( pm->cmd.buttons & BUTTON_WALKING ) ) {
-				bobmove = 0.4;	// faster speeds bob faster
-				footstep = qtrue;
-			} else {
-				bobmove = 0.3;
-			}
-			PM_ContinueLegsAnim( LEGS_BACK );
-		*/
 	}
 	else {
 		if ( !( pm->cmd.buttons & BUTTON_WALKING ) ) {
@@ -1678,11 +1616,8 @@ static void PM_TorsoAnimation( void )
 				PM_ContinueTorsoAnim( TORSO_FALL );
 			}
 		}
-
-
-		// Running Forward
-		//if (  	pm->ps->legsAnim && LEGS_RUN ) {
 		else if (  	pm->cmd.forwardmove || (pm->cmd.rightmove && pml.groundPlane && pm->xyspeed > 200 && !( pm->cmd.buttons & BUTTON_WALKING ) ) ) {
+			// Running Forward
 			if ( pm->ps->weapon == WP_GAUNTLET ) {
 				PM_ContinueTorsoAnim( TORSO_RUN2 );
 			}
@@ -2276,8 +2211,5 @@ void Pmove (pmove_t *pmove)
 			pmove->cmd.upmove = 20;
 		}
 	}
-
-	//PM_CheckStuck();
-
 }
 
