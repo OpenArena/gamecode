@@ -165,7 +165,7 @@ static qboolean	CG_ParseAnimationFile( const char *filename, clientInfo_t *ci ) 
 				ci->headOffset[i] = atof( token );
 			}
 			continue;
-		} else if ( !Q_stricmp( token, "eyes" ) ) {	// leilei - EYES
+		} else if ( Q_strequal( token, "eyes" ) ) {	// leilei - EYES
 			for ( i = 0 ; i < 3 ; i++ ) {
 				token = COM_Parse( &text_p );
 				if ( !token ) {
@@ -174,7 +174,7 @@ static qboolean	CG_ParseAnimationFile( const char *filename, clientInfo_t *ci ) 
 				ci->eyepos[i] = atof( token );
 			}
 			continue;
-		} else if ( !Q_stricmp( token, "sex" ) ) {
+		} else if ( Q_strequal( token, "sex" ) ) {
 			token = COM_Parse( &text_p );
 			if ( !token ) {
 				break;
@@ -617,50 +617,20 @@ CG_RegisterClientSkin
 static qboolean	CG_RegisterClientSkin( clientInfo_t *ci, const char *teamName, const char *modelName, const char *skinName, const char *headModelName, const char *headSkinName ) {
 	char filename[MAX_QPATH];
 
-	/*
-	Com_sprintf( filename, sizeof( filename ), "models/players/%s/%slower_%s.skin", modelName, teamName, skinName );
-	ci->legsSkin = trap_R_RegisterSkin( filename );
-	if (!ci->legsSkin) {
-		Com_sprintf( filename, sizeof( filename ), "models/players/characters/%s/%slower_%s.skin", modelName, teamName, skinName );
-		ci->legsSkin = trap_R_RegisterSkin( filename );
-		if (!ci->legsSkin) {
-			Com_Printf( "Leg skin load failure: %s\n", filename );
-		}
-	}
-
-
-	Com_sprintf( filename, sizeof( filename ), "models/players/%s/%supper_%s.skin", modelName, teamName, skinName );
-	ci->torsoSkin = trap_R_RegisterSkin( filename );
-	if (!ci->torsoSkin) {
-		Com_sprintf( filename, sizeof( filename ), "models/players/characters/%s/%supper_%s.skin", modelName, teamName, skinName );
-		ci->torsoSkin = trap_R_RegisterSkin( filename );
-		if (!ci->torsoSkin) {
-			Com_Printf( "Torso skin load failure: %s\n", filename );
-		}
-	}
-	*/
-
 	if (ci->onepiece){
 		Com_sprintf( filename, sizeof( filename ), "models/playerfs/%s/%stris_%s.skin", modelName, teamName, skinName );
 		ci->legsSkin = trap_R_RegisterSkin( filename );
 		if (!ci->legsSkin) {
 			Com_Printf( "Onepieced model skin load failure: %s\n", filename );
-			}
-		
-
+		}
 	}
-
-	else
-
-	{
-
-	if ( CG_FindClientModelFile( filename, sizeof(filename), ci, teamName, modelName, skinName, "lower", "skin" ) ) {
-		ci->legsSkin = trap_R_RegisterSkin( filename );
-	}
-	if (!ci->legsSkin) {
-		Com_Printf( "Leg skin load failure: %s\n", filename );
-	}
-
+	else {
+		if ( CG_FindClientModelFile( filename, sizeof(filename), ci, teamName, modelName, skinName, "lower", "skin" ) ) {
+			ci->legsSkin = trap_R_RegisterSkin( filename );
+		}
+		if (!ci->legsSkin) {
+			Com_Printf( "Leg skin load failure: %s\n", filename );
+		}
 	}
 
 	if ( CG_FindClientModelFile( filename, sizeof(filename), ci, teamName, modelName, skinName, "upper", "skin" ) ) {
@@ -705,22 +675,21 @@ static qboolean CG_RegisterClientModelname( clientInfo_t *ci, const char *modelN
 	// leilei - onepiece model loading for certain maps or WIP animation debug
 	ci->onepiece = 0; 
 	if (cg_enableFS.integer){
-
 		Com_sprintf( filename, sizeof( filename ), "models/playerfs/%s/tris.mdr", modelName );
 		ci->legsModel = trap_R_RegisterModel( filename );
-			if ( ci->legsModel ){ 
-						FSloaded = 1;
-						ci->onepiece = 1;
-						
-					}
+		if ( ci->legsModel ){ 
+			FSloaded = 1;
+			ci->onepiece = 1;
+		}
 		if ( !ci->legsModel ) 
 			FSloaded = 0; // just end it
 		
-
-		if (FSloaded)
+		if (FSloaded) {
 			Com_Printf( "%s is fanservice\n", filename );
-		else
+		}
+		else {
 			Com_Printf( "%s can't provide fanservice\n", filename );
+		}
 	}
 
 	// load the usual model
@@ -732,16 +701,16 @@ static qboolean CG_RegisterClientModelname( clientInfo_t *ci, const char *modelN
 		Com_sprintf( filename, sizeof( filename ), "models/players/characters/%s/lower.mdr", modelName );
 		ci->legsModel = trap_R_RegisterModel( filename );
 		if ( !ci->legsModel ) {
-	Com_sprintf( filename, sizeof( filename ), "models/players/%s/lower.md3", modelName );
-	ci->legsModel = trap_R_RegisterModel( filename );
-	if ( !ci->legsModel ) {
-		Com_sprintf( filename, sizeof( filename ), "models/players/characters/%s/lower.md3", modelName );
-		ci->legsModel = trap_R_RegisterModel( filename );
-		if ( !ci->legsModel ) {
-			Com_Printf( "Failed to load model file %s\n", filename );
-			return qfalse;
-		}
-	}
+			Com_sprintf( filename, sizeof( filename ), "models/players/%s/lower.md3", modelName );
+			ci->legsModel = trap_R_RegisterModel( filename );
+			if ( !ci->legsModel ) {
+				Com_sprintf( filename, sizeof( filename ), "models/players/characters/%s/lower.md3", modelName );
+				ci->legsModel = trap_R_RegisterModel( filename );
+				if ( !ci->legsModel ) {
+					Com_Printf( "Failed to load model file %s\n", filename );
+					return qfalse;
+				}
+			}
 		}
 	}
 
@@ -844,7 +813,7 @@ static qboolean CG_RegisterClientModelname( clientInfo_t *ci, const char *modelN
 	Com_sprintf( filename, sizeof( filename ), "models/players/%s/eyes.cfg", modelName );
 	if ( !CG_ParseEyesFile( filename, ci ) ) {
 		//	Com_Printf( "No eyes for %s\n", filename );
-		}
+	}
 	
 
 
@@ -1671,8 +1640,8 @@ static void CG_PlayerAngles( centity_t *cent, vec3_t legs[3], vec3_t torso[3], v
 	
 	// allow yaw to drift a bit
 	if ( ( cent->currentState.legsAnim & ~ANIM_TOGGLEBIT ) != LEGS_IDLE 
-		|| ((cent->currentState.torsoAnim & ~ANIM_TOGGLEBIT) != TORSO_STAND 
-		&& (cent->currentState.torsoAnim & ~ANIM_TOGGLEBIT) != TORSO_STAND2)) {
+			|| ((cent->currentState.torsoAnim & ~ANIM_TOGGLEBIT) != TORSO_STAND 
+			&& (cent->currentState.torsoAnim & ~ANIM_TOGGLEBIT) != TORSO_STAND2)) {
 		// if not standing still, always point all in the same direction
 		cent->pe.torso.yawing = qtrue;	// always center
 		cent->pe.torso.pitching = qtrue;	// always center
@@ -1804,8 +1773,8 @@ static void CG_PlayerAngles( centity_t *cent, vec3_t legs[3], vec3_t torso[3], v
 			legsAngles[ROLL] = 0.0f;
 		}
 
-	// leilei - don't lean for our new strafe animations
-	if (( cent->currentState.legsAnim & ~ANIM_TOGGLEBIT ) == LEGS_STRAFE_LEFT || ( cent->currentState.legsAnim & ~ANIM_TOGGLEBIT ) == LEGS_STRAFE_RIGHT){
+		// leilei - don't lean for our new strafe animations
+		if (( cent->currentState.legsAnim & ~ANIM_TOGGLEBIT ) == LEGS_STRAFE_LEFT || ( cent->currentState.legsAnim & ~ANIM_TOGGLEBIT ) == LEGS_STRAFE_RIGHT){
 			legsAngles[YAW] = torsoAngles[YAW];
 			//legsAngles[PITCH] = 0.0f;
 			legsAngles[ROLL] = 0.0f;
@@ -2078,25 +2047,6 @@ static void CG_PlayerFlag( centity_t *cent, qhandle_t hSkin, refEntity_t *torso 
 			// change the yaw angle
 			CG_SwingAngles( angles[YAW], 25, 90, 0.15f, &cent->pe.flag.yawAngle, &cent->pe.flag.yawing );
 		}
-
-		/*
-		d = DotProduct(pole.axis[2], dir);
-		angle = Q_acos(d);
-
-		d = DotProduct(pole.axis[1], dir);
-		if (d < 0) {
-			angle = 360 - angle * 180 / M_PI;
-		}
-		else {
-			angle = angle * 180 / M_PI;
-		}
-		if (angle > 340 && angle < 20) {
-			flagAnim = FLAG_RUNUP;
-		}
-		if (angle > 160 && angle < 200) {
-			flagAnim = FLAG_RUNDOWN;
-		}
-		*/
 	}
 
 	// set the yaw angle
@@ -2505,32 +2455,22 @@ void CG_AddRefEntityWithPowerups( refEntity_t *ent, entityState_t *state, int te
 		trap_R_AddRefEntityToScene( ent );
             }
 	} else {
-		/*
-		if ( state->eFlags & EF_KAMIKAZE ) {
-			if (team == TEAM_BLUE)
-				ent->customShader = cgs.media.blueKamikazeShader;
-			else
-				ent->customShader = cgs.media.redKamikazeShader;
-			trap_R_AddRefEntityToScene( ent );
+		trap_R_AddRefEntityToScene( ent );
+		if(!isMissile && (cgs.dmflags & DF_PLAYER_OVERLAY) && !(state->eFlags & EF_DEAD)  ) {
+			switch(team) {
+				case TEAM_RED:
+					ent->customShader = cgs.media.redOverlay;
+					trap_R_AddRefEntityToScene( ent );
+					break;
+				case TEAM_BLUE:
+					ent->customShader = cgs.media.blueOverlay;
+					trap_R_AddRefEntityToScene( ent );
+					break;
+				default:
+					ent->customShader = cgs.media.neutralOverlay;
+					trap_R_AddRefEntityToScene( ent );
+			}
 		}
-		else {*/
-			trap_R_AddRefEntityToScene( ent );
-		//}
-                        if(!isMissile && (cgs.dmflags & DF_PLAYER_OVERLAY) && !(state->eFlags & EF_DEAD)  ) {
-                            switch(team) {
-                                case TEAM_RED:
-                                    ent->customShader = cgs.media.redOverlay;
-                                    trap_R_AddRefEntityToScene( ent );
-                                    break;
-                                case TEAM_BLUE:
-                                    ent->customShader = cgs.media.blueOverlay;
-                                    trap_R_AddRefEntityToScene( ent );
-                                    break;
-                                default:
-                                    ent->customShader = cgs.media.neutralOverlay;
-                                    trap_R_AddRefEntityToScene( ent );
-                            }
-                        }
                         
 		if ( state->powerups & ( 1 << PW_QUAD ) )
 		{
@@ -2631,33 +2571,31 @@ void CG_Player( centity_t *cent ) {
 	float chibifactorhead = 0.0f;
 
 	if (cg_leiChibi.integer > 0){
-
-			if (cg_leiChibi.integer == 1){
-				// chibi SD proportion
-				chibifactortorso = 0.0f;
-				chibifactorbody = 0.62f;
-				chibifactorhead = 2.7f;
-				}
-			else if (cg_leiChibi.integer == 2){
-				// slightly younger proportion
-				chibifactorbody = 0.92f;
-				chibifactortorso = 0.82f;
-				chibifactorhead = 1.30f;
-				}
-			else if (cg_leiChibi.integer == 3){
-				// slightly more 'real' proportion
-				chibifactorbody = 0.92f;
-				chibifactortorso = 0.97f;
-				chibifactorhead = 0.92f;
-				}
-			else if (cg_leiChibi.integer == 4){
-				// big torso
-				chibifactorbody = 0.85f;
-				chibifactortorso = 1.3f;
-				chibifactorhead = 0.91f;
-				}
-
+		if (cg_leiChibi.integer == 1){
+			// chibi SD proportion
+			chibifactortorso = 0.0f;
+			chibifactorbody = 0.62f;
+			chibifactorhead = 2.7f;
 		}
+		else if (cg_leiChibi.integer == 2){
+			// slightly younger proportion
+			chibifactorbody = 0.92f;
+			chibifactortorso = 0.82f;
+			chibifactorhead = 1.30f;
+		}
+		else if (cg_leiChibi.integer == 3){
+			// slightly more 'real' proportion
+			chibifactorbody = 0.92f;
+			chibifactortorso = 0.97f;
+			chibifactorhead = 0.92f;
+		}
+		else if (cg_leiChibi.integer == 4){
+			// big torso
+			chibifactorbody = 0.85f;
+			chibifactortorso = 1.3f;
+			chibifactorhead = 0.91f;
+		}
+	}
 	else
 	{
 		chibifactorbody = chibifactortorso = chibifactorhead = 0;	// normal scale...
@@ -2724,8 +2662,10 @@ void CG_Player( centity_t *cent ) {
 	// add the legs
 	//
 	legs.hModel = ci->legsModel;
-	if (!ci->onepiece) // onepiece uses internal model skins right now until skin loading is fixed later
-	legs.customSkin = ci->legsSkin;
+	if (!ci->onepiece) {
+		// onepiece uses internal model skins right now until skin loading is fixed later
+		legs.customSkin = ci->legsSkin;
+	}
 
 	VectorCopy( cent->lerpOrigin, legs.origin );
 
@@ -2733,18 +2673,18 @@ void CG_Player( centity_t *cent ) {
 
 // leilei - chibi mode hack
 	if (chibifactorbody){
-	VectorScale( legs.axis[0], chibifactorbody, legs.axis[0] );
-	VectorScale( legs.axis[1], chibifactorbody, legs.axis[1] );
-	VectorScale( legs.axis[2], chibifactorbody, legs.axis[2] );
+		VectorScale( legs.axis[0], chibifactorbody, legs.axis[0] );
+		VectorScale( legs.axis[1], chibifactorbody, legs.axis[1] );
+		VectorScale( legs.axis[2], chibifactorbody, legs.axis[2] );
 	}
 
 
 	// leilei - q scale hack
 
 	if (cg_enableQ.integer) {
-	VectorScale( legs.axis[0], QUACK_SCALE, legs.axis[0] );
-	VectorScale( legs.axis[1], QUACK_SCALE, legs.axis[1] );
-	VectorScale( legs.axis[2], QUACK_SCALE, legs.axis[2] );
+		VectorScale( legs.axis[0], QUACK_SCALE, legs.axis[0] );
+		VectorScale( legs.axis[1], QUACK_SCALE, legs.axis[1] );
+		VectorScale( legs.axis[2], QUACK_SCALE, legs.axis[2] );
 	}
 
 
@@ -2753,8 +2693,8 @@ void CG_Player( centity_t *cent ) {
 	VectorCopy (legs.origin, legs.oldorigin);	// don't positionally lerp at all
 
 	if (cg_cameraEyes.integer){
-			legs.renderfx &= RF_FIRST_PERSON;
-		}
+		legs.renderfx &= RF_FIRST_PERSON;
+	}
 
 
 	CG_AddRefEntityWithPowerups( &legs, &cent->currentState, ci->team, qfalse );
@@ -2768,65 +2708,58 @@ void CG_Player( centity_t *cent ) {
 	// add the torso
 	//
 	if (ci->onepiece) {
-
 		// skip all the further crap and put a head on the legs
+		//
+		// add the head
+		//
+		head.hModel = ci->headModel;
+
+		if (!head.hModel) {
+			return;
+		}
+		head.customSkin = ci->headSkin;
+
+		VectorCopy( cent->lerpOrigin, head.lightingOrigin );
+
+		CG_PositionRotatedEntityOnTag( &head, &legs, ci->legsModel, "tag_head");
+
+		// 
+		// add the eyes
+		//
 
 
-			//
-			// add the head
-			//
-			head.hModel = ci->headModel;
-			
-			if (!head.hModel) {
-				return;
-			}
-			head.customSkin = ci->headSkin;
-		
-			VectorCopy( cent->lerpOrigin, head.lightingOrigin );
-		
-			CG_PositionRotatedEntityOnTag( &head, &legs, ci->legsModel, "tag_head");
-		
-			// 
-			// add the eyes
-			//
-		
-			
-		
-			if (camereyes){
+
+		if (camereyes){
 			cent->eyesOrigin[0] = head.origin[0];
 			cent->eyesOrigin[1] = head.origin[1];
 			cent->eyesOrigin[2] = head.origin[2];
 			if (cg_cameraEyes.integer == 3){
-			vectoangles( head.axis[0], headang);
+				vectoangles( head.axis[0], headang);
 			}
-			else
-			if (cg_cameraEyes.integer == 2){
-			vectoangles( head.axis[0], headang);
-			//VectorCopy(cent->lerpAngles, headang);
-			//headang[0] = cent->lerpAngles[0];
-			headang[1] = cent->lerpAngles[1];
+			else {
+				if (cg_cameraEyes.integer == 2){
+					vectoangles( head.axis[0], headang);
+					//VectorCopy(cent->lerpAngles, headang);
+					//headang[0] = cent->lerpAngles[0];
+					headang[1] = cent->lerpAngles[1];
+				}
+				else {
+					VectorCopy(cent->lerpAngles, headang);
+				}
 			}
-			else
-			{
-		
-			VectorCopy(cent->lerpAngles, headang);
-			}
-		
-		
-		
-		
+
 			if (cg_cameraEyes.integer){
-			VectorCopy(head.origin, cent->eyesOrigin);
-		
-			VectorSubtract(cent->eyesOrigin, cent->lerpOrigin, cent->eyesOrigin);
-			VectorCopy(cent->eyesOrigin, headpos);
+				VectorCopy(head.origin, cent->eyesOrigin);
+
+				VectorSubtract(cent->eyesOrigin, cent->lerpOrigin, cent->eyesOrigin);
+				VectorCopy(cent->eyesOrigin, headpos);
 			}
-			}
-		
-			VectorCopy(cent->pe.eyepos, head.eyepos[0]);				// Copy it to our refdef for the renderer
-		
-			// HMM
-			{
+		}
+
+		VectorCopy(cent->pe.eyepos, head.eyepos[0]);				// Copy it to our refdef for the renderer
+
+		// HMM
+		{
 			vec3_t v, forwaad;
 			vec3_t orrg;
 			trace_t trace;
@@ -2838,24 +2771,20 @@ void CG_Player( centity_t *cent ) {
 					if (trace.fraction < 1)
 						VectorCopy(trace.endpos, v);				// look closer
 			VectorCopy(v, head.eyelook);				// Copy it to our refdef for the renderer
-			}
-		
-			head.shadowPlane = shadowPlane;
-		
-		
-			head.renderfx = renderfx;
-		
-		
-			if ((cg_cameraEyes.integer == 2) || (cg_cameraEyes.integer == 3)){
-				head.renderfx &= RF_FIRST_PERSON;
-			}
-			CG_AddRefEntityWithPowerups( &head, &cent->currentState, ci->team, qfalse );
-		
-			CG_BreathPuffs(cent, &head);
-		
-			CG_DustTrail(cent);
-	
+		}
 
+		head.shadowPlane = shadowPlane;
+
+		head.renderfx = renderfx;
+
+		if ((cg_cameraEyes.integer == 2) || (cg_cameraEyes.integer == 3)){
+			head.renderfx &= RF_FIRST_PERSON;
+		}
+		CG_AddRefEntityWithPowerups( &head, &cent->currentState, ci->team, qfalse );
+
+		CG_BreathPuffs(cent, &head);
+
+		CG_DustTrail(cent);
 		return;
 	}
 
@@ -2874,14 +2803,14 @@ void CG_Player( centity_t *cent ) {
 	torso.shadowPlane = shadowPlane;
 	torso.renderfx = renderfx;
 	if (cg_cameraEyes.integer){
-			torso.renderfx &= RF_FIRST_PERSON;
-		}
+		torso.renderfx &= RF_FIRST_PERSON;
+	}
 
 
 	if (chibifactortorso){
-	VectorScale( torso.axis[0], chibifactortorso, torso.axis[0] );
-	VectorScale( torso.axis[1], chibifactortorso, torso.axis[1] );
-	VectorScale( torso.axis[2], chibifactortorso, torso.axis[2] );
+		VectorScale( torso.axis[0], chibifactortorso, torso.axis[0] );
+		VectorScale( torso.axis[1], chibifactortorso, torso.axis[1] );
+		VectorScale( torso.axis[2], chibifactortorso, torso.axis[2] );
 	}
 
 
@@ -3112,44 +3041,43 @@ void CG_Player( centity_t *cent ) {
 	
 
 	if (camereyes){
-	cent->eyesOrigin[0] = head.origin[0];
-	cent->eyesOrigin[1] = head.origin[1];
-	cent->eyesOrigin[2] = head.origin[2];
-	if (cg_cameraEyes.integer == 2){
-	vectoangles( head.axis[0], headang);
-	}
-	else
-	{
-
-	VectorCopy(cent->lerpAngles, headang);
-	}
-
+		cent->eyesOrigin[0] = head.origin[0];
+		cent->eyesOrigin[1] = head.origin[1];
+		cent->eyesOrigin[2] = head.origin[2];
+		if (cg_cameraEyes.integer == 2){
+			vectoangles( head.axis[0], headang);
+		}
+		else
+		{
+			VectorCopy(cent->lerpAngles, headang);
+		}
 
 
 
-	if (cg_cameraEyes.integer){
-	VectorCopy(head.origin, cent->eyesOrigin);
 
-	VectorSubtract(cent->eyesOrigin, cent->lerpOrigin, cent->eyesOrigin);
-	VectorCopy(cent->eyesOrigin, headpos);
-	}
+		if (cg_cameraEyes.integer){
+			VectorCopy(head.origin, cent->eyesOrigin);
+
+			VectorSubtract(cent->eyesOrigin, cent->lerpOrigin, cent->eyesOrigin);
+			VectorCopy(cent->eyesOrigin, headpos);
+		}	
 	}
 
 	VectorCopy(cent->pe.eyepos, head.eyepos[0]);				// Copy it to our refdef for the renderer
 
 	// HMM
 	{
-	vec3_t v, forwaad;
-	vec3_t orrg;
-	trace_t trace;
-	VectorCopy(cent->lerpAngles, v);
-	AngleVectors( v, forwaad, NULL, NULL );
-	VectorMA(cent->lerpOrigin, 1024, forwaad, v );
-	VectorCopy(head.origin, orrg);
-	CG_Trace (&trace, orrg, NULL, NULL, v, -1, CONTENTS_SOLID);
-			if (trace.fraction < 1)
-				VectorCopy(trace.endpos, v);				// look closer
-	VectorCopy(v, head.eyelook);				// Copy it to our refdef for the renderer
+		vec3_t v, forwaad;
+		vec3_t orrg;
+		trace_t trace;
+		VectorCopy(cent->lerpAngles, v);
+		AngleVectors( v, forwaad, NULL, NULL );
+		VectorMA(cent->lerpOrigin, 1024, forwaad, v );
+		VectorCopy(head.origin, orrg);
+		CG_Trace (&trace, orrg, NULL, NULL, v, -1, CONTENTS_SOLID);
+		if (trace.fraction < 1)
+			VectorCopy(trace.endpos, v);				// look closer
+		VectorCopy(v, head.eyelook);				// Copy it to our refdef for the renderer
 	}
 
 	head.shadowPlane = shadowPlane;
@@ -3158,9 +3086,9 @@ void CG_Player( centity_t *cent ) {
 
 	// leilei - chibi mode hack
 	if (chibifactorhead){
-	VectorScale( head.axis[0], chibifactorhead, head.axis[0] );
-	VectorScale( head.axis[1], chibifactorhead, head.axis[1] );
-	VectorScale( head.axis[2], chibifactorhead, head.axis[2] );
+		VectorScale( head.axis[0], chibifactorhead, head.axis[0] );
+		VectorScale( head.axis[1], chibifactorhead, head.axis[1] );
+		VectorScale( head.axis[2], chibifactorhead, head.axis[2] );
 	}
 
 

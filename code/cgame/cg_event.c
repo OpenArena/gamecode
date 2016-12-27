@@ -126,7 +126,7 @@ static void CG_Obituary( entityState_t *ent ) {
 		message = NULL;
 		causeShader = cgs.media.skullShader;
 	}
-	else
+	else {
 		switch( mod ) {
 		case MOD_SUICIDE:
 			message = "suicides";
@@ -165,6 +165,7 @@ static void CG_Obituary( entityState_t *ent ) {
 			causeShader = cgs.media.skullShader;
 			break;
 		}
+	}
 
 	if (attacker == target) {
 		gender = ci->gender;
@@ -259,10 +260,10 @@ static void CG_Obituary( entityState_t *ent ) {
 				CG_PlaceString( cg.snap->ps.persistant[PERS_RANK] + 1 ),
 				cg.snap->ps.persistant[PERS_SCORE] );
 		} else {
-                    if(ent->generic1)
-                        s = va("You fragged your ^1TEAMMATE^7 %s", targetName );
-                    else
-			s = va("You fragged %s", targetName );
+			if(ent->generic1)
+				s = va("You fragged your ^1TEAMMATE^7 %s", targetName );
+			else
+				s = va("You fragged %s", targetName );
 		}
 #ifdef MISSIONPACK
 		if (!(cg_singlePlayerActive.integer && cg_cameraOrbit.integer)) {

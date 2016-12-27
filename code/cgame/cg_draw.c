@@ -1493,8 +1493,7 @@ static void CG_DrawFragMsgIcons(fragInfo_t fi, int i) {
 	spacing = 3;
 	imageWidth = 10;
 
-	/* if (fi.attackerName != '\0') { */
-	if (strlen(fi.attackerName) > 0) {
+	if (fi.attackerName[0] != '\0') {
 		CG_Text_Paint(FRAGMSG_X, FRAGMSG_Y + (i * 16), 0.20, color,
 				fi.attackerName, 0, 0, ITEM_TEXTSTYLE_SHADOWED);
 		x_offset = CG_Text_Width(fi.attackerName, 0.20, 0) + spacing;
@@ -1518,8 +1517,7 @@ static void CG_DrawFragMsgIcons(fragInfo_t fi, int i) {
 	trap_R_SetColor(hcolor);
 	spacing = 3;
 
-	/* if (fi.attackerName != '\0') { */
-	if (strlen(fi.attackerName) > 0) {
+	if (fi.attackerName[0] != '\0') {
 		CG_DrawStringExt(FRAGMSG_X, FRAGMSG_Y + (i * TINYCHAR_HEIGHT),
 				fi.attackerName, hcolor, qfalse, qfalse,
 				TINYCHAR_WIDTH, TINYCHAR_HEIGHT, 0);

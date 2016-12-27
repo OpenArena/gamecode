@@ -947,10 +947,13 @@ void CG_DrawActiveFrame( int serverTime, stereoFrame_t stereoView, qboolean demo
 
 	// decide on third person view
 
-	if (!cg_deathcam.integer)				// leilei - allow first person deathcam
-	cg.renderingThirdPerson = cg_thirdPerson.integer;
-	else
-	cg.renderingThirdPerson = cg_thirdPerson.integer || (cg.snap->ps.stats[STAT_HEALTH] <= 0);
+	if (!cg_deathcam.integer) {
+		// leilei - allow first person deathcam
+		cg.renderingThirdPerson = cg_thirdPerson.integer;
+	}
+	else {
+		cg.renderingThirdPerson = cg_thirdPerson.integer || (cg.snap->ps.stats[STAT_HEALTH] <= 0);
+	}
 
 	// build cg.refdef
 	inwater = CG_CalcViewValues();

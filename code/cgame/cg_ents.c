@@ -340,7 +340,7 @@ static void CG_Item( centity_t *cent ) {
 	// add to refresh list
 	trap_R_AddRefEntityToScene(&ent);
 
-	if ( item->giType == IT_WEAPON && wi->barrelModel ) {
+	if ( wi && wi->barrelModel ) {
 		refEntity_t	barrel;
 
 		memset( &barrel, 0, sizeof( barrel ) );
@@ -733,26 +733,10 @@ CG_CalcEntityLerpPositions
 ===============
 */
 static void CG_CalcEntityLerpPositions( centity_t *cent ) {
-
 //unlagged - projectile nudge
 	// this will be set to how far forward projectiles will be extrapolated
 	int timeshift = 0;
 //unlagged - projectile nudge
-
-//unlagged - smooth clients #2
-	// this is done server-side now - cg_smoothClients is undefined
-	// players will always be TR_INTERPOLATE
-/*
-	// if this player does not want to see extrapolated players
-	if ( !cg_smoothClients.integer ) {
-		// make sure the clients use TR_INTERPOLATE
-		if ( cent->currentState.number < MAX_CLIENTS ) {
-			cent->currentState.pos.trType = TR_INTERPOLATE;
-			cent->nextState.pos.trType = TR_INTERPOLATE;
-		}
-	}
-*/
-//unlagged - smooth clients #2
 
 	if ( cent->interpolate && cent->currentState.pos.trType == TR_INTERPOLATE ) {
 		CG_InterpolateEntityPosition( cent );
