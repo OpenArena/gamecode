@@ -418,7 +418,7 @@ static cvarTable_t cvarTable[] = { // bk001129
 	{ &cg_timescaleFadeSpeed, "cg_timescaleFadeSpeed", "0", 0},
 	{ &cg_timescale, "timescale", "1", 0},
 	{ &cg_scorePlum, "cg_scorePlums", "1", CVAR_USERINFO | CVAR_ARCHIVE},
-	{ &cg_obituaryOutput, "cg_obituaryOutput", "2", CVAR_ARCHIVE},
+	{ &cg_obituaryOutput, "cg_obituaryOutput", "3", CVAR_ARCHIVE},
 //unlagged - smooth clients #2
 // this is done server-side now
 //	{ &cg_smoothClients, "cg_smoothClients", "0", CVAR_USERINFO | CVAR_ARCHIVE},
