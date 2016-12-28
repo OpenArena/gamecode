@@ -144,8 +144,6 @@ void CG_Text_Paint(float x, float y, float scale, vec4_t color, const char *text
 // TTimo: FIXME
 //		const unsigned char *s = text;
 		const char *s = text;
-		float max_top = 0;
-		int i;
 		trap_R_SetColor( color );
 		memcpy(&newColor[0], &color[0], sizeof(vec4_t));
 		len = strlen(text);
@@ -153,17 +151,8 @@ void CG_Text_Paint(float x, float y, float scale, vec4_t color, const char *text
 			len = limit;
 		}
 		count = 0;
-
-		for (i = 0; i < sizeof(&font->glyphs); i++) {
-			glyph = &font->glyphs[i];
-			if (glyph->top > max_top) {
-				max_top = glyph->top;
-			}
-		}
-
 		while (s && *s && count < len) {
 			glyph = &font->glyphs[(int)*s]; // TTimo: FIXME: getting nasty warnings without the cast, hopefully this doesn't break the VM build
-
 			if ( Q_IsColorString( s ) ) {
 				memcpy( newColor, g_color_table[ColorIndex(*(s+1))], sizeof( newColor ) );
 				newColor[3] = color[3];
@@ -171,12 +160,12 @@ void CG_Text_Paint(float x, float y, float scale, vec4_t color, const char *text
 				s += 2;
 				continue;
 			} else {
-				float yadj = max_top - useScale * glyph->top;
+				float yadj = useScale * glyph->top;
 				if (style == ITEM_TEXTSTYLE_SHADOWED || style == ITEM_TEXTSTYLE_SHADOWEDMORE) {
 					int ofs = style == ITEM_TEXTSTYLE_SHADOWED ? 1 : 2;
 					colorBlack[3] = newColor[3];
 					trap_R_SetColor( colorBlack );
-					CG_Text_PaintChar(x + ofs, y + yadj + ofs,
+					CG_Text_PaintChar(x + ofs, y - yadj + ofs,
 														glyph->imageWidth,
 														glyph->imageHeight,
 														useScale,
@@ -188,7 +177,7 @@ void CG_Text_Paint(float x, float y, float scale, vec4_t color, const char *text
 					colorBlack[3] = 1.0;
 					trap_R_SetColor( newColor );
 				}
-				CG_Text_PaintChar(x, y + yadj,
+				CG_Text_PaintChar(x, y - yadj,
 													glyph->imageWidth,
 													glyph->imageHeight,
 													useScale,
@@ -1477,7 +1466,8 @@ static void CG_DrawFragMsgIcons(fragInfo_t fi, int i) {
 	int	spacing;
 #ifdef MISSIONPACK
 	float	*color;
-	int imageWidth;
+	int imageWidth = 10;
+	int imageHeight = 10;
 #else
 	vec4_t	hcolor;
 #endif
@@ -1491,7 +1481,6 @@ static void CG_DrawFragMsgIcons(fragInfo_t fi, int i) {
 	trap_R_SetColor(color);
 
 	spacing = 3;
-	imageWidth = 10;
 
 	if (fi.attackerName[0] != '\0') {
 		CG_Text_Paint(FRAGMSG_X, FRAGMSG_Y + (i * 16), 0.20, color,
@@ -1499,8 +1488,8 @@ static void CG_DrawFragMsgIcons(fragInfo_t fi, int i) {
 		x_offset = CG_Text_Width(fi.attackerName, 0.20, 0) + spacing;
 	} else x_offset = 0;
 
-	CG_DrawPic(FRAGMSG_X + x_offset, FRAGMSG_Y + (i * 16), imageWidth, 10,
-			fi.causeShader);
+	CG_DrawPic(FRAGMSG_X + x_offset, FRAGMSG_Y + (i * 16) - imageHeight,
+			imageWidth, imageHeight, fi.causeShader);
 
 	x_offset += imageWidth + spacing;
 
