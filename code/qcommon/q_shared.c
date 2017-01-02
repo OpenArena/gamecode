@@ -1111,56 +1111,6 @@ void Info_RemoveKey(char *s, const char *key) {
 
 }
 
-/*
-===================
-Info_RemoveKey_Big
-===================
- */
-void Info_RemoveKey_Big(char *s, const char *key) {
-	char *start;
-	char pkey[BIG_INFO_KEY];
-	char value[BIG_INFO_VALUE];
-	char *o;
-
-	if (strlen(s) >= BIG_INFO_STRING) {
-		Com_Error(ERR_DROP, "Info_RemoveKey_Big: oversize infostring");
-	}
-
-	if (strchr(key, '\\')) {
-		return;
-	}
-
-	while (1) {
-		start = s;
-		if (*s == '\\')
-			s++;
-		o = pkey;
-		while (*s != '\\') {
-			if (!*s)
-				return;
-			*o++ = *s++;
-		}
-		*o = 0;
-		s++;
-
-		o = value;
-		while (*s != '\\' && *s) {
-			if (!*s)
-				return;
-			*o++ = *s++;
-		}
-		*o = 0;
-
-		if (!strcmp(key, pkey)) {
-			strcpy(start, s); // remove this part
-			return;
-		}
-
-		if (!*s)
-			return;
-	}
-
-}
 
 /*
 ==================
@@ -1216,44 +1166,6 @@ void Info_SetValueForKey(char *s, const char *key, const char *value) {
 	strcat(newi, s);
 	strcpy(s, newi);
 }
-
-/*
-==================
-Info_SetValueForKey_Big
-
-Changes or adds a key/value pair
-==================
- */
-void Info_SetValueForKey_Big(char *s, const char *key, const char *value) {
-	char newi[BIG_INFO_STRING];
-	const char* blacklist = "\\;\"";
-
-	if (strlen(s) >= BIG_INFO_STRING) {
-		Com_Error(ERR_DROP, "Info_SetValueForKey: oversize infostring");
-	}
-
-	for (; *blacklist; ++blacklist) {
-		if (strchr(key, *blacklist) || strchr(value, *blacklist)) {
-			Com_Printf(S_COLOR_YELLOW "Can't use keys or values with a '%c': %s = %s\n", *blacklist, key, value);
-			return;
-		}
-	}
-
-	Info_RemoveKey_Big(s, key);
-	if (!value || !strlen(value))
-		return;
-
-	Com_sprintf(newi, sizeof (newi), "\\%s\\%s", key, value);
-
-	if (strlen(newi) + strlen(s) >= BIG_INFO_STRING) {
-		Com_Printf("BIG Info string length exceeded\n");
-		return;
-	}
-
-	strcat(s, newi);
-}
-
-
 
 
 //====================================================================
