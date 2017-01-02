@@ -78,7 +78,7 @@ void CG_PredictWeaponEffects( centity_t *cent ) {
 			// you definitely *will* want something like this to test the backward reconciliation
 			// to make sure it's working *exactly* right
 			/*if ( cg_debugDelag.integer ) {
-                         * Sago: There are some problems with some unlagged code. People will just have to trust it
+				* Sago: There are some problems with some unlagged code. People will just have to trust it
 				// trace forward
 				CG_Trace( &trace, muzzlePoint, vec3_origin, vec3_origin, endPoint, cent->currentState.number, CONTENTS_BODY|CONTENTS_SOLID );
 
@@ -136,12 +136,14 @@ void CG_PredictWeaponEffects( centity_t *cent ) {
 			VectorMA( muzzlePoint, 4, right, muzzlePoint );
 			VectorMA( muzzlePoint, -1, up, muzzlePoint );
 
-                        if(!cg.renderingThirdPerson) {
-                           if(cg_drawGun.integer == 2)
-				VectorMA(muzzlePoint, 8, cg.refdef.viewaxis[1], muzzlePoint);
-                           else if(cg_drawGun.integer == 3)
-				VectorMA(muzzlePoint, 4, cg.refdef.viewaxis[1], muzzlePoint);
-                        }
+			if(!cg.renderingThirdPerson) {
+				if(cg_drawGun.integer == 2) {
+					VectorMA(muzzlePoint, 8, cg.refdef.viewaxis[1], muzzlePoint);
+				}
+				else if(cg_drawGun.integer == 3) {
+					VectorMA(muzzlePoint, 4, cg.refdef.viewaxis[1], muzzlePoint);
+				}
+			}
 
 			// draw a rail trail
 			CG_RailTrail( &cgs.clientinfo[cent->currentState.number], muzzlePoint, trace.endpos );
@@ -233,7 +235,7 @@ void CG_PredictWeaponEffects( centity_t *cent ) {
 			//Com_Printf( "Predicted bullet\n" );
 		}
 	}
-        // was it a chaingun attack?
+	// was it a chaingun attack?
 	else if ( ent->weapon == WP_CHAINGUN ) {
 		// do we have it on for the machinegun?
 		if ( cg_delag.integer & 1 || cg_delag.integer & 2 ) {

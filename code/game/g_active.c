@@ -320,12 +320,12 @@ void SpectatorThink( gentity_t *ent, usercmd_t *ucmd ) {
 
 	client = ent->client;
 
-        if ( ( g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_CTF_ELIMINATION) &&
-                client->sess.spectatorState != SPECTATOR_FOLLOW &&
-                g_elimination_lockspectator.integer>1 &&
-                ent->client->sess.sessionTeam != TEAM_SPECTATOR ) {
-            Cmd_FollowCycle_f(ent);
-        }
+	if ( ( g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_CTF_ELIMINATION) &&
+	       client->sess.spectatorState != SPECTATOR_FOLLOW &&
+	       g_elimination_lockspectator.integer>1 &&
+	       ent->client->sess.sessionTeam != TEAM_SPECTATOR ) {
+		Cmd_FollowCycle_f(ent);
+	}
 
 	if ( client->sess.spectatorState != SPECTATOR_FOLLOW ) {
 		client->ps.pm_type = PM_SPECTATOR;
@@ -351,7 +351,7 @@ void SpectatorThink( gentity_t *ent, usercmd_t *ucmd ) {
 	client->oldbuttons = client->buttons;
 	client->buttons = ucmd->buttons;
 	
-    //KK-OAX Changed to keep followcycle functional
+	//KK-OAX Changed to keep followcycle functional
 	// attack button cycles through spectators
 	if ( ( client->buttons & BUTTON_ATTACK ) && ! ( client->oldbuttons & BUTTON_ATTACK ) ) {
 		Cmd_FollowCycle_f( ent );
@@ -524,8 +524,8 @@ void ClientIntermissionThink( gclient_t *client ) {
 
 	// the level will exit when everyone wants to or after timeouts
 
-        if( g_entities[client->ps.clientNum].r.svFlags & SVF_BOT )
-            return; //Bots cannot mark themself as ready
+	if( g_entities[client->ps.clientNum].r.svFlags & SVF_BOT )
+		return; //Bots cannot mark themself as ready
 
 	// swap and latch button actions
 	client->oldbuttons = client->buttons;
@@ -1031,25 +1031,25 @@ void ClientThink_real( gentity_t *ent ) {
 
 	pm.pmove_fixed = pmove_fixed.integer | client->pers.pmoveFixed;
 	pm.pmove_msec = pmove_msec.integer;
-        pm.pmove_float = pmove_float.integer;
-        pm.pmove_flags = g_dmflags.integer;
+	pm.pmove_float = pmove_float.integer;
+	pm.pmove_flags = g_dmflags.integer;
 
 	VectorCopy( client->ps.origin, client->oldOrigin );
 
-        #ifdef MISSIONPACK
-		if (level.intermissionQueued != 0 && g_singlePlayer.integer) {
-			if ( level.time - level.intermissionQueued >= 1000  ) {
-				pm.cmd.buttons = 0;
-				pm.cmd.forwardmove = 0;
-				pm.cmd.rightmove = 0;
-				pm.cmd.upmove = 0;
-				if ( level.time - level.intermissionQueued >= 2000 && level.time - level.intermissionQueued <= 2500 ) {
-					trap_SendConsoleCommand( EXEC_APPEND, "centerview\n");
-				}
-				ent->client->ps.pm_type = PM_SPINTERMISSION;
+#ifdef MISSIONPACK
+	if (level.intermissionQueued != 0 && g_singlePlayer.integer) {
+		if ( level.time - level.intermissionQueued >= 1000  ) {
+			pm.cmd.buttons = 0;
+			pm.cmd.forwardmove = 0;
+			pm.cmd.rightmove = 0;
+			pm.cmd.upmove = 0;
+			if ( level.time - level.intermissionQueued >= 2000 && level.time - level.intermissionQueued <= 2500 ) {
+				trap_SendConsoleCommand( EXEC_APPEND, "centerview\n");
 			}
+			ent->client->ps.pm_type = PM_SPINTERMISSION;
 		}
-        #endif
+	}
+#endif
 	Pmove (&pm);
 
 	// save results of pmove

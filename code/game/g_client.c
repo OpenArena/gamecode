@@ -71,7 +71,7 @@ void SP_info_player_intermission( gentity_t *ent ) {
 /*
 =======================================================================
 
-  SelectSpawnPoint
+ SelectSpawnPoint
 
 =======================================================================
 */
@@ -741,7 +741,7 @@ void RespawnDead(void)
 		}
 		
 		client->client->pers.livesLeft = g_lms_lives.integer;
-         
+
 		respawnRound(client);
 	}
 	return;
@@ -1259,8 +1259,8 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 	gentity_t	*ent;
 	char        reason[ MAX_STRING_CHARS ] = {""};
 	int         i;
-    
-    //KK-OAX I moved these up so userinfo could be assigned/used. 
+
+	//KK-OAX I moved these up so userinfo could be assigned/used. 
 	ent = &g_entities[ clientNum ];
 	client = &level.clients[ clientNum ];
 	ent->client = client;
@@ -1320,7 +1320,7 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 		 
 	}
 
-    //Check for local client
+	//Check for local client
 	if( strequals( client->pers.ip, "localhost" ) ) {
 		client->pers.localClient = qtrue;
 	}
@@ -1377,7 +1377,7 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 	}
 
 //unlagged - backward reconciliation #5
-    G_admin_namelog_update( client, qfalse );
+	G_admin_namelog_update( client, qfalse );
 	return NULL;
 }
 
@@ -1513,9 +1513,9 @@ void ClientBegin( int clientNum ) {
 			trap_SendServerCommand( -1, va("print \"%s" S_COLOR_WHITE " entered the game\n\"", client->pers.netname) );
 		}
 	}
-        
+
 	motd ( ent );
-        
+
 	G_LogPrintf( "ClientBegin: %i\n", clientNum );
 
 	//Send domination point names:
@@ -1744,7 +1744,7 @@ void ClientSpawn(gentity_t *ent) {
 	ent->waterlevel = 0;
 	ent->watertype = 0;
 	ent->flags = 0;
-        
+
 	//Sago: No one has hit the client yet!
 	client->lastSentFlying = -1;
 	

@@ -52,7 +52,7 @@ void trap_Print( const char *string ) {
 
 void trap_Error( const char *string ) {
 	syscall( UI_ERROR, string );
-        exit(UI_ERROR); //Will never occour but makes compiler happy
+	exit(UI_ERROR); //Will never occour but makes compiler happy
 }
 
 int trap_Milliseconds( void ) {
@@ -367,31 +367,31 @@ int trap_RealTime(qtime_t *qtime) {
 
 // this returns a handle.  arg0 is the name in the format "idlogo.roq", set arg1 to NULL, alteredstates to qfalse (do not alter gamestate)
 int trap_CIN_PlayCinematic( const char *arg0, int xpos, int ypos, int width, int height, int bits) {
-  return syscall(UI_CIN_PLAYCINEMATIC, arg0, xpos, ypos, width, height, bits);
+	return syscall(UI_CIN_PLAYCINEMATIC, arg0, xpos, ypos, width, height, bits);
 }
  
 // stops playing the cinematic and ends it.  should always return FMV_EOF
 // cinematics must be stopped in reverse order of when they are started
 e_status trap_CIN_StopCinematic(int handle) {
-  return syscall(UI_CIN_STOPCINEMATIC, handle);
+	return syscall(UI_CIN_STOPCINEMATIC, handle);
 }
 
 
 // will run a frame of the cinematic but will not draw it.  Will return FMV_EOF if the end of the cinematic has been reached.
 e_status trap_CIN_RunCinematic (int handle) {
-  return syscall(UI_CIN_RUNCINEMATIC, handle);
+	return syscall(UI_CIN_RUNCINEMATIC, handle);
 }
  
 
 // draws the current frame
 void trap_CIN_DrawCinematic (int handle) {
-  syscall(UI_CIN_DRAWCINEMATIC, handle);
+	syscall(UI_CIN_DRAWCINEMATIC, handle);
 }
  
 
 // allows you to resize the animation dynamically
 void trap_CIN_SetExtents (int handle, int x, int y, int w, int h) {
-  syscall(UI_CIN_SETEXTENTS, handle, x, y, w, h);
+	syscall(UI_CIN_SETEXTENTS, handle, x, y, w, h);
 }
 
 

@@ -32,15 +32,15 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 //
 
 
-int				ui_numBots;
-static char		*ui_botInfos[MAX_BOTS];
+int             ui_numBots;
+static char     *ui_botInfos[MAX_BOTS];
 
-static int		ui_numArenas;
-static char		*ui_arenaInfos[MAX_ARENAS];
+static int      ui_numArenas;
+static char     *ui_arenaInfos[MAX_ARENAS];
 
 #ifndef MISSIONPACK // bk001206
-static int		ui_numSinglePlayerArenas;
-static int		ui_numSpecialSinglePlayerArenas;
+static int      ui_numSinglePlayerArenas;
+static int      ui_numSpecialSinglePlayerArenas;
 #endif
 
 /*
@@ -49,10 +49,10 @@ UI_ParseInfos
 ===============
 */
 int UI_ParseInfos( char *buf, int max, char *infos[] ) {
-	char	*token;
-	int		count;
-	char	key[MAX_TOKEN_CHARS];
-	char	info[MAX_INFO_STRING];
+	char    *token;
+	int     count;
+	char    key[MAX_TOKEN_CHARS];
+	char    info[MAX_INFO_STRING];
 
 	count = 0;
 
@@ -105,9 +105,9 @@ UI_LoadArenasFromFile
 ===============
 */
 static void UI_LoadArenasFromFile( char *filename ) {
-	int				len;
-	fileHandle_t	f;
-	char			buf[MAX_ARENAS_TEXT];
+	int             len;
+	fileHandle_t    f;
+	char            buf[MAX_ARENAS_TEXT];
 
 	len = trap_FS_FOpenFile( filename, &f, FS_READ );
 	if ( !f ) {
@@ -133,14 +133,15 @@ UI_LoadArenas
 ===============
 */
 void UI_LoadArenas( void ) {
-	int			numdirs;
-	vmCvar_t	arenasFile;
-	char		filename[128];
-	char		dirlist[1024];
-	char*		dirptr;
-	int			i, n;
-	int			dirlen;
-	char		*type;
+	int         numdirs;
+	vmCvar_t    arenasFile;
+	char        filename[128];
+	char        dirlist[1024];
+	char*       dirptr;
+	int         i;
+	int         n;
+	int         dirlen;
+	char        *type;
 	// rfactory changes
 	// Changed RD
 	char specialgame[100];
@@ -224,12 +225,6 @@ void UI_LoadArenas( void ) {
 				if( strstr( type, "dd" ) ) {
 					uiInfo.mapList[uiInfo.mapCount].typeBits |= (1 << GT_DOUBLE_D);
 				}
-//			}
-//			else
-//			{
-//				if( !Q_stricmp( type, specialgame ) ) {
-//					uiInfo.mapList[uiInfo.mapCount].typeBits |= (1 << GT_FFA);
-//			}
 		} else {
 			uiInfo.mapList[uiInfo.mapCount].typeBits |= (1 << GT_FFA);
 		}

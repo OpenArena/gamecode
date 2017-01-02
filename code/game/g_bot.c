@@ -108,8 +108,8 @@ int G_ParseInfos( char *buf, int max, char *infos[] ) {
 			}
 			Info_SetValueForKey( info, key, token );
 		}
-                if(!BG_CanAlloc(strlen(info) + strlen("\\num\\") + strlen(va("%d", MAX_ARENAS)) + 1))
-                    break; //Not enough memory. Don't even try
+		if(!BG_CanAlloc(strlen(info) + strlen("\\num\\") + strlen(va("%d", MAX_ARENAS)) + 1))
+			break; //Not enough memory. Don't even try
 		//NOTE: extra space for arena number
 		//KK-OAX Changed to Tremulous's BG_Alloc
 		infos[count] = BG_Alloc(strlen(info) + strlen("\\num\\") + strlen(va("%d", MAX_ARENAS)) + 1);
@@ -244,8 +244,8 @@ void G_AddRandomBot( int team ) {
 	char	*value, netname[36], *teamstr;
 	gclient_t	*cl;
 
-        if (!trap_AAS_Initialized())
-            return; //If no AAS then don't even try
+	if (!trap_AAS_Initialized())
+		return; //If no AAS then don't even try
 
 	num = 0;
 	for ( n = 0; n < g_numBots ; n++ ) {
@@ -413,12 +413,11 @@ void G_CheckMinimumPlayers( void ) {
 	minplayers = bot_minplayers.integer;
 	if (minplayers <= 0) return;
 
-        if (!trap_AAS_Initialized())
-        {
-            minplayers = 0;
-            checkminimumplayers_time = level.time+600*1000;
-            return; //If no AAS then don't even try
-        }
+	if (!trap_AAS_Initialized()) {
+		minplayers = 0;
+		checkminimumplayers_time = level.time+600*1000;
+		return; //If no AAS then don't even try
+	}
 
 	if (g_gametype.integer >= GT_TEAM && g_ffa_gt!=1) {
 		if (minplayers >= g_maxclients.integer / 2) {

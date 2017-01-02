@@ -188,8 +188,10 @@ int BotAI_GetEntityState( int entityNum, entityState_t *state ) {
 	memset( state, 0, sizeof(entityState_t) );
 	if (!ent->inuse) return qfalse;
 	if (!ent->r.linked) return qfalse;
-        if ( !(g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_LMS ||g_instantgib.integer || g_rockets.integer || g_elimination_allgametypes.integer || g_gametype.integer==GT_CTF_ELIMINATION)
-	&& (ent->r.svFlags & SVF_NOCLIENT) ) return qfalse;
+	if ( !(g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_LMS ||g_instantgib.integer || g_rockets.integer || g_elimination_allgametypes.integer || g_gametype.integer==GT_CTF_ELIMINATION)
+	       && (ent->r.svFlags & SVF_NOCLIENT) ) {
+		return qfalse;
+	}
 	memcpy( state, &ent->s, sizeof(entityState_t) );
 	return qtrue;
 }
@@ -554,11 +556,11 @@ void BotSetInfoConfigString(bot_state_t *bs) {
 			break;
 		}
 	}
-  	cs = va("l\\%s\\c\\%s\\a\\%s",
-				leader,
-				carrying,
-				action);
-  	trap_SetConfigstring (CS_BOTINFO + bs->client, cs);
+	cs = va("l\\%s\\c\\%s\\a\\%s",
+	            leader,
+	            carrying,
+	            action);
+	trap_SetConfigstring (CS_BOTINFO + bs->client, cs);
 }
 
 /*
@@ -1195,16 +1197,16 @@ int BotAISetupClient(int client, struct bot_settings_s *settings, qboolean resta
 	char filename[MAX_PATH], name[MAX_PATH], gender[MAX_PATH];
 	bot_state_t *bs;
 	int errnum;
-    //KK-OAX Changed to Tremulous's BG_Alloc
+	//KK-OAX Changed to Tremulous's BG_Alloc
 	if (!botstates[client]) {
-            if(!BG_CanAlloc(sizeof(bot_state_t))) {
-                //We cannot run BG_Alloc, fail nicely
-                BotAI_Print(PRT_FATAL, "BotAISetupClient: Not enough heap memory\n");
-		return qfalse;
-            }
-            botstates[client] = BG_Alloc(sizeof(bot_state_t));
-            //BG_Allow will succed or terminate
-        }
+		if(!BG_CanAlloc(sizeof(bot_state_t))) {
+			//We cannot run BG_Alloc, fail nicely
+			BotAI_Print(PRT_FATAL, "BotAISetupClient: Not enough heap memory\n");
+			return qfalse;
+		}
+		botstates[client] = BG_Alloc(sizeof(bot_state_t));
+		//BG_Allow will succed or terminate
+	}
 	bs = botstates[client];
 
 	if (bs && bs->inuse) {
@@ -1517,8 +1519,8 @@ int BotAIStartFrame(int time) {
 				trap_BotLibUpdateEntity(i, NULL);
 				continue;
 			}
-                        if ( !(g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_LMS ||g_instantgib.integer || g_rockets.integer || g_elimination_allgametypes.integer || g_gametype.integer==GT_CTF_ELIMINATION)
-                        && ent->r.svFlags & SVF_NOCLIENT) {
+			if ( !(g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_LMS ||g_instantgib.integer || g_rockets.integer || g_elimination_allgametypes.integer || g_gametype.integer==GT_CTF_ELIMINATION)
+				   && ent->r.svFlags & SVF_NOCLIENT) {
 				trap_BotLibUpdateEntity(i, NULL);
 				continue;
 			}
@@ -1540,7 +1542,7 @@ int BotAIStartFrame(int time) {
 					continue;
 				}
 			}
-                        
+
 			//
 			memset(&state, 0, sizeof(bot_entitystate_t));
 			//

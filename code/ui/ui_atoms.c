@@ -127,7 +127,7 @@ void UI_SetBestScores(postGameInfo_t *newInfo, qboolean postGame) {
 	trap_Cvar_Set("ui_scoreShutoutBonus",	va("%i", newInfo->shutoutBonus));
 	trap_Cvar_Set("ui_scoreTime",					va("%02i:%02i", newInfo->time / 60, newInfo->time % 60));
 	trap_Cvar_Set("ui_scoreCaptures",		va("%i", newInfo->captures));
-  if (postGame) {
+	if (postGame) {
 		trap_Cvar_Set("ui_scoreAccuracy2",     va("%i%%", newInfo->accuracy));
 		trap_Cvar_Set("ui_scoreImpressives2",	va("%i", newInfo->impressives));
 		trap_Cvar_Set("ui_scoreExcellents2", 	va("%i", newInfo->excellents));
@@ -487,8 +487,8 @@ Coordinates are 640*480 virtual values
 void UI_DrawRect( float x, float y, float width, float height, const float *color ) {
 	trap_R_SetColor( color );
 
-  UI_DrawTopBottom(x, y, width, height);
-  UI_DrawSides(x, y, width, height);
+	UI_DrawTopBottom(x, y, width, height);
+	UI_DrawSides(x, y, width, height);
 
 	trap_R_SetColor( NULL );
 }

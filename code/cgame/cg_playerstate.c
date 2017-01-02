@@ -289,7 +289,6 @@ static void pushReward(sfxHandle_t sfx, qhandle_t shader, int rewardCount) {
 	}
 }
 
-        
 /*
 ==================
 CG_CheckLocalSounds
