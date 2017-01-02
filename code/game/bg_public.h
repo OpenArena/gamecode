@@ -213,11 +213,11 @@ typedef struct {
 	int			pmove_fixed;
 	int			pmove_msec;
 
-        //Sago's pmove
-        int                     pmove_float;
-        
-        //Flags effecting movement (see dmflags)
-        int                     pmove_flags;
+	//Sago's pmove
+	int                     pmove_float;
+
+	//Flags effecting movement (see dmflags)
+	int                     pmove_flags;
 
 	// callbacks to test the world
 	// these will be different functions during game and cgame

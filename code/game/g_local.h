@@ -288,28 +288,28 @@ typedef struct {
 	int			samplehead;
 //unlagged - true ping
 //KK-OAX Killing Sprees/Multikills
-    int         killstreak;
-    int         deathstreak;
-    qboolean    onSpree;
-    int         multiKillCount;
-    
+	int         killstreak;
+	int         deathstreak;
+	qboolean    onSpree;
+	int         multiKillCount;
+
 //KK-OAX Admin Stuff        
-    char        guid[ 33 ];
-    char        ip[ 40 ];
-    qboolean    muted;
-    qboolean    disoriented;
-    qboolean    wasdisoriented;
-    int         adminLevel;
+	char        guid[ 33 ];
+	char        ip[ 40 ];
+	qboolean    muted;
+	qboolean    disoriented;
+	qboolean    wasdisoriented;
+	int         adminLevel;
 
 // flood protection
-    int         floodDemerits;
-    int         floodTime;
+	int         floodDemerits;
+	int         floodTime;
  
 //Used To Track Name Changes
-    int         nameChangeTime;
-    int         nameChanges;
-    
-    qboolean    cannotWin; // Set to true if the players joins a leading team or the team with the most players
+	int         nameChangeTime;
+	int         nameChanges;
+
+	qboolean    cannotWin; // Set to true if the players joins a leading team or the team with the most players
 } clientPersistant_t;
 
 //unlagged - backward reconciliation #1
@@ -395,13 +395,13 @@ struct gclient_s {
 
 	qboolean	isEliminated;			//Has been killed in this round
 
-        //New vote system. The votes are saved in the client info, so we know who voted on what and can cancel votes on leave.
-        //0=not voted, 1=voted yes, -1=voted no
-        int vote;
-        
-        int lastSentFlying;                             //The last client that sent the player flying
-        int lastSentFlyingTime;                         //So we can time out
-        
+	//New vote system. The votes are saved in the client info, so we know who voted on what and can cancel votes on leave.
+	//0=not voted, 1=voted yes, -1=voted no
+	int vote;
+
+	int lastSentFlying;                             //The last client that sent the player flying
+	int lastSentFlyingTime;                         //So we can time out
+
 
 	//unlagged - backward reconciliation #1
 	// the serverTime the button was pressed
@@ -422,9 +422,9 @@ struct gclient_s {
 	// the last frame number we got an update from this client
 	int			lastUpdateFrame;
 //unlagged - smooth clients #1
-        qboolean        spawnprotected;
+	qboolean        spawnprotected;
 
-        int			accuracy[WP_NUM_WEAPONS][2];
+	int			accuracy[WP_NUM_WEAPONS][2];
 };
 
 
@@ -480,8 +480,8 @@ typedef struct {
 	int			voteYes;
 	int			voteNo;
 	int			numVotingClients;		// set by CountVotes
-        int             voteKickClient;                         // if non-negative the current vote is about this client.
-        int             voteKickType;                           // if 1 = ban (execute ban)
+	int             voteKickClient;                         // if non-negative the current vote is about this client.
+	int             voteKickType;                           // if 1 = ban (execute ban)
 
 	// team voting state
 	char		teamVoteString[2][MAX_STRING_CHARS];
@@ -546,24 +546,24 @@ typedef struct {
 	int			frameStartTime;
 //unlagged - backward reconciliation #4
 //KK-OAX Storing upper bounds of spree/multikill arrays 
-    int         kSpreeUBound;
-    int         dSpreeUBound;
-    int         mKillUBound;
+	int         kSpreeUBound;
+	int         dSpreeUBound;
+int         mKillUBound;
 //KK-OAX Storing g_spreeDiv to avoid dividing by 0.    
-    int         spreeDivisor;
+	int         spreeDivisor;
 
-    qboolean    RedTeamLocked;
-    qboolean    BlueTeamLocked;
-    qboolean    FFALocked;
-    
-    //Obelisk tell
-    int healthRedObelisk; //health in percent
-    int healthBlueObelisk; //helth in percent
-    qboolean MustSendObeliskHealth; //Health has changed
-	
-    int		max_humanplayers;
+	qboolean    RedTeamLocked;
+	qboolean    BlueTeamLocked;
+	qboolean    FFALocked;
+
+	//Obelisk tell
+	int healthRedObelisk; //health in percent
+	int healthBlueObelisk; //helth in percent
+	qboolean MustSendObeliskHealth; //Health has changed
+
+	int		max_humanplayers;
 	int		lastActiveTime; ///< Updated as long as there are at least one human player on the server
-     
+
 } level_locals_t;
 
 //KK-OAX These are some Print Shortcuts for KillingSprees and Admin
@@ -1409,9 +1409,9 @@ void	trap_SnapVector( float *v );
 
 typedef struct
 {
-    char    *cmdName;
-    int     cmdFlags;
-    void    ( *cmdHandler )( gentity_t *ent );
+	char    *cmdName;
+	int     cmdFlags;
+	void    ( *cmdHandler )( gentity_t *ent );
 } commands_t;
 
 //

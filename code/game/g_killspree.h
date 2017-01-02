@@ -37,28 +37,28 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 typedef struct killspree
 {
-    int                 spreeLevel;
-    int                 streakCount; //Added programatically based off SpreeDivisor. 
-    char                spreeMsg[ MAX_STRING_CHARS ];
-    char                sound2Play[ MAX_STRING_CHARS ];
-    int                 position;
+	int                 spreeLevel;
+	int                 streakCount; //Added programatically based off SpreeDivisor. 
+	char                spreeMsg[ MAX_STRING_CHARS ];
+	char                sound2Play[ MAX_STRING_CHARS ];
+	int                 position;
 } killspree_t;
 
 
 typedef struct deathspree
 {
-    int                 spreeLevel;
-    int                 streakCount; //Added programatically based off SpreeDivisor.
-    char                spreeMsg[ MAX_STRING_CHARS ];
-    char                sound2Play[ MAX_STRING_CHARS ];
-    int                 position;
+	int                 spreeLevel;
+	int                 streakCount; //Added programatically based off SpreeDivisor.
+	char                spreeMsg[ MAX_STRING_CHARS ];
+	char                sound2Play[ MAX_STRING_CHARS ];
+	int                 position;
 } deathspree_t;
 
 typedef struct multikill
 {
-    char                killMsg[ MAX_STRING_CHARS ];
-    char                sound2Play[ MAX_STRING_CHARS ];
-    int                 kills;
+	char                killMsg[ MAX_STRING_CHARS ];
+	char                sound2Play[ MAX_STRING_CHARS ];
+	int                 kills;
 } multikill_t;
 
 //function declarations
