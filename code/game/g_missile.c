@@ -189,12 +189,11 @@ static void ProximityMine_Activate( gentity_t *ent )
 		c = NULL;
 	}
 	
-	if (g_gametype.integer == GT_TEAM || g_gametype.integer == GT_DOMINATION || g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_DOUBLE_D
-			 || g_gametype.integer == GT_HARVESTER) {
+	if (g_gametype.integer == GT_TEAM || g_gametype.integer == GT_DOMINATION || g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_DOUBLE_D) {
 		c = NULL;
 	}
 	
-	if (g_gametype.integer == GT_OBELISK ) {
+	if (g_gametype.integer == GT_OBELISK || g_gametype.integer == GT_HARVESTER) {
 		switch (ent->s.generic1) {
 		case TEAM_RED:
 			c = "team_redobelisk";
