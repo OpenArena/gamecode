@@ -439,7 +439,8 @@ static void ClientTimerActions( gentity_t *ent, int msec ) {
 					ent->health = maxHealth * 1.1;
 				}
 				G_AddEvent( ent, EV_POWERUP_REGEN, 0 );
-			} else if ( ent->health < maxHealth * 2) {
+			}
+			else if ( ent->health < maxHealth * 2) {
 				ent->health += 5;
 				if ( ent->health > maxHealth * 2 ) {
 					ent->health = maxHealth * 2;
@@ -452,16 +453,16 @@ static void ClientTimerActions( gentity_t *ent, int msec ) {
 				ent->health--;
 			}
 			//Start killing players in LMS, if we are in overtime
-			if(g_elimination_roundtime.integer&&g_gametype.integer==GT_LMS && TeamHealthCount( -1, TEAM_FREE ) != ent->health &&(level.roundNumber==level.roundNumberStarted)&&(level.time>=level.roundStartTime+1000*g_elimination_roundtime.integer)) {
+			if (g_elimination_roundtime.integer&&g_gametype.integer==GT_LMS && TeamHealthCount( -1, TEAM_FREE ) != ent->health &&
+			         (level.roundNumber==level.roundNumberStarted)&&(level.time>=level.roundStartTime+1000*g_elimination_roundtime.integer)) {
 				ent->damage=5;
-				G_Damage (ent, NULL, NULL, NULL, NULL, 
-					ent->damage, DAMAGE_NO_ARMOR, MOD_UNKNOWN);
+				G_Damage (ent, NULL, NULL, NULL, NULL, ent->damage, DAMAGE_NO_ARMOR, MOD_UNKNOWN);
 			}
-			else
-			if ( ent->health < client->ps.stats[STAT_MAX_HEALTH] ) {
+			else if ( ent->health < client->ps.stats[STAT_MAX_HEALTH] ) {
 				ent->health+=g_regen.integer;
-				if(ent->health>client->ps.stats[STAT_MAX_HEALTH])
+				if (ent->health>client->ps.stats[STAT_MAX_HEALTH]) {
 					ent->health= client->ps.stats[STAT_MAX_HEALTH];
+				}
 			}
 		}
 
