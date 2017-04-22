@@ -198,9 +198,11 @@ void CheckElimination(void) {
 
 	if(g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_CTF_ELIMINATION)
 	{
-		int		counts[TEAM_NUM_TEAMS];
-		int		countsLiving[TEAM_NUM_TEAMS];
-		int		countsHealth[TEAM_NUM_TEAMS];
+		int counts[TEAM_NUM_TEAMS];
+		int countsLiving[TEAM_NUM_TEAMS];
+		int countsHealth[TEAM_NUM_TEAMS];
+		int countLivingHumans;
+		int countHumans;
 		counts[TEAM_BLUE] = TeamCount( -1, TEAM_BLUE );
 		counts[TEAM_RED] = TeamCount( -1, TEAM_RED );
 
@@ -209,6 +211,16 @@ void CheckElimination(void) {
 
 		countsHealth[TEAM_BLUE] = TeamHealthCount( -1, TEAM_BLUE );
 		countsHealth[TEAM_RED] = TeamHealthCount( -1, TEAM_RED );
+		
+		countHumans = TeamHumanParticipantsCount(-1);
+		countLivingHumans = TeamLivingHumanCount(-1);
+
+		if (countLivingHumans == 0 && countHumans > 0) {
+			level.humansEliminated = qtrue;
+		}
+		else {
+			level.humansEliminated = qfalse;
+		}
 
 		if(level.roundBluePlayers != 0 && level.roundRedPlayers != 0) { //Cannot score if one of the team never got any living players
 			if((countsLiving[TEAM_BLUE]==0)&&(level.roundNumber==level.roundNumberStarted))

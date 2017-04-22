@@ -516,13 +516,14 @@ typedef struct {
 	gentity_t	*bodyQue[BODY_QUEUE_SIZE];
 	int			portalSequence;
 	//Added for elimination:
-	int roundStartTime;		//time the current round was started
-	int roundNumber;			//The round number we have reached
-	int roundNumberStarted;			//1 less than roundNumber if we are allowed to spawn
-	int roundRedPlayers;			//How many players was there at start of round
-	int roundBluePlayers;			//used to find winners in a draw.
-	qboolean roundRespawned;		//We have respawned for this round!
-	int eliminationSides;			//Random, change red/blue bases
+	int roundStartTime;             //time the current round was started
+	int roundNumber;                //The round number we have reached
+	int roundNumberStarted;         //1 less than roundNumber if we are allowed to spawn
+	int roundRedPlayers;            //How many players was there at start of round
+	int roundBluePlayers;           //used to find winners in a draw.
+	qboolean roundRespawned;        //We have respawned for this round!
+	int eliminationSides;           //Random, change red/blue bases
+	qboolean humansEliminated;      //True if we are in an elimination mode and all humans have been eliminated
 
 	//Added for Double Domination
 	//Points get status: TEAM_FREE for not taking, TEAM_RED/TEAM_BLUE for taken and TEAM_NONE for not spawned yet
@@ -783,6 +784,8 @@ void G_PredictPlayerMove( gentity_t *ent, float frametime );
 int TeamCount( int ignoreClientNum, team_t team );
 team_t TeamLivingCount( int ignoreClientNum, int team ); //Elimination
 team_t TeamHealthCount( int ignoreClientNum, int team ); //Elimination
+int TeamLivingHumanCount(int ignoreClientNum);
+int TeamHumanParticipantsCount(int ignoreClientNum);
 void RespawnAll(void); //For round elimination
 void RespawnDead(void);
 void EnableWeapons(void);

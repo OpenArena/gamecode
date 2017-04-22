@@ -643,6 +643,63 @@ team_t TeamLivingCount( int ignoreClientNum, int team ) {
 	return count;
 }
 
+int TeamLivingHumanCount(int ignoreClientNum) {
+	int i;
+	int count = 0;
+	qboolean	isLMS = (g_gametype.integer==GT_LMS);
+
+	for ( i = 0 ; i < level.maxclients ; i++ ) {
+		if ( i == ignoreClientNum ) {
+			continue;
+		}
+		if ( level.clients[i].pers.connected == CON_DISCONNECTED ) {
+			continue;
+		}
+
+		if ( level.clients[i].pers.connected == CON_CONNECTING) {
+			continue;
+		}
+		if (g_entities[i].r.svFlags & SVF_BOT) {
+			continue;
+		}
+		if (level.clients[i].sess.sessionTeam == TEAM_SPECTATOR) {
+			continue;
+		}
+		//crash if g_gametype.integer is used here, why?
+		if ( (level.clients[i].ps.stats[STAT_HEALTH]>0 || isLMS) && !(level.clients[i].isEliminated)) {
+			count++;
+		}
+	}
+	return count;
+}
+
+int TeamHumanParticipantsCount(int ignoreClientNum) {
+	int i;
+	int count = 0;
+
+	for ( i = 0 ; i < level.maxclients ; i++ ) {
+		if ( i == ignoreClientNum ) {
+			continue;
+		}
+		if ( level.clients[i].pers.connected == CON_DISCONNECTED ) {
+			continue;
+		}
+
+		if ( level.clients[i].pers.connected == CON_CONNECTING) {
+			continue;
+		}
+		if (g_entities[i].r.svFlags & SVF_BOT) {
+			continue;
+		}
+		if (level.clients[i].sess.sessionTeam == TEAM_SPECTATOR) {
+			continue;
+		}
+		count++;
+	}
+
+	return count;
+}
+
 /*
 ================
 TeamHealthCount
