@@ -211,7 +211,7 @@ void CheckElimination(void) {
 
 		countsHealth[TEAM_BLUE] = TeamHealthCount( -1, TEAM_BLUE );
 		countsHealth[TEAM_RED] = TeamHealthCount( -1, TEAM_RED );
-		
+
 		countHumans = TeamHumanParticipantsCount(-1);
 		countLivingHumans = TeamLivingHumanCount(-1);
 
@@ -379,8 +379,6 @@ void CheckLMS(void) {
 		return;
 	}
 
-	
-
 	//We don't want to do anything in intermission
 	if(level.intermissiontime) {
 		if(level.roundRespawned) {
@@ -393,8 +391,21 @@ void CheckLMS(void) {
 	if(g_gametype.integer == GT_LMS)
 	{
 		int		countsLiving[TEAM_NUM_TEAMS];
+		int countHumans;
+		int countLivingHumans;
 		//trap_SendServerCommand( -1, "print \"This is LMS!\n\"");
 		countsLiving[TEAM_FREE] = TeamLivingCount( -1, TEAM_FREE );
+
+		countHumans = TeamHumanParticipantsCount(-1);
+		countLivingHumans = TeamLivingHumanCount(-1);
+
+		if (countLivingHumans == 0 && countHumans > 0) {
+			level.humansEliminated = qtrue;
+		}
+		else {
+			level.humansEliminated = qfalse;
+		}
+
 		if(countsLiving[TEAM_FREE]==1 && level.roundNumber==level.roundNumberStarted)
 		{
 			if(mode <=1 )
