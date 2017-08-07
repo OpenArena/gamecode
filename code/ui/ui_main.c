@@ -6118,7 +6118,8 @@ static void UI_RunCinematicFrame(int handle)
 PlayerModel_BuildList
 =================
 */
-static void UI_BuildQ3Model_List( void )
+// old version for reference or fallback?
+static void OLDUI_BuildQ3Model_List( void )
 {
 	int		numdirs;
 	int		numfiles;
@@ -6151,6 +6152,7 @@ static void UI_BuildQ3Model_List( void )
 		// iterate all skin files in directory
 		numfiles = trap_FS_GetFileList( va("models/players/%s",dirptr), "tga", filelist, 2048 );
 		fileptr  = filelist;
+
 		for (j=0; j<numfiles && uiInfo.q3HeadCount < MAX_PLAYERMODELS; j++,fileptr+=filelen+1) {
 			filelen = strlen(fileptr);
 
@@ -6213,6 +6215,234 @@ static void UI_BuildQ3Model_List( void )
 				}
 			}
 
+		}
+	}
+
+}
+
+/*
+==========================
+UI_IsFileExists
+==========================
+*/
+static qboolean	UI_IsFileExists(const char *filename) {
+	int len;
+
+	len = trap_FS_FOpenFile( filename, NULL, FS_READ );
+	if (len>0) {
+		return qtrue;
+	}
+	return qfalse;
+}
+
+
+
+// leilei - This is a version which excludes invalid skins, doesn't check for icons, and doesn't load icon textures 
+static void UI_BuildQ3Model_List( void )
+{
+	int		numdirs;
+	int		numfiles;
+	int		nummodels;
+	char	dirlist[2048];
+	char	filelist[2048];
+	char	modellist[2048];
+	char	modelname[MAX_QPATH];
+	char	skinname[MAX_QPATH];
+	char	scratch[256];
+	char*	dirptr;
+	char*	fileptr;
+	char*	mdlptr;
+	char 	doesitexist[MAX_QPATH];
+	int		i;
+	int		j, k, dirty;
+	int		dirlen;
+	int		filelen;
+	int		modellen;
+	int		valid, hasteam;
+	uiInfo.q3HeadCount = 0;
+	uiInfo.q3HeadCount2 = 0;
+	valid = 0;
+	hasteam = 0;
+	// iterate directory of all player models
+	numdirs = trap_FS_GetFileList("models/players", "/", dirlist, 4096 ); // upped from 2048 then lowered from 32768 as there are no 32k amounts of player models. 
+										// let's be honest, there's roughly 340 of them
+	dirptr  = dirlist;
+	for (i=0; i<numdirs && uiInfo.q3HeadCount < MAX_PLAYERMODELS; i++,dirptr+=dirlen+1) {
+		dirlen = strlen(dirptr);
+
+		if (dirlen && dirptr[dirlen-1]=='/') dirptr[dirlen-1]='\0';
+
+		if ( strequals(dirptr,".") || strequals(dirptr,"..")) {
+			continue;
+		}
+
+		// iterate all skin files in directory
+		numfiles = trap_FS_GetFileList( va("models/players/%s",dirptr), "skin", filelist, 2048 );
+		nummodels = trap_FS_GetFileList( va("models/players/%s",dirptr), "cfg", modellist, 2048 );
+
+		fileptr  = filelist;
+		mdlptr  = modellist;
+	
+		for (j=0; j<numfiles && uiInfo.q3HeadCount < MAX_PLAYERMODELS; j++) {
+
+
+			filelen = strlen(fileptr);
+			modellen = strlen(mdlptr);
+
+
+			COM_StripExtension(mdlptr, modelname, sizeof(modelname));
+			COM_StripExtension(fileptr, skinname, sizeof(skinname));
+
+			Com_sprintf( doesitexist, sizeof(doesitexist), "models/players/%s/animation.cfg", dirptr);
+			// look for lower.??? to verify it's an existing model (excluding skins for non-existent q3 models, for example)
+
+			if (UI_IsFileExists(doesitexist)) valid = 1;
+
+			else valid = 0;
+
+			if (valid)
+			{
+
+				COM_StripExtension(fileptr, skinname, sizeof(skinname));
+
+					if (Q_stricmpn(skinname, "head_red", 8) == 0) hasteam = 1;
+					else hasteam = 0;
+				// look for head_????
+				//if (Q_stricmpn(skinname, "head_", 5) == 0 && !(Q_stricmp(skinname,"head_blue") == 0 || Q_stricmp(skinname,"head_red") == 0))
+				//	if (Q_stricmpn(skinname, "head_", 5) == 0)	// leilei - show red blue anyway
+				if (Q_stricmpn(skinname, "head_default", 12) == 0)	// leilei - only default skin on this list
+				{
+					if (Q_stricmp(skinname, "head_default") == 0) {
+						Com_sprintf( scratch, sizeof(scratch), "%s", dirptr);
+					}
+					else {
+						Com_sprintf( scratch, sizeof(scratch), "%s/%s",dirptr, skinname + 5);
+
+					}
+
+					dirty = 0;
+					for(k=0; k<uiInfo.q3HeadCount; k++) {
+						if (!Q_stricmp(scratch, uiInfo.q3HeadNames[uiInfo.q3HeadCount])) {
+							dirty = 1;
+							break;
+						}
+					}
+					if (!dirty) {
+					//	if (hasteam)
+						Com_sprintf( uiInfo.q3HeadNames[uiInfo.q3HeadCount], sizeof(uiInfo.q3HeadNames[uiInfo.q3HeadCount]), "%s", scratch);
+					//	else
+					//	Com_sprintf( uiInfo.q3HeadNames[uiInfo.q3HeadCount], sizeof(uiInfo.q3HeadNames[uiInfo.q3HeadCount]), "%s", scratch);
+						uiInfo.q3HeadCount++; // don't load icon
+						//uiInfo.q3HeadIcons[uiInfo.q3HeadCount++] = trap_R_RegisterShaderNoMip(va("models/players/%s/%s",dirptr,skinname));
+					}
+				}
+			}
+			fileptr+=filelen+1;
+			mdlptr+=modellen+1;
+		}
+	}
+		// leilei - a count hack
+		{
+		Com_sprintf( scratch, sizeof(scratch), "%i", uiInfo.q3HeadCount);
+
+		trap_Cvar_Set("ui_numberOfPlayers", scratch);
+		}
+}
+
+
+static void UI_AhBuildQ3Model_List( void )
+{
+	int		numdirs;
+	int		numfiles;
+	int		nummodels;
+	char	dirlist[2048];
+	char	filelist[2048];
+	char	modellist[2048];
+	char	modelname[MAX_QPATH];
+	char	skinname[MAX_QPATH];
+	char	scratch[256];
+	char*	dirptr;
+	char*	fileptr;
+	char*	mdlptr;
+	char 	doesitexist[MAX_QPATH];
+	int		i;
+	int		j, k, dirty;
+	int		dirlen;
+	int		filelen;
+	int		modellen;
+	int		valid;
+	uiInfo.q3HeadCount = 0;
+	uiInfo.q3HeadCount2 = 0;
+	valid = 0;
+	// iterate directory of all player models
+	numdirs = trap_FS_GetFileList("models/players", "/", dirlist, 512 ); // upped from 2048 then lowered from 32768 as there are no 32k amounts of player models. 
+										// let's be honest, there's roughly 340 of them
+	dirptr  = dirlist;
+	for (i=0; i<numdirs && uiInfo.q3HeadCount < MAX_PLAYERMODELS; i++,dirptr+=dirlen+1) {
+		dirlen = strlen(dirptr);
+
+		if (dirlen && dirptr[dirlen-1]=='/') dirptr[dirlen-1]='\0';
+
+		if ( strequals(dirptr,".") || strequals(dirptr,"..")) {
+			continue;
+		}
+
+		// iterate all skin files in directory
+		numfiles = trap_FS_GetFileList( va("models/players/%s",dirptr), "skin", filelist, 2048 );
+		nummodels = trap_FS_GetFileList( va("models/players/%s",dirptr), "cfg", modellist, 2048 );
+
+		fileptr  = filelist;
+		mdlptr  = modellist;
+	
+		for (j=0; j<numfiles && uiInfo.q3HeadCount < MAX_PLAYERMODELS; j++) {
+
+
+			filelen = strlen(fileptr);
+			modellen = strlen(mdlptr);
+
+
+			COM_StripExtension(mdlptr, modelname, sizeof(modelname));
+			COM_StripExtension(fileptr, skinname, sizeof(skinname));
+
+			Com_sprintf( doesitexist, sizeof(doesitexist), "models/players/%s/animation.cfg", dirptr);
+			// look for lower.??? to verify it's an existing model (excluding skins for non-existent q3 models, for example)
+
+			if (UI_IsFileExists(doesitexist)) valid = 1;
+
+			else valid = 0;
+
+			if (valid)
+			{
+
+				COM_StripExtension(fileptr, skinname, sizeof(skinname));
+
+				// look for head_????
+				//if (Q_stricmpn(skinname, "head_", 5) == 0 && !(Q_stricmp(skinname,"head_blue") == 0 || Q_stricmp(skinname,"head_red") == 0))
+					if (Q_stricmpn(skinname, "head_", 5) == 0)	// leilei - show red blue anyway
+	
+				{
+					if (Q_stricmp(skinname, "head_default") == 0) {
+						Com_sprintf( scratch, sizeof(scratch), "%s", dirptr);
+					}
+					else {
+						Com_sprintf( scratch, sizeof(scratch), "%s/%s",dirptr, skinname + 5);
+					}
+					dirty = 0;
+					for(k=0; k<uiInfo.q3HeadCount; k++) {
+						if (!Q_stricmp(scratch, uiInfo.q3HeadNames[uiInfo.q3HeadCount])) {
+							dirty = 1;
+							break;
+						}
+					}
+					if (!dirty) {
+						Com_sprintf( uiInfo.q3HeadNames[uiInfo.q3HeadCount], sizeof(uiInfo.q3HeadNames[uiInfo.q3HeadCount]), "%s", scratch);
+						uiInfo.q3HeadCount++; // don't load icon
+						//uiInfo.q3HeadIcons[uiInfo.q3HeadCount++] = trap_R_RegisterShaderNoMip(va("models/players/%s/%s",dirptr,skinname));
+					}
+				}
+			}
+			fileptr+=filelen+1;
+			mdlptr+=modellen+1;
 		}
 	}
 
