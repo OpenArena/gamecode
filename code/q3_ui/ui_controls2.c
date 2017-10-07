@@ -1246,6 +1246,21 @@ static void Controls_InitWeapons( void ) {
 	}
 }
 
+
+static void Controls_Menu_AddPText (menutext_s* menutext, int* y, int id, char* text ) {
+	menutext->generic.type		= MTYPE_PTEXT;
+	menutext->generic.flags	= QMF_CENTER_JUSTIFY|QMF_PULSEIFFOCUS;
+	menutext->generic.callback	= Controls_MenuEvent;
+	menutext->generic.id		= id;
+	menutext->generic.x		= 152;
+	menutext->generic.y		= *y;
+	menutext->string			= text;
+	menutext->color			= color_red;
+	menutext->style			= UI_RIGHT;
+
+	*y += PROP_HEIGHT;
+}
+
 /*
 =================
 Controls_MenuInit
@@ -1254,6 +1269,7 @@ Controls_MenuInit
 static void Controls_MenuInit( void )
 {
 	static char playername[32];
+	int y;
 
 	// zero set all our globals
 	memset( &s_controls, 0 ,sizeof(controls_t) );
@@ -1288,45 +1304,12 @@ static void Controls_MenuInit( void )
 	s_controls.framer.width  	    = 256;
 	s_controls.framer.height  	    = 334;
 
-	s_controls.looking.generic.type     = MTYPE_PTEXT;
-	s_controls.looking.generic.flags    = QMF_RIGHT_JUSTIFY|QMF_PULSEIFFOCUS;
-	s_controls.looking.generic.id	    = ID_LOOKING;
-	s_controls.looking.generic.callback	= Controls_MenuEvent;
-	s_controls.looking.generic.x	    = 152;
-	s_controls.looking.generic.y	    = 240 - 2 * PROP_HEIGHT;
-	s_controls.looking.string			= "LOOK";
-	s_controls.looking.style			= UI_RIGHT;
-	s_controls.looking.color			= color_red;
-
-	s_controls.movement.generic.type     = MTYPE_PTEXT;
-	s_controls.movement.generic.flags    = QMF_RIGHT_JUSTIFY|QMF_PULSEIFFOCUS;
-	s_controls.movement.generic.id	     = ID_MOVEMENT;
-	s_controls.movement.generic.callback = Controls_MenuEvent;
-	s_controls.movement.generic.x	     = 152;
-	s_controls.movement.generic.y	     = 240 - PROP_HEIGHT;
-	s_controls.movement.string			= "MOVE";
-	s_controls.movement.style			= UI_RIGHT;
-	s_controls.movement.color			= color_red;
-
-	s_controls.weapons.generic.type	    = MTYPE_PTEXT;
-	s_controls.weapons.generic.flags    = QMF_RIGHT_JUSTIFY|QMF_PULSEIFFOCUS;
-	s_controls.weapons.generic.id	    = ID_WEAPONS;
-	s_controls.weapons.generic.callback	= Controls_MenuEvent;
-	s_controls.weapons.generic.x	    = 152;
-	s_controls.weapons.generic.y	    = 240;
-	s_controls.weapons.string			= "SHOOT";
-	s_controls.weapons.style			= UI_RIGHT;
-	s_controls.weapons.color			= color_red;
-
-	s_controls.misc.generic.type	 = MTYPE_PTEXT;
-	s_controls.misc.generic.flags    = QMF_RIGHT_JUSTIFY|QMF_PULSEIFFOCUS;
-	s_controls.misc.generic.id	     = ID_MISC;
-	s_controls.misc.generic.callback = Controls_MenuEvent;
-	s_controls.misc.generic.x		 = 152;
-	s_controls.misc.generic.y		 = 240 + PROP_HEIGHT;
-	s_controls.misc.string			= "MISC";
-	s_controls.misc.style			= UI_RIGHT;
-	s_controls.misc.color			= color_red;
+	y = 240 - 2 * PROP_HEIGHT;
+	
+	Controls_Menu_AddPText(&s_controls.looking,&y,ID_LOOKING, "LOOK");
+	Controls_Menu_AddPText(&s_controls.movement,&y,ID_MOVEMENT, "MOVE");
+	Controls_Menu_AddPText(&s_controls.weapons,&y,ID_WEAPONS, "SHOOT");
+	Controls_Menu_AddPText(&s_controls.misc,&y,ID_MISC, "MISC");
 
 	s_controls.back.generic.type	 = MTYPE_BITMAP;
 	s_controls.back.generic.name     = ART_BACK0;
