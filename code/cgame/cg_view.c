@@ -24,6 +24,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 // for a 3D rendering
 #include "cg_local.h"
 
+#define degrees(v) (v * 180.0 / M_PI)
+#define radians(v) (v * M_PI / 180.0)
 
 /*
 =============================================================================
@@ -638,9 +640,9 @@ static int CG_CalcFov( void ) {
 		fov_x = fov_x * 0.93 * (cg.xyspeed * (0.0006) + 1);
 	}
 
-	x = cg.refdef.width / tan( fov_x / 360 * M_PI );
+	x = cg.refdef.width / tan( radians(fov_x) / 2.0 );
 	fov_y = atan2( cg.refdef.height, x );
-	fov_y = fov_y * 360 / M_PI;
+	fov_y = degrees(fov_y) * 2;
 
 	// warp if underwater
 	contents = CG_PointContents( cg.refdef.vieworg, -1 );
@@ -664,7 +666,14 @@ static int CG_CalcFov( void ) {
 		cg.zoomSensitivity = 1;
 	} 
 	else {
-		cg.zoomSensitivity = cg.refdef.fov_y / 75.0;
+		float zoomSensitivity = cg_zoomSensitivity.value;
+		if (zoomSensitivity == 0.0) {
+			// use legacy zoom sensitivity formula
+			cg.zoomSensitivity = cg.refdef.fov_y / 75.0;
+		} else {
+			// use corrected zoom sensitivity formula
+			cg.zoomSensitivity = zoomSensitivity * tan(radians(cg.refdef.fov_x) / 2.0) / tan(radians(cg_fov.value) / 2.0);
+		}
 	}
 
 	return inwater;
