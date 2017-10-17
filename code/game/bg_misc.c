@@ -63,6 +63,27 @@ gitem_t bg_itemlist[] ={
 	//
 
 	/*QUAKED item_armor_shard (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
+        Armor Shard. Gives 5 Armor Points, up to a maximum of 200, which slowly wears out to 100.
+        -------- KEYS --------
+	wait: Seconds before the item respawns. Default: 40. Set to -1 for never respawn.
+	random: How many seconds the respawn time varies from the Respawn Delay value. Default: 0. See Notes.
+	team: Makes the item spawn randomly with other items with the same "team" value. See Notes.
+	target: When this item is picked up, it triggers the entity specified here, if set.
+	targetname: If used as destination for a target_give, the item can be given to players (e.g. at player spawn time).
+	notbot: If set to 1, the entity won't attract bots.
+	notfree: If set to 1, prevents the entity from spawning in all non-team-based modes (ffa, single player deathmatch, etc.).
+	notteam: If set to 1, prevents the entity from spawning in all team-based modes (ctf, 1flag, dom, etc.).
+	notsingle: If set to 1, prevents the entity from spawning in Single Player Deathmatch mode (g_gametype 2) only.
+	gametype: If set, makes the entity spawn ONLY in the specified gametypes. Separate gametypes with commas. Valid values: ffa, tournament, single, team, ctf, oneflag, obelisk, harvester, elimination, ctfelimination, lms, dd, dom, pos.
+	!gametype: Usage is similar to Game Type key, with opposite effect. If set, causes the entity to NOT spawn in the specified gametypes. Not supported in gamecode older than OA 0.8.8: entity will always spawn in old mods for Q3A!
+        -------- SPAWNFLAGS --------
+	SUSPENDED: If set to 1, the item will remain floating instead of appearing on the ground. Bots do not look for "suspended" items, unless they are reachable by jumppads or in water.
+        -------- NOTES --------
+	First and foremost: it is NOT advisable to change the respawn time of an item, or the amount of ammo given by a weapon/box, because you are messing with the player's natural timing of the items. You're doing well with the default values. That said...
+
+	The "wait" value of a "teamed" item will determine the respawn time of the following one. Setting one of the items to -1 (no respawn) will prevent further items from spawning, after that one.
+
+	Using "random" key will make the respawn time variable, to the maximum limits given by "random" added or subtracted to "wait" seconds. Example: "wait 10" with "random 2" will make the item respawn between 8 and 12 seconds of delay.
 	 */
 	{
 		"item_armor_shard",
@@ -80,6 +101,27 @@ gitem_t bg_itemlist[] ={
 	},
 
 	/*QUAKED item_armor_combat (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
+        Combat Armor. Gives 50 Armor Points, up to a maximum of 200, which slowly wears out to 100.
+        -------- KEYS --------
+	wait: Seconds before the item respawns. Default: 40. Set to -1 for never respawn.
+	random: How many seconds the respawn time varies from the Respawn Delay value. Default: 0. See Notes.
+	team: Makes the item spawn randomly with other items with the same "team" value. See Notes.
+	target: When this item is picked up, it triggers the entity specified here, if set.
+	targetname: If used as destination for a target_give, the item can be given to players (e.g. at player spawn time).
+	notbot: If set to 1, the entity won't attract bots.
+	notfree: If set to 1, prevents the entity from spawning in all non-team-based modes (ffa, single player deathmatch, etc.).
+	notteam: If set to 1, prevents the entity from spawning in all team-based modes (ctf, 1flag, dom, etc.).
+	notsingle: If set to 1, prevents the entity from spawning in Single Player Deathmatch mode (g_gametype 2) only.
+	gametype: If set, makes the entity spawn ONLY in the specified gametypes. Separate gametypes with commas. Valid values: ffa, tournament, single, team, ctf, oneflag, obelisk, harvester, elimination, ctfelimination, lms, dd, dom, pos.
+	!gametype: Usage is similar to Game Type key, with opposite effect. If set, causes the entity to NOT spawn in the specified gametypes. Not supported in gamecode older than OA 0.8.8: entity will always spawn in old mods for Q3A!
+        -------- SPAWNFLAGS --------
+	SUSPENDED: If set to 1, the item will remain floating instead of appearing on the ground. Bots do not look for "suspended" items, unless they are reachable by jumppads or in water.
+        -------- NOTES --------
+	First and foremost: it is NOT advisable to change the respawn time of an item, or the amount of ammo given by a weapon/box, because you are messing with the player's natural timing of the items. You're doing well with the default values. That said...
+
+	The "wait" value of a "teamed" item will determine the respawn time of the following one. Setting one of the items to -1 (no respawn) will prevent further items from spawning, after that one.
+
+	Using "random" key will make the respawn time variable, to the maximum limits given by "random" added or subtracted to "wait" seconds. Example: "wait 10" with "random 2" will make the item respawn between 8 and 12 seconds of delay.
 	 */
 	{
 		"item_armor_combat",
@@ -96,6 +138,27 @@ gitem_t bg_itemlist[] ={
 	},
 
 	/*QUAKED item_armor_body (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
+        Body Armor. Gives 100 Armor Points, up to a maximum of 200, which slowly wears out to 100.
+        -------- KEYS --------
+	wait: Seconds before the item respawns. Default: 40. Set to -1 for never respawn.
+	random: How many seconds the respawn time varies from the Respawn Delay value. Default: 0. See Notes.
+	team: Makes the item spawn randomly with other items with the same "team" value. See Notes.
+	target: When this item is picked up, it triggers the entity specified here, if set.
+	targetname: If used as destination for a target_give, the item can be given to players (e.g. at player spawn time).
+	notbot: If set to 1, the entity won't attract bots.
+	notfree: If set to 1, prevents the entity from spawning in all non-team-based modes (ffa, single player deathmatch, etc.).
+	notteam: If set to 1, prevents the entity from spawning in all team-based modes (ctf, 1flag, dom, etc.).
+	notsingle: If set to 1, prevents the entity from spawning in Single Player Deathmatch mode (g_gametype 2) only.
+	gametype: If set, makes the entity spawn ONLY in the specified gametypes. Separate gametypes with commas. Valid values: ffa, tournament, single, team, ctf, oneflag, obelisk, harvester, elimination, ctfelimination, lms, dd, dom, pos.
+	!gametype: Usage is similar to Game Type key, with opposite effect. If set, causes the entity to NOT spawn in the specified gametypes. Not supported in gamecode older than OA 0.8.8: entity will always spawn in old mods for Q3A!
+        -------- SPAWNFLAGS --------
+	SUSPENDED: If set to 1, the item will remain floating instead of appearing on the ground. Bots do not look for "suspended" items, unless they are reachable by jumppads or in water.
+        -------- NOTES --------
+	First and foremost: it is NOT advisable to change the respawn time of an item, or the amount of ammo given by a weapon/box, because you are messing with the player's natural timing of the items. You're doing well with the default values. That said...
+
+	The "wait" value of a "teamed" item will determine the respawn time of the following one. Setting one of the items to -1 (no respawn) will prevent further items from spawning, after that one.
+
+	Using "random" key will make the respawn time variable, to the maximum limits given by "random" added or subtracted to "wait" seconds. Example: "wait 10" with "random 2" will make the item respawn between 8 and 12 seconds of delay.
 	 */
 	{
 		"item_armor_body",
@@ -116,6 +179,27 @@ gitem_t bg_itemlist[] ={
 	//
 
 	/*QUAKED item_health_small (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
+        Small Health. Gives 5 Health Points, up to a maximum of 200, which slowly wears out to 100.
+        -------- KEYS --------
+	wait: Seconds before the item respawns. Default: 40. Set to -1 for never respawn.
+	random: How many seconds the respawn time varies from the Respawn Delay value. Default: 0. See Notes.
+	team: Makes the item spawn randomly with other items with the same "team" value. See Notes.
+	target: When this item is picked up, it triggers the entity specified here, if set.
+	targetname: If used as destination for a target_give, the item can be given to players (e.g. at player spawn time).
+	notbot: If set to 1, the entity won't attract bots.
+	notfree: If set to 1, prevents the entity from spawning in all non-team-based modes (ffa, single player deathmatch, etc.).
+	notteam: If set to 1, prevents the entity from spawning in all team-based modes (ctf, 1flag, dom, etc.).
+	notsingle: If set to 1, prevents the entity from spawning in Single Player Deathmatch mode (g_gametype 2) only.
+	gametype: If set, makes the entity spawn ONLY in the specified gametypes. Separate gametypes with commas. Valid values: ffa, tournament, single, team, ctf, oneflag, obelisk, harvester, elimination, ctfelimination, lms, dd, dom, pos.
+	!gametype: Usage is similar to Game Type key, with opposite effect. If set, causes the entity to NOT spawn in the specified gametypes. Not supported in gamecode older than OA 0.8.8: entity will always spawn in old mods for Q3A!
+        -------- SPAWNFLAGS --------
+	SUSPENDED: If set to 1, the item will remain floating instead of appearing on the ground. Bots do not look for "suspended" items, unless they are reachable by jumppads or in water.
+        -------- NOTES --------
+	First and foremost: it is NOT advisable to change the respawn time of an item, or the amount of ammo given by a weapon/box, because you are messing with the player's natural timing of the items. You're doing well with the default values. That said...
+
+	The "wait" value of a "teamed" item will determine the respawn time of the following one. Setting one of the items to -1 (no respawn) will prevent further items from spawning, after that one.
+
+	Using "random" key will make the respawn time variable, to the maximum limits given by "random" added or subtracted to "wait" seconds. Example: "wait 10" with "random 2" will make the item respawn between 8 and 12 seconds of delay.
 	 */
 	{
 		"item_health_small",
@@ -133,6 +217,27 @@ gitem_t bg_itemlist[] ={
 	},
 
 	/*QUAKED item_health (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
+        Medium Health. Gives 25 Health Points, up to a maximum of 100. If health > 100 then it cannot be picked up.
+        -------- KEYS --------
+	wait: Seconds before the item respawns. Default: 40. Set to -1 for never respawn.
+	random: How many seconds the respawn time varies from the Respawn Delay value. Default: 0. See Notes.
+	team: Makes the item spawn randomly with other items with the same "team" value. See Notes.
+	target: When this item is picked up, it triggers the entity specified here, if set.
+	targetname: If used as destination for a target_give, the item can be given to players (e.g. at player spawn time).
+	notbot: If set to 1, the entity won't attract bots.
+	notfree: If set to 1, prevents the entity from spawning in all non-team-based modes (ffa, single player deathmatch, etc.).
+	notteam: If set to 1, prevents the entity from spawning in all team-based modes (ctf, 1flag, dom, etc.).
+	notsingle: If set to 1, prevents the entity from spawning in Single Player Deathmatch mode (g_gametype 2) only.
+	gametype: If set, makes the entity spawn ONLY in the specified gametypes. Separate gametypes with commas. Valid values: ffa, tournament, single, team, ctf, oneflag, obelisk, harvester, elimination, ctfelimination, lms, dd, dom, pos.
+	!gametype: Usage is similar to Game Type key, with opposite effect. If set, causes the entity to NOT spawn in the specified gametypes. Not supported in gamecode older than OA 0.8.8: entity will always spawn in old mods for Q3A!
+        -------- SPAWNFLAGS --------
+	SUSPENDED: If set to 1, the item will remain floating instead of appearing on the ground. Bots do not look for "suspended" items, unless they are reachable by jumppads or in water.
+        -------- NOTES --------
+	First and foremost: it is NOT advisable to change the respawn time of an item, or the amount of ammo given by a weapon/box, because you are messing with the player's natural timing of the items. You're doing well with the default values. That said...
+
+	The "wait" value of a "teamed" item will determine the respawn time of the following one. Setting one of the items to -1 (no respawn) will prevent further items from spawning, after that one.
+
+	Using "random" key will make the respawn time variable, to the maximum limits given by "random" added or subtracted to "wait" seconds. Example: "wait 10" with "random 2" will make the item respawn between 8 and 12 seconds of delay.
 	 */
 	{
 		"item_health",
@@ -150,6 +255,27 @@ gitem_t bg_itemlist[] ={
 	},
 
 	/*QUAKED item_health_large (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
+        Large Health. Gives 50 Health Points, up to a maximum of 100. If health > 100 then it cannot be picked up.
+        -------- KEYS --------
+	wait: Seconds before the item respawns. Default: 40. Set to -1 for never respawn.
+	random: How many seconds the respawn time varies from the Respawn Delay value. Default: 0. See Notes.
+	team: Makes the item spawn randomly with other items with the same "team" value. See Notes.
+	target: When this item is picked up, it triggers the entity specified here, if set.
+	targetname: If used as destination for a target_give, the item can be given to players (e.g. at player spawn time).
+	notbot: If set to 1, the entity won't attract bots.
+	notfree: If set to 1, prevents the entity from spawning in all non-team-based modes (ffa, single player deathmatch, etc.).
+	notteam: If set to 1, prevents the entity from spawning in all team-based modes (ctf, 1flag, dom, etc.).
+	notsingle: If set to 1, prevents the entity from spawning in Single Player Deathmatch mode (g_gametype 2) only.
+	gametype: If set, makes the entity spawn ONLY in the specified gametypes. Separate gametypes with commas. Valid values: ffa, tournament, single, team, ctf, oneflag, obelisk, harvester, elimination, ctfelimination, lms, dd, dom, pos.
+	!gametype: Usage is similar to Game Type key, with opposite effect. If set, causes the entity to NOT spawn in the specified gametypes. Not supported in gamecode older than OA 0.8.8: entity will always spawn in old mods for Q3A!
+        -------- SPAWNFLAGS --------
+	SUSPENDED: If set to 1, the item will remain floating instead of appearing on the ground. Bots do not look for "suspended" items, unless they are reachable by jumppads or in water.
+        -------- NOTES --------
+	First and foremost: it is NOT advisable to change the respawn time of an item, or the amount of ammo given by a weapon/box, because you are messing with the player's natural timing of the items. You're doing well with the default values. That said...
+
+	The "wait" value of a "teamed" item will determine the respawn time of the following one. Setting one of the items to -1 (no respawn) will prevent further items from spawning, after that one.
+
+	Using "random" key will make the respawn time variable, to the maximum limits given by "random" added or subtracted to "wait" seconds. Example: "wait 10" with "random 2" will make the item respawn between 8 and 12 seconds of delay.
 	 */
 	{
 		"item_health_large",
@@ -167,6 +293,27 @@ gitem_t bg_itemlist[] ={
 	},
 
 	/*QUAKED item_health_mega (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
+        Mega Health. Gives 100 Health Points, up to a maximum of 200, which slowly wears out to 100.
+        -------- KEYS --------
+	wait: Seconds before the item respawns. Default: 40. Set to -1 for never respawn.
+	random: How many seconds the respawn time varies from the Respawn Delay value. Default: 0. See Notes.
+	team: Makes the item spawn randomly with other items with the same "team" value. See Notes.
+	target: When this item is picked up, it triggers the entity specified here, if set.
+	targetname: If used as destination for a target_give, the item can be given to players (e.g. at player spawn time).
+	notbot: If set to 1, the entity won't attract bots.
+	notfree: If set to 1, prevents the entity from spawning in all non-team-based modes (ffa, single player deathmatch, etc.).
+	notteam: If set to 1, prevents the entity from spawning in all team-based modes (ctf, 1flag, dom, etc.).
+	notsingle: If set to 1, prevents the entity from spawning in Single Player Deathmatch mode (g_gametype 2) only.
+	gametype: If set, makes the entity spawn ONLY in the specified gametypes. Separate gametypes with commas. Valid values: ffa, tournament, single, team, ctf, oneflag, obelisk, harvester, elimination, ctfelimination, lms, dd, dom, pos.
+	!gametype: Usage is similar to Game Type key, with opposite effect. If set, causes the entity to NOT spawn in the specified gametypes. Not supported in gamecode older than OA 0.8.8: entity will always spawn in old mods for Q3A!
+        -------- SPAWNFLAGS --------
+	SUSPENDED: If set to 1, the item will remain floating instead of appearing on the ground. Bots do not look for "suspended" items, unless they are reachable by jumppads or in water.
+        -------- NOTES --------
+	First and foremost: it is NOT advisable to change the respawn time of an item, or the amount of ammo given by a weapon/box, because you are messing with the player's natural timing of the items. You're doing well with the default values. That said...
+
+	The "wait" value of a "teamed" item will determine the respawn time of the following one. Setting one of the items to -1 (no respawn) will prevent further items from spawning, after that one.
+
+	Using "random" key will make the respawn time variable, to the maximum limits given by "random" added or subtracted to "wait" seconds. Example: "wait 10" with "random 2" will make the item respawn between 8 and 12 seconds of delay.
 	 */
 	{
 		"item_health_mega",
@@ -188,7 +335,7 @@ gitem_t bg_itemlist[] ={
 	//
 
 	/*QUAKED weapon_gauntlet (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
-	Gauntlet weapon. Has no ammo.
+	Gauntlet weapon. Meleé weapon which consumes no ammo.
 	-------- KEYS --------
 	wait: Seconds before the item respawns. Default: 40. Set to -1 for never respawn.
 	random: How many seconds the respawn time varies from the Respawn Delay value. Default: 0. See Notes.
@@ -227,7 +374,7 @@ gitem_t bg_itemlist[] ={
 	},
 
 	/*QUAKED weapon_shotgun (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
-	Shotgun weapon. Comes with 10 ammo units.
+	Shotgun weapon. Does high damage at close quarters and can kill an unarmored player quickly. Comes with 10 ammo units.
 	-------- KEYS --------
 	wait: Seconds before the item respawns. Default: 40. Set to -1 for never respawn.
 	random: How many seconds the respawn time varies from the Respawn Delay value. Default: 0. See Notes.
@@ -265,7 +412,7 @@ gitem_t bg_itemlist[] ={
 	},
 
 	/*QUAKED weapon_machinegun (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
-	Machinegun weapon. Comes with 40 ammo units.
+	Machinegun weapon. Hitscan weapon with starting ammo of 100 for regular modes, and 50 for team modes. Comes with 40 ammo units.
 	-------- KEYS --------
 	wait: Seconds before the item respawns. Default: 40. Set to -1 for never respawn.
 	random: How many seconds the respawn time varies from the Respawn Delay value. Default: 0. See Notes.
@@ -305,7 +452,7 @@ gitem_t bg_itemlist[] ={
 	},
 
 	/*QUAKED weapon_grenadelauncher (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
-	Grenade Launcher weapon. Comes with 10 ammo units.
+	Grenade Launcher weapon. Fires grenades which ricochet walls, ceilings and floors, and explodes after 2.5 seconds, dealing either direct or splash damage. Comes with 10 ammo units.
 	-------- KEYS --------
 	wait: Seconds before the item respawns. Default: 40. Set to -1 for never respawn.
 	random: How many seconds the respawn time varies from the Respawn Delay value. Default: 0. See Notes.
@@ -343,7 +490,7 @@ gitem_t bg_itemlist[] ={
 	},
 
 	/*QUAKED weapon_rocketlauncher (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
-	Rocket Launcher weapon. Comes with 10 ammo units.
+	Rocket Launcher weapon. Fires a rocket in a straight line, dealing direct or splash damage upon explosion. It's also used to do rocket jumps. Comes with 10 ammo units.
 	-------- KEYS --------
 	wait: Seconds before the item respawns. Default: 40. Set to -1 for never respawn.
 	random: How many seconds the respawn time varies from the Respawn Delay value. Default: 0. See Notes.
@@ -381,7 +528,7 @@ gitem_t bg_itemlist[] ={
 	},
 
 	/*QUAKED weapon_lightning (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
-	Lightning Gun weapon. Comes with 100 ammo units.
+	Lightning Gun weapon. Fires a limited-range beam of lightning that deals constant damage. Comes with 100 ammo units.
 	-------- KEYS --------
 	wait: Seconds before the item respawns. Default: 40. Set to -1 for never respawn.
 	random: How many seconds the respawn time varies from the Respawn Delay value. Default: 0. See Notes.
@@ -419,7 +566,7 @@ gitem_t bg_itemlist[] ={
 	},
 
 	/*QUAKED weapon_railgun (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
-	Railgun weapon. Comes with 10 ammo units.
+	Railgun weapon. Sniper's choice. Used for long-range combat, has the highest accuracy and the highest rate of fire as well, but leaves a trail, giving players a hint of where the shots came from. Comes with 10 ammo units.
 	-------- KEYS --------
 	wait: Seconds before the item respawns. Default: 40. Set to -1 for never respawn.
 	random: How many seconds the respawn time varies from the Respawn Delay value. Default: 0. See Notes.
@@ -459,7 +606,7 @@ gitem_t bg_itemlist[] ={
 	},
 
 	/*QUAKED weapon_plasmagun (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
-	Plasma Gun weapon. Comes with 50 ammo units.
+	Plasma Gun weapon. Fires a stream of plasma pulses inflicting minor splash damage. Can be used for plasma climbing. Comes with 50 ammo units.
 	-------- KEYS --------
 	wait: Seconds before the item respawns. Default: 40. Set to -1 for never respawn.
 	random: How many seconds the respawn time varies from the Respawn Delay value. Default: 0. See Notes.
@@ -497,7 +644,7 @@ gitem_t bg_itemlist[] ={
 	},
 
 	/*QUAKED weapon_bfg (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
-	BFG weapon. Comes with 20 ammo units.
+	BFG weapon. God-Tier Plasma Gun on steroids. Has a rapid rate of fire (but not as fast as the PG), and deals even more damage per hit. Comes with 20 ammo units.
 	-------- KEYS --------
 	wait: Seconds before the item respawns. Default: 40. Set to -1 for never respawn.
 	random: How many seconds the respawn time varies from the Respawn Delay value. Default: 0. See Notes.
@@ -537,7 +684,7 @@ gitem_t bg_itemlist[] ={
 	},
 
 	/*QUAKED weapon_grapplinghook (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
-	Grappling Hook weapon. Has no ammo.
+	Grappling Hook weapon. Can be seen as more of an utility rather than a weapon, since it deals little damage. It's main use is to reach places normally unreachable on foot or via weaponjumping. Consumes no ammo.
 	-------- KEYS --------
 	wait: Seconds before the item respawns. Default: 40. Set to -1 for never respawn.
 	random: How many seconds the respawn time varies from the Respawn Delay value. Default: 0. See Notes.
@@ -972,7 +1119,32 @@ gitem_t bg_itemlist[] ={
 	//
 
 	/*QUAKED item_quad (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
-	 */
+        Quad Damage powerup. Despite what its name says, the weapons do 3x damage under the effect of this powerup. It also partially nullifies the Invisibility effect. If used together with the Doubler rune, the damage goes up to 6x.
+        By default, it lasts 30 seconds and takes 120 seconds for respawning.
+	-------- KEYS --------
+	wait: Seconds before the item respawns. Default: 120. Set to -1 for never respawn.
+	random: How many seconds the respawn time varies from the Respawn Delay value. Default: 0. See Notes.
+        count: How many seconds the powerup effect lasts. Default: 30.
+	team: Makes the item spawn randomly with other items with the same "team" value. See Notes.
+	target: When this item is picked up, it triggers the entity specified here, if set.
+	targetname: If used as destination for a target_give, the item can be given to players (e.g. at player spawn time).
+	notbot: If set to 1, the entity won't attract bots.
+	notfree: If set to 1, prevents the entity from spawning in all non-team-based modes (ffa, single player deathmatch, etc.).
+	notteam: If set to 1, prevents the entity from spawning in all team-based modes (ctf, 1flag, dom, etc.).
+	notsingle: If set to 1, prevents the entity from spawning in Single Player Deathmatch mode (g_gametype 2) only.
+	gametype: If set, makes the entity spawn ONLY in the specified gametypes. Separate gametypes with commas. Valid values: ffa, tournament, single, team, ctf, oneflag, obelisk, harvester, elimination, ctfelimination, lms, dd, dom, pos.
+	!gametype: Usage is similar to Game Type key, with opposite effect. If set, causes the entity to NOT spawn in the specified gametypes. Not supported in gamecode older than OA 0.8.8: entity will always spawn in old mods for Q3A!
+	-------- SPAWNFLAGS --------
+	SUSPENDED: If set to 1, the item will remain floating instead of appearing on the ground. Bots do not look for "suspended" items, unless they are reachable by jumppads or in water.
+	-------- NOTES --------
+	Powerups are instantly activated and have a limited time, after which they wear out. Players can carry more than one powerup at a time. Be cautious with their placement. You may not want a player to become practically unbeatable for several seconds.
+	
+	It is NOT advisable to change the respawn time of an item, or the amount of ammo given by a weapon/box, because you are messing with the player's natural timing of the items. This also counts for the powerup duration time. You're doing well with the default values. That said...
+
+	The "wait" value of a "teamed" item will determine the respawn time of the following one. Setting one of the items to -1 (no respawn) will prevent further items from spawning, after that one.
+
+	Using "random" key will make the respawn time variable, to the maximum limits given by "random" added or subtracted to "wait" seconds. Example: "wait 10" with "random 2" will make the item respawn between 8 and 12 seconds of delay.
+         */
 	{
 		"item_quad",
 		"sound/items/quaddamage.wav",
@@ -989,6 +1161,31 @@ gitem_t bg_itemlist[] ={
 	},
 
 	/*QUAKED item_enviro (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
+        Battle Suit powerup. Cuts damage by half, and prevents damage from slime, lava, drowning while underwater, and splash damage.
+        By default, it lasts 30 seconds and takes 120 seconds for respawning.
+	-------- KEYS --------
+	wait: Seconds before the item respawns. Default: 120. Set to -1 for never respawn.
+	random: How many seconds the respawn time varies from the Respawn Delay value. Default: 0. See Notes.
+        count: How many seconds the powerup effect lasts. Default: 30.
+	team: Makes the item spawn randomly with other items with the same "team" value. See Notes.
+	target: When this item is picked up, it triggers the entity specified here, if set.
+	targetname: If used as destination for a target_give, the item can be given to players (e.g. at player spawn time).
+	notbot: If set to 1, the entity won't attract bots.
+	notfree: If set to 1, prevents the entity from spawning in all non-team-based modes (ffa, single player deathmatch, etc.).
+	notteam: If set to 1, prevents the entity from spawning in all team-based modes (ctf, 1flag, dom, etc.).
+	notsingle: If set to 1, prevents the entity from spawning in Single Player Deathmatch mode (g_gametype 2) only.
+	gametype: If set, makes the entity spawn ONLY in the specified gametypes. Separate gametypes with commas. Valid values: ffa, tournament, single, team, ctf, oneflag, obelisk, harvester, elimination, ctfelimination, lms, dd, dom, pos.
+	!gametype: Usage is similar to Game Type key, with opposite effect. If set, causes the entity to NOT spawn in the specified gametypes. Not supported in gamecode older than OA 0.8.8: entity will always spawn in old mods for Q3A!
+	-------- SPAWNFLAGS --------
+	SUSPENDED: If set to 1, the item will remain floating instead of appearing on the ground. Bots do not look for "suspended" items, unless they are reachable by jumppads or in water.
+	-------- NOTES --------
+	Powerups are instantly activated and have a limited time, after which they wear out. Players can carry more than one powerup at a time. Be cautious with their placement. You may not want a player to become practically unbeatable for several seconds.
+	
+	It is NOT advisable to change the respawn time of an item, or the amount of ammo given by a weapon/box, because you are messing with the player's natural timing of the items. This also counts for the powerup duration time. You're doing well with the default values. That said...
+
+	The "wait" value of a "teamed" item will determine the respawn time of the following one. Setting one of the items to -1 (no respawn) will prevent further items from spawning, after that one.
+
+	Using "random" key will make the respawn time variable, to the maximum limits given by "random" added or subtracted to "wait" seconds. Example: "wait 10" with "random 2" will make the item respawn between 8 and 12 seconds of delay.
 	 */
 	{
 		"item_enviro",
@@ -1006,6 +1203,31 @@ gitem_t bg_itemlist[] ={
 	},
 
 	/*QUAKED item_haste (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
+        Haste powerup. When picked up, the player runs at 130% speed during its duration time. It also partially nullifies the Invisibility effect.
+        By default, it lasts 30 seconds and takes 120 seconds for respawning.
+	-------- KEYS --------
+	wait: Seconds before the item respawns. Default: 120. Set to -1 for never respawn.
+	random: How many seconds the respawn time varies from the Respawn Delay value. Default: 0. See Notes.
+        count: How many seconds the powerup effect lasts. Default: 30.
+	team: Makes the item spawn randomly with other items with the same "team" value. See Notes.
+	target: When this item is picked up, it triggers the entity specified here, if set.
+	targetname: If used as destination for a target_give, the item can be given to players (e.g. at player spawn time).
+	notbot: If set to 1, the entity won't attract bots.
+	notfree: If set to 1, prevents the entity from spawning in all non-team-based modes (ffa, single player deathmatch, etc.).
+	notteam: If set to 1, prevents the entity from spawning in all team-based modes (ctf, 1flag, dom, etc.).
+	notsingle: If set to 1, prevents the entity from spawning in Single Player Deathmatch mode (g_gametype 2) only.
+	gametype: If set, makes the entity spawn ONLY in the specified gametypes. Separate gametypes with commas. Valid values: ffa, tournament, single, team, ctf, oneflag, obelisk, harvester, elimination, ctfelimination, lms, dd, dom, pos.
+	!gametype: Usage is similar to Game Type key, with opposite effect. If set, causes the entity to NOT spawn in the specified gametypes. Not supported in gamecode older than OA 0.8.8: entity will always spawn in old mods for Q3A!
+	-------- SPAWNFLAGS --------
+	SUSPENDED: If set to 1, the item will remain floating instead of appearing on the ground. Bots do not look for "suspended" items, unless they are reachable by jumppads or in water.
+	-------- NOTES --------
+	Powerups are instantly activated and have a limited time, after which they wear out. Players can carry more than one powerup at a time. Be cautious with their placement. You may not want a player to become practically unbeatable for several seconds.
+	
+	It is NOT advisable to change the respawn time of an item, or the amount of ammo given by a weapon/box, because you are messing with the player's natural timing of the items. This also counts for the powerup duration time. You're doing well with the default values. That said...
+
+	The "wait" value of a "teamed" item will determine the respawn time of the following one. Setting one of the items to -1 (no respawn) will prevent further items from spawning, after that one.
+
+	Using "random" key will make the respawn time variable, to the maximum limits given by "random" added or subtracted to "wait" seconds. Example: "wait 10" with "random 2" will make the item respawn between 8 and 12 seconds of delay.
 	 */
 	{
 		"item_haste",
@@ -1023,6 +1245,31 @@ gitem_t bg_itemlist[] ={
 	},
 
 	/*QUAKED item_invis (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
+        Invisibility powerup. Like its name implies, it turns a player invisible. The effect is partially nullified by Quad Damage and Haste effects.
+        By default, it lasts 30 seconds and takes 120 seconds for respawning.
+	-------- KEYS --------
+	wait: Seconds before the item respawns. Default: 120. Set to -1 for never respawn.
+	random: How many seconds the respawn time varies from the Respawn Delay value. Default: 0. See Notes.
+        count: How many seconds the powerup effect lasts. Default: 30.
+	team: Makes the item spawn randomly with other items with the same "team" value. See Notes.
+	target: When this item is picked up, it triggers the entity specified here, if set.
+	targetname: If used as destination for a target_give, the item can be given to players (e.g. at player spawn time).
+	notbot: If set to 1, the entity won't attract bots.
+	notfree: If set to 1, prevents the entity from spawning in all non-team-based modes (ffa, single player deathmatch, etc.).
+	notteam: If set to 1, prevents the entity from spawning in all team-based modes (ctf, 1flag, dom, etc.).
+	notsingle: If set to 1, prevents the entity from spawning in Single Player Deathmatch mode (g_gametype 2) only.
+	gametype: If set, makes the entity spawn ONLY in the specified gametypes. Separate gametypes with commas. Valid values: ffa, tournament, single, team, ctf, oneflag, obelisk, harvester, elimination, ctfelimination, lms, dd, dom, pos.
+	!gametype: Usage is similar to Game Type key, with opposite effect. If set, causes the entity to NOT spawn in the specified gametypes. Not supported in gamecode older than OA 0.8.8: entity will always spawn in old mods for Q3A!
+	-------- SPAWNFLAGS --------
+	SUSPENDED: If set to 1, the item will remain floating instead of appearing on the ground. Bots do not look for "suspended" items, unless they are reachable by jumppads or in water.
+	-------- NOTES --------
+	Powerups are instantly activated and have a limited time, after which they wear out. Players can carry more than one powerup at a time. Be cautious with their placement. You may not want a player to become practically unbeatable for several seconds.
+	
+	It is NOT advisable to change the respawn time of an item, or the amount of ammo given by a weapon/box, because you are messing with the player's natural timing of the items. This also counts for the powerup duration time. You're doing well with the default values. That said...
+
+	The "wait" value of a "teamed" item will determine the respawn time of the following one. Setting one of the items to -1 (no respawn) will prevent further items from spawning, after that one.
+
+	Using "random" key will make the respawn time variable, to the maximum limits given by "random" added or subtracted to "wait" seconds. Example: "wait 10" with "random 2" will make the item respawn between 8 and 12 seconds of delay.
 	 */
 	{
 		"item_invis",
@@ -1040,6 +1287,31 @@ gitem_t bg_itemlist[] ={
 	},
 
 	/*QUAKED item_regen (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
+        Regeneration powerup. Boosts the holder's health and armor by a rate of 5HP and 5AP per second up to a total of 200 or until the item's duration is finished, whatever happens first. After that, both slowly wears out to 100.
+        By default, it lasts 30 seconds and takes 120 seconds for respawning.
+	-------- KEYS --------
+	wait: Seconds before the item respawns. Default: 120. Set to -1 for never respawn.
+	random: How many seconds the respawn time varies from the Respawn Delay value. Default: 0. See Notes.
+        count: How many seconds the powerup effect lasts. Default: 30.
+	team: Makes the item spawn randomly with other items with the same "team" value. See Notes.
+	target: When this item is picked up, it triggers the entity specified here, if set.
+	targetname: If used as destination for a target_give, the item can be given to players (e.g. at player spawn time).
+	notbot: If set to 1, the entity won't attract bots.
+	notfree: If set to 1, prevents the entity from spawning in all non-team-based modes (ffa, single player deathmatch, etc.).
+	notteam: If set to 1, prevents the entity from spawning in all team-based modes (ctf, 1flag, dom, etc.).
+	notsingle: If set to 1, prevents the entity from spawning in Single Player Deathmatch mode (g_gametype 2) only.
+	gametype: If set, makes the entity spawn ONLY in the specified gametypes. Separate gametypes with commas. Valid values: ffa, tournament, single, team, ctf, oneflag, obelisk, harvester, elimination, ctfelimination, lms, dd, dom, pos.
+	!gametype: Usage is similar to Game Type key, with opposite effect. If set, causes the entity to NOT spawn in the specified gametypes. Not supported in gamecode older than OA 0.8.8: entity will always spawn in old mods for Q3A!
+	-------- SPAWNFLAGS --------
+	SUSPENDED: If set to 1, the item will remain floating instead of appearing on the ground. Bots do not look for "suspended" items, unless they are reachable by jumppads or in water.
+	-------- NOTES --------
+	Powerups are instantly activated and have a limited time, after which they wear out. Players can carry more than one powerup at a time. Be cautious with their placement. You may not want a player to become practically unbeatable for several seconds.
+	
+	It is NOT advisable to change the respawn time of an item, or the amount of ammo given by a weapon/box, because you are messing with the player's natural timing of the items. This also counts for the powerup duration time. You're doing well with the default values. That said...
+
+	The "wait" value of a "teamed" item will determine the respawn time of the following one. Setting one of the items to -1 (no respawn) will prevent further items from spawning, after that one.
+
+	Using "random" key will make the respawn time variable, to the maximum limits given by "random" added or subtracted to "wait" seconds. Example: "wait 10" with "random 2" will make the item respawn between 8 and 12 seconds of delay.
 	 */
 	{
 		"item_regen",
@@ -1057,6 +1329,31 @@ gitem_t bg_itemlist[] ={
 	},
 
 	/*QUAKED item_flight (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
+        Flight powerup. Allows the user to fly all over the arena until it wears off. The downside is that you cannot use jump and launchpads and gain speed by strafing.
+        By default, it lasts 60 seconds and takes 120 seconds for respawning.
+	-------- KEYS --------
+	wait: Seconds before the item respawns. Default: 120. Set to -1 for never respawn.
+	random: How many seconds the respawn time varies from the Respawn Delay value. Default: 0. See Notes.
+        count: How many seconds the powerup effect lasts. Default: 60.
+	team: Makes the item spawn randomly with other items with the same "team" value. See Notes.
+	target: When this item is picked up, it triggers the entity specified here, if set.
+	targetname: If used as destination for a target_give, the item can be given to players (e.g. at player spawn time).
+	notbot: If set to 1, the entity won't attract bots.
+	notfree: If set to 1, prevents the entity from spawning in all non-team-based modes (ffa, single player deathmatch, etc.).
+	notteam: If set to 1, prevents the entity from spawning in all team-based modes (ctf, 1flag, dom, etc.).
+	notsingle: If set to 1, prevents the entity from spawning in Single Player Deathmatch mode (g_gametype 2) only.
+	gametype: If set, makes the entity spawn ONLY in the specified gametypes. Separate gametypes with commas. Valid values: ffa, tournament, single, team, ctf, oneflag, obelisk, harvester, elimination, ctfelimination, lms, dd, dom, pos.
+	!gametype: Usage is similar to Game Type key, with opposite effect. If set, causes the entity to NOT spawn in the specified gametypes. Not supported in gamecode older than OA 0.8.8: entity will always spawn in old mods for Q3A!
+	-------- SPAWNFLAGS --------
+	SUSPENDED: If set to 1, the item will remain floating instead of appearing on the ground. Bots do not look for "suspended" items, unless they are reachable by jumppads or in water.
+	-------- NOTES --------
+	Powerups are instantly activated and have a limited time, after which they wear out. Players can carry more than one powerup at a time. Be cautious with their placement. You may not want a player to become practically unbeatable for several seconds.
+	
+	It is NOT advisable to change the respawn time of an item, or the amount of ammo given by a weapon/box, because you are messing with the player's natural timing of the items. This also counts for the powerup duration time. You're doing well with the default values. That said...
+
+	The "wait" value of a "teamed" item will determine the respawn time of the following one. Setting one of the items to -1 (no respawn) will prevent further items from spawning, after that one.
+
+	Using "random" key will make the respawn time variable, to the maximum limits given by "random" added or subtracted to "wait" seconds. Example: "wait 10" with "random 2" will make the item respawn between 8 and 12 seconds of delay.
 	 */
 	{
 		"item_flight",
@@ -1085,6 +1382,8 @@ gitem_t bg_itemlist[] ={
 	!gametype: Usage is similar to Game Type key, with opposite effect. If set, causes the entity to NOT spawn in the specified gametypes. Not supported in gamecode older than OA 0.8.8: entity will always spawn in old mods for Q3A!
 	-------- NOTES --------
 	First and foremost, refrain from placing vital game objectives in zones only reachable with trickjumping. That creates an unnecessary imbalance, giving an unfair advantage to humans. Key game objectives being essential items to their gametypes must be reachable on foot by everyone, regardless of skill level.
+        
+        Also, take care with the gametype and !gametype keys. Your map might not be able to be playable at all on some mods.
 	 */
 	{
 		"team_CTF_redflag",
@@ -1108,6 +1407,8 @@ gitem_t bg_itemlist[] ={
 	!gametype: Usage is similar to Game Type key, with opposite effect. If set, causes the entity to NOT spawn in the specified gametypes. Not supported in gamecode older than OA 0.8.8: entity will always spawn in old mods for Q3A!
 	-------- NOTES --------
 	First and foremost, refrain from placing vital game objectives in zones only reachable with trickjumping. That creates an unnecessary imbalance, giving an unfair advantage to humans. Key game objectives being essential items to their gametypes must be reachable on foot by everyone, regardless of skill level.
+        
+        Also, take care with the gametype and !gametype keys. Your map might not be able to be playable at all on some mods.
 	 */
 	{
 		"team_CTF_blueflag",
@@ -1128,7 +1429,7 @@ gitem_t bg_itemlist[] ={
 	//
 
 	/*QUAKED holdable_kamikaze (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
-	Kamikaze holdable item. Blows the player up creating an earthquake across the arena and a big explosion which frags anyone in its radius. If the holder is fragged but not gibbed, then after 3 seconds it causes the same explosion.
+	Kamikaze holdable item. Blows the player up creating an earthquake across the arena and a big explosion which frags anyone in its radius. If the holder is fragged but not gibbed, then after 3 seconds it causes the same explosion. The explosion can also push and damage allies.
 	-------- KEYS --------
 	wait: Seconds before the item respawns. Default: 60. Set to -1 for never respawn.
 	random: How many seconds the respawn time varies from the Respawn Delay value. Default: 0. See Notes.
@@ -1367,7 +1668,32 @@ gitem_t bg_itemlist[] ={
 	//
 
 	/*QUAKED item_scout (.3 .3 1) (-16 -16 -16) (16 16 16) suspended redTeam blueTeam
-	 */
+        Scout rune. Boosts the player speed by a rate of 2x, and increases the rate of fire for all weapons. The downside is that the players cannot pick up armor items, and Haste doesn't stack up for extra speed.
+        -------- KEYS --------
+	wait: Seconds before the item respawns. Default: 0. Set to -1 for never respawn.
+	random: How many seconds the respawn time varies from the Respawn Delay value. Default: 0. See Notes.
+	team: Makes the item spawn randomly with other items with the same "team" value. See Notes.
+	target: When this item is picked up, it triggers the entity specified here, if set.
+	targetname: If used as destination for a target_give, the item can be given to players (e.g. at player spawn time).
+	notbot: If set to 1, the entity won't attract bots.
+	notfree: If set to 1, prevents the entity from spawning in all non-team-based modes (ffa, single player deathmatch, etc.).
+	notteam: If set to 1, prevents the entity from spawning in all team-based modes (ctf, 1flag, dom, etc.).
+	notsingle: If set to 1, prevents the entity from spawning in Single Player Deathmatch mode (g_gametype 2) only.
+	gametype: If set, makes the entity spawn ONLY in the specified gametypes. Separate gametypes with commas. Valid values: ffa, tournament, single, team, ctf, oneflag, obelisk, harvester, elimination, ctfelimination, lms, dd, dom, pos.
+	!gametype: Usage is similar to Game Type key, with opposite effect. If set, causes the entity to NOT spawn in the specified gametypes. Not supported in gamecode older than OA 0.8.8: entity will always spawn in old mods for Q3A!
+        -------- SPAWNFLAGS --------
+	SUSPENDED: If set to 1, the item will remain floating instead of appearing on the ground. Bots do not look for "suspended" items, unless they are reachable by jumppads or in water.
+        REDTEAM: Only players belonging to the Red Team can pick up this item.
+        BLUETEAM: Only players belonging to the Blue Team can pick up this item.
+        -------- NOTES --------
+	Runes are meant to respawn instantly. They can be placed on each team's base and set so only players from that specific team can pick them up, or set without the team flags so any player can pick them up.
+        
+        It is NOT advisable to change the respawn time of an item, or the amount of ammo given by a weapon/box, because you are messing with the player's natural timing of the items. You're doing well with the default values. That said...
+
+	The "wait" value of a "teamed" item will determine the respawn time of the following one. Setting one of the items to -1 (no respawn) will prevent further items from spawning, after that one.
+
+	Using "random" key will make the respawn time variable, to the maximum limits given by "random" added or subtracted to "wait" seconds. Example: "wait 10" with "random 2" will make the item respawn between 8 and 12 seconds of delay.
+ */
 	{
 		"item_scout",
 		"sound/items/scout.wav",
@@ -1383,6 +1709,31 @@ gitem_t bg_itemlist[] ={
 	},
 
 	/*QUAKED item_guard (.3 .3 1) (-16 -16 -16) (16 16 16) suspended redTeam blueTeam
+        Guard rune. Gives the holder 200 HP and 200 AP. Health is regenerated to this maximum if below. If coupled with the Portable Medkit, the holdable's effect is boosted up to 225 HP.
+        -------- KEYS --------
+	wait: Seconds before the item respawns. Default: 0. Set to -1 for never respawn.
+	random: How many seconds the respawn time varies from the Respawn Delay value. Default: 0. See Notes.
+	team: Makes the item spawn randomly with other items with the same "team" value. See Notes.
+	target: When this item is picked up, it triggers the entity specified here, if set.
+	targetname: If used as destination for a target_give, the item can be given to players (e.g. at player spawn time).
+	notbot: If set to 1, the entity won't attract bots.
+	notfree: If set to 1, prevents the entity from spawning in all non-team-based modes (ffa, single player deathmatch, etc.).
+	notteam: If set to 1, prevents the entity from spawning in all team-based modes (ctf, 1flag, dom, etc.).
+	notsingle: If set to 1, prevents the entity from spawning in Single Player Deathmatch mode (g_gametype 2) only.
+	gametype: If set, makes the entity spawn ONLY in the specified gametypes. Separate gametypes with commas. Valid values: ffa, tournament, single, team, ctf, oneflag, obelisk, harvester, elimination, ctfelimination, lms, dd, dom, pos.
+	!gametype: Usage is similar to Game Type key, with opposite effect. If set, causes the entity to NOT spawn in the specified gametypes. Not supported in gamecode older than OA 0.8.8: entity will always spawn in old mods for Q3A!
+        -------- SPAWNFLAGS --------
+	SUSPENDED: If set to 1, the item will remain floating instead of appearing on the ground. Bots do not look for "suspended" items, unless they are reachable by jumppads or in water.
+        REDTEAM: Only players belonging to the Red Team can pick up this item.
+        BLUETEAM: Only players belonging to the Blue Team can pick up this item.
+        -------- NOTES --------
+	Runes are meant to respawn instantly. They can be placed on each team's base and set so only players from that specific team can pick them up, or set without the team flags so any player can pick them up.
+        
+        It is NOT advisable to change the respawn time of an item, or the amount of ammo given by a weapon/box, because you are messing with the player's natural timing of the items. You're doing well with the default values. That said...
+
+	The "wait" value of a "teamed" item will determine the respawn time of the following one. Setting one of the items to -1 (no respawn) will prevent further items from spawning, after that one.
+
+	Using "random" key will make the respawn time variable, to the maximum limits given by "random" added or subtracted to "wait" seconds. Example: "wait 10" with "random 2" will make the item respawn between 8 and 12 seconds of delay.
 	 */
 	{
 		"item_guard",
@@ -1399,6 +1750,31 @@ gitem_t bg_itemlist[] ={
 	},
 
 	/*QUAKED item_doubler (.3 .3 1) (-16 -16 -16) (16 16 16) suspended redTeam blueTeam
+        Doubler rune. Doubles the damage of the player's weapons. If used together with the Quad Damage powerup, the damage goes up to 6x.
+        -------- KEYS --------
+	wait: Seconds before the item respawns. Default: 0. Set to -1 for never respawn.
+	random: How many seconds the respawn time varies from the Respawn Delay value. Default: 0. See Notes.
+	team: Makes the item spawn randomly with other items with the same "team" value. See Notes.
+	target: When this item is picked up, it triggers the entity specified here, if set.
+	targetname: If used as destination for a target_give, the item can be given to players (e.g. at player spawn time).
+	notbot: If set to 1, the entity won't attract bots.
+	notfree: If set to 1, prevents the entity from spawning in all non-team-based modes (ffa, single player deathmatch, etc.).
+	notteam: If set to 1, prevents the entity from spawning in all team-based modes (ctf, 1flag, dom, etc.).
+	notsingle: If set to 1, prevents the entity from spawning in Single Player Deathmatch mode (g_gametype 2) only.
+	gametype: If set, makes the entity spawn ONLY in the specified gametypes. Separate gametypes with commas. Valid values: ffa, tournament, single, team, ctf, oneflag, obelisk, harvester, elimination, ctfelimination, lms, dd, dom, pos.
+	!gametype: Usage is similar to Game Type key, with opposite effect. If set, causes the entity to NOT spawn in the specified gametypes. Not supported in gamecode older than OA 0.8.8: entity will always spawn in old mods for Q3A!
+        -------- SPAWNFLAGS --------
+	SUSPENDED: If set to 1, the item will remain floating instead of appearing on the ground. Bots do not look for "suspended" items, unless they are reachable by jumppads or in water.
+        REDTEAM: Only players belonging to the Red Team can pick up this item.
+        BLUETEAM: Only players belonging to the Blue Team can pick up this item.
+        -------- NOTES --------
+	Runes are meant to respawn instantly. They can be placed on each team's base and set so only players from that specific team can pick them up, or set without the team flags so any player can pick them up.
+        
+        It is NOT advisable to change the respawn time of an item, or the amount of ammo given by a weapon/box, because you are messing with the player's natural timing of the items. You're doing well with the default values. That said...
+
+	The "wait" value of a "teamed" item will determine the respawn time of the following one. Setting one of the items to -1 (no respawn) will prevent further items from spawning, after that one.
+
+	Using "random" key will make the respawn time variable, to the maximum limits given by "random" added or subtracted to "wait" seconds. Example: "wait 10" with "random 2" will make the item respawn between 8 and 12 seconds of delay.
 	 */
 	{
 		"item_doubler",
@@ -1415,7 +1791,31 @@ gitem_t bg_itemlist[] ={
 	},
 
 	/*QUAKED item_ammoregen (.3 .3 1) (-16 -16 -16) (16 16 16) suspended redTeam blueTeam
-	
+        Ammo Regen rune. Regenerates ammo for every weapon the player possess.
+        -------- KEYS --------
+	wait: Seconds before the item respawns. Default: 0. Set to -1 for never respawn.
+	random: How many seconds the respawn time varies from the Respawn Delay value. Default: 0. See Notes.
+	team: Makes the item spawn randomly with other items with the same "team" value. See Notes.
+	target: When this item is picked up, it triggers the entity specified here, if set.
+	targetname: If used as destination for a target_give, the item can be given to players (e.g. at player spawn time).
+	notbot: If set to 1, the entity won't attract bots.
+	notfree: If set to 1, prevents the entity from spawning in all non-team-based modes (ffa, single player deathmatch, etc.).
+	notteam: If set to 1, prevents the entity from spawning in all team-based modes (ctf, 1flag, dom, etc.).
+	notsingle: If set to 1, prevents the entity from spawning in Single Player Deathmatch mode (g_gametype 2) only.
+	gametype: If set, makes the entity spawn ONLY in the specified gametypes. Separate gametypes with commas. Valid values: ffa, tournament, single, team, ctf, oneflag, obelisk, harvester, elimination, ctfelimination, lms, dd, dom, pos.
+	!gametype: Usage is similar to Game Type key, with opposite effect. If set, causes the entity to NOT spawn in the specified gametypes. Not supported in gamecode older than OA 0.8.8: entity will always spawn in old mods for Q3A!
+        -------- SPAWNFLAGS --------
+	SUSPENDED: If set to 1, the item will remain floating instead of appearing on the ground. Bots do not look for "suspended" items, unless they are reachable by jumppads or in water.
+        REDTEAM: Only players belonging to the Red Team can pick up this item.
+        BLUETEAM: Only players belonging to the Blue Team can pick up this item.
+        -------- NOTES --------
+	Runes are meant to respawn instantly. They can be placed on each team's base and set so only players from that specific team can pick them up, or set without the team flags so any player can pick them up.
+        
+        It is NOT advisable to change the respawn time of an item, or the amount of ammo given by a weapon/box, because you are messing with the player's natural timing of the items. You're doing well with the default values. That said...
+
+	The "wait" value of a "teamed" item will determine the respawn time of the following one. Setting one of the items to -1 (no respawn) will prevent further items from spawning, after that one.
+
+	Using "random" key will make the respawn time variable, to the maximum limits given by "random" added or subtracted to "wait" seconds. Example: "wait 10" with "random 2" will make the item respawn between 8 and 12 seconds of delay.
 	 */
 	{
 		"item_ammoregen",
@@ -1443,7 +1843,9 @@ gitem_t bg_itemlist[] ={
 	!gametype: Usage is similar to Game Type key, with opposite effect. If set, causes the entity to NOT spawn in the specified gametypes. Not supported in gamecode older than OA 0.8.8: entity will always spawn in old mods for Q3A!
 	-------- NOTES --------
 	First and foremost, refrain from placing vital game objectives in zones only reachable with trickjumping. That creates an unnecessary imbalance, giving an unfair advantage to humans. Key game objectives being essential items to their gametypes must be reachable on foot by everyone, regardless of skill level.
-	 */
+        
+        Also, take care with the gametype and !gametype keys. Your map might not be able to be playable at all on some mods.
+        */
 	{
 		"team_CTF_neutralflag",
 		NULL,
