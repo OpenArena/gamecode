@@ -171,6 +171,7 @@ typedef struct {
 	vec3_t			eyepos;		// where our eyes at
 	vec3_t			eyelookat;	// what we seein'
 	lerpFrame_t		head;
+
 } playerEntity_t;
 
 //=================================================
@@ -221,6 +222,11 @@ typedef struct centity_s {
 
 	vec3_t			weapOrigin;	// leilei - for lazy bob
 	vec3_t			weapAngles;
+
+	float			startroll; 	// leilei - muzzleflashes - starting roll so it's not constantly flickering a roll every other frame.
+	int			muztime[5];	
+	int			muzslot;
+	float			muzroll[5];
 } centity_t;
 
 
@@ -446,7 +452,18 @@ typedef struct weaponInfo_s {
 	sfxHandle_t		firingSound;
 	qboolean		loopFireSound;
 	int			lfx;	// leilei - for weapon muzzleflash particle effects
-	int			lfxdrawn;	
+	int			lfxdrawn;	// (note- i may/may not take this out. I don't know.)	
+
+	//		leilei  - different muzzleflash styles
+	qhandle_t		flashModel_type1;		// Quake style			(gradient-textured oval sphere)
+	qhandle_t		flashModel_type2;		// u99 style			(additive-blended animated sprite)
+	qhandle_t		flashModel_type2a;		// 3rd person for U99 style	(sprite cloud)
+	qhandle_t		flashModel_type3;		// 64 style			(an alphablended sprite for 1st gen 3d hardware)
+	qhandle_t		flashModel_type4;		// Anime style			(whatever I darn well want)
+	qhandle_t		flashModel_type5;		// 2003 style			(4 intersecting planes that scale up and fade)
+	qhandle_t		flashModel_type5a;		// 3rd person for 2003 style 	(cone that scales up and doesn't fade))
+
+	//float			startroll; // starting roll so it's not constantly flickering a roll every other frame.
 } weaponInfo_t;
 
 
@@ -1382,6 +1399,7 @@ extern	vmCvar_t		cg_leiEnhancement;			// LEILEI'S LINE!
 extern	vmCvar_t		cg_leiGoreNoise;			// LEILEI'S LINE!
 extern	vmCvar_t		cg_leiBrassNoise;			// LEILEI'S LINE!
 extern	vmCvar_t		cg_leiSuperGoreyAwesome;	// LEILEI'S LINE!
+extern	vmCvar_t		cg_muzzleflashStyle;		// Leilei
 extern	vmCvar_t		cg_leiDebug;
 extern	vmCvar_t		cg_deathcam;
 extern	vmCvar_t		cg_cameramode;

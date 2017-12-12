@@ -134,6 +134,7 @@ vmCvar_t cg_addMarks;
 vmCvar_t cg_brassTime;
 vmCvar_t cg_viewsize;
 vmCvar_t cg_viewnudge; // leilei
+vmCvar_t cg_muzzleflashStyle;
 vmCvar_t cg_drawGun;
 vmCvar_t cg_gun_frame;
 vmCvar_t cg_gun_x;
@@ -507,7 +508,8 @@ static cvarTable_t cvarTable[] = {// bk001129
 	{ &cg_weaponBarStyle, "cg_weaponBarStyle", "0", CVAR_ARCHIVE},
 	{ &cg_weaponOrder, "cg_weaponOrder", "/1/2/4/3/6/7/8/9/5/", CVAR_ARCHIVE},
 	{&cg_chatBeep, "cg_chatBeep", "1", CVAR_ARCHIVE},
-	{&cg_teamChatBeep, "cg_teamChatBeep", "1", CVAR_ARCHIVE}
+	{&cg_teamChatBeep, "cg_teamChatBeep", "1", CVAR_ARCHIVE},
+	{ &cg_muzzleflashStyle, "cg_muzzleflashStyle", "1", CVAR_ARCHIVE}
 };
 
 static int cvarTableSize = sizeof ( cvarTable) / sizeof ( cvarTable[0]);

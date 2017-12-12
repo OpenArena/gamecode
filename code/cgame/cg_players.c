@@ -1702,9 +1702,9 @@ static void CG_PlayerAngles(centity_t *cent, vec3_t legs[3], vec3_t torso[3], ve
 		if (ci->fixedtorso) {
 			torsoAngles[PITCH] = 0.0f;
 		}
-		if (camereyes) {
-			torsoAngles[PITCH] = 0.0f; // don't pitch 
-		}
+	//	if (camereyes) {
+	//		torsoAngles[PITCH] = 0.0f; // don't pitch 
+	//	}
 	}
 
 
