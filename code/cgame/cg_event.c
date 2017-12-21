@@ -177,7 +177,7 @@ static void CG_Obituary(entityState_t *ent) {
 				if (gender == GENDER_FEMALE)
 					message = "tripped on her own grenade";
 				else if (gender == GENDER_NEUTER)
-					message = "tripped on its own grenade";
+					message = "tripped on their own grenade";
 				else
 					message = "tripped on his own grenade";
 				causeShader = cgs.media.grenadeShader;
@@ -186,7 +186,7 @@ static void CG_Obituary(entityState_t *ent) {
 				if (gender == GENDER_FEMALE)
 					message = "blew herself up";
 				else if (gender == GENDER_NEUTER)
-					message = "blew itself up";
+					message = "blew themself up";
 				else
 					message = "blew himself up";
 				causeShader = cgs.media.rocketShader;
@@ -195,7 +195,7 @@ static void CG_Obituary(entityState_t *ent) {
 				if (gender == GENDER_FEMALE)
 					message = "melted herself";
 				else if (gender == GENDER_NEUTER)
-					message = "melted itself";
+					message = "melted themself";
 				else
 					message = "melted himself";
 				causeShader = cgs.media.plasmaShader;
@@ -208,7 +208,7 @@ static void CG_Obituary(entityState_t *ent) {
 				if (gender == GENDER_FEMALE) {
 					message = "found her prox mine";
 				} else if (gender == GENDER_NEUTER) {
-					message = "found its prox mine";
+					message = "found their prox mine";
 				} else {
 					message = "found his prox mine";
 				}
@@ -218,7 +218,7 @@ static void CG_Obituary(entityState_t *ent) {
 				if (gender == GENDER_FEMALE)
 					message = "killed herself";
 				else if (gender == GENDER_NEUTER)
-					message = "killed itself";
+					message = "killed themself";
 				else
 					message = "killed himself";
 				causeShader = cgs.media.skullShader;

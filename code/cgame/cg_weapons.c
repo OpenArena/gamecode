@@ -860,6 +860,63 @@ void CG_RegisterWeapon( int weaponNum )
 	Q_strcat( path, sizeof(path), "_flash.md3" );
 	weaponInfo->flashModel = trap_R_RegisterModel( path );
 
+	if ( !weaponInfo->flashModel ) {
+		weaponInfo->flashModel = trap_R_RegisterModel( "models/weapons2/shotgun/shotgun_flash.md3" );	// default flash
+	}
+
+	// leilei - additional flash styles
+
+	Q_strncpyz( path, item->world_model[0], MAX_QPATH );
+	COM_StripExtension(path, path, sizeof(path));
+	Q_strcat( path, sizeof(path), "_flash1.md3" );
+	weaponInfo->flashModel_type1 = trap_R_RegisterModel( path );
+
+	Q_strncpyz( path, item->world_model[0], MAX_QPATH );
+	COM_StripExtension(path, path, sizeof(path));
+	Q_strcat( path, sizeof(path), "_flash2.md3" );
+	weaponInfo->flashModel_type2 = trap_R_RegisterModel( path );
+
+	Q_strncpyz( path, item->world_model[0], MAX_QPATH );
+	COM_StripExtension(path, path, sizeof(path));
+	Q_strcat( path, sizeof(path), "_flash2a.md3" );
+	weaponInfo->flashModel_type2a = trap_R_RegisterModel( path );
+
+	Q_strncpyz( path, item->world_model[0], MAX_QPATH );
+	COM_StripExtension(path, path, sizeof(path));
+	Q_strcat( path, sizeof(path), "_flash3.md3" );
+	weaponInfo->flashModel_type3 = trap_R_RegisterModel( path );
+
+	Q_strncpyz( path, item->world_model[0], MAX_QPATH );
+	COM_StripExtension(path, path, sizeof(path));
+	Q_strcat( path, sizeof(path), "_flash4.md3" );
+	weaponInfo->flashModel_type4 = trap_R_RegisterModel( path );
+
+	Q_strncpyz( path, item->world_model[0], MAX_QPATH );
+	COM_StripExtension(path, path, sizeof(path));
+	Q_strcat( path, sizeof(path), "_flash5.md3" );
+	weaponInfo->flashModel_type5 = trap_R_RegisterModel( path );
+
+
+	Q_strncpyz( path, item->world_model[0], MAX_QPATH );
+	COM_StripExtension(path, path, sizeof(path));
+	Q_strcat( path, sizeof(path), "_flash5a.md3" );
+	weaponInfo->flashModel_type5a = trap_R_RegisterModel( path );
+
+
+
+
+
+
+	// leilei - revert to default flash model if we really don't have a real one.
+
+	if (!weaponInfo->flashModel_type1) weaponInfo->flashModel_type1 = trap_R_RegisterModel( "models/muzzle/flash1.md3" );
+	if (!weaponInfo->flashModel_type2) weaponInfo->flashModel_type2 = trap_R_RegisterModel( "models/muzzle/flash2.md3" ); 
+	if (!weaponInfo->flashModel_type2a) weaponInfo->flashModel_type2a = trap_R_RegisterModel( "models/muzzle/flash2a.md3" ); 
+	if (!weaponInfo->flashModel_type3) weaponInfo->flashModel_type3 = trap_R_RegisterModel( "models/muzzle/flash3.md3" ); 
+	if (!weaponInfo->flashModel_type4) weaponInfo->flashModel_type4 = trap_R_RegisterModel( "models/muzzle/flash4.md3" ); 
+	if (!weaponInfo->flashModel_type5) weaponInfo->flashModel_type5 = trap_R_RegisterModel( "models/muzzle/flash5.md3" ); 
+	if (!weaponInfo->flashModel_type5a) weaponInfo->flashModel_type5a = trap_R_RegisterModel( "models/muzzle/flash5a.md3" ); 
+
 	Q_strncpyz( path, item->world_model[0], MAX_QPATH );
 	COM_StripExtension(path, path, sizeof(path));
 	Q_strcat( path, sizeof(path), "_barrel.md3" );
@@ -918,6 +975,7 @@ void CG_RegisterWeapon( int weaponNum )
 		weaponInfo->firingSound = trap_S_RegisterSound( "sound/weapons/vulcan/wvulfire.wav", qfalse );
 		weaponInfo->loopFireSound = qtrue;
 		MAKERGB( weaponInfo->flashDlightColor, 1, 1, 0 );
+		// leilei -testing a looping firing sound instead of lots of flash sounds for performance reasons
 		weaponInfo->flashSound[0] = trap_S_RegisterSound( "sound/weapons/vulcan/vulcanf1b.wav", qfalse );
 		weaponInfo->flashSound[1] = trap_S_RegisterSound( "sound/weapons/vulcan/vulcanf2b.wav", qfalse );
 		weaponInfo->flashSound[2] = trap_S_RegisterSound( "sound/weapons/vulcan/vulcanf3b.wav", qfalse );
@@ -1219,7 +1277,7 @@ static void CG_CalculateWeaponPosition( vec3_t origin, vec3_t angles )
 		             (LAND_DEFLECT_TIME + LAND_RETURN_TIME - delta) / LAND_RETURN_TIME;
 	}
 
-#if 0
+#if 0			// leilei - this may be dead pre-q3 1.01 code
 	// drop the weapon when stair climbing
 	delta = cg.time - cg.stepTime;
 	if ( delta < STEP_TIME/2 ) {
@@ -1535,6 +1593,9 @@ The main player will have this called for BOTH cases, so effects like light and
 sound should only be done on the world model case.
 =============
 */
+
+float	localflashtime[5];	// leilei - hack to do multiple flash models at once 
+
 void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent, int team )
 {
 	refEntity_t	gun;
@@ -1545,6 +1606,8 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
 	weaponInfo_t	*weapon;
 	centity_t	*nonPredictedCent;
 	orientation_t	lerped;
+	int 	third;
+
 
 	weaponNum = cent->currentState.weapon;
 
@@ -1641,67 +1704,439 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
 		nonPredictedCent = cent;
 	}
 
+
 	// add the flash
-	if ( ( weaponNum == WP_LIGHTNING || weaponNum == WP_GAUNTLET || weaponNum == WP_GRAPPLING_HOOK )
-	        && ( nonPredictedCent->currentState.eFlags & EF_FIRING ) ) {
-		// continuous flash
-	}
-	else {
-		// impulse flash
-		if ( cg.time - cent->muzzleFlashTime > MUZZLE_FLASH_TIME && !cent->pe.railgunFlash ) {
+
+	// leilei - split into 5 styles:
+	// 1 - Q3 (default)
+	// 2 - q1
+	// 3 - fake99
+	// 4 - 64
+	// 5 - anime 
+	// 6 - fake2003
+
+
+	if (cg_muzzleflashStyle.integer == 2)
+	{
+		if ( ( weaponNum == WP_LIGHTNING || weaponNum == WP_GAUNTLET || weaponNum == WP_GRAPPLING_HOOK )
+		        && ( nonPredictedCent->currentState.eFlags & EF_FIRING ) ) {
+			// continuous flash
+		}
+		else {
+			// impulse flash
+			if ( cg.time - cent->muzzleFlashTime > 200 && !cent->pe.railgunFlash ) {
+				return;
+			}
+		}
+	
+		memset( &flash, 0, sizeof( flash ) );
+		VectorCopy( parent->lightingOrigin, flash.lightingOrigin );
+		flash.shadowPlane = parent->shadowPlane;
+		flash.renderfx = parent->renderfx;
+	
+		flash.hModel = weapon->flashModel_type1;
+		if (!flash.hModel) {
 			return;
 		}
+		angles[YAW] = 0;
+		angles[PITCH] = 0;
+		angles[ROLL] = 0;	// don't roll randomly.
+		AnglesToAxis( angles, flash.axis );
+
+
+		// downscale hack
+		if ( cg.time - cent->muzzleFlashTime > 100 ){
+			VectorScale(flash.axis[0], 1.5, flash.axis[0]);
+			VectorScale(flash.axis[1], 1.5, flash.axis[1]);
+			VectorScale(flash.axis[2], 1.5, flash.axis[2]);
+		}
+	
+		// colorize the railgun blast
+		if ( weaponNum == WP_RAILGUN ) {
+			clientInfo_t	*ci;
+	
+			ci = &cgs.clientinfo[ cent->currentState.clientNum ];
+			flash.shaderRGBA[0] = 255 * ci->color1[0];
+			flash.shaderRGBA[1] = 255 * ci->color1[1];
+			flash.shaderRGBA[2] = 255 * ci->color1[2];
+		}
+
+		CG_PositionRotatedEntityOnTag( &flash, &gun, weapon->weaponModel, "tag_flash");
+	
+		if (cg_muzzleflashStyle.integer != 0)	// leilei - allow the flash to go away 
+		trap_R_AddRefEntityToScene( &flash );
+	
+		if ( ps || cg.renderingThirdPerson ||
+		        cent->currentState.number != cg.predictedPlayerState.clientNum ) {
+			// add lightning bolt
+			if ( cg.time - cent->muzzleFlashTime < 100 && !cent->pe.railgunFlash )// leilei - don't prolong the lightning
+			CG_LightningBolt( nonPredictedCent, flash.origin );
+	
+			// add rail trail
+			CG_SpawnRailTrail( cent, flash.origin );
+
+			if ( cg.time - cent->muzzleFlashTime < 100 )	// flash for 0.1 sec
+			if ( weapon->flashDlightColor[0] || weapon->flashDlightColor[1] || weapon->flashDlightColor[2] ) {
+				trap_R_AddLightToScene( parent->origin, 300, 0.95,
+				                        0.95, 0.95 );	// mono lighting
+			}
+		}
+		return;	// Override third person flash so we can have a different model and lighting origin
+	}
+	else if (cg_muzzleflashStyle.integer == 3)	// "fake '99"
+	{
+		if ( ( weaponNum == WP_LIGHTNING || weaponNum == WP_GAUNTLET || weaponNum == WP_GRAPPLING_HOOK )
+		        && ( nonPredictedCent->currentState.eFlags & EF_FIRING ) ) {
+			// continuous flash
+		}
+		else {
+			// impulse flash
+			if ( cg.time - cent->muzzleFlashTime > 120 && !cent->pe.railgunFlash ) {
+				return;
+			}
+		}
+	
+		memset( &flash, 0, sizeof( flash ) );
+		VectorCopy( parent->lightingOrigin, flash.lightingOrigin );
+		flash.shadowPlane = parent->shadowPlane;
+		flash.renderfx = parent->renderfx;
+	
+		if (cent->currentState.number == cg.snap->ps.clientNum && !cg.renderingThirdPerson)	// use 3rd person flash model
+		flash.hModel = weapon->flashModel_type2;
+		else
+		flash.hModel = weapon->flashModel_type2a;
+
+		if (!flash.hModel) {
+			return;
+		}
+		angles[YAW] = 0;
+		angles[PITCH] = 0;
+		angles[ROLL] = crandom() * 360;	
+		if (cent->currentState.number == cg.snap->ps.clientNum && !cg.renderingThirdPerson)
+		angles[ROLL] = 0;	// don't roll the first person 
+
+		AnglesToAxis( angles, flash.axis );
+
+		// UT's beam weapons didn't have muzzleflashes, so we don't either.
+
+		CG_PositionRotatedEntityOnTag( &flash, &gun, weapon->weaponModel, "tag_flash");
+	
+		if (cg_muzzleflashStyle.integer != 0)	// leilei - allow the flash to go away 
+		trap_R_AddRefEntityToScene( &flash );
+	
+		if ( ps || cg.renderingThirdPerson ||
+		        cent->currentState.number != cg.predictedPlayerState.clientNum ) {
+			// add lightning bolt
+			if ( cg.time - cent->muzzleFlashTime < 100 && !cent->pe.railgunFlash )// leilei - don't prolong the lightning
+			CG_LightningBolt( nonPredictedCent, flash.origin );
+	
+			// add rail trail
+			CG_SpawnRailTrail( cent, flash.origin );
+	
+			if ( weapon->flashDlightColor[0] || weapon->flashDlightColor[1] || weapon->flashDlightColor[2] ) {
+				trap_R_AddLightToScene( parent->origin, 150, weapon->flashDlightColor[0],
+				                        weapon->flashDlightColor[1], weapon->flashDlightColor[2] );	// also comes from player center
+			}
+		}
+		return;	// Override third person flash so we can have a different model and lighting origin
+	}
+	else if (cg_muzzleflashStyle.integer == 4)	// "64". alpha muzzle sprites only, is a shader sequence
+	{
+		if ( ( weaponNum == WP_LIGHTNING || weaponNum == WP_GAUNTLET || weaponNum == WP_GRAPPLING_HOOK )
+		        && ( nonPredictedCent->currentState.eFlags & EF_FIRING ) ) {
+			// continuous flash
+		}
+		else {
+			// impulse flash
+			if ( cg.time - cent->muzzleFlashTime > 240 && !cent->pe.railgunFlash ) {
+				return;
+			}
+		}
+	
+		memset( &flash, 0, sizeof( flash ) );
+		VectorCopy( parent->lightingOrigin, flash.lightingOrigin );
+		flash.shadowPlane = parent->shadowPlane;
+		flash.renderfx = parent->renderfx;
+		flash.hModel = weapon->flashModel_type3;
+
+		if (!flash.hModel) {
+			return;
+		}
+		angles[YAW] = 0;
+		angles[PITCH] = 0;
+		angles[ROLL] = 0;	
+
+		AnglesToAxis( angles, flash.axis );
+		// set shadertime
+		flash.shaderTime = cent->muzzleFlashTime / 1000.0f;
+
+		// UT's beam weapons didn't have muzzleflashes, so we don't either.
+
+		CG_PositionRotatedEntityOnTag( &flash, &gun, weapon->weaponModel, "tag_flash");
+	
+		trap_R_AddRefEntityToScene( &flash );
+	
+		if ( ps || cg.renderingThirdPerson ||
+		        cent->currentState.number != cg.predictedPlayerState.clientNum ) {
+			// add lightning bolt
+			if ( cg.time - cent->muzzleFlashTime < 100 && !cent->pe.railgunFlash )// leilei - don't prolong the lightning
+			CG_LightningBolt( nonPredictedCent, flash.origin );
+	
+			// add rail trail
+			CG_SpawnRailTrail( cent, flash.origin );
+	
+			if ( weapon->flashDlightColor[0] || weapon->flashDlightColor[1] || weapon->flashDlightColor[2] ) {
+				trap_R_AddLightToScene( parent->origin, 150, weapon->flashDlightColor[0],
+				                        weapon->flashDlightColor[1], weapon->flashDlightColor[2] );	// also comes from player center
+			}
+		}
+		return;	// Override third person flash so we can have a different model and lighting origin
 	}
 
-	memset( &flash, 0, sizeof( flash ) );
-	VectorCopy( parent->lightingOrigin, flash.lightingOrigin );
-	flash.shadowPlane = parent->shadowPlane;
-	flash.renderfx = parent->renderfx;
+	else if (cg_muzzleflashStyle.integer == 5)	// anime. the idea is similar to fake2003, but scaling differs between first and third
+	{						// and allow artist creativity to define how it should fade away
+		
+		float fadeout;
+		if ( ( weaponNum == WP_LIGHTNING || weaponNum == WP_GAUNTLET || weaponNum == WP_GRAPPLING_HOOK )
+		        && ( nonPredictedCent->currentState.eFlags & EF_FIRING ) ) {
+			// continuous flash
+		}
+		else {
+			// impulse flash
+			if ( cg.time - cent->muzzleFlashTime > 400 && !cent->pe.railgunFlash ) {
+				return;
+			}
+		}
+		
+		fadeout = ((400 - (cg.time - cent->muzzleFlashTime)) * 0.001);
+		if (fadeout < 0) return; // if we faded, we don't draw. ok
+	
+		memset( &flash, 0, sizeof( flash ) );
+		VectorCopy( parent->lightingOrigin, flash.lightingOrigin );
+		flash.shadowPlane = parent->shadowPlane;
+		flash.renderfx = parent->renderfx;
 
-	flash.hModel = weapon->flashModel;
-	if (!flash.hModel) {
+		if (cg.time - cent->muzzleFlashTime < 5) // hopefully no one will notice the jitter at this rate
+		cent->startroll = crandom() * 720;
+	
+		flash.hModel = weapon->flashModel_type4;
+		if (!flash.hModel) {
+			return;
+		}
+		angles[YAW] = 0;
+		angles[PITCH] = 0;
+		angles[ROLL] = cent->startroll;
+
+		AnglesToAxis( angles, flash.axis );
+
+
+		// Expand, and fade
+		{
+			float eh;
+			if (cent->currentState.number == cg.snap->ps.clientNum && !cg.renderingThirdPerson)	
+			eh = (cg.time - cent->muzzleFlashTime) * 0.003 + 0.2;
+			else
+			eh = (cg.time - cent->muzzleFlashTime) * 0.007 + 0.6;
+			VectorScale(flash.axis[0], eh, flash.axis[0]);
+			VectorScale(flash.axis[1], eh, flash.axis[1]);
+			VectorScale(flash.axis[2], eh, flash.axis[2]);
+
+			flash.shaderRGBA[0] = 255;
+			flash.shaderRGBA[1] = 255;
+			flash.shaderRGBA[2] = 255;
+
+			// leilei - scale hack, flip the flash 
+			if (cent->startroll > 360)
+			VectorScale(flash.axis[1], -1, flash.axis[1]);
+
+
+		}
+
+		// set shadertime
+		flash.shaderTime = cent->muzzleFlashTime / 1000.0f;
+
+		// colorize the railgun blast
+		if ( weaponNum == WP_RAILGUN ) {
+			clientInfo_t	*ci;
+	
+			ci = &cgs.clientinfo[ cent->currentState.clientNum ];
+			flash.shaderRGBA[0] = 255 * ci->color1[0];
+			flash.shaderRGBA[1] = 255 * ci->color1[1];
+			flash.shaderRGBA[2] = 255 * ci->color1[2];
+		}
+
+			CG_PositionRotatedEntityOnTag( &flash, &gun, weapon->weaponModel, "tag_flash");
+		
+			if (cg_muzzleflashStyle.integer != 0)	// leilei - allow the flash to go away 
+			trap_R_AddRefEntityToScene( &flash );
+		
+			if ( ps || cg.renderingThirdPerson ||
+			        cent->currentState.number != cg.predictedPlayerState.clientNum ) {
+				// add lightning bolt
+			if ( cg.time - cent->muzzleFlashTime < 100 && !cent->pe.railgunFlash )// leilei - don't prolong the lightning
+				CG_LightningBolt( nonPredictedCent, flash.origin );
+		
+				// add rail trail
+				CG_SpawnRailTrail( cent, flash.origin );
+		
+				if ( weapon->flashDlightColor[0] || weapon->flashDlightColor[1] || weapon->flashDlightColor[2] ) {
+					trap_R_AddLightToScene( flash.origin, 500 * fadeout, weapon->flashDlightColor[0] * (fadeout * 4),
+					                        weapon->flashDlightColor[1]  * (fadeout * 4), weapon->flashDlightColor[2]  * (fadeout * 4));
+				}
+			
+			}
 		return;
+		
 	}
-	angles[YAW] = 0;
-	angles[PITCH] = 0;
-	angles[ROLL] = crandom() * 10;
-	AnglesToAxis( angles, flash.axis );
+	else if (cg_muzzleflashStyle.integer == 6)	// "fake2003"
+	{
+		
+		float fadeout;
+		if ( ( weaponNum == WP_LIGHTNING || weaponNum == WP_GAUNTLET || weaponNum == WP_GRAPPLING_HOOK )
+		        && ( nonPredictedCent->currentState.eFlags & EF_FIRING ) ) {
+			// continuous flash
+		}
+		else {
+			// impulse flash
+			if ( cg.time - cent->muzzleFlashTime > 200 && !cent->pe.railgunFlash ) {
+				return;
+			}
+		}
+		
+		fadeout = ((200 - (cg.time - cent->muzzleFlashTime)) * 0.001);
+		if (fadeout < 0) return; // if we faded, we don't draw. ok
+	
+		memset( &flash, 0, sizeof( flash ) );
+		VectorCopy( parent->lightingOrigin, flash.lightingOrigin );
+		flash.shadowPlane = parent->shadowPlane;
+		flash.renderfx = parent->renderfx;
 
-	// colorize the railgun blast
-	if ( weaponNum == WP_RAILGUN ) {
-		clientInfo_t	*ci;
+		if (cg.time - cent->muzzleFlashTime < 5) // hopefully no one will notice the jitter at this rate
+		cent->startroll = crandom() * 361;
+	
+		if (cent->currentState.number == cg.snap->ps.clientNum && !cg.renderingThirdPerson)	// use 3rd person flash model
+		flash.hModel = weapon->flashModel_type5;
+		else
+		flash.hModel = weapon->flashModel_type5a;
+		if (!flash.hModel) {
+			return;
+		}
+		angles[YAW] = 0;
+		angles[PITCH] = 0;
+		if (cent->currentState.number == cg.snap->ps.clientNum && !cg.renderingThirdPerson)	
+		angles[ROLL] = 0;	// pick one random angle for third person cone
+		else
+		angles[ROLL] = cent->startroll;
 
-		ci = &cgs.clientinfo[ cent->currentState.clientNum ];
-		flash.shaderRGBA[0] = 255 * ci->color1[0];
-		flash.shaderRGBA[1] = 255 * ci->color1[1];
-		flash.shaderRGBA[2] = 255 * ci->color1[2];
-	}
+		AnglesToAxis( angles, flash.axis );
 
-	CG_PositionRotatedEntityOnTag( &flash, &gun, weapon->weaponModel, "tag_flash");
 
-//	if (!weapon->lfx && !cg_leiEnhancement.integer )
-	//		flash.hModel = NULL;
+		// Expand, and fade
+		{
+			float eh = (cg.time - cent->muzzleFlashTime) * 0.005 + 0.6;
+			VectorScale(flash.axis[0], eh, flash.axis[0]);
+			VectorScale(flash.axis[1], eh, flash.axis[1]);
+			VectorScale(flash.axis[2], eh, flash.axis[2]);
 
-	trap_R_AddRefEntityToScene( &flash );
+			flash.shaderRGBA[0] = 255 * fadeout;
+			flash.shaderRGBA[1] = 255 * fadeout;
+			flash.shaderRGBA[2] = 255 * fadeout;
 
-	if ( ps || cg.renderingThirdPerson ||
-	        cent->currentState.number != cg.predictedPlayerState.clientNum ) {
-		// add lightning bolt
-		CG_LightningBolt( nonPredictedCent, flash.origin );
-
-		// add rail trail
-		CG_SpawnRailTrail( cent, flash.origin );
-
-		if (weapon->lfx && cg_leiEnhancement.integer ) {
-			trap_R_LFX_ParticleEffect(weapon->lfx, flash.origin, flash.axis[0]);
-			weapon->lfxdrawn = 1;
 		}
 
-		if ( weapon->flashDlightColor[0] || weapon->flashDlightColor[1] || weapon->flashDlightColor[2] ) {
-			trap_R_AddLightToScene( flash.origin, 300 + (rand()&31), weapon->flashDlightColor[0],
-			                        weapon->flashDlightColor[1], weapon->flashDlightColor[2] );
+		// set shadertime
+		flash.shaderTime = cent->muzzleFlashTime / 1000.0f;
+
+		// colorize the railgun blast
+		if ( weaponNum == WP_RAILGUN ) {
+			clientInfo_t	*ci;
+	
+			ci = &cgs.clientinfo[ cent->currentState.clientNum ];
+			flash.shaderRGBA[0] = 255 * ci->color1[0] * fadeout;
+			flash.shaderRGBA[1] = 255 * ci->color1[1] * fadeout;
+			flash.shaderRGBA[2] = 255 * ci->color1[2] * fadeout;
 		}
+
+			CG_PositionRotatedEntityOnTag( &flash, &gun, weapon->weaponModel, "tag_flash");
+		
+			if (cg_muzzleflashStyle.integer != 0)	// leilei - allow the flash to go away 
+			trap_R_AddRefEntityToScene( &flash );
+		
+			if ( ps || cg.renderingThirdPerson ||
+			        cent->currentState.number != cg.predictedPlayerState.clientNum ) {
+				// add lightning bolt
+			if ( cg.time - cent->muzzleFlashTime < 100 && !cent->pe.railgunFlash )// leilei - don't prolong the lightning
+				CG_LightningBolt( nonPredictedCent, flash.origin );
+		
+				// add rail trail
+				CG_SpawnRailTrail( cent, flash.origin );
+		
+				if ( weapon->flashDlightColor[0] || weapon->flashDlightColor[1] || weapon->flashDlightColor[2] ) {
+					trap_R_AddLightToScene( parent->origin, 200, weapon->flashDlightColor[0] * fadeout,
+					                        weapon->flashDlightColor[1]  * fadeout, weapon->flashDlightColor[2]  * fadeout);
+				}
+			
+			}
+		return;
+		
 	}
+	
+
+	else	// q3 - don't touch this!
+	{
+		if ( ( weaponNum == WP_LIGHTNING || weaponNum == WP_GAUNTLET || weaponNum == WP_GRAPPLING_HOOK )
+		        && ( nonPredictedCent->currentState.eFlags & EF_FIRING ) ) {
+			// continuous flash
+		}
+		else {
+			// impulse flash
+			if ( cg.time - cent->muzzleFlashTime > MUZZLE_FLASH_TIME && !cent->pe.railgunFlash ) {
+				return;
+			}
+		}
+	
+		memset( &flash, 0, sizeof( flash ) );
+		VectorCopy( parent->lightingOrigin, flash.lightingOrigin );
+		flash.shadowPlane = parent->shadowPlane;
+		flash.renderfx = parent->renderfx;
+	
+		flash.hModel = weapon->flashModel;
+		if (!flash.hModel) {
+			return;
+		}
+		angles[YAW] = 0;
+		angles[PITCH] = 0;
+		angles[ROLL] = crandom() * 10;
+		AnglesToAxis( angles, flash.axis );
+	
+		// colorize the railgun blast
+		if ( weaponNum == WP_RAILGUN ) {
+			clientInfo_t	*ci;
+	
+			ci = &cgs.clientinfo[ cent->currentState.clientNum ];
+			flash.shaderRGBA[0] = 255 * ci->color1[0];
+			flash.shaderRGBA[1] = 255 * ci->color1[1];
+			flash.shaderRGBA[2] = 255 * ci->color1[2];
+		}
+	}	
+		CG_PositionRotatedEntityOnTag( &flash, &gun, weapon->weaponModel, "tag_flash");
+	
+		if (cg_muzzleflashStyle.integer != 0)	// leilei - allow the flash to go away 
+		trap_R_AddRefEntityToScene( &flash );
+	
+		if ( ps || cg.renderingThirdPerson ||
+		        cent->currentState.number != cg.predictedPlayerState.clientNum ) {
+			// add lightning bolt
+			CG_LightningBolt( nonPredictedCent, flash.origin );
+	
+			// add rail trail
+			CG_SpawnRailTrail( cent, flash.origin );
+	
+			if ( weapon->flashDlightColor[0] || weapon->flashDlightColor[1] || weapon->flashDlightColor[2] ) {
+				trap_R_AddLightToScene( flash.origin, 300 + (rand()&31), weapon->flashDlightColor[0],
+				                        weapon->flashDlightColor[1], weapon->flashDlightColor[2] );
+			}
+		}
 }
 
 /*
@@ -2942,6 +3377,12 @@ void CG_FireWeapon( centity_t *cent )
 	// append the flash to the weapon model
 	cent->muzzleFlashTime = cg.time;
 
+	// leilei - hack for multiple muzzleflashes
+	cent->muztime[cent->muzslot] = cg.time;
+	cent->muzslot += 1;
+	if (cent->muzslot > 2)
+	cent->muzslot = 0;
+
 	// lightning gun only does this this on initial press
 	if ( ent->weapon == WP_LIGHTNING ) {
 		if ( cent->pe.lightningFiring ) {
@@ -3289,6 +3730,7 @@ void CG_MissileHitWall( int weapon, int clientNum, vec3_t origin, vec3_t dir, im
 	//
 	// create the explosion
 	//
+		if (!cg_leiEnhancement.integer) 	// don't make it when particles are enabled
 	if ( mod ) {
 		le = CG_MakeExplosion( origin, dir,
 		                       mod,	shader,
