@@ -1583,6 +1583,72 @@ static void CG_AddWeaponWithPowerups( refEntity_t *gun, int powerups )
 	}
 }
 
+static void MuzzleFlashStyleQ1(refEntity_t *parent, playerState_t *ps, centity_t *cent, weapon_t weaponNum, centity_t *nonPredictedCent, refEntity_t	*gun, weaponInfo_t *weapon) {
+	vec3_t		angles;
+	refEntity_t	flash;
+	if ( ( weaponNum == WP_LIGHTNING || weaponNum == WP_GAUNTLET || weaponNum == WP_GRAPPLING_HOOK )
+			&& ( nonPredictedCent->currentState.eFlags & EF_FIRING ) ) {
+		// continuous flash
+	}
+	else {
+		// impulse flash
+		if ( cg.time - cent->muzzleFlashTime > 200 && !cent->pe.railgunFlash ) {
+			return;
+		}
+	}
+	memset( &flash, 0, sizeof( flash ) );
+	VectorCopy( parent->lightingOrigin, flash.lightingOrigin );
+	flash.shadowPlane = parent->shadowPlane;
+	flash.renderfx = parent->renderfx;
+
+	flash.hModel = weapon->flashModel_type1;
+	if (!flash.hModel) {
+		return;
+	}
+	angles[YAW] = 0;
+	angles[PITCH] = 0;
+	angles[ROLL] = 0;	// don't roll randomly.
+	AnglesToAxis( angles, flash.axis );
+
+
+	// downscale hack
+	if ( cg.time - cent->muzzleFlashTime > 100 ){
+		VectorScale(flash.axis[0], 1.5, flash.axis[0]);
+		VectorScale(flash.axis[1], 1.5, flash.axis[1]);
+		VectorScale(flash.axis[2], 1.5, flash.axis[2]);
+	}
+
+	// colorize the railgun blast
+	if ( weaponNum == WP_RAILGUN ) {
+		clientInfo_t	*ci;
+
+		ci = &cgs.clientinfo[ cent->currentState.clientNum ];
+		flash.shaderRGBA[0] = 255 * ci->color1[0];
+		flash.shaderRGBA[1] = 255 * ci->color1[1];
+		flash.shaderRGBA[2] = 255 * ci->color1[2];
+	}
+
+	CG_PositionRotatedEntityOnTag( &flash, gun, weapon->weaponModel, "tag_flash");
+
+	// leilei - allow the flash to go away 
+	trap_R_AddRefEntityToScene( &flash );
+
+	if ( ps || cg.renderingThirdPerson ||
+			cent->currentState.number != cg.predictedPlayerState.clientNum ) {
+		// add lightning bolt
+		if ( cg.time - cent->muzzleFlashTime < 100 && !cent->pe.railgunFlash )// leilei - don't prolong the lightning
+		CG_LightningBolt( nonPredictedCent, flash.origin );
+
+		// add rail trail
+		CG_SpawnRailTrail( cent, flash.origin );
+
+		if ( cg.time - cent->muzzleFlashTime < 100 )	// flash for 0.1 sec
+		if ( weapon->flashDlightColor[0] || weapon->flashDlightColor[1] || weapon->flashDlightColor[2] ) {
+			trap_R_AddLightToScene( parent->origin, 300, 0.95,
+									0.95, 0.95 );	// mono lighting
+		}
+	}
+}
 
 /*
 =============
@@ -1593,8 +1659,6 @@ The main player will have this called for BOTH cases, so effects like light and
 sound should only be done on the world model case.
 =============
 */
-
-float	localflashtime[5];	// leilei - hack to do multiple flash models at once 
 
 void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent, int team )
 {
@@ -1717,69 +1781,7 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
 
 	if (cg_muzzleflashStyle.integer == 2)
 	{
-		if ( ( weaponNum == WP_LIGHTNING || weaponNum == WP_GAUNTLET || weaponNum == WP_GRAPPLING_HOOK )
-		        && ( nonPredictedCent->currentState.eFlags & EF_FIRING ) ) {
-			// continuous flash
-		}
-		else {
-			// impulse flash
-			if ( cg.time - cent->muzzleFlashTime > 200 && !cent->pe.railgunFlash ) {
-				return;
-			}
-		}
-	
-		memset( &flash, 0, sizeof( flash ) );
-		VectorCopy( parent->lightingOrigin, flash.lightingOrigin );
-		flash.shadowPlane = parent->shadowPlane;
-		flash.renderfx = parent->renderfx;
-	
-		flash.hModel = weapon->flashModel_type1;
-		if (!flash.hModel) {
-			return;
-		}
-		angles[YAW] = 0;
-		angles[PITCH] = 0;
-		angles[ROLL] = 0;	// don't roll randomly.
-		AnglesToAxis( angles, flash.axis );
-
-
-		// downscale hack
-		if ( cg.time - cent->muzzleFlashTime > 100 ){
-			VectorScale(flash.axis[0], 1.5, flash.axis[0]);
-			VectorScale(flash.axis[1], 1.5, flash.axis[1]);
-			VectorScale(flash.axis[2], 1.5, flash.axis[2]);
-		}
-	
-		// colorize the railgun blast
-		if ( weaponNum == WP_RAILGUN ) {
-			clientInfo_t	*ci;
-	
-			ci = &cgs.clientinfo[ cent->currentState.clientNum ];
-			flash.shaderRGBA[0] = 255 * ci->color1[0];
-			flash.shaderRGBA[1] = 255 * ci->color1[1];
-			flash.shaderRGBA[2] = 255 * ci->color1[2];
-		}
-
-		CG_PositionRotatedEntityOnTag( &flash, &gun, weapon->weaponModel, "tag_flash");
-	
-		// leilei - allow the flash to go away 
-		trap_R_AddRefEntityToScene( &flash );
-	
-		if ( ps || cg.renderingThirdPerson ||
-		        cent->currentState.number != cg.predictedPlayerState.clientNum ) {
-			// add lightning bolt
-			if ( cg.time - cent->muzzleFlashTime < 100 && !cent->pe.railgunFlash )// leilei - don't prolong the lightning
-			CG_LightningBolt( nonPredictedCent, flash.origin );
-	
-			// add rail trail
-			CG_SpawnRailTrail( cent, flash.origin );
-
-			if ( cg.time - cent->muzzleFlashTime < 100 )	// flash for 0.1 sec
-			if ( weapon->flashDlightColor[0] || weapon->flashDlightColor[1] || weapon->flashDlightColor[2] ) {
-				trap_R_AddLightToScene( parent->origin, 300, 0.95,
-				                        0.95, 0.95 );	// mono lighting
-			}
-		}
+		MuzzleFlashStyleQ1(parent, ps, cent, weaponNum, nonPredictedCent, &gun, weapon);
 		return;	// Override third person flash so we can have a different model and lighting origin
 	}
 	else if (cg_muzzleflashStyle.integer == 3)	// "fake '99"
