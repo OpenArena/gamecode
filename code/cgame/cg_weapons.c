@@ -1762,7 +1762,7 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
 
 		CG_PositionRotatedEntityOnTag( &flash, &gun, weapon->weaponModel, "tag_flash");
 	
-		if (cg_muzzleflashStyle.integer != 0)	// leilei - allow the flash to go away 
+		// leilei - allow the flash to go away 
 		trap_R_AddRefEntityToScene( &flash );
 	
 		if ( ps || cg.renderingThirdPerson ||
@@ -1811,8 +1811,10 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
 		angles[YAW] = 0;
 		angles[PITCH] = 0;
 		angles[ROLL] = crandom() * 360;	
-		if (cent->currentState.number == cg.snap->ps.clientNum && !cg.renderingThirdPerson)
-		angles[ROLL] = 0;	// don't roll the first person 
+		if (cent->currentState.number == cg.snap->ps.clientNum && !cg.renderingThirdPerson) {
+			// don't roll the first person
+			angles[ROLL] = 0;
+		}
 
 		AnglesToAxis( angles, flash.axis );
 
@@ -1820,14 +1822,16 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
 
 		CG_PositionRotatedEntityOnTag( &flash, &gun, weapon->weaponModel, "tag_flash");
 	
-		if (cg_muzzleflashStyle.integer != 0)	// leilei - allow the flash to go away 
+		// leilei - allow the flash to go away 
 		trap_R_AddRefEntityToScene( &flash );
 	
 		if ( ps || cg.renderingThirdPerson ||
 		        cent->currentState.number != cg.predictedPlayerState.clientNum ) {
 			// add lightning bolt
-			if ( cg.time - cent->muzzleFlashTime < 100 && !cent->pe.railgunFlash )// leilei - don't prolong the lightning
-			CG_LightningBolt( nonPredictedCent, flash.origin );
+			if ( cg.time - cent->muzzleFlashTime < 100 && !cent->pe.railgunFlash ) {
+				// leilei - don't prolong the lightning
+				CG_LightningBolt( nonPredictedCent, flash.origin );
+			}
 	
 			// add rail trail
 			CG_SpawnRailTrail( cent, flash.origin );
@@ -1967,7 +1971,7 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
 
 		CG_PositionRotatedEntityOnTag( &flash, &gun, weapon->weaponModel, "tag_flash");
 
-		if (cg_muzzleflashStyle.integer != 0)	// leilei - allow the flash to go away 
+		// leilei - allow the flash to go away 
 		trap_R_AddRefEntityToScene( &flash );
 
 		if ( ps || cg.renderingThirdPerson ||
@@ -2064,7 +2068,7 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
 
 		CG_PositionRotatedEntityOnTag( &flash, &gun, weapon->weaponModel, "tag_flash");
 
-		if (cg_muzzleflashStyle.integer != 0)	// leilei - allow the flash to go away 
+		// leilei - allow the flash to go away 
 		trap_R_AddRefEntityToScene( &flash );
 
 		if ( ps || cg.renderingThirdPerson ||
@@ -2124,7 +2128,7 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
 	}
 	CG_PositionRotatedEntityOnTag( &flash, &gun, weapon->weaponModel, "tag_flash");
 
-	if (cg_muzzleflashStyle.integer != 0)	// leilei - allow the flash to go away 
+	// leilei - allow the flash to go away 
 	trap_R_AddRefEntityToScene( &flash );
 
 	if ( ps || cg.renderingThirdPerson ||
