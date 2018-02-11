@@ -2086,44 +2086,42 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
 		return;
 		
 	}
-	else
-	{
-		// q3 - don't touch this!
-		if ( ( weaponNum == WP_LIGHTNING || weaponNum == WP_GAUNTLET || weaponNum == WP_GRAPPLING_HOOK )
-		        && ( nonPredictedCent->currentState.eFlags & EF_FIRING ) ) {
-			// continuous flash
-		}
-		else {
-			// impulse flash
-			if ( cg.time - cent->muzzleFlashTime > MUZZLE_FLASH_TIME && !cent->pe.railgunFlash ) {
-				return;
-			}
-		}
 	
-		memset( &flash, 0, sizeof( flash ) );
-		VectorCopy( parent->lightingOrigin, flash.lightingOrigin );
-		flash.shadowPlane = parent->shadowPlane;
-		flash.renderfx = parent->renderfx;
-	
-		flash.hModel = weapon->flashModel;
-		if (!flash.hModel) {
+	// q3 - don't touch this!
+	if ( ( weaponNum == WP_LIGHTNING || weaponNum == WP_GAUNTLET || weaponNum == WP_GRAPPLING_HOOK )
+			&& ( nonPredictedCent->currentState.eFlags & EF_FIRING ) ) {
+		// continuous flash
+	}
+	else {
+		// impulse flash
+		if ( cg.time - cent->muzzleFlashTime > MUZZLE_FLASH_TIME && !cent->pe.railgunFlash ) {
 			return;
 		}
-		angles[YAW] = 0;
-		angles[PITCH] = 0;
-		angles[ROLL] = crandom() * 10;
-		AnglesToAxis( angles, flash.axis );
-	
-		// colorize the railgun blast
-		if ( weaponNum == WP_RAILGUN ) {
-			clientInfo_t	*ci;
-	
-			ci = &cgs.clientinfo[ cent->currentState.clientNum ];
-			flash.shaderRGBA[0] = 255 * ci->color1[0];
-			flash.shaderRGBA[1] = 255 * ci->color1[1];
-			flash.shaderRGBA[2] = 255 * ci->color1[2];
-		}
-	}	
+	}
+
+	memset( &flash, 0, sizeof( flash ) );
+	VectorCopy( parent->lightingOrigin, flash.lightingOrigin );
+	flash.shadowPlane = parent->shadowPlane;
+	flash.renderfx = parent->renderfx;
+
+	flash.hModel = weapon->flashModel;
+	if (!flash.hModel) {
+		return;
+	}
+	angles[YAW] = 0;
+	angles[PITCH] = 0;
+	angles[ROLL] = crandom() * 10;
+	AnglesToAxis( angles, flash.axis );
+
+	// colorize the railgun blast
+	if ( weaponNum == WP_RAILGUN ) {
+		clientInfo_t	*ci;
+
+		ci = &cgs.clientinfo[ cent->currentState.clientNum ];
+		flash.shaderRGBA[0] = 255 * ci->color1[0];
+		flash.shaderRGBA[1] = 255 * ci->color1[1];
+		flash.shaderRGBA[2] = 255 * ci->color1[2];
+	}
 	CG_PositionRotatedEntityOnTag( &flash, &gun, weapon->weaponModel, "tag_flash");
 
 	if (cg_muzzleflashStyle.integer != 0)	// leilei - allow the flash to go away 
