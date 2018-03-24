@@ -1235,13 +1235,14 @@ static void CG_CalculateWeaponPosition( vec3_t origin, vec3_t angles )
 
 		}
 
-
+		// figure 8
 		if (cg_bobmodel.integer == 3) {
-			bob = scale * 2 * 0.05 * cg.bobfracsin * 0.04;
-			VectorMA (origin, bob, right, origin);
+			float thebob = (  cg.bobcycle2 ) * (1.0f / 41.0f);
+			float scale2 =  0.001f * scale;
+			if (scale2 < 0) scale2 *= -1;
 
-			bob = cos(scale * 0.07 * cg.bobfraccos * 0.05) - sin(scale * 0.07 * cg.bobfracsin * 0.1);
-			VectorMA (origin, bob, up, origin);
+			VectorMA (origin, (sin(thebob) * 1.5) * scale2, right, origin);
+			VectorMA (origin, (sin(thebob * 2) * 0.5) * scale2, up, origin);
 		}
 
 	}

@@ -465,20 +465,42 @@ static void CG_OffsetFirstPersonView( void ) {
 
 	// add angles based on bob
 
-	if ( cg_bob.integer ) {
+	if ( cg_bob.integer == 6 ) // leilei - sweeney bob
+	{
+		vec3_t		forward, right, up;
+		speed = cg.xyspeed;
+		if (speed > 320) speed = 320;
+		delta = cg.bobfracsin * 0.006 * speed;
+		if (cg.bobcycle & 1)
+			delta = -delta;
+
+		AngleVectors (angles, forward, right, up);
+		VectorMA (origin, delta, right, origin);
+	}
+	else if ( cg_bob.integer ) 
+	{
 		// make sure the bob is visible even at low speeds
 		speed = cg.xyspeed > 200 ? cg.xyspeed : 200;
 
 		delta = cg.bobfracsin * cg_bobpitch.value * speed;
 		if (cg.predictedPlayerState.pm_flags & PMF_DUCKED)
 			delta *= 3;		// crouching
+
+		// leilei - no pitch for 3 or 4
+		if ( cg_bob.integer == 1 || cg_bob.integer == 2 )         
 		angles[PITCH] += delta;
+
 		delta = cg.bobfracsin * cg_bobroll.value * speed;
 		if (cg.predictedPlayerState.pm_flags & PMF_DUCKED)
 			delta *= 3;		// crouching accentuates roll
 		if (cg.bobcycle & 1)
 			delta = -delta;
-		angles[ROLL] += delta;
+
+		// leilei - no roll for 2 or 4
+		if ( cg_bob.integer == 1 || cg_bob.integer == 3 || cg_bob.integer == 5 )         
+			angles[ROLL] += delta;
+
+
 	}
 
 //===================================
@@ -759,6 +781,7 @@ static int CG_CalcViewValues( void ) {
 	cg.xyspeed = sqrt( ps->velocity[0] * ps->velocity[0] +
 		ps->velocity[1] * ps->velocity[1] );
 
+	cg.bobcycle2 = ps->bobCycle; // leilei - copy the bobcycle so we can use it directly elsewhere
 
 	VectorCopy( ps->origin, cg.refdef.vieworg );
 	VectorCopy( ps->viewangles, cg.refdefViewAngles );
