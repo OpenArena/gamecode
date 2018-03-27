@@ -1741,13 +1741,6 @@ static void CG_PlayerAngles(centity_t *cent, vec3_t legs[3], vec3_t torso[3], ve
 			legsAngles[ROLL] = 0.0f;
 		}
 
-		// leilei - don't lean for our new strafe animations
-		if ((cent->currentState.legsAnim & ~ANIM_TOGGLEBIT) == LEGS_STRAFE_LEFT || (cent->currentState.legsAnim & ~ANIM_TOGGLEBIT) == LEGS_STRAFE_RIGHT) {
-			legsAngles[YAW] = torsoAngles[YAW];
-			//legsAngles[PITCH] = 0.0f;
-			legsAngles[ROLL] = 0.0f;
-		}
-
 	}
 
 	// pain twitch
