@@ -5719,7 +5719,15 @@ qboolean ItemParse_outlinecolor(itemDef_t *item, int handle) {
 
 // leilei - color schemes
 vec4_t hexcol[4];
-extern char *UI_Cvar_VariableString( const char *var_name );
+
+// i am lazy
+static char *Both_Cvar_VariableString( const char *var_name ) {
+	static char	buffer[MAX_STRING_CHARS];
+
+	trap_Cvar_VariableStringBuffer( var_name, buffer, sizeof( buffer ) );
+
+	return buffer;
+}
 
 void UpdateHexColors (){
 	// Parse ui_colors to update our vectors from the hex values in the cvar	
@@ -5727,7 +5735,7 @@ void UpdateHexColors (){
 	int col1, col2, col3, col4;
 	int col[4];
 	int i;
-	char *thecolors = UI_Cvar_VariableString("ui_colors");
+	char *thecolors = Both_Cvar_VariableString("ui_colors");
 
 	token = COM_ParseExt( &thecolors, qfalse);
 	col[0] = strtol( token, NULL, 0 );
