@@ -72,6 +72,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define WINDOW_FOCUSDISABLE   0x04000000
 // end changed RD
 
+// leilei - alterable colors
+#define WINDOW_HEXCOLORSET   0x08000000 // we're set from a scheme
+
 // CGAME cursor type bits
 #define CURSOR_NONE     0x00000001
 #define CURSOR_ARROW    0x00000002
@@ -161,6 +164,7 @@ typedef struct {
 	vec4_t borderColor; // border color
 	vec4_t outlineColor; // border color
 	qhandle_t background; // background asset  
+	vec4_t hexColor; // leilei - defined colors
 } windowDef_t;
 
 typedef windowDef_t Window;

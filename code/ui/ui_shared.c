@@ -922,6 +922,9 @@ void Script_SetColor(itemDef_t *item, char **args) {
 		} else if (Q_stricmp(name, "forecolor") == 0) {
 			out = &item->window.foreColor;
 			item->window.flags |= WINDOW_FORECOLORSET;
+		} else if (Q_stricmp(name, "hexcolor") == 0) {	// leilei - schemes
+			out = &item->window.hexColor;
+			item->window.flags |= WINDOW_HEXCOLORSET;
 		} else if (Q_stricmp(name, "bordercolor") == 0) {
 			out = &item->window.borderColor;
 		}
@@ -1006,6 +1009,9 @@ void Script_SetItemColor(itemDef_t *item, char **args) {
 				} else if (Q_stricmp(name, "forecolor") == 0) {
 					out = &item2->window.foreColor;
 					item2->window.flags |= WINDOW_FORECOLORSET;
+				} else if (Q_stricmp(name, "hexcolor") == 0) {
+					out = &item2->window.hexColor;
+					item2->window.flags |= WINDOW_HEXCOLORSET;
 				} else if (Q_stricmp(name, "bordercolor") == 0) {
 					out = &item2->window.borderColor;
 				}
@@ -5711,6 +5717,86 @@ qboolean ItemParse_outlinecolor(itemDef_t *item, int handle) {
 	return qtrue;
 }
 
+// leilei - color schemes
+vec4_t hexcol[4];
+extern char *UI_Cvar_VariableString( const char *var_name );
+
+void UpdateHexColors (){
+	// Parse ui_colors to update our vectors from the hex values in the cvar	
+	const char *token;
+	int col1, col2, col3, col4;
+	int col[4];
+	int i;
+	char *thecolors = UI_Cvar_VariableString("ui_colors");
+
+	token = COM_ParseExt( &thecolors, qfalse);
+	col[0] = strtol( token, NULL, 0 );
+	token = COM_ParseExt( &thecolors, qfalse);
+	col[1] = strtol( token, NULL, 0 );
+	token = COM_ParseExt( &thecolors, qfalse);
+	col[2] = strtol( token, NULL, 0 );
+	token = COM_ParseExt( &thecolors, qfalse);
+	col[3] = strtol( token, NULL, 0 );
+
+//	Com_Printf("Colors = %i %i %i %i\n", col[0], col[1], col[2], col[3]);
+//	Com_Printf("Token is %s\n", token);
+//	Com_Printf("Thecolors is %s\n", thecolors);
+
+	for (i=0;i<4;i++)
+	{
+		hexcol[i][0] = (float)((col[i] >> 16) & 0xFF) / 255;
+		hexcol[i][1] = (float)((col[i] >> 8 ) & 0xFF) / 255;
+		hexcol[i][2] = (float)(col[i] & 0xFF) / 255;
+	}
+}
+
+qboolean ItemParse_hexcolor(itemDef_t *item, int handle) {
+	int i;
+	int j;
+	float f;
+	int hecks[4];
+
+	UpdateHexColors();	// TODO: Move to a uiscript command so scheme changes
+				// can update everything
+
+	// the way we parse it is take the float vectors as
+	// integers that point to which defined hex color value will be
+	// used per component:
+
+	// like say ui_colors 202154 FFF 121212
+	// hexcolor 0, 1, 1, 2
+	//	    |  |  |  |
+	//          |  |  |  \------- borderColor becomes RGB 18,18,18
+	//          |  |  \--------- textColor becomes RGB 255,255,255
+	//          |  \---------- foreColor becomes RGB 255,255,255
+	//	    \---------- backColor becomes RGB 32,33,84
+	//
+	// Alpha components set by previous colors should be unaffected so
+	// fades can still work, no sudden borders, etc.
+	//
+	//
+
+	for (i = 0; i < 4; i++) {
+		if (!PC_Float_Parse(handle, &f)) {
+			return qfalse;
+		}
+		hecks[i] = (int)f;
+	}	
+
+
+	for (i = 0; i < 4; i++) {
+		for (j = 0; j < 3; j++) { // ignore alpha
+			item->window.backColor[j] 	= hexcol[hecks[0]][j];
+			item->window.foreColor[j] 	= hexcol[hecks[1]][j];
+			item->window.outlineColor[j] 	= hexcol[hecks[2]][j];
+			item->window.borderColor[j] 	= hexcol[hecks[3]][j];
+		}
+		
+	}
+
+	return qtrue;
+}
+
 qboolean ItemParse_background(itemDef_t *item, int handle) {
 	const char *temp;
 
@@ -6218,6 +6304,7 @@ keywordHash_t itemParseKeywords[] = {
 	{"hideCvar", ItemParse_hideCvar, NULL},
 	{"cinematic", ItemParse_cinematic, NULL},
 	{"doubleclick", ItemParse_doubleClick, NULL},
+	{"hexcolor", ItemParse_hexcolor, NULL},
 	{NULL, 0, NULL}
 };
 

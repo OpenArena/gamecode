@@ -135,6 +135,7 @@ extern vmCvar_t ui_serverStatusTimeOut;
 extern vmCvar_t ui_humansonly;
 
 extern vmCvar_t	ui_introPlayed;
+extern vmCvar_t	ui_colors;
 
 //
 // ui_qmenu.c
@@ -1245,7 +1246,6 @@ typedef struct postGameInfo_s {
 	int skillBonus;
 	int baseScore;
 } postGameInfo_t;
-
 
 
 #endif

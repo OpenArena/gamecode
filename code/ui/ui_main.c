@@ -4796,7 +4796,7 @@ static void UI_BuildServerDisplayList(qboolean force, qboolean doReset)
 	trap_Cvar_VariableStringBuffer( "cl_motdString", uiInfo.serverStatus.motd, sizeof(uiInfo.serverStatus.motd) );
 	len = strlen(uiInfo.serverStatus.motd);
 	if (len == 0) {
-		strcpy(uiInfo.serverStatus.motd, "Welcome to Team Arena!");
+		strcpy(uiInfo.serverStatus.motd, "Welcome to OpenArena!");
 		len = strlen(uiInfo.serverStatus.motd);
 	}
 	if (len != uiInfo.serverStatus.motdLen) {
@@ -7036,6 +7036,7 @@ vmCvar_t	gameover; // ai script
 
 // leilei
 vmCvar_t	ui_introPlayed;
+vmCvar_t	ui_colors;
 
 vmCvar_t ui_humansonly;
 
@@ -7183,6 +7184,8 @@ static cvarTable_t		cvarTable[] = {
 	{ &persid, "persid", "0", CVAR_INIT},
 	{ &gameover, "gameover", "0", CVAR_INIT}, // ai script
 // end changed RD
+// leilei
+	{ &ui_colors, "ui_colors", "0x1e3072 0x7286d0 0x1fd1b2 0x606060", CVAR_ARCHIVE},
 	{ &ui_introPlayed, "ui_introPlayed", "0", CVAR_INIT },
 };
 
