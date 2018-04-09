@@ -5718,7 +5718,7 @@ qboolean ItemParse_outlinecolor(itemDef_t *item, int handle) {
 }
 
 // leilei - color schemes
-vec4_t hexcol[4];
+
 
 // i am lazy
 static char *Both_Cvar_VariableString( const char *var_name ) {
@@ -5729,29 +5729,20 @@ static char *Both_Cvar_VariableString( const char *var_name ) {
 	return buffer;
 }
 
-void UpdateHexColors (){
+#define MAX_HEXCOLORS 8
+vec4_t hexcol[MAX_HEXCOLORS];
+
+void UpdateHexColors ( void ){
 	// Parse ui_colors to update our vectors from the hex values in the cvar	
 	const char *token;
-	int col1, col2, col3, col4;
-	int col[4];
+	int col[MAX_HEXCOLORS];
 	int i;
 	char *thecolors = Both_Cvar_VariableString("ui_colors");
 
-	token = COM_ParseExt( &thecolors, qfalse);
-	col[0] = strtol( token, NULL, 0 );
-	token = COM_ParseExt( &thecolors, qfalse);
-	col[1] = strtol( token, NULL, 0 );
-	token = COM_ParseExt( &thecolors, qfalse);
-	col[2] = strtol( token, NULL, 0 );
-	token = COM_ParseExt( &thecolors, qfalse);
-	col[3] = strtol( token, NULL, 0 );
-
-//	Com_Printf("Colors = %i %i %i %i\n", col[0], col[1], col[2], col[3]);
-//	Com_Printf("Token is %s\n", token);
-//	Com_Printf("Thecolors is %s\n", thecolors);
-
-	for (i=0;i<4;i++)
+	for (i=0;i<MAX_HEXCOLORS;i++)
 	{
+		token = COM_ParseExt( &thecolors, qfalse);
+		col[i] = strtol( token, NULL, 0 );
 		hexcol[i][0] = (float)((col[i] >> 16) & 0xFF) / 255;
 		hexcol[i][1] = (float)((col[i] >> 8 ) & 0xFF) / 255;
 		hexcol[i][2] = (float)(col[i] & 0xFF) / 255;
