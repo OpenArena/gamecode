@@ -552,6 +552,7 @@ int trap_PC_LoadSource(const char *filename);
 int trap_PC_FreeSource(int handle);
 int trap_PC_ReadToken(int handle, pc_token_t *pc_token);
 int trap_PC_SourceFileAndLine(int handle, char *filename, int *line);
+void trap_Cvar_VariableStringBuffer( const char *var_name, char *buffer, int bufsize );
 
 void Item_Text_AutoWrapped_Paint(itemDef_t *item);
 

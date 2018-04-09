@@ -465,14 +465,17 @@ static void CG_OffsetFirstPersonView( void ) {
 
 	// add angles based on bob
 
-	if ( cg_bob.integer == 6 ) // leilei - sweeney bob
-	{
+	if ( cg_bob.integer == 6 ) {
+		// leilei - sweeney bob
 		vec3_t		forward, right, up;
 		speed = cg.xyspeed;
-		if (speed > 320) speed = 320;
+		if (speed > 320) {
+			speed = 320;
+		}
 		delta = cg.bobfracsin * 0.006 * speed;
-		if (cg.bobcycle & 1)
+		if (cg.bobcycle & 1) {
 			delta = -delta;
+		}
 
 		AngleVectors (angles, forward, right, up);
 		VectorMA (origin, delta, right, origin);
@@ -483,12 +486,15 @@ static void CG_OffsetFirstPersonView( void ) {
 		speed = cg.xyspeed > 200 ? cg.xyspeed : 200;
 
 		delta = cg.bobfracsin * cg_bobpitch.value * speed;
-		if (cg.predictedPlayerState.pm_flags & PMF_DUCKED)
-			delta *= 3;		// crouching
+		if (cg.predictedPlayerState.pm_flags & PMF_DUCKED) {
+			// crouching
+			delta *= 3;
+		}
 
 		// leilei - no pitch for 3 or 4
-		if ( cg_bob.integer == 1 || cg_bob.integer == 2 )         
-		angles[PITCH] += delta;
+		if ( cg_bob.integer == 1 || cg_bob.integer == 2 ) {
+			angles[PITCH] += delta;
+		}
 
 		delta = cg.bobfracsin * cg_bobroll.value * speed;
 		if (cg.predictedPlayerState.pm_flags & PMF_DUCKED)
