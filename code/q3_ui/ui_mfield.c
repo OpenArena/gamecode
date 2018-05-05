@@ -232,7 +232,7 @@ void MField_CharEvent( mfield_t *edit, int ch ) {
 		return;
 	}
 
-	if ( ch == 'a' - 'a' + 1 ) {	// ctrl-a is home
+	if ( ch == 1 ) {	// ctrl-a is home
 		edit->cursor = 0;
 		edit->scroll = 0;
 		return;

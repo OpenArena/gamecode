@@ -1703,9 +1703,6 @@ static void UI_DrawPlayerModel(rectDef_t *rect)
 	vec3_t	moveangles;
 
 	if (trap_Cvar_VariableValue("ui_Q3Model")) {
-		strcpy(model, UI_Cvar_VariableString("model"));
-		strcpy(head, UI_Cvar_VariableString("headmodel"));
-
 		// leilei - and do the team too
 		strcpy(model, UI_Cvar_VariableString("team_model"));
 		strcpy(head, UI_Cvar_VariableString("team_headmodel"));
@@ -2632,7 +2629,7 @@ static void UI_DrawGLInfo(rectDef_t *rect, float scale, vec4_t color, int textSt
 	y = rect->y + 45;
 	numLines = 0;
 	while ( y < rect->y + rect->h && *eptr ) {
-		while ( *eptr && *eptr == ' ' )
+		while ( *eptr == ' ' )
 			*eptr++ = '\0';
 
 		// track start of valid string
@@ -2909,7 +2906,7 @@ static qboolean UI_OwnerDrawVisible(int flags)
 			flags &= ~UI_SHOW_NOTFAVORITESERVERS;
 		}
 		if (flags & UI_SHOW_ANYTEAMGAME) {
-			if (uiInfo.gameTypes[ui_gameType.integer].gtEnum <= GT_TEAM && uiInfo.gameTypes[ui_gameType.integer].gtEnum != GT_LMS ) {
+			if (uiInfo.gameTypes[ui_gameType.integer].gtEnum <= GT_TEAM || uiInfo.gameTypes[ui_gameType.integer].gtEnum != GT_LMS ) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_ANYTEAMGAME;
@@ -3331,7 +3328,7 @@ static qboolean UI_BotName_HandleKey(int flags, float *special, int key)
 			value++;
 		}
 
-		if (game >= GT_TEAM && !GT_LMS) {
+		if (game >= GT_TEAM && game != GT_LMS) {
 			if (value >= uiInfo.characterCount + 2) {
 				value = 0;
 			}
