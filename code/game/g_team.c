@@ -908,7 +908,7 @@ void Team_DD_makeA2team( gentity_t *target, int team )
 	//gentity_t		*it_ent;
 	Team_DD_RemovePointAgfx();
 	it = NULL;
-	if(team == TEAM_NONE) {
+	if(team == TEAM_NONE || !target) {
 		return;
 	}
 	else if(team == TEAM_RED) {
@@ -939,7 +939,7 @@ static void Team_DD_makeB2team( gentity_t *target, int team )
 
 	Team_DD_RemovePointBgfx();
 	it = NULL;
-	if(team == TEAM_NONE) {
+	if(team == TEAM_NONE || !target) {
 		return;
 	}
 	if(team == TEAM_RED) {
@@ -1933,7 +1933,7 @@ void TeamplayInfoMessage( gentity_t *ent )
 	// figure out what client should be on the display
 	// we are limited to 8, but we want to use the top eight players
 	// but in client order (so they don't keep changing position on the overlay)
-	for (i = 0, cnt = 0; i < g_maxclients.integer && cnt < TEAM_MAXOVERLAY; i++) {
+	for (i = 0, cnt = 0; i < g_maxclients.integer && i < MAX_CLIENTS && cnt < TEAM_MAXOVERLAY; i++) {
 		player = g_entities + level.sortedClients[i];
 		if (player->inuse && player->client->sess.sessionTeam == team ) {
 			clients[cnt++] = level.sortedClients[i];
