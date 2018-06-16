@@ -33,3 +33,6 @@ The development board on the OpenArena forum: http://openarena.ws/board/index.ph
 
 In particular the Open Arena Expanded topic: http://openarena.ws/board/index.php?topic=1908.0
 
+## License ##
+
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
