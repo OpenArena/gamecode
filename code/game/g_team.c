@@ -1364,11 +1364,10 @@ int Team_TouchOurFlag( gentity_t *ent, gentity_t *other, int team )
 			continue;
 		}
 
-		if (player->client->sess.sessionTeam !=
-		        cl->sess.sessionTeam) {
+		if (player->client->sess.sessionTeam != cl->sess.sessionTeam) {
 			player->client->pers.teamState.lasthurtcarrier = -5;
 		}
-		else if (player->client->sess.sessionTeam == cl->sess.sessionTeam) {
+		else {
 			if (player != other) {
 				AddScore(player, ent->r.currentOrigin, CTF_TEAM_BONUS);
 			}
@@ -1947,7 +1946,7 @@ void TeamplayInfoMessage( gentity_t *ent )
 	string[0] = 0;
 	stringlength = 0;
 
-	for (i = 0, cnt = 0; i < g_maxclients.integer && cnt < TEAM_MAXOVERLAY; i++) {
+	for (i = 0, cnt = 0; i < g_maxclients.integer && i < MAX_GENTITIES && cnt < TEAM_MAXOVERLAY; i++) {
 		player = g_entities + i;
 		if (player->inuse && player->client->sess.sessionTeam == team ) {
 

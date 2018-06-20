@@ -2399,7 +2399,7 @@ static void UI_DrawBotName(rectDef_t *rect, float scale, vec4_t color, int textS
 	int value = uiInfo.botIndex;
 	int game = trap_Cvar_VariableValue("g_gametype");
 	const char *text = "";
-	if (game >= GT_TEAM && !GT_LMS ) {
+	if (game >= GT_TEAM && game != GT_LMS ) {
 		if (value >= uiInfo.characterCount) {
 			value = 0;
 		}
@@ -3781,7 +3781,7 @@ static void UI_StartSkirmish(qboolean next, char *name)
 		while( *p && count < 16 ) {
 
 			//skip spaces
-			while( *p && *p == ' ' ) {
+			while( *p == ' ' ) {
 				p++;
 			}
 			if( !p ) {
@@ -4782,8 +4782,6 @@ static void UI_BuildServerDisplayList(qboolean force, qboolean doReset)
 {
 	int i, count, clients, maxClients, ping, game, len, visible;
 	char info[MAX_STRING_CHARS];
-//	qboolean startRefresh = qtrue; TTimo: unused
-	static int numinvisible;
 
 	if (!(force || uiInfo.uiDC.realTime > uiInfo.serverStatus.nextDisplayRefresh)) {
 		return;
@@ -4802,7 +4800,6 @@ static void UI_BuildServerDisplayList(qboolean force, qboolean doReset)
 	}
 
 	if (doReset) {
-		numinvisible = 0;
 		// clear number of displayed servers
 		uiInfo.serverStatus.numDisplayServers = 0;
 		uiInfo.serverStatus.numPlayersOnServers = 0;
@@ -4887,7 +4884,6 @@ static void UI_BuildServerDisplayList(qboolean force, qboolean doReset)
 			// done with this server
 			if (ping > 0) {
 				trap_LAN_MarkServerVisible(ui_netSource.integer, i, qfalse);
-				numinvisible++;
 			}
 		}
 	}

@@ -294,7 +294,7 @@ static void UI_PositionEntityOnTag( refEntity_t *entity, const refEntity_t *pare
 							clipHandle_t parentModel, char *tagName ) {
 	int				i;
 	orientation_t	lerped;
-	
+
 	// lerp the tag
 	trap_CM_LerpTag( &lerped, parentModel, parent->oldframe, parent->frame,
 		1.0 - parent->backlerp, tagName );
@@ -508,7 +508,7 @@ static void UI_SwingAngles( float destination, float swingTolerance, float clamp
 			*swinging = qfalse;
 		}
 		*angle = AngleMod( *angle + move );
-	} else if ( swing < 0 ) {
+	} else {
 		move = uiInfo.uiDC.frameTime * scale * -speed;
 		if ( move <= swing ) {
 			move = swing;
