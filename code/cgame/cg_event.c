@@ -522,7 +522,7 @@ static void CG_UseItem(centity_t *cent) {
 
 }
 
-static qboolean CG_WeaponHigher(int currentWeapon, int newWeapon) {
+qboolean CG_WeaponHigher(int currentWeapon, int newWeapon) {
 	char *currentScore = NULL;
 	char *newScore = NULL;
 	char weapon[5];

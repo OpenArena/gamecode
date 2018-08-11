@@ -3325,6 +3325,8 @@ void CG_Weapon_f( void )
 	cg.weaponSelect = num;
 }
 
+qboolean CG_WeaponHigher(int currentWeapon, int newWeapon);
+
 /*
 ===================
 CG_OutOfAmmoChange
@@ -3342,6 +3344,11 @@ void CG_OutOfAmmoChange( void )
 		if ( CG_WeaponSelectable( i ) && i != WP_GRAPPLING_HOOK ) {
 			cg.weaponSelect = i;
 			break;
+		}
+	}
+	for ( i = MAX_WEAPONS-1 ; i > 0 ; i-- ) {
+		if ( CG_WeaponSelectable( i ) && CG_WeaponHigher(cg.weaponSelect, i) ) {
+			cg.weaponSelect = i;
 		}
 	}
 }
