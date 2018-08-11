@@ -970,6 +970,7 @@ int allowedVote(const char *commandStr);
 void CheckVote( void );
 void CountVotes( void );
 void ClientLeaving(int clientNumber);
+const char* whiteListedStr(const char* str);
 
 #define MAX_MAPNAME 32
 #define MAPS_PER_PAGE 10

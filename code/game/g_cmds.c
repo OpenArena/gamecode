@@ -1744,6 +1744,7 @@ void Cmd_CallVote_f( gentity_t *ent ) {
 
 	level.voteKickClient = -1; //not a client
 	level.voteKickType = 0; //not a ban
+	level.voteDisplayString[0] = 0;
 
 	// special case for g_gametype, check for bad values
 	if ( Q_strequal( arg1, "g_gametype" ) ) {
@@ -1927,7 +1928,7 @@ void Cmd_CallVote_f( gentity_t *ent ) {
 	}
 
 	ent->client->pers.voteCount++;
-	trap_SendServerCommand( -1, va("print \"%s called a vote.\n\"", ent->client->pers.netname ) );
+	trap_SendServerCommand( -1, va("print \"%s called a vote (%s).\n\"", ent->client->pers.netname, whiteListedStr(level.voteDisplayString) ) );
 
 	// start the voting, the caller automatically votes yes
 	level.voteTime = level.time;
