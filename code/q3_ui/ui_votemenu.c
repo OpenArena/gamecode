@@ -366,7 +366,7 @@ void UI_VoteMenuMenuInternal( void )
 	y+=VOTEMENU_MENU_VERTICAL_SPACING;
 	s_votemenu.bNo.generic.id       = ID_NO;
 	UI_SetMenuTextDefaults(&s_votemenu.bNo );
-	UI_SetTextEffect(&s_votemenu.bYes, qfalse, s_votemenu.selection);
+	UI_SetTextEffect(&s_votemenu.bNo, qtrue, s_votemenu.selection);
 	s_votemenu.bNo.generic.y        = y;
 	s_votemenu.bNo.generic.callback = VoteMenu_Event;
 	s_votemenu.bNo.string           = "Vote no";
