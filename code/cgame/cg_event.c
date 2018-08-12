@@ -522,7 +522,14 @@ static void CG_UseItem(centity_t *cent) {
 
 }
 
-qboolean CG_WeaponHigher(int currentWeapon, int newWeapon) {
+/**
+ * Function to check if a new is better according to cg_weaponOrder
+ * If the order is unspecified (at least one of the weapons are not specified in cg_weaponOrder) the result is false
+ * @param currentWeapon The weapon currently equipped
+ * @param newWeapon The new weapon that we might want to change to
+ * @return true if newWeapon is placed after currentWeapon in cg_weaponOrder. False otherwise
+ */
+static qboolean CG_WeaponHigher(int currentWeapon, int newWeapon) {
 	char *currentScore = NULL;
 	char *newScore = NULL;
 	char weapon[5];
@@ -530,12 +537,10 @@ qboolean CG_WeaponHigher(int currentWeapon, int newWeapon) {
 	currentScore = strstr(cg_weaponOrder.string, weapon);
 	Com_sprintf(weapon, 5, "/%i/", newWeapon);
 	newScore = strstr(cg_weaponOrder.string, weapon);
-	if (!newScore || !currentScore)
+	if (!newScore || !currentScore) {
 		return qfalse;
-	if (newScore > currentScore)
-		return qtrue;
-	else
-		return qfalse;
+	}
+	return newScore > currentScore;
 }
 
 /*

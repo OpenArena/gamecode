@@ -3325,7 +3325,24 @@ void CG_Weapon_f( void )
 	cg.weaponSelect = num;
 }
 
-qboolean CG_WeaponHigher(int currentWeapon, int newWeapon);
+/**
+ * Gives the best weapon with ammo based on cg_weaponOrder
+ * If it cannot find a weapon WP_NONE is returned
+ * @return A weapon number or WP_NONE if none is found
+ */
+static int CG_GetBestWeapon(void) {
+	int ret = WP_NONE;
+	const char* currentPlace;
+	int newWeaponNumber;
+	for (currentPlace = strstr(cg_weaponOrder.string, "/"); currentPlace; currentPlace = strstr(currentPlace, "/") ) {
+		currentPlace++;
+		newWeaponNumber = atoi(currentPlace);
+		if ( CG_WeaponSelectable(newWeaponNumber) ) {
+			ret = newWeaponNumber;
+		}
+	}
+	return ret;
+}
 
 /*
 ===================
@@ -3339,16 +3356,13 @@ void CG_OutOfAmmoChange( void )
 	int		i;
 
 	cg.weaponSelectTime = cg.time;
-
-	for ( i = MAX_WEAPONS-1 ; i > 0 ; i-- ) {
-		if ( CG_WeaponSelectable( i ) && i != WP_GRAPPLING_HOOK ) {
-			cg.weaponSelect = i;
-			break;
-		}
-	}
-	for ( i = MAX_WEAPONS-1 ; i > 0 ; i-- ) {
-		if ( CG_WeaponSelectable( i ) && CG_WeaponHigher(cg.weaponSelect, i) ) {
-			cg.weaponSelect = i;
+	cg.weaponSelect = CG_GetBestWeapon();
+	if (cg.weaponSelect == WP_NONE) {
+		for ( i = MAX_WEAPONS-1 ; i > 0 ; i-- ) {
+			if ( CG_WeaponSelectable( i ) && i != WP_GRAPPLING_HOOK ) {
+				cg.weaponSelect = i;
+				break;
+			}
 		}
 	}
 }
