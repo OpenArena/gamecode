@@ -25,8 +25,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #define VOTEMENU_BACK0          "menu/" MENU_ART_DIR "/back_0"
 #define VOTEMENU_BACK1          "menu/" MENU_ART_DIR "/back_1"
-#define ART_FIGHT0		"menu/" MENU_ART_DIR "/accept_0"
-#define ART_FIGHT1		"menu/" MENU_ART_DIR "/accept_1"
+#define ART_FIGHT0              "menu/" MENU_ART_DIR "/accept_0"
+#define ART_FIGHT1              "menu/" MENU_ART_DIR "/accept_1"
 #define ART_BACKGROUND          "menu/" MENU_ART_DIR "/addbotframe"
 
 static char* votemenu_fraglmit_artlist[] =
@@ -40,7 +40,7 @@ static char* votemenu_fraglmit_artlist[] =
 
 #define ID_BACK     100
 #define ID_GO       101
-#define ID_50        102
+#define ID_50       102
 #define ID_10       103
 #define ID_15       104
 #define ID_20       105
@@ -52,10 +52,10 @@ static char* votemenu_fraglmit_artlist[] =
 
 typedef struct
 {
-	menuframework_s	menu;
-	menutext_s		banner;
-	menubitmap_s	back;
-	menubitmap_s	go;
+	menuframework_s menu;
+	menutext_s      banner;
+	menubitmap_s    back;
+	menubitmap_s    go;
 
 	//Buttons:
 	menutext_s      bLimit50;
@@ -132,16 +132,16 @@ static void VoteMenu_Fraglimit_Event( void* ptr, int event )
 }
 
 static void setMenutext(menutext_s *menu,int y,int id,int value,char *text) {
-	menu->generic.type            = MTYPE_PTEXT;
+	menu->generic.type        = MTYPE_PTEXT;
 	menu->color               = color_red;
 	menu->generic.flags       = QMF_CENTER_JUSTIFY|QMF_PULSEIFFOCUS;
 	if((s_votemenu_fraglmit.min > value && value!=0) || 
 			(s_votemenu_fraglmit.max < value && s_votemenu_fraglmit.max!=0) ||
 			(s_votemenu_fraglmit.max != 0 && value==0)) {
-		menu->generic.flags   |= QMF_INACTIVE|QMF_GRAYED;
+		menu->generic.flags |= QMF_INACTIVE|QMF_GRAYED;
 	}
 	else if(s_votemenu_fraglmit.selection == id) {
-		menu->color       = color_orange;
+		menu->color = color_orange;
 	}
 	menu->generic.x           = 320;
 	menu->generic.y           = y;
@@ -161,10 +161,7 @@ static void VoteMenu_Fraglimit_Cache( void )
 	int	i;
 
 	// touch all our pics
-	for (i=0; ;i++)
-	{
-		if (!votemenu_fraglmit_artlist[i])
-			break;
+	for (i=0;votemenu_fraglmit_artlist[i];i++) {
 		trap_R_RegisterShaderNoMip(votemenu_fraglmit_artlist[i]);
 	}
 }
@@ -199,11 +196,11 @@ void UI_VoteFraglimitMenuInternal( void )
 	s_votemenu_fraglmit.menu.draw = UI_VoteMenu_Fraglimit_Draw;
 
 	s_votemenu_fraglmit.banner.generic.type  = MTYPE_BTEXT;
-	s_votemenu_fraglmit.banner.generic.x	  = 320;
-	s_votemenu_fraglmit.banner.generic.y	  = 16;
-	s_votemenu_fraglmit.banner.string		  = "CALL VOTE - FRAGLIMIT";
-	s_votemenu_fraglmit.banner.color	      = color_white;
-	s_votemenu_fraglmit.banner.style	      = UI_CENTER;
+	s_votemenu_fraglmit.banner.generic.x     = 320;
+	s_votemenu_fraglmit.banner.generic.y     = 16;
+	s_votemenu_fraglmit.banner.string        = "CALL VOTE - FRAGLIMIT";
+	s_votemenu_fraglmit.banner.color         = color_white;
+	s_votemenu_fraglmit.banner.style         = UI_CENTER;
 
 	y = 98;
 	setMenutext(&s_votemenu_fraglmit.bLimit10,y,ID_10,10,"10");
@@ -220,26 +217,26 @@ void UI_VoteFraglimitMenuInternal( void )
 	y+=FRAGLIMIT_MENU_VERTICAL_SPACING;
 	setMenutext(&s_votemenu_fraglmit.bLimitInf,y,ID_INF,0,"No limit");
 
-	s_votemenu_fraglmit.back.generic.type	   = MTYPE_BITMAP;
+	s_votemenu_fraglmit.back.generic.type     = MTYPE_BITMAP;
 	s_votemenu_fraglmit.back.generic.name     = VOTEMENU_BACK0;
 	s_votemenu_fraglmit.back.generic.flags    = QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS;
 	s_votemenu_fraglmit.back.generic.callback = VoteMenu_Fraglimit_Event;
-	s_votemenu_fraglmit.back.generic.id	   = ID_BACK;
-	s_votemenu_fraglmit.back.generic.x		   = 320-128;
-	s_votemenu_fraglmit.back.generic.y		   = 256+128-64;
-	s_votemenu_fraglmit.back.width  		   = 128;
-	s_votemenu_fraglmit.back.height  		   = 64;
+	s_votemenu_fraglmit.back.generic.id       = ID_BACK;
+	s_votemenu_fraglmit.back.generic.x        = 320-128;
+	s_votemenu_fraglmit.back.generic.y        = 256+128-64;
+	s_votemenu_fraglmit.back.width            = 128;
+	s_votemenu_fraglmit.back.height           = 64;
 	s_votemenu_fraglmit.back.focuspic         = VOTEMENU_BACK1;
 
-	s_votemenu_fraglmit.go.generic.type	   = MTYPE_BITMAP;
+	s_votemenu_fraglmit.go.generic.type     = MTYPE_BITMAP;
 	s_votemenu_fraglmit.go.generic.name     = ART_FIGHT0;
 	s_votemenu_fraglmit.go.generic.flags    = QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS;
 	s_votemenu_fraglmit.go.generic.callback = VoteMenu_Fraglimit_Event;
-	s_votemenu_fraglmit.go.generic.id	   = ID_GO;
-	s_votemenu_fraglmit.go.generic.x		   = 320;
-	s_votemenu_fraglmit.go.generic.y		   = 256+128-64;
-	s_votemenu_fraglmit.go.width  		   = 128;
-	s_votemenu_fraglmit.go.height  		   = 64;
+	s_votemenu_fraglmit.go.generic.id       = ID_GO;
+	s_votemenu_fraglmit.go.generic.x        = 320;
+	s_votemenu_fraglmit.go.generic.y        = 256+128-64;
+	s_votemenu_fraglmit.go.width            = 128;
+	s_votemenu_fraglmit.go.height           = 64;
 	s_votemenu_fraglmit.go.focuspic         = ART_FIGHT1;
 }
 

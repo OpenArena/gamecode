@@ -24,8 +24,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #define VOTEMENU_BACK0          "menu/" MENU_ART_DIR "/back_0"
 #define VOTEMENU_BACK1          "menu/" MENU_ART_DIR "/back_1"
-#define ART_FIGHT0		"menu/" MENU_ART_DIR "/accept_0"
-#define ART_FIGHT1		"menu/" MENU_ART_DIR "/accept_1"
+#define ART_FIGHT0              "menu/" MENU_ART_DIR "/accept_0"
+#define ART_FIGHT1              "menu/" MENU_ART_DIR "/accept_1"
 #define ART_BACKGROUND          "menu/" MENU_ART_DIR "/addbotframe"
 
 static char* votemenu_Timelmit_artlist[] =
@@ -39,7 +39,7 @@ static char* votemenu_Timelmit_artlist[] =
 
 #define ID_BACK     100
 #define ID_GO       101
-#define ID_50        102
+#define ID_50       102
 #define ID_10       103
 #define ID_15       104
 #define ID_20       105
@@ -197,11 +197,11 @@ void UI_VoteTimelimitMenuInternal( void )
 	s_votemenu_Timelmit.menu.draw = UI_VoteMenu_Timelimit_Draw;
 
 	s_votemenu_Timelmit.banner.generic.type  = MTYPE_BTEXT;
-	s_votemenu_Timelmit.banner.generic.x	  = 320;
-	s_votemenu_Timelmit.banner.generic.y	  = 16;
-	s_votemenu_Timelmit.banner.string		  = "CALL VOTE - TIMELIMIT";
-	s_votemenu_Timelmit.banner.color	      = color_white;
-	s_votemenu_Timelmit.banner.style	      = UI_CENTER;
+	s_votemenu_Timelmit.banner.generic.x     = 320;
+	s_votemenu_Timelmit.banner.generic.y     = 16;
+	s_votemenu_Timelmit.banner.string        = "CALL VOTE - TIMELIMIT";
+	s_votemenu_Timelmit.banner.color         = color_white;
+	s_votemenu_Timelmit.banner.style         = UI_CENTER;
 
 	y = 98;
 	setTimeMenutext(&s_votemenu_Timelmit.bLimit10,y,ID_10,10,"10 minutes");
@@ -218,26 +218,26 @@ void UI_VoteTimelimitMenuInternal( void )
 	y+=TimeLIMIT_MENU_VERTICAL_SPACING;
 	setTimeMenutext(&s_votemenu_Timelmit.bLimitInf,y,ID_INF,0,"No limit");
 
-	s_votemenu_Timelmit.back.generic.type	   = MTYPE_BITMAP;
+	s_votemenu_Timelmit.back.generic.type     = MTYPE_BITMAP;
 	s_votemenu_Timelmit.back.generic.name     = VOTEMENU_BACK0;
 	s_votemenu_Timelmit.back.generic.flags    = QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS;
 	s_votemenu_Timelmit.back.generic.callback = VoteMenu_Timelimit_Event;
-	s_votemenu_Timelmit.back.generic.id	   = ID_BACK;
-	s_votemenu_Timelmit.back.generic.x		   = 320-128;
-	s_votemenu_Timelmit.back.generic.y		   = 256+128-64;
-	s_votemenu_Timelmit.back.width  		   = 128;
-	s_votemenu_Timelmit.back.height  		   = 64;
+	s_votemenu_Timelmit.back.generic.id       = ID_BACK;
+	s_votemenu_Timelmit.back.generic.x        = 320-128;
+	s_votemenu_Timelmit.back.generic.y        = 256+128-64;
+	s_votemenu_Timelmit.back.width            = 128;
+	s_votemenu_Timelmit.back.height           = 64;
 	s_votemenu_Timelmit.back.focuspic         = VOTEMENU_BACK1;
 
-	s_votemenu_Timelmit.go.generic.type	   = MTYPE_BITMAP;
+	s_votemenu_Timelmit.go.generic.type     = MTYPE_BITMAP;
 	s_votemenu_Timelmit.go.generic.name     = ART_FIGHT0;
 	s_votemenu_Timelmit.go.generic.flags    = QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS;
 	s_votemenu_Timelmit.go.generic.callback = VoteMenu_Timelimit_Event;
-	s_votemenu_Timelmit.go.generic.id	   = ID_GO;
-	s_votemenu_Timelmit.go.generic.x		   = 320;
-	s_votemenu_Timelmit.go.generic.y		   = 256+128-64;
-	s_votemenu_Timelmit.go.width  		   = 128;
-	s_votemenu_Timelmit.go.height  		   = 64;
+	s_votemenu_Timelmit.go.generic.id       = ID_GO;
+	s_votemenu_Timelmit.go.generic.x        = 320;
+	s_votemenu_Timelmit.go.generic.y        = 256+128-64;
+	s_votemenu_Timelmit.go.width            = 128;
+	s_votemenu_Timelmit.go.height           = 64;
 	s_votemenu_Timelmit.go.focuspic         = ART_FIGHT1;
 }
 
