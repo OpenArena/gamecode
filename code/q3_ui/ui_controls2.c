@@ -196,12 +196,12 @@ typedef struct
 	menuaction_s		railgun;
 	menuaction_s		plasma;
 	menuaction_s		bfg;
-        menuaction_s		grapple;
-        //New in Beta 23
-        menuaction_s		nailgun;
-        menuaction_s		proxmine;
-        menuaction_s		chaingun;
-        //New in 23 end
+	menuaction_s		grapple;
+	//New in Beta 23
+	menuaction_s		nailgun;
+	menuaction_s		proxmine;
+	menuaction_s		chaingun;
+	//New in 23 end
 	menuaction_s		attack;
 	menuaction_s		prevweapon;
 	menuaction_s		nextweapon;
@@ -226,8 +226,8 @@ typedef struct
 	menuaction_s		chat2;
 	menuaction_s		chat3;
 	menuaction_s		chat4;
-        menuaction_s		voip_talk;
-        menuradiobutton_s	voip_teamonly;
+	menuaction_s		voip_talk;
+	menuradiobutton_s	voip_teamonly;
 	menuradiobutton_s	joyenable;
 	menuslider_s		joythreshold;
 	int					section;
@@ -251,7 +251,7 @@ static const char *autoswitch_items[] = {
 	"ALWAYS",
 	"NEW",
 	"BETTER",
-        "NEW&BETTER",
+	"NEW&BETTER",
 	NULL
 };
 
@@ -289,10 +289,10 @@ static bind_t g_bindings[] =
 	{"weapon 7",		"railgun",		ID_WEAPON7,	ANIM_WEAPON7,	'7',	-1,	-1, -1},
 	{"weapon 8",		"plasma gun",		ID_WEAPON8,	ANIM_WEAPON8,	'8',	-1,	-1, -1},
 	{"weapon 9",		"BFG",			ID_WEAPON9,	ANIM_WEAPON9,	'9',	-1,	-1, -1},
-        {"weapon 10",		"Grapple",		ID_WEAPON10,	ANIM_WEAPON10,	-1,	-1,	-1, -1},
-        {"weapon 11",		"nailgun",		ID_WEAPON11,	ANIM_WEAPON11,	-1,	-1,	-1, -1},
-        {"weapon 12",		"mine Launcher",	ID_WEAPON12,	ANIM_WEAPON12,	-1,	-1,	-1, -1},
-        {"weapon 13",		"chaingun",		ID_WEAPON13,	ANIM_WEAPON13,	-1,	-1,	-1, -1},
+	{"weapon 10",		"Grapple",		ID_WEAPON10,	ANIM_WEAPON10,	-1,	-1,	-1, -1},
+	{"weapon 11",		"nailgun",		ID_WEAPON11,	ANIM_WEAPON11,	-1,	-1,	-1, -1},
+	{"weapon 12",		"mine Launcher",	ID_WEAPON12,	ANIM_WEAPON12,	-1,	-1,	-1, -1},
+	{"weapon 13",		"chaingun",		ID_WEAPON13,	ANIM_WEAPON13,	-1,	-1,	-1, -1},
 	{"+attack", 		"attack",		ID_ATTACK,	ANIM_ATTACK,	K_CTRL,			-1,		-1, -1},
 	{"weapprev",		"prev weapon",		ID_WEAPPREV,	ANIM_IDLE,		'[',			-1,		-1, -1},
 	{"weapnext", 		"next weapon",		ID_WEAPNEXT,	ANIM_IDLE,		']',			-1,		-1, -1},
@@ -301,7 +301,7 @@ static bind_t g_bindings[] =
 	{"messagemode2", 	"chat - team",		ID_CHAT2,		ANIM_CHAT,		-1,				-1,		-1, -1},
 	{"messagemode3", 	"chat - target",	ID_CHAT3,		ANIM_CHAT,		-1,				-1,		-1, -1},
 	{"messagemode4", 	"chat - attacker",	ID_CHAT4,		ANIM_CHAT,		-1,				-1,		-1, -1},
-        {"+voiprecord", 	"voice chat",           ID_VOIP_TALK,		ANIM_CHAT,		'q',				-1,		-1, -1},
+	{"+voiprecord", 	"voice chat",           ID_VOIP_TALK,		ANIM_CHAT,		'q',				-1,		-1, -1},
 	{"+acc",		"show accuracy",	ID_ACCURACY,	ANIM_IDLE,		-1,			-1,		-1, -1},
 	{(char*)NULL,		(char*)NULL,		0,				0,				-1,				-1,		-1,	-1},
 };
@@ -316,7 +316,7 @@ static configcvar_t g_configcvars[] =
 	{"joy_threshold",	0,					0},
 	{"m_filter",		0,					0},
 	{"cl_freelook",		0,					0},
-        {"cg_voipTeamOnly",	0,					0},
+	{"cg_voipTeamOnly",	0,					0},
 	{NULL,				0,					0}
 };
 
@@ -350,10 +350,10 @@ static menucommon_s *g_weapons_controls[] = {
 	(menucommon_s *)&s_controls.railgun,          
 	(menucommon_s *)&s_controls.plasma,           
 	(menucommon_s *)&s_controls.bfg,
-        (menucommon_s *)&s_controls.grapple,
-        (menucommon_s *)&s_controls.nailgun,
-        (menucommon_s *)&s_controls.proxmine,
-        (menucommon_s *)&s_controls.chaingun,
+	(menucommon_s *)&s_controls.grapple,
+	(menucommon_s *)&s_controls.nailgun,
+	(menucommon_s *)&s_controls.proxmine,
+	(menucommon_s *)&s_controls.chaingun,
 	NULL,
 };
 
@@ -381,8 +381,8 @@ static menucommon_s *g_misc_controls[] = {
 	(menucommon_s *)&s_controls.chat2,
 	(menucommon_s *)&s_controls.chat3,
 	(menucommon_s *)&s_controls.chat4,
-        (menucommon_s *)&s_controls.voip_talk,
-        (menucommon_s *)&s_controls.voip_teamonly,
+	(menucommon_s *)&s_controls.voip_talk,
+	(menucommon_s *)&s_controls.voip_teamonly,
 	NULL,
 };
 
@@ -404,11 +404,8 @@ static void Controls_InitCvars( void )
 	configcvar_t*	cvarptr;
 
 	cvarptr = g_configcvars;
-	for (i=0; ;i++,cvarptr++)
+	for (i=0; cvarptr->name ;i++,cvarptr++)
 	{
-		if (!cvarptr->name)
-			break;
-
 		// get current value
 		cvarptr->value = trap_Cvar_VariableValue( cvarptr->name );
 
@@ -569,16 +566,16 @@ static void Controls_UpdateModel( int anim ) {
 	case ANIM_WEAPON10:
 		s_controls.playerWeapon = WP_GRAPPLING_HOOK;
 		break;
-                
-        case ANIM_WEAPON11:
+
+	case ANIM_WEAPON11:
 		s_controls.playerWeapon = WP_NAILGUN;
 		break;
-              
-        case ANIM_WEAPON12:
+
+	case ANIM_WEAPON12:
 		s_controls.playerWeapon = WP_PROX_LAUNCHER;
 		break;
-                
-        case ANIM_WEAPON13:
+
+	case ANIM_WEAPON13:
 		s_controls.playerWeapon = WP_CHAINGUN;
 		break;
 
@@ -729,10 +726,10 @@ static void Controls_DrawKeyBinding( void *self )
 	c = (Menu_ItemAtCursor( a->generic.parent ) == a);
 
 	b1 = g_bindings[a->generic.id].bind1;
-	if (b1 == -1)
+	if (b1 == -1) {
 		strcpy(name,"???");
-	else
-	{
+	}
+	else {
 		trap_Key_KeynumToStringBuf( b1, name, 32 );
 		Q_strupr(name);
 
@@ -775,7 +772,7 @@ static void Controls_DrawKeyBinding( void *self )
 		}
 		else
 		{
-			UI_DrawString( x - SMALLCHAR_WIDTH, y, g_bindings[a->generic.id].label, UI_RIGHT|UI_SMALLFONT, controls_binding_color );
+			UI_DrawString( x - SMALLCHAR_WIDTH, y, g_bindings[a->generic.id].label, UI_RIGHT|UI_SMALLFONT, text_color_normal );
 			UI_DrawString( x + SMALLCHAR_WIDTH, y, name, UI_LEFT|UI_SMALLFONT, controls_binding_color );
 		}
 	}
@@ -857,11 +854,7 @@ static void Controls_GetConfig( void )
 	bindptr = g_bindings;
 
 	// iterate each command, get its numeric binding
-	for (i=0; ;i++,bindptr++)
-	{
-		if (!bindptr->label)
-			break;
-
+	for (i=0; bindptr->label;i++,bindptr++) {
 		Controls_GetKeyAssignment(bindptr->command, twokeys);
 
 		bindptr->bind1 = twokeys[0];
@@ -876,7 +869,7 @@ static void Controls_GetConfig( void )
 	s_controls.joyenable.curvalue    = UI_ClampCvar( 0, 1, Controls_GetCvarValue( "in_joystick" ) );
 	s_controls.joythreshold.curvalue = UI_ClampCvar( 0.05f, 0.75f, Controls_GetCvarValue( "joy_threshold" ) );
 	s_controls.freelook.curvalue     = UI_ClampCvar( 0, 1, Controls_GetCvarValue( "cl_freelook" ) );
-        s_controls.voip_teamonly.curvalue= UI_ClampCvar( 0, 1, Controls_GetCvarValue( "cg_voipTeamOnly" ) );
+	s_controls.voip_teamonly.curvalue= UI_ClampCvar( 0, 1, Controls_GetCvarValue( "cg_voipTeamOnly" ) );
 }
 
 /*
@@ -893,24 +886,22 @@ static void Controls_SetConfig( void )
 	bindptr = g_bindings;
 
 	// iterate each command, get its numeric binding
-	for (i=0; ;i++,bindptr++)
-	{
-		if (!bindptr->label)
-			break;
-
-		if (bindptr->bind1 != -1)
-		{	
+	for (i=0;bindptr->label ;i++,bindptr++) {
+		if (bindptr->bind1 != -1) {	
 			trap_Key_SetBinding( bindptr->bind1, bindptr->command );
 
-			if (bindptr->bind2 != -1)
+			if (bindptr->bind2 != -1) {
 				trap_Key_SetBinding( bindptr->bind2, bindptr->command );
+			}
 		}
 	}
 
-	if ( s_controls.invertmouse.curvalue )
+	if ( s_controls.invertmouse.curvalue ) {
 		trap_Cvar_SetValue( "m_pitch", -fabs( trap_Cvar_VariableValue( "m_pitch" ) ) );
-	else
+	}
+	else {
 		trap_Cvar_SetValue( "m_pitch", fabs( trap_Cvar_VariableValue( "m_pitch" ) ) );
+	}
 
 	trap_Cvar_SetValue( "m_filter", s_controls.smoothmouse.curvalue );
 	trap_Cvar_SetValue( "cl_run", s_controls.alwaysrun.curvalue );
@@ -919,7 +910,7 @@ static void Controls_SetConfig( void )
 	trap_Cvar_SetValue( "in_joystick", s_controls.joyenable.curvalue );
 	trap_Cvar_SetValue( "joy_threshold", s_controls.joythreshold.curvalue );
 	trap_Cvar_SetValue( "cl_freelook", s_controls.freelook.curvalue );
-        trap_Cvar_SetValue( "cg_voipTeamOnly", s_controls.voip_teamonly.curvalue);
+	trap_Cvar_SetValue( "cg_voipTeamOnly", s_controls.voip_teamonly.curvalue);
 	trap_Cmd_ExecuteText( EXEC_APPEND, "in_restart\n" );
 }
 
@@ -937,11 +928,8 @@ static void Controls_SetDefaults( void )
 	bindptr = g_bindings;
 
 	// iterate each command, set its default binding
-	for (i=0; ;i++,bindptr++)
+	for (i=0; bindptr->label ;i++,bindptr++)
 	{
-		if (!bindptr->label)
-			break;
-
 		bindptr->bind1 = bindptr->defaultbind1;
 		bindptr->bind2 = bindptr->defaultbind2;
 	}
@@ -954,7 +942,7 @@ static void Controls_SetDefaults( void )
 	s_controls.joyenable.curvalue    = Controls_GetCvarDefault( "in_joystick" );
 	s_controls.joythreshold.curvalue = Controls_GetCvarDefault( "joy_threshold" );
 	s_controls.freelook.curvalue     = Controls_GetCvarDefault( "cl_freelook" );
-        s_controls.voip_teamonly.curvalue= Controls_GetCvarDefault( "cg_voipTeamOnly");
+	s_controls.voip_teamonly.curvalue= Controls_GetCvarDefault( "cg_voipTeamOnly");
 }
 
 /*
@@ -1034,7 +1022,7 @@ static sfxHandle_t Controls_MenuKey( int key )
 	bindptr = g_bindings;
 	for (i=0; ;i++,bindptr++)
 	{
-		if (!bindptr->label)	
+		if (!bindptr->label)
 			break;
 		
 		if (bindptr->id == id)
@@ -1183,14 +1171,14 @@ static void Controls_MenuEvent( void* ptr, int event )
 		case ID_SMOOTHMOUSE:
 		case ID_ALWAYSRUN:
 		case ID_AUTOSWITCH:
-                case ID_VOIP_TEAMONLY:
+		case ID_VOIP_TEAMONLY:
 		case ID_JOYENABLE:
 		case ID_JOYTHRESHOLD:
 			if (event == QM_ACTIVATED)
 			{
 				s_controls.changesmade = qtrue;
 			}
-			break;		
+			break;
 	}
 }
 
@@ -1301,8 +1289,8 @@ static void Controls_MenuInit( void )
 	s_controls.framer.generic.flags = QMF_LEFT_JUSTIFY|QMF_INACTIVE;
 	s_controls.framer.generic.x     = 376;
 	s_controls.framer.generic.y     = 76;
-	s_controls.framer.width  	    = 256;
-	s_controls.framer.height  	    = 334;
+	s_controls.framer.width         = 256;
+	s_controls.framer.height        = 334;
 
 	y = 240 - 2 * PROP_HEIGHT;
 	
@@ -1444,25 +1432,25 @@ static void Controls_MenuInit( void )
 	s_controls.bfg.generic.ownerdraw = Controls_DrawKeyBinding;
 	s_controls.bfg.generic.id        = ID_WEAPON9;
 
-        s_controls.grapple.generic.type	     = MTYPE_ACTION;
+	s_controls.grapple.generic.type	     = MTYPE_ACTION;
 	s_controls.grapple.generic.flags     = QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS|QMF_GRAYED|QMF_HIDDEN;
 	s_controls.grapple.generic.callback  = Controls_ActionEvent;
 	s_controls.grapple.generic.ownerdraw = Controls_DrawKeyBinding;
 	s_controls.grapple.generic.id        = ID_WEAPON10;
-        
-        s_controls.nailgun.generic.type	     = MTYPE_ACTION;
+
+	s_controls.nailgun.generic.type	     = MTYPE_ACTION;
 	s_controls.nailgun.generic.flags     = QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS|QMF_GRAYED|QMF_HIDDEN;
 	s_controls.nailgun.generic.callback  = Controls_ActionEvent;
 	s_controls.nailgun.generic.ownerdraw = Controls_DrawKeyBinding;
 	s_controls.nailgun.generic.id        = ID_WEAPON11;
-        
-        s_controls.proxmine.generic.type	     = MTYPE_ACTION;
+
+	s_controls.proxmine.generic.type	     = MTYPE_ACTION;
 	s_controls.proxmine.generic.flags     = QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS|QMF_GRAYED|QMF_HIDDEN;
 	s_controls.proxmine.generic.callback  = Controls_ActionEvent;
 	s_controls.proxmine.generic.ownerdraw = Controls_DrawKeyBinding;
 	s_controls.proxmine.generic.id        = ID_WEAPON12;
-        
-        s_controls.chaingun.generic.type	     = MTYPE_ACTION;
+
+	s_controls.chaingun.generic.type      = MTYPE_ACTION;
 	s_controls.chaingun.generic.flags     = QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS|QMF_GRAYED|QMF_HIDDEN;
 	s_controls.chaingun.generic.callback  = Controls_ActionEvent;
 	s_controls.chaingun.generic.ownerdraw = Controls_DrawKeyBinding;
@@ -1570,11 +1558,11 @@ static void Controls_MenuInit( void )
 	s_controls.autoswitch.generic.type      = MTYPE_SPINCONTROL;
 	s_controls.autoswitch.generic.flags	    = QMF_SMALLFONT;
 	s_controls.autoswitch.generic.x	        = SCREEN_WIDTH/2;
-	s_controls.autoswitch.generic.name	    = "autoswitch weapons";
+	s_controls.autoswitch.generic.name      = "autoswitch weapons";
 	s_controls.autoswitch.generic.id        = ID_AUTOSWITCH;
 	s_controls.autoswitch.generic.callback  = Controls_MenuEvent;
 	s_controls.autoswitch.generic.statusbar = Controls_StatusBar;
-        s_controls.autoswitch.itemnames = autoswitch_items;
+	s_controls.autoswitch.itemnames         = autoswitch_items;
 
 	s_controls.sensitivity.generic.type	     = MTYPE_SLIDER;
 	s_controls.sensitivity.generic.x		 = SCREEN_WIDTH/2;
@@ -1616,13 +1604,13 @@ static void Controls_MenuInit( void )
 	s_controls.chat4.generic.ownerdraw = Controls_DrawKeyBinding;
 	s_controls.chat4.generic.id        = ID_CHAT4;
         
-        s_controls.voip_talk.generic.type	   = MTYPE_ACTION;
+	s_controls.voip_talk.generic.type	   = MTYPE_ACTION;
 	s_controls.voip_talk.generic.flags     = QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS|QMF_GRAYED|QMF_HIDDEN;
 	s_controls.voip_talk.generic.callback  = Controls_ActionEvent;
 	s_controls.voip_talk.generic.ownerdraw = Controls_DrawKeyBinding;
 	s_controls.voip_talk.generic.id        = ID_VOIP_TALK;
 
-        s_controls.voip_teamonly.generic.type      = MTYPE_RADIOBUTTON;
+	s_controls.voip_teamonly.generic.type      = MTYPE_RADIOBUTTON;
 	s_controls.voip_teamonly.generic.flags	    = QMF_SMALLFONT;
 	s_controls.voip_teamonly.generic.x	        = SCREEN_WIDTH/2;
 	s_controls.voip_teamonly.generic.name	    = "teamonly voicechat";
@@ -1704,10 +1692,10 @@ static void Controls_MenuInit( void )
 	Menu_AddItem( &s_controls.menu, &s_controls.railgun );
 	Menu_AddItem( &s_controls.menu, &s_controls.plasma );
 	Menu_AddItem( &s_controls.menu, &s_controls.bfg );
-        Menu_AddItem( &s_controls.menu, &s_controls.grapple );
-        Menu_AddItem( &s_controls.menu, &s_controls.nailgun );
-        Menu_AddItem( &s_controls.menu, &s_controls.proxmine );
-        Menu_AddItem( &s_controls.menu, &s_controls.chaingun );
+	Menu_AddItem( &s_controls.menu, &s_controls.grapple );
+	Menu_AddItem( &s_controls.menu, &s_controls.nailgun );
+	Menu_AddItem( &s_controls.menu, &s_controls.proxmine );
+	Menu_AddItem( &s_controls.menu, &s_controls.chaingun );
 
 	Menu_AddItem( &s_controls.menu, &s_controls.showscores );
 	Menu_AddItem( &s_controls.menu, &s_controls.showacc );
@@ -1717,8 +1705,8 @@ static void Controls_MenuInit( void )
 	Menu_AddItem( &s_controls.menu, &s_controls.chat2 );
 	Menu_AddItem( &s_controls.menu, &s_controls.chat3 );
 	Menu_AddItem( &s_controls.menu, &s_controls.chat4 );
-        Menu_AddItem( &s_controls.menu, &s_controls.voip_talk );
-        Menu_AddItem( &s_controls.menu, &s_controls.voip_teamonly );
+	Menu_AddItem( &s_controls.menu, &s_controls.voip_talk );
+	Menu_AddItem( &s_controls.menu, &s_controls.voip_teamonly );
 
 	Menu_AddItem( &s_controls.menu, &s_controls.back );
 
