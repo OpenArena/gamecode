@@ -3190,6 +3190,25 @@ static qboolean CG_WeaponSelectable( int i )
 	return qtrue;
 }
 
+static int CG_GetBestWeapon(void);
+
+void CG_BestWeapon_f( void ) {
+	int		newW;
+
+	if ( !cg.snap ) {
+		return;
+	}
+	if ( cg.snap->ps.pm_flags & PMF_FOLLOW ) {
+		return;
+	}
+
+	newW = CG_GetBestWeapon();
+	if (newW != WP_NONE) {
+		cg.weaponSelectTime = cg.time;
+		cg.weaponSelect = newW;
+	}
+}
+
 /*
 ===============
 CG_NextWeapon_f
