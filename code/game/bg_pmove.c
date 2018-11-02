@@ -50,7 +50,6 @@ float	pm_spectatorfriction = 5.0f;
 
 int		c_pmove = 0;
 
-extern int enableQ;
 extern	vmCvar_t	cg_enableQ;		// leilei - map changes player/weapons scale (for q1 adaptations)
 /*
 ===============

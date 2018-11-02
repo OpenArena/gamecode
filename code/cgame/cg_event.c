@@ -177,7 +177,7 @@ static void CG_Obituary(entityState_t *ent) {
 				if (gender == GENDER_FEMALE)
 					message = "tripped on her own grenade";
 				else if (gender == GENDER_NEUTER)
-					message = "tripped on its own grenade";
+					message = "tripped on their own grenade";
 				else
 					message = "tripped on his own grenade";
 				causeShader = cgs.media.grenadeShader;
@@ -186,7 +186,7 @@ static void CG_Obituary(entityState_t *ent) {
 				if (gender == GENDER_FEMALE)
 					message = "blew herself up";
 				else if (gender == GENDER_NEUTER)
-					message = "blew itself up";
+					message = "blew themself up";
 				else
 					message = "blew himself up";
 				causeShader = cgs.media.rocketShader;
@@ -195,7 +195,7 @@ static void CG_Obituary(entityState_t *ent) {
 				if (gender == GENDER_FEMALE)
 					message = "melted herself";
 				else if (gender == GENDER_NEUTER)
-					message = "melted itself";
+					message = "melted themself";
 				else
 					message = "melted himself";
 				causeShader = cgs.media.plasmaShader;
@@ -208,7 +208,7 @@ static void CG_Obituary(entityState_t *ent) {
 				if (gender == GENDER_FEMALE) {
 					message = "found her prox mine";
 				} else if (gender == GENDER_NEUTER) {
-					message = "found its prox mine";
+					message = "found their prox mine";
 				} else {
 					message = "found his prox mine";
 				}
@@ -218,7 +218,7 @@ static void CG_Obituary(entityState_t *ent) {
 				if (gender == GENDER_FEMALE)
 					message = "killed herself";
 				else if (gender == GENDER_NEUTER)
-					message = "killed itself";
+					message = "killed themself";
 				else
 					message = "killed himself";
 				causeShader = cgs.media.skullShader;
@@ -522,6 +522,13 @@ static void CG_UseItem(centity_t *cent) {
 
 }
 
+/**
+ * Function to check if a new is better according to cg_weaponOrder
+ * If the order is unspecified (at least one of the weapons are not specified in cg_weaponOrder) the result is false
+ * @param currentWeapon The weapon currently equipped
+ * @param newWeapon The new weapon that we might want to change to
+ * @return true if newWeapon is placed after currentWeapon in cg_weaponOrder. False otherwise
+ */
 static qboolean CG_WeaponHigher(int currentWeapon, int newWeapon) {
 	char *currentScore = NULL;
 	char *newScore = NULL;
@@ -530,12 +537,10 @@ static qboolean CG_WeaponHigher(int currentWeapon, int newWeapon) {
 	currentScore = strstr(cg_weaponOrder.string, weapon);
 	Com_sprintf(weapon, 5, "/%i/", newWeapon);
 	newScore = strstr(cg_weaponOrder.string, weapon);
-	if (!newScore || !currentScore)
+	if (!newScore || !currentScore) {
 		return qfalse;
-	if (newScore > currentScore)
-		return qtrue;
-	else
-		return qfalse;
+	}
+	return newScore > currentScore;
 }
 
 /*

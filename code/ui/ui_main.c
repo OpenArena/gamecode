@@ -1703,9 +1703,6 @@ static void UI_DrawPlayerModel(rectDef_t *rect)
 	vec3_t	moveangles;
 
 	if (trap_Cvar_VariableValue("ui_Q3Model")) {
-		strcpy(model, UI_Cvar_VariableString("model"));
-		strcpy(head, UI_Cvar_VariableString("headmodel"));
-
 		// leilei - and do the team too
 		strcpy(model, UI_Cvar_VariableString("team_model"));
 		strcpy(head, UI_Cvar_VariableString("team_headmodel"));
@@ -2402,7 +2399,7 @@ static void UI_DrawBotName(rectDef_t *rect, float scale, vec4_t color, int textS
 	int value = uiInfo.botIndex;
 	int game = trap_Cvar_VariableValue("g_gametype");
 	const char *text = "";
-	if (game >= GT_TEAM && !GT_LMS ) {
+	if (game >= GT_TEAM && game != GT_LMS ) {
 		if (value >= uiInfo.characterCount) {
 			value = 0;
 		}
@@ -2632,7 +2629,7 @@ static void UI_DrawGLInfo(rectDef_t *rect, float scale, vec4_t color, int textSt
 	y = rect->y + 45;
 	numLines = 0;
 	while ( y < rect->y + rect->h && *eptr ) {
-		while ( *eptr && *eptr == ' ' )
+		while ( *eptr == ' ' )
 			*eptr++ = '\0';
 
 		// track start of valid string
@@ -2909,7 +2906,7 @@ static qboolean UI_OwnerDrawVisible(int flags)
 			flags &= ~UI_SHOW_NOTFAVORITESERVERS;
 		}
 		if (flags & UI_SHOW_ANYTEAMGAME) {
-			if (uiInfo.gameTypes[ui_gameType.integer].gtEnum <= GT_TEAM && uiInfo.gameTypes[ui_gameType.integer].gtEnum != GT_LMS ) {
+			if (uiInfo.gameTypes[ui_gameType.integer].gtEnum <= GT_TEAM || uiInfo.gameTypes[ui_gameType.integer].gtEnum != GT_LMS ) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_ANYTEAMGAME;
@@ -3331,7 +3328,7 @@ static qboolean UI_BotName_HandleKey(int flags, float *special, int key)
 			value++;
 		}
 
-		if (game >= GT_TEAM && !GT_LMS) {
+		if (game >= GT_TEAM && game != GT_LMS) {
 			if (value >= uiInfo.characterCount + 2) {
 				value = 0;
 			}
@@ -3784,7 +3781,7 @@ static void UI_StartSkirmish(qboolean next, char *name)
 		while( *p && count < 16 ) {
 
 			//skip spaces
-			while( *p && *p == ' ' ) {
+			while( *p == ' ' ) {
 				p++;
 			}
 			if( !p ) {
@@ -4785,8 +4782,6 @@ static void UI_BuildServerDisplayList(qboolean force, qboolean doReset)
 {
 	int i, count, clients, maxClients, ping, game, len, visible;
 	char info[MAX_STRING_CHARS];
-//	qboolean startRefresh = qtrue; TTimo: unused
-	static int numinvisible;
 
 	if (!(force || uiInfo.uiDC.realTime > uiInfo.serverStatus.nextDisplayRefresh)) {
 		return;
@@ -4805,7 +4800,6 @@ static void UI_BuildServerDisplayList(qboolean force, qboolean doReset)
 	}
 
 	if (doReset) {
-		numinvisible = 0;
 		// clear number of displayed servers
 		uiInfo.serverStatus.numDisplayServers = 0;
 		uiInfo.serverStatus.numPlayersOnServers = 0;
@@ -4890,7 +4884,6 @@ static void UI_BuildServerDisplayList(qboolean force, qboolean doReset)
 			// done with this server
 			if (ping > 0) {
 				trap_LAN_MarkServerVisible(ui_netSource.integer, i, qfalse);
-				numinvisible++;
 			}
 		}
 	}

@@ -39,8 +39,6 @@ typedef struct {
 gentity_t		g_entities[MAX_GENTITIES];
 gclient_t		g_clients[MAX_CLIENTS];
 
-extern int	enableQ;
-
 vmCvar_t	g_gametype;
 vmCvar_t	g_dmflags;
 vmCvar_t        g_videoflags;
@@ -110,7 +108,7 @@ vmCvar_t	g_enableFS;		// leilei
 vmCvar_t	g_enableBreath;
 vmCvar_t	g_proxMineTimeout;
 vmCvar_t	g_music;
-vmCvar_t        g_spawnprotect;
+vmCvar_t	g_spawnprotect;
 //Following for elimination:
 vmCvar_t	g_elimination_selfdamage;
 vmCvar_t	g_elimination_startHealth;
@@ -120,7 +118,7 @@ vmCvar_t	g_elimination_grapple;
 vmCvar_t	g_elimination_roundtime;
 vmCvar_t	g_elimination_warmup;
 vmCvar_t	g_elimination_activewarmup;
-vmCvar_t        g_elimination_allgametypes;
+vmCvar_t	g_elimination_allgametypes;
 vmCvar_t	g_elimination_machinegun;
 vmCvar_t	g_elimination_shotgun;
 vmCvar_t	g_elimination_grenade;
@@ -132,7 +130,7 @@ vmCvar_t	g_elimination_chain;
 vmCvar_t	g_elimination_mine;
 vmCvar_t	g_elimination_nail;
 
-vmCvar_t        g_elimination_lockspectator;
+vmCvar_t	g_elimination_lockspectator;
 
 vmCvar_t	g_rockets;
 
@@ -278,7 +276,7 @@ static cvarTable_t		gameCvarTable[] = {
 	//Votes start:
 	{ &g_allowVote, "g_allowVote", "1", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse },
 	{ &g_maxvotes, "g_maxVotes", MAX_VOTE_COUNT, CVAR_ARCHIVE, 0, qfalse },
-	{ &g_voteNames, "g_voteNames", "/map_restart/nextmap/map/g_gametype/kick/clientkick/g_doWarmup/timelimit/fraglimit/shuffle/", CVAR_ARCHIVE, 0, qfalse }, //clientkick g_doWarmup timelimit fraglimit
+	{ &g_voteNames, "g_voteNames", "/map_restart/nextmap/map/g_gametype/kick/clientkick/g_doWarmup/timelimit/fraglimit/", CVAR_ARCHIVE, 0, qfalse },
 	{ &g_voteBan, "g_voteBan", "0", CVAR_ARCHIVE, 0, qfalse },
 	{ &g_voteGametypes, "g_voteGametypes", "/0/1/3/4/5/6/7/8/9/10/11/12/13/", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse },
 	{ &g_voteMaxTimelimit, "g_voteMaxTimelimit", "1000", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse },

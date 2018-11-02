@@ -23,7 +23,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 // cg_players.c -- handle the media and animation for player entities
 #include "cg_local.h"
 
-char *cg_customSoundNames[MAX_CUSTOM_SOUNDS] = {
+static char *cg_customSoundNames[MAX_CUSTOM_SOUNDS] = {
 	"*death1.wav",
 	"*death2.wav",
 	"*death3.wav",
@@ -1506,7 +1506,7 @@ static void CG_SwingAngles(float destination, float swingTolerance, float clampT
 			*swinging = qfalse;
 		}
 		*angle = AngleMod(*angle + move);
-	} else if (swing < 0) {
+	} else {
 		move = cg.frametime * scale * -speed;
 		if (move <= swing) {
 			move = swing;
@@ -1702,9 +1702,9 @@ static void CG_PlayerAngles(centity_t *cent, vec3_t legs[3], vec3_t torso[3], ve
 		if (ci->fixedtorso) {
 			torsoAngles[PITCH] = 0.0f;
 		}
-		if (camereyes) {
-			torsoAngles[PITCH] = 0.0f; // don't pitch 
-		}
+	//	if (camereyes) {
+	//		torsoAngles[PITCH] = 0.0f; // don't pitch 
+	//	}
 	}
 
 

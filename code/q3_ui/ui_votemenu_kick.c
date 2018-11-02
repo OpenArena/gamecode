@@ -23,36 +23,35 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "ui_local.h"
 
 
-#define ART_BACK0			"menu/" MENU_ART_DIR "/back_0"
-#define ART_BACK1			"menu/" MENU_ART_DIR "/back_1"
-#define ART_FIGHT0			"menu/" MENU_ART_DIR "/accept_0"
-#define ART_FIGHT1			"menu/" MENU_ART_DIR "/accept_1"
+#define ART_BACK0                       "menu/" MENU_ART_DIR "/back_0"
+#define ART_BACK1                       "menu/" MENU_ART_DIR "/back_1"
+#define ART_FIGHT0                      "menu/" MENU_ART_DIR "/accept_0"
+#define ART_FIGHT1                      "menu/" MENU_ART_DIR "/accept_1"
 #define ART_BACKGROUND                  "menu/" MENU_ART_DIR "/addbotframe"
-#define ART_ARROWS			"menu/" MENU_ART_DIR "/arrows_vert_0"
-#define ART_ARROWUP			"menu/" MENU_ART_DIR "/arrows_vert_top"
+#define ART_ARROWS                      "menu/" MENU_ART_DIR "/arrows_vert_0"
+#define ART_ARROWUP                     "menu/" MENU_ART_DIR "/arrows_vert_top"
 #define ART_ARROWDOWN                   "menu/" MENU_ART_DIR "/arrows_vert_bot"
 
-#define ID_BACK				10
-#define ID_GO				11
-#define ID_LIST				12
-#define ID_UP				13
-#define ID_DOWN				14
-#define ID_PLAYERNAME0			20
-#define ID_PLAYERNAME1			21
-#define ID_PLAYERNAME2			22
-#define ID_PLAYERNAME3			23
-#define ID_PLAYERNAME4			24
-#define ID_PLAYERNAME5			25
-#define ID_PLAYERNAME6			26
-#define ID_PLAYERNAME7			27
-#define ID_PLAYERNAME8			28
-#define ID_PLAYERNAME9			29
-#define SIZE_OF_LIST                    10
-//#define ID_PLAYERNAME10			30
+#define ID_BACK 10
+#define ID_GO 11
+#define ID_LIST 12
+#define ID_UP 13
+#define ID_DOWN 14
+#define ID_PLAYERNAME0 20
+#define ID_PLAYERNAME1 21
+#define ID_PLAYERNAME2 22
+#define ID_PLAYERNAME3 23
+#define ID_PLAYERNAME4 24
+#define ID_PLAYERNAME5 25
+#define ID_PLAYERNAME6 26
+#define ID_PLAYERNAME7 27
+#define ID_PLAYERNAME8 28
+#define ID_PLAYERNAME9 29
+#define SIZE_OF_LIST 10
 
-#define SIZE_OF_NAME                    32
+#define SIZE_OF_NAME 32
 
-#define VOTEKICK_MENU_VERTICAL_SPACING	20
+#define VOTEKICK_MENU_VERTICAL_SPACING 20
 
 typedef struct {
 	int id;
@@ -60,17 +59,17 @@ typedef struct {
 } player;
 
 typedef struct {
-	menuframework_s	menu;
-	menubitmap_s	arrows;
-	menutext_s		banner;
-	menubitmap_s	up;
-	menubitmap_s	down;
-	menutext_s	players[SIZE_OF_LIST];
-	menubitmap_s	go;
-	menubitmap_s	back;
+	menuframework_s menu;
+	menubitmap_s    arrows;
+	menutext_s      banner;
+	menubitmap_s    up;
+	menubitmap_s    down;
+	menutext_s      players[SIZE_OF_LIST];
+	menubitmap_s    go;
+	menubitmap_s    back;
 
-	int		numPlayers;
-	int		selected;
+	int             numPlayers;
+	int             selected;
 	int             startIndex;
 	player          players_profiles[MAX_CLIENTS];
 } votemenu_kick_t;
@@ -195,7 +194,7 @@ static void VoteKickMenu_Cache( void )
 }
 
 static void setKickMenutext(menutext_s *menu,int y,int id,qboolean active,char *text) {
-	menu->generic.type            = MTYPE_PTEXT;
+	menu->generic.type        = MTYPE_PTEXT;
 	menu->color               = color_red;
 	menu->generic.flags       = QMF_CENTER_JUSTIFY|QMF_PULSEIFFOCUS;
 	if(!active) {
@@ -227,19 +226,19 @@ void UI_VoteKickMenuInternal( void )
 	s_votemenu_kick.menu.draw = UI_VoteKickMenu_Draw;
 
 	s_votemenu_kick.banner.generic.type  = MTYPE_BTEXT;
-	s_votemenu_kick.banner.generic.x	  = 320;
-	s_votemenu_kick.banner.generic.y	  = 16;
-	s_votemenu_kick.banner.string		  = "CALL VOTE KICK";
-	s_votemenu_kick.banner.color	      = color_white;
-	s_votemenu_kick.banner.style	      = UI_CENTER;
+	s_votemenu_kick.banner.generic.x     = 320;
+	s_votemenu_kick.banner.generic.y     = 16;
+	s_votemenu_kick.banner.string        = "CALL VOTE KICK";
+	s_votemenu_kick.banner.color         = color_white;
+	s_votemenu_kick.banner.style         = UI_CENTER;
 
 	s_votemenu_kick.arrows.generic.type  = MTYPE_BITMAP;
 	s_votemenu_kick.arrows.generic.name  = ART_ARROWS;
 	s_votemenu_kick.arrows.generic.flags = QMF_INACTIVE;
-	s_votemenu_kick.arrows.generic.x	 = 200;
-	s_votemenu_kick.arrows.generic.y	 = 128;
-	s_votemenu_kick.arrows.width  	     = 64;
-	s_votemenu_kick.arrows.height  	     = 128;
+	s_votemenu_kick.arrows.generic.x     = 200;
+	s_votemenu_kick.arrows.generic.y     = 128;
+	s_votemenu_kick.arrows.width         = 64;
+	s_votemenu_kick.arrows.height        = 128;
 
 	y = 98;
 	setKickMenutext(&s_votemenu_kick.players[0],y,ID_PLAYERNAME0,s_votemenu_kick.startIndex<s_votemenu_kick.numPlayers,s_votemenu_kick.players_profiles[s_votemenu_kick.startIndex].name);
@@ -262,47 +261,47 @@ void UI_VoteKickMenuInternal( void )
 	y+=VOTEKICK_MENU_VERTICAL_SPACING;
 	setKickMenutext(&s_votemenu_kick.players[9],y,ID_PLAYERNAME9,s_votemenu_kick.startIndex+9<s_votemenu_kick.numPlayers,s_votemenu_kick.players_profiles[s_votemenu_kick.startIndex+9].name);
 
-	s_votemenu_kick.up.generic.type	    = MTYPE_BITMAP;
+	s_votemenu_kick.up.generic.type     = MTYPE_BITMAP;
 	s_votemenu_kick.up.generic.flags    = QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS;
-	s_votemenu_kick.up.generic.x		= 200;
-	s_votemenu_kick.up.generic.y		= 128;
-	s_votemenu_kick.up.generic.id	    = ID_UP;
+	s_votemenu_kick.up.generic.x        = 200;
+	s_votemenu_kick.up.generic.y        = 128;
+	s_votemenu_kick.up.generic.id       = ID_UP;
 	s_votemenu_kick.up.generic.callback = UI_VoteKickMenu_UpEvent;
-	s_votemenu_kick.up.width  		    = 64;
-	s_votemenu_kick.up.height  		    = 64;
+	s_votemenu_kick.up.width            = 64;
+	s_votemenu_kick.up.height           = 64;
 	s_votemenu_kick.up.focuspic         = ART_ARROWUP;
 
-	s_votemenu_kick.down.generic.type	  = MTYPE_BITMAP;
+	s_votemenu_kick.down.generic.type     = MTYPE_BITMAP;
 	s_votemenu_kick.down.generic.flags    = QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS;
-	s_votemenu_kick.down.generic.x		  = 200;
-	s_votemenu_kick.down.generic.y		  = 128+64;
-	s_votemenu_kick.down.generic.id	      = ID_DOWN;
+	s_votemenu_kick.down.generic.x        = 200;
+	s_votemenu_kick.down.generic.y        = 128+64;
+	s_votemenu_kick.down.generic.id       = ID_DOWN;
 	s_votemenu_kick.down.generic.callback = UI_VoteKickMenu_DownEvent;
-	s_votemenu_kick.down.width  		  = 64;
-	s_votemenu_kick.down.height  		  = 64;
+	s_votemenu_kick.down.width            = 64;
+	s_votemenu_kick.down.height           = 64;
 	s_votemenu_kick.down.focuspic         = ART_ARROWDOWN;
 
-	s_votemenu_kick.go.generic.type			= MTYPE_BITMAP;
-	s_votemenu_kick.go.generic.name			= ART_FIGHT0;
-	s_votemenu_kick.go.generic.flags		= QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS;
-	s_votemenu_kick.go.generic.id			= ID_GO;
-	s_votemenu_kick.go.generic.callback		= VoteKickMenu_Event;
-	s_votemenu_kick.go.generic.x			= 320+128-128;
-	s_votemenu_kick.go.generic.y			= 256+128-64;
-	s_votemenu_kick.go.width  				= 128;
-	s_votemenu_kick.go.height  				= 64;
-	s_votemenu_kick.go.focuspic				= ART_FIGHT1;
+	s_votemenu_kick.go.generic.type       = MTYPE_BITMAP;
+	s_votemenu_kick.go.generic.name       = ART_FIGHT0;
+	s_votemenu_kick.go.generic.flags      = QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS;
+	s_votemenu_kick.go.generic.id         = ID_GO;
+	s_votemenu_kick.go.generic.callback   = VoteKickMenu_Event;
+	s_votemenu_kick.go.generic.x          = 320+128-128;
+	s_votemenu_kick.go.generic.y          = 256+128-64;
+	s_votemenu_kick.go.width              = 128;
+	s_votemenu_kick.go.height             = 64;
+	s_votemenu_kick.go.focuspic           = ART_FIGHT1;
 
-	s_votemenu_kick.back.generic.type		= MTYPE_BITMAP;
-	s_votemenu_kick.back.generic.name		= ART_BACK0;
-	s_votemenu_kick.back.generic.flags		= QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS;
-	s_votemenu_kick.back.generic.id			= ID_BACK;
-	s_votemenu_kick.back.generic.callback	= VoteKickMenu_Event;
-	s_votemenu_kick.back.generic.x			= 320-128;
-	s_votemenu_kick.back.generic.y			= 256+128-64;
-	s_votemenu_kick.back.width				= 128;
-	s_votemenu_kick.back.height				= 64;
-	s_votemenu_kick.back.focuspic			= ART_BACK1;
+	s_votemenu_kick.back.generic.type     = MTYPE_BITMAP;
+	s_votemenu_kick.back.generic.name     = ART_BACK0;
+	s_votemenu_kick.back.generic.flags    = QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS;
+	s_votemenu_kick.back.generic.id       = ID_BACK;
+	s_votemenu_kick.back.generic.callback = VoteKickMenu_Event;
+	s_votemenu_kick.back.generic.x        = 320-128;
+	s_votemenu_kick.back.generic.y        = 256+128-64;
+	s_votemenu_kick.back.width            = 128;
+	s_votemenu_kick.back.height           = 64;
+	s_votemenu_kick.back.focuspic         = ART_BACK1;
 }
 
 /*
