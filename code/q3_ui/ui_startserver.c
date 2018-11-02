@@ -1413,7 +1413,7 @@ static void ServerOptions_InitBotNames( void ) {
 	p = &bots[0];
 	while( *p && count < PLAYER_SLOTS ) {
 		//skip spaces
-		while( *p && *p == ' ' ) {
+		while( *p == ' ' ) {
 			p++;
 		}
 		if( !p ) {
@@ -1423,7 +1423,7 @@ static void ServerOptions_InitBotNames( void ) {
 		// mark start of bot name
 		bot = p;
 
-		// skip until space of null
+		// skip until space or null
 		while( *p && *p != ' ' ) {
 			p++;
 		}

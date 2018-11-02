@@ -357,6 +357,23 @@ t_customvote getCustomVote(char* votecommand) {
 	return result;
 }
 
+const char* whiteListedStr(const char* str) {
+	static char buffer[1024];
+	int sourceIndex = 0;
+	int destIndex = 0;
+	int sourceLength = strlen(str);
+	memset(&buffer, 0, sizeof(buffer));
+	for (; sourceIndex < sourceLength && destIndex < sizeof(buffer); ++sourceIndex) {
+		char a = str[sourceIndex];
+		if ( (a >= 'a' && a <= 'z') || (a >= 'A' && a <= 'Z') || (a >= '0' && a <= '9') || a == ' ' || a == '?' ) {
+			buffer[destIndex] = a;
+			++destIndex;
+		}
+	}
+	buffer[sizeof(buffer)-1] = 0;
+	return buffer;
+}
+
 /*
 ==================
 CheckVote
@@ -374,28 +391,29 @@ void CheckVote( void ) {
 		if(g_dmflags.integer & DF_LIGHT_VOTING) {
 			//Let pass if there was at least twice as many for as against
 			if ( level.voteYes > level.voteNo*2 ) {
-				trap_SendServerCommand( -1, "print \"Vote passed. At least 2 of 3 voted yes\n\"" );
+				trap_SendServerCommand( -1, va("print \"Vote passed. At least 2 of 3 voted yes (%s)\n\"", whiteListedStr(level.voteDisplayString)) );
 				level.voteExecuteTime = level.time + 3000;
 			} else {
 				//Let pass if there is more yes than no and at least 2 yes votes and at least 30% yes of all on the server
 				if ( level.voteYes > level.voteNo && level.voteYes >= 2 && (level.voteYes*10)>(level.numVotingClients*3) ) {
-					trap_SendServerCommand( -1, "print \"Vote passed. More yes than no.\n\"" );
+					trap_SendServerCommand( -1, va("print \"Vote passed. More yes than no. (%s)\n\"", whiteListedStr(level.voteDisplayString)) );
 					level.voteExecuteTime = level.time + 3000;
-				} else
-					trap_SendServerCommand( -1, "print \"Vote failed.\n\"" );
+				} else {
+					trap_SendServerCommand( -1, va("print \"Vote failed. (%s)\n\"", whiteListedStr(level.voteDisplayString)) );
+				}
 			}
 		} else {
-			trap_SendServerCommand( -1, "print \"Vote failed.\n\"" );
+			trap_SendServerCommand( -1, va("print \"Vote failed. (%s)\n\"", whiteListedStr(level.voteDisplayString)) );
 		}
 	} else {
 		// ATVI Q3 1.32 Patch #9, WNF
 		if ( level.voteYes > (level.numVotingClients)/2 ) {
 			// execute the command, then remove the vote
-			trap_SendServerCommand( -1, "print \"Vote passed.\n\"" );
+			trap_SendServerCommand( -1, va ("print \"Vote passed. (%s)\n\"", whiteListedStr(level.voteDisplayString)) );
 			level.voteExecuteTime = level.time + 3000;
 		} else if ( level.voteNo >= (level.numVotingClients)/2 ) {
 			// same behavior as a timeout
-			trap_SendServerCommand( -1, "print \"Vote failed.\n\"" );
+			trap_SendServerCommand( -1, va("print \"Vote failed. (%s)\n\"", whiteListedStr(level.voteDisplayString) ) );
 		} else {
 			// still waiting for a majority
 			return;

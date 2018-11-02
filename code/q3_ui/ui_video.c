@@ -195,7 +195,7 @@ static void UI_DriverInfo_Menu( void )
 	eptr = s_driverinfo.stringbuff;
 	while ( s_driverinfo.numstrings<40 && *eptr )
 	{
-		while ( *eptr && *eptr == ' ' )
+		while ( *eptr == ' ' )
 			*eptr++ = '\0';
 
 		// track start of valid string

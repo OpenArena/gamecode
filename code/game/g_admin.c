@@ -2480,15 +2480,17 @@ qboolean G_admin_admintest( gentity_t *ent, int skiparg )
 		}
 	}
 
-	if( found ) {
-		l = g_admin_admins[ i ]->level;
-		for( i = 0; i < MAX_ADMIN_LEVELS && g_admin_levels[ i ]; i++ ) {
-			if( g_admin_levels[ i ]->level != l )
-				continue;
-			if( *g_admin_levels[ i ]->name ) {
-				lname = qtrue;
-				break;
-			}
+	if (!found) {
+		return qfalse;
+	}
+	
+	l = g_admin_admins[ i ]->level;
+	for( i = 0; i < MAX_ADMIN_LEVELS && g_admin_levels[ i ]; i++ ) {
+		if( g_admin_levels[ i ]->level != l )
+			continue;
+		if( *g_admin_levels[ i ]->name ) {
+			lname = qtrue;
+			break;
 		}
 	}
 	AP( va( "print \"^3!admintest: ^7%s^7 is a level %d admin %s%s^7%s\n\"",

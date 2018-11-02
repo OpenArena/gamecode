@@ -2908,11 +2908,7 @@ static rectDef_t *Item_CorrectedTextRect(itemDef_t *item) {
 void Menu_HandleKey(menuDef_t *menu, int key, qboolean down) {
 	int i;
 	itemDef_t *item = NULL;
-	qboolean inHandler = qfalse;
 
-	if (inHandler) {
-		return;
-	}
 	// Changed RD
 	if (DC->getCVarValue("ui_transitionkey")) {
 		for (i = 0; i < menu->itemCount; i++) {
@@ -2922,10 +2918,8 @@ void Menu_HandleKey(menuDef_t *menu, int key, qboolean down) {
 		}
 	}
 	// end changed RD
-	inHandler = qtrue;
 	if (g_waitingForKey && down) {
 		Item_Bind_HandleKey(g_bindItem, key, down);
-		inHandler = qfalse;
 		return;
 	}
 
@@ -2933,7 +2927,6 @@ void Menu_HandleKey(menuDef_t *menu, int key, qboolean down) {
 		if (!Item_TextField_HandleKey(g_editItem, key)) {
 			g_editingField = qfalse;
 			g_editItem = NULL;
-			inHandler = qfalse;
 			return;
 		} else if (key == K_MOUSE1 || key == K_MOUSE2 || key == K_MOUSE3) {
 			g_editingField = qfalse;
@@ -2945,7 +2938,6 @@ void Menu_HandleKey(menuDef_t *menu, int key, qboolean down) {
 	}
 
 	if (menu == NULL) {
-		inHandler = qfalse;
 		return;
 	}
 
@@ -2957,7 +2949,6 @@ void Menu_HandleKey(menuDef_t *menu, int key, qboolean down) {
 			inHandleKey = qtrue;
 			Menus_HandleOOBClick(menu, key, down);
 			inHandleKey = qfalse;
-			inHandler = qfalse;
 			return;
 		}
 	}
@@ -2972,13 +2963,11 @@ void Menu_HandleKey(menuDef_t *menu, int key, qboolean down) {
 	if (item != NULL) {
 		if (Item_HandleKey(item, key, down)) {
 			Item_Action(item);
-			inHandler = qfalse;
 			return;
 		}
 	}
 
 	if (!down) {
-		inHandler = qfalse;
 		return;
 	}
 
@@ -3092,7 +3081,6 @@ void Menu_HandleKey(menuDef_t *menu, int key, qboolean down) {
 			}
 			break;
 	}
-	inHandler = qfalse;
 }
 
 void ToWindowCoords(float *x, float *y, windowDef_t *window) {
@@ -3769,13 +3757,6 @@ typedef struct {
 	int bind2;
 } bind_t;
 
-typedef struct {
-	char* name;
-	float defaultvalue;
-	float value;
-} configcvar_t;
-
-
 static bind_t g_bindings[] ={
 	{"+scores", K_TAB, -1, -1, -1},
 	{"+button2", K_ENTER, -1, -1, -1},
@@ -3843,19 +3824,6 @@ static bind_t g_bindings[] ={
 
 static const int g_bindCount = sizeof (g_bindings) / sizeof (bind_t);
 
-#ifndef MISSIONPACK // bk001206
-static configcvar_t g_configcvars[] ={
-	{"cl_run", 0, 0},
-	{"m_pitch", 0, 0},
-	{"cg_autoswitch", 0, 0},
-	{"sensitivity", 0, 0},
-	{"in_joystick", 0, 0},
-	{"joy_threshold", 0, 0},
-	{"m_filter", 0, 0},
-	{"cl_freelook", 0, 0},
-	{NULL, 0, 0}
-};
-#endif
 
 /*
 =================

@@ -565,6 +565,7 @@ static consoleCommand_t commands[] = {
 	{ "-zoom", CG_ZoomUp_f},
 	{ "sizeup", CG_SizeUp_f},
 	{ "sizedown", CG_SizeDown_f},
+	{ "weapbest", CG_BestWeapon_f},
 	{ "weapnext", CG_NextWeapon_f},
 	{ "weapprev", CG_PrevWeapon_f},
 	{ "weapon", CG_Weapon_f},
