@@ -36,7 +36,7 @@ G_ReadAltKillSettings
 Since this is cvar dependent, it has to be placed in G_InitGame after cvars are registered.
 =================
 */
-qboolean G_ReadAltKillSettings( gentity_t *ent, int skiparg )
+qboolean G_ReadAltKillSettings( void )
 {
 	//Let's Initialize some Spree structs/objects
 	killspree_t     *k = NULL;
@@ -77,7 +77,7 @@ qboolean G_ReadAltKillSettings( gentity_t *ent, int skiparg )
 	// If the config file is not defined...forget reading/loading
 	if( !g_sprees.string[0] ) {
 		//Let's disable multikills to keep stock excellent sound
-		if( g_altExcellent.integer == 1 )
+		if( g_altExcellent.integer )
 		{
 			trap_Cvar_Set( "g_altExcellent", "0" );
 		}
@@ -201,15 +201,16 @@ qboolean G_ReadAltKillSettings( gentity_t *ent, int skiparg )
 	BG_Free( cnf2 );
 	G_Printf("Sprees/Kills: loaded %d killing sprees, %d death sprees, and %d multikills.\n", ksc, dsc, mc );
 	//Mark the Upper Bounds of the Arrays (Since they start numbering at 0, We subtract 1 )
-		level.kSpreeUBound = ( ksc - 1 );        
-		level.dSpreeUBound = ( dsc - 1 );
+	level.kSpreeUBound = ( ksc - 1 );        
+	level.dSpreeUBound = ( dsc - 1 );
 	if( mc > 0 ) {
 		level.mKillUBound = ( mc - 1 );
-	} else {
+	} 
+	else {
 		level.mKillUBound = -1;
 		//KK-OAX We don't have any kills defined, revert to stock.
 		//FIXME: Make sure this change shows up in the console... 
-		if( g_altExcellent.integer == 1 ) {
+		if( g_altExcellent.integer ) {
 			trap_Cvar_Set( "g_altExcellent", "0" );
 		}
 
@@ -218,7 +219,7 @@ qboolean G_ReadAltKillSettings( gentity_t *ent, int skiparg )
 }
 
 
-static char *fillPlaceHolder( char *stringToSearch, char *placeHolder, char *replaceWith )
+static const char *fillPlaceHolder( const char *stringToSearch, const char *placeHolder, const char *replaceWith )
 {
 	static char output[ MAX_SAY_TEXT ];
 	char *p;
@@ -235,7 +236,7 @@ static char *fillPlaceHolder( char *stringToSearch, char *placeHolder, char *rep
 }
 
 //This concatenate's the message to broadcast to the clients. 
-static char *CreateMessage( gentity_t *ent, char *message, char *spreeNumber )
+static char *CreateMessage( gentity_t *ent, const char *message, const char *spreeNumber )
 {
 	static char output[ MAX_SAY_TEXT ] = { "" };
 
@@ -401,7 +402,8 @@ void G_CheckForSpree( gentity_t *ent, int streak2Test, qboolean checkKillSpree )
 				}
 			}
 		}   
-	} else /*if( checkKillSpree )*/ {
+	} 
+	else {
 		//Is the streak higher than the largest level defined?
 		if( divisionHolder > level.kSpreeUBound ) {
 			//Let's make sure it's a whole number to mimic the other sprees
@@ -419,13 +421,7 @@ void G_CheckForSpree( gentity_t *ent, int streak2Test, qboolean checkKillSpree )
 			sound = killSprees[ level.kSpreeUBound ]->sound2Play;
 			soundIndex = G_SoundIndex( sound );
 			soundIndex = G_SoundIndex( sound );
-			//G_GlobalSound( soundIndex );
 			G_Sound(ent,0,soundIndex);
-			/* Doesn't do anything at the moment. cp does not work while kill message is displayed
-			 * if( position == CENTER_PRINT ) {
-				//Only Center print for player doing the killing spree
-				CP( va("cp \"%s\"", returnedString ) );
-			}*/
 			AP( va("chat \"%s\"", returnedString ) );
 		} else { 
 			for( i = 0; killSprees[ i ]; i++ ) {
@@ -436,21 +432,13 @@ void G_CheckForSpree( gentity_t *ent, int streak2Test, qboolean checkKillSpree )
 					sound = killSprees[ i ]->sound2Play;
 					soundIndex = G_SoundIndex( sound );                
 					soundIndex = G_SoundIndex( sound );
-					//G_GlobalSound( soundIndex );
 					G_Sound(ent,0,soundIndex);
-					/*if( position == CENTER_PRINT ) {
-						//Only Center print for player doing the killing spree
-						CP( va("cp \"%s\"", returnedString ) );
-					}*/
 					AP( va("chat \"%s\"", returnedString ) );
 					break;
 				}
 			}
 		}    
-	} /*else {
-		G_Printf("Killing Spree Error in G_CheckForSpree\n");
-		return;
-	}*/
+	}
 }
 
 
@@ -480,32 +468,26 @@ void G_checkForMultiKill( gentity_t *ent ) {
 		G_Sound(ent, 0, soundIndex );
 		AP( va("chat \"%s\"", returnedString ) );
 		return;
-	} else {     
-		for( i = 0; multiKills[ i ]; i++ ) {
-			//If the multikill count is equal to a killLevel let's do this. 
-
-			if( multiKills[ i ]->kills == multiKillCount ) {
-				Q_snprintf( multiKillString, sizeof( multiKillString ), "%i", multiKills[ i ]->kills );
-				//Build the Message
-				returnedString = CreateMessage ( ent, multiKills[ i ]->killMsg, multiKillString );
-				//Grab the sound
-				sound = multiKills[ i ]->sound2Play;
-				//Index the sound
-				soundIndex = G_SoundIndex( sound );
-				//Play the sound
-				G_Sound(ent, 0, soundIndex );
-				/* Print the String
-				Since we don't want to clutter screens (the player is already going to get the excellent icon)
-				we won't give them an option to centerprint. 
-				*/
-				AP( va("chat \"%s\"", returnedString ) );
-				break;
-			}
-		}   
-
 	}
+	for( i = 0; multiKills[ i ]; i++ ) {
+		//If the multikill count is equal to a killLevel let's do this. 
 
+		if( multiKills[ i ]->kills == multiKillCount ) {
+			Q_snprintf( multiKillString, sizeof( multiKillString ), "%i", multiKills[ i ]->kills );
+			//Build the Message
+			returnedString = CreateMessage ( ent, multiKills[ i ]->killMsg, multiKillString );
+			//Grab the sound
+			sound = multiKills[ i ]->sound2Play;
+			//Index the sound
+			soundIndex = G_SoundIndex( sound );
+			//Play the sound
+			G_Sound(ent, 0, soundIndex );
+			/* Print the String
+			Since we don't want to clutter screens (the player is already going to get the excellent icon)
+			we won't give them an option to centerprint. 
+			*/
+			AP( va("chat \"%s\"", returnedString ) );
+			break;
+		}
+	}   
 }
-
-
-     
