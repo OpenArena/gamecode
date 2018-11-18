@@ -961,8 +961,10 @@ G_ItemDisabled
 */
 int G_ItemDisabled( gitem_t *item )
 {
-
 	char name[128];
+	if (!g_runes.integer && item->giType == IT_PERSISTANT_POWERUP) {
+		return qtrue;
+	}
 
 	Com_sprintf(name, sizeof(name), "disable_%s", item->classname);
 	return trap_Cvar_VariableIntegerValue( name );
@@ -985,8 +987,6 @@ void G_SpawnItem (gentity_t *ent, gitem_t *item)
 
 	RegisterItem( item );
 	if ( G_ItemDisabled(item) )
-		return;
-	if (!g_runes.integer && item->giType == IT_PERSISTANT_POWERUP)
 		return;
 
 	ent->item = item;
