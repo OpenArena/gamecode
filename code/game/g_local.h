@@ -1137,7 +1137,7 @@ extern vmCvar_t		g_elimination_ctf_oneway;	//Only attack in one direction (level
 
 extern vmCvar_t         g_awardpushing; //The server can decide if players are awarded for pushing people in lave etc.
 
-extern vmCvar_t         g_persistantpowerups;
+extern vmCvar_t g_runes;
 
 extern vmCvar_t        g_catchup; //Favors the week players
 

@@ -1246,7 +1246,8 @@ long strtol(const char *nptr, const char **endptr, int base) {
 			base = 16;
 		} else if (base == 0)
 			base = 8;
-	} else if (base == 0)
+	}
+	if (base == 0)
 		base = 10;
 	res = 0;
 	while (qtrue) {
