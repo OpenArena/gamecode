@@ -997,36 +997,95 @@ void G_SpawnItem (gentity_t *ent, gitem_t *item)
 
 	ent->physicsBounce = 0.50;		// items are bouncy
 
-	if (g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_LMS ||
-	        ( item->giType != IT_TEAM && (g_instantgib.integer || g_rockets.integer || g_elimination_allgametypes.integer || g_gametype.integer==GT_CTF_ELIMINATION) ) ) {
-		ent->s.eFlags |= EF_NODRAW; //Invisible in elimination
-		ent->r.svFlags |= SVF_NOCLIENT;  //Don't broadcast
-	}
-
-	if(g_gametype.integer == GT_DOUBLE_D && (strequals(ent->classname, "team_CTF_redflag") || strequals(ent->classname, "team_CTF_blueflag")
-	        || strequals(ent->classname, "team_CTF_neutralflag") || item->giType == IT_PERSISTANT_POWERUP  )) {
-		ent->s.eFlags |= EF_NODRAW; //Don't draw the flag models/persistant powerups
-	}
-
-	if( g_gametype.integer != GT_1FCTF && g_gametype.integer != GT_POSSESSION && strequals(ent->classname, "team_CTF_neutralflag")) {
-		ent->s.eFlags |= EF_NODRAW; // Don't draw the flag in CTF_elimination
-	}
-
-	if( g_gametype.integer == GT_POSSESSION && (strequals(ent->classname, "team_CTF_redflag") || strequals(ent->classname, "team_CTF_blueflag") ) ) {
-		ent->s.eFlags |= EF_NODRAW; // Don't draw the flag colored flags in possession
-	}
-
-	if (strequals(ent->classname, "domination_point")) {
-		ent->s.eFlags |= EF_NODRAW; // Don't draw domination_point. It is just a pointer to where the Domination points should be placed
-	}
-	if ( item->giType == IT_POWERUP ) {
-		G_SoundIndex( "sound/items/poweruprespawn.wav" );
-		G_SpawnFloat( "noglobalsound", "0", &ent->speed);
-	}
-
-	if ( item->giType == IT_PERSISTANT_POWERUP ) {
-		ent->s.generic1 = ent->spawnflags;
-	}
+    // Individual control per cvar and gametype of what's being drawn.
+    // g_instantgib, g_rockets, g_elimination_allgametypes: Anything that isn't a key objective.
+    if(g_instantgib.integer || g_rockets.integer || g_elimination_allgametypes.integer)
+    {
+        if(item->giType != IT_TEAM)
+        {
+            ent->s.eFlags |= EF_NODRAW;
+            ent->r.svFlags |= SVF_NOCLIENT;
+        }
+    }
+    // g_runes: Only runes aren't drawn.
+    if(g_runes.integer)
+    {
+        if(item->giType == IT_PERSISTANT_POWERUP)
+        {
+            ent->s.eFlags |= EF_NODRAW;
+            ent->r.svFlags |= SVF_NOCLIENT;
+        }
+    }
+    // Key objectives aren't drawn in Free for All, Team Deathmatch, Tournament, Elimination and Last Man Standing gamemodes.
+    if(g_gametype.integer == GT_FFA || g_gametype.integer == GT_TOURNAMENT || g_gametype.integer == GT_TEAM || g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_LMS)
+    {
+        if(item->giType == IT_TEAM)
+        {
+            ent->s.eFlags |= EF_NODRAW;
+            ent->r.svFlags |= SVF_NOCLIENT;
+        }
+    }
+    // Team flags aren't drawn outside of CTF, 1FCTF and CTF Elimination.
+    if(g_gametype.integer != GT_CTF || g_gametype.integer != GT_1FCTF || g_gametype.integer != GT_CTF_ELIMINATION)
+    {
+        if(item->giType == IT_TEAM && (strequals(ent->classname,"team_CTF_redflag") || strequals(ent->classname,"team_CTF_blueflag")))
+        {
+            ent->s.eFlags |= EF_NODRAW;
+            ent->r.svFlags |= SVF_NOCLIENT;
+        }
+    }
+    // Team obelisks aren't drawn outside of CTF, 1FCTF, Overload, Harvester and CTF Elimination.
+    if(g_gametype.integer != GT_CTF || g_gametype.integer != GT_1FCTF || g_gametype.integer != GT_CTF_ELIMINATION)
+    {
+        if(item->giType == IT_TEAM && (strequals(ent->classname,"team_redobelisk") || strequals(ent->classname,"team_blueobelisk")))
+        {
+            ent->s.eFlags |= EF_NODRAW;
+            ent->r.svFlags |= SVF_NOCLIENT;
+        }
+    }
+    // Neutral flag isn't drawn outside of 1FCTF and Possession.
+    if(g_gametype.integer != GT_1FCTF || g_gametype.integer != GT_POSSESSION)
+    {
+        if(item->giType == IT_TEAM && (strequals(ent->classname,"team_CTF_neutralflag")))
+        {
+            ent->s.eFlags |= EF_NODRAW;
+            ent->r.svFlags |= SVF_NOCLIENT;
+        }
+    }
+    // Neutral obelisk isn't drawn outside of 1FCTF, Harvester and Possession.
+    if(g_gametype.integer != GT_1FCTF || g_gametype.integer != GT_HARVESTER || g_gametype.integer != GT_POSSESSION)
+    {
+        if(item->giType == IT_TEAM && (strequals(ent->classname,"team_neutralobelisk")))
+        {
+            ent->s.eFlags |= EF_NODRAW;
+            ent->r.svFlags |= SVF_NOCLIENT;
+        }
+    }
+    // Double Domination and Domination don't support runes.
+    if(g_gametype.integer == GT_DOUBLE_D || g_gametype.integer == GT_DOMINATION)
+    {
+        if(item->giType == IT_PERSISTANT_POWERUP)
+        {
+            ent->s.eFlags |= EF_NODRAW;
+            ent->r.svFlags |= SVF_NOCLIENT;
+        }
+    }
+    // Don't draw domination_point. It is just a pointer to where the Domination points should be placed.
+    if (strequals(ent->classname, "domination_point"))
+    {
+        ent->s.eFlags |= EF_NODRAW;
+    }
+    // Powerups have a distinctive sound on respawn.
+    if ( item->giType == IT_POWERUP )
+    {
+        G_SoundIndex( "sound/items/poweruprespawn.wav" );
+        G_SpawnFloat( "noglobalsound", "0", &ent->speed);
+    }
+    // Runes are spawned with a specific configuration.
+    if ( item->giType == IT_PERSISTANT_POWERUP )
+    {
+        ent->s.generic1 = ent->spawnflags;
+    }
 }
 
 
