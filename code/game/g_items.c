@@ -986,7 +986,7 @@ void G_SpawnItem (gentity_t *ent, gitem_t *item)
 	RegisterItem( item );
 	if ( G_ItemDisabled(item) )
 		return;
-	if (!g_persistantpowerups.integer && item->giType == IT_PERSISTANT_POWERUP)
+	if (!g_runes.integer && item->giType == IT_PERSISTANT_POWERUP)
 		return;
 
 	ent->item = item;

@@ -145,7 +145,7 @@ vmCvar_t	g_lms_lives;
 vmCvar_t	g_lms_mode;
 vmCvar_t	g_elimination_ctf_oneway;
 vmCvar_t        g_awardpushing; //The server can decide if players are awarded for pushing people in lave etc.
-vmCvar_t        g_persistantpowerups; //Allow missionpack style persistant powerups?
+vmCvar_t g_runes; //Allow missionpack style persistant powerups?
 
 vmCvar_t        g_catchup; //Favors the week players
 
@@ -353,9 +353,9 @@ static cvarTable_t		gameCvarTable[] = {
 
 	//g_persistantpowerups
 #ifdef MISSIONPACK
-	{ &g_persistantpowerups, "g_runes", "1", CVAR_LATCH, 0, qfalse },
+	{ &g_runes, "g_runes", "1", CVAR_LATCH, 0, qfalse },
 #else
-	{ &g_persistantpowerups, "g_runes", "0", CVAR_LATCH|CVAR_ARCHIVE, 0, qfalse },
+	{ &g_runes, "g_runes", "0", CVAR_LATCH|CVAR_ARCHIVE, 0, qfalse },
 #endif
 
 
