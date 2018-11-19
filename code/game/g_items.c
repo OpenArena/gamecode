@@ -1007,15 +1007,6 @@ void G_SpawnItem (gentity_t *ent, gitem_t *item)
             ent->r.svFlags |= SVF_NOCLIENT;
         }
     }
-    // g_runes: Only runes aren't drawn.
-    if(g_runes.integer)
-    {
-        if(item->giType == IT_PERSISTANT_POWERUP)
-        {
-            ent->s.eFlags |= EF_NODRAW;
-            ent->r.svFlags |= SVF_NOCLIENT;
-        }
-    }
     // Key objectives aren't drawn in Free for All, Team Deathmatch, Tournament, Elimination and Last Man Standing gamemodes.
     if(g_gametype.integer == GT_FFA || g_gametype.integer == GT_TOURNAMENT || g_gametype.integer == GT_TEAM || g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_LMS)
     {
@@ -1035,7 +1026,7 @@ void G_SpawnItem (gentity_t *ent, gitem_t *item)
         }
     }
     // Team obelisks aren't drawn outside of CTF, 1FCTF, Overload, Harvester and CTF Elimination.
-    if(g_gametype.integer != GT_CTF || g_gametype.integer != GT_1FCTF || g_gametype.integer != GT_CTF_ELIMINATION)
+    if(g_gametype.integer != GT_CTF && g_gametype.integer != GT_1FCTF && g_gametype.integer != GT_CTF_ELIMINATION)
     {
         if(item->giType == IT_TEAM && (strequals(ent->classname,"team_redobelisk") || strequals(ent->classname,"team_blueobelisk")))
         {
@@ -1044,7 +1035,7 @@ void G_SpawnItem (gentity_t *ent, gitem_t *item)
         }
     }
     // Neutral flag isn't drawn outside of 1FCTF and Possession.
-    if(g_gametype.integer != GT_1FCTF || g_gametype.integer != GT_POSSESSION)
+    if(g_gametype.integer != GT_1FCTF && g_gametype.integer != GT_POSSESSION)
     {
         if(item->giType == IT_TEAM && (strequals(ent->classname,"team_CTF_neutralflag")))
         {
@@ -1053,7 +1044,7 @@ void G_SpawnItem (gentity_t *ent, gitem_t *item)
         }
     }
     // Neutral obelisk isn't drawn outside of 1FCTF, Harvester and Possession.
-    if(g_gametype.integer != GT_1FCTF || g_gametype.integer != GT_HARVESTER || g_gametype.integer != GT_POSSESSION)
+    if(g_gametype.integer != GT_1FCTF && g_gametype.integer != GT_HARVESTER && g_gametype.integer != GT_POSSESSION)
     {
         if(item->giType == IT_TEAM && (strequals(ent->classname,"team_neutralobelisk")))
         {
