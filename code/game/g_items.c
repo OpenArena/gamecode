@@ -1017,7 +1017,7 @@ void G_SpawnItem (gentity_t *ent, gitem_t *item)
         }
     }
     // Team flags aren't drawn outside of CTF, 1FCTF and CTF Elimination.
-    if(g_gametype.integer != GT_CTF || g_gametype.integer != GT_1FCTF || g_gametype.integer != GT_CTF_ELIMINATION)
+    if(g_gametype.integer != GT_CTF && g_gametype.integer != GT_1FCTF && g_gametype.integer != GT_CTF_ELIMINATION)
     {
         if(item->giType == IT_TEAM && (strequals(ent->classname,"team_CTF_redflag") || strequals(ent->classname,"team_CTF_blueflag")))
         {
