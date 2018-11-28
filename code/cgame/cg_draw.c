@@ -1734,8 +1734,6 @@ static float CG_DrawScores(float y) {
 				CG_DrawPic(x, y1 - 4, w, 32, cgs.media.ddPointSkinA[cgs.redflag]);
 			}
 
-
-
 			//Time till capture:
 			if (((statusB == statusA) && (statusA == TEAM_RED)) ||
 					((statusB == statusA) && (statusA == TEAM_BLUE))) {
@@ -1752,7 +1750,7 @@ static float CG_DrawScores(float y) {
 
 
 
-		if (cgs.gametype >= GT_CTF && cgs.ffa_gt == 0) {
+		if (cgs.gametype != GT_FFA && cgs.gametype != GT_TOURNAMENT && cgs.gametype != GT_TEAM && cgs.gametype != GT_LMS && cgs.gametype != GT_POSSESSION) {
 			v = cgs.capturelimit;
 		} else {
 			v = cgs.fraglimit;

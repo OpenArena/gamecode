@@ -1688,12 +1688,7 @@ void SP_func_pendulum(gentity_t *ent)
 	if ( length < 8 ) {
 		length = 8;
 	}
-	if (g_gravity_low.integer > 0) {
-		freq = 1 / ( M_PI * 2 ) * sqrt( (g_gravity.value)/2*g_gravityModifier.value / ( 3 * length ) );
-	}
-	else {
-		freq = 1 / ( M_PI * 2 ) * sqrt( g_gravity.value*g_gravityModifier.value / ( 3 * length ) );
-	}
+	freq = 1 / ( M_PI * 2 ) * sqrt( g_gravity.value*g_gravityModifier.value / ( 3 * length ) );
 
 	ent->s.pos.trDuration = ( 1000 / freq );
 
