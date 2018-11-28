@@ -1427,22 +1427,34 @@ static void UI_SetCapFragLimits(qboolean uiVars)
 {
 	int cap = 5;
 	int frag = 10;
-	if (uiInfo.gameTypes[ui_gameType.integer].gtEnum == GT_OBELISK) {
-		cap = 4;
-	}
-	else if (uiInfo.gameTypes[ui_gameType.integer].gtEnum == GT_HARVESTER) {
-		cap = 15;
-	}
-	else if (uiInfo.gameTypes[ui_gameType.integer].gtEnum == GT_DOMINATION || uiInfo.gameTypes[ui_gameType.integer].gtEnum == GT_POSSESSION) {
-		cap = 125;
-	}
 	if (uiVars) {
-		trap_Cvar_Set("ui_captureLimit", va("%d", cap));
-		trap_Cvar_Set("ui_fragLimit", va("%d", frag));
+		if (uiVars == qtrue) {
+			trap_Cvar_Set("ui_captureLimit", va("%d", cap));
+			trap_Cvar_Set("ui_fragLimit", va("%d", frag));
+		}
+		else if (uiVars == qfalse) {
+			trap_Cvar_Set("capturelimit", va("%d", cap));
+			trap_Cvar_Set("fraglimit", va("%d", frag));
+		}
 	}
-	else {
-		trap_Cvar_Set("capturelimit", va("%d", cap));
-		trap_Cvar_Set("fraglimit", va("%d", frag));
+	else
+	{
+		if (uiInfo.gameTypes[ui_gameType.integer].gtEnum == GT_OBELISK) {
+			cap = 4;
+			frag = 0;
+		}
+		else if (uiInfo.gameTypes[ui_gameType.integer].gtEnum == GT_HARVESTER) {
+			cap = 15;
+			frag = 0;
+		}
+		else if (uiInfo.gameTypes[ui_gameType.integer].gtEnum == GT_DOMINATION) {
+			cap = 125;
+			frag = 0;
+		}
+		else if (uiInfo.gameTypes[ui_gameType.integer].gtEnum == GT_POSSESSION) {
+			frag = 125;
+			cap = 0;
+		}
 	}
 }
 // ui_gameType assumes gametype 0 is -1 ALL and will not show
@@ -2909,25 +2921,25 @@ static qboolean UI_OwnerDrawVisible(int flags)
 			flags &= ~UI_SHOW_NOTFAVORITESERVERS;
 		}
 		if (flags & UI_SHOW_ANYTEAMGAME) {
-			if (uiInfo.gameTypes[ui_gameType.integer].gtEnum <= GT_TEAM || uiInfo.gameTypes[ui_gameType.integer].gtEnum != GT_LMS || uiInfo.gameTypes[ui_gameType.integer].gtEnum != GT_POSSESSION ) {
+			if (uiInfo.gameTypes[ui_gameType.integer].gtEnum <= GT_TEAM || uiInfo.gameTypes[ui_gameType.integer].gtEnum == GT_LMS || uiInfo.gameTypes[ui_gameType.integer].gtEnum == GT_POSSESSION ) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_ANYTEAMGAME;
 		}
 		if (flags & UI_SHOW_ANYNONTEAMGAME) {
-			if (uiInfo.gameTypes[ui_gameType.integer].gtEnum > GT_TEAM || uiInfo.gameTypes[ui_gameType.integer].gtEnum == GT_LMS || uiInfo.gameTypes[ui_gameType.integer].gtEnum == GT_POSSESSION ) {
+			if (uiInfo.gameTypes[ui_gameType.integer].gtEnum > GT_TEAM && uiInfo.gameTypes[ui_gameType.integer].gtEnum != GT_LMS && uiInfo.gameTypes[ui_gameType.integer].gtEnum != GT_POSSESSION ) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_ANYNONTEAMGAME;
 		}
 		if (flags & UI_SHOW_NETANYTEAMGAME) {
-			if (uiInfo.gameTypes[ui_netGameType.integer].gtEnum <= GT_TEAM && uiInfo.gameTypes[ui_gameType.integer].gtEnum != GT_LMS && uiInfo.gameTypes[ui_gameType.integer].gtEnum != GT_POSSESSION ) {
+			if (uiInfo.gameTypes[ui_netGameType.integer].gtEnum <= GT_TEAM || uiInfo.gameTypes[ui_gameType.integer].gtEnum == GT_LMS || uiInfo.gameTypes[ui_gameType.integer].gtEnum == GT_POSSESSION ) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_NETANYTEAMGAME;
 		}
 		if (flags & UI_SHOW_NETANYNONTEAMGAME) {
-			if (uiInfo.gameTypes[ui_netGameType.integer].gtEnum > GT_TEAM || uiInfo.gameTypes[ui_gameType.integer].gtEnum == GT_LMS || uiInfo.gameTypes[ui_gameType.integer].gtEnum == GT_POSSESSION ) {
+			if (uiInfo.gameTypes[ui_netGameType.integer].gtEnum > GT_TEAM && uiInfo.gameTypes[ui_gameType.integer].gtEnum != GT_LMS && uiInfo.gameTypes[ui_gameType.integer].gtEnum != GT_POSSESSION ) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_NETANYNONTEAMGAME;
@@ -4378,7 +4390,7 @@ static void UI_RunMenuScript(char **args)
 			}
 		}
 		else if (Q_strequal(name, "addBot") ) {
-			if (trap_Cvar_VariableValue("g_gametype") >= GT_TEAM && !GT_LMS && !GT_POSSESSION ) {
+			if (trap_Cvar_VariableValue("g_gametype") >= GT_TEAM || GT_LMS || GT_POSSESSION ) {
 				trap_Cmd_ExecuteText( EXEC_APPEND, va("addbot %s %i %s\n", uiInfo.characterList[uiInfo.botIndex].name, uiInfo.skillIndex+1, (uiInfo.redBlue == 0) ? "Red" : "Blue") );
 			}
 			else {
