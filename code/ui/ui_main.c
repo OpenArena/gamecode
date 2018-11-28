@@ -1433,6 +1433,9 @@ static void UI_SetCapFragLimits(qboolean uiVars)
 	else if (uiInfo.gameTypes[ui_gameType.integer].gtEnum == GT_HARVESTER) {
 		cap = 15;
 	}
+	else if (uiInfo.gameTypes[ui_gameType.integer].gtEnum == GT_DOMINATION || uiInfo.gameTypes[ui_gameType.integer].gtEnum == GT_POSSESSION) {
+		cap = 125;
+	}
 	if (uiVars) {
 		trap_Cvar_Set("ui_captureLimit", va("%d", cap));
 		trap_Cvar_Set("ui_fragLimit", va("%d", frag));
@@ -1586,7 +1589,7 @@ static void UI_DrawTeamMember(rectDef_t *rect, float scale, vec4_t color, qboole
 	else {
 		value -= 2;
 
-		if (ui_actualNetGameType.integer >= GT_TEAM) {
+		if (ui_actualNetGameType.integer >= GT_TEAM && ui_actualNetGameType.integer != GT_LMS && ui_actualNetGameType.integer != GT_POSSESSION ) {
 			if (value >= uiInfo.characterCount) {
 				value = 0;
 			}
@@ -2399,7 +2402,7 @@ static void UI_DrawBotName(rectDef_t *rect, float scale, vec4_t color, int textS
 	int value = uiInfo.botIndex;
 	int game = trap_Cvar_VariableValue("g_gametype");
 	const char *text = "";
-	if (game >= GT_TEAM && game != GT_LMS ) {
+	if (game >= GT_TEAM && game != GT_LMS && game != GT_POSSESSION) {
 		if (value >= uiInfo.characterCount) {
 			value = 0;
 		}
@@ -2854,14 +2857,14 @@ static qboolean UI_OwnerDrawVisible(int flags)
 	while (flags) {
 
 		if (flags & UI_SHOW_FFA) {
-			if (trap_Cvar_VariableValue("g_gametype") != GT_FFA || trap_Cvar_VariableValue("g_gametype") != GT_LMS ) {
+			if (trap_Cvar_VariableValue("g_gametype") != GT_FFA || trap_Cvar_VariableValue("g_gametype") != GT_LMS || trap_Cvar_VariableValue("g_gametype") != GT_POSSESSION ) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_FFA;
 		}
 
 		if (flags & UI_SHOW_NOTFFA) {
-			if (trap_Cvar_VariableValue("g_gametype") == GT_FFA || trap_Cvar_VariableValue("g_gametype") == GT_LMS ) {
+			if (trap_Cvar_VariableValue("g_gametype") == GT_FFA || trap_Cvar_VariableValue("g_gametype") == GT_LMS || trap_Cvar_VariableValue("g_gametype") == GT_POSSESSION ) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_NOTFFA;
@@ -2906,25 +2909,25 @@ static qboolean UI_OwnerDrawVisible(int flags)
 			flags &= ~UI_SHOW_NOTFAVORITESERVERS;
 		}
 		if (flags & UI_SHOW_ANYTEAMGAME) {
-			if (uiInfo.gameTypes[ui_gameType.integer].gtEnum <= GT_TEAM || uiInfo.gameTypes[ui_gameType.integer].gtEnum != GT_LMS ) {
+			if (uiInfo.gameTypes[ui_gameType.integer].gtEnum <= GT_TEAM || uiInfo.gameTypes[ui_gameType.integer].gtEnum != GT_LMS || uiInfo.gameTypes[ui_gameType.integer].gtEnum != GT_POSSESSION ) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_ANYTEAMGAME;
 		}
 		if (flags & UI_SHOW_ANYNONTEAMGAME) {
-			if (uiInfo.gameTypes[ui_gameType.integer].gtEnum > GT_TEAM || uiInfo.gameTypes[ui_gameType.integer].gtEnum == GT_LMS ) {
+			if (uiInfo.gameTypes[ui_gameType.integer].gtEnum > GT_TEAM || uiInfo.gameTypes[ui_gameType.integer].gtEnum == GT_LMS || uiInfo.gameTypes[ui_gameType.integer].gtEnum == GT_POSSESSION ) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_ANYNONTEAMGAME;
 		}
 		if (flags & UI_SHOW_NETANYTEAMGAME) {
-			if (uiInfo.gameTypes[ui_netGameType.integer].gtEnum <= GT_TEAM && uiInfo.gameTypes[ui_gameType.integer].gtEnum != GT_LMS ) {
+			if (uiInfo.gameTypes[ui_netGameType.integer].gtEnum <= GT_TEAM && uiInfo.gameTypes[ui_gameType.integer].gtEnum != GT_LMS && uiInfo.gameTypes[ui_gameType.integer].gtEnum != GT_POSSESSION ) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_NETANYTEAMGAME;
 		}
 		if (flags & UI_SHOW_NETANYNONTEAMGAME) {
-			if (uiInfo.gameTypes[ui_netGameType.integer].gtEnum > GT_TEAM || uiInfo.gameTypes[ui_gameType.integer].gtEnum == GT_LMS ) {
+			if (uiInfo.gameTypes[ui_netGameType.integer].gtEnum > GT_TEAM || uiInfo.gameTypes[ui_gameType.integer].gtEnum == GT_LMS || uiInfo.gameTypes[ui_gameType.integer].gtEnum == GT_POSSESSION ) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_NETANYNONTEAMGAME;
@@ -3222,8 +3225,7 @@ static qboolean UI_TeamMember_HandleKey(int flags, float *special, int key, qboo
 		else {
 			value++;
 		}
-
-		if (ui_actualNetGameType.integer >= GT_TEAM) {
+		if (ui_actualNetGameType.integer >= GT_TEAM && ui_actualNetGameType.integer != GT_LMS && ui_actualNetGameType.integer != GT_POSSESSION) {
 			if (value >= uiInfo.characterCount + 2) {
 				value = 0;
 			}
@@ -3328,7 +3330,7 @@ static qboolean UI_BotName_HandleKey(int flags, float *special, int key)
 			value++;
 		}
 
-		if (game >= GT_TEAM && game != GT_LMS) {
+		if (game >= GT_TEAM && game != GT_LMS && game != GT_POSSESSION) {
 			if (value >= uiInfo.characterCount + 2) {
 				value = 0;
 			}
@@ -3764,7 +3766,7 @@ static void UI_StartSkirmish(qboolean next, char *name)
 		Com_sprintf( buff, sizeof(buff), "wait ; addbot %s %f "", %i \n", uiInfo.mapList[ui_currentMap.integer].opponentName, skill, delay);
 		trap_Cmd_ExecuteText( EXEC_APPEND, buff );
 	}
-	else if (g == GT_FFA) { // leilei - parse the opponentname as a list of bots instead like q3_ui's arena parsing
+	else if (g == GT_FFA || g == GT_LMS || g == GT_POSSESSION) { // leilei - parse the opponentname as a list of bots instead like q3_ui's arena parsing
 		char		*p;
 		char		*bot;
 		const char	*botInfo;
@@ -4033,7 +4035,7 @@ static void UI_RunMenuScript(char **args)
 			for (i = 0; i < PLAYERS_PER_TEAM; i++) {
 				int bot = trap_Cvar_VariableValue( va("ui_blueteam%i", i+1));
 				if (bot > 1) {
-					if (ui_actualNetGameType.integer >= GT_TEAM) {
+					if (ui_actualNetGameType.integer >= GT_TEAM && ui_actualNetGameType.integer != GT_LMS && ui_actualNetGameType.integer != GT_POSSESSION ) {
 						Com_sprintf( buff, sizeof(buff), "addbot %s %f %s\n", uiInfo.characterList[bot-2].name, skill, "Blue");
 					}
 					else {
@@ -4043,7 +4045,7 @@ static void UI_RunMenuScript(char **args)
 				}
 				bot = trap_Cvar_VariableValue( va("ui_redteam%i", i+1));
 				if (bot > 1) {
-					if (ui_actualNetGameType.integer >= GT_TEAM) {
+					if (ui_actualNetGameType.integer >= GT_TEAM && ui_actualNetGameType.integer != GT_LMS && ui_actualNetGameType.integer != GT_POSSESSION ) {
 						Com_sprintf( buff, sizeof(buff), "addbot %s %f %s\n", uiInfo.characterList[bot-2].name, skill, "Red");
 					}
 					else {
@@ -4376,7 +4378,7 @@ static void UI_RunMenuScript(char **args)
 			}
 		}
 		else if (Q_strequal(name, "addBot") ) {
-			if (trap_Cvar_VariableValue("g_gametype") >= GT_TEAM && !GT_LMS ) {
+			if (trap_Cvar_VariableValue("g_gametype") >= GT_TEAM && !GT_LMS && !GT_POSSESSION ) {
 				trap_Cmd_ExecuteText( EXEC_APPEND, va("addbot %s %i %s\n", uiInfo.characterList[uiInfo.botIndex].name, uiInfo.skillIndex+1, (uiInfo.redBlue == 0) ? "Red" : "Blue") );
 			}
 			else {
@@ -4911,6 +4913,7 @@ serverStatusCvar_t serverStatusCvars[] = {
 	{"protocol", ""},
 	{"timelimit", ""},
 	{"fraglimit", ""},
+	{"capturelimit", ""},
 	{NULL, NULL}
 };
 
@@ -6902,6 +6905,38 @@ vmCvar_t	ui_ctf_capturelimit;
 vmCvar_t	ui_ctf_timelimit;
 vmCvar_t	ui_ctf_friendly;
 
+vmCvar_t	ui_1fctf_capturelimit;
+vmCvar_t	ui_1fctf_timelimit;
+vmCvar_t	ui_1fctf_friendly;
+
+vmCvar_t	ui_overload_capturelimit;
+vmCvar_t	ui_overload_timelimit;
+vmCvar_t	ui_overload_friendly;
+
+vmCvar_t	ui_harvester_capturelimit;
+vmCvar_t	ui_harvester_timelimit;
+vmCvar_t	ui_harvester_friendly;
+
+vmCvar_t	ui_elimination_capturelimit;
+vmCvar_t	ui_elimination_timelimit;
+
+vmCvar_t	ui_ctf_elimination_capturelimit;
+vmCvar_t	ui_ctf_elimination_timelimit;
+
+vmCvar_t	ui_lms_fraglimit;
+vmCvar_t	ui_lms_timelimit;
+
+vmCvar_t	ui_dd_capturelimit;
+vmCvar_t	ui_dd_timelimit;
+vmCvar_t	ui_dd_friendly;
+
+vmCvar_t	ui_dom_capturelimit;
+vmCvar_t	ui_dom_timelimit;
+vmCvar_t	ui_dom_friendly;
+
+vmCvar_t	ui_pos_scorelimit;
+vmCvar_t	ui_pos_timelimit;
+
 vmCvar_t	ui_arenasFile;
 vmCvar_t	ui_botsFile;
 vmCvar_t	ui_spScores1;
@@ -7048,6 +7083,38 @@ static cvarTable_t		cvarTable[] = {
 	{ &ui_ctf_capturelimit, "ui_ctf_capturelimit", "8", CVAR_ARCHIVE },
 	{ &ui_ctf_timelimit, "ui_ctf_timelimit", "30", CVAR_ARCHIVE },
 	{ &ui_ctf_friendly, "ui_ctf_friendly",  "0", CVAR_ARCHIVE },
+
+	{ &ui_1fctf_capturelimit, "ui_1fctf_capturelimit", "8", CVAR_ARCHIVE },
+	{ &ui_1fctf_timelimit, "ui_1fctf_timelimit", "30", CVAR_ARCHIVE },
+	{ &ui_1fctf_friendly, "ui_1fctf_friendly",  "0", CVAR_ARCHIVE },
+
+	{ &ui_overload_capturelimit, "ui_overload_capturelimit", "8", CVAR_ARCHIVE },
+	{ &ui_overload_timelimit, "ui_overload_timelimit", "30", CVAR_ARCHIVE },
+	{ &ui_overload_friendly, "ui_overload_friendly",  "0", CVAR_ARCHIVE },
+
+	{ &ui_harvester_capturelimit, "ui_harvester_capturelimit", "20", CVAR_ARCHIVE },
+	{ &ui_harvester_timelimit, "ui_harvester_timelimit", "30", CVAR_ARCHIVE },
+	{ &ui_harvester_friendly, "ui_harvester_friendly",  "0", CVAR_ARCHIVE },
+
+	{ &ui_elimination_capturelimit, "ui_elimination_capturelimit", "8", CVAR_ARCHIVE },
+	{ &ui_elimination_timelimit, "ui_elimination_timelimit", "20", CVAR_ARCHIVE },
+
+	{ &ui_ctf_elimination_capturelimit, "ui_ctf_elimination_capturelimit", "8", CVAR_ARCHIVE },
+	{ &ui_ctf_elimination_timelimit, "ui_ctf_elimination_timelimit", "30", CVAR_ARCHIVE },
+
+	{ &ui_lms_fraglimit, "ui_lms_fraglimit", "20", CVAR_ARCHIVE },
+	{ &ui_lms_timelimit, "ui_lms_timelimit", "0", CVAR_ARCHIVE },
+
+	{ &ui_dd_capturelimit, "ui_dd_capturelimit", "8", CVAR_ARCHIVE },
+	{ &ui_dd_timelimit, "ui_dd_timelimit", "30", CVAR_ARCHIVE },
+	{ &ui_dd_friendly, "ui_dd_friendly",  "0", CVAR_ARCHIVE },
+
+	{ &ui_dom_capturelimit, "ui_dom_capturelimit", "500", CVAR_ARCHIVE },
+	{ &ui_dom_timelimit, "ui_dom_timelimit", "30", CVAR_ARCHIVE },
+	{ &ui_dom_friendly, "ui_dom_friendly",  "0", CVAR_ARCHIVE },
+
+	{ &ui_pos_scorelimit, "ui_pos_scorelimit", "120", CVAR_ARCHIVE },
+	{ &ui_pos_timelimit, "ui_pos_timelimit", "20", CVAR_ARCHIVE },
 
 	{ &ui_arenasFile, "g_arenasFile", "", CVAR_INIT|CVAR_ROM },
 	{ &ui_botsFile, "g_botsFile", "", CVAR_INIT|CVAR_ROM },

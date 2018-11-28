@@ -201,6 +201,9 @@ void UI_LoadArenas( void ) {
 				if( strstr( type, "tourney" ) ) {
 					uiInfo.mapList[uiInfo.mapCount].typeBits |= (1 << GT_TOURNAMENT);
 				}
+				if( strstr( type, "team" ) ) {
+					uiInfo.mapList[uiInfo.mapCount].typeBits |= (1 << GT_TEAM);
+				}
 				if( strstr( type, "ctf" ) ) {
 					uiInfo.mapList[uiInfo.mapCount].typeBits |= (1 << GT_CTF);
 				}
@@ -224,6 +227,12 @@ void UI_LoadArenas( void ) {
 				}
 				if( strstr( type, "dd" ) ) {
 					uiInfo.mapList[uiInfo.mapCount].typeBits |= (1 << GT_DOUBLE_D);
+				}
+				if( strstr( type, "dom" ) ) {
+					uiInfo.mapList[uiInfo.mapCount].typeBits |= (1 << GT_DOMINATION);
+				}
+				if( strstr( type, "pos" ) ) {
+					uiInfo.mapList[uiInfo.mapCount].typeBits |= (1 << GT_POSSESSION);
 				}
 		} else {
 			uiInfo.mapList[uiInfo.mapCount].typeBits |= (1 << GT_FFA);

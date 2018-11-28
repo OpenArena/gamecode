@@ -114,6 +114,7 @@ MULTIPLAYER MENU (SERVER BROWSER)
 #define GAMES_LMS			10
 #define GAMES_DOUBLE_D			11
 #define GAMES_DOM                       12
+#define GAMES_POS                       13
 
 
 static const char *master_items[] = {
@@ -731,6 +732,12 @@ static void ArenaServers_UpdateMenu( void ) {
 				continue;
 			}
 			break;
+
+		case GAMES_POS:
+			if( servernodeptr->gametype != GT_POSSESSION ) {
+				continue;
+			}
+			break;
 		}
                 
                 if(g_hideprivate && servernodeptr->needPass)
@@ -1322,6 +1329,10 @@ static void ArenaServers_StartRefreshNoClearList( void )
 
                 case GAMES_DOM:
                     strcpy( myargs, " dom" );
+                    break;
+
+                case GAMES_POS:
+                    strcpy( myargs, " pos" );
                     break;
 		}
 
