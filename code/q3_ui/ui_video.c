@@ -674,9 +674,9 @@ static void GraphicsOptions_ApplyChanges( void *unused, int notification )
 		// search for builtin mode that matches the detected mode
 		int mode;
 		if ( s_graphicsoptions.mode.curvalue == -1
-			|| s_graphicsoptions.mode.curvalue >= sizeof(detectedResolutions)/sizeof(detectedResolutions[0]) )
+			|| s_graphicsoptions.mode.curvalue >= sizeof(detectedResolutions)/sizeof(detectedResolutions[0]) ) {
 			s_graphicsoptions.mode.curvalue = 0;
-
+		}
 		mode = GraphicsOptions_FindBuiltinResolution( s_graphicsoptions.mode.curvalue );
 		if( mode == -1 )
 		{
@@ -699,22 +699,20 @@ static void GraphicsOptions_ApplyChanges( void *unused, int notification )
 	trap_Cvar_SetValue( "r_depthbits", 0 );
 	trap_Cvar_SetValue( "r_stencilbits", 0 );
 	trap_Cvar_SetValue( "r_vertexLight", s_graphicsoptions.lighting.curvalue );
-        trap_Cvar_SetValue( "cg_autovertex", s_graphicsoptions.lighting.curvalue );
-        trap_Cvar_SetValue( "r_flares", s_graphicsoptions.flares.curvalue );
-        trap_Cvar_SetValue( "r_bloom", s_graphicsoptions.bloom.curvalue );
-        trap_Cvar_SetValue( "cg_drawFPS", s_graphicsoptions.drawfps.curvalue );
-        
-        //r_ext_texture_filter_anisotropic is special
-        if(s_graphicsoptions.aniso.curvalue) {
-            trap_Cvar_SetValue( "r_ext_max_anisotropy", s_graphicsoptions.aniso.curvalue*2 );
-            trap_Cvar_SetValue( "r_ext_texture_filter_anisotropic", qtrue );
-        }
-        else
-            trap_Cvar_SetValue( "r_ext_texture_filter_anisotropic", qfalse );
-        
-        trap_Cvar_SetValue( "com_hunkmegs", 128 );
-        
-        
+	trap_Cvar_SetValue( "cg_autovertex", s_graphicsoptions.lighting.curvalue );
+	trap_Cvar_SetValue( "r_flares", s_graphicsoptions.flares.curvalue );
+	trap_Cvar_SetValue( "r_bloom", s_graphicsoptions.bloom.curvalue );
+	trap_Cvar_SetValue( "cg_drawFPS", s_graphicsoptions.drawfps.curvalue );
+
+	//r_ext_texture_filter_anisotropic is special
+	if(s_graphicsoptions.aniso.curvalue) {
+		trap_Cvar_SetValue( "r_ext_max_anisotropy", s_graphicsoptions.aniso.curvalue*2 );
+		trap_Cvar_SetValue( "r_ext_texture_filter_anisotropic", qtrue );
+	}
+	else {
+		trap_Cvar_SetValue( "r_ext_texture_filter_anisotropic", qfalse );
+	}
+
 	if ( s_graphicsoptions.geometry.curvalue == 2 )
 	{
 		trap_Cvar_SetValue( "r_lodBias", 0 );
