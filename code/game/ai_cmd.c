@@ -944,6 +944,10 @@ void BotMatch_GetFlag(bot_state_t *bs, bot_match_t *match) {
 		if (!ctf_neutralflag.areanum || !ctf_redflag.areanum || !ctf_blueflag.areanum)
 			return;
 	}
+	else if (gametype == GT_POSSESSION) {
+		if (!ctf_neutralflag.areanum)
+			return;
+	}
 	else {
 		return;
 	}
@@ -964,7 +968,7 @@ void BotMatch_GetFlag(bot_state_t *bs, bot_match_t *match) {
 	//set the team goal time
 	bs->teamgoal_time = FloatTime() + CTF_GETFLAG_TIME;
 	// get an alternate route in ctf
-	if (gametype == GT_CTF || gametype == GT_CTF_ELIMINATION) {
+	if (gametype == GT_CTF || gametype == GT_1FCTF || gametype == GT_CTF_ELIMINATION) {
 		//get an alternative route goal towards the enemy base
 		BotGetAlternateRouteGoal(bs, BotOppositeTeam(bs));
 	}
@@ -1859,7 +1863,7 @@ void BotMatch_CTF(bot_state_t *bs, bot_match_t *match) {
 			bs->flagstatuschanged = 1;
 		}
 	}
-	else if (gametype == GT_1FCTF) {
+	else if (gametype == GT_1FCTF || gametype == GT_POSSESSION) {
 		if (match->subtype & ST_1FCTFGOTFLAG) {
 			trap_BotMatchVariable(match, NETNAME, netname, sizeof(netname));
 			bs->flagcarrier = ClientFromName(netname);
