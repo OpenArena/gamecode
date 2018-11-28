@@ -341,9 +341,13 @@ Bot1FCTFCarryingFlag
 ==================
  */
 int Bot1FCTFCarryingFlag(bot_state_t *bs) {
-	if (gametype != GT_1FCTF || gametype != GT_POSSESSION) return qfalse;
+	if (gametype != GT_1FCTF && gametype != GT_POSSESSION) {
+		return qfalse;
+	}
 
-	if (bs->inventory[INVENTORY_NEUTRALFLAG] > 0) return qtrue;
+	if (bs->inventory[INVENTORY_NEUTRALFLAG] > 0) {
+		return qtrue;
+	}
 	return qfalse;
 }
 

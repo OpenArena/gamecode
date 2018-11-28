@@ -55,6 +55,7 @@ vmCvar_t	g_maxGameClients;
 vmCvar_t	g_dedicated;
 vmCvar_t	g_speed;
 vmCvar_t	g_gravity;
+vmCvar_t	g_gravity_low;
 vmCvar_t	g_gravityModifier;
 vmCvar_t        g_damageModifier;
 vmCvar_t	g_cheats;
@@ -258,6 +259,7 @@ static cvarTable_t		gameCvarTable[] = {
 
 	{ &g_speed, "g_speed", "320", 0, 0, qtrue  },
 	{ &g_gravity, "g_gravity", "800", 0, 0, qtrue  },
+	{ &g_gravity, "g_gravity_low", "0", 0, 0, qtrue  },
 	{ &g_gravityModifier, "g_gravityModifier", "1", 0, 0, qtrue  },
 	{ &g_damageModifier, "g_damageModifier", "0", 0, 0, qtrue },
 	{ &g_knockback, "g_knockback", "1000", 0, 0, qtrue  },
@@ -352,8 +354,8 @@ static cvarTable_t		gameCvarTable[] = {
 	{ &g_elimination_ctf_oneway, "elimination_ctf_oneway", "0", CVAR_ARCHIVE| CVAR_NORESTART, 0, qtrue },
 
 	/* For Double Domination */
-	{ &g_dd_timeToWin, "g_dd_timeToWin", "10", CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
-	{ &g_dd_intermissionTime, "g_dd_intermissionTime", "10", CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
+	{ &g_dd_timeToWin, "g_dd_timeToWin", "10", CVAR_ARCHIVE, 0, qtrue },
+	{ &g_dd_intermissionTime, "g_dd_intermissionTime", "10", CVAR_ARCHIVE, 0, qtrue },
 
 	{ &g_elimination_lockspectator, "elimination_lockspectator", "0", CVAR_NORESTART, 0, qtrue },
 
