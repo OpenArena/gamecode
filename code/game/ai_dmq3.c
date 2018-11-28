@@ -341,7 +341,7 @@ Bot1FCTFCarryingFlag
 ==================
  */
 int Bot1FCTFCarryingFlag(bot_state_t *bs) {
-	if (gametype != GT_1FCTF) return qfalse;
+	if (gametype != GT_1FCTF || gametype != GT_POSSESSION) return qfalse;
 
 	if (bs->inventory[INVENTORY_NEUTRALFLAG] > 0) return qtrue;
 	return qfalse;
@@ -1427,7 +1427,7 @@ void BotTeamGoals(bot_state_t *bs, int retreat) {
 		if (gametype == GT_CTF || gametype == GT_CTF_ELIMINATION) {
 			//decide what to do in CTF mode
 			BotCTFSeekGoals(bs);
-		} else if (gametype == GT_1FCTF) {
+		} else if (gametype == GT_1FCTF || gametype == GT_POSSESSION) {
 			Bot1FCTFSeekGoals(bs);
 		} else if (gametype == GT_OBELISK) {
 			BotObeliskSeekGoals(bs);
@@ -2342,7 +2342,7 @@ int BotWantsToRetreat(bot_state_t *bs) {
 		//always retreat when carrying a CTF flag
 		if (BotCTFCarryingFlag(bs))
 			return qtrue;
-	} else if (gametype == GT_1FCTF) {
+	} else if (gametype == GT_1FCTF || gametype == GT_POSSESSION) {
 		//if carrying the flag then always retreat
 		if (Bot1FCTFCarryingFlag(bs))
 			return qtrue;
@@ -2421,6 +2421,11 @@ int BotWantsToChase(bot_state_t *bs) {
 		BotEntityInfo(bs->enemy, &entinfo);
 		// always chase if the enemy is carrying cubes
 		if (EntityCarriesCubes(&entinfo)) return qtrue;
+	} else if (gametype == GT_POSSESSION) {
+		//always chase if the enemy is carrying a flag
+		BotEntityInfo(bs->enemy, &entinfo);
+		if (EntityCarriesFlag(&entinfo))
+			return qtrue;
 	}
 	//if the bot is getting the flag
 	if (bs->ltgtype == LTG_GETFLAG)
@@ -4832,7 +4837,7 @@ void BotCheckEvents(bot_state_t *bs, entityState_t *state) {
 				bs->enemysuicide = qtrue;
 			}
 			//	
-			if (gametype == GT_1FCTF) {
+			if (gametype == GT_1FCTF || gametype == GT_POSSESSION) {
 				//
 				BotEntityInfo(target, &entinfo);
 				if (entinfo.powerups & (1 << PW_NEUTRALFLAG)) {
@@ -5457,6 +5462,9 @@ void BotSetupDeathmatchAI(void) {
 		if (untrap_BotGetLevelItemGoal(-1, "Neutral Obelisk", &neutralobelisk) < 0)
 			BotAI_Print(PRT_WARNING, "Harvester without neutral obelisk\n");
 		BotSetEntityNumForGoal(&neutralobelisk, "team_neutralobelisk");
+	} else if (gametype == GT_POSSESSION) {
+		if (untrap_BotGetLevelItemGoal(-1, "Neutral Flag", &ctf_neutralflag) < 0)
+			BotAI_Print(PRT_WARNING, "Possession without Neutral Flag\n");
 	}
 
 	max_bspmodelindex = 0;

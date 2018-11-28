@@ -1969,7 +1969,7 @@ int AINode_Seek_LTG(bot_state_t *bs)
 				range = 50;
 		}
 #endif //CTF
-		else if (gametype == GT_1FCTF) {
+		else if (gametype == GT_1FCTF || GT_POSSESSION) {
 			if (Bot1FCTFCarryingFlag(bs))
 				range = 50;
 		}
@@ -2489,7 +2489,7 @@ int AINode_Battle_Retreat(bot_state_t *bs) {
 				range = 50;
 		}
 #endif //CTF
-		else if (gametype == GT_1FCTF) {
+		else if (gametype == GT_1FCTF || gametype == GT_POSSESSION) {
 			if (Bot1FCTFCarryingFlag(bs))
 				range = 50;
 		}
