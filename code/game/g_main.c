@@ -1452,7 +1452,7 @@ static void SendVictoryChallenge( void )
 	default:
 		return;
 	};
-	if ( g_gametype.integer >= GT_TEAM && g_ffa_gt!=1) {
+	if ( g_gametype.integer!=GT_FFA && g_gametype.integer!=GT_TOURNAMENT && g_gametype.integer!=GT_LMS && g_gametype.integer!=GT_POSSESSION ) {
 		//Team games
 		for ( i = 0 ; i < level.maxclients ; i++ ) {
 			cl = &level.clients[i];

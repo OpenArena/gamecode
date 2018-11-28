@@ -81,6 +81,9 @@ extern vmCvar_t	ui_dom_capturelimit;
 extern vmCvar_t	ui_dom_timelimit;
 extern vmCvar_t	ui_dom_friendly;
 
+extern vmCvar_t	ui_pos_scorelimit;
+extern vmCvar_t	ui_pos_timelimit;
+
 extern vmCvar_t	ui_arenasFile;
 extern vmCvar_t	ui_botsFile;
 extern vmCvar_t	ui_spScores1;
