@@ -89,7 +89,8 @@ static const char *teamArenaGameTypes[] = {
 	"CTFELIMINATION",
 	"LMS",
 	"DOUBLE D",
-	"DOMINATION"
+	"DOMINATION",
+	"POSSESSION"
 };
 
 static int const numTeamArenaGameTypes = sizeof(teamArenaGameTypes) / sizeof(const char*);
