@@ -843,6 +843,15 @@ void G_CheckTeamItems( void )
 			G_Printf( S_COLOR_YELLOW "WARNING: No team_neutralobelisk in map\n" );
 		}
 	}
+/*	if( g_gametype.integer == GT_POSSESSION ) {
+		gitem_t	*item;
+
+		// check for the neutral flag
+		item = BG_FindItem( "Neutral Flag" );
+		if ( !item || !itemRegistered[ item - bg_itemlist ] ) {
+			G_Printf( S_COLOR_YELLOW "WARNING: No team_CTF_neutralflag in map\n" );
+		}
+	} */
 }
 
 /*

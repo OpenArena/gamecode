@@ -5161,7 +5161,7 @@ void BotSetupAlternativeRouteGoals(void) {
 					ALTROUTEGOAL_CLUSTERPORTALS |
 					ALTROUTEGOAL_VIEWPORTALS);
 		}
-	} else if (gametype == GT_1FCTF) {
+	} else if (gametype == GT_1FCTF || gametype == GT_POSSESSION) {
 		if (trap_BotGetLevelItemGoal(-1, "Neutral Obelisk", &neutralobelisk) < 0)
 			BotAI_Print(PRT_WARNING, "One Flag CTF without Neutral Obelisk\n");
 		red_numaltroutegoals = trap_AAS_AlternativeRouteGoals(
