@@ -134,6 +134,10 @@ vmCvar_t	g_elimination_lockspectator;
 
 vmCvar_t	g_rockets;
 
+//Following for Double Domination:
+vmCvar_t	g_dd_timeToWin;
+vmCvar_t	g_dd_intermissionTime;
+
 //dmn_clowns suggestions (with my idea of implementing):
 vmCvar_t	g_instantgib;
 vmCvar_t	g_vampire;
@@ -346,6 +350,10 @@ static cvarTable_t		gameCvarTable[] = {
 	{ &g_elimination_nail, "elimination_nail", "0", CVAR_ARCHIVE| CVAR_NORESTART, 0, qtrue },
 
 	{ &g_elimination_ctf_oneway, "elimination_ctf_oneway", "0", CVAR_ARCHIVE| CVAR_NORESTART, 0, qtrue },
+
+	/* For Double Domination */
+	{ &g_dd_timeToWin, "g_dd_timeToWin", "10", CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
+	{ &g_dd_intermissionTime, "g_dd_intermissionTime", "10", CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
 
 	{ &g_elimination_lockspectator, "elimination_lockspectator", "0", CVAR_NORESTART, 0, qtrue },
 
@@ -2157,9 +2165,9 @@ void CheckDoubleDomination( void )
 	if ( level.warmupTime != 0) {
 		if( ((level.pointStatusA == TEAM_BLUE && level.pointStatusB == TEAM_BLUE) ||
 		        (level.pointStatusA == TEAM_RED && level.pointStatusB == TEAM_RED)) &&
-		        level.timeTaken + 10*1000 <= level.time ) {
+		        level.timeTaken + g_dd_timeToWin.integer*1000 <= level.time ) {
 			Team_RemoveDoubleDominationPoints();
-			level.roundStartTime = level.time + 10*1000;
+			level.roundStartTime = level.time + g_dd_intermissionTime.integer*1000;
 			SendScoreboardMessageToAllClients();
 		}
 		return;
@@ -2172,7 +2180,7 @@ void CheckDoubleDomination( void )
 	if(level.intermissiontime)
 		return;
 
-	if(level.pointStatusA == TEAM_RED && level.pointStatusB == TEAM_RED && level.timeTaken + 10*1000 <= level.time) {
+	if(level.pointStatusA == TEAM_RED && level.pointStatusB == TEAM_RED && level.timeTaken + g_dd_timeToWin.integer*1000 <= level.time) {
 		//Red scores
 		trap_SendServerCommand( -1, "print \"Red team scores!\n\"");
 		AddTeamScore(level.intermission_origin,TEAM_RED,1);
@@ -2181,12 +2189,12 @@ void CheckDoubleDomination( void )
 		Team_DD_bonusAtPoints(TEAM_RED);
 		Team_RemoveDoubleDominationPoints();
 		//We start again in 10 seconds:
-		level.roundStartTime = level.time + 10*1000;
+		level.roundStartTime = level.time + g_dd_intermissionTime.integer*1000;
 		SendScoreboardMessageToAllClients();
 		CalculateRanks();
 	}
 
-	if(level.pointStatusA == TEAM_BLUE && level.pointStatusB == TEAM_BLUE && level.timeTaken + 10*1000 <= level.time) {
+	if(level.pointStatusA == TEAM_BLUE && level.pointStatusB == TEAM_BLUE && level.timeTaken + g_dd_timeToWin.integer*1000 <= level.time) {
 		//Blue scores
 		trap_SendServerCommand( -1, "print \"Blue team scores!\n\"");
 		AddTeamScore(level.intermission_origin,TEAM_BLUE,1);
@@ -2195,7 +2203,7 @@ void CheckDoubleDomination( void )
 		Team_DD_bonusAtPoints(TEAM_BLUE);
 		Team_RemoveDoubleDominationPoints();
 		//We start again in 10 seconds:
-		level.roundStartTime = level.time + 10*1000;
+		level.roundStartTime = level.time + g_dd_intermissionTime.integer*1000;
 		SendScoreboardMessageToAllClients();
 		CalculateRanks();
 	}
@@ -2779,8 +2787,9 @@ void G_RunFrame( int levelTime )
 
 void MapInfoPrint(mapinfo_result_t *info)
 {
-	G_Printf("Auther: %s\n",info->author);
-	G_Printf("Fraglimit: %i\n",info->fragLimit);
-	G_Printf("Capturelimit: %i\n",info->captureLimit);
+	G_Printf("Author: %s\n",info->author);
+	G_Printf("Frag Limit: %i\n",info->fragLimit);
+	G_Printf("Time Limit: %i\n",info->timeLimit);
+	G_Printf("Capture Limit: %i\n",info->captureLimit);
 	G_Printf("minTeamSize: %i\n",info->minTeamSize);
 }

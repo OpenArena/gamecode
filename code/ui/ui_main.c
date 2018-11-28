@@ -201,8 +201,8 @@ Q_EXPORT intptr_t vmMain( int command, int arg0, int arg1, int arg2, int arg3, i
 void AssetCache( void )
 {
 	int n;
-	//if (Assets.textFont == NULL) {
-	//}
+	/* if (Assets.textFont == NULL) {
+	   } */
 	//Assets.background = trap_R_RegisterShaderNoMip( ASSET_BACKGROUND );
 	//Com_Printf("Menu Size: %i bytes\n", sizeof(Menus));
 	uiInfo.uiDC.Assets.gradientBar = trap_R_RegisterShaderNoMip( ASSET_GRADIENTBAR );
@@ -698,9 +698,9 @@ void _UI_Refresh( int realtime )
 	static int index;
 	static int	previousTimes[UI_FPS_FRAMES];
 
-	//if ( !( trap_Key_GetCatcher() & KEYCATCH_UI ) ) {
-	//	return;
-	//}
+	/* if ( !( trap_Key_GetCatcher() & KEYCATCH_UI ) ) {
+	   	return;
+	   } */
 
 	uiInfo.uiDC.frameTime = realtime - uiInfo.uiDC.realTime;
 	uiInfo.uiDC.realTime = realtime;
@@ -1260,15 +1260,15 @@ void UI_ParseMenu(const char *menuFile)
 			break;
 		}
 
-		//if ( Q_stricmp( token, "{" ) ) {
-		//	Com_Printf( "Missing { in menu file\n" );
-		//	break;
-		//}
+		/* if ( Q_stricmp( token, "{" ) ) {
+			Com_Printf( "Missing { in menu file\n" );
+			break;
+		} */
 
-		//if ( menuCount == MAX_MENUS ) {
-		//	Com_Printf( "Too many menus!\n" );
-		//	break;
-		//}
+		/* if ( menuCount == MAX_MENUS ) {
+			Com_Printf( "Too many menus!\n" );
+			break;
+		} */
 
 		if ( token.string[0] == '}' ) {
 			break;
@@ -1970,6 +1970,7 @@ static const char *UI_OpponentLeaderName(void)
 }
 #endif
 
+/*
 static const char *UI_AIFromName(const char *name)
 {
 	int j;
@@ -1980,7 +1981,7 @@ static const char *UI_AIFromName(const char *name)
 	}
 	return "sergei";
 }
-
+*/
 #ifndef MISSIONPACK // bk001206
 static const int UI_AIIndex(const char *name)
 {
@@ -3707,7 +3708,7 @@ static qboolean UI_SetNextMap(int actual, int index, char *name)
 
 static void UI_StartSkirmish(qboolean next, char *name)
 {
-	int i, k, g, delay, temp;
+	int /* i, */ k, g, delay, temp;
 	float skill;
 	char buff[MAX_STRING_CHARS];
 
@@ -3830,7 +3831,12 @@ static void UI_StartSkirmish(qboolean next, char *name)
 	}
 	else {
 		temp = uiInfo.mapList[ui_currentMap.integer].teamMembers * 2;
-		trap_Cvar_Set("sv_maxClients", va("%d", temp));
+		trap_Cvar_Set("sv_maxClients", va("%i", temp + 2));
+		trap_Cvar_Set("bot_minPlayers", va("%i", temp));
+		trap_Cvar_Set("skill", va("%f", skill));
+		Com_sprintf( buff, sizeof(buff), "wait ;\n");
+		trap_Cmd_ExecuteText( EXEC_APPEND, buff );
+/* Neon_Knight: Disabling temporarily the checks.
 		for (i =0; i < uiInfo.mapList[ui_currentMap.integer].teamMembers; i++) {
 			Com_sprintf( buff, sizeof(buff), "addbot %s %f %s %i %s\n", UI_AIFromName(uiInfo.teamList[k].teamMembers[i]), skill, (g == GT_FFA) ? "" : "Blue", delay, uiInfo.teamList[k].teamMembers[i]);
 			trap_Cmd_ExecuteText( EXEC_APPEND, buff );
@@ -3842,6 +3848,7 @@ static void UI_StartSkirmish(qboolean next, char *name)
 			trap_Cmd_ExecuteText( EXEC_APPEND, buff );
 			delay += 500;
 		}
+*/
 	}
 	if (g >= GT_TEAM ) {
 		trap_Cmd_ExecuteText( EXEC_APPEND, "wait 5; team Red\n" );
@@ -5976,11 +5983,11 @@ static qboolean MapList_Parse(char **p)
 				}
 			}
 
-			//mapList[mapCount].imageName = String_Alloc(va("levelshots/%s", mapList[mapCount].mapLoadName));
-			//if (uiInfo.mapCount == 0) {
-			// only load the first cinematic, selection loads the others
-			//  uiInfo.mapList[uiInfo.mapCount].cinematic = trap_CIN_PlayCinematic(va("%s.roq",uiInfo.mapList[uiInfo.mapCount].mapLoadName), qfalse, qfalse, qtrue, 0, 0, 0, 0);
-			//}
+			/* mapList[mapCount].imageName = String_Alloc(va("levelshots/%s", mapList[mapCount].mapLoadName));
+			if (uiInfo.mapCount == 0) {
+			 only load the first cinematic, selection loads the others
+			  uiInfo.mapList[uiInfo.mapCount].cinematic = trap_CIN_PlayCinematic(va("%s.roq",uiInfo.mapList[uiInfo.mapCount].mapLoadName), qfalse, qfalse, qtrue, 0, 0, 0, 0);
+			} */
 			uiInfo.mapList[uiInfo.mapCount].cinematic = -1;
 			//uiInfo.mapList[uiInfo.mapCount].levelShot = trap_R_RegisterShaderNoMip(va("levelshots/%s_small", uiInfo.mapList[uiInfo.mapCount].mapLoadName));
 			// leilei - We don't have _small levelshots, memory reasons
@@ -6460,9 +6467,9 @@ void _UI_KeyEvent( int key, qboolean down )
 		}
 	}
 
-	//if ((s > 0) && (s != menu_null_sound)) {
-	//  trap_S_StartLocalSound( s, CHAN_LOCAL_SOUND );
-	//}
+	/* if ((s > 0) && (s != menu_null_sound)) {
+	  trap_S_StartLocalSound( s, CHAN_LOCAL_SOUND );
+	} */
 }
 
 /*

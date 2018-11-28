@@ -91,6 +91,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define TEAM_OVERLAY_MAXLOCATION_WIDTH	16
 // leilei - change these to sorceress for baseoa3 as there is no sarge or sergei
 #define	DEFAULT_MODEL			"sarge"
+/* Neon_Knight: Disabling temporarily the checks.
 #ifdef MISSIONPACK
 #define	DEFAULT_TEAM_MODEL		"sergei"
 #define	DEFAULT_TEAM_HEAD		"*sergei"
@@ -98,7 +99,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define	DEFAULT_TEAM_MODEL		"sarge"
 #define	DEFAULT_TEAM_HEAD		"sarge"
 #endif
-
+*/
 #define DEFAULT_REDTEAM_NAME		"Vim supporters"
 #define DEFAULT_BLUETEAM_NAME		"Emacs supporters"
 

@@ -850,7 +850,8 @@ This will usually be deferred to a safe time
 ===================
  */
 static void CG_LoadClientInfo(int clientNum, clientInfo_t *ci) {
-	const char *dir, *fallback;
+/* Neon_Knight: Disabling temporarily the checks. */
+	const char *dir/* , *fallback */;
 	int i, modelloaded;
 	const char *s;
 	char teamname[MAX_QPATH];
@@ -882,9 +883,11 @@ static void CG_LoadClientInfo(int clientNum, clientInfo_t *ci) {
 			} else {
 				Q_strncpyz(teamname, DEFAULT_REDTEAM_NAME, sizeof (teamname));
 			}
+/* Neon_Knight: Disabling temporarily the checks.
 			if (!CG_RegisterClientModelname(ci, DEFAULT_TEAM_MODEL, ci->skinName, DEFAULT_TEAM_HEAD, ci->skinName, teamname)) {
 				CG_Error("DEFAULT_TEAM_MODEL / skin (%s/%s) failed to register", DEFAULT_TEAM_MODEL, ci->skinName);
 			}
+*/
 		} else {
 			if (!CG_RegisterClientModelname(ci, DEFAULT_MODEL, "default", DEFAULT_MODEL, "default", teamname)) {
 				CG_Error("DEFAULT_MODEL (%s) failed to register", DEFAULT_MODEL);
@@ -904,7 +907,9 @@ static void CG_LoadClientInfo(int clientNum, clientInfo_t *ci) {
 
 	// sounds
 	dir = ci->modelName;
+/* Neon_Knight: Disabling temporarily the checks.
 	fallback = (cgs.gametype >= GT_TEAM && cgs.ffa_gt != 1) ? DEFAULT_TEAM_MODEL : DEFAULT_MODEL;
+*/
 
 	for (i = 0; i < MAX_CUSTOM_SOUNDS; i++) {
 		s = cg_customSoundNames[i];
@@ -916,9 +921,9 @@ static void CG_LoadClientInfo(int clientNum, clientInfo_t *ci) {
 		if (modelloaded) {
 			ci->sounds[i] = trap_S_RegisterSound(va("sound/player/%s/%s", dir, s + 1), qfalse);
 		}
-		if (!ci->sounds[i]) {
+/*		if (!ci->sounds[i]) {
 			ci->sounds[i] = trap_S_RegisterSound(va("sound/player/%s/%s", fallback, s + 1), qfalse);
-		}
+		} */
 	}
 
 	ci->deferred = qfalse;
@@ -1142,11 +1147,12 @@ void CG_NewClientInfo(int clientNum) {
 		// to prevent load hitches
 		char modelStr[MAX_QPATH];
 		char *skin;
-
+/* Neon_Knight: Disabling temporarily the checks.
 		if (cgs.gametype >= GT_TEAM && cgs.ffa_gt != 1) {
 			Q_strncpyz(newInfo.modelName, DEFAULT_TEAM_MODEL, sizeof ( newInfo.modelName));
 			Q_strncpyz(newInfo.skinName, "default", sizeof ( newInfo.skinName));
 		} else {
+*/
 			trap_Cvar_VariableStringBuffer("model", modelStr, sizeof ( modelStr));
 			if ((skin = strchr(modelStr, '/')) == NULL) {
 				skin = "default";
@@ -1156,8 +1162,9 @@ void CG_NewClientInfo(int clientNum) {
 
 			Q_strncpyz(newInfo.skinName, skin, sizeof ( newInfo.skinName));
 			Q_strncpyz(newInfo.modelName, modelStr, sizeof ( newInfo.modelName));
+/* Neon_Knight: Disabling temporarily the checks.
 		}
-
+*/
 		if (cgs.gametype >= GT_TEAM && cgs.ffa_gt != 1) {
 			// keep skin name
 			slash = strchr(v, '/');
@@ -1186,11 +1193,12 @@ void CG_NewClientInfo(int clientNum) {
 		// to prevent load hitches
 		char modelStr[MAX_QPATH];
 		char *skin;
-
+/* Neon_Knight: Disabling temporarily the checks.
 		if (cgs.gametype >= GT_TEAM && cgs.ffa_gt != 1) {
 			Q_strncpyz(newInfo.headModelName, DEFAULT_TEAM_MODEL, sizeof ( newInfo.headModelName));
 			Q_strncpyz(newInfo.headSkinName, "default", sizeof ( newInfo.headSkinName));
 		} else {
+*/
 			trap_Cvar_VariableStringBuffer("headmodel", modelStr, sizeof ( modelStr));
 			if ((skin = strchr(modelStr, '/')) == NULL) {
 				skin = "default";
@@ -1200,8 +1208,9 @@ void CG_NewClientInfo(int clientNum) {
 
 			Q_strncpyz(newInfo.headSkinName, skin, sizeof ( newInfo.headSkinName));
 			Q_strncpyz(newInfo.headModelName, modelStr, sizeof ( newInfo.headModelName));
+/* Neon_Knight: Disabling temporarily the checks.
 		}
-
+*/
 		if (cgs.gametype >= GT_TEAM && cgs.ffa_gt != 1) {
 			// keep skin name
 			slash = strchr(v, '/');
