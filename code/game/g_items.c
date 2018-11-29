@@ -88,7 +88,7 @@ int Pickup_Powerup( gentity_t *ent, gentity_t *other )
 
 		// if same team in team game, no sound
 		// cannot use OnSameTeam as it expects to g_entities, not clients
-		if ( g_gametype.integer >= GT_TEAM && g_ffa_gt==0 && other->client->sess.sessionTeam == client->sess.sessionTeam  ) {
+		if (G_IsATeamGame(g_gametype.integer,qfalse) && other->client->sess.sessionTeam == client->sess.sessionTeam  ) {
 			continue;
 		}
 

@@ -330,3 +330,31 @@ void UI_SetDefaultCvar(const char* cvar, const char* value) {
 		trap_Cvar_Set(cvar,value);
 	}
 }
+
+/* Neon_Knight: Useful check in order to have code consistency. */
+/*																																			
+===================
+UI_IsATeamGame
+
+Checks if the gametype is a team-based game.
+===================
+ */
+qboolean UI_IsATeamGame(int check,qboolean capturebased) {
+	if (capturebased == qtrue) { /* If it's capture-based (TDM not included), then true. */
+		if (check != GT_FFA && check != GT_TOURNAMENT && check != GT_SINGLE_PLAYER && check != GT_LMS && check != GT_POSSESSION) {
+			return qtrue;
+		}
+		else {
+			return qfalse;
+		}
+	}
+	else { /* If it's frag-based (TDM included), then true. */
+		if (check != GT_FFA && check != GT_TOURNAMENT && check != GT_SINGLE_PLAYER && check != GT_TEAM && check != GT_LMS && check != GT_POSSESSION) {
+			return qtrue;
+		}
+		else {
+			return qfalse;
+		}
+	}
+}
+/* /Neon_Knight */

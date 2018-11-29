@@ -857,7 +857,7 @@ void G_InitGame( int levelTime, int randomSeed, int restart )
 
 	// make sure we have flags for CTF, etc
 	if ( g_gametype.integer == GT_POSSESSION ||
-	        (g_gametype.integer >= GT_TEAM && g_ffa_gt!=1) ) {
+	        G_IsATeamGame(g_gametype.integer,qfalse) ) {
 		G_CheckTeamItems();
 	}
 
@@ -1289,7 +1289,7 @@ void CalculateRanks( void )
 	       sizeof(level.sortedClients[0]), SortRanks );
 
 	// set the rank value for all clients that are connected and not spectators
-	if ( g_gametype.integer >= GT_TEAM && g_ffa_gt!=1) {
+	if (G_IsATeamGame(g_gametype.integer,qfalse)) {
 		// in team games, rank is just the order of the teams, 0=red, 1=blue, 2=tied
 		for ( i = 0;  i < level.numConnectedClients; i++ ) {
 			cl = &level.clients[ level.sortedClients[i] ];
@@ -1328,7 +1328,7 @@ void CalculateRanks( void )
 	}
 
 	// set the CS_SCORES1/2 configstrings, which will be visible to everyone
-	if ( g_gametype.integer >= GT_TEAM && g_ffa_gt!=1) {
+	if (G_IsATeamGame(g_gametype.integer,qfalse)) {
 		trap_SetConfigstring( CS_SCORES1, va("%i", level.teamScores[TEAM_RED] ) );
 		trap_SetConfigstring( CS_SCORES2, va("%i", level.teamScores[TEAM_BLUE] ) );
 	}
@@ -1452,7 +1452,7 @@ static void SendVictoryChallenge( void )
 	default:
 		return;
 	};
-	if ( g_gametype.integer!=GT_FFA && g_gametype.integer!=GT_TOURNAMENT && g_gametype.integer!=GT_LMS && g_gametype.integer!=GT_POSSESSION ) {
+	if (G_IsATeamGame(g_gametype.integer,qfalse)) {
 		//Team games
 		for ( i = 0 ; i < level.maxclients ; i++ ) {
 			cl = &level.clients[i];
@@ -1858,7 +1858,7 @@ void LogExit( const char *string )
 		numSorted = 32;
 	}
 
-	if ( g_gametype.integer >= GT_TEAM && g_ffa_gt!=1) {
+	if (G_IsATeamGame(g_gametype.integer,qfalse)) {
 		G_LogPrintf( "red:%i  blue:%i\n",
 		             level.teamScores[TEAM_RED], level.teamScores[TEAM_BLUE] );
 	}
@@ -1890,7 +1890,7 @@ void LogExit( const char *string )
 
 #ifdef MISSIONPACK
 	if (g_singlePlayer.integer) {
-		if (g_gametype.integer >= GT_CTF && g_ffa_gt==0) {
+		if (G_IsATeamGame(g_gametype.integer,qtrue)) {
 			won = level.teamScores[TEAM_RED] > level.teamScores[TEAM_BLUE];
 		}
 		trap_SendConsoleCommand( EXEC_APPEND, (won) ? "spWin\n" : "spLose\n" );
@@ -2014,7 +2014,7 @@ qboolean ScoreIsTied( void )
 		        level.teamScores[TEAM_RED] == level.teamScores[TEAM_BLUE]-1);
 	}
 
-	if ( g_gametype.integer >= GT_TEAM && g_ffa_gt!=1) {
+	if (G_IsATeamGame(g_gametype.integer,qfalse)) {
 		return level.teamScores[TEAM_RED] == level.teamScores[TEAM_BLUE];
 	}
 
@@ -2088,7 +2088,7 @@ void CheckExitRules( void )
 		return;
 	}
 
-	if ( (g_gametype.integer < GT_CTF || g_ffa_gt>0 ) && g_fraglimit.integer ) {
+	if (!G_IsATeamGame(g_gametype.integer,qtrue) && g_fraglimit.integer ) {
 		if ( level.teamScores[TEAM_RED] >= g_fraglimit.integer ) {
 			trap_SendServerCommand( -1, "print \"Red hit the fraglimit.\n\"" );
 			LogExit( "Fraglimit hit." );
@@ -2119,7 +2119,7 @@ void CheckExitRules( void )
 		}
 	}
 
-	if ( (g_gametype.integer >= GT_CTF && g_ffa_gt<1) && g_capturelimit.integer ) {
+	if ( G_IsATeamGame(g_gametype.integer,qtrue) && g_capturelimit.integer ) {
 
 		if ( level.teamScores[TEAM_RED] >= g_capturelimit.integer ) {
 			trap_SendServerCommand( -1, "print \"Red hit the capturelimit.\n\"" );
@@ -2784,3 +2784,31 @@ void MapInfoPrint(mapinfo_result_t *info)
 	G_Printf("Capturelimit: %i\n",info->captureLimit);
 	G_Printf("minTeamSize: %i\n",info->minTeamSize);
 }
+
+/* Neon_Knight: Useful check in order to have code consistency. */
+/*																																			
+===================
+G_IsATeamGame
+
+Checks if the gametype is a team-based game.
+===================
+ */
+qboolean G_IsATeamGame(int check,qboolean capturebased) {
+	if (capturebased == qtrue) { /* If it's capture-based (TDM not included), then true. */
+		if (check != GT_FFA && check != GT_TOURNAMENT && check != GT_SINGLE_PLAYER && check != GT_LMS && check != GT_POSSESSION) {
+			return qtrue;
+		}
+		else {
+			return qfalse;
+		}
+	}
+	else { /* If it's frag-based (TDM included), then true. */
+		if (check != GT_FFA && check != GT_TOURNAMENT && check != GT_SINGLE_PLAYER && check != GT_TEAM && check != GT_LMS && check != GT_POSSESSION) {
+			return qtrue;
+		}
+		else {
+			return qfalse;
+		}
+	}
+}
+/* /Neon_Knight */

@@ -1281,3 +1281,7 @@ typedef struct postGameInfo_s {
 
 
 #endif
+
+/* Neon_Knight: Useful check in order to have code consistency. */
+qboolean UI_IsATeamGame(int check,qboolean capturebased);
+/* /Neon_Knight */

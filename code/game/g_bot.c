@@ -419,7 +419,7 @@ void G_CheckMinimumPlayers( void ) {
 		return; //If no AAS then don't even try
 	}
 
-	if (g_gametype.integer >= GT_TEAM && g_ffa_gt!=1) {
+	if (G_IsATeamGame(g_gametype.integer,qfalse)) {
 		if (minplayers >= g_maxclients.integer / 2) {
 			minplayers = (g_maxclients.integer / 2) -1;
 		}
@@ -671,7 +671,7 @@ static void G_AddBot( const char *name, float skill, const char *team, int delay
 
 	// initialize the bot settings
 	if( !team || !*team ) {
-		if( g_gametype.integer >= GT_TEAM && g_ffa_gt!=1) {
+		if(G_IsATeamGame(g_gametype.integer,qfalse)) {
 			if( PickTeam(clientNum) == TEAM_RED) {
 				team = "red";
 			}
@@ -1030,9 +1030,9 @@ void G_InitBots( qboolean restart ) {
 		    trap_Cvar_Set("bot_minplayers","2"); //Always 2 for Tourney
 		} else {
 			basedelay = MinSpawnpointCount()/2;
-			if(basedelay < 3 && (g_gametype.integer < GT_TEAM || g_ffa_gt) )
+			if(basedelay < 3 && !G_IsATeamGame(g_gametype.integer,qfalse) )
 			    basedelay = 3; //Minimum 3 for FFA
-			if(basedelay < 2 && !(g_gametype.integer < GT_TEAM || g_ffa_gt) )
+			if(basedelay < 2 && !G_IsATeamGame(g_gametype.integer,qfalse) )
 			    basedelay = 2; //Minimum 2 for TEAM
 			trap_Cvar_Set("bot_minplayers",va("%i",basedelay) );
 		}

@@ -918,3 +918,7 @@ void RankStatus_Cache( void );
 void UI_RankStatusMenu( void );
 
 #endif
+
+/* Neon_Knight: Useful check in order to have code consistency. */
+qboolean UI_IsATeamGame(int check,qboolean capturebased);
+/* /Neon_Knight */

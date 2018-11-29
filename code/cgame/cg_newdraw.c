@@ -60,7 +60,7 @@ void CG_SetPrintString(int type, const char *p)
 
 void CG_CheckOrderPending(void)
 {
-	if (cgs.gametype < GT_CTF || cgs.ffa_gt>0) {
+	if (!CG_IsATeamGame(cgs.gametype,qtrue)) {
 		return;
 	}
 	if (cgs.orderPending) {
@@ -872,7 +872,7 @@ static void CG_DrawCTFPowerUp(rectDef_t *rect)
 {
 	int		value;
 
-	if (cgs.gametype < GT_CTF || cgs.ffa_gt>0) {
+	if (!CG_IsATeamGame(cgs.gametype,qtrue)) {
 		return;
 	}
 	value = cg.snap->ps.stats[STAT_PERSISTANT_POWERUP];
@@ -1109,13 +1109,13 @@ qboolean CG_OwnerDrawVisible(int flags)
 	}
 
 	if (flags & CG_SHOW_ANYTEAMGAME) {
-		if( cgs.gametype >= GT_TEAM && cgs.ffa_gt!=1) {
+		if(CG_IsATeamGame(cgs.gametype,qfalse)) {
 			return qtrue;
 		}
 	}
 
 	if (flags & CG_SHOW_ANYNONTEAMGAME) {
-		if( cgs.gametype < GT_TEAM || cgs.ffa_gt==1) {
+		if(!CG_IsATeamGame(cgs.gametype,qfalse)) {
 			return qtrue;
 		}
 	}
@@ -1242,7 +1242,7 @@ static void CG_DrawKiller(rectDef_t *rect, float scale, vec4_t color, qhandle_t 
 
 static void CG_DrawCapFragLimit(rectDef_t *rect, float scale, vec4_t color, qhandle_t shader, int textStyle)
 {
-	int limit = (cgs.gametype >= GT_CTF && cgs.ffa_gt==0) ? cgs.capturelimit : cgs.fraglimit;
+	int limit = (CG_IsATeamGame(cgs.gametype,qtrue)) ? cgs.capturelimit : cgs.fraglimit;
 	CG_Text_Paint(rect->x, rect->y, scale, color, va("%2i", limit),0, 0, textStyle);
 }
 
@@ -1263,7 +1263,7 @@ static void CG_Draw2ndPlace(rectDef_t *rect, float scale, vec4_t color, qhandle_
 const char *CG_GetGameStatusText(void)
 {
 	const char *s = "";
-	if ( cgs.gametype < GT_TEAM || cgs.ffa_gt==1) {
+	if (!CG_IsATeamGame(cgs.gametype,qfalse)) {
 		if (cg.snap->ps.persistant[PERS_TEAM] != TEAM_SPECTATOR ) {
 			s = va("%s place with %i",CG_PlaceString( cg.snap->ps.persistant[PERS_RANK] + 1 ),cg.snap->ps.persistant[PERS_SCORE] );
 		}
@@ -1972,9 +1972,9 @@ static void CG_DrawCaptureLimit( rectDef_t *rect, float text_x, float text_y, ve
 	int			value;
 	info = CG_ConfigString( CS_SERVERINFO );
 	value = atoi( Info_ValueForKey( info, "capturelimit" ) );
-	if (cgs.gametype >= GT_CTF && cgs.ffa_gt == 0)
+	if (CG_IsATeamGame(cgs.gametype,qtrue))
 		value = atoi( Info_ValueForKey( info, "capturelimit" ) );
-	if (cgs.gametype < GT_CTF || cgs.ffa_gt>0)
+	if (!CG_IsATeamGame(cgs.gametype,qtrue))
 		value = atoi( Info_ValueForKey( info, "fraglimit" ) );
 	if ( value ) {
 		CG_DrawLoadingString( rect, text_x, text_y, color, scale, align, textStyle, va( "%i", value ));

@@ -2058,3 +2058,6 @@ void	trap_R_LFX_ParticleEffect( int effect, const vec3_t origin, const vec3_t ve
 
 // LEILEI ENHANCEMENT
 
+/* Neon_Knight: Useful check in order to have code consistency. */
+qboolean CG_IsATeamGame(int check,qboolean capturebased);
+/* /Neon_Knight */
