@@ -201,8 +201,8 @@ Q_EXPORT intptr_t vmMain( int command, int arg0, int arg1, int arg2, int arg3, i
 void AssetCache( void )
 {
 	int n;
-	//if (Assets.textFont == NULL) {
-	//}
+	/* if (Assets.textFont == NULL) {
+	} */
 	//Assets.background = trap_R_RegisterShaderNoMip( ASSET_BACKGROUND );
 	//Com_Printf("Menu Size: %i bytes\n", sizeof(Menus));
 	uiInfo.uiDC.Assets.gradientBar = trap_R_RegisterShaderNoMip( ASSET_GRADIENTBAR );
@@ -698,9 +698,9 @@ void _UI_Refresh( int realtime )
 	static int index;
 	static int	previousTimes[UI_FPS_FRAMES];
 
-	//if ( !( trap_Key_GetCatcher() & KEYCATCH_UI ) ) {
-	//	return;
-	//}
+	/* if ( !( trap_Key_GetCatcher() & KEYCATCH_UI ) ) {
+		return;
+	} */
 
 	uiInfo.uiDC.frameTime = realtime - uiInfo.uiDC.realTime;
 	uiInfo.uiDC.realTime = realtime;
@@ -1260,15 +1260,15 @@ void UI_ParseMenu(const char *menuFile)
 			break;
 		}
 
-		//if ( Q_stricmp( token, "{" ) ) {
-		//	Com_Printf( "Missing { in menu file\n" );
-		//	break;
-		//}
+		/* if ( Q_stricmp( token, "{" ) ) {
+			Com_Printf( "Missing { in menu file\n" );
+			break;
+		}*/ 
 
-		//if ( menuCount == MAX_MENUS ) {
-		//	Com_Printf( "Too many menus!\n" );
-		//	break;
-		//}
+		/* if ( menuCount == MAX_MENUS ) {
+			Com_Printf( "Too many menus!\n" );
+			break;
+		} */
 
 		if ( token.string[0] == '}' ) {
 			break;
@@ -3830,8 +3830,8 @@ static void UI_StartSkirmish(qboolean next, char *name)
 	}
 	else {
 		temp = uiInfo.mapList[ui_currentMap.integer].teamMembers * 2;
-		/* Neon_Knight: Toggleable cg_missionpackChecks */
-		if(cg_missionpackChecks.integer != 0) {
+		/* Neon_Knight: Toggleable Missionpack Checks */
+		if(ui_missionpackChecks.integer != 0) {
 			trap_Cvar_Set("sv_maxClients", va("%i", temp));
 			for (i =0; i < uiInfo.mapList[ui_currentMap.integer].teamMembers; i++) {
 				Com_sprintf( buff, sizeof(buff), "addbot %s %f %s %i %s\n", UI_AIFromName(uiInfo.teamList[k].teamMembers[i]), skill, (g == GT_FFA) ? "" : "Blue", delay, uiInfo.teamList[k].teamMembers[i]);
@@ -4402,8 +4402,8 @@ static void UI_RunMenuScript(char **args)
 			}
 		}
 		else if (Q_strequal(name, "addBot") ) {
-			/* Neon_Knight: Toggleable cg_missionpackChecks */
-			if ((trap_Cvar_VariableValue("g_gametype") == GT_FFA || trap_Cvar_VariableValue("g_gametype") == GT_TOURNAMENT || trap_Cvar_VariableValue("g_gametype") == GT_LMS || trap_Cvar_VariableValue("g_gametype") == GT_POSSESSION) && cg_missionpackChecks.integer == 0) {
+			/* Neon_Knight: Toggleable Missionpack Checks */
+			if ((trap_Cvar_VariableValue("g_gametype") == GT_FFA || trap_Cvar_VariableValue("g_gametype") == GT_TOURNAMENT || trap_Cvar_VariableValue("g_gametype") == GT_LMS || trap_Cvar_VariableValue("g_gametype") == GT_POSSESSION) && ui_missionpackChecks.integer == 0) {
 			/* /Neon_Knight */
 				trap_Cmd_ExecuteText( EXEC_APPEND, va("addbot %s %i %s\n", uiInfo.characterList[uiInfo.botIndex].name, uiInfo.skillIndex+1, (uiInfo.redBlue == 0) ? "Red" : "Blue") );
 			}
@@ -7093,6 +7093,7 @@ vmCvar_t	ui_introPlayed;
 
 vmCvar_t ui_humansonly;
 
+vmCvar_t ui_missionpackChecks;
 
 // bk001129 - made static to avoid aliasing
 static cvarTable_t		cvarTable[] = {
@@ -7270,6 +7271,7 @@ static cvarTable_t		cvarTable[] = {
 	{ &gameover, "gameover", "0", CVAR_INIT}, // ai script
 // end changed RD
 	{ &ui_introPlayed, "ui_introPlayed", "0", CVAR_INIT },
+	{ &ui_missionpackChecks, "ui_missionpackChecks", "1", CVAR_INIT },
 };
 
 // bk001129 - made static to avoid aliasing
