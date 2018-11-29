@@ -7431,30 +7431,37 @@ static void UI_StartServerRefresh(qboolean full)
 }
 
 /* Neon_Knight: Useful check in order to have code consistency. */
-/*																																			
+/*
 ===================
-UI_IsATeamGame
+UI_IsATeamGametype
 
 Checks if the gametype is a team-based game.
+(UI_IsATeamGame(check,qtrue))
 ===================
  */
-qboolean UI_IsATeamGame(int check,qboolean capturebased) {
-	if (capturebased == qtrue) { /* If it's capture-based (TDM not included), then true. */
-		if (check != GT_FFA && check != GT_TOURNAMENT && check != GT_SINGLE_PLAYER && check != GT_LMS && check != GT_POSSESSION) {
-			return qtrue;
-		}
-		else {
-			return qfalse;
-		}
+qboolean UI_IsATeamGametype(int check) {
+	if (check != GT_FFA && check != GT_TOURNAMENT && check != GT_SINGLE_PLAYER && check != GT_LMS && check != GT_POSSESSION) {
+		return qtrue;
 	}
-	else { /* If it's frag-based (TDM included), then true. */
-		if (check != GT_FFA && check != GT_TOURNAMENT && check != GT_SINGLE_PLAYER && check != GT_TEAM && check != GT_LMS && check != GT_POSSESSION) {
-			return qtrue;
-		}
-		else {
-			return qfalse;
-		}
+	else {
+		return qfalse;
+	}
+}
+/*
+===================
+UI_UsesKeyObjectives
+
+Checks if the gametype makes use of gametype-specific objectives.
+(Flags, obelisks, control points...)
+(UI_IsATeamGame(check,qfalse))
+===================
+ */
+qboolean UI_UsesKeyObjectives(int check) {
+	if (capturebased == qtrue) {
+		return qtrue;
+	}
+	else {
+		return qfalse;
 	}
 }
 /* /Neon_Knight */
-

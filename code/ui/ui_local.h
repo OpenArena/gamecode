@@ -1283,5 +1283,6 @@ typedef struct postGameInfo_s {
 #endif
 
 /* Neon_Knight: Useful check in order to have code consistency. */
-qboolean UI_IsATeamGame(int check,qboolean capturebased);
+qboolean UI_IsATeamGametype(int check);	/* Whether the gametype is team-based or not.*/
+qboolean UI_UsesKeyObjectives(int check);	/* Whether the gametype uses key objectives or not. */
 /* /Neon_Knight */

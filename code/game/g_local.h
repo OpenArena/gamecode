@@ -1440,5 +1440,6 @@ void MapInfoPrint(mapinfo_result_t *info);
 void monster_die (gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int damage, int mod);
 
 /* Neon_Knight: Useful check in order to have code consistency. */
-qboolean G_IsATeamGame(int check,qboolean capturebased);
+qboolean G_IsATeamGametype(int check);	/* Whether the gametype is team-based or not.*/
+qboolean G_UsesKeyObjectives(int check);	/* Whether the gametype uses key objectives or not. */
 /* /Neon_Knight */

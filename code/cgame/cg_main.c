@@ -2694,30 +2694,40 @@ void CG_FairCvars() {
 	do_vid_restart = qtrue;
 }
 
+
+
 /* Neon_Knight: Useful check in order to have code consistency. */
-/*																																			
+/*
 ===================
-CG_IsATeamGame
+CG_IsATeamGametype
 
 Checks if the gametype is a team-based game.
+(CG_IsATeamGame(check,qtrue))
 ===================
  */
-qboolean CG_IsATeamGame(int check,qboolean capturebased) {
-	if (capturebased == qtrue) { /* If it's capture-based (TDM not included), then true. */
-		if (check != GT_FFA && check != GT_TOURNAMENT && check != GT_SINGLE_PLAYER && check != GT_LMS && check != GT_POSSESSION) {
-			return qtrue;
-		}
-		else {
-			return qfalse;
-		}
+qboolean CG_IsATeamGametype(int check) {
+	if (check != GT_FFA && check != GT_TOURNAMENT && check != GT_SINGLE_PLAYER && check != GT_LMS && check != GT_POSSESSION) {
+		return qtrue;
 	}
-	else { /* If it's frag-based (TDM included), then true. */
-		if (check != GT_FFA && check != GT_TOURNAMENT && check != GT_SINGLE_PLAYER && check != GT_TEAM && check != GT_LMS && check != GT_POSSESSION) {
-			return qtrue;
-		}
-		else {
-			return qfalse;
-		}
+	else {
+		return qfalse;
+	}
+}
+/*
+===================
+CG_UsesKeyObjectives
+
+Checks if the gametype makes use of gametype-specific objectives.
+(Flags, obelisks, control points...)
+(CG_IsATeamGame(check,qfalse))
+===================
+ */
+qboolean CG_UsesKeyObjectives(int check) {
+	if (capturebased == qtrue) {
+		return qtrue;
+	}
+	else {
+		return qfalse;
 	}
 }
 /* /Neon_Knight */
