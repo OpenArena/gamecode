@@ -298,10 +298,6 @@ vmCvar_t cg_weaponBarStyle;
 vmCvar_t cg_chatBeep;
 vmCvar_t cg_teamChatBeep;
 
-/* Neon_Knight: Missionpack checks toggle. Just because. */
-vmCvar_t cg_missionpackChecks;
-/* /Neon_Knight */
-
 typedef struct {
 	vmCvar_t *vmCvar;
 	char *cvarName;
@@ -514,9 +510,6 @@ static cvarTable_t cvarTable[] = {// bk001129
 	{&cg_chatBeep, "cg_chatBeep", "1", CVAR_ARCHIVE},
 	{&cg_teamChatBeep, "cg_teamChatBeep", "1", CVAR_ARCHIVE},
 	{ &cg_muzzleflashStyle, "cg_muzzleflashStyle", "1", CVAR_ARCHIVE}
-/* Neon_Knight: Enables MP checks. */
-	{ &cg_missionpackChecks, "cg_missionpackChecks", "1", CVAR_ARCHIVE}
-/* /Neon_Knight */
 };
 
 static int cvarTableSize = sizeof ( cvarTable) / sizeof ( cvarTable[0]);
@@ -544,11 +537,8 @@ void CG_RegisterCvars(void) {
 
 	trap_Cvar_Register(NULL, "model", DEFAULT_MODEL, CVAR_USERINFO | CVAR_ARCHIVE);
 	trap_Cvar_Register(NULL, "headmodel", DEFAULT_MODEL, CVAR_USERINFO | CVAR_ARCHIVE);
-	if(cg_missionpackChecks.integer != 0)
-	{
-		trap_Cvar_Register(NULL, "team_model", DEFAULT_TEAM_MODEL, CVAR_USERINFO | CVAR_ARCHIVE);
-		trap_Cvar_Register(NULL, "team_headmodel", DEFAULT_TEAM_HEAD, CVAR_USERINFO | CVAR_ARCHIVE);
-	}
+	trap_Cvar_Register(NULL, "team_model", DEFAULT_TEAM_MODEL, CVAR_USERINFO | CVAR_ARCHIVE);
+	trap_Cvar_Register(NULL, "team_headmodel", DEFAULT_TEAM_HEAD, CVAR_USERINFO | CVAR_ARCHIVE);
 }
 
 /*																																			
@@ -1884,15 +1874,15 @@ void CG_ParseMenu(const char *menuFile) {
 			break;
 		}
 
-		/* if ( !Q_strequal( token, "{" ) ) {
-			Com_Printf( "Missing { in menu file\n" );
-			break;
-		} */
+		//if ( !Q_strequal( token, "{" ) ) {
+		//	Com_Printf( "Missing { in menu file\n" );
+		//	break;
+		//}
 
-		/* if ( menuCount == MAX_MENUS ) {
-			Com_Printf( "Too many menus!\n" );
-			break;
-		} */
+		//if ( menuCount == MAX_MENUS ) {
+		//	Com_Printf( "Too many menus!\n" );
+		//	break;
+		//}
 
 		if (token.string[0] == '}') {
 			break;
@@ -2315,9 +2305,9 @@ void CG_LoadHudMenu(void) {
 }
 
 void CG_AssetCache(void) {
-	/* if (Assets.textFont == NULL) {
-	trap_R_RegisterFont("fonts/arial.ttf", 72, &Assets.textFont);
-	} */
+	//if (Assets.textFont == NULL) {
+	//  trap_R_RegisterFont("fonts/arial.ttf", 72, &Assets.textFont);
+	//}
 	//Assets.background = trap_R_RegisterShaderNoMip( ASSET_BACKGROUND );
 	//Com_Printf("Menu Size: %i bytes\n", sizeof(Menus));
 	/*
