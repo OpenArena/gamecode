@@ -231,7 +231,7 @@ qboolean OnSameTeam( const gentity_t *ent1, const gentity_t *ent2 )
 		return qfalse;
 	}
 
-	if (!G_IsATeamGame(g_gametype.integer,qfalse)) {
+	if (!(G_IsATeamGametype(g_gametype.integer) && G_UsesKeyObjectives(g_gametype.integer))) {
 		return qfalse;
 	}
 
@@ -2434,7 +2434,7 @@ void ShuffleTeams(void)
 	int i;
 	int assignedClients=1, nextTeam=TEAM_RED;
 
-	if (!G_IsATeamGame(g_gametype.integer,qfalse))
+	if (!(G_IsATeamGametype(g_gametype.integer) && G_UsesKeyObjectives(g_gametype.integer)))
 		return; //Can only shuffle team games!
 
 	for( i=0; i < level.numConnectedClients; i++ ) {

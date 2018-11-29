@@ -548,7 +548,7 @@ void UI_TeamOrdersMenu_f( void )
 	// make sure it's a team game
 	trap_GetConfigString( CS_SERVERINFO, info, sizeof(info) );
 	teamOrdersMenuInfo.gametype = atoi( Info_ValueForKey( info, "g_gametype" ) );
-	if(!UI_IsATeamGame(teamOrdersMenuInfo.gametype,qfalse)) {
+	if(!(UI_IsATeamGametype(teamOrdersMenuInfo.gametype) && UI_UsesKeyObjectives(teamOrdersMenuInfo.gametype))) {
 		return;
 	}
 

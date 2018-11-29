@@ -452,7 +452,7 @@ void G_SpawnGEntityFromSpawnVars( void ) {
 		}
 	}
 	// check for "notteam" flag (GT_FFA, GT_TOURNAMENT, GT_SINGLE_PLAYER)
-	if (G_IsATeamGame(g_gametype.integer,qfalse)) {
+	if (G_IsATeamGametype(g_gametype.integer) && G_UsesKeyObjectives(g_gametype.integer)) {
 		G_SpawnInt( "notteam", "0", &i );
 		if ( i ) {
 			G_FreeEntity( ent );

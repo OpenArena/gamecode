@@ -294,7 +294,7 @@ void CG_DrawInformation( void ) {
 		y += PROP_HEIGHT;
 	}
 
-	if (!CG_IsATeamGame(cgs.gametype,qtrue)) {
+	if (!CG_IsATeamGametype(cgs.gametype)) {
 		value = atoi( Info_ValueForKey( info, "fraglimit" ) );
 		if ( value ) {
 			UI_DrawProportionalString( 320, y, va( "fraglimit %i", value ),
@@ -303,7 +303,7 @@ void CG_DrawInformation( void ) {
 		}
 	}
 
-	if (CG_IsATeamGame(cgs.gametype,qtrue)) {
+	if (CG_IsATeamGametype(cgs.gametype)) {
 		value = atoi( Info_ValueForKey( info, "capturelimit" ) );
 		if ( value ) {
 			UI_DrawProportionalString( 320, y, va( "capturelimit %i", value ),

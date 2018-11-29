@@ -109,7 +109,7 @@ void G_InitSessionData( gclient_t *client, char *userinfo ) {
 	sess = &client->sess;
 
 	// initial team determination
-	if (G_IsATeamGame(g_gametype.integer,qfalse)) {
+	if (G_IsATeamGametype(g_gametype.integer) && G_UsesKeyObjectives(g_gametype.integer)) {
 		if ( g_teamAutoJoin.integer && !(g_entities[ client - level.clients ].r.svFlags & SVF_BOT) ) {
 			sess->sessionTeam = PickTeam( -1 );
 			BroadcastTeamChange( client, -1 );

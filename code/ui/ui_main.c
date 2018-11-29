@@ -1602,7 +1602,7 @@ static void UI_DrawTeamMember(rectDef_t *rect, float scale, vec4_t color, qboole
 	else {
 		value -= 2;
 
-		if (UI_IsATeamGame(ui_actualNetGameType.integer,qfalse)) {
+		if (UI_IsATeamGametype(ui_actualNetGameType.integer) && UI_UsesKeyObjectives(ui_actualNetGameType.integer)) {
 			if (value >= uiInfo.characterCount) {
 				value = 0;
 			}
@@ -2415,7 +2415,7 @@ static void UI_DrawBotName(rectDef_t *rect, float scale, vec4_t color, int textS
 	int value = uiInfo.botIndex;
 	int game = trap_Cvar_VariableValue("g_gametype");
 	const char *text = "";
-	if (UI_IsATeamGame(game,qfalse)) {
+	if (UI_IsATeamGametype(game) && UI_UsesKeyObjectives(game)) {
 		if (value >= uiInfo.characterCount) {
 			value = 0;
 		}
@@ -3238,7 +3238,7 @@ static qboolean UI_TeamMember_HandleKey(int flags, float *special, int key, qboo
 		else {
 			value++;
 		}
-		if (UI_IsATeamGame(ui_actualNetGameType.integer,qfalse)) {
+		if (UI_IsATeamGametype(ui_actualNetGameType.integer) && UI_UsesKeyObjectives(ui_actualNetGameType.integer)) {
 			if (value >= uiInfo.characterCount + 2) {
 				value = 0;
 			}
@@ -3343,7 +3343,7 @@ static qboolean UI_BotName_HandleKey(int flags, float *special, int key)
 			value++;
 		}
 
-		if (UI_IsATeamGame(game,qfalse)) {
+		if (UI_IsATeamGametype(game) && UI_UsesKeyObjectives(game)) {
 			if (value >= uiInfo.characterCount + 2) {
 				value = 0;
 			}
@@ -3843,7 +3843,7 @@ static void UI_StartSkirmish(qboolean next, char *name)
 			delay += 500;
 		}
 	}
-	if (UI_IsATeamGame(g,qfalse)) {
+	if (UI_IsATeamGametype(g) && UI_UsesKeyObjectives(g)) {
 		trap_Cmd_ExecuteText( EXEC_APPEND, "wait 5; team Red\n" );
 	}
 }
@@ -4048,7 +4048,7 @@ static void UI_RunMenuScript(char **args)
 			for (i = 0; i < PLAYERS_PER_TEAM; i++) {
 				int bot = trap_Cvar_VariableValue( va("ui_blueteam%i", i+1));
 				if (bot > 1) {
-					if (UI_IsATeamGame(ui_actualNetGameType.integer,qfalse)) {
+					if (UI_IsATeamGametype(ui_actualNetGameType.integer) && UI_UsesKeyObjectives(ui_actualNetGameType.integer)) {
 						Com_sprintf( buff, sizeof(buff), "addbot %s %f %s\n", uiInfo.characterList[bot-2].name, skill, "Blue");
 					}
 					else {
@@ -4058,7 +4058,7 @@ static void UI_RunMenuScript(char **args)
 				}
 				bot = trap_Cvar_VariableValue( va("ui_redteam%i", i+1));
 				if (bot > 1) {
-					if (UI_IsATeamGame(ui_actualNetGameType.integer,qfalse)) {
+					if (UI_IsATeamGametype(ui_actualNetGameType.integer) && UI_UsesKeyObjectives(ui_actualNetGameType.integer)) {
 						Com_sprintf( buff, sizeof(buff), "addbot %s %f %s\n", uiInfo.characterList[bot-2].name, skill, "Red");
 					}
 					else {
@@ -4391,7 +4391,7 @@ static void UI_RunMenuScript(char **args)
 			}
 		}
 		else if (Q_strequal(name, "addBot") ) {
-			if (UI_IsATeamGame(trap_Cvar_VariableValue("g_gametype"),qfalse)) {
+			if (UI_IsATeamGametype(trap_Cvar_VariableValue("g_gametype")) && UI_UsesKeyObjectives(trap_Cvar_VariableValue("g_gametype"))) {
 				trap_Cmd_ExecuteText( EXEC_APPEND, va("addbot %s %i %s\n", uiInfo.characterList[uiInfo.botIndex].name, uiInfo.skillIndex+1, (uiInfo.redBlue == 0) ? "Red" : "Blue") );
 			}
 			else {

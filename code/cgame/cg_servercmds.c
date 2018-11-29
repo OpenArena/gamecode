@@ -406,7 +406,7 @@ static void CG_ParseWarmup( void ) {
 
 	} else if ( warmup > 0 && cg.warmup <= 0 ) {
 #ifdef MISSIONPACK
-		if (CG_IsATeamGame(cgs.gametype,qtrue)) {
+		if (CG_IsATeamGametype(cgs.gametype)) {
 			trap_S_StartLocalSound( cgs.media.countPrepareTeamSound, CHAN_ANNOUNCER );
 		} else
 #endif
