@@ -466,7 +466,7 @@ static qboolean CG_FindClientModelFile(char *filename, int length, clientInfo_t 
 	char *team, *charactersFolder;
 	int i;
 
-	if (CCG_IsATeamGametype(cgs.gametype) && CG_UsesKeyObjectives(cgs.gametype)) {
+	if (CG_IsATeamGametype(cgs.gametype) && CG_UsesKeyObjectives(cgs.gametype)) {
 		switch (ci->team) {
 			case TEAM_BLUE:
 			{

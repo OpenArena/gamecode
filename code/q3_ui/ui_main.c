@@ -358,7 +358,7 @@ Checks if the gametype makes use of gametype-specific objectives.
 ===================
  */
 qboolean UI_UsesKeyObjectives(int check) {
-	if (capturebased == qtrue) {
+	if (check != GT_FFA && check != GT_TOURNAMENT && check != GT_SINGLE_PLAYER && check != GT_TEAM && check != GT_LMS && check != GT_POSSESSION) {
 		return qtrue;
 	}
 	else {
