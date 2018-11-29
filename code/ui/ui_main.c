@@ -3830,18 +3830,29 @@ static void UI_StartSkirmish(qboolean next, char *name)
 	}
 	else {
 		temp = uiInfo.mapList[ui_currentMap.integer].teamMembers * 2;
-		trap_Cvar_Set("sv_maxClients", va("%d", temp));
-		for (i =0; i < uiInfo.mapList[ui_currentMap.integer].teamMembers; i++) {
-			Com_sprintf( buff, sizeof(buff), "addbot %s %f %s %i %s\n", UI_AIFromName(uiInfo.teamList[k].teamMembers[i]), skill, (g == GT_FFA) ? "" : "Blue", delay, uiInfo.teamList[k].teamMembers[i]);
-			trap_Cmd_ExecuteText( EXEC_APPEND, buff );
-			delay += 500;
+		/* Neon_Knight: Toggleable cg_missionpackChecks */
+		if(cg_missionpackChecks.integer != 0) {
+			trap_Cvar_Set("sv_maxClients", va("%i", temp));
+			for (i =0; i < uiInfo.mapList[ui_currentMap.integer].teamMembers; i++) {
+				Com_sprintf( buff, sizeof(buff), "addbot %s %f %s %i %s\n", UI_AIFromName(uiInfo.teamList[k].teamMembers[i]), skill, (g == GT_FFA) ? "" : "Blue", delay, uiInfo.teamList[k].teamMembers[i]);
+				trap_Cmd_ExecuteText( EXEC_APPEND, buff );
+				delay += 500;
+			}
+			k = UI_TeamIndexFromName(UI_Cvar_VariableString("ui_teamName"));
+			for (i =0; i < uiInfo.mapList[ui_currentMap.integer].teamMembers-1; i++) {
+				Com_sprintf( buff, sizeof(buff), "addbot %s %f %s %i %s\n", UI_AIFromName(uiInfo.teamList[k].teamMembers[i]), skill, (g == GT_FFA) ? "" : "Red", delay, uiInfo.teamList[k].teamMembers[i]);
+				trap_Cmd_ExecuteText( EXEC_APPEND, buff );
+				delay += 500;
+			}
 		}
-		k = UI_TeamIndexFromName(UI_Cvar_VariableString("ui_teamName"));
-		for (i =0; i < uiInfo.mapList[ui_currentMap.integer].teamMembers-1; i++) {
-			Com_sprintf( buff, sizeof(buff), "addbot %s %f %s %i %s\n", UI_AIFromName(uiInfo.teamList[k].teamMembers[i]), skill, (g == GT_FFA) ? "" : "Red", delay, uiInfo.teamList[k].teamMembers[i]);
+		else {
+			trap_Cvar_Set("sv_maxClients", va("%i", temp+2));
+			trap_Cvar_Set("bot_minplayers", va("%i", temp));
+			trap_Cvar_Set("skill", va("%f", skill));
+			Com_sprintf( buff, sizeof(buff), "wait ;\n");
 			trap_Cmd_ExecuteText( EXEC_APPEND, buff );
-			delay += 500;
 		}
+		/* /Neon_Knight */
 	}
 	if (g >= GT_TEAM ) {
 		trap_Cmd_ExecuteText( EXEC_APPEND, "wait 5; team Red\n" );
@@ -4391,7 +4402,9 @@ static void UI_RunMenuScript(char **args)
 			}
 		}
 		else if (Q_strequal(name, "addBot") ) {
-			if (trap_Cvar_VariableValue("g_gametype") >= GT_TEAM || GT_LMS || GT_POSSESSION ) {
+			/* Neon_Knight: Toggleable cg_missionpackChecks */
+			if ((trap_Cvar_VariableValue("g_gametype") == GT_FFA || trap_Cvar_VariableValue("g_gametype") == GT_TOURNAMENT || trap_Cvar_VariableValue("g_gametype") == GT_LMS || trap_Cvar_VariableValue("g_gametype") == GT_POSSESSION) && cg_missionpackChecks.integer == 0) {
+			/* /Neon_Knight */
 				trap_Cmd_ExecuteText( EXEC_APPEND, va("addbot %s %i %s\n", uiInfo.characterList[uiInfo.botIndex].name, uiInfo.skillIndex+1, (uiInfo.redBlue == 0) ? "Red" : "Blue") );
 			}
 			else {
@@ -5976,15 +5989,15 @@ static qboolean MapList_Parse(char **p)
 				}
 			}
 
-			//mapList[mapCount].imageName = String_Alloc(va("levelshots/%s", mapList[mapCount].mapLoadName));
-			//if (uiInfo.mapCount == 0) {
-			// only load the first cinematic, selection loads the others
-			//  uiInfo.mapList[uiInfo.mapCount].cinematic = trap_CIN_PlayCinematic(va("%s.roq",uiInfo.mapList[uiInfo.mapCount].mapLoadName), qfalse, qfalse, qtrue, 0, 0, 0, 0);
-			//}
+			/* mapList[mapCount].imageName = String_Alloc(va("levelshots/%s", mapList[mapCount].mapLoadName));
+			if (uiInfo.mapCount == 0) {
+			 only load the first cinematic, selection loads the others
+			  uiInfo.mapList[uiInfo.mapCount].cinematic = trap_CIN_PlayCinematic(va("%s.roq",uiInfo.mapList[uiInfo.mapCount].mapLoadName), qfalse, qfalse, qtrue, 0, 0, 0, 0);
+			} */
 			uiInfo.mapList[uiInfo.mapCount].cinematic = -1;
-			//uiInfo.mapList[uiInfo.mapCount].levelShot = trap_R_RegisterShaderNoMip(va("levelshots/%s_small", uiInfo.mapList[uiInfo.mapCount].mapLoadName));
-			// leilei - We don't have _small levelshots, memory reasons
-			//if (!uiInfo.mapList[uiInfo.mapCount].levelShot)
+			/* uiInfo.mapList[uiInfo.mapCount].levelShot = trap_R_RegisterShaderNoMip(va("levelshots/%s_small", uiInfo.mapList[uiInfo.mapCount].mapLoadName)); */
+			/* leilei - We don't have _small levelshots, memory reasons */
+			/* if (!uiInfo.mapList[uiInfo.mapCount].levelShot) */
 			uiInfo.mapList[uiInfo.mapCount].levelShot = trap_R_RegisterShaderNoMip(va("levelshots/%s", uiInfo.mapList[uiInfo.mapCount].mapLoadName));
 
 			if (uiInfo.mapCount < MAX_MAPS) {
@@ -6460,9 +6473,9 @@ void _UI_KeyEvent( int key, qboolean down )
 		}
 	}
 
-	//if ((s > 0) && (s != menu_null_sound)) {
-	//  trap_S_StartLocalSound( s, CHAN_LOCAL_SOUND );
-	//}
+	/* if ((s > 0) && (s != menu_null_sound)) {
+	  trap_S_StartLocalSound( s, CHAN_LOCAL_SOUND );
+	} */
 }
 
 /*
