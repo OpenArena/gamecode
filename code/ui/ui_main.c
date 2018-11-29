@@ -3830,7 +3830,7 @@ static void UI_StartSkirmish(qboolean next, char *name)
 	}
 	else {
 		temp = uiInfo.mapList[ui_currentMap.integer].teamMembers * 2;
-		/* Neon_Knight: Toggleable Missionpack Checks */
+		/* Neon_Knight: Missionpack checks, if != 0, enables this. */
 		if(ui_missionpackChecks.integer != 0) {
 			trap_Cvar_Set("sv_maxClients", va("%i", temp));
 			for (i =0; i < uiInfo.mapList[ui_currentMap.integer].teamMembers; i++) {
@@ -4402,13 +4402,14 @@ static void UI_RunMenuScript(char **args)
 			}
 		}
 		else if (Q_strequal(name, "addBot") ) {
-			/* Neon_Knight: Toggleable Missionpack Checks */
-			if ((trap_Cvar_VariableValue("g_gametype") == GT_FFA || trap_Cvar_VariableValue("g_gametype") == GT_TOURNAMENT || trap_Cvar_VariableValue("g_gametype") == GT_LMS || trap_Cvar_VariableValue("g_gametype") == GT_POSSESSION) && ui_missionpackChecks.integer == 0) {
-			/* /Neon_Knight */
+			/* Neon_Knight: Missionpack checks, if != 0, enables this. */
+			if (ui_missionpackChecks.integer != 0) {
+				if (trap_Cvar_VariableValue("g_gametype") != GT_FFA && trap_Cvar_VariableValue("g_gametype") != GT_TOURNAMENT && trap_Cvar_VariableValue("g_gametype") != GT_LMS && trap_Cvar_VariableValue("g_gametype") != GT_POSSESSION) {
+				/* /Neon_Knight */
+					trap_Cmd_ExecuteText( EXEC_APPEND, va("addbot %s %i %s\n", UI_GetBotNameByNumber(uiInfo.botIndex), uiInfo.skillIndex+1, (uiInfo.redBlue == 0) ? "Red" : "Blue") );
+				}
+			} else {
 				trap_Cmd_ExecuteText( EXEC_APPEND, va("addbot %s %i %s\n", uiInfo.characterList[uiInfo.botIndex].name, uiInfo.skillIndex+1, (uiInfo.redBlue == 0) ? "Red" : "Blue") );
-			}
-			else {
-				trap_Cmd_ExecuteText( EXEC_APPEND, va("addbot %s %i %s\n", UI_GetBotNameByNumber(uiInfo.botIndex), uiInfo.skillIndex+1, (uiInfo.redBlue == 0) ? "Red" : "Blue") );
 			}
 			// Changed RD
 		}

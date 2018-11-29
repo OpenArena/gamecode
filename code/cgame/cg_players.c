@@ -882,9 +882,11 @@ static void CG_LoadClientInfo(int clientNum, clientInfo_t *ci) {
 			} else {
 				Q_strncpyz(teamname, DEFAULT_REDTEAM_NAME, sizeof (teamname));
 			}
-			/* Neon_Knight: Toggleable cg_missionpackChecks */
-			if (!CG_RegisterClientModelname(ci, DEFAULT_TEAM_MODEL, ci->skinName, DEFAULT_TEAM_HEAD, ci->skinName, teamname) && cg_missionpackChecks.integer != 0) {
-				CG_Error("DEFAULT_TEAM_MODEL / skin (%s/%s) failed to register", DEFAULT_TEAM_MODEL, ci->skinName);
+			/* Neon_Knight: Missionpack checks, if != 0, enables this. */
+			if (cg_missionpackChecks.integer != 0) {
+				if (!CG_RegisterClientModelname(ci, DEFAULT_TEAM_MODEL, ci->skinName, DEFAULT_TEAM_HEAD, ci->skinName, teamname)) {
+					CG_Error("DEFAULT_TEAM_MODEL / skin (%s/%s) failed to register", DEFAULT_TEAM_MODEL, ci->skinName);
+				}
 			}
 			/* /Neon_Knight */
 		} else {
@@ -906,10 +908,11 @@ static void CG_LoadClientInfo(int clientNum, clientInfo_t *ci) {
 
 	// sounds
 	dir = ci->modelName;
-	/* Neon_Knight: Toggleable cg_missionpackChecks */
-	fallback = (cgs.gametype != GT_FFA && cgs.gametype != GT_TOURNAMENT &&
-		cgs.gametype != GT_LMS && cgs.gametype != GT_POSSESSION &&
-		cg_missionpackChecks.integer != 0) ? DEFAULT_TEAM_MODEL : DEFAULT_MODEL;
+	/* Neon_Knight: Missionpack checks, if != 0, enables this. */
+	if (cg_missionpackChecks.integer != 0) {
+		fallback = (cgs.gametype != GT_FFA && cgs.gametype != GT_TOURNAMENT &&
+			cgs.gametype != GT_LMS && cgs.gametype != GT_POSSESSION) ? DEFAULT_TEAM_MODEL : DEFAULT_MODEL;
+	}
 	/* /Neon_Knight */
 
 	for (i = 0; i < MAX_CUSTOM_SOUNDS; i++) {
@@ -922,9 +925,11 @@ static void CG_LoadClientInfo(int clientNum, clientInfo_t *ci) {
 		if (modelloaded) {
 			ci->sounds[i] = trap_S_RegisterSound(va("sound/player/%s/%s", dir, s + 1), qfalse);
 		}
-		/* Neon_Knight: Toggleable cg_missionpackChecks */
-		if (!ci->sounds[i] && cg_missionpackChecks.integer != 0) {
-			ci->sounds[i] = trap_S_RegisterSound(va("sound/player/%s/%s", fallback, s + 1), qfalse);
+		/* Neon_Knight: Missionpack checks, if != 0, enables this. */
+		if (cg_missionpackChecks.integer != 0) {
+			if (!ci->sounds[i]) {
+				ci->sounds[i] = trap_S_RegisterSound(va("sound/player/%s/%s", fallback, s + 1), qfalse);
+			}
 		}
 		/* /Neon_Knight */
 	}
@@ -1151,11 +1156,12 @@ void CG_NewClientInfo(int clientNum) {
 		char modelStr[MAX_QPATH];
 		char *skin;
 
-		/* Neon_Knight: Toggleable cg_missionpackChecks */
-		if (cgs.gametype != GT_FFA && cgs.gametype != GT_TOURNAMENT && cgs.gametype != GT_LMS && cgs.gametype != GT_POSSESSION && cg_missionpackChecks.integer != 0) {
-		/* / Neon_Knight */
-			Q_strncpyz(newInfo.modelName, DEFAULT_TEAM_MODEL, sizeof ( newInfo.modelName));
-			Q_strncpyz(newInfo.skinName, "default", sizeof ( newInfo.skinName));
+		/* Neon_Knight: Missionpack checks, if != 0, enables this. */
+		if (cg_missionpackChecks.integer != 0) {
+			if (cgs.gametype != GT_FFA && cgs.gametype != GT_TOURNAMENT && cgs.gametype != GT_LMS && cgs.gametype != GT_POSSESSION) {
+				Q_strncpyz(newInfo.modelName, DEFAULT_TEAM_MODEL, sizeof ( newInfo.modelName));
+				Q_strncpyz(newInfo.skinName, "default", sizeof ( newInfo.skinName));
+			}
 		} else {
 			trap_Cvar_VariableStringBuffer("model", modelStr, sizeof ( modelStr));
 			if ((skin = strchr(modelStr, '/')) == NULL) {
@@ -1167,8 +1173,8 @@ void CG_NewClientInfo(int clientNum) {
 			Q_strncpyz(newInfo.skinName, skin, sizeof ( newInfo.skinName));
 			Q_strncpyz(newInfo.modelName, modelStr, sizeof ( newInfo.modelName));
 		}
-
-		if (cgs.gametype >= GT_TEAM && cgs.ffa_gt != 1) {
+		/* /Neon_Knight */
+		if (cgs.gametype != GT_FFA && cgs.gametype != GT_TOURNAMENT && cgs.gametype != GT_LMS && cgs.gametype != GT_POSSESSION) {
 			// keep skin name
 			slash = strchr(v, '/');
 			if (slash) {
@@ -1197,11 +1203,12 @@ void CG_NewClientInfo(int clientNum) {
 		char modelStr[MAX_QPATH];
 		char *skin;
 
-		/* Neon_Knight: Toggleable cg_missionpackChecks */
-		if (cgs.gametype != GT_TEAM && cgs.gametype != GT_TOURNAMENT && cgs.gametype != GT_LMS && cgs.gametype != GT_POSSESSION && cg_missionpackChecks.integer != 0) {
-		/* /Neon_Knight */
-			Q_strncpyz(newInfo.headModelName, DEFAULT_TEAM_MODEL, sizeof ( newInfo.headModelName));
-			Q_strncpyz(newInfo.headSkinName, "default", sizeof ( newInfo.headSkinName));
+		/* Neon_Knight: Missionpack checks, if != 0, enables this. */
+		if (cg_missionpackChecks.integer != 0) {
+			if (cgs.gametype != GT_TEAM && cgs.gametype != GT_TOURNAMENT && cgs.gametype != GT_LMS && cgs.gametype != GT_POSSESSION) {
+				Q_strncpyz(newInfo.headModelName, DEFAULT_TEAM_MODEL, sizeof ( newInfo.headModelName));
+				Q_strncpyz(newInfo.headSkinName, "default", sizeof ( newInfo.headSkinName));
+			}
 		} else {
 			trap_Cvar_VariableStringBuffer("headmodel", modelStr, sizeof ( modelStr));
 			if ((skin = strchr(modelStr, '/')) == NULL) {
@@ -1213,6 +1220,7 @@ void CG_NewClientInfo(int clientNum) {
 			Q_strncpyz(newInfo.headSkinName, skin, sizeof ( newInfo.headSkinName));
 			Q_strncpyz(newInfo.headModelName, modelStr, sizeof ( newInfo.headModelName));
 		}
+		/* /Neon_Knight */
 
 		if (cgs.gametype >= GT_TEAM && cgs.ffa_gt != 1) {
 			// keep skin name
