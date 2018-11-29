@@ -836,12 +836,15 @@ void G_CheckTeamItems( void )
 		if( !ent ) {
 			G_Printf( S_COLOR_YELLOW "WARNING: No team_blueobelisk in map\n" );
 		}
-
-		ent = NULL;
-		ent = G_Find( ent, FOFS(classname), "team_neutralobelisk" );
-		if( !ent ) {
-			G_Printf( S_COLOR_YELLOW "WARNING: No team_neutralobelisk in map\n" );
+		/* Neon_Knight: Only check for skull generator if fromBodies is disabled. */
+		if (g_harvester_fromBodies.integer == 0) {
+			ent = NULL;
+			ent = G_Find( ent, FOFS(classname), "team_neutralobelisk" );
+			if( !ent ) {
+				G_Printf( S_COLOR_YELLOW "WARNING: No team_neutralobelisk in map\n" );
+			}
 		}
+		/* /Neon_Knight */
 	}
 }
 
@@ -996,6 +999,14 @@ void G_SpawnItem (gentity_t *ent, gitem_t *item)
 	ent->think = FinishSpawningItem;
 
 	ent->physicsBounce = 0.50;		// items are bouncy
+
+	/* Neon_Knight: g_harvester_fromBodies - Makes skulls spawn from dead bodies instead of a central obelisk. */
+	/* The neutral obelisk should never be shown if fromBodies is enabled. */
+	if (g_gametype.integer == GT_HARVESTER && g_harvester_fromBodies.integer != 0 && strequals(ent->classname, "team_neutralobelisk")) {
+		ent->s.eFlags |= EF_NODRAW; //Invisible in harvester with g_harvester_fromBodies != 0.
+		ent->r.svFlags |= SVF_NOCLIENT;  //Don't broadcast
+	}
+	/* /Neon_Knight */
 
 	if (g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_LMS ||
 	        ( item->giType != IT_TEAM && (g_instantgib.integer || g_rockets.integer || g_elimination_allgametypes.integer || g_gametype.integer==GT_CTF_ELIMINATION) ) ) {
