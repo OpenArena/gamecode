@@ -2785,12 +2785,7 @@ Checks if the gametype is a team-based game.
 ===================
  */
 qboolean G_IsATeamGametype(int check) {
-	if (check != GT_FFA && check != GT_TOURNAMENT && check != GT_SINGLE_PLAYER && check != GT_LMS && check != GT_POSSESSION) {
-		return qtrue;
-	}
-	else {
-		return qfalse;
-	}
+	return GAMETYPE_IS_A_TEAM_GAME(check);
 }
 /*
 ===================
@@ -2800,12 +2795,7 @@ Checks if the gametype makes use of gametype-specific objectives.
 ===================
  */
 qboolean G_UsesKeyObjectives(int check) {
-	if (check != GT_FFA && check != GT_TOURNAMENT && check != GT_SINGLE_PLAYER && check != GT_TEAM && check != GT_LMS && check != GT_POSSESSION) {
-		return qtrue;
-	}
-	else {
-		return qfalse;
-	}
+	return GAMETYPE_USES_KEY_OBJECTIVES(check);
 }
 /*
 ===================
@@ -2815,12 +2805,7 @@ Checks if the gametype makes use of the red and blue flags.
 ===================
  */
 qboolean G_UsesTeamFlags(int check) {
-	if (check == GT_CTF || check == GT_1FCTF || check == GT_CTF_ELIMINATION) {
-		return qtrue;
-	}
-	else {
-		return qfalse;
-	}
+	return GAMETYPE_USES_RED_AND_BLUE_FLAG(check);
 }
 /*
 ===================
@@ -2830,12 +2815,7 @@ Checks if the gametype makes use of the neutral flag.
 ===================
  */
 qboolean G_UsesTheWhiteFlag(int check) {
-	if (check == GT_1FCTF || check == GT_POSSESSION) {
-		return qtrue;
-	}
-	else {
-		return qfalse;
-	}
+	return GAMETYPE_USES_WHITE_FLAG(check);
 }
 /*
 ===================
@@ -2845,12 +2825,7 @@ Checks if the gametype has a round-based system.
 ===================
  */
 qboolean G_IsARoundBasedGametype(int check) {
-	if (check == GT_ELIMINATION || check == GT_CTF_ELIMINATION || check == GT_LMS) {
-		return qtrue;
-	}
-	else {
-		return qfalse;
-	}
+	return GAMETYPE_IS_ROUND_BASED(check);
 }
 /*
 ===================
@@ -2860,26 +2835,6 @@ Checks if the gametype uses team-colored obelisks.
 ===================
  */
 qboolean G_UsesTeamObelisks(int check) {
-	if (check == GT_HARVESTER || check == GT_OBELISK) {
-		return qtrue;
-	}
-	else {
-		return qfalse;
-	}
-}
-/*
-===================
-G_UsesControlPoints
-
-Checks if the gametype uses team-colored obelisks.
-===================
- */
-qboolean G_UsesControlPoints(int check) {
-	if (check == GT_DOUBLE_D || check == GT_DOMINATION) {
-		return qtrue;
-	}
-	else {
-		return qfalse;
-	}
+	return GAMETYPE_USES_OBELISKS(check);
 }
 /* /Neon_Knight */
