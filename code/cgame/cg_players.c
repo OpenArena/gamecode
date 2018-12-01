@@ -882,9 +882,13 @@ static void CG_LoadClientInfo(int clientNum, clientInfo_t *ci) {
 			} else {
 				Q_strncpyz(teamname, DEFAULT_REDTEAM_NAME, sizeof (teamname));
 			}
-			if (!CG_RegisterClientModelname(ci, DEFAULT_TEAM_MODEL, ci->skinName, DEFAULT_TEAM_HEAD, ci->skinName, teamname)) {
-				CG_Error("DEFAULT_TEAM_MODEL / skin (%s/%s) failed to register", DEFAULT_TEAM_MODEL, ci->skinName);
+			/* Neon_Knight: Missionpack checks, if != 0, enables this. */
+			if (cg_missionpackChecks.integer != 0) {
+				if (!CG_RegisterClientModelname(ci, DEFAULT_TEAM_MODEL, ci->skinName, DEFAULT_TEAM_HEAD, ci->skinName, teamname)) {
+					CG_Error("DEFAULT_TEAM_MODEL / skin (%s/%s) failed to register", DEFAULT_TEAM_MODEL, ci->skinName);
+				}
 			}
+			/* /Neon_Knight */
 		} else {
 			if (!CG_RegisterClientModelname(ci, DEFAULT_MODEL, "default", DEFAULT_MODEL, "default", teamname)) {
 				CG_Error("DEFAULT_MODEL (%s) failed to register", DEFAULT_MODEL);
@@ -916,9 +920,13 @@ static void CG_LoadClientInfo(int clientNum, clientInfo_t *ci) {
 		if (modelloaded) {
 			ci->sounds[i] = trap_S_RegisterSound(va("sound/player/%s/%s", dir, s + 1), qfalse);
 		}
-		if (!ci->sounds[i]) {
-			ci->sounds[i] = trap_S_RegisterSound(va("sound/player/%s/%s", fallback, s + 1), qfalse);
+		/* Neon_Knight: Missionpack checks, if != 0, enables this. */
+		if (cg_missionpackChecks.integer) {
+			if (!ci->sounds[i]) {
+				ci->sounds[i] = trap_S_RegisterSound(va("sound/player/%s/%s", fallback, s + 1), qfalse);
+			}
 		}
+		/* /Neon_Knight */
 	}
 
 	ci->deferred = qfalse;
@@ -1143,9 +1151,12 @@ void CG_NewClientInfo(int clientNum) {
 		char modelStr[MAX_QPATH];
 		char *skin;
 
-		if (CG_IsATeamGametype(cgs.gametype) && CG_UsesKeyObjectives(cgs.gametype)) {
-			Q_strncpyz(newInfo.modelName, DEFAULT_TEAM_MODEL, sizeof ( newInfo.modelName));
-			Q_strncpyz(newInfo.skinName, "default", sizeof ( newInfo.skinName));
+		/* Neon_Knight: Missionpack checks, if != 0, enables this. */
+		if (cg_missionpackChecks.integer) {
+			if (CG_IsATeamGametype(cgs.gametype) && CG_UsesKeyObjectives(cgs.gametype)) {
+				Q_strncpyz(newInfo.modelName, DEFAULT_TEAM_MODEL, sizeof ( newInfo.modelName));
+				Q_strncpyz(newInfo.skinName, "default", sizeof ( newInfo.skinName));
+			}
 		} else {
 			trap_Cvar_VariableStringBuffer("model", modelStr, sizeof ( modelStr));
 			if ((skin = strchr(modelStr, '/')) == NULL) {
@@ -1157,7 +1168,7 @@ void CG_NewClientInfo(int clientNum) {
 			Q_strncpyz(newInfo.skinName, skin, sizeof ( newInfo.skinName));
 			Q_strncpyz(newInfo.modelName, modelStr, sizeof ( newInfo.modelName));
 		}
-
+		/* /Neon_Knight */
 		if (CG_IsATeamGametype(cgs.gametype) && CG_UsesKeyObjectives(cgs.gametype)) {
 			// keep skin name
 			slash = strchr(v, '/');
@@ -1187,9 +1198,12 @@ void CG_NewClientInfo(int clientNum) {
 		char modelStr[MAX_QPATH];
 		char *skin;
 
-		if (CG_IsATeamGametype(cgs.gametype) && CG_UsesKeyObjectives(cgs.gametype)) {
-			Q_strncpyz(newInfo.headModelName, DEFAULT_TEAM_MODEL, sizeof ( newInfo.headModelName));
-			Q_strncpyz(newInfo.headSkinName, "default", sizeof ( newInfo.headSkinName));
+		/* Neon_Knight: Missionpack checks, if != 0, enables this. */
+		if (cg_missionpackChecks.integer) {
+			if (CG_IsATeamGametype(cgs.gametype) && CG_UsesKeyObjectives(cgs.gametype)) {
+				Q_strncpyz(newInfo.headModelName, DEFAULT_TEAM_MODEL, sizeof ( newInfo.headModelName));
+				Q_strncpyz(newInfo.headSkinName, "default", sizeof ( newInfo.headSkinName));
+			}
 		} else {
 			trap_Cvar_VariableStringBuffer("headmodel", modelStr, sizeof ( modelStr));
 			if ((skin = strchr(modelStr, '/')) == NULL) {
@@ -1201,6 +1215,7 @@ void CG_NewClientInfo(int clientNum) {
 			Q_strncpyz(newInfo.headSkinName, skin, sizeof ( newInfo.headSkinName));
 			Q_strncpyz(newInfo.headModelName, modelStr, sizeof ( newInfo.headModelName));
 		}
+		/* /Neon_Knight */
 
 		if (CG_IsATeamGametype(cgs.gametype) && CG_UsesKeyObjectives(cgs.gametype)) {
 			// keep skin name

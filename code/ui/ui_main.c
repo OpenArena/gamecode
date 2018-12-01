@@ -3830,18 +3830,29 @@ static void UI_StartSkirmish(qboolean next, char *name)
 	}
 	else {
 		temp = uiInfo.mapList[ui_currentMap.integer].teamMembers * 2;
-		trap_Cvar_Set("sv_maxClients", va("%d", temp));
-		for (i =0; i < uiInfo.mapList[ui_currentMap.integer].teamMembers; i++) {
-			Com_sprintf( buff, sizeof(buff), "addbot %s %f %s %i %s\n", UI_AIFromName(uiInfo.teamList[k].teamMembers[i]), skill, (g == GT_FFA) ? "" : "Blue", delay, uiInfo.teamList[k].teamMembers[i]);
-			trap_Cmd_ExecuteText( EXEC_APPEND, buff );
-			delay += 500;
+		/* Neon_Knight: Missionpack checks, if != 0, enables this. */
+		if(ui_missionpackChecks.integer) {
+			trap_Cvar_Set("sv_maxClients", va("%i", temp));
+			for (i =0; i < uiInfo.mapList[ui_currentMap.integer].teamMembers; i++) {
+				Com_sprintf( buff, sizeof(buff), "addbot %s %f %s %i %s\n", UI_AIFromName(uiInfo.teamList[k].teamMembers[i]), skill, (g == GT_FFA) ? "" : "Blue", delay, uiInfo.teamList[k].teamMembers[i]);
+				trap_Cmd_ExecuteText( EXEC_APPEND, buff );
+				delay += 500;
+			}
+			k = UI_TeamIndexFromName(UI_Cvar_VariableString("ui_teamName"));
+			for (i =0; i < uiInfo.mapList[ui_currentMap.integer].teamMembers-1; i++) {
+				Com_sprintf( buff, sizeof(buff), "addbot %s %f %s %i %s\n", UI_AIFromName(uiInfo.teamList[k].teamMembers[i]), skill, (g == GT_FFA) ? "" : "Red", delay, uiInfo.teamList[k].teamMembers[i]);
+				trap_Cmd_ExecuteText( EXEC_APPEND, buff );
+				delay += 500;
+			}
 		}
-		k = UI_TeamIndexFromName(UI_Cvar_VariableString("ui_teamName"));
-		for (i =0; i < uiInfo.mapList[ui_currentMap.integer].teamMembers-1; i++) {
-			Com_sprintf( buff, sizeof(buff), "addbot %s %f %s %i %s\n", UI_AIFromName(uiInfo.teamList[k].teamMembers[i]), skill, (g == GT_FFA) ? "" : "Red", delay, uiInfo.teamList[k].teamMembers[i]);
+		else {
+			trap_Cvar_Set("sv_maxClients", va("%i", temp+2));
+			trap_Cvar_Set("bot_minplayers", va("%i", temp));
+			trap_Cvar_Set("skill", va("%f", skill));
+			Com_sprintf( buff, sizeof(buff), "wait ;\n");
 			trap_Cmd_ExecuteText( EXEC_APPEND, buff );
-			delay += 500;
 		}
+		/* /Neon_Knight */
 	}
 	if (UI_IsATeamGametype(g) && UI_UsesKeyObjectives(g)) {
 		trap_Cmd_ExecuteText( EXEC_APPEND, "wait 5; team Red\n" );
@@ -4391,11 +4402,14 @@ static void UI_RunMenuScript(char **args)
 			}
 		}
 		else if (Q_strequal(name, "addBot") ) {
+			/* Neon_Knight: Missionpack checks, if != 0, enables this. */
+			if (ui_missionpackChecks.integer) {
 			if (UI_IsATeamGametype(trap_Cvar_VariableValue("g_gametype")) && UI_UsesKeyObjectives(trap_Cvar_VariableValue("g_gametype"))) {
+				/* /Neon_Knight */
+					trap_Cmd_ExecuteText( EXEC_APPEND, va("addbot %s %i %s\n", UI_GetBotNameByNumber(uiInfo.botIndex), uiInfo.skillIndex+1, (uiInfo.redBlue == 0) ? "Red" : "Blue") );
+				}
+			} else {
 				trap_Cmd_ExecuteText( EXEC_APPEND, va("addbot %s %i %s\n", uiInfo.characterList[uiInfo.botIndex].name, uiInfo.skillIndex+1, (uiInfo.redBlue == 0) ? "Red" : "Blue") );
-			}
-			else {
-				trap_Cmd_ExecuteText( EXEC_APPEND, va("addbot %s %i %s\n", UI_GetBotNameByNumber(uiInfo.botIndex), uiInfo.skillIndex+1, (uiInfo.redBlue == 0) ? "Red" : "Blue") );
 			}
 			// Changed RD
 		}
@@ -7080,6 +7094,7 @@ vmCvar_t	ui_introPlayed;
 
 vmCvar_t ui_humansonly;
 
+vmCvar_t ui_missionpackChecks;
 
 // bk001129 - made static to avoid aliasing
 static cvarTable_t		cvarTable[] = {
@@ -7257,6 +7272,7 @@ static cvarTable_t		cvarTable[] = {
 	{ &gameover, "gameover", "0", CVAR_INIT}, // ai script
 // end changed RD
 	{ &ui_introPlayed, "ui_introPlayed", "0", CVAR_INIT },
+	{ &ui_missionpackChecks, "ui_missionpackChecks", "1", CVAR_INIT },
 };
 
 // bk001129 - made static to avoid aliasing

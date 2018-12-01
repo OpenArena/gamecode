@@ -2480,10 +2480,10 @@ qboolean G_admin_admintest( gentity_t *ent, int skiparg )
 		}
 	}
 
-	if (!found) {
+	if (!found || i == MAX_ADMIN_ADMINS) {
+		//The i == MAX_ADMIN_ADMINS check makes it easier for static analysers to rationate about the code
 		return qfalse;
 	}
-	
 	l = g_admin_admins[ i ]->level;
 	for( i = 0; i < MAX_ADMIN_LEVELS && g_admin_levels[ i ]; i++ ) {
 		if( g_admin_levels[ i ]->level != l )
