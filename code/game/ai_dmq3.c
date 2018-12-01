@@ -5184,9 +5184,12 @@ void BotSetupAlternativeRouteGoals(void) {
 				ALTROUTEGOAL_CLUSTERPORTALS |
 				ALTROUTEGOAL_VIEWPORTALS);
 	} else if (gametype == GT_HARVESTER) {
-		if (untrap_BotGetLevelItemGoal(-1, "Neutral Obelisk", &neutralobelisk) < 0)
-			BotAI_Print(PRT_WARNING, "Harvester without neutral obelisk\n");
-		//
+		/* Neon_Knight: There shouldn't be a need for neutral obelisk with fromBodies.*/
+		if(g_harvesterFromBodies.integer == 0) {
+			if (untrap_BotGetLevelItemGoal(-1, "Neutral Obelisk", &neutralobelisk) < 0) {
+				BotAI_Print(PRT_WARNING, "Harvester without neutral obelisk\n");
+			}
+		}
 		red_numaltroutegoals = trap_AAS_AlternativeRouteGoals(
 				neutralobelisk.origin, neutralobelisk.areanum,
 				redobelisk.origin, redobelisk.areanum, TFL_DEFAULT,
@@ -5199,6 +5202,7 @@ void BotSetupAlternativeRouteGoals(void) {
 				blue_altroutegoals, MAX_ALTROUTEGOALS,
 				ALTROUTEGOAL_CLUSTERPORTALS |
 				ALTROUTEGOAL_VIEWPORTALS);
+		/* /Neon_Knight */
 	}
 	altroutegoals_setup = qtrue;
 }
@@ -5454,9 +5458,13 @@ void BotSetupDeathmatchAI(void) {
 		if (untrap_BotGetLevelItemGoal(-1, "Blue Obelisk", &blueobelisk) < 0)
 			BotAI_Print(PRT_WARNING, "Harvester without blue obelisk\n");
 		BotSetEntityNumForGoal(&blueobelisk, "team_blueobelisk");
-		if (untrap_BotGetLevelItemGoal(-1, "Neutral Obelisk", &neutralobelisk) < 0)
-			BotAI_Print(PRT_WARNING, "Harvester without neutral obelisk\n");
-		BotSetEntityNumForGoal(&neutralobelisk, "team_neutralobelisk");
+		/* Neon_Knight: There shouldn't be a need to check for neutral obelisk with fromBodies.*/
+		if (g_harvesterFromBodies.integer != 1) {
+			if (untrap_BotGetLevelItemGoal(-1, "Neutral Obelisk", &neutralobelisk) < 0)
+				BotAI_Print(PRT_WARNING, "Harvester without neutral obelisk\n");
+			BotSetEntityNumForGoal(&neutralobelisk, "team_neutralobelisk");
+		}
+		/* /Neon_Knight */
 	} else if (gametype == GT_POSSESSION) {
 		if (untrap_BotGetLevelItemGoal(-1, "Neutral Flag", &ctf_neutralflag) < 0)
 			BotAI_Print(PRT_WARNING, "Possession without Neutral Flag\n");
