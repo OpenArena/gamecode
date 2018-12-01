@@ -860,7 +860,7 @@ void ClearRegisteredItems( void )
 		}
 		/* Neon_Knight: In grappleAll mode, the Grapple is added to the starting inventory in Instagib. */
 		if (g_grapple.integer != 0 && g_grappleAll.integer != 0) {
-			client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_GRAPPLING_HOOK);
+			RegisterItem( BG_FindItemForWeapon( WP_GRAPPLING_HOOK ) );
 		}
 		/* / Neon_Knight */
 		//RegisterItem( BG_FindItemForWeapon( WP_MACHINEGUN ) );
@@ -869,7 +869,7 @@ void ClearRegisteredItems( void )
 	else if(g_rockets.integer) {
 		/* Neon_Knight: In grappleAll mode, the Grapple is added to the starting inventory in All Rockets. */
 		if (g_grapple.integer != 0 && g_grappleAll.integer != 0) {
-			client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_GRAPPLING_HOOK);
+			RegisterItem( BG_FindItemForWeapon( WP_GRAPPLING_HOOK ) );
 		}
 		/* / Neon_Knight */
 		//RegisterItem( BG_FindItemForWeapon( WP_GAUNTLET ) );
@@ -882,7 +882,7 @@ void ClearRegisteredItems( void )
 		RegisterItem( BG_FindItemForWeapon( WP_GAUNTLET ) );
 		/* Neon_Knight: In grapple mode, the Grapple is added to the starting inventory. */
 		if (g_grapple.integer != 0 && g_grappleAll.integer != 0) {
-			client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_GRAPPLING_HOOK);
+			RegisterItem( BG_FindItemForWeapon( WP_GRAPPLING_HOOK ) );
 		}
 		/* / Neon_Knight */
 		if(g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_CTF_ELIMINATION
