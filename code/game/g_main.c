@@ -204,8 +204,8 @@ vmCvar_t		g_execute_gametype_script;
 vmCvar_t		g_emptyCommand;
 vmCvar_t		g_emptyTime;
 
-/* Neon_Knight: g_harvester_fromBodies - Makes skulls spawn from dead bodies instead of a central obelisk. */
-vmCvar_t		g_harvester_fromBodies;
+/* Neon_Knight: g_harvesterFromBodies - Makes skulls spawn from dead bodies instead of a central obelisk. */
+vmCvar_t		g_harvesterFromBodies;
 /* /Neon_Knight */
 
 mapinfo_result_t mapinfo;
@@ -417,8 +417,8 @@ static cvarTable_t		gameCvarTable[] = {
 	{ &g_emptyCommand, "g_emptyCommand", "map_restart", CVAR_ARCHIVE, 0, qfalse},
 	{ &g_emptyTime, "g_emptytime", "0", CVAR_ARCHIVE, 0, qfalse},
 
-/* Neon_Knight: g_harvester_fromBodies - Makes skulls spawn from dead bodies instead of a central obelisk. */
-	{ &g_harvester_fromBodies, "g_harvester_fromBodies", "0", CVAR_NORESTART, 0, qfalse},
+/* Neon_Knight: g_harvesterFromBodies - Makes skulls spawn from dead bodies instead of a central obelisk. */
+	{ &g_harvesterFromBodies, "g_harvesterFromBodies", "0", CVAR_NORESTART, 0, qfalse},
 /* /Neon_Knight */
 };
 

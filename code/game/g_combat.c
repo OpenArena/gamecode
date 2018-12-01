@@ -164,8 +164,8 @@ void TossClientItems( gentity_t *self )
 			}
 		}
 	}
-	/* Neon_Knight: g_harvester_fromBodies - Makes skulls spawn from dead bodies instead of a central obelisk. */
-	if (g_gametype.integer == GT_HARVESTER && g_harvester_fromBodies.integer != 0) {
+	/* Neon_Knight: g_harvesterFromBodies - Makes skulls spawn from dead bodies instead of a central obelisk. */
+	if (g_gametype.integer == GT_HARVESTER && g_harvesterFromBodies.integer != 0) {
 		angle = 45;
 		if( self->client->sess.sessionTeam == TEAM_RED ) {
 			item = BG_FindItem( "Red Cube" );
@@ -796,20 +796,20 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 		}
 	}
 	TossClientPersistantPowerups( self );
+	/* Neon_Knight: g_harvesterFromBodies - Makes skulls spawn from dead bodies instead of a central obelisk. */
 	if( g_gametype.integer == GT_HARVESTER ) {
-		/* Neon_Knight: g_harvester_fromBodies - Makes skulls spawn from dead bodies instead of a central obelisk. */
-		if (g_harvester_fromBodies.integer != 0) {
+		if (g_harvesterFromBodies.integer != 0) {
 			TossClientItems(self);
 		}
 		else {
 			TossClientCubes( self );
 		}
-		/* /Neon_Knight */
 	}
 	// if client is in a nodrop area, don't drop anything (but return CTF flags!)
-	if (g_harvester_fromBodies.integer == 0) {
+	if (g_harvesterFromBodies.integer == 0) {
 		TossClientItems( self );
 	}
+	/* /Neon_Knight */
 //#endif
 
 	Cmd_Score_f( self );		// show scores

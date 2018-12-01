@@ -5190,7 +5190,7 @@ void BotSetupAlternativeRouteGoals(void) {
 				ALTROUTEGOAL_VIEWPORTALS);
 	} else if (gametype == GT_HARVESTER) {
 		/* Neon_Knight: There shouldn't be a need for neutral obelisk with fromBodies.*/
-		if(g_harvester_fromBodies.integer == 0) {
+		if(g_harvesterFromBodies.integer == 0) {
 			if (untrap_BotGetLevelItemGoal(-1, "Neutral Obelisk", &neutralobelisk) < 0) {
 				BotAI_Print(PRT_WARNING, "Harvester without neutral obelisk\n");
 			}
@@ -5464,7 +5464,7 @@ void BotSetupDeathmatchAI(void) {
 			BotAI_Print(PRT_WARNING, "Harvester without blue obelisk\n");
 		BotSetEntityNumForGoal(&blueobelisk, "team_blueobelisk");
 		/* Neon_Knight: There shouldn't be a need to check for neutral obelisk with fromBodies.*/
-		if (g_harvester_fromBodies.integer != 1) {
+		if (g_harvesterFromBodies.integer != 1) {
 			if (untrap_BotGetLevelItemGoal(-1, "Neutral Obelisk", &neutralobelisk) < 0)
 				BotAI_Print(PRT_WARNING, "Harvester without neutral obelisk\n");
 			BotSetEntityNumForGoal(&neutralobelisk, "team_neutralobelisk");

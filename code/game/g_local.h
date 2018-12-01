@@ -1191,8 +1191,8 @@ extern  vmCvar_t    g_warningExpire;
 extern  vmCvar_t    g_minNameChangePeriod;
 extern  vmCvar_t    g_maxNameChanges;
 
-/* Neon_Knight: g_harvester_fromBodies - Makes skulls spawn from dead bodies instead of a central obelisk. */
-extern  vmCvar_t    g_harvester_fromBodies;
+/* Neon_Knight: g_harvesterFromBodies - Makes skulls spawn from dead bodies instead of a central obelisk. */
+extern  vmCvar_t    g_harvesterFromBodies;
 /* /Neon_Knight */
 
 void	trap_Printf( const char *fmt );
