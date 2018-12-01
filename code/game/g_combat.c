@@ -67,7 +67,7 @@ void AddScore( gentity_t *ent, vec3_t origin, int score )
 		return;
 	}
 	// show score plum
-	if( level.numNonSpectatorClients<3 && score < 0 && (g_gametype.integer<GT_TEAM || g_ffa_gt==1)) {
+	if( level.numNonSpectatorClients<3 && score < 0 && !G_IsATeamGametype(g_gametype.integer)) {
 		for ( i = 0 ; i < level.maxclients ; i++ ) {
 			if ( level.clients[ i ].pers.connected != CON_CONNECTED )
 				continue; //Client was not connected
@@ -117,7 +117,7 @@ void TossClientItems( gentity_t *self )
 	weapon = self->s.weapon;
 
 	//Never drop in elimination or last man standing mode!
-	if( g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_LMS)
+	if(G_IsARoundBasedGametype(g_gametype.integer) && !G_UsesTeamFlags(g_gametype.integer))
 		return;
 
 	// make a special check to see if they are changing to a new
@@ -406,7 +406,7 @@ void CheckAlmostCapture( gentity_t *self, gentity_t *attacker )
 	        self->client->ps.powerups[PW_BLUEFLAG] ||
 	        self->client->ps.powerups[PW_NEUTRALFLAG] ) {
 		// get the goal flag this player should have been going for
-		if ( g_gametype.integer == GT_CTF || g_gametype.integer == GT_CTF_ELIMINATION) {
+		if (G_UsesTeamFlags(g_gametype.integer) && !G_UsesTheWhiteFlag(g_gametype.integer)) {
 			if ( self->client->sess.sessionTeam == TEAM_BLUE ) {
 				classname = "team_CTF_blueflag";
 			}
@@ -559,7 +559,7 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 	ent->s.otherEntityNum2 = killer;
 	//Sago: Hmmm... generic? Can I transmit anything I like? Like if it is a team kill? Let's try
 	ent->s.generic1 = OnSameTeam (self, attacker);
-	if( !((g_gametype.integer==GT_ELIMINATION || g_gametype.integer==GT_CTF_ELIMINATION) && level.time < level.roundStartTime) ) {
+	if( !((G_IsARoundBasedGametype(g_gametype.integer) && G_IsATeamGametype(g_gametype.integer)) && level.time < level.roundStartTime) ) {
 		ent->r.svFlags = SVF_BROADCAST;	// send to everyone (if not an elimination gametype during active warmup)
 	}
 	else {
@@ -574,8 +574,8 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 		attacker->client->lastkilled_client = self->s.number;
 
 		if ( attacker == self || OnSameTeam (self, attacker ) ) {
-			if(g_gametype.integer!=GT_LMS && g_gametype.integer != GT_POSSESSION && !((g_gametype.integer==GT_ELIMINATION || g_gametype.integer==GT_CTF_ELIMINATION) && level.time < level.roundStartTime)) {
-				if( (g_gametype.integer <GT_TEAM && g_ffa_gt!=1 && self->client->ps.persistant[PERS_SCORE]>0) || level.numNonSpectatorClients<3) {
+			if(g_gametype.integer != GT_POSSESSION && !G_IsARoundBasedGametype(g_gametype.integer) && level.time < level.roundStartTime) {
+				if( (G_IsATeamGametype(g_gametype.integer) && self->client->ps.persistant[PERS_SCORE]>0) || level.numNonSpectatorClients<3) {
 					//Cannot get negative scores by suicide
 					AddScore( attacker, self->r.currentOrigin, -1 );
 				}
@@ -754,8 +754,7 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 		}
 	}
 	else {
-		if(g_gametype.integer!=GT_LMS && g_gametype.integer != GT_POSSESSION &&
-		        !((g_gametype.integer==GT_ELIMINATION || g_gametype.integer==GT_CTF_ELIMINATION) && level.time < level.roundStartTime)) {
+		if(g_gametype.integer != GT_POSSESSION && !G_IsARoundBasedGametype(g_gametype.integer) && level.time < level.roundStartTime) {
 			if(self->client->ps.persistant[PERS_SCORE]>0 || level.numNonSpectatorClients<3) { 
 				//Cannot get negative scores by suicide
 				AddScore( self, self->r.currentOrigin, -1 );
@@ -832,7 +831,7 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 		self->client->respawnTime = i*g_respawntime.integer*1000;
 	}
 	//However during warm up, we should respawn quicker!
-	if(g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_CTF_ELIMINATION || g_gametype.integer == GT_LMS) {
+	if(G_IsARoundBasedGametype(g_gametype.integer)) {
 		if(level.time<=level.roundStartTime && level.time>level.roundStartTime-1000*g_elimination_activewarmup.integer) {
 			self->client->respawnTime = level.time + rand()%800;
 		}
@@ -1186,7 +1185,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 		// if TF_NO_FRIENDLY_FIRE is set, don't do damage to the target
 		// if the attacker was on the same team
 		if ( mod != MOD_JUICED && mod != MOD_CRUSH && targ != attacker && !(dflags & DAMAGE_NO_TEAM_PROTECTION) && OnSameTeam (targ, attacker)  ) {
-			if ( ( !g_friendlyFire.integer && g_gametype.integer != GT_ELIMINATION && g_gametype.integer != GT_CTF_ELIMINATION ) || ( g_elimination_selfdamage.integer<2 &&	(g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_CTF_ELIMINATION) ) ) {
+			if ( ( !g_friendlyFire.integer && !(G_IsARoundBasedGametype(g_gametype.integer) && G_IsATeamGametype(g_gametype.integer)) ) || ( g_elimination_selfdamage.integer<2 && G_IsARoundBasedGametype(g_gametype.integer) ) ) {
 				return;
 			}
 		}
@@ -1262,14 +1261,14 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 		damage = 0;
 	}
 
-	if ((g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_CTF_ELIMINATION || g_gametype.integer == GT_LMS || g_elimination_allgametypes.integer)
-	        && g_elimination_selfdamage.integer<1 && ( targ == attacker ||  mod == MOD_FALLING )) {
+	if ((G_IsARoundBasedGametype(g_gametype.integer) || g_elimination_allgametypes.integer) &&
+		g_elimination_selfdamage.integer<1 && ( targ == attacker ||  mod == MOD_FALLING )) {
 		damage = 0;
 	}
 
 
 //So people can be telefragged!
-	if ((g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_CTF_ELIMINATION || g_gametype.integer == GT_LMS) && level.time < level.roundStartTime && ((mod == MOD_LAVA) || (mod == MOD_SLIME)) ) {
+	if (G_IsARoundBasedGametype(g_gametype.integer) && level.time < level.roundStartTime && ((mod == MOD_LAVA) || (mod == MOD_SLIME)) ) {
 		damage = 1000;
 	}
 
@@ -1313,7 +1312,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 	}
 
 	// See if it's the player hurting the emeny flag carrier
-	if( g_gametype.integer == GT_CTF || g_gametype.integer == GT_1FCTF || g_gametype.integer == GT_CTF_ELIMINATION) {
+	if(G_UsesTeamFlags(g_gametype.integer)) {
 		Team_CheckHurtCarrier(targ, attacker);
 	}
 

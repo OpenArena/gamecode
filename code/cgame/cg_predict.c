@@ -263,7 +263,7 @@ static void CG_TouchItem( centity_t *cent ) {
 	//For instantgib
 	qboolean	canBePicked;
 
-	if(cgs.gametype == GT_ELIMINATION || cgs.gametype == GT_LMS)
+	if(CG_IsARoundBasedGametype(cgs.gametype) && !CG_UsesTeamFlags(cgs.gametype))
 		return; //No weapon pickup in elimination
 
 	//normally we can
@@ -304,7 +304,7 @@ static void CG_TouchItem( centity_t *cent ) {
 		}
 	}
 	
-	if( cgs.gametype == GT_CTF || cgs.gametype == GT_CTF_ELIMINATION || cgs.gametype == GT_HARVESTER ) {
+	if((CG_UsesTeamFlags(cgs.gametype) && !CG_UsesTheWhiteFlag(cgs.gametype)) || cgs.gametype == GT_HARVESTER ) {
 		if (cg.predictedPlayerState.persistant[PERS_TEAM] == TEAM_RED &&
 			item->giType == IT_TEAM && item->giTag == PW_REDFLAG)
 			return;

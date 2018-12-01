@@ -446,7 +446,7 @@ respawn
 void ClientRespawn( gentity_t *ent ) {
 	gentity_t	*tent;
 
-	if((g_gametype.integer!=GT_ELIMINATION && g_gametype.integer!=GT_CTF_ELIMINATION && g_gametype.integer !=GT_LMS) && !ent->client->isEliminated)
+	if( !G_IsARoundBasedGametype(g_gametype.integer) && !ent->client->isEliminated)
 	{
 		ent->client->isEliminated = qtrue; //must not be true in warmup
 	} else {
@@ -478,14 +478,13 @@ void ClientRespawn( gentity_t *ent ) {
 		}
 	}
 
-	if((g_gametype.integer==GT_ELIMINATION || g_gametype.integer==GT_CTF_ELIMINATION || g_gametype.integer==GT_LMS) 
-			&& ent->client->ps.pm_type == PM_SPECTATOR && ent->client->ps.stats[STAT_HEALTH] > 0) {
+	if(G_IsARoundBasedGametype(g_gametype.integer) && ent->client->ps.pm_type == PM_SPECTATOR && ent->client->ps.stats[STAT_HEALTH] > 0) {
 		return;
 	}
 	ClientSpawn(ent);
 
 	// add a teleportation effect
-	if(g_gametype.integer!=GT_ELIMINATION && g_gametype.integer!=GT_CTF_ELIMINATION && g_gametype.integer!=GT_LMS)
+	if(!G_IsARoundBasedGametype(g_gametype.integer))
 	{	
 		tent = G_TempEntity( ent->client->ps.origin, EV_PLAYER_TELEPORT_IN );
 		tent->s.clientNum = ent->s.clientNum;
@@ -508,7 +507,7 @@ void respawnRound( gentity_t *ent ) {
 	ClientSpawn(ent);
 
 	// add a teleportation effect
-	if(g_gametype.integer!=GT_ELIMINATION && g_gametype.integer!=GT_CTF_ELIMINATION && g_gametype.integer!=GT_LMS)
+	if(!G_IsARoundBasedGametype(g_gametype.integer))
 	{
 		tent = G_TempEntity( ent->client->ps.origin, EV_PLAYER_TELEPORT_IN );
 		tent->s.clientNum = ent->s.clientNum;
@@ -1175,7 +1174,7 @@ void ClientUserinfoChanged( int clientNum ) {
 	if ( ( ( client->sess.sessionTeam == TEAM_SPECTATOR ) ||
 		( ( ( client->isEliminated ) /*||
 		( client->ps.pm_type == PM_SPECTATOR )*/ ) &&   //Sago: If this is true client.isEliminated or TEAM_SPECTATOR is true to and this is redundant
-		( g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_CTF_ELIMINATION || g_gametype.integer == GT_LMS) ) ) &&
+		G_IsARoundBasedGametype(g_gametype.integer) ) ) &&
 		( client->sess.spectatorState == SPECTATOR_SCOREBOARD ) ) {
 
 		Q_strncpyz( client->pers.netname, "scoreboard", sizeof(client->pers.netname) );
@@ -1201,7 +1200,7 @@ void ClientUserinfoChanged( int clientNum ) {
 	client->ps.stats[STAT_MAX_HEALTH] = client->pers.maxHealth;
 
 	// set model
-	if( g_gametype.integer >= GT_TEAM && g_ffa_gt==0) {
+	if(G_IsATeamGametype(g_gametype.integer) && G_UsesKeyObjectives(g_gametype.integer)) {
 		Q_strncpyz( model, Info_ValueForKey (userinfo, "team_model"), sizeof( model ) );
 		Q_strncpyz( headModel, Info_ValueForKey (userinfo, "team_headmodel"), sizeof( headModel ) );
 	} else {
@@ -1210,7 +1209,7 @@ void ClientUserinfoChanged( int clientNum ) {
 	}
 
 	// bots set their team a few frames later
-	if (g_gametype.integer >= GT_TEAM && g_ffa_gt==0 && g_entities[clientNum].r.svFlags & SVF_BOT) {
+	if (G_IsATeamGametype(g_gametype.integer) && G_UsesKeyObjectives(g_gametype.integer) && g_entities[clientNum].r.svFlags & SVF_BOT) {
 		s = Info_ValueForKey( userinfo, "team" );
 		if ( Q_strequal( s, "red" ) || Q_strequal( s, "r" ) ) {
 			team = TEAM_RED;
@@ -1226,7 +1225,7 @@ void ClientUserinfoChanged( int clientNum ) {
 		team = client->sess.sessionTeam;
 	}
 
-	if (g_gametype.integer >= GT_TEAM && g_ffa_gt!=1) {
+	if (G_IsATeamGametype(g_gametype.integer) && G_UsesKeyObjectives(g_gametype.integer)) {
 		client->pers.teamInfo = qtrue;
 	} else {
 		s = Info_ValueForKey( userinfo, "teamoverlay" );
@@ -1243,7 +1242,7 @@ void ClientUserinfoChanged( int clientNum ) {
 	teamLeader = client->sess.teamLeader;
 
 	// colors
-	if( g_gametype.integer >= GT_TEAM && g_ffa_gt==0 && g_instantgib.integer) {
+	if(G_IsATeamGametype(g_gametype.integer) && G_UsesKeyObjectives(g_gametype.integer) && g_instantgib.integer) {
 		switch(team) {
 			case TEAM_RED:
 				c1[0] = COLOR_BLUE;
@@ -1410,8 +1409,7 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 		trap_SendServerCommand( -1, va("print \"%s" S_COLOR_WHITE " connected\n\"", client->pers.netname) );
 	}
 
-	if ( g_gametype.integer >= GT_TEAM &&
-		client->sess.sessionTeam != TEAM_SPECTATOR ) {
+	if (G_IsATeamGametype(g_gametype.integer) && G_UsesKeyObjectives(g_gametype.integer) && client->sess.sessionTeam != TEAM_SPECTATOR ) {
 		BroadcastTeamChange( client, -1 );
 	}
 
@@ -1524,7 +1522,7 @@ void ClientBegin( int clientNum ) {
 	countFree = TeamCount(-1,TEAM_FREE);
 	countRed = TeamCount(-1,TEAM_RED);
 	countBlue = TeamCount(-1,TEAM_BLUE);
-	if(g_gametype.integer < GT_TEAM || g_ffa_gt)
+	if(!(G_IsATeamGametype(g_gametype.integer) && G_UsesKeyObjectives(g_gametype.integer)))
 	{
 		if(countFree>level.teamSize)
 			level.teamSize=countFree;
@@ -1559,9 +1557,7 @@ void ClientBegin( int clientNum ) {
 	if( ( client->sess.sessionTeam != TEAM_SPECTATOR ) &&
 		( ( !( client->isEliminated ) /*&&
 		( ( !client->ps.pm_type ) == PM_SPECTATOR ) */ ) || //Sago: Yes, it made no sense 
-		( ( g_gametype.integer != GT_ELIMINATION || level.intermissiontime) &&
-		( g_gametype.integer != GT_CTF_ELIMINATION || level.intermissiontime) &&
-		( g_gametype.integer != GT_LMS || level.intermissiontime ) ) ) ) {
+		( (!G_IsARoundBasedGametype(g_gametype.integer) || level.intermissiontime) ) ) ) {
 		// send event
 		tent = G_TempEntity( ent->client->ps.origin, EV_PLAYER_TELEPORT_IN );
 		tent->s.clientNum = ent->s.clientNum;
@@ -1625,15 +1621,7 @@ void ClientSpawn(gentity_t *ent) {
 	//In Elimination the player should not spawn if he have already spawned in the round (but not for spectators)
 	// N_G: You've obviously wanted something ELSE
 	//Sago: Yes, the !level.intermissiontime is currently redundant but it might still be the bast place to make the test, CheckElimination in g_main makes sure the next if will fail and the rest of the things this block does might not affect if in Intermission (I'll just test that)
-	if( 
-	( 
-		( 
-			g_gametype.integer == GT_ELIMINATION ||
-			g_gametype.integer == GT_CTF_ELIMINATION || (g_gametype.integer == GT_LMS && client->isEliminated)) &&
-			(!level.intermissiontime || level.warmupTime != 0)
-		) &&
-		( client->sess.sessionTeam != TEAM_SPECTATOR ) 
-	)
+	if((((G_IsARoundBasedGametype(g_gametype.integer) && G_IsATeamGametype(g_gametype.integer)) || (g_gametype.integer == GT_LMS && client->isEliminated)) && (!level.intermissiontime || level.warmupTime != 0)) && ( client->sess.sessionTeam != TEAM_SPECTATOR))
 	{
 		// N_G: Another condition that makes no sense to me, see for
 		// yourself if you really meant this
@@ -1694,8 +1682,8 @@ void ClientSpawn(gentity_t *ent) {
 	// find a spawn point
 	// do it before setting health back up, so farthest
 	// ranging doesn't count this client
-	if ((client->sess.sessionTeam == TEAM_SPECTATOR) 
-			|| ( (client->ps.pm_type == PM_SPECTATOR || client->isEliminated )  && (g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_CTF_ELIMINATION) ) ) {
+	if ((client->sess.sessionTeam == TEAM_SPECTATOR)  || ((client->ps.pm_type == PM_SPECTATOR || client->isEliminated )  &&
+		(G_IsARoundBasedGametype(g_gametype.integer) && G_IsATeamGametype(g_gametype.integer)))) {
 		spawnPoint = SelectSpectatorSpawnPoint ( spawn_origin, spawn_angles);
 	} else if (g_gametype.integer == GT_DOUBLE_D) {
 		//Double Domination uses special spawn points:
@@ -1703,7 +1691,7 @@ void ClientSpawn(gentity_t *ent) {
 	} else if (g_gametype.integer == GT_DOMINATION) {
 		//Domination uses special spawn points:
 		spawnPoint = SelectDominationSpawnPoint (client->sess.sessionTeam, spawn_origin, spawn_angles);
-	} else if (g_gametype.integer >= GT_CTF && g_ffa_gt==0 ) {
+	} else if (G_IsATeamGametype(g_gametype.integer)) {
 		// all base oriented team games use the CTF spawn points
 		spawnPoint = SelectCTFSpawnPoint ( 
 						client->sess.sessionTeam, 
@@ -1810,7 +1798,7 @@ void ClientSpawn(gentity_t *ent) {
 
 	client->ps.clientNum = index;
 
-	if(g_gametype.integer != GT_ELIMINATION && g_gametype.integer != GT_CTF_ELIMINATION && g_gametype.integer != GT_LMS && !g_elimination_allgametypes.integer)
+	if(!G_IsARoundBasedGametype(g_gametype.integer) && !g_elimination_allgametypes.integer)
 	{
 		client->ps.stats[STAT_WEAPONS] = ( 1 << WP_MACHINEGUN );
 		if ( g_gametype.integer == GT_TEAM ) {
@@ -1906,14 +1894,15 @@ void ClientSpawn(gentity_t *ent) {
 
 	// the respawned flag will be cleared after the attack and jump keys come up
 	client->ps.pm_flags |= PMF_RESPAWNED;
-	if(g_gametype.integer==GT_ELIMINATION || g_gametype.integer==GT_CTF_ELIMINATION || g_gametype.integer==GT_LMS)	
+	if(G_IsARoundBasedGametype(g_gametype.integer)) {
 		client->ps.pm_flags |= PMF_ELIMWARMUP;
+	}
 
 	trap_GetUsercmd( client - level.clients, &ent->client->pers.cmd );
 	SetClientViewAngle( ent, spawn_angles );
 
 	if ( (ent->client->sess.sessionTeam == TEAM_SPECTATOR) || ((client->ps.pm_type == PM_SPECTATOR || client->isEliminated) && 
-		(g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_CTF_ELIMINATION || g_gametype.integer == GT_LMS) ) ) {
+		G_IsARoundBasedGametype(g_gametype.integer))) {
 	} else {
 		G_KillBox( ent );
 		trap_LinkEntity (ent);
@@ -1960,8 +1949,8 @@ void ClientSpawn(gentity_t *ent) {
 	ClientThink( ent-g_entities );
 
 	// positively link the client, even if the command times are weird
-	if ( (ent->client->sess.sessionTeam != TEAM_SPECTATOR) || ( (!client->isEliminated || client->ps.pm_type != PM_SPECTATOR)&& 
-		(g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_CTF_ELIMINATION || g_gametype.integer == GT_LMS) ) ) {
+	if ( (ent->client->sess.sessionTeam != TEAM_SPECTATOR) || ( (!client->isEliminated || client->ps.pm_type != PM_SPECTATOR) && 
+		G_IsARoundBasedGametype(g_gametype.integer) ) ) {
 		BG_PlayerStateToEntityState( &client->ps, &ent->s, qtrue );
 		VectorCopy( ent->client->ps.origin, ent->r.currentOrigin );
 		trap_LinkEntity( ent );
