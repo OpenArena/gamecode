@@ -1442,4 +1442,9 @@ void monster_die (gentity_t *self, gentity_t *inflictor, gentity_t *attacker, in
 /* Neon_Knight: Useful check in order to have code consistency. */
 qboolean G_IsATeamGametype(int check);	/* Whether the gametype is team-based or not.*/
 qboolean G_UsesKeyObjectives(int check);	/* Whether the gametype uses key objectives or not. */
+qboolean G_UsesTeamFlags(int check);	/* Whether the gametype uses the red and blue flags. */
+qboolean G_UsesWhiteFlag(int check);	/* Whether the gametype uses the neutral flag. */
+qboolean G_IsARoundBasedGametype(int check);	/* Whether the gametype uses the neutral flag. */
+qboolean G_UsesTeamObelisks(int check);	/* Whether the gametype uses team obelisks. */
+qboolean G_UsesControlPoints(int check);	/* Whether the gametype uses control points. */
 /* /Neon_Knight */

@@ -936,7 +936,7 @@ void BotMatch_GetFlag(bot_state_t *bs, bot_match_t *match) {
 	char netname[MAX_MESSAGE_SIZE];
 	int client;
 
-	if (gametype == GT_CTF || gametype == GT_CTF_ELIMINATION) {
+	if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
 		if (!ctf_redflag.areanum || !ctf_blueflag.areanum)
 			return;
 	}
@@ -968,7 +968,7 @@ void BotMatch_GetFlag(bot_state_t *bs, bot_match_t *match) {
 	//set the team goal time
 	bs->teamgoal_time = FloatTime() + CTF_GETFLAG_TIME;
 	// get an alternate route in ctf
-	if (gametype == GT_CTF || gametype == GT_1FCTF || gametype == GT_CTF_ELIMINATION) {
+	if (G_UsesTeamFlags(gametype)) {
 		//get an alternative route goal towards the enemy base
 		BotGetAlternateRouteGoal(bs, BotOppositeTeam(bs));
 	}
@@ -990,10 +990,10 @@ void BotMatch_AttackEnemyBase(bot_state_t *bs, bot_match_t *match) {
 	char netname[MAX_MESSAGE_SIZE];
 	int client;
 
-	if (gametype == GT_CTF|| gametype == GT_CTF_ELIMINATION) {
+	if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
 		BotMatch_GetFlag(bs, match);
 	}
-	else if (gametype == GT_1FCTF || gametype == GT_OBELISK || gametype == GT_HARVESTER) {
+	else if (gametype == GT_1FCTF || G_UsesTeamObelisks(gametype)) {
 		if (!redobelisk.areanum || !blueobelisk.areanum)
 			return;
 	}
@@ -1077,7 +1077,7 @@ void BotMatch_RushBase(bot_state_t *bs, bot_match_t *match) {
 	char netname[MAX_MESSAGE_SIZE];
 	int client;
 
-	if (gametype == GT_CTF|| gametype == GT_CTF_ELIMINATION) {
+	if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
 		if (!ctf_redflag.areanum || !ctf_blueflag.areanum)
 			return;
 	}
@@ -1171,7 +1171,7 @@ void BotMatch_ReturnFlag(bot_state_t *bs, bot_match_t *match) {
 	int client;
 
 	//if not in CTF mode
-	if (gametype != GT_CTF && gametype != GT_CTF_ELIMINATION && gametype != GT_1FCTF)
+	if (G_UsesTeamFlags(gametype))
 		return;
 	//if not addressed to this bot
 	if (!BotAddressedToBot(bs, match))
@@ -1678,9 +1678,7 @@ void BotMatch_WhereAreYou(bot_state_t *bs, bot_match_t *match) {
 		}
 	}
 	if (bestitem != -1) {
-		if (gametype == GT_CTF || gametype == GT_CTF_ELIMINATION
-			|| gametype == GT_1FCTF
-			) {
+		if (G_UsesTeamFlags(gametype)) {
 			redtt = trap_AAS_AreaTravelTimeToGoalArea(bs->areanum, bs->origin, ctf_redflag.areanum, TFL_DEFAULT);
 			bluett = trap_AAS_AreaTravelTimeToGoalArea(bs->areanum, bs->origin, ctf_blueflag.areanum, TFL_DEFAULT);
 			if (redtt < (redtt + bluett) * 0.4) {
@@ -1693,7 +1691,7 @@ void BotMatch_WhereAreYou(bot_state_t *bs, bot_match_t *match) {
 				BotAI_BotInitialChat(bs, "location", nearbyitems[bestitem], NULL);
 			}
 		}
-		else if (gametype == GT_OBELISK || gametype == GT_HARVESTER) {
+		else if (G_UsesTeamObelisks(gametype)) {
 			redtt = trap_AAS_AreaTravelTimeToGoalArea(bs->areanum, bs->origin, redobelisk.areanum, TFL_DEFAULT);
 			bluett = trap_AAS_AreaTravelTimeToGoalArea(bs->areanum, bs->origin, blueobelisk.areanum, TFL_DEFAULT);
 			if (redtt < (redtt + bluett) * 0.4) {
@@ -1831,7 +1829,7 @@ void BotMatch_CTF(bot_state_t *bs, bot_match_t *match) {
 
 	char flag[128], netname[MAX_NETNAME];
 
-	if (gametype == GT_CTF || gametype == GT_CTF_ELIMINATION) {
+	if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
 		trap_BotMatchVariable(match, FLAG, flag, sizeof(flag));
 		if (match->subtype & ST_GOTFLAG) {
 			if (Q_strequal(flag, "red")) {
@@ -1863,7 +1861,7 @@ void BotMatch_CTF(bot_state_t *bs, bot_match_t *match) {
 			bs->flagstatuschanged = 1;
 		}
 	}
-	else if (gametype == GT_1FCTF || gametype == GT_POSSESSION) {
+	else if (G_UsesTheWhiteFlag(gametype)) {
 		if (match->subtype & ST_1FCTFGOTFLAG) {
 			trap_BotMatchVariable(match, NETNAME, netname, sizeof(netname));
 			bs->flagcarrier = ClientFromName(netname);

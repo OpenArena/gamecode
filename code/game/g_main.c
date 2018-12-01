@@ -1206,7 +1206,7 @@ int QDECL SortRanks( const void *a, const void *b )
 	}
 
 	//In elimination and CTF elimination, sort dead players last
-	if((g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_CTF_ELIMINATION)
+	if(G_UsesTeamFlags(g_gametype.integer) && !G_UsesTheWhiteFlag(g_gametype.integer)
 	        && level.roundNumber==level.roundNumberStarted && (ca->isEliminated != cb->isEliminated)) {
 		if( ca->isEliminated )
 			return 1;
@@ -2601,7 +2601,7 @@ void G_RunFrame( int levelTime )
 	// get any cvar changes
 	G_UpdateCvars();
 
-	if( (g_gametype.integer==GT_ELIMINATION || g_gametype.integer==GT_CTF_ELIMINATION) && !(g_elimflags.integer & EF_NO_FREESPEC) && g_elimination_lockspectator.integer>1)
+	if( (G_IsARoundBasedGametype(g_gametype.integer) && G_IsATeamGametype(g_gametype.integer)) && !(g_elimflags.integer & EF_NO_FREESPEC) && g_elimination_lockspectator.integer>1)
 		trap_Cvar_Set("elimflags",va("%i",g_elimflags.integer|EF_NO_FREESPEC));
 	else if( (g_elimflags.integer & EF_NO_FREESPEC) && g_elimination_lockspectator.integer<2)
 		trap_Cvar_Set("elimflags",va("%i",g_elimflags.integer&(~EF_NO_FREESPEC) ) );
@@ -2791,7 +2791,6 @@ void MapInfoPrint(mapinfo_result_t *info)
 G_IsATeamGametype
 
 Checks if the gametype is a team-based game.
-(G_IsATeamGame(check,qtrue))
 ===================
  */
 qboolean G_IsATeamGametype(int check) {
@@ -2807,12 +2806,85 @@ qboolean G_IsATeamGametype(int check) {
 G_UsesKeyObjectives
 
 Checks if the gametype makes use of gametype-specific objectives.
-(Flags, obelisks, control points...)
-(G_IsATeamGame(check,qfalse))
 ===================
  */
 qboolean G_UsesKeyObjectives(int check) {
 	if (check != GT_FFA && check != GT_TOURNAMENT && check != GT_SINGLE_PLAYER && check != GT_TEAM && check != GT_LMS && check != GT_POSSESSION) {
+		return qtrue;
+	}
+	else {
+		return qfalse;
+	}
+}
+/*
+===================
+G_UsesTeamFlags
+
+Checks if the gametype makes use of the red and blue flags.
+===================
+ */
+qboolean G_UsesTeamFlags(int check) {
+	if (check == GT_CTF || check == GT_1FCTF || check == GT_CTF_ELIMINATION) {
+		return qtrue;
+	}
+	else {
+		return qfalse;
+	}
+}
+/*
+===================
+G_UsesTheWhiteFlag
+
+Checks if the gametype makes use of the neutral flag.
+===================
+ */
+qboolean G_UsesTheWhiteFlag(int check) {
+	if (check == GT_1FCTF || check == GT_POSSESSION) {
+		return qtrue;
+	}
+	else {
+		return qfalse;
+	}
+}
+/*
+===================
+G_IsARoundBasedGametype
+
+Checks if the gametype has a round-based system.
+===================
+ */
+qboolean G_IsARoundBasedGametype(int check) {
+	if (check == GT_ELIMINATION || check == GT_CTF_ELIMINATION || check == GT_LMS) {
+		return qtrue;
+	}
+	else {
+		return qfalse;
+	}
+}
+/*
+===================
+G_UsesTeamObelisks
+
+Checks if the gametype uses team-colored obelisks.
+===================
+ */
+qboolean G_IsARoundBasedGametype(int check) {
+	if (check == GT_HARVESTER || check == GT_OVERLOAD) {
+		return qtrue;
+	}
+	else {
+		return qfalse;
+	}
+}
+/*
+===================
+G_UsesControlPoints
+
+Checks if the gametype uses team-colored obelisks.
+===================
+ */
+qboolean G_IsARoundBasedGametype(int check) {
+	if (check == GT_DOUBLE_D || check == GT_DOMINATION) {
 		return qtrue;
 	}
 	else {

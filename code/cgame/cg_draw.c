@@ -1443,7 +1443,7 @@ static float CG_DrawFollowMessage(float y) {
 	char *s;
 	int w;
 
-	if (!(cg.snap->ps.pm_flags & PMF_FOLLOW) || ((cgs.elimflags & EF_NO_FREESPEC) && (cgs.gametype == GT_ELIMINATION || cgs.gametype == GT_CTF_ELIMINATION))) {
+	if (!(cg.snap->ps.pm_flags & PMF_FOLLOW) || ((cgs.elimflags & EF_NO_FREESPEC) && CG_IsARoundBasedGametype(cgs.gametype) && CG_IsATeamGametype(cgs.gametype))) {
 		return y;
 	}
 
@@ -1607,7 +1607,7 @@ static void CG_DrawUpperRight(stereoFrame_t stereoFrame) {
 	if (cg_drawFPS.integer && (stereoFrame == STEREO_CENTER || stereoFrame == STEREO_RIGHT)) {
 		y = CG_DrawFPS(y);
 	}
-	if (cgs.gametype == GT_ELIMINATION || cgs.gametype == GT_CTF_ELIMINATION || cgs.gametype == GT_LMS) {
+	if (CG_IsARoundBasedGametype(cgs.gametype)) {
 		y = CG_DrawEliminationTimer(y);
 		/*if (cgs.clientinfo[ cg.clientNum ].isDead)
 			y = CG_DrawEliminationDeathMessage( y);*/
@@ -1680,7 +1680,7 @@ static float CG_DrawScores(float y) {
 		}
 		CG_DrawBigString(x + 4, y, s, 1.0F);
 
-		if (cgs.gametype == GT_CTF || cgs.gametype == GT_CTF_ELIMINATION) {
+		if (CG_UsesTeamFlags(cgs.gametype) && !CG_UsesTheWhiteFlag(cgs.gametype)) {
 			// Display flag status
 			item = BG_FindItemForPowerup(PW_BLUEFLAG);
 
@@ -1714,7 +1714,7 @@ static float CG_DrawScores(float y) {
 		}
 		CG_DrawBigString(x + 4, y, s, 1.0F);
 
-		if (cgs.gametype == GT_CTF || cgs.gametype == GT_CTF_ELIMINATION) {
+		if (CG_UsesTeamFlags(cgs.gametype) && !CG_UsesTheWhiteFlag(cgs.gametype)) {
 			// Display flag status
 			item = BG_FindItemForPowerup(PW_REDFLAG);
 
@@ -3104,7 +3104,7 @@ static qboolean CG_DrawScoreboard(void) {
 #else
 	char *s;
 	int w;
-	if (cg.respawnTime && cg.snap->ps.persistant[PERS_TEAM] != TEAM_SPECTATOR && (cgs.gametype < GT_ELIMINATION || cgs.gametype > GT_LMS)) {
+	if (cg.respawnTime && cg.snap->ps.persistant[PERS_TEAM] != TEAM_SPECTATOR && (!CG_IsARoundBasedGametype(cgs.gametype)) {
 		if (cg.respawnTime > cg.time) {
 			s = va("Respawn in: %2.2f", ((double) cg.respawnTime - (double) cg.time) / 1000.0);
 			w = CG_DrawStrlen(s) * SMALLCHAR_WIDTH;

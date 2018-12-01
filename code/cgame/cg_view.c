@@ -261,8 +261,7 @@ static void CG_OffsetThirdPersonView( void ) {
 	VectorCopy( cg.refdefViewAngles, focusAngles );
 
 	// if dead, look at killer
-	if ( (cg.predictedPlayerState.stats[STAT_HEALTH] <= 0) && 
-				(cgs.gametype !=GT_ELIMINATION && cgs.gametype !=GT_CTF_ELIMINATION && cgs.gametype !=GT_LMS) ) {
+	if ( (cg.predictedPlayerState.stats[STAT_HEALTH] <= 0) && !CG_IsARoundBasedGametype(cgs.gametype) ) {
 		focusAngles[YAW] = cg.predictedPlayerState.stats[STAT_DEAD_YAW];
 		cg.refdefViewAngles[YAW] = cg.predictedPlayerState.stats[STAT_DEAD_YAW];
 	}
@@ -431,7 +430,7 @@ static void CG_OffsetFirstPersonView( void ) {
 	VectorAdd (angles, cg.kick_angles, angles);
 
 	// add angles based on damage kick
-	if ( cg.damageTime && cgs.gametype!=GT_ELIMINATION && cgs.gametype!=GT_CTF_ELIMINATION && cgs.gametype!=GT_LMS) {
+	if ( cg.damageTime && !CG_IsARoundBasedGametype(cgs.gametype)) {
 		ratio = cg.time - cg.damageTime;
 		if ( ratio < DAMAGE_DEFLECT_TIME ) {
 			ratio /= DAMAGE_DEFLECT_TIME;

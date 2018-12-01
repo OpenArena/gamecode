@@ -357,13 +357,13 @@ static void UI_TeamOrdersMenu_ListEvent( void *ptr, int event )
 
 	if( id == ID_LIST_BOTS ) {
 		teamOrdersMenuInfo.selectedBot = selection;
-		if( teamOrdersMenuInfo.gametype == GT_CTF || teamOrdersMenuInfo.gametype == GT_CTF_ELIMINATION ) {
+		if(UI_UsesTeamFlags(teamOrdersMenuInfo.gametype) && !UI_UsesTheWhiteFlag(teamOrdersMenuInfo.gametype)) {
 			UI_TeamOrdersMenu_SetList( ID_LIST_CTF_ORDERS );
 		}
 		if( teamOrdersMenuInfo.gametype == GT_1FCTF ) {
 			UI_TeamOrdersMenu_SetList( ID_LIST_CTF1F_ORDERS );
 		}
-		if( teamOrdersMenuInfo.gametype == GT_OBELISK || teamOrdersMenuInfo.gametype == GT_HARVESTER ) {
+		if( UI_UsesTeamObelisks(teamOrdersMenuInfo.gametype) ) {
 			UI_TeamOrdersMenu_SetList( ID_LIST_BASE_ORDERS );
 		}
 		if( teamOrdersMenuInfo.gametype == GT_TEAM || teamOrdersMenuInfo.gametype == GT_ELIMINATION || teamOrdersMenuInfo.gametype == GT_DOMINATION ) {

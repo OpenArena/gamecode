@@ -277,7 +277,7 @@ void Team_SetFlagStatus( int team, flagStatus_t status )
 	if( modified ) {
 		char st[4];
 
-		if( g_gametype.integer == GT_CTF || g_gametype.integer == GT_CTF_ELIMINATION) {
+		if(G_UsesTeamFlags(g_gametype.integer) && !G_UsesTheWhiteFlag(g_gametype.integer)) {
 			st[0] = ctfFlagStatusRemap[teamgame.redStatus];
 			st[1] = ctfFlagStatusRemap[teamgame.blueStatus];
 			st[2] = 0;
@@ -407,7 +407,7 @@ void Team_FragBonuses(gentity_t *targ, gentity_t *inflictor, gentity_t *attacker
 		enemy_flag_pw = PW_REDFLAG;
 	}
 
-	if (g_gametype.integer == GT_1FCTF || g_gametype.integer == GT_POSSESSION) {
+	if (G_UsesTheWhiteFlag(g_gametype.integer)) {
 		enemy_flag_pw = PW_NEUTRALFLAG;
 	}
 
@@ -965,11 +965,11 @@ static void Team_DD_makeB2team( gentity_t *target, int team )
 
 static void Team_ResetFlags( void )
 {
-	if( g_gametype.integer == GT_CTF || g_gametype.integer == GT_CTF_ELIMINATION) {
+	if(G_UsesTeamFlags(g_gametype.integer) && !G_UsesTheWhiteFlag(g_gametype.integer)) {
 		Team_ResetFlag( TEAM_RED );
 		Team_ResetFlag( TEAM_BLUE );
 	}
-	else if( g_gametype.integer == GT_1FCTF || g_gametype.integer == GT_POSSESSION ) {
+	else if(G_UsesTheWhiteFlag(g_gametype.integer)) {
 		Team_ResetFlag( TEAM_FREE );
 	}
 }
@@ -1280,7 +1280,7 @@ int Team_TouchOurFlag( gentity_t *ent, gentity_t *other, int team )
 	gclient_t	*cl = other->client;
 	int			enemy_flag;
 
-	if( g_gametype.integer == GT_1FCTF || g_gametype.integer == GT_POSSESSION ) {
+	if(G_UsesTheWhiteFlag(g_gametype.integer)) {
 		enemy_flag = PW_NEUTRALFLAG;
 	}
 	else {
@@ -2353,7 +2353,7 @@ void SP_team_blueobelisk( gentity_t *ent )
 */
 void SP_team_neutralobelisk( gentity_t *ent )
 {
-	if ( g_gametype.integer != GT_1FCTF && g_gametype.integer != GT_HARVESTER && g_gametype.integer != GT_POSSESSION ) {
+	if (!G_UsesTheWhiteFlag(g_gametype.integer) && g_gametype.integer != GT_HARVESTER ) {
 		G_FreeEntity(ent);
 		return;
 	}

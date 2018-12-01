@@ -695,7 +695,7 @@ static void CG_DrawBlueFlagName(rectDef_t *rect, float scale, vec4_t color, int 
 
 static void CG_DrawBlueFlagStatus(rectDef_t *rect, qhandle_t shader)
 {
-	if (cgs.gametype != GT_CTF && cgs.gametype != GT_CTF_ELIMINATION && cgs.gametype != GT_1FCTF) {
+	if (!CG_UsesTeamFlags(cgs.gametype)) {
 		if (cgs.gametype == GT_HARVESTER) {
 			vec4_t color = {0, 0, 1, 1};
 			trap_R_SetColor(color);
@@ -750,7 +750,7 @@ static void CG_DrawRedFlagName(rectDef_t *rect, float scale, vec4_t color, int t
 
 static void CG_DrawRedFlagStatus(rectDef_t *rect, qhandle_t shader)
 {
-	if (cgs.gametype != GT_CTF && cgs.gametype != GT_CTF_ELIMINATION && cgs.gametype != GT_1FCTF) {
+	if (!CG_UsesTeamFlags(cgs.gametype)) {
 		if (cgs.gametype == GT_HARVESTER) {
 			vec4_t color = {1, 0, 0, 1};
 			trap_R_SetColor(color);
@@ -840,7 +840,7 @@ static void CG_HarvesterSkulls(rectDef_t *rect, float scale, vec4_t color, qbool
 
 static void CG_OneFlagStatus(rectDef_t *rect)
 {
-	if (cgs.gametype != GT_1FCTF && cgs.gametype != GT_POSSESSION) {
+	if (!CG_UsesTheWhiteFlag(cgs.gametype)) {
 		return;
 	}
 	else {
@@ -1019,7 +1019,7 @@ float CG_GetValue(int ownerDraw)
 
 qboolean CG_OtherTeamHasFlag(void)
 {
-	if (cgs.gametype == GT_CTF || cgs.gametype == GT_CTF_ELIMINATION || cgs.gametype == GT_1FCTF) {
+	if (CG_UsesTeamFlags(cgs.gametype)) {
 		int team = cg.snap->ps.persistant[PERS_TEAM];
 		if (cgs.gametype == GT_1FCTF) {
 			if (team == TEAM_RED && cgs.flagStatus == FLAG_TAKEN_BLUE) {
@@ -1049,7 +1049,7 @@ qboolean CG_OtherTeamHasFlag(void)
 
 qboolean CG_YourTeamHasFlag(void)
 {
-	if (cgs.gametype == GT_CTF || cgs.gametype == GT_CTF_ELIMINATION || cgs.gametype == GT_1FCTF) {
+	if (CG_UsesTeamFlags(cgs.gametype)) {
 		int team = cg.snap->ps.persistant[PERS_TEAM];
 		if (cgs.gametype == GT_1FCTF) {
 			if (team == TEAM_RED && cgs.flagStatus == FLAG_TAKEN_RED) {
@@ -1139,7 +1139,7 @@ qboolean CG_OwnerDrawVisible(int flags)
 	}
 
 	if (flags & CG_SHOW_CTF) {
-		if( cgs.gametype == GT_CTF || cgs.gametype == GT_CTF_ELIMINATION) {
+		if(CG_UsesTeamFlags(cgs.gametype) && !G_UsesTheWhiteFlag(gametype)) {
 			return qtrue;
 		}
 	}

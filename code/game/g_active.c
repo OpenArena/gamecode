@@ -320,7 +320,7 @@ void SpectatorThink( gentity_t *ent, usercmd_t *ucmd ) {
 
 	client = ent->client;
 
-	if ( ( g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_CTF_ELIMINATION) &&
+	if ( G_IsARoundBasedGametype(g_gametype.integer) && G_IsATeamGametype(g_gametype.integer) &&
 	       client->sess.spectatorState != SPECTATOR_FOLLOW &&
 	       g_elimination_lockspectator.integer>1 &&
 	       ent->client->sess.sessionTeam != TEAM_SPECTATOR ) {
@@ -358,7 +358,7 @@ void SpectatorThink( gentity_t *ent, usercmd_t *ucmd ) {
 	}
 
 	if ( ( client->buttons & BUTTON_USE_HOLDABLE ) && ! ( client->oldbuttons & BUTTON_USE_HOLDABLE ) ) {
-		if ( ( g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_CTF_ELIMINATION) &&
+		if ( G_IsARoundBasedGametype(g_gametype.integer) && G_IsATeamGametype(g_gametype.integer) &&
 			g_elimination_lockspectator.integer>1 &&
 			ent->client->sess.sessionTeam != TEAM_SPECTATOR ) {
 			return;
@@ -452,7 +452,7 @@ static void ClientTimerActions( gentity_t *ent, int msec ) {
 			if ( ent->health > client->ps.stats[STAT_MAX_HEALTH] ) {
 				ent->health--;
 			}
-			if ( (g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_CTF_ELIMINATION || g_gametype.integer == GT_LMS) && level.humansEliminated ) {
+			if ( G_IsARoundBasedGametype(g_gametype.integer) && level.humansEliminated ) {
 				ent->damage=5;
 				G_Damage (ent, NULL, NULL, NULL, NULL, ent->damage, DAMAGE_NO_KNOCKBACK, MOD_UNKNOWN);
 			}

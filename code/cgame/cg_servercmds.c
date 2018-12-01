@@ -79,7 +79,7 @@ static void CG_ParseScores( void ) {
 	cgs.roundStartTime = atoi( CG_Argv( 4 ) );
 
 	//Update thing in lower-right corner
-	if(cgs.gametype == GT_ELIMINATION || cgs.gametype == GT_CTF_ELIMINATION)
+	if(CG_IsARoundBasedGametype(cgs.gametype) && CG_IsATeamGametype(cgs.gametype))
 	{
 		cgs.scores1 = cg.teamScores[0];
 		cgs.scores2 = cg.teamScores[1];
@@ -145,7 +145,7 @@ CG_ParseElimination
 =================
 */
 static void CG_ParseElimination( void ) {
-	if(cgs.gametype == GT_ELIMINATION || cgs.gametype == GT_CTF_ELIMINATION)
+	if(CG_IsARoundBasedGametype(cgs.gametype) && CG_IsATeamGametype(cgs.gametype))
 	{
 		cgs.scores1 = atoi( CG_Argv( 1 ) );
 		cgs.scores2 = atoi( CG_Argv( 2 ) );
@@ -431,13 +431,13 @@ void CG_SetConfigValues( void ) {
 	cgs.scores1 = atoi( CG_ConfigString( CS_SCORES1 ) );
 	cgs.scores2 = atoi( CG_ConfigString( CS_SCORES2 ) );
 	cgs.levelStartTime = atoi( CG_ConfigString( CS_LEVEL_START_TIME ) );
-	if( cgs.gametype == GT_CTF || cgs.gametype == GT_CTF_ELIMINATION || cgs.gametype == GT_DOUBLE_D) {
+	if((CG_UsesTeamFlags(cgs.gametype) && !CG_UsesTheWhiteFlag(cgs.gametype)) || cgs.gametype == GT_DOUBLE_D) {
 		s = CG_ConfigString( CS_FLAGSTATUS );
 		cgs.redflag = s[0] - '0';
 		cgs.blueflag = s[1] - '0';
 	}
 //#ifdef MISSIONPACK
-	else if( cgs.gametype == GT_1FCTF || cgs.gametype == GT_POSSESSION ) {
+	else if( CG_UsesTheWhiteFlag(cgs.gametype) ) {
 		s = CG_ConfigString( CS_FLAGSTATUS );
 		cgs.flagStatus = s[0] - '0';
 	}
@@ -557,16 +557,14 @@ static void CG_ConfigStringModified( void ) {
 		CG_NewClientInfo( num - CS_PLAYERS );
 		CG_BuildSpectatorString();
 	} else if ( num == CS_FLAGSTATUS ) {
-		if( cgs.gametype == GT_CTF || cgs.gametype == GT_CTF_ELIMINATION || cgs.gametype == GT_DOUBLE_D) {
+		if((CG_UsesTeamFlags(cgs.gametype) && CG_UsesTheWhiteFlag(cgs.gametype)) || cgs.gametype == GT_DOUBLE_D) {
 			// format is rb where its red/blue, 0 is at base, 1 is taken, 2 is dropped
 			cgs.redflag = str[0] - '0';
 			cgs.blueflag = str[1] - '0';
 		}
-//#ifdef MISSIONPACK
-		else if( cgs.gametype == GT_1FCTF || cgs.gametype == GT_POSSESSION ) {
+		else if( CG_UsesTheWhiteFlag(cgs.gametype) ) {
 			cgs.flagStatus = str[0] - '0';
 		}
-//#endif
 	}
 	else if ( num == CS_SHADERSTATE ) {
 		CG_ShaderStateChanged();

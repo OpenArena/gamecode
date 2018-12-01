@@ -232,6 +232,11 @@ static int GametypeBits( char *string ) {
 			bits |= 1 << GT_DOMINATION;
 			continue;
 		}
+                
+		if( Q_strequal( token, "pos" ) ) {
+			bits |= 1 << GT_POSSESSION;
+			continue;
+		}
 	}
 	return bits;
 }
@@ -1696,7 +1701,7 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 	s_serveroptions.timelimit.field.widthInChars = 3;
 	s_serveroptions.timelimit.field.maxchars     = 3;
 
-	if(UI_IsATeamGametype(s_serveroptions.gametype) && UI_UsesKeyObjectives(s_serveroptions.gametype) && s_serveroptions.gametype != GT_ELIMINATION && s_serveroptions.gametype != GT_CTF_ELIMINATION) {
+	if(UI_IsATeamGametype(s_serveroptions.gametype) && UI_UsesKeyObjectives(s_serveroptions.gametype) && !(UI_IsARoundBasedGametype(s_serveroptions.gametype) && UI_IsATeamGametype(s_serveroptions.gametype))) {
 		y += BIGCHAR_HEIGHT+2;
 		s_serveroptions.friendlyfire.generic.type     = MTYPE_RADIOBUTTON;
 		s_serveroptions.friendlyfire.generic.flags    = QMF_PULSEIFFOCUS|QMF_SMALLFONT;
@@ -1886,7 +1891,7 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 		Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.flaglimit );
 	}
 	Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.timelimit );
-	if(UI_IsATeamGametype(s_serveroptions.gametype) && UI_UsesKeyObjectives(s_serveroptions.gametype) && s_serveroptions.gametype != GT_ELIMINATION && s_serveroptions.gametype != GT_CTF_ELIMINATION) {
+	if(UI_IsATeamGametype(s_serveroptions.gametype) && UI_UsesKeyObjectives(s_serveroptions.gametype) && !(UI_IsARoundBasedGametype(s_serveroptions.gametype) && UI_IsATeamGametype(s_serveroptions.gametype))) {
 		Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.friendlyfire );
 	}
 	Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.pure );
