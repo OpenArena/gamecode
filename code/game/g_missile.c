@@ -174,25 +174,23 @@ static void ProximityMine_Activate( gentity_t *ent )
 	float		r;
 	vec3_t          v1;
 	gentity_t       *flag;
-	char            *c;
+	char            *c = NULL;
 	qboolean        nearFlag = qfalse;
 
 	// find the flag
-	switch (ent->s.generic1) {
-	case TEAM_RED:
-		c = "team_CTF_redflag";
-		break;
-	case TEAM_BLUE:
-		c = "team_CTF_blueflag";
-		break;
-	default:
-		c = NULL;
+	if (G_UsesTeamFlags(g_gametype.integer)) {
+		switch (ent->s.generic1) {
+			case TEAM_RED:
+				c = "team_CTF_redflag";
+				break;
+			case TEAM_BLUE:
+				c = "team_CTF_blueflag";
+				break;
+			default:
+				c = NULL;
+		}
 	}
-	
-	if (g_gametype.integer == GT_TEAM || g_gametype.integer == GT_ELIMINATION || G_UsesControlPoints(g_gametype.integer)) {
-		c = NULL;
-	}
-	
+
 	if (G_UsesTeamObelisks(g_gametype.integer)) {
 		switch (ent->s.generic1) {
 		case TEAM_RED:
