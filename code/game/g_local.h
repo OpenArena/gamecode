@@ -1189,6 +1189,10 @@ extern  vmCvar_t    g_warningExpire;
 extern  vmCvar_t    g_minNameChangePeriod;
 extern  vmCvar_t    g_maxNameChanges;
 
+/* Neon_Knight: Adding cvar for (de)activation of the Grappling Hook */
+extern  vmCvar_t    g_grapple;
+extern  vmCvar_t    g_grappleAll;
+/* /Neon_Knight */
 
 void	trap_Printf( const char *fmt );
 void	trap_Error( const char *fmt ) __attribute__((noreturn));

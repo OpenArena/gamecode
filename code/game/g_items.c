@@ -853,12 +853,23 @@ void ClearRegisteredItems( void )
 	memset( itemRegistered, 0, sizeof( itemRegistered ) );
 
 	if(g_instantgib.integer) {
-		if(g_instantgib.integer & 2)
+		if(g_instantgib.integer & 2) {
 			RegisterItem( BG_FindItemForWeapon( WP_GAUNTLET ) );
+		}
+		/* Neon_Knight: In grappleAll mode, the Grapple is added to the starting inventory in Instagib. */
+		if (g_grapple.integer != 0 && g_grappleAll.integer != 0) {
+			RegisterItem( BG_FindItemForWeapon( WP_GRAPPLING_HOOK ) );
+		}
+		/* / Neon_Knight */
 		//RegisterItem( BG_FindItemForWeapon( WP_MACHINEGUN ) );
 		RegisterItem( BG_FindItemForWeapon( WP_RAILGUN ) );
 	}
 	else if(g_rockets.integer) {
+		/* Neon_Knight: In grappleAll mode, the Grapple is added to the starting inventory in All Rockets. */
+		if (g_grapple.integer != 0 && g_grappleAll.integer != 0) {
+			RegisterItem( BG_FindItemForWeapon( WP_GRAPPLING_HOOK ) );
+		}
+		/* / Neon_Knight */
 		//RegisterItem( BG_FindItemForWeapon( WP_GAUNTLET ) );
 		//RegisterItem( BG_FindItemForWeapon( WP_MACHINEGUN ) );
 		RegisterItem( BG_FindItemForWeapon( WP_ROCKET_LAUNCHER ) );
@@ -867,6 +878,12 @@ void ClearRegisteredItems( void )
 		// players always start with the base weapon
 		RegisterItem( BG_FindItemForWeapon( WP_MACHINEGUN ) );
 		RegisterItem( BG_FindItemForWeapon( WP_GAUNTLET ) );
+    
+		/* Neon_Knight: In grapple mode, the Grapple is added to the starting inventory. */
+		if (g_grapple.integer != 0 && g_grappleAll.integer != 0) {
+			RegisterItem( BG_FindItemForWeapon( WP_GRAPPLING_HOOK ) );
+		}
+		/* / Neon_Knight */
 		if(G_IsARoundBasedGametype(g_gametype.integer) || g_elimination_allgametypes.integer) {
 			RegisterItem( BG_FindItemForWeapon( WP_SHOTGUN ) );
 			RegisterItem( BG_FindItemForWeapon( WP_GRENADE_LAUNCHER ) );
