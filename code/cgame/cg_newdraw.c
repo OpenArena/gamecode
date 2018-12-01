@@ -1139,7 +1139,7 @@ qboolean CG_OwnerDrawVisible(int flags)
 	}
 
 	if (flags & CG_SHOW_CTF) {
-		if(CG_UsesTeamFlags(cgs.gametype) && !G_UsesTheWhiteFlag(gametype)) {
+		if(CG_UsesTeamFlags(cgs.gametype) && !CG_UsesTheWhiteFlag(cgs.gametype)) {
 			return qtrue;
 		}
 	}

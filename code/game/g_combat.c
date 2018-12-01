@@ -754,7 +754,7 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 		}
 	}
 	else {
-		if(g_gametype.integer != GT_POSSESSION && !G_IsARoundBasedGametype(g_gametype.integer) && level.time < level.roundStartTime)) {
+		if(g_gametype.integer != GT_POSSESSION && !G_IsARoundBasedGametype(g_gametype.integer) && level.time < level.roundStartTime) {
 			if(self->client->ps.persistant[PERS_SCORE]>0 || level.numNonSpectatorClients<3) { 
 				//Cannot get negative scores by suicide
 				AddScore( self, self->r.currentOrigin, -1 );
@@ -1261,8 +1261,8 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 		damage = 0;
 	}
 
-	if (G_IsARoundBasedGametype(g_gametype.integer) || g_elimination_allgametypes.integer)
-	        && g_elimination_selfdamage.integer<1 && ( targ == attacker ||  mod == MOD_FALLING )) {
+	if ((G_IsARoundBasedGametype(g_gametype.integer) || g_elimination_allgametypes.integer) &&
+		g_elimination_selfdamage.integer<1 && ( targ == attacker ||  mod == MOD_FALLING )) {
 		damage = 0;
 	}
 

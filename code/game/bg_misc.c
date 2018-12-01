@@ -1288,7 +1288,7 @@ qboolean BG_CanItemBeGrabbed(int gametype, const entityState_t *ent, const playe
 					}
 				}
 			}
-			if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
+			if (gametype == GT_CTF || gametype == GT_CTF_ELIMINATION) {
 				// ent->modelindex2 is non-zero on items if they are dropped
 				// we need to know this because we can pick up our dropped flag (and return it)
 				// but we can't pick up our flag at base
