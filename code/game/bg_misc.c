@@ -1288,6 +1288,9 @@ qboolean BG_CanItemBeGrabbed(int gametype, const entityState_t *ent, const playe
 					}
 				}
 			}
+			/* Neon_Knight: For some reason, this doesn't work:
+			if (G_IsARoundBasedGametype(gametype) && G_IsATeamGametype(gametype)) {
+			*/
 			if (gametype == GT_CTF || gametype == GT_CTF_ELIMINATION) {
 				// ent->modelindex2 is non-zero on items if they are dropped
 				// we need to know this because we can pick up our dropped flag (and return it)

@@ -799,7 +799,7 @@ static void CG_RegisterSounds(void) {
 	// N_G: Another condition that makes no sense to me, see for
 	// yourself if you really meant this
 	// Sago: Makes perfect sense: Load team game stuff if the gametype is a teamgame and not an exception (like GT_LMS)
-	if (((cgs.gametype >= GT_TEAM) && (cgs.ffa_gt != 1)) ||
+	if ((CG_IsATeamGametype(cgs.gametype) && CG_UsesKeyObjectives(cgs.gametype)) ||
 			cg_buildScript.integer) {
 
 		cgs.media.captureAwardSound = trap_S_RegisterSound("sound/teamplay/flagcapture_yourteam.wav", qtrue);
@@ -820,7 +820,7 @@ static void CG_RegisterSounds(void) {
 		cgs.media.takenYourTeamSound = trap_S_RegisterSound("sound/teamplay/flagtaken_yourteam.wav", qtrue);
 		cgs.media.takenOpponentSound = trap_S_RegisterSound("sound/teamplay/flagtaken_opponent.wav", qtrue);
 
-		if (cgs.gametype == GT_CTF || cgs.gametype == GT_CTF_ELIMINATION || cg_buildScript.integer) {
+		if ((CG_UsesTeamFlags(cgs.gametype) && !CG_UsesTheWhiteFlag(cgs.gametype)) || cg_buildScript.integer) {
 			cgs.media.redFlagReturnedSound = trap_S_RegisterSound("sound/teamplay/voc_red_returned.wav", qtrue);
 			cgs.media.blueFlagReturnedSound = trap_S_RegisterSound("sound/teamplay/voc_blue_returned.wav", qtrue);
 			cgs.media.enemyTookYourFlagSound = trap_S_RegisterSound("sound/teamplay/voc_enemy_flag.wav", qtrue);
@@ -846,7 +846,7 @@ static void CG_RegisterSounds(void) {
 	}
 
 
-	if (cgs.gametype == GT_1FCTF || cgs.gametype == GT_CTF || cgs.gametype == GT_CTF_ELIMINATION || cgs.gametype == GT_POSSESSION || cg_buildScript.integer) {
+	if (CG_UsesTeamFlags(cgs.gametype) || CG_UsesTheWhiteFlag(cgs.gametype) || cg_buildScript.integer) {
 		cgs.media.youHaveFlagSound = trap_S_RegisterSound("sound/teamplay/voc_you_flag.wav", qtrue);
 		cgs.media.holyShitSound = trap_S_RegisterSound("sound/feedback/voc_holyshit.wav", qtrue);
 	}
@@ -1162,14 +1162,14 @@ static void CG_RegisterGraphics(void) {
 	cgs.media.regenShader = trap_R_RegisterShader("powerups/regen");
 	cgs.media.hastePuffShader = trap_R_RegisterShader("hasteSmokePuff");
 
-	if (cgs.gametype == GT_CTF || cgs.gametype == GT_CTF_ELIMINATION || cgs.gametype == GT_1FCTF || cgs.gametype == GT_HARVESTER || cg_buildScript.integer) {
+	if (CG_UsesTeamFlags(cgs.gametype) || cgs.gametype == GT_HARVESTER || cg_buildScript.integer) {
 		cgs.media.redCubeModel = trap_R_RegisterModel("models/powerups/orb/r_orb.md3");
 		cgs.media.blueCubeModel = trap_R_RegisterModel("models/powerups/orb/b_orb.md3");
 		cgs.media.redCubeIcon = trap_R_RegisterShader("icons/skull_red");
 		cgs.media.blueCubeIcon = trap_R_RegisterShader("icons/skull_blue");
 	}
 
-	if ((cgs.gametype >= GT_TEAM) && (cgs.ffa_gt != 1)) {
+	if (CG_IsATeamGametype(cgs.gametype) && CG_UsesKeyObjectives(cgs.gametype)) {
 		cgs.media.redOverlay = trap_R_RegisterShader("playeroverlays/playerSuit1_Red");
 		cgs.media.blueOverlay = trap_R_RegisterShader("playeroverlays/playerSuit1_Blue");
 	} else {
@@ -1189,8 +1189,7 @@ static void CG_RegisterGraphics(void) {
 		cgs.media.ddPointSkinB[TEAM_NONE] = trap_R_RegisterShaderNoMip("icons/noammo");
 	}
 
-	if (cgs.gametype == GT_CTF || cgs.gametype == GT_CTF_ELIMINATION || cgs.gametype == GT_1FCTF || cgs.gametype == GT_POSSESSION
-			|| cgs.gametype == GT_HARVESTER || cg_buildScript.integer) {
+	if (CG_UsesTeamFlags(cgs.gametype) || CG_UsesTheWhiteFlag(cgs.gametype) || cgs.gametype == GT_HARVESTER || cg_buildScript.integer) {
 		cgs.media.redFlagModel = trap_R_RegisterModel("models/flags/r_flag.md3");
 		cgs.media.blueFlagModel = trap_R_RegisterModel("models/flags/b_flag.md3");
 		cgs.media.neutralFlagModel = trap_R_RegisterModel("models/flags/n_flag.md3");
@@ -1212,7 +1211,7 @@ static void CG_RegisterGraphics(void) {
 		cgs.media.neutralFlagBaseModel = trap_R_RegisterModel("models/mapobjects/flagbase/ntrl_base.md3");
 	}
 
-	if (cgs.gametype == GT_1FCTF || cgs.gametype == GT_POSSESSION || cg_buildScript.integer) {
+	if (CG_UsesTheWhiteFlag(cgs.gametype) || cg_buildScript.integer) {
 		cgs.media.neutralFlagModel = trap_R_RegisterModel("models/flags/n_flag.md3");
 		cgs.media.flagShader[0] = trap_R_RegisterShaderNoMip("icons/iconf_neutral1");
 		cgs.media.flagShader[1] = trap_R_RegisterShaderNoMip("icons/iconf_red2");
@@ -1238,7 +1237,7 @@ static void CG_RegisterGraphics(void) {
 	cgs.media.redKamikazeShader = trap_R_RegisterShader("models/weaphits/kamikred");
 	cgs.media.dustPuffShader = trap_R_RegisterShader("hasteSmokePuff");
 
-	if (((cgs.gametype >= GT_TEAM) && (cgs.ffa_gt != 1)) ||
+	if ((CG_IsATeamGametype(cgs.gametype) && CG_UsesKeyObjectives(cgs.gametype)) ||
 			cg_buildScript.integer) {
 
 		cgs.media.friendShader = trap_R_RegisterShader("sprites/foe");
@@ -2046,7 +2045,7 @@ void CG_SetScoreSelection(void *p) {
 		return;
 	}
 
-	if (cgs.gametype >= GT_TEAM && cgs.ffa_gt != 1) {
+	if (CG_IsATeamGametype(cgs.gametype) && CG_UsesKeyObjectives(cgs.gametype)) {
 		int feeder = FEEDER_REDTEAM_LIST;
 		i = red;
 		if (cg.scores[cg.selectedScore].team == TEAM_BLUE) {
@@ -2063,7 +2062,7 @@ void CG_SetScoreSelection(void *p) {
 
 static clientInfo_t * CG_InfoFromScoreIndex(int index, int team, int *scoreIndex) {
 	int i, count;
-	if (cgs.gametype >= GT_TEAM && cgs.ffa_gt != 1) {
+	if (CG_IsATeamGametype(cgs.gametype) && CG_UsesKeyObjectives(cgs.gametype)) {
 		count = 0;
 		for (i = 0; i < cg.numScores; i++) {
 			if (cg.scores[i].team == team) {
@@ -2170,7 +2169,7 @@ static qhandle_t CG_FeederItemImage(float feederID, int index) {
 }
 
 static void CG_FeederSelection(float feederID, int index) {
-	if (cgs.gametype >= GT_TEAM && cgs.ffa_gt != 1) {
+	if (CG_IsATeamGametype(cgs.gametype) && CG_UsesKeyObjectives(cgs.gametype)) {
 		int i, count;
 		int team = (feederID == FEEDER_REDTEAM_LIST) ? TEAM_RED : TEAM_BLUE;
 		count = 0;
@@ -2706,3 +2705,112 @@ void CG_FairCvars() {
 	do_vid_restart = qtrue;
 }
 
+
+
+/* Neon_Knight: Useful check in order to have code consistency. */
+/*
+===================
+CG_IsATeamGametype
+
+Checks if the gametype is a team-based game.
+===================
+ */
+qboolean CG_IsATeamGametype(int check) {
+	if (check != GT_FFA && check != GT_TOURNAMENT && check != GT_SINGLE_PLAYER && check != GT_LMS && check != GT_POSSESSION) {
+		return qtrue;
+	}
+	else {
+		return qfalse;
+	}
+}
+/*
+===================
+CG_UsesKeyObjectives
+
+Checks if the gametype makes use of gametype-specific objectives.
+===================
+ */
+qboolean CG_UsesKeyObjectives(int check) {
+	if (check != GT_FFA && check != GT_TOURNAMENT && check != GT_SINGLE_PLAYER && check != GT_TEAM && check != GT_LMS && check != GT_POSSESSION) {
+		return qtrue;
+	}
+	else {
+		return qfalse;
+	}
+}
+/*
+===================
+CG_UsesTeamFlags
+
+Checks if the gametype makes use of the red and blue flags.
+===================
+ */
+qboolean CG_UsesTeamFlags(int check) {
+	if (check == GT_CTF || check == GT_1FCTF || check == GT_CTF_ELIMINATION) {
+		return qtrue;
+	}
+	else {
+		return qfalse;
+	}
+}
+/*
+===================
+CG_UsesTheWhiteFlag
+
+Checks if the gametype makes use of the neutral flag.
+===================
+ */
+qboolean CG_UsesTheWhiteFlag(int check) {
+	if (check == GT_1FCTF || check == GT_POSSESSION) {
+		return qtrue;
+	}
+	else {
+		return qfalse;
+	}
+}
+/*
+===================
+CG_IsARoundBasedGametype
+
+Checks if the gametype has a round-based system.
+===================
+ */
+qboolean CG_IsARoundBasedGametype(int check) {
+	if (check == GT_ELIMINATION || check == GT_CTF_ELIMINATION || check == GT_LMS) {
+		return qtrue;
+	}
+	else {
+		return qfalse;
+	}
+}
+/*
+===================
+CG_UsesTeamObelisks
+
+Checks if the gametype uses team-colored obelisks.
+===================
+ */
+qboolean CG_UsesTeamObelisks(int check) {
+	if (check == GT_HARVESTER || check == GT_OBELISK) {
+		return qtrue;
+	}
+	else {
+		return qfalse;
+	}
+}
+/*
+===================
+CG_UsesControlPoints
+
+Checks if the gametype uses team-colored obelisks.
+===================
+ */
+qboolean CG_UsesControlPoints(int check) {
+	if (check == GT_DOUBLE_D || check == GT_DOMINATION) {
+		return qtrue;
+	}
+	else {
+		return qfalse;
+	}
+}
+/* /Neon_Knight */

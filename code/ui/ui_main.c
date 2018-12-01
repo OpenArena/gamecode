@@ -1602,7 +1602,7 @@ static void UI_DrawTeamMember(rectDef_t *rect, float scale, vec4_t color, qboole
 	else {
 		value -= 2;
 
-		if (ui_actualNetGameType.integer >= GT_TEAM && ui_actualNetGameType.integer != GT_LMS && ui_actualNetGameType.integer != GT_POSSESSION ) {
+		if (UI_IsATeamGametype(ui_actualNetGameType.integer) && UI_UsesKeyObjectives(ui_actualNetGameType.integer)) {
 			if (value >= uiInfo.characterCount) {
 				value = 0;
 			}
@@ -2415,7 +2415,7 @@ static void UI_DrawBotName(rectDef_t *rect, float scale, vec4_t color, int textS
 	int value = uiInfo.botIndex;
 	int game = trap_Cvar_VariableValue("g_gametype");
 	const char *text = "";
-	if (game >= GT_TEAM && game != GT_LMS && game != GT_POSSESSION) {
+	if (UI_IsATeamGametype(game) && UI_UsesKeyObjectives(game)) {
 		if (value >= uiInfo.characterCount) {
 			value = 0;
 		}
@@ -2870,14 +2870,14 @@ static qboolean UI_OwnerDrawVisible(int flags)
 	while (flags) {
 
 		if (flags & UI_SHOW_FFA) {
-			if (trap_Cvar_VariableValue("g_gametype") != GT_FFA || trap_Cvar_VariableValue("g_gametype") != GT_LMS || trap_Cvar_VariableValue("g_gametype") != GT_POSSESSION ) {
+			if (UI_IsATeamGametype(trap_Cvar_VariableValue("g_gametype")) || trap_Cvar_VariableValue("g_gametype") == GT_TOURNAMENT) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_FFA;
 		}
 
 		if (flags & UI_SHOW_NOTFFA) {
-			if (trap_Cvar_VariableValue("g_gametype") == GT_FFA || trap_Cvar_VariableValue("g_gametype") == GT_LMS || trap_Cvar_VariableValue("g_gametype") == GT_POSSESSION ) {
+			if (!UI_IsATeamGametype(trap_Cvar_VariableValue("g_gametype")) && trap_Cvar_VariableValue("g_gametype") != GT_TOURNAMENT) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_NOTFFA;
@@ -2922,25 +2922,25 @@ static qboolean UI_OwnerDrawVisible(int flags)
 			flags &= ~UI_SHOW_NOTFAVORITESERVERS;
 		}
 		if (flags & UI_SHOW_ANYTEAMGAME) {
-			if (uiInfo.gameTypes[ui_gameType.integer].gtEnum <= GT_TEAM || uiInfo.gameTypes[ui_gameType.integer].gtEnum == GT_LMS || uiInfo.gameTypes[ui_gameType.integer].gtEnum == GT_POSSESSION ) {
+			if (!UI_IsATeamGametype(uiInfo.gameTypes[ui_gameType.integer].gtEnum)) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_ANYTEAMGAME;
 		}
 		if (flags & UI_SHOW_ANYNONTEAMGAME) {
-			if (uiInfo.gameTypes[ui_gameType.integer].gtEnum > GT_TEAM && uiInfo.gameTypes[ui_gameType.integer].gtEnum != GT_LMS && uiInfo.gameTypes[ui_gameType.integer].gtEnum != GT_POSSESSION ) {
+			if (UI_IsATeamGametype(uiInfo.gameTypes[ui_gameType.integer].gtEnum)) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_ANYNONTEAMGAME;
 		}
 		if (flags & UI_SHOW_NETANYTEAMGAME) {
-			if (uiInfo.gameTypes[ui_netGameType.integer].gtEnum <= GT_TEAM || uiInfo.gameTypes[ui_gameType.integer].gtEnum == GT_LMS || uiInfo.gameTypes[ui_gameType.integer].gtEnum == GT_POSSESSION ) {
+			if (!UI_IsATeamGametype(uiInfo.gameTypes[ui_netGameType.integer].gtEnum)) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_NETANYTEAMGAME;
 		}
 		if (flags & UI_SHOW_NETANYNONTEAMGAME) {
-			if (uiInfo.gameTypes[ui_netGameType.integer].gtEnum > GT_TEAM && uiInfo.gameTypes[ui_gameType.integer].gtEnum != GT_LMS && uiInfo.gameTypes[ui_gameType.integer].gtEnum != GT_POSSESSION ) {
+			if (UI_IsATeamGametype(uiInfo.gameTypes[ui_netGameType.integer].gtEnum)) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_NETANYNONTEAMGAME;
@@ -3238,7 +3238,7 @@ static qboolean UI_TeamMember_HandleKey(int flags, float *special, int key, qboo
 		else {
 			value++;
 		}
-		if (ui_actualNetGameType.integer >= GT_TEAM && ui_actualNetGameType.integer != GT_LMS && ui_actualNetGameType.integer != GT_POSSESSION) {
+		if (UI_IsATeamGametype(ui_actualNetGameType.integer) && UI_UsesKeyObjectives(ui_actualNetGameType.integer)) {
 			if (value >= uiInfo.characterCount + 2) {
 				value = 0;
 			}
@@ -3343,7 +3343,7 @@ static qboolean UI_BotName_HandleKey(int flags, float *special, int key)
 			value++;
 		}
 
-		if (game >= GT_TEAM && game != GT_LMS && game != GT_POSSESSION) {
+		if (UI_IsATeamGametype(game) && UI_UsesKeyObjectives(game)) {
 			if (value >= uiInfo.characterCount + 2) {
 				value = 0;
 			}
@@ -3779,7 +3779,7 @@ static void UI_StartSkirmish(qboolean next, char *name)
 		Com_sprintf( buff, sizeof(buff), "wait ; addbot %s %f "", %i \n", uiInfo.mapList[ui_currentMap.integer].opponentName, skill, delay);
 		trap_Cmd_ExecuteText( EXEC_APPEND, buff );
 	}
-	else if (g == GT_FFA || g == GT_LMS || g == GT_POSSESSION) { // leilei - parse the opponentname as a list of bots instead like q3_ui's arena parsing
+	else if (!UI_IsATeamGametype(g) && g != GT_TOURNAMENT) { // leilei - parse the opponentname as a list of bots instead like q3_ui's arena parsing
 		char		*p;
 		char		*bot;
 		const char	*botInfo;
@@ -3854,7 +3854,7 @@ static void UI_StartSkirmish(qboolean next, char *name)
 		}
 		/* /Neon_Knight */
 	}
-	if (g >= GT_TEAM ) {
+	if (UI_IsATeamGametype(g) && UI_UsesKeyObjectives(g)) {
 		trap_Cmd_ExecuteText( EXEC_APPEND, "wait 5; team Red\n" );
 	}
 }
@@ -4059,7 +4059,7 @@ static void UI_RunMenuScript(char **args)
 			for (i = 0; i < PLAYERS_PER_TEAM; i++) {
 				int bot = trap_Cvar_VariableValue( va("ui_blueteam%i", i+1));
 				if (bot > 1) {
-					if (ui_actualNetGameType.integer >= GT_TEAM && ui_actualNetGameType.integer != GT_LMS && ui_actualNetGameType.integer != GT_POSSESSION ) {
+					if (UI_IsATeamGametype(ui_actualNetGameType.integer) && UI_UsesKeyObjectives(ui_actualNetGameType.integer)) {
 						Com_sprintf( buff, sizeof(buff), "addbot %s %f %s\n", uiInfo.characterList[bot-2].name, skill, "Blue");
 					}
 					else {
@@ -4069,7 +4069,7 @@ static void UI_RunMenuScript(char **args)
 				}
 				bot = trap_Cvar_VariableValue( va("ui_redteam%i", i+1));
 				if (bot > 1) {
-					if (ui_actualNetGameType.integer >= GT_TEAM && ui_actualNetGameType.integer != GT_LMS && ui_actualNetGameType.integer != GT_POSSESSION ) {
+					if (UI_IsATeamGametype(ui_actualNetGameType.integer) && UI_UsesKeyObjectives(ui_actualNetGameType.integer)) {
 						Com_sprintf( buff, sizeof(buff), "addbot %s %f %s\n", uiInfo.characterList[bot-2].name, skill, "Red");
 					}
 					else {
@@ -4404,7 +4404,7 @@ static void UI_RunMenuScript(char **args)
 		else if (Q_strequal(name, "addBot") ) {
 			/* Neon_Knight: Missionpack checks, if != 0, enables this. */
 			if (ui_missionpackChecks.integer != 0) {
-				if (trap_Cvar_VariableValue("g_gametype") != GT_FFA && trap_Cvar_VariableValue("g_gametype") != GT_TOURNAMENT && trap_Cvar_VariableValue("g_gametype") != GT_LMS && trap_Cvar_VariableValue("g_gametype") != GT_POSSESSION) {
+  			if (UI_IsATeamGametype(trap_Cvar_VariableValue("g_gametype")) && UI_UsesKeyObjectives(trap_Cvar_VariableValue("g_gametype"))) {
 				/* /Neon_Knight */
 					trap_Cmd_ExecuteText( EXEC_APPEND, va("addbot %s %i %s\n", UI_GetBotNameByNumber(uiInfo.botIndex), uiInfo.skillIndex+1, (uiInfo.redBlue == 0) ? "Red" : "Blue") );
 				}
@@ -7446,3 +7446,113 @@ static void UI_StartServerRefresh(qboolean full)
 	}
 }
 
+/* Neon_Knight: Useful check in order to have code consistency. */
+/*
+===================
+UI_IsATeamGametype
+
+Checks if the gametype is a team-based game.
+(UI_IsATeamGame(check,qtrue))
+===================
+ */
+qboolean UI_IsATeamGametype(int check) {
+	if (check != GT_FFA && check != GT_TOURNAMENT && check != GT_SINGLE_PLAYER && check != GT_LMS && check != GT_POSSESSION) {
+		return qtrue;
+	}
+	else {
+		return qfalse;
+	}
+}
+/*
+===================
+UI_UsesKeyObjectives
+
+Checks if the gametype makes use of gametype-specific objectives.
+(Flags, obelisks, control points...)
+(UI_IsATeamGame(check,qfalse))
+===================
+ */
+qboolean UI_UsesKeyObjectives(int check) {
+	if (check != GT_FFA && check != GT_TOURNAMENT && check != GT_SINGLE_PLAYER && check != GT_TEAM && check != GT_LMS && check != GT_POSSESSION) {
+		return qtrue;
+	}
+	else {
+		return qfalse;
+	}
+}
+/*
+===================
+UI_UsesTeamFlags
+
+Checks if the gametype makes use of the red and blue flags.
+===================
+ */
+qboolean UI_UsesTeamFlags(int check) {
+	if (check == GT_CTF || check == GT_1FCTF || check == GT_CTF_ELIMINATION) {
+		return qtrue;
+	}
+	else {
+		return qfalse;
+	}
+}
+/*
+===================
+UI_UsesTheWhiteFlag
+
+Checks if the gametype makes use of the neutral flag.
+===================
+ */
+qboolean UI_UsesTheWhiteFlag(int check) {
+	if (check == GT_1FCTF || check == GT_POSSESSION) {
+		return qtrue;
+	}
+	else {
+		return qfalse;
+	}
+}
+/*
+===================
+UI_IsARoundBasedGametype
+
+Checks if the gametype has a round-based system.
+===================
+ */
+qboolean UI_IsARoundBasedGametype(int check) {
+	if (check == GT_ELIMINATION || check == GT_CTF_ELIMINATION || check == GT_LMS) {
+		return qtrue;
+	}
+	else {
+		return qfalse;
+	}
+}
+/*
+===================
+CG_UsesTeamObelisks
+
+Checks if the gametype uses team-colored obelisks.
+===================
+ */
+qboolean UI_UsesTeamObelisks(int check) {
+	if (check == GT_HARVESTER || check == GT_OBELISK) {
+		return qtrue;
+	}
+	else {
+		return qfalse;
+	}
+}
+/*
+===================
+CG_UsesControlPoints
+
+Checks if the gametype uses team-colored obelisks.
+===================
+ */
+qboolean UI_UsesControlPoints(int check) {
+	if (check == GT_DOUBLE_D || check == GT_DOMINATION) {
+		return qtrue;
+	}
+	else {
+		return qfalse;
+	}
+}
+/* /Neon_Knight */
