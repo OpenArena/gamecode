@@ -2868,8 +2868,8 @@ G_UsesTeamObelisks
 Checks if the gametype uses team-colored obelisks.
 ===================
  */
-qboolean G_IsARoundBasedGametype(int check) {
-	if (check == GT_HARVESTER || check == GT_OVERLOAD) {
+qboolean G_UsesTeamObelisks(int check) {
+	if (check == GT_HARVESTER || check == GT_OBELISK) {
 		return qtrue;
 	}
 	else {
@@ -2883,7 +2883,7 @@ G_UsesControlPoints
 Checks if the gametype uses team-colored obelisks.
 ===================
  */
-qboolean G_IsARoundBasedGametype(int check) {
+qboolean G_UsesControlPoints(int check) {
 	if (check == GT_DOUBLE_D || check == GT_DOMINATION) {
 		return qtrue;
 	}

@@ -7511,13 +7511,13 @@ qboolean UI_IsARoundBasedGametype(int check) {
 }
 /*
 ===================
-UI_UsesTeamObelisks
+CG_UsesTeamObelisks
 
 Checks if the gametype uses team-colored obelisks.
 ===================
  */
-qboolean UI_IsARoundBasedGametype(int check) {
-	if (check == GT_HARVESTER || check == GT_OVERLOAD) {
+qboolean UI_UsesTeamObelisks(int check) {
+	if (check == GT_HARVESTER || check == GT_OBELISK) {
 		return qtrue;
 	}
 	else {
@@ -7526,12 +7526,12 @@ qboolean UI_IsARoundBasedGametype(int check) {
 }
 /*
 ===================
-UI_UsesControlPoints
+CG_UsesControlPoints
 
 Checks if the gametype uses team-colored obelisks.
 ===================
  */
-qboolean UI_IsARoundBasedGametype(int check) {
+qboolean UI_UsesControlPoints(int check) {
 	if (check == GT_DOUBLE_D || check == GT_DOMINATION) {
 		return qtrue;
 	}
