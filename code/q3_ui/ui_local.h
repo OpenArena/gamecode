@@ -181,10 +181,6 @@ extern vmCvar_t ui_browserOnlyHumans;
 #define QMF_UPPERCASE			(unsigned int)0x00080000	// edit field is all upper case
 #define QMF_SILENT				(unsigned int)0x00100000
 
-//for cgs.ffa_gt and g_ffa kinda leary about this...
-//#define FREEFORALL			(s_serveroptions.gametype==GT_LMS)
-//#define TRAP_FREEFORALL			(trap_Cvar_VariableValue( "g_gametype" ) == GT_LMS)
-
 // callback notifications
 #define QM_GOTFOCUS				1
 #define QM_LOSTFOCUS			2
@@ -918,3 +914,13 @@ void RankStatus_Cache( void );
 void UI_RankStatusMenu( void );
 
 #endif
+
+/* Neon_Knight: Useful check in order to have code consistency. */
+qboolean UI_IsATeamGametype(int check);	/* Whether the gametype is team-based or not.*/
+qboolean UI_UsesKeyObjectives(int check);	/* Whether the gametype uses key objectives or not. */
+qboolean UI_UsesTeamFlags(int check);	/* Whether the gametype uses the red and blue flags. */
+qboolean UI_UsesTheWhiteFlag(int check);	/* Whether the gametype uses the neutral flag. */
+qboolean UI_IsARoundBasedGametype(int check);	/* Whether the gametype uses the neutral flag. */
+qboolean UI_UsesTeamObelisks(int check);	/* Whether the gametype uses team obelisks. */
+qboolean UI_UsesControlPoints(int check);	/* Whether the gametype uses control points. */
+/* /Neon_Knight */

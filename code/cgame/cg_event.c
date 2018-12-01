@@ -254,7 +254,7 @@ static void CG_Obituary(entityState_t *ent) {
 	if (attacker == cg.snap->ps.clientNum) {
 		char *s;
 
-		if (cgs.gametype < GT_TEAM) {
+		if (!(CG_IsATeamGametype(cgs.gametype) && CG_UsesKeyObjectives(cgs.gametype))) {
 			s = va("You fragged %s\n%s place with %i", targetName,
 					CG_PlaceString(cg.snap->ps.persistant[PERS_RANK] + 1),
 					cg.snap->ps.persistant[PERS_SCORE]);
@@ -1290,18 +1290,14 @@ void CG_EntityEvent(centity_t *cent, vec3_t position) {
 					if (cg.snap->ps.powerups[PW_BLUEFLAG] || cg.snap->ps.powerups[PW_NEUTRALFLAG]) {
 					} else {
 						if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_BLUE) {
-							//#ifdef MISSIONPACK
 							if (cgs.gametype == GT_1FCTF)
 								CG_AddBufferedSound(cgs.media.yourTeamTookTheFlagSound);
 							else
-								//#endif
 								CG_AddBufferedSound(cgs.media.enemyTookYourFlagSound);
 						} else if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_RED) {
-							//#ifdef MISSIONPACK
 							if (cgs.gametype == GT_1FCTF)
 								CG_AddBufferedSound(cgs.media.enemyTookTheFlagSound);
 							else
-								//#endif
 								CG_AddBufferedSound(cgs.media.yourTeamTookEnemyFlagSound);
 						}
 					}
@@ -1311,18 +1307,14 @@ void CG_EntityEvent(centity_t *cent, vec3_t position) {
 					if (cg.snap->ps.powerups[PW_REDFLAG] || cg.snap->ps.powerups[PW_NEUTRALFLAG]) {
 					} else {
 						if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_RED) {
-							//#ifdef MISSIONPACK
 							if (cgs.gametype == GT_1FCTF)
 								CG_AddBufferedSound(cgs.media.yourTeamTookTheFlagSound);
 							else
-								//#endif
 								CG_AddBufferedSound(cgs.media.enemyTookYourFlagSound);
 						} else if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_BLUE) {
-							//#ifdef MISSIONPACK
 							if (cgs.gametype == GT_1FCTF)
 								CG_AddBufferedSound(cgs.media.enemyTookTheFlagSound);
 							else
-								//#endif
 								CG_AddBufferedSound(cgs.media.yourTeamTookEnemyFlagSound);
 						}
 					}

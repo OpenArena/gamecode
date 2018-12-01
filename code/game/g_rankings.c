@@ -105,7 +105,7 @@ void G_RankRunFrame()
 				break;
 			case QGR_STATUS_ACTIVE:
 				if( (ent->client->sess.sessionTeam == TEAM_SPECTATOR || (client->isEliminated)) &&
-					(g_gametype.integer < GT_TEAM) )
+					!(G_IsATeamGametype(g_gametype.integer) && G_UsesKeyObjectives(g_gametype.integer)) )
 				{
 					SetTeam( ent, "free" );
 				}
