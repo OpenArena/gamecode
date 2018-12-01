@@ -1126,8 +1126,6 @@ extern vmCvar_t		g_vampire;
 extern vmCvar_t		g_vampireMaxHealth;
 //new in elimination Beta3
 extern vmCvar_t		g_regen;
-//Free for all gametype
-extern int		g_ffa_gt; //0 = TEAM GAME, 1 = FFA, 2 = TEAM GAME without bases
 
 extern vmCvar_t		g_lms_lives;
 

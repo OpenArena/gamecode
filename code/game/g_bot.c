@@ -459,7 +459,7 @@ void G_CheckMinimumPlayers( void ) {
 			}
 		}
 	}
-	else if (g_gametype.integer == GT_FFA || g_ffa_gt == 1) {
+	else if (g_gametype.integer == GT_FFA) {
 		if (minplayers >= g_maxclients.integer) {
 			minplayers = g_maxclients.integer-1;
 		}

@@ -140,7 +140,6 @@ vmCvar_t	g_vampire;
 vmCvar_t	g_vampireMaxHealth;
 //Regen
 vmCvar_t	g_regen;
-int	g_ffa_gt; //Are this a FFA gametype even if gametype is high?
 vmCvar_t	g_lms_lives;
 vmCvar_t	g_lms_mode;
 vmCvar_t	g_elimination_ctf_oneway;
@@ -598,14 +597,6 @@ void G_RegisterCvars( void )
 	if ( g_gametype.integer < 0 || g_gametype.integer >= GT_MAX_GAME_TYPE ) {
 		G_Printf( "g_gametype %i is out of range, defaulting to 0\n", g_gametype.integer );
 		trap_Cvar_Set( "g_gametype", "0" );
-	}
-
-	//set FFA status for high gametypes:
-	if ( g_gametype.integer == GT_LMS || g_gametype.integer == GT_POSSESSION ) {
-		g_ffa_gt = 1;	//Last Man standig is a FFA gametype
-	}
-	else {
-		g_ffa_gt = 0;	//If >GT_CTF use bases
 	}
 
 	level.warmupModificationCount = g_warmup.modificationCount;
