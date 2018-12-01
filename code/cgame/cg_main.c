@@ -298,6 +298,10 @@ vmCvar_t cg_weaponBarStyle;
 vmCvar_t cg_chatBeep;
 vmCvar_t cg_teamChatBeep;
 
+/* Neon_Knight: Missionpack checks toggle. Just because. */
+vmCvar_t cg_missionpackChecks;
+/* /Neon_Knight */
+
 typedef struct {
 	vmCvar_t *vmCvar;
 	char *cvarName;
@@ -509,7 +513,10 @@ static cvarTable_t cvarTable[] = {// bk001129
 	{ &cg_weaponOrder, "cg_weaponOrder", "/1/2/4/3/6/7/8/5/9/", CVAR_ARCHIVE},
 	{&cg_chatBeep, "cg_chatBeep", "1", CVAR_ARCHIVE},
 	{&cg_teamChatBeep, "cg_teamChatBeep", "1", CVAR_ARCHIVE},
-	{ &cg_muzzleflashStyle, "cg_muzzleflashStyle", "1", CVAR_ARCHIVE}
+	{ &cg_muzzleflashStyle, "cg_muzzleflashStyle", "1", CVAR_ARCHIVE},
+/* Neon_Knight: Enables MP checks. */
+	{ &cg_missionpackChecks, "cg_missionpackChecks", "1", CVAR_ARCHIVE}
+/* /Neon_Knight */
 };
 
 static int cvarTableSize = sizeof ( cvarTable) / sizeof ( cvarTable[0]);
@@ -537,8 +544,11 @@ void CG_RegisterCvars(void) {
 
 	trap_Cvar_Register(NULL, "model", DEFAULT_MODEL, CVAR_USERINFO | CVAR_ARCHIVE);
 	trap_Cvar_Register(NULL, "headmodel", DEFAULT_MODEL, CVAR_USERINFO | CVAR_ARCHIVE);
-	trap_Cvar_Register(NULL, "team_model", DEFAULT_TEAM_MODEL, CVAR_USERINFO | CVAR_ARCHIVE);
-	trap_Cvar_Register(NULL, "team_headmodel", DEFAULT_TEAM_HEAD, CVAR_USERINFO | CVAR_ARCHIVE);
+	/* Neon_Knight: Missionpack checks, if != 0, enables this. */
+	if (cg_missionpackChecks.integer) {
+		trap_Cvar_Register(NULL, "team_model", DEFAULT_TEAM_MODEL, CVAR_USERINFO | CVAR_ARCHIVE);
+		trap_Cvar_Register(NULL, "team_headmodel", DEFAULT_TEAM_HEAD, CVAR_USERINFO | CVAR_ARCHIVE);
+	}
 }
 
 /*																																			
