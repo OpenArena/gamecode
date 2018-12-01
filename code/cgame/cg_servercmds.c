@@ -352,12 +352,6 @@ void CG_ParseServerinfo( void ) {
 
 	info = CG_ConfigString( CS_SERVERINFO );
 	cgs.gametype = atoi( Info_ValueForKey( info, "g_gametype" ) );
-	//By default do as normal:
-	cgs.ffa_gt = 0;
-	//See if ffa gametype
-	if (cgs.gametype == GT_LMS || cgs.gametype == GT_POSSESSION) {	
-		cgs.ffa_gt = 1;
-	}
 	trap_Cvar_Set("g_gametype", va("%i", cgs.gametype));
 	cgs.dmflags = atoi( Info_ValueForKey( info, "dmflags" ) );
 	cgs.videoflags = atoi( Info_ValueForKey( info, "videoflags" ) );
