@@ -2870,14 +2870,14 @@ static qboolean UI_OwnerDrawVisible(int flags)
 	while (flags) {
 
 		if (flags & UI_SHOW_FFA) {
-			if (trap_Cvar_VariableValue("g_gametype") != GT_FFA || trap_Cvar_VariableValue("g_gametype") != GT_LMS || trap_Cvar_VariableValue("g_gametype") != GT_POSSESSION ) {
+			if (UI_IsATeamGametype(trap_Cvar_VariableValue("g_gametype")) || trap_Cvar_VariableValue("g_gametype") == GT_TOURNAMENT) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_FFA;
 		}
 
 		if (flags & UI_SHOW_NOTFFA) {
-			if (trap_Cvar_VariableValue("g_gametype") == GT_FFA || trap_Cvar_VariableValue("g_gametype") == GT_LMS || trap_Cvar_VariableValue("g_gametype") == GT_POSSESSION ) {
+			if (!UI_IsATeamGametype(trap_Cvar_VariableValue("g_gametype")) && trap_Cvar_VariableValue("g_gametype") != GT_TOURNAMENT) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_NOTFFA;
@@ -3779,7 +3779,7 @@ static void UI_StartSkirmish(qboolean next, char *name)
 		Com_sprintf( buff, sizeof(buff), "wait ; addbot %s %f "", %i \n", uiInfo.mapList[ui_currentMap.integer].opponentName, skill, delay);
 		trap_Cmd_ExecuteText( EXEC_APPEND, buff );
 	}
-	else if (g == GT_FFA || g == GT_LMS || g == GT_POSSESSION) { // leilei - parse the opponentname as a list of bots instead like q3_ui's arena parsing
+	else if (!UI_IsATeamGametype(g) && g != GT_TOURNAMENT) { // leilei - parse the opponentname as a list of bots instead like q3_ui's arena parsing
 		char		*p;
 		char		*bot;
 		const char	*botInfo;
