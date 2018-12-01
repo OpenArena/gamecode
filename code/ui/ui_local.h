@@ -168,6 +168,10 @@ extern vmCvar_t ui_humansonly;
 
 extern vmCvar_t	ui_introPlayed;
 
+/* Neon_Knight: Additional missionpack check */
+extern vmCvar_t	ui_missionpackChecks;
+/* /Neon_Knight */
+
 //
 // ui_qmenu.c
 //
