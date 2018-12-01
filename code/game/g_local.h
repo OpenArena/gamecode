@@ -1126,8 +1126,6 @@ extern vmCvar_t		g_vampire;
 extern vmCvar_t		g_vampireMaxHealth;
 //new in elimination Beta3
 extern vmCvar_t		g_regen;
-//Free for all gametype
-extern int		g_ffa_gt; //0 = TEAM GAME, 1 = FFA, 2 = TEAM GAME without bases
 
 extern vmCvar_t		g_lms_lives;
 
@@ -1439,4 +1437,12 @@ void MapInfoPrint(mapinfo_result_t *info);
 
 void monster_die (gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int damage, int mod);
 
-
+/* Neon_Knight: Useful check in order to have code consistency. */
+qboolean G_IsATeamGametype(int check);	/* Whether the gametype is team-based or not.*/
+qboolean G_UsesKeyObjectives(int check);	/* Whether the gametype uses key objectives or not. */
+qboolean G_UsesTeamFlags(int check);	/* Whether the gametype uses the red and blue flags. */
+qboolean G_UsesTheWhiteFlag(int check);	/* Whether the gametype uses the neutral flag. */
+qboolean G_IsARoundBasedGametype(int check);	/* Whether the gametype uses the neutral flag. */
+qboolean G_UsesTeamObelisks(int check);	/* Whether the gametype uses team obelisks. */
+qboolean G_UsesControlPoints(int check);	/* Whether the gametype uses control points. */
+/* /Neon_Knight */

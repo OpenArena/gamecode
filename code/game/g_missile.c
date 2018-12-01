@@ -142,7 +142,7 @@ void ProximityMine_Trigger( gentity_t *trigger, gentity_t *other, trace_t *trace
 	}
 
 
-	if ( g_gametype.integer >= GT_TEAM && g_ffa_gt!=1) {
+	if (G_IsATeamGametype(g_gametype.integer) && G_UsesKeyObjectives(g_gametype.integer)) {
 		// don't trigger same team mines
 		if (trigger->parent->s.generic1 == other->client->sess.sessionTeam) {
 			return;
@@ -189,11 +189,11 @@ static void ProximityMine_Activate( gentity_t *ent )
 		c = NULL;
 	}
 	
-	if (g_gametype.integer == GT_TEAM || g_gametype.integer == GT_DOMINATION || g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_DOUBLE_D) {
+	if (g_gametype.integer == GT_TEAM || g_gametype.integer == GT_ELIMINATION || G_UsesControlPoints(g_gametype.integer)) {
 		c = NULL;
 	}
 	
-	if (g_gametype.integer == GT_OBELISK || g_gametype.integer == GT_HARVESTER) {
+	if (G_UsesTeamObelisks(g_gametype.integer)) {
 		switch (ent->s.generic1) {
 		case TEAM_RED:
 			c = "team_redobelisk";

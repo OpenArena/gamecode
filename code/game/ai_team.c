@@ -131,7 +131,7 @@ int BotSortTeamMatesByBaseTravelTime(bot_state_t *bs, int *teammates, int maxtea
 	int traveltimes[MAX_CLIENTS];
 	bot_goal_t *goal = NULL;
 
-	if (gametype == GT_CTF || gametype == GT_1FCTF || gametype == GT_CTF_ELIMINATION) {
+	if (G_UsesTeamFlags(gametype)) {
 		if (BotTeam(bs) == TEAM_RED)
 			goal = &ctf_redflag;
 		else
@@ -2112,7 +2112,7 @@ void BotTeamAI(bot_state_t *bs) {
         if (bot_nochat.integer>2) return;
 
 	//
-	if ( gametype < GT_TEAM || g_ffa_gt == 1 )
+	if (!(G_IsATeamGametype(gametype) && G_UsesKeyObjectives(gametype)))
 		return;
 	// make sure we've got a valid team leader
 	if (!BotValidTeamLeader(bs)) {

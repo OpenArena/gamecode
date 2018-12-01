@@ -1443,7 +1443,7 @@ static float CG_DrawFollowMessage(float y) {
 	char *s;
 	int w;
 
-	if (!(cg.snap->ps.pm_flags & PMF_FOLLOW) || ((cgs.elimflags & EF_NO_FREESPEC) && (cgs.gametype == GT_ELIMINATION || cgs.gametype == GT_CTF_ELIMINATION))) {
+	if (!(cg.snap->ps.pm_flags & PMF_FOLLOW) || ((cgs.elimflags & EF_NO_FREESPEC) && CG_IsARoundBasedGametype(cgs.gametype) && CG_IsATeamGametype(cgs.gametype))) {
 		return y;
 	}
 
@@ -1582,7 +1582,7 @@ static void CG_DrawUpperRight(stereoFrame_t stereoFrame) {
 
 	y = 0;
 
-	if (cgs.gametype >= GT_TEAM && cgs.ffa_gt != 1 && cg_drawTeamOverlay.integer == 1) {
+	if (CG_IsATeamGametype(cgs.gametype) && CG_UsesKeyObjectives(cgs.gametype) && cg_drawTeamOverlay.integer == 1) {
 		y = CG_DrawTeamOverlay(y, qtrue, qtrue);
 	}
 	/*if ( cgs.gametype == GT_DOUBLE_D ) {
@@ -1607,7 +1607,7 @@ static void CG_DrawUpperRight(stereoFrame_t stereoFrame) {
 	if (cg_drawFPS.integer && (stereoFrame == STEREO_CENTER || stereoFrame == STEREO_RIGHT)) {
 		y = CG_DrawFPS(y);
 	}
-	if (cgs.gametype == GT_ELIMINATION || cgs.gametype == GT_CTF_ELIMINATION || cgs.gametype == GT_LMS) {
+	if (CG_IsARoundBasedGametype(cgs.gametype)) {
 		y = CG_DrawEliminationTimer(y);
 		/*if (cgs.clientinfo[ cg.clientNum ].isDead)
 			y = CG_DrawEliminationDeathMessage( y);*/
@@ -1665,7 +1665,7 @@ static float CG_DrawScores(float y) {
 	y1 = y;
 
 	// draw from the right side to left
-	if (cgs.gametype >= GT_TEAM && cgs.ffa_gt != 1) {
+	if (CG_IsATeamGametype(cgs.gametype) && CG_UsesKeyObjectives(cgs.gametype)) {
 		x = 640;
 		color[0] = 0.0f;
 		color[1] = 0.0f;
@@ -1680,7 +1680,7 @@ static float CG_DrawScores(float y) {
 		}
 		CG_DrawBigString(x + 4, y, s, 1.0F);
 
-		if (cgs.gametype == GT_CTF || cgs.gametype == GT_CTF_ELIMINATION) {
+		if (CG_UsesTeamFlags(cgs.gametype) && !CG_UsesTheWhiteFlag(cgs.gametype)) {
 			// Display flag status
 			item = BG_FindItemForPowerup(PW_BLUEFLAG);
 
@@ -1714,7 +1714,7 @@ static float CG_DrawScores(float y) {
 		}
 		CG_DrawBigString(x + 4, y, s, 1.0F);
 
-		if (cgs.gametype == GT_CTF || cgs.gametype == GT_CTF_ELIMINATION) {
+		if (CG_UsesTeamFlags(cgs.gametype) && !CG_UsesTheWhiteFlag(cgs.gametype)) {
 			// Display flag status
 			item = BG_FindItemForPowerup(PW_REDFLAG);
 
@@ -1752,7 +1752,7 @@ static float CG_DrawScores(float y) {
 
 
 
-		if (cgs.gametype >= GT_CTF && cgs.ffa_gt == 0) {
+		if (CG_IsATeamGametype(cgs.gametype)) {
 			v = cgs.capturelimit;
 		} else {
 			v = cgs.fraglimit;
@@ -1950,7 +1950,7 @@ static void CG_DrawLowerRight(void) {
 
 	y = 480 - ICON_SIZE;
 
-	if (cgs.gametype >= GT_TEAM && cgs.ffa_gt != 1 && cg_drawTeamOverlay.integer == 2) {
+	if (CG_IsATeamGametype(cgs.gametype) && CG_UsesKeyObjectives(cgs.gametype) && cg_drawTeamOverlay.integer == 2) {
 		y = CG_DrawTeamOverlay(y, qtrue, qfalse);
 	}
 
@@ -2005,7 +2005,7 @@ static void CG_DrawLowerLeft(void) {
 
 	y = 480 - ICON_SIZE;
 
-	if (cgs.gametype >= GT_TEAM && cgs.ffa_gt != 1 && cg_drawTeamOverlay.integer == 3) {
+	if (CG_IsATeamGametype(cgs.gametype) && CG_UsesKeyObjectives(cgs.gametype) && cg_drawTeamOverlay.integer == 3) {
 		y = CG_DrawTeamOverlay(y, qfalse, qfalse);
 	}
 
@@ -2965,7 +2965,7 @@ static void CG_DrawSpectator(void) {
 	CG_DrawBigString(320 - 9 * 8, 440, "SPECTATOR", 1.0F);
 	if (cgs.gametype == GT_TOURNAMENT) {
 		CG_DrawBigString(320 - 15 * 8, 460, "waiting to play", 1.0F);
-	} else if (cgs.gametype >= GT_TEAM && cgs.ffa_gt != 1) {
+	} else if (CG_IsATeamGametype(cgs.gametype) && CG_UsesKeyObjectives(cgs.gametype)) {
 		CG_DrawBigString(320 - 39 * 8, 460, "press ESC and use the JOIN menu to play", 1.0F);
 	}
 }
@@ -3080,7 +3080,7 @@ static qboolean CG_DrawScoreboard(void) {
 
 
 	if (menuScoreboard == NULL) {
-		if (cgs.gametype >= GT_TEAM && cgs.ffa_gt != 1) {
+		if (CG_IsATeamGametype(cgs.gametype) && CG_UsesKeyObjectives(cgs.gametype)) {
 			menuScoreboard = Menus_FindByName("teamscore_menu");
 		} else {
 			menuScoreboard = Menus_FindByName("score_menu");
@@ -3104,7 +3104,7 @@ static qboolean CG_DrawScoreboard(void) {
 #else
 	char *s;
 	int w;
-	if (cg.respawnTime && cg.snap->ps.persistant[PERS_TEAM] != TEAM_SPECTATOR && (cgs.gametype < GT_ELIMINATION || cgs.gametype > GT_LMS)) {
+	if (cg.respawnTime && cg.snap->ps.persistant[PERS_TEAM] != TEAM_SPECTATOR && (!CG_IsARoundBasedGametype(cgs.gametype))) {
 		if (cg.respawnTime > cg.time) {
 			s = va("Respawn in: %2.2f", ((double) cg.respawnTime - (double) cg.time) / 1000.0);
 			w = CG_DrawStrlen(s) * SMALLCHAR_WIDTH;
@@ -3529,7 +3529,7 @@ static void CG_Draw2D(stereoFrame_t stereoFrame) {
 			CG_DrawReward();
 		}
 
-		if (cgs.gametype >= GT_TEAM && cgs.ffa_gt != 1) {
+		if (CG_IsATeamGametype(cgs.gametype) && CG_UsesKeyObjectives(cgs.gametype)) {
 #ifndef MISSIONPACK
 			CG_DrawTeamInfo();
 #endif
