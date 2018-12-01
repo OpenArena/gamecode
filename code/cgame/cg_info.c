@@ -250,7 +250,6 @@ void CG_DrawInformation( void ) {
 	case GT_CTF:
 		s = "Capture The Flag";
 		break;
-//#ifdef MISSIONPACK
 	case GT_1FCTF:
 		s = "One Flag CTF";
 		break;
@@ -260,7 +259,6 @@ void CG_DrawInformation( void ) {
 	case GT_HARVESTER:
 		s = "Harvester";
 		break;
-//#endif
 	case GT_ELIMINATION:
 		s = "Elimination";
 		break;
@@ -294,7 +292,7 @@ void CG_DrawInformation( void ) {
 		y += PROP_HEIGHT;
 	}
 
-	if (cgs.gametype < GT_CTF || cgs.ffa_gt>0) {
+	if (!CG_IsATeamGametype(cgs.gametype)) {
 		value = atoi( Info_ValueForKey( info, "fraglimit" ) );
 		if ( value ) {
 			UI_DrawProportionalString( 320, y, va( "fraglimit %i", value ),
@@ -303,7 +301,7 @@ void CG_DrawInformation( void ) {
 		}
 	}
 
-	if (cgs.gametype >= GT_CTF && cgs.ffa_gt == 0) {
+	if (CG_IsATeamGametype(cgs.gametype)) {
 		value = atoi( Info_ValueForKey( info, "capturelimit" ) );
 		if ( value ) {
 			UI_DrawProportionalString( 320, y, va( "capturelimit %i", value ),

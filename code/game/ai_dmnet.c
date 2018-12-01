@@ -838,7 +838,7 @@ int BotGetLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal) 
 		return qtrue;
 	}
 #ifdef CTF
-	if (gametype == GT_CTF || gametype == GT_CTF_ELIMINATION) {
+	if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
 		//if going for enemy flag
 		if (bs->ltgtype == LTG_GETFLAG) {
 			//check for bot typing status message
@@ -1963,13 +1963,13 @@ int AINode_Seek_LTG(bot_state_t *bs)
 		else range = 150;
 		//
 #ifdef CTF
-		if (gametype == GT_CTF || gametype == GT_CTF_ELIMINATION) {
+		if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
 			//if carrying a flag the bot shouldn't be distracted too much
 			if (BotCTFCarryingFlag(bs))
 				range = 50;
 		}
 #endif //CTF
-		else if (gametype == GT_1FCTF || GT_POSSESSION) {
+		else if (G_UsesTheWhiteFlag(gametype)) {
 			if (Bot1FCTFCarryingFlag(bs))
 				range = 50;
 		}
@@ -2483,13 +2483,13 @@ int AINode_Battle_Retreat(bot_state_t *bs) {
 		bs->check_time = FloatTime() + 1;
 		range = 150;
 #ifdef CTF
-		if (gametype == GT_CTF || gametype == GT_CTF_ELIMINATION) {
+		if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
 			//if carrying a flag the bot shouldn't be distracted too much
 			if (BotCTFCarryingFlag(bs))
 				range = 50;
 		}
 #endif //CTF
-		else if (gametype == GT_1FCTF || gametype == GT_POSSESSION) {
+		else if (G_UsesTheWhiteFlag(gametype)) {
 			if (Bot1FCTFCarryingFlag(bs))
 				range = 50;
 		}

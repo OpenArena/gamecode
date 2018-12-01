@@ -1004,7 +1004,7 @@ void SP_func_door (gentity_t *ent)
 		ent->wait = 99999999;
 
 
-	if ( g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_CTF_ELIMINATION) {
+	if (G_IsARoundBasedGametype(g_gametype.integer) && G_IsATeamGametype(g_gametype.integer)) {
 		char*	value;
 		//Classic part to make the
 		if ( strequals(ent->targetname, ELIMINATION_ACTIVE_TARGETNAME ) ) {
