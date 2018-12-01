@@ -88,7 +88,7 @@ int Pickup_Powerup( gentity_t *ent, gentity_t *other )
 
 		// if same team in team game, no sound
 		// cannot use OnSameTeam as it expects to g_entities, not clients
-		if ( g_gametype.integer >= GT_TEAM && g_ffa_gt==0 && other->client->sess.sessionTeam == client->sess.sessionTeam  ) {
+		if (G_IsATeamGametype(g_gametype.integer) && G_UsesKeyObjectives(g_gametype.integer) && other->client->sess.sessionTeam == client->sess.sessionTeam  ) {
 			continue;
 		}
 
@@ -444,7 +444,7 @@ void Touch_Item (gentity_t *ent, gentity_t *other, trace_t *trace)
 	            (other->client->sess.sessionTeam==TEAM_RED && (level.eliminationSides+level.roundNumber)%2 != 0 ) ))
 		return;
 
-	if (g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_LMS)
+	if (G_IsARoundBasedGametype(g_gametype.integer) && !G_UsesTeamFlags(g_gametype.integer))
 		return;		//nothing to pick up in elimination
 
 	if (!other->client)
@@ -631,8 +631,7 @@ gentity_t *LaunchItem( gitem_t *item, vec3_t origin, vec3_t velocity )
 	VectorCopy( velocity, dropped->s.pos.trDelta );
 
 	dropped->s.eFlags |= EF_BOUNCE_HALF;
-	if ((g_gametype.integer == GT_CTF || g_gametype.integer == GT_1FCTF ||
-	        g_gametype.integer == GT_CTF_ELIMINATION || g_gametype.integer == GT_DOUBLE_D || g_gametype.integer == GT_POSSESSION)
+	if ((G_UsesTeamFlags(g_gametype.integer) || G_UsesTheWhiteFlag(g_gametype.integer) || g_gametype.integer == GT_DOUBLE_D)
 	        && item->giType == IT_TEAM) { // Special case for CTF flags
 		dropped->think = Team_DroppedFlagThink;
 		dropped->nextthink = level.time + 30000;
@@ -742,8 +741,7 @@ void FinishSpawningItem( gentity_t *ent )
 
 
 	// powerups don't spawn in for a while (but not in elimination)
-	if(g_gametype.integer != GT_ELIMINATION && g_gametype.integer != GT_CTF_ELIMINATION && g_gametype.integer != GT_LMS
-	        && !g_instantgib.integer && !g_elimination_allgametypes.integer && !g_rockets.integer )
+	if(!G_IsARoundBasedGametype(g_gametype.integer) && !g_instantgib.integer && !g_elimination_allgametypes.integer && !g_rockets.integer )
 		if ( ent->item->giType == IT_POWERUP ) {
 			float	respawn;
 
@@ -773,7 +771,7 @@ void G_CheckTeamItems( void )
 	// Set up team stuff
 	Team_InitGame();
 
-	if( g_gametype.integer == GT_CTF || g_gametype.integer == GT_CTF_ELIMINATION || g_gametype.integer == GT_DOUBLE_D) {
+	if( (G_UsesTeamFlags(g_gametype.integer) && !G_UsesTheWhiteFlag(g_gametype.integer)) || g_gametype.integer == GT_DOUBLE_D) {
 		gitem_t	*item;
 
 		// check for the two flags
@@ -880,13 +878,13 @@ void ClearRegisteredItems( void )
 		// players always start with the base weapon
 		RegisterItem( BG_FindItemForWeapon( WP_MACHINEGUN ) );
 		RegisterItem( BG_FindItemForWeapon( WP_GAUNTLET ) );
+    
 		/* Neon_Knight: In grapple mode, the Grapple is added to the starting inventory. */
 		if (g_grapple.integer != 0 && g_grappleAll.integer != 0) {
 			RegisterItem( BG_FindItemForWeapon( WP_GRAPPLING_HOOK ) );
 		}
 		/* / Neon_Knight */
-		if(g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_CTF_ELIMINATION
-		        || g_gametype.integer == GT_LMS || g_elimination_allgametypes.integer) {
+		if(G_IsARoundBasedGametype(g_gametype.integer) || g_elimination_allgametypes.integer) {
 			RegisterItem( BG_FindItemForWeapon( WP_SHOTGUN ) );
 			RegisterItem( BG_FindItemForWeapon( WP_GRENADE_LAUNCHER ) );
 			RegisterItem( BG_FindItemForWeapon( WP_ROCKET_LAUNCHER ) );
@@ -1013,7 +1011,7 @@ void G_SpawnItem (gentity_t *ent, gitem_t *item)
 
 	ent->physicsBounce = 0.50;		// items are bouncy
 
-	if (g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_LMS ||
+	if ((G_IsARoundBasedGametype(g_gametype.integer) && !G_UsesTeamFlags(g_gametype.integer)) ||
 	        ( item->giType != IT_TEAM && (g_instantgib.integer || g_rockets.integer || g_elimination_allgametypes.integer || g_gametype.integer==GT_CTF_ELIMINATION) ) ) {
 		ent->s.eFlags |= EF_NODRAW; //Invisible in elimination
 		ent->r.svFlags |= SVF_NOCLIENT;  //Don't broadcast
@@ -1024,7 +1022,7 @@ void G_SpawnItem (gentity_t *ent, gitem_t *item)
 		ent->s.eFlags |= EF_NODRAW; //Don't draw the flag models/persistant powerups
 	}
 
-	if( g_gametype.integer != GT_1FCTF && g_gametype.integer != GT_POSSESSION && strequals(ent->classname, "team_CTF_neutralflag")) {
+	if( !G_UsesTheWhiteFlag(g_gametype.integer) && strequals(ent->classname, "team_CTF_neutralflag")) {
 		ent->s.eFlags |= EF_NODRAW; // Don't draw the flag in CTF_elimination
 	}
 

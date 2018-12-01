@@ -140,7 +140,6 @@ vmCvar_t	g_vampire;
 vmCvar_t	g_vampireMaxHealth;
 //Regen
 vmCvar_t	g_regen;
-int	g_ffa_gt; //Are this a FFA gametype even if gametype is high?
 vmCvar_t	g_lms_lives;
 vmCvar_t	g_lms_mode;
 vmCvar_t	g_elimination_ctf_oneway;
@@ -610,14 +609,6 @@ void G_RegisterCvars( void )
 		trap_Cvar_Set( "g_gametype", "0" );
 	}
 
-	//set FFA status for high gametypes:
-	if ( g_gametype.integer == GT_LMS || g_gametype.integer == GT_POSSESSION ) {
-		g_ffa_gt = 1;	//Last Man standig is a FFA gametype
-	}
-	else {
-		g_ffa_gt = 0;	//If >GT_CTF use bases
-	}
-
 	level.warmupModificationCount = g_warmup.modificationCount;
 }
 
@@ -867,7 +858,7 @@ void G_InitGame( int levelTime, int randomSeed, int restart )
 
 	// make sure we have flags for CTF, etc
 	if ( g_gametype.integer == GT_POSSESSION ||
-	        (g_gametype.integer >= GT_TEAM && g_ffa_gt!=1) ) {
+	        (G_IsATeamGametype(g_gametype.integer) && G_UsesKeyObjectives(g_gametype.integer))) {
 		G_CheckTeamItems();
 	}
 
@@ -1216,7 +1207,7 @@ int QDECL SortRanks( const void *a, const void *b )
 	}
 
 	//In elimination and CTF elimination, sort dead players last
-	if((g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_CTF_ELIMINATION)
+	if(G_UsesTeamFlags(g_gametype.integer) && !G_UsesTheWhiteFlag(g_gametype.integer)
 	        && level.roundNumber==level.roundNumberStarted && (ca->isEliminated != cb->isEliminated)) {
 		if( ca->isEliminated )
 			return 1;
@@ -1299,7 +1290,7 @@ void CalculateRanks( void )
 	       sizeof(level.sortedClients[0]), SortRanks );
 
 	// set the rank value for all clients that are connected and not spectators
-	if ( g_gametype.integer >= GT_TEAM && g_ffa_gt!=1) {
+	if (G_IsATeamGametype(g_gametype.integer) && G_UsesKeyObjectives(g_gametype.integer)) {
 		// in team games, rank is just the order of the teams, 0=red, 1=blue, 2=tied
 		for ( i = 0;  i < level.numConnectedClients; i++ ) {
 			cl = &level.clients[ level.sortedClients[i] ];
@@ -1338,7 +1329,7 @@ void CalculateRanks( void )
 	}
 
 	// set the CS_SCORES1/2 configstrings, which will be visible to everyone
-	if ( g_gametype.integer >= GT_TEAM && g_ffa_gt!=1) {
+	if (G_IsATeamGametype(g_gametype.integer) && G_UsesKeyObjectives(g_gametype.integer)) {
 		trap_SetConfigstring( CS_SCORES1, va("%i", level.teamScores[TEAM_RED] ) );
 		trap_SetConfigstring( CS_SCORES2, va("%i", level.teamScores[TEAM_BLUE] ) );
 	}
@@ -1462,7 +1453,7 @@ static void SendVictoryChallenge( void )
 	default:
 		return;
 	};
-	if ( g_gametype.integer!=GT_FFA && g_gametype.integer!=GT_TOURNAMENT && g_gametype.integer!=GT_LMS && g_gametype.integer!=GT_POSSESSION ) {
+	if (G_IsATeamGametype(g_gametype.integer) && G_UsesKeyObjectives(g_gametype.integer)) {
 		//Team games
 		for ( i = 0 ; i < level.maxclients ; i++ ) {
 			cl = &level.clients[i];
@@ -1868,7 +1859,7 @@ void LogExit( const char *string )
 		numSorted = 32;
 	}
 
-	if ( g_gametype.integer >= GT_TEAM && g_ffa_gt!=1) {
+	if (G_IsATeamGametype(g_gametype.integer) && G_UsesKeyObjectives(g_gametype.integer)) {
 		G_LogPrintf( "red:%i  blue:%i\n",
 		             level.teamScores[TEAM_RED], level.teamScores[TEAM_BLUE] );
 	}
@@ -1900,7 +1891,7 @@ void LogExit( const char *string )
 
 #ifdef MISSIONPACK
 	if (g_singlePlayer.integer) {
-		if (g_gametype.integer >= GT_CTF && g_ffa_gt==0) {
+		if (G_IsATeamGametype(g_gametype.integer)) {
 			won = level.teamScores[TEAM_RED] > level.teamScores[TEAM_BLUE];
 		}
 		trap_SendConsoleCommand( EXEC_APPEND, (won) ? "spWin\n" : "spLose\n" );
@@ -2024,7 +2015,7 @@ qboolean ScoreIsTied( void )
 		        level.teamScores[TEAM_RED] == level.teamScores[TEAM_BLUE]-1);
 	}
 
-	if ( g_gametype.integer >= GT_TEAM && g_ffa_gt!=1) {
+	if (G_IsATeamGametype(g_gametype.integer) && G_UsesKeyObjectives(g_gametype.integer)) {
 		return level.teamScores[TEAM_RED] == level.teamScores[TEAM_BLUE];
 	}
 
@@ -2098,7 +2089,7 @@ void CheckExitRules( void )
 		return;
 	}
 
-	if ( (g_gametype.integer < GT_CTF || g_ffa_gt>0 ) && g_fraglimit.integer ) {
+	if (!G_IsATeamGametype(g_gametype.integer) && g_fraglimit.integer ) {
 		if ( level.teamScores[TEAM_RED] >= g_fraglimit.integer ) {
 			trap_SendServerCommand( -1, "print \"Red hit the fraglimit.\n\"" );
 			LogExit( "Fraglimit hit." );
@@ -2129,7 +2120,7 @@ void CheckExitRules( void )
 		}
 	}
 
-	if ( (g_gametype.integer >= GT_CTF && g_ffa_gt<1) && g_capturelimit.integer ) {
+	if ( G_IsATeamGametype(g_gametype.integer) && g_capturelimit.integer ) {
 
 		if ( level.teamScores[TEAM_RED] >= g_capturelimit.integer ) {
 			trap_SendServerCommand( -1, "print \"Red hit the capturelimit.\n\"" );
@@ -2335,7 +2326,7 @@ void CheckTournament( void )
 		int		counts[TEAM_NUM_TEAMS];
 		qboolean	notEnough = qfalse;
 
-		if ( g_gametype.integer > GT_TEAM && !g_ffa_gt ) {
+		if(!G_IsATeamGametype(g_gametype.integer)) {
 			counts[TEAM_BLUE] = TeamCount( -1, TEAM_BLUE );
 			counts[TEAM_RED] = TeamCount( -1, TEAM_RED );
 
@@ -2611,7 +2602,7 @@ void G_RunFrame( int levelTime )
 	// get any cvar changes
 	G_UpdateCvars();
 
-	if( (g_gametype.integer==GT_ELIMINATION || g_gametype.integer==GT_CTF_ELIMINATION) && !(g_elimflags.integer & EF_NO_FREESPEC) && g_elimination_lockspectator.integer>1)
+	if( (G_IsARoundBasedGametype(g_gametype.integer) && G_IsATeamGametype(g_gametype.integer)) && !(g_elimflags.integer & EF_NO_FREESPEC) && g_elimination_lockspectator.integer>1)
 		trap_Cvar_Set("elimflags",va("%i",g_elimflags.integer|EF_NO_FREESPEC));
 	else if( (g_elimflags.integer & EF_NO_FREESPEC) && g_elimination_lockspectator.integer<2)
 		trap_Cvar_Set("elimflags",va("%i",g_elimflags.integer&(~EF_NO_FREESPEC) ) );
@@ -2794,3 +2785,111 @@ void MapInfoPrint(mapinfo_result_t *info)
 	G_Printf("Capturelimit: %i\n",info->captureLimit);
 	G_Printf("minTeamSize: %i\n",info->minTeamSize);
 }
+
+/* Neon_Knight: Useful check in order to have code consistency. */
+/*
+===================
+G_IsATeamGametype
+
+Checks if the gametype is a team-based game.
+===================
+ */
+qboolean G_IsATeamGametype(int check) {
+	if (check != GT_FFA && check != GT_TOURNAMENT && check != GT_SINGLE_PLAYER && check != GT_LMS && check != GT_POSSESSION) {
+		return qtrue;
+	}
+	else {
+		return qfalse;
+	}
+}
+/*
+===================
+G_UsesKeyObjectives
+
+Checks if the gametype makes use of gametype-specific objectives.
+===================
+ */
+qboolean G_UsesKeyObjectives(int check) {
+	if (check != GT_FFA && check != GT_TOURNAMENT && check != GT_SINGLE_PLAYER && check != GT_TEAM && check != GT_LMS && check != GT_POSSESSION) {
+		return qtrue;
+	}
+	else {
+		return qfalse;
+	}
+}
+/*
+===================
+G_UsesTeamFlags
+
+Checks if the gametype makes use of the red and blue flags.
+===================
+ */
+qboolean G_UsesTeamFlags(int check) {
+	if (check == GT_CTF || check == GT_1FCTF || check == GT_CTF_ELIMINATION) {
+		return qtrue;
+	}
+	else {
+		return qfalse;
+	}
+}
+/*
+===================
+G_UsesTheWhiteFlag
+
+Checks if the gametype makes use of the neutral flag.
+===================
+ */
+qboolean G_UsesTheWhiteFlag(int check) {
+	if (check == GT_1FCTF || check == GT_POSSESSION) {
+		return qtrue;
+	}
+	else {
+		return qfalse;
+	}
+}
+/*
+===================
+G_IsARoundBasedGametype
+
+Checks if the gametype has a round-based system.
+===================
+ */
+qboolean G_IsARoundBasedGametype(int check) {
+	if (check == GT_ELIMINATION || check == GT_CTF_ELIMINATION || check == GT_LMS) {
+		return qtrue;
+	}
+	else {
+		return qfalse;
+	}
+}
+/*
+===================
+G_UsesTeamObelisks
+
+Checks if the gametype uses team-colored obelisks.
+===================
+ */
+qboolean G_UsesTeamObelisks(int check) {
+	if (check == GT_HARVESTER || check == GT_OBELISK) {
+		return qtrue;
+	}
+	else {
+		return qfalse;
+	}
+}
+/*
+===================
+G_UsesControlPoints
+
+Checks if the gametype uses team-colored obelisks.
+===================
+ */
+qboolean G_UsesControlPoints(int check) {
+	if (check == GT_DOUBLE_D || check == GT_DOMINATION) {
+		return qtrue;
+	}
+	else {
+		return qfalse;
+	}
+}
+/* /Neon_Knight */
