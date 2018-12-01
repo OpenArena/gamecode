@@ -2922,25 +2922,25 @@ static qboolean UI_OwnerDrawVisible(int flags)
 			flags &= ~UI_SHOW_NOTFAVORITESERVERS;
 		}
 		if (flags & UI_SHOW_ANYTEAMGAME) {
-			if (uiInfo.gameTypes[ui_gameType.integer].gtEnum <= GT_TEAM || uiInfo.gameTypes[ui_gameType.integer].gtEnum == GT_LMS || uiInfo.gameTypes[ui_gameType.integer].gtEnum == GT_POSSESSION ) {
+			if (!UI_IsATeamGametype(uiInfo.gameTypes[ui_gameType.integer].gtEnum)) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_ANYTEAMGAME;
 		}
 		if (flags & UI_SHOW_ANYNONTEAMGAME) {
-			if (uiInfo.gameTypes[ui_gameType.integer].gtEnum > GT_TEAM && uiInfo.gameTypes[ui_gameType.integer].gtEnum != GT_LMS && uiInfo.gameTypes[ui_gameType.integer].gtEnum != GT_POSSESSION ) {
+			if (UI_IsATeamGametype(uiInfo.gameTypes[ui_gameType.integer].gtEnum)) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_ANYNONTEAMGAME;
 		}
 		if (flags & UI_SHOW_NETANYTEAMGAME) {
-			if (uiInfo.gameTypes[ui_netGameType.integer].gtEnum <= GT_TEAM || uiInfo.gameTypes[ui_gameType.integer].gtEnum == GT_LMS || uiInfo.gameTypes[ui_gameType.integer].gtEnum == GT_POSSESSION ) {
+			if (!UI_IsATeamGametype(uiInfo.gameTypes[ui_netGameType.integer].gtEnum)) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_NETANYTEAMGAME;
 		}
 		if (flags & UI_SHOW_NETANYNONTEAMGAME) {
-			if (uiInfo.gameTypes[ui_netGameType.integer].gtEnum > GT_TEAM && uiInfo.gameTypes[ui_gameType.integer].gtEnum != GT_LMS && uiInfo.gameTypes[ui_gameType.integer].gtEnum != GT_POSSESSION ) {
+			if (UI_IsATeamGametype(uiInfo.gameTypes[ui_netGameType.integer].gtEnum)) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_NETANYNONTEAMGAME;

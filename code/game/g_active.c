@@ -1128,9 +1128,7 @@ void ClientThink_real( gentity_t *ent ) {
 		if ( ( level.time > client->respawnTime ) &&
 			( ( ( g_forcerespawn.integer > 0 ) && 
 			( level.time - client->respawnTime  > g_forcerespawn.integer * 1000 ) ) ||
-			( ( ( g_gametype.integer == GT_LMS ) ||
-			( g_gametype.integer == GT_ELIMINATION ) ||
-			( g_gametype.integer == GT_CTF_ELIMINATION ) ) &&
+			( G_IsARoundBasedGametype(g_gametype.integer) &&
 			( level.time - client->respawnTime > 0 ) ) ||	
 			( ucmd->buttons & ( BUTTON_ATTACK | BUTTON_USE_HOLDABLE ) ) ) ) {
 

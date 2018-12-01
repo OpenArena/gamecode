@@ -67,7 +67,7 @@ void AddScore( gentity_t *ent, vec3_t origin, int score )
 		return;
 	}
 	// show score plum
-	if( level.numNonSpectatorClients<3 && score < 0 && (g_gametype.integer<GT_TEAM || g_ffa_gt==1)) {
+	if( level.numNonSpectatorClients<3 && score < 0 && !G_IsATeamGametype(g_gametype.integer)) {
 		for ( i = 0 ; i < level.maxclients ; i++ ) {
 			if ( level.clients[ i ].pers.connected != CON_CONNECTED )
 				continue; //Client was not connected

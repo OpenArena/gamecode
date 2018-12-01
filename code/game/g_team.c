@@ -2303,7 +2303,7 @@ void SP_team_redobelisk( gentity_t *ent )
 {
 	gentity_t *obelisk;
 
-	if ( g_gametype.integer <= GT_TEAM || g_ffa_gt>0) {
+	if (!G_UsesKeyObjectives(g_gametype.integer)) {
 		G_FreeEntity(ent);
 		return;
 	}
@@ -2329,7 +2329,7 @@ void SP_team_blueobelisk( gentity_t *ent )
 {
 	gentity_t *obelisk;
 
-	if ( g_gametype.integer <= GT_TEAM || g_ffa_gt>0) {
+	if (!G_UsesKeyObjectives(g_gametype.integer)) {
 		G_FreeEntity(ent);
 		return;
 	}

@@ -1702,7 +1702,7 @@ BotCheckItemPickup
 void BotCheckItemPickup(bot_state_t *bs, int *oldinventory) {
 	int offence, leader;
 
-	if (gametype <= GT_TEAM && g_ffa_gt == 0)
+	if (!G_UsesKeyObjectives(gametype))
 		return;
 
 	offence = -1;
