@@ -240,7 +240,7 @@ void UI_RandomF_f(void) {
 	float max = trap_Cvar_VariableValue("ui_randomFMax");
 	float min = trap_Cvar_VariableValue("ui_randomFMin");
 
-	randomNumber = min+(max-min)*((float)rand())/((float)RAND_MAX);
+	randomNumber = min+(max-min)*((float)rand())/((float)69069);
 
 	Com_Printf("Random: %f\n", randomNumber);
 	trap_Cvar_SetValue("ui_randomF", randomNumber);
