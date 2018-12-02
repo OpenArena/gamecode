@@ -205,7 +205,6 @@ vmCvar_t		g_emptyTime;
 
 /* Neon_Knight: Adding cvar for (de)activation of the Grappling Hook. */
 vmCvar_t		g_grapple;
-vmCvar_t		g_grappleAll;
 /* /Neon_Knight */
 
 mapinfo_result_t mapinfo;
@@ -417,8 +416,7 @@ static cvarTable_t		gameCvarTable[] = {
 	{ &g_emptyTime, "g_emptytime", "0", CVAR_ARCHIVE, 0, qfalse},
 
 /* Neon_Knight: Adding a cvar for the (de)activation of the Grappling Hook. */
-	{ &g_grapple, "g_grapple", "0", CVAR_ARCHIVE | CVAR_LATCH | CVAR_NORESTART, 0, qfalse},
-	{ &g_grappleAll, "g_grappleAll", "0", CVAR_ARCHIVE | CVAR_NORESTART, 0, qfalse},
+	{ &g_grapple, "g_grapple", "0", CVAR_ARCHIVE, 0, qfalse},
 /* /Neon_Knight */
 
 };

@@ -1877,8 +1877,8 @@ void ClientSpawn(gentity_t *ent) {
 		client->ps.ammo[WP_RAILGUN] = 999; //Don't display any ammo
 		if(g_instantgib.integer>1)
 		{
-			/* Neon_Knight: In grappleAll mode, Instagib is played with Grapple. */
-			if (g_grapple.integer != 0 && g_grappleAll.integer != 0) {
+			/* Neon_Knight: In grapple mode, Instagib is played with Grapple. */
+			if (g_grapple.integer != 0) {
 				client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_GRAPPLING_HOOK);
 			}
 			/* / Neon_Knight */
@@ -1890,8 +1890,8 @@ void ClientSpawn(gentity_t *ent) {
 	//nexuiz style rocket arena (rocket launcher only)
 	if(g_rockets.integer) 
 	{
-		/* Neon_Knight: In grappleAll mode, All Rockets is played with Grapple. */
-		if (g_grapple.integer != 0 && g_grappleAll.integer != 0) {
+		/* Neon_Knight: In grapple mode, All Rockets is played with Grapple. */
+		if (g_grapple.integer != 0) {
 			client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_GRAPPLING_HOOK);
 		}
 		/* / Neon_Knight */
