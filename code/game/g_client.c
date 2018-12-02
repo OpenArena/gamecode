@@ -1851,9 +1851,6 @@ void ClientSpawn(gentity_t *ent) {
 			client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_BFG );
 			client->ps.ammo[WP_BFG] = g_elimination_bfg.integer;
 		}
-			if (g_elimination_grapple.integer) {
-			client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_GRAPPLING_HOOK );
-		}
 		if (g_elimination_nail.integer > 0) {
 			client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_NAILGUN );
 			client->ps.ammo[WP_NAILGUN] = g_elimination_nail.integer;
@@ -1870,23 +1867,24 @@ void ClientSpawn(gentity_t *ent) {
 		ent->health = client->ps.stats[STAT_ARMOR] = g_elimination_startArmor.integer; //client->ps.stats[STAT_MAX_HEALTH]*2;
 		ent->health = client->ps.stats[STAT_HEALTH] = g_elimination_startHealth.integer; //client->ps.stats[STAT_MAX_HEALTH]*2;	
 	}
-	//Instantgib mode, replace weapons with rail (and maybe gauntlet)
+
 	if(g_instantgib.integer)
 	{
 		client->ps.stats[STAT_WEAPONS] = ( 1 << WP_RAILGUN );
 		client->ps.ammo[WP_RAILGUN] = 999; //Don't display any ammo
-		if(g_instantgib.integer>1)
-		{
-			 client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_GAUNTLET );
-	              	client->ps.ammo[WP_GAUNTLET] = -1;
+		if (g_instantgib.integer>1) {
+			client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_GAUNTLET );
+			client->ps.ammo[WP_GAUNTLET] = -1;
 		}
 	}
 
-	//nexuiz style rocket arena (rocket launcher only)
-	if(g_rockets.integer) 
-	{
+	if (g_rockets.integer) {
 		client->ps.stats[STAT_WEAPONS] = ( 1 << WP_ROCKET_LAUNCHER );
 		client->ps.ammo[WP_ROCKET_LAUNCHER] = 999;
+	}
+
+	if (g_grapple.integer) {
+		client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_GRAPPLING_HOOK );
 	}
 
 	G_SetOrigin( ent, spawn_origin );
