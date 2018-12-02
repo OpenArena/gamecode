@@ -392,4 +392,14 @@ Checks if the gametype uses team-colored obelisks.
 qboolean UI_UsesTeamObelisks(int check) {
 	return GAMETYPE_USES_OBELISKS(check);
 }
+/*
+===================
+UI_IsAStarterWeapon
+
+(Normal games only) Checks if the weapon is a starting weapon.
+===================
+ */
+qboolean UI_IsAStarterWeapon(int check) {
+	return WEAPON_IS_STARTER(check);
+}
 /* /Neon_Knight */

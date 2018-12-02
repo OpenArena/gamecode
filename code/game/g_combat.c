@@ -124,7 +124,7 @@ void TossClientItems( gentity_t *self )
 	// weapon that isn't the mg or gauntlet.  Without this, a client
 	// can pick up a weapon, be killed, and not drop the weapon because
 	// their weapon change hasn't completed yet and they are still holding the MG.
-	if ( weapon == WP_MACHINEGUN || weapon == WP_GRAPPLING_HOOK ) {
+	if (G_IsAStarterWeapon(weapon) && weapon != WP_GAUNTLET) {
 		if ( self->client->ps.weaponstate == WEAPON_DROPPING ) {
 			weapon = self->client->pers.cmd.weapon;
 		}
@@ -136,8 +136,7 @@ void TossClientItems( gentity_t *self )
 	if (g_instantgib.integer || g_rockets.integer || g_gametype.integer == GT_CTF_ELIMINATION || g_elimination_allgametypes.integer) {
 		//Nothing!
 	}
-	else if ( weapon > WP_MACHINEGUN && weapon != WP_GRAPPLING_HOOK &&
-	          self->client->ps.ammo[ weapon ] ) {
+	else if ( !G_IsAStarterWeapon(weapon) && self->client->ps.ammo[ weapon ] ) {
 		// find the item type for this weapon
 		item = BG_FindItemForWeapon( weapon );
 

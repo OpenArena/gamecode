@@ -88,7 +88,7 @@ tryagain:
 		goto tryagain;
 	}
 
-	if ( weaponNum == WP_MACHINEGUN || weaponNum == WP_GAUNTLET || weaponNum == WP_BFG ) {
+	if ( (UI_IsAStarterWeapon(weaponNum) && weaponNum != WP_GRAPPLING_HOOK) || weaponNum == WP_BFG ) {
 		strcpy( path, item->world_model[0] );
 		COM_StripExtension(path, path, sizeof(path));
 		strcat( path, "_barrel.md3" );
@@ -952,7 +952,7 @@ void UI_DrawPlayer( float x, float y, float w, float h, playerInfo_t *pi, int ti
 	//
 	// rfactory
 	// Changed RD
-	if (( pi->realWeapon == WP_MACHINEGUN || pi->realWeapon == WP_GAUNTLET || pi->realWeapon == WP_BFG ) && pi->barrelModel) {
+	if (( (UI_IsAStarterWeapon(pi->realWeapon) && pi->realWeapon != WP_GRAPPLING_HOOK) || pi->realWeapon == WP_BFG ) && pi->barrelModel) {
 	// end changed RD
 		vec3_t	angles;
 
@@ -1174,7 +1174,7 @@ void UI_DrawPlayerII( float x, float y, float w, float h, playerInfo_t *pi, int 
 	//
 	// rfactory
 	// Changed RD
-	if (( pi->realWeapon == WP_MACHINEGUN || pi->realWeapon == WP_GAUNTLET || pi->realWeapon == WP_BFG ) && pi->barrelModel) {
+	if (( (UI_IsAStarterWeapon(pi->realWeapon) && pi->realWeapon != WP_GRAPPLING_HOOK) || pi->realWeapon == WP_BFG ) && pi->barrelModel) {
 	// end changed RD
 		vec3_t	angles;
 

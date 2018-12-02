@@ -946,7 +946,7 @@ void FireWeapon( gentity_t *ent )
 		ent->client->spawnprotected = qfalse;
 
 	// track shots taken for accuracy tracking.  Grapple is not a weapon and gauntet is just not tracked
-	if( ent->s.weapon != WP_GRAPPLING_HOOK && ent->s.weapon != WP_GAUNTLET ) {
+	if( !(G_IsAStarterWeapon(ent->s.weapon) && ent->s.weapon != WP_MACHINEGUN) ) {
 		if( ent->s.weapon == WP_NAILGUN ) {
 			ent->client->accuracy_shots += NUM_NAILSHOTS;
 			ent->client->accuracy[WP_NAILGUN][0]++;

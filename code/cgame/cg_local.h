@@ -2067,4 +2067,6 @@ qboolean CG_UsesTheWhiteFlag(int check);	/* Whether the gametype uses the neutra
 qboolean CG_IsARoundBasedGametype(int check);	/* Whether the gametype uses the neutral flag. */
 qboolean CG_UsesTeamObelisks(int check);	/* Whether the gametype uses team obelisks. */
 qboolean CG_UsesControlPoints(int check);	/* Whether the gametype uses control points. */
+
+qboolean CG_IsAStarterWeapon(int check);	/* Whether the player spawns with that weapon in normal games. */
 /* /Neon_Knight */

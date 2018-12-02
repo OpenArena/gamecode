@@ -706,7 +706,6 @@ void Cmd_Kill_f( gentity_t *ent ) {
 		player_die (ent, ent, ent, 100000, MOD_SUICIDE);
 	}
 }
-
 /*
 =================
 BroadcastTeamChange
@@ -2268,7 +2267,7 @@ commands_t cmds[ ] =
 	//KK-OAX
 	{ "freespectator", CMD_NOTEAM, StopFollowing },
 	{ "getmappage", 0, Cmd_GetMappage_f },
-	{ "gc", 0, Cmd_GameCommand_f }
+	{ "gc", 0, Cmd_GameCommand_f },
 
 };
 
