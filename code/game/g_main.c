@@ -416,7 +416,7 @@ static cvarTable_t		gameCvarTable[] = {
 	{ &g_emptyTime, "g_emptytime", "0", CVAR_ARCHIVE, 0, qfalse},
 
 /* Neon_Knight: g_harvesterFromBodies - Makes skulls spawn from dead bodies instead of a central obelisk. */
-	{ &g_harvesterFromBodies, "g_harvesterFromBodies", "0", CVAR_NORESTART, 0, qfalse},
+	{ &g_harvesterFromBodies, "g_harvesterFromBodies", "0", CVAR_ARCHIVE, 0, qfalse},
 /* /Neon_Knight */
 };
 
