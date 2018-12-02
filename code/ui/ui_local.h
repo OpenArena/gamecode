@@ -172,6 +172,10 @@ extern vmCvar_t	ui_introPlayed;
 extern vmCvar_t	ui_missionpackChecks;
 /* /Neon_Knight */
 
+/* Neon_Knight: Random number generator */
+extern vmCvar_t	ui_random;
+/* /Neon_Knight */
+
 //
 // ui_qmenu.c
 //

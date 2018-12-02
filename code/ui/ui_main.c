@@ -7096,6 +7096,8 @@ vmCvar_t ui_humansonly;
 
 vmCvar_t ui_missionpackChecks;
 
+vmCvar_t ui_random;
+
 // bk001129 - made static to avoid aliasing
 static cvarTable_t		cvarTable[] = {
 	{ &ui_ffa_fraglimit, "ui_ffa_fraglimit", "20", CVAR_ARCHIVE },
@@ -7273,6 +7275,7 @@ static cvarTable_t		cvarTable[] = {
 // end changed RD
 	{ &ui_introPlayed, "ui_introPlayed", "0", CVAR_INIT },
 	{ &ui_missionpackChecks, "ui_missionpackChecks", "1", CVAR_INIT },
+	{ &ui_random, "ui_random", "", CVAR_ARCHIVE },
 };
 
 // bk001129 - made static to avoid aliasing

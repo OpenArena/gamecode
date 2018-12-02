@@ -211,6 +211,18 @@ static void	UI_Cache_f( void ) {
 }
 
 /*
+===============
+UI_Random_f
+===============
+*/
+void UI_Random_f(void) {
+	int seed;
+	int randomNumber = rand();
+	CG_Printf("Random: %i\n", randomNumber);
+	trap_Cvar_Set("ui_random", va("%i", randomNumber));
+}
+
+/*
 =======================
 UI_CalcPostGameStats
 =======================
@@ -374,6 +386,12 @@ qboolean UI_ConsoleCommand( int realTime ) {
 
 	if ( Q_strequal(cmd, "ui_cdkey") ) {
 		//UI_CDKeyMenu_f();
+		return qtrue;
+	}
+
+
+	if ( Q_strequal(cmd, "ui_random") ) {
+		UI_Random_f();
 		return qtrue;
 	}
 
