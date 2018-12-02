@@ -114,7 +114,6 @@ vmCvar_t	g_elimination_selfdamage;
 vmCvar_t	g_elimination_startHealth;
 vmCvar_t	g_elimination_startArmor;
 vmCvar_t	g_elimination_bfg;
-vmCvar_t	g_elimination_grapple;
 vmCvar_t	g_elimination_roundtime;
 vmCvar_t	g_elimination_warmup;
 vmCvar_t	g_elimination_activewarmup;
@@ -202,6 +201,10 @@ vmCvar_t        g_timestamp_startgame;
 vmCvar_t		g_execute_gametype_script;
 vmCvar_t		g_emptyCommand;
 vmCvar_t		g_emptyTime;
+
+/* Neon_Knight: Adding cvar for (de)activation of the Grappling Hook. */
+vmCvar_t		g_grapple;
+/* /Neon_Knight */
 
 mapinfo_result_t mapinfo;
 
@@ -320,34 +323,33 @@ static cvarTable_t		gameCvarTable[] = {
 
 	{ &g_rankings, "g_rankings", "0", 0, 0, qfalse},
 	{ &g_music, "g_music", "", 0, 0, qfalse},
-	{ &g_spawnprotect, "g_spawnprotect", "500", CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue},
+	{ &g_spawnprotect, "g_spawnprotect", "500", CVAR_ARCHIVE, 0, qtrue},
 	//Now for elimination stuff:
 	{ &g_elimination_selfdamage, "elimination_selfdamage", "0", 0, 0, qtrue },
-	{ &g_elimination_startHealth, "elimination_startHealth", "200", CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
-	{ &g_elimination_startArmor, "elimination_startArmor", "150", CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
-	{ &g_elimination_bfg, "elimination_bfg", "0", CVAR_ARCHIVE| CVAR_NORESTART, 0, qtrue },
-	{ &g_elimination_grapple, "elimination_grapple", "0", CVAR_ARCHIVE| CVAR_NORESTART, 0, qtrue },
-	{ &g_elimination_roundtime, "elimination_roundtime", "120", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
-	{ &g_elimination_warmup, "elimination_warmup", "7", CVAR_ARCHIVE | CVAR_NORESTART , 0, qtrue },
-	{ &g_elimination_activewarmup, "elimination_activewarmup", "5", CVAR_ARCHIVE | CVAR_NORESTART , 0, qtrue },
-	{ &g_elimination_allgametypes, "g_elimination", "0", CVAR_LATCH | CVAR_NORESTART, 0, qfalse },
+	{ &g_elimination_startHealth, "elimination_startHealth", "200", CVAR_ARCHIVE, 0, qtrue },
+	{ &g_elimination_startArmor, "elimination_startArmor", "150", CVAR_ARCHIVE, 0, qtrue },
+	{ &g_elimination_bfg, "elimination_bfg", "0", CVAR_ARCHIVE, 0, qtrue },
+	{ &g_elimination_roundtime, "elimination_roundtime", "120", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qtrue },
+	{ &g_elimination_warmup, "elimination_warmup", "7", CVAR_ARCHIVE , 0, qtrue },
+	{ &g_elimination_activewarmup, "elimination_activewarmup", "5", CVAR_ARCHIVE , 0, qtrue },
+	{ &g_elimination_allgametypes, "g_elimination", "0", CVAR_LATCH, 0, qfalse },
 
-	{ &g_elimination_machinegun, "elimination_machinegun", "500", CVAR_ARCHIVE| CVAR_NORESTART, 0, qtrue },
-	{ &g_elimination_shotgun, "elimination_shotgun", "500", CVAR_ARCHIVE| CVAR_NORESTART, 0, qtrue },
-	{ &g_elimination_grenade, "elimination_grenade", "100", CVAR_ARCHIVE| CVAR_NORESTART, 0, qtrue },
-	{ &g_elimination_rocket, "elimination_rocket", "50", CVAR_ARCHIVE| CVAR_NORESTART, 0, qtrue },
-	{ &g_elimination_railgun, "elimination_railgun", "20", CVAR_ARCHIVE| CVAR_NORESTART, 0, qtrue },
-	{ &g_elimination_lightning, "elimination_lightning", "300", CVAR_ARCHIVE| CVAR_NORESTART, 0, qtrue },
-	{ &g_elimination_plasmagun, "elimination_plasmagun", "200", CVAR_ARCHIVE| CVAR_NORESTART, 0, qtrue },
-	{ &g_elimination_chain, "elimination_chain", "0", CVAR_ARCHIVE| CVAR_NORESTART, 0, qtrue },
-	{ &g_elimination_mine, "elimination_mine", "0", CVAR_ARCHIVE| CVAR_NORESTART, 0, qtrue },
-	{ &g_elimination_nail, "elimination_nail", "0", CVAR_ARCHIVE| CVAR_NORESTART, 0, qtrue },
+	{ &g_elimination_machinegun, "elimination_machinegun", "500", CVAR_ARCHIVE, 0, qtrue },
+	{ &g_elimination_shotgun, "elimination_shotgun", "500", CVAR_ARCHIVE, 0, qtrue },
+	{ &g_elimination_grenade, "elimination_grenade", "100", CVAR_ARCHIVE, 0, qtrue },
+	{ &g_elimination_rocket, "elimination_rocket", "50", CVAR_ARCHIVE, 0, qtrue },
+	{ &g_elimination_railgun, "elimination_railgun", "20", CVAR_ARCHIVE, 0, qtrue },
+	{ &g_elimination_lightning, "elimination_lightning", "300", CVAR_ARCHIVE, 0, qtrue },
+	{ &g_elimination_plasmagun, "elimination_plasmagun", "200", CVAR_ARCHIVE, 0, qtrue },
+	{ &g_elimination_chain, "elimination_chain", "0", CVAR_ARCHIVE, 0, qtrue },
+	{ &g_elimination_mine, "elimination_mine", "0", CVAR_ARCHIVE, 0, qtrue },
+	{ &g_elimination_nail, "elimination_nail", "0", CVAR_ARCHIVE, 0, qtrue },
 
-	{ &g_elimination_ctf_oneway, "elimination_ctf_oneway", "0", CVAR_ARCHIVE| CVAR_NORESTART, 0, qtrue },
+	{ &g_elimination_ctf_oneway, "elimination_ctf_oneway", "0", CVAR_ARCHIVE, 0, qtrue },
 
-	{ &g_elimination_lockspectator, "elimination_lockspectator", "0", CVAR_NORESTART, 0, qtrue },
+	{ &g_elimination_lockspectator, "elimination_lockspectator", "0", 0, qtrue },
 
-	{ &g_awardpushing, "g_awardpushing", "1", CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
+	{ &g_awardpushing, "g_awardpushing", "1", CVAR_ARCHIVE, 0, qtrue },
 
 	//g_persistantpowerups
 #ifdef MISSIONPACK
@@ -358,15 +360,15 @@ static cvarTable_t		gameCvarTable[] = {
 
 
 	//nexuiz style rocket arena
-	{ &g_rockets, "g_rockets", "0", CVAR_SERVERINFO | CVAR_LATCH | CVAR_NORESTART, 0, qfalse },
+	{ &g_rockets, "g_rockets", "0", CVAR_SERVERINFO | CVAR_LATCH, 0, qfalse },
 
 	//Instantgib and Vampire thingies
 	{ &g_instantgib, "g_instantgib", "0", CVAR_SERVERINFO | CVAR_LATCH, 0, qfalse },
-	{ &g_vampire, "g_vampire", "0.0", CVAR_NORESTART, 0, qtrue },
-	{ &g_regen, "g_regen", "0", CVAR_NORESTART, 0, qtrue },
-	{ &g_vampireMaxHealth, "g_vampire_max_health", "500", CVAR_NORESTART, 0, qtrue },
-	{ &g_lms_lives, "g_lms_lives", "1", CVAR_NORESTART, 0, qtrue },
-	{ &g_lms_mode, "g_lms_mode", "0", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
+	{ &g_vampire, "g_vampire", "0.0", 0, 0, qtrue },
+	{ &g_regen, "g_regen", "0", 0, 0, qtrue },
+	{ &g_vampireMaxHealth, "g_vampire_max_health", "500", 0, 0, qtrue },
+	{ &g_lms_lives, "g_lms_lives", "1", 0, 0, qtrue },
+	{ &g_lms_mode, "g_lms_mode", "0", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qtrue },
 
 	{ &g_catchup, "g_catchup", "0", CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue},
 
@@ -409,7 +411,11 @@ static cvarTable_t		gameCvarTable[] = {
 	{ &g_timestamp_startgame, "g_timestamp", "0001-01-01 00:00:00", CVAR_SERVERINFO, 0, qfalse},
 	{ &g_execute_gametype_script, "g_egs", "0", CVAR_ROM, 0, qfalse },
 	{ &g_emptyCommand, "g_emptyCommand", "map_restart", CVAR_ARCHIVE, 0, qfalse},
-	{ &g_emptyTime, "g_emptytime", "0", CVAR_ARCHIVE, 0, qfalse}
+	{ &g_emptyTime, "g_emptytime", "0", CVAR_ARCHIVE, 0, qfalse},
+
+/* Neon_Knight: Adding a cvar for the (de)activation of the Grappling Hook. */
+	{ &g_grapple, "g_grapple", "0", CVAR_ARCHIVE, 0, qfalse},
+/* /Neon_Knight */
 
 };
 
