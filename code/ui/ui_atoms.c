@@ -210,18 +210,27 @@ static void	UI_Cache_f( void ) {
 	Display_CacheAll();
 }
 
+/* Neon_Knight: Random number generator. */
 /*
 ===============
 UI_Random_f
+
+Generates and stores a random number using a maximum and a minimum.
 ===============
 */
 void UI_Random_f(void) {
-	int seed;
-	int randomNumber = rand();
-	CG_Printf("Random: %i\n", randomNumber);
-	trap_Cvar_Set("ui_random", va("%i", randomNumber));
-}
+	float randomNumber = rand();
+	float max = trap_Cvar_VariableValue("ui_randomMax");
+	float min = trap_Cvar_VariableValue("ui_randomMin");
 
+	while ((randomNumber > max) || (randomNumber < min)) {
+		randomNumber = rand();
+	}
+
+	Com_Printf("Random: %f\n", randomNumber);
+	trap_Cvar_SetValue("ui_random", randomNumber);
+}
+/* /Neon_Knight */
 /*
 =======================
 UI_CalcPostGameStats
@@ -390,7 +399,7 @@ qboolean UI_ConsoleCommand( int realTime ) {
 	}
 
 
-	if ( Q_strequal(cmd, "ui_random") ) {
+	if ( Q_strequal(cmd, "ui_randomGen") ) {
 		UI_Random_f();
 		return qtrue;
 	}

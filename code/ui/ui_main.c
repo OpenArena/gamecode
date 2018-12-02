@@ -7096,7 +7096,11 @@ vmCvar_t ui_humansonly;
 
 vmCvar_t ui_missionpackChecks;
 
+/* Neon_Knight: Random number generator. */
 vmCvar_t ui_random;
+vmCvar_t ui_randomMax;
+vmCvar_t ui_randomMin;
+/* Neon_Knight */
 
 // bk001129 - made static to avoid aliasing
 static cvarTable_t		cvarTable[] = {
@@ -7275,7 +7279,11 @@ static cvarTable_t		cvarTable[] = {
 // end changed RD
 	{ &ui_introPlayed, "ui_introPlayed", "0", CVAR_INIT },
 	{ &ui_missionpackChecks, "ui_missionpackChecks", "1", CVAR_INIT },
+	/* Neon_Knight: Random number generator. */
 	{ &ui_random, "ui_random", "", CVAR_ARCHIVE },
+	{ &ui_randomMax, "ui_randomMax", "1", CVAR_ARCHIVE },
+	{ &ui_randomMin, "ui_randomMin", "0", CVAR_ARCHIVE },
+	/* Neon_Knight */
 };
 
 // bk001129 - made static to avoid aliasing

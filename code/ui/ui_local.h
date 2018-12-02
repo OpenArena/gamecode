@@ -174,6 +174,8 @@ extern vmCvar_t	ui_missionpackChecks;
 
 /* Neon_Knight: Random number generator */
 extern vmCvar_t	ui_random;
+extern vmCvar_t	ui_randomMax;
+extern vmCvar_t	ui_randomMin;
 /* /Neon_Knight */
 
 //
