@@ -856,14 +856,12 @@ void ClearRegisteredItems( void )
 	memset( itemRegistered, 0, sizeof( itemRegistered ) );
 
 	if(g_instantgib.integer) {
-		if(g_instantgib.integer & 2)
+		if(g_instantgib.integer & 2) {
 			RegisterItem( BG_FindItemForWeapon( WP_GAUNTLET ) );
-		//RegisterItem( BG_FindItemForWeapon( WP_MACHINEGUN ) );
+		}
 		RegisterItem( BG_FindItemForWeapon( WP_RAILGUN ) );
 	}
 	else if(g_rockets.integer) {
-		//RegisterItem( BG_FindItemForWeapon( WP_GAUNTLET ) );
-		//RegisterItem( BG_FindItemForWeapon( WP_MACHINEGUN ) );
 		RegisterItem( BG_FindItemForWeapon( WP_ROCKET_LAUNCHER ) );
 	}
 	else {
@@ -882,6 +880,9 @@ void ClearRegisteredItems( void )
 			RegisterItem( BG_FindItemForWeapon( WP_PROX_LAUNCHER ) );
 			RegisterItem( BG_FindItemForWeapon( WP_CHAINGUN ) );
 		}
+	}
+	if (g_grapple.integer) {
+		RegisterItem( BG_FindItemForWeapon( WP_GRAPPLING_HOOK ) );
 	}
 	if( g_gametype.integer == GT_HARVESTER ) {
 		RegisterItem( BG_FindItem( "Red Cube" ) );
