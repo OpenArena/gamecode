@@ -1588,7 +1588,7 @@ static void CG_AddWeaponWithPowerups( refEntity_t *gun, int powerups )
 static void MuzzleFlashStyleQ1(refEntity_t *parent, playerState_t *ps, centity_t *cent, weapon_t weaponNum, centity_t *nonPredictedCent, refEntity_t	*gun, weaponInfo_t *weapon) {
 	vec3_t		angles;
 	refEntity_t	flash;
-	if ( ( weaponNum == WP_LIGHTNING || weaponNum == WP_GAUNTLET || weaponNum == WP_GRAPPLING_HOOK )
+	if ( ( weaponNum == WP_LIGHTNING || (CG_IsAStarterWeapon(weaponNum) && weaponNum != WP_MACHINEGUN))
 			&& ( nonPredictedCent->currentState.eFlags & EF_FIRING ) ) {
 		// continuous flash
 	}
@@ -1788,7 +1788,7 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
 	}
 	else if (cg_muzzleflashStyle.integer == 3)	// "fake '99"
 	{
-		if ( ( weaponNum == WP_LIGHTNING || weaponNum == WP_GAUNTLET || weaponNum == WP_GRAPPLING_HOOK )
+		if ( ( weaponNum == WP_LIGHTNING || (CG_IsAStarterWeapon(weaponNum) && weaponNum != WP_MACHINEGUN))
 		        && ( nonPredictedCent->currentState.eFlags & EF_FIRING ) ) {
 			// continuous flash
 		}
@@ -1849,7 +1849,7 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
 	}
 	else if (cg_muzzleflashStyle.integer == 4)	// "64". alpha muzzle sprites only, is a shader sequence
 	{
-		if ( ( weaponNum == WP_LIGHTNING || weaponNum == WP_GAUNTLET || weaponNum == WP_GRAPPLING_HOOK )
+		if ( ( weaponNum == WP_LIGHTNING || (CG_IsAStarterWeapon(weaponNum) && weaponNum != WP_MACHINEGUN))
 		        && ( nonPredictedCent->currentState.eFlags & EF_FIRING ) ) {
 			// continuous flash
 		}
@@ -1903,7 +1903,7 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
 	{						// and allow artist creativity to define how it should fade away
 		
 		float fadeout;
-		if ( ( weaponNum == WP_LIGHTNING || weaponNum == WP_GAUNTLET || weaponNum == WP_GRAPPLING_HOOK )
+		if ( ( weaponNum == WP_LIGHTNING || (CG_IsAStarterWeapon(weaponNum) && weaponNum != WP_MACHINEGUN))
 		        && ( nonPredictedCent->currentState.eFlags & EF_FIRING ) ) {
 			// continuous flash
 		}
@@ -1999,7 +1999,7 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
 	{
 		
 		float fadeout;
-		if ( ( weaponNum == WP_LIGHTNING || weaponNum == WP_GAUNTLET || weaponNum == WP_GRAPPLING_HOOK )
+		if ( ( weaponNum == WP_LIGHTNING || (CG_IsAStarterWeapon(weaponNum) && weaponNum != WP_MACHINEGUN))
 		        && ( nonPredictedCent->currentState.eFlags & EF_FIRING ) ) {
 			// continuous flash
 		}
@@ -2096,7 +2096,7 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
 	}
 	
 	// q3 - don't touch this!
-	if ( ( weaponNum == WP_LIGHTNING || weaponNum == WP_GAUNTLET || weaponNum == WP_GRAPPLING_HOOK )
+	if ( ( weaponNum == WP_LIGHTNING || (CG_IsAStarterWeapon(weaponNum) && weaponNum != WP_MACHINEGUN))
 			&& ( nonPredictedCent->currentState.eFlags & EF_FIRING ) ) {
 		// continuous flash
 	}
@@ -2468,7 +2468,7 @@ void CG_DrawWeaponBar1(int count, int bits)
 
 		br=ammo*32/100;
 
-		if(i!=WP_GAUNTLET && i!=WP_GRAPPLING_HOOK) {
+		if(!(CG_IsAStarterWeapon(i) && i != WP_MACHINEGUN)) {
 			if(ammo <= 20)
 				CG_FillRect( x, y+38, br,4, red);
 			if(ammo > 20 && ammo <= 50)
@@ -2681,7 +2681,7 @@ void CG_DrawWeaponBar3(int count, int bits, float *color)
 
 		br=ammo*20/100;
 
-		if(i!=WP_GAUNTLET && i!=WP_GRAPPLING_HOOK) {
+		if(!(CG_IsAStarterWeapon(i) && i != WP_MACHINEGUN)) {
 			if(ammo <= 20)
 				CG_FillRect( 51, y+2+20-br, 4,br, red);
 			if(ammo > 20 && ammo <= 50)
@@ -3020,7 +3020,7 @@ void CG_DrawWeaponBar6(int count, int bits, float *color)
 
 		br=ammo*26/100;
 
-		if(i!=WP_GAUNTLET && i!=WP_GRAPPLING_HOOK) {
+		if(!(CG_IsAStarterWeapon(i) && i != WP_MACHINEGUN)) {
 			if(ammo <= 20)
 				CG_FillRect( x+2, y +40, br, 4, red);
 			if(ammo > 20 && ammo <= 50)

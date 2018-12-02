@@ -87,7 +87,7 @@ tryagain:
 		goto tryagain;
 	}
 
-	if ( weaponNum == WP_MACHINEGUN || weaponNum == WP_GAUNTLET || weaponNum == WP_BFG ) {
+	if ( (UI_IsAStarterWeapon(weaponNum) && weaponNum != WP_GRAPPLING_HOOK) || weaponNum == WP_BFG ) {
 		strcpy( path, item->world_model[0] );
 		COM_StripExtension( path, path, sizeof(path) );
 		strcat( path, "_barrel.md3" );
@@ -828,7 +828,7 @@ void UI_DrawPlayer( float x, float y, float w, float h, playerInfo_t *pi, int ti
 	//
 	// add the spinning barrel
 	//
-	if ( pi->realWeapon == WP_MACHINEGUN || pi->realWeapon == WP_GAUNTLET || pi->realWeapon == WP_BFG ) {
+	if ( (UI_IsAStarterWeapon(pi->realWeapon) && pi->realWeapon != WP_GRAPPLING_HOOK) || pi->realWeapon == WP_BFG ) {
 		vec3_t	angles;
 
 		memset( &barrel, 0, sizeof(barrel) );
