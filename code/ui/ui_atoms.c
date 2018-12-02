@@ -210,25 +210,44 @@ static void	UI_Cache_f( void ) {
 	Display_CacheAll();
 }
 
-/* Neon_Knight: Random number generator. */
+/* Neon_Knight: Random number generators. */
 /*
 ===============
-UI_Random_f
+UI_RandomI_f
 
-Generates and stores a random number using a maximum and a minimum.
+Generates and stores a random integer number using a maximum and a minimum.
 ===============
 */
-void UI_Random_f(void) {
+void UI_RandomI_f(void) {
+	int randomNumber = rand();
+	int max = trap_Cvar_VariableValue("ui_randomIMax");
+	int min = trap_Cvar_VariableValue("ui_randomIMin");
+
+	while ((randomNumber > max) || (randomNumber < min)) {
+		randomNumber = rand();
+	}
+
+	Com_Printf("Random: %i\n", randomNumber);
+	trap_Cvar_SetValue("ui_randomI", randomNumber);
+}
+/*
+===============
+UI_RandomF_f
+
+Generates and stores a random floating point number using a maximum and a minimum.
+===============
+*/
+void UI_RandomF_f(void) {
 	float randomNumber = rand();
-	float max = trap_Cvar_VariableValue("ui_randomMax");
-	float min = trap_Cvar_VariableValue("ui_randomMin");
+	float max = trap_Cvar_VariableValue("ui_randomFMax");
+	float min = trap_Cvar_VariableValue("ui_randomFMin");
 
 	while ((randomNumber > max) || (randomNumber < min)) {
 		randomNumber = rand();
 	}
 
 	Com_Printf("Random: %f\n", randomNumber);
-	trap_Cvar_SetValue("ui_random", randomNumber);
+	trap_Cvar_SetValue("ui_randomF", randomNumber);
 }
 /* /Neon_Knight */
 /*
@@ -398,11 +417,13 @@ qboolean UI_ConsoleCommand( int realTime ) {
 		return qtrue;
 	}
 
-
+	/* Neon_Knight: Random number generators. */
 	if ( Q_strequal(cmd, "ui_randomGen") ) {
-		UI_Random_f();
+		UI_RandomI_f();
+		UI_RandomF_f();
 		return qtrue;
 	}
+	/* /Neon_Knight */
 
 	return qfalse;
 }

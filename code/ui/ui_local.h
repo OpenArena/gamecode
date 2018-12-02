@@ -173,9 +173,12 @@ extern vmCvar_t	ui_missionpackChecks;
 /* /Neon_Knight */
 
 /* Neon_Knight: Random number generator */
-extern vmCvar_t	ui_random;
-extern vmCvar_t	ui_randomMax;
-extern vmCvar_t	ui_randomMin;
+extern vmCvar_t	ui_randomI;
+extern vmCvar_t	ui_randomIMax;
+extern vmCvar_t	ui_randomIMin;
+extern vmCvar_t	ui_randomF;
+extern vmCvar_t	ui_randomFMax;
+extern vmCvar_t	ui_randomFMin;
 /* /Neon_Knight */
 
 //
@@ -1288,10 +1291,6 @@ typedef struct postGameInfo_s {
 	int baseScore;
 } postGameInfo_t;
 
-
-
-#endif
-
 /* Neon_Knight: Useful check in order to have code consistency. */
 qboolean UI_IsATeamGametype(int check);	/* Whether the gametype is team-based or not.*/
 qboolean UI_UsesKeyObjectives(int check);	/* Whether the gametype uses key objectives or not. */
@@ -1301,3 +1300,5 @@ qboolean UI_IsARoundBasedGametype(int check);	/* Whether the gametype uses the n
 qboolean UI_UsesTeamObelisks(int check);	/* Whether the gametype uses team obelisks. */
 qboolean UI_UsesControlPoints(int check);	/* Whether the gametype uses control points. */
 /* /Neon_Knight */
+
+#endif

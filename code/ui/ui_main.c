@@ -7097,9 +7097,12 @@ vmCvar_t ui_humansonly;
 vmCvar_t ui_missionpackChecks;
 
 /* Neon_Knight: Random number generator. */
-vmCvar_t ui_random;
-vmCvar_t ui_randomMax;
-vmCvar_t ui_randomMin;
+vmCvar_t ui_randomI;
+vmCvar_t ui_randomIMax;
+vmCvar_t ui_randomIMin;
+vmCvar_t ui_randomF;
+vmCvar_t ui_randomFMax;
+vmCvar_t ui_randomFMin;
 /* Neon_Knight */
 
 // bk001129 - made static to avoid aliasing
@@ -7280,9 +7283,12 @@ static cvarTable_t		cvarTable[] = {
 	{ &ui_introPlayed, "ui_introPlayed", "0", CVAR_INIT },
 	{ &ui_missionpackChecks, "ui_missionpackChecks", "1", CVAR_INIT },
 	/* Neon_Knight: Random number generator. */
-	{ &ui_random, "ui_random", "", CVAR_ARCHIVE },
-	{ &ui_randomMax, "ui_randomMax", "1", CVAR_ARCHIVE },
-	{ &ui_randomMin, "ui_randomMin", "0", CVAR_ARCHIVE },
+	{ &ui_randomI, "ui_randomI", "", CVAR_ARCHIVE },
+	{ &ui_randomIMax, "ui_randomIMax", "10", CVAR_ARCHIVE },
+	{ &ui_randomIMin, "ui_randomIMin", "0", CVAR_ARCHIVE },
+	{ &ui_randomF, "ui_randomF", "", CVAR_ARCHIVE },
+	{ &ui_randomFMax, "ui_randomFMax", "1", CVAR_ARCHIVE },
+	{ &ui_randomFMin, "ui_randomFMin", "0", CVAR_ARCHIVE },
 	/* Neon_Knight */
 };
 
