@@ -702,6 +702,7 @@ int G_InvulnerabilityEffect( gentity_t *targ, vec3_t dir, vec3_t point, vec3_t i
 void body_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int damage, int meansOfDeath );
 void TossClientItems( gentity_t *self );
 void TossClientPersistantPowerups( gentity_t *self );
+void TossClientCubesValues(vec3_t angles, vec3_t origin, vec3_t velocity);
 void TossClientCubes( gentity_t *self );
 
 // damage flags
@@ -1188,9 +1189,8 @@ extern  vmCvar_t    g_warningExpire;
 extern  vmCvar_t    g_minNameChangePeriod;
 extern  vmCvar_t    g_maxNameChanges;
 
-/* Neon_Knight: Adding cvar for (de)activation of the Grappling Hook */
 extern  vmCvar_t    g_grapple;
-/* /Neon_Knight */
+extern  vmCvar_t    g_harvesterFromBodies;
 
 void	trap_Printf( const char *fmt );
 void	trap_Error( const char *fmt ) __attribute__((noreturn));

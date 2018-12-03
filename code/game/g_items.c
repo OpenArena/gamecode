@@ -1063,7 +1063,6 @@ void G_BounceItem( gentity_t *ent, trace_t *trace )
 	ent->s.pos.trTime = level.time;
 }
 
-
 /*
 ================
 G_RunItem
@@ -1073,6 +1072,8 @@ G_RunItem
 void G_RunItem( gentity_t *ent )
 {
 	vec3_t		origin;
+	vec3_t		angles;
+	vec3_t		velocity;
 	trace_t		tr;
 	int			contents;
 	int			mask;
@@ -1122,6 +1123,14 @@ void G_RunItem( gentity_t *ent )
 	// if it is in a nodrop volume, remove it
 	contents = trap_PointContents( ent->r.currentOrigin, -1 );
 	if ( contents & CONTENTS_NODROP ) {
+		if (ent->item && ent->item->giType == IT_TEAM && (Q_strequal(ent->item->pickup_name,"Red Cube") || Q_strequal(ent->item->pickup_name,"Blue Cube"))) {
+			TossClientCubesValues(angles, origin, velocity);
+			G_SetOrigin( ent, origin );
+			ent->s.pos.trType = TR_GRAVITY;
+			ent->s.pos.trTime = level.time;
+			VectorCopy( velocity, ent->s.pos.trDelta );
+			return;
+		}
 		if (ent->item && ent->item->giType == IT_TEAM) {
 			Team_FreeEntity(ent);
 		}

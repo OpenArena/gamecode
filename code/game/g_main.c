@@ -202,9 +202,9 @@ vmCvar_t		g_execute_gametype_script;
 vmCvar_t		g_emptyCommand;
 vmCvar_t		g_emptyTime;
 
-/* Neon_Knight: Adding cvar for (de)activation of the Grappling Hook. */
 vmCvar_t		g_grapple;
-/* /Neon_Knight */
+vmCvar_t		g_harvesterFromBodies;
+
 
 mapinfo_result_t mapinfo;
 
@@ -413,9 +413,8 @@ static cvarTable_t		gameCvarTable[] = {
 	{ &g_emptyCommand, "g_emptyCommand", "map_restart", CVAR_ARCHIVE, 0, qfalse},
 	{ &g_emptyTime, "g_emptytime", "0", CVAR_ARCHIVE, 0, qfalse},
 
-/* Neon_Knight: Adding a cvar for the (de)activation of the Grappling Hook. */
 	{ &g_grapple, "g_grapple", "0", CVAR_ARCHIVE, 0, qfalse},
-/* /Neon_Knight */
+	{ &g_harvesterFromBodies, "g_harvesterFromBodies", "0", CVAR_ARCHIVE, 0, qfalse},
 
 };
 
