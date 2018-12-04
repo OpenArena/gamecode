@@ -4820,7 +4820,7 @@ static void UI_BuildServerDisplayList(qboolean force, qboolean doReset)
 	trap_Cvar_VariableStringBuffer( "cl_motdString", uiInfo.serverStatus.motd, sizeof(uiInfo.serverStatus.motd) );
 	len = strlen(uiInfo.serverStatus.motd);
 	if (len == 0) {
-		strcpy(uiInfo.serverStatus.motd, "Welcome to Team Arena!");
+		strcpy(uiInfo.serverStatus.motd, "Welcome to OpenArena!");
 		len = strlen(uiInfo.serverStatus.motd);
 	}
 	if (len != uiInfo.serverStatus.motdLen) {
@@ -7092,6 +7092,8 @@ vmCvar_t	gameover; // ai script
 // leilei
 vmCvar_t	ui_introPlayed;
 
+vmCvar_t	ui_colors;
+
 vmCvar_t ui_humansonly;
 
 vmCvar_t ui_missionpackChecks;
@@ -7282,6 +7284,8 @@ static cvarTable_t		cvarTable[] = {
 // end changed RD
 	{ &ui_introPlayed, "ui_introPlayed", "0", CVAR_INIT },
 	{ &ui_missionpackChecks, "ui_missionpackChecks", "1", CVAR_INIT },
+// leilei
+	{ &ui_colors, "ui_colors", "0x1e3072 0x7286d0 0x1fd1b2 0x606060", CVAR_ARCHIVE},
 	/* Neon_Knight: Random number generator. */
 	{ &ui_randomI, "ui_randomI", "", CVAR_ARCHIVE },
 	{ &ui_randomIMax, "ui_randomIMax", "10", CVAR_ARCHIVE },
@@ -7289,7 +7293,6 @@ static cvarTable_t		cvarTable[] = {
 	{ &ui_randomF, "ui_randomF", "", CVAR_ARCHIVE },
 	{ &ui_randomFMax, "ui_randomFMax", "1", CVAR_ARCHIVE },
 	{ &ui_randomFMin, "ui_randomFMin", "0", CVAR_ARCHIVE },
-	/* Neon_Knight */
 };
 
 // bk001129 - made static to avoid aliasing
