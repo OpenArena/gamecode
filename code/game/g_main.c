@@ -202,9 +202,9 @@ vmCvar_t		g_execute_gametype_script;
 vmCvar_t		g_emptyCommand;
 vmCvar_t		g_emptyTime;
 
-/* Neon_Knight: Adding cvar for (de)activation of the Grappling Hook. */
 vmCvar_t		g_grapple;
-/* /Neon_Knight */
+vmCvar_t		g_harvesterFromBodies;
+
 
 mapinfo_result_t mapinfo;
 
@@ -370,14 +370,14 @@ static cvarTable_t		gameCvarTable[] = {
 	{ &g_lms_lives, "g_lms_lives", "1", 0, 0, qtrue },
 	{ &g_lms_mode, "g_lms_mode", "0", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qtrue },
 
-	{ &g_catchup, "g_catchup", "0", CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue},
+	{ &g_catchup, "g_catchup", "0", CVAR_ARCHIVE, 0, qtrue},
 
-	{ &g_autonextmap, "g_autonextmap", "0", CVAR_ARCHIVE | CVAR_NORESTART, 0, qfalse},
+	{ &g_autonextmap, "g_autonextmap", "0", CVAR_ARCHIVE, 0, qfalse},
 	{
 		&g_mappools, "g_mappools", "0\\maps_dm.cfg\\1\\maps_tourney.cfg\\3\\maps_tdm.cfg\\4\\maps_ctf.cfg\\5\\maps_oneflag.cfg\\6\\maps_obelisk.cfg\
-\\7\\maps_harvester.cfg\\8\\maps_elimination.cfg\\9\\maps_ctf.cfg\\10\\maps_lms.cfg\\11\\maps_dd.cfg\\12\\maps_dom.cfg\\13\\maps_dm.cfg\\", CVAR_ARCHIVE | CVAR_NORESTART, 0, qfalse
+\\7\\maps_harvester.cfg\\8\\maps_elimination.cfg\\9\\maps_ctf.cfg\\10\\maps_lms.cfg\\11\\maps_dd.cfg\\12\\maps_dom.cfg\\13\\maps_dm.cfg\\", CVAR_ARCHIVE, 0, qfalse
 	},
-	{ &g_humanplayers, "g_humanplayers", "0", CVAR_ROM | CVAR_NORESTART, 0, qfalse },
+	{ &g_humanplayers, "g_humanplayers", "0", CVAR_ROM, 0, qfalse },
 //used for voIP
 	{ &g_redTeamClientNumbers, "g_redTeamClientNumbers", "0",CVAR_ROM, 0, qfalse },
 	{ &g_blueTeamClientNumbers, "g_blueTeamClientNumbers", "0",CVAR_ROM, 0, qfalse },
@@ -413,9 +413,8 @@ static cvarTable_t		gameCvarTable[] = {
 	{ &g_emptyCommand, "g_emptyCommand", "map_restart", CVAR_ARCHIVE, 0, qfalse},
 	{ &g_emptyTime, "g_emptytime", "0", CVAR_ARCHIVE, 0, qfalse},
 
-/* Neon_Knight: Adding a cvar for the (de)activation of the Grappling Hook. */
 	{ &g_grapple, "g_grapple", "0", CVAR_ARCHIVE, 0, qfalse},
-/* /Neon_Knight */
+	{ &g_harvesterFromBodies, "g_harvesterFromBodies", "0", CVAR_ARCHIVE, 0, qtrue},
 
 };
 

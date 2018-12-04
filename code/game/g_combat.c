@@ -172,6 +172,24 @@ TossClientCubes
 */
 extern gentity_t	*neutralObelisk;
 
+void TossClientCubesValues(vec3_t angles, vec3_t origin, vec3_t velocity) {
+	angles[YAW] = (float)(level.time % 360);
+	angles[PITCH] = 0;	// always forward
+	angles[ROLL] = 0;
+	
+	AngleVectors( angles, velocity, NULL, NULL );
+	VectorScale( velocity, 150, velocity );
+	velocity[2] += 200 + crandom() * 50;
+
+	if( neutralObelisk ) {
+		VectorCopy( neutralObelisk->s.pos.trBase, origin );
+		origin[2] += 44;
+	}
+	else {
+		VectorClear( origin ) ;
+	}
+}
+
 void TossClientCubes( gentity_t *self )
 {
 	gitem_t		*item;
@@ -195,20 +213,10 @@ void TossClientCubes( gentity_t *self )
 		item = BG_FindItem( "Blue Cube" );
 	}
 
-	angles[YAW] = (float)(level.time % 360);
-	angles[PITCH] = 0;	// always forward
-	angles[ROLL] = 0;
-
-	AngleVectors( angles, velocity, NULL, NULL );
-	VectorScale( velocity, 150, velocity );
-	velocity[2] += 200 + crandom() * 50;
-
-	if( neutralObelisk ) {
-		VectorCopy( neutralObelisk->s.pos.trBase, origin );
-		origin[2] += 44;
-	}
-	else {
-		VectorClear( origin ) ;
+	TossClientCubesValues(angles, origin, velocity);
+	
+	if (g_harvesterFromBodies.integer) {
+		VectorCopy (self->s.pos.trBase, origin);
 	}
 
 	drop = LaunchItem( item, origin, velocity );
