@@ -4820,7 +4820,7 @@ static void UI_BuildServerDisplayList(qboolean force, qboolean doReset)
 	trap_Cvar_VariableStringBuffer( "cl_motdString", uiInfo.serverStatus.motd, sizeof(uiInfo.serverStatus.motd) );
 	len = strlen(uiInfo.serverStatus.motd);
 	if (len == 0) {
-+		strcpy(uiInfo.serverStatus.motd, "Welcome to OpenArena!");
+		strcpy(uiInfo.serverStatus.motd, "Welcome to OpenArena!");
 		len = strlen(uiInfo.serverStatus.motd);
 	}
 	if (len != uiInfo.serverStatus.motdLen) {

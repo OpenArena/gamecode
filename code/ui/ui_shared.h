@@ -555,6 +555,8 @@ int trap_PC_SourceFileAndLine(int handle, char *filename, int *line);
 
 void Item_Text_AutoWrapped_Paint(itemDef_t *item);
 
+void trap_Cvar_VariableStringBuffer( const char *var_name, char *buffer, int bufsize );
+
 // Knightmare- screen item alignment types
 // Adapted from an i3d thread that applies this to the JK2 source http://forums.inside3d.com/viewtopic.php?f=1&t=5159&p=49084
 
