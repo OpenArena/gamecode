@@ -168,6 +168,8 @@ extern vmCvar_t ui_humansonly;
 
 extern vmCvar_t	ui_introPlayed;
 
+extern vmCvar_t	ui_colors;
+
 /* Neon_Knight: Additional missionpack check */
 extern vmCvar_t	ui_missionpackChecks;
 /* /Neon_Knight */

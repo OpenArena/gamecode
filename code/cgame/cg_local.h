@@ -709,6 +709,7 @@ typedef struct {
 	// temp working variables for player view
 	float		bobfracsin;
 	int			bobcycle;
+	float			bobcycle2; /* leilei - for more bobbing styles */
 	float		xyspeed;
 	int     nextOrbitTime;
 
