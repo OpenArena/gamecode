@@ -2493,6 +2493,9 @@ qboolean G_admin_admintest( gentity_t *ent, int skiparg )
 			break;
 		}
 	}
+	if (i >= MAX_ADMIN_LEVELS) {
+		return qfalse;
+	}
 	AP( va( "print \"^3!admintest: ^7%s^7 is a level %d admin %s%s^7%s\n\"",
 	        ent->client->pers.netname,
 	        l,
