@@ -143,7 +143,7 @@ vmCvar_t  ui_debug;
 vmCvar_t  ui_initialized;
 vmCvar_t  ui_teamArenaFirstRun;
 
-void _UI_Init( qboolean );
+void _UI_Init( qboolean, int randomSeed );
 void _UI_Shutdown( void );
 void _UI_KeyEvent( int key, qboolean down );
 void _UI_MouseEvent( int dx, int dy );
@@ -156,7 +156,7 @@ Q_EXPORT intptr_t vmMain( int command, int arg0, int arg1, int arg2, int arg3, i
 		return UI_API_VERSION;
 
 	case UI_INIT:
-		_UI_Init(arg0);
+		_UI_Init(arg0, arg1);
 		return 0;
 
 	case UI_SHUTDOWN:
@@ -6252,7 +6252,7 @@ float realxscale, realyscale;
 UI_Init
 =================
 */
-void _UI_Init( qboolean inGameLoad )
+void _UI_Init( qboolean inGameLoad, int randomSeed )
 {
 	const char *menuSet;
 	// Changed RD
@@ -6261,6 +6261,8 @@ void _UI_Init( qboolean inGameLoad )
 	char head[256];
 	int i;
 	// end changed RD
+
+	srand( randomSeed );
 
 	//uiInfo.inGameLoad = inGameLoad;
 
