@@ -800,7 +800,7 @@ void srand(unsigned seed) {
 
 int rand(void) {
 	randSeed = (69069 * randSeed + 1);
-	return randSeed & 0x7fff;
+	return randSeed & RAND_MAX;
 }
 
 double atof(const char *string) {
