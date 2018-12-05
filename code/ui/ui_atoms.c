@@ -316,7 +316,7 @@ ui_randomIntToCvar CVAR minInt maxInt
 Sets the CVAR to a random integer between minInt and maxInt (both included)
 =======================
 */
-static qboolean ui_randomIntToCvar( void ) {
+static void ui_randomIntToCvar( void ) {
 	if (trap_Argc() == 4) {
 		char cvarName[MAX_QPATH];
 		char minIntString[MAX_QPATH];
@@ -330,21 +330,20 @@ static qboolean ui_randomIntToCvar( void ) {
 		maxInt = atoi(maxIntString)+1;
 		if (minInt >= maxInt) {
 			Com_Printf("maxInt (%d) must be greater than minInt (%d)\n", maxInt-1, minInt);
-			return qtrue;
+			return;
 		}
 		if (maxInt-minInt > RAND_MAX) {
 			Com_Printf("The difference between min and max (%d) is larger than %d\n", maxInt-minInt, RAND_MAX);
-			return qtrue;
+			return;
 		}
 		trap_Cvar_SetValue(cvarName, minInt+rand()%(maxInt-minInt));
 	}
 	else {
 		Com_Printf("Must be called like: ui_randomIntToCvar CVAR min max\n");
 	}
-	return qtrue;
 }
 
-static qboolean ui_randomFloatToCvar( void ) {
+static void ui_randomFloatToCvar( void ) {
 	if (trap_Argc() == 4) {
 		char cvarName[MAX_QPATH];
 		char minFloatString[MAX_QPATH];
@@ -358,26 +357,26 @@ static qboolean ui_randomFloatToCvar( void ) {
 		maxFloat = atof(maxFloatString);
 		if (minFloat >= maxFloat) {
 			Com_Printf("max (%f) must be greater than min (%f)\n", maxFloat, minFloat);
-			return qtrue;
+			return;
 		}
 		trap_Cvar_SetValue(cvarName, minFloat+((maxFloat+minFloat)*(float)rand()/(float)RAND_MAX));
 	}
 	else {
 		Com_Printf("Must be called like: ui_randomIntToCvar CVAR min max\n");
 	}
-	return qtrue;
+	return;
 }
 
-static qboolean ui_randomStringToCvar( void ) {
+static void ui_randomStringToCvar( void ) {
 	char cvarName[MAX_QPATH];
 	int choice = rand();
 	if (trap_Argc() < 2) {
 		Com_Printf("Must be called like: ui_randomStringToCvar CVAR string1 stringN...\n");
-		return qtrue;
+		return;
 	}
 	Q_strncpyz(cvarName, UI_Argv(1), sizeof(cvarName));
 	trap_Cvar_Set(cvarName, UI_Argv(2+choice%(trap_Argc()-2)));
-	return qtrue;
+	return;
 }
 
 /*
@@ -441,15 +440,18 @@ qboolean UI_ConsoleCommand( int realTime ) {
 	}
 
 	if ( Q_strequal(cmd, "ui_randomIntToCvar") ) {
-		return ui_randomIntToCvar();
+		ui_randomIntToCvar();
+		return qtrue;
 	}
 
 	if ( Q_strequal(cmd, "ui_randomFloatToCvar") ) {
-		return ui_randomFloatToCvar();
+		ui_randomFloatToCvar();
+		return qtrue;
 	}
 
 	if ( Q_strequal(cmd, "ui_randomStringToCvar") ) {
-		return ui_randomStringToCvar();
+		ui_randomStringToCvar();
+		return qtrue;
 	}
 
 	if ( Q_strequal(cmd, "ui_cdkey") ) {
