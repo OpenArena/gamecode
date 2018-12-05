@@ -368,6 +368,18 @@ static qboolean ui_randomFloatToCvar( void ) {
 	return qtrue;
 }
 
+static qboolean ui_randomStringToCvar( void ) {
+	char cvarName[MAX_QPATH];
+	int choice = rand();
+	if (trap_Argc() < 2) {
+		Com_Printf("Must be called like: ui_randomStringToCvar CVAR string1 stringN...\n");
+		return qtrue;
+	}
+	Q_strncpyz(cvarName, UI_Argv(1), sizeof(cvarName));
+	trap_Cvar_Set(cvarName, UI_Argv(2+choice%(trap_Argc()-2)));
+	return qtrue;
+}
+
 /*
 =================
 UI_ConsoleCommand
@@ -434,6 +446,10 @@ qboolean UI_ConsoleCommand( int realTime ) {
 
 	if ( Q_strequal(cmd, "ui_randomFloatToCvar") ) {
 		return ui_randomFloatToCvar();
+	}
+
+	if ( Q_strequal(cmd, "ui_randomStringToCvar") ) {
+		return ui_randomStringToCvar();
 	}
 
 	if ( Q_strequal(cmd, "ui_cdkey") ) {

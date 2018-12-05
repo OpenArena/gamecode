@@ -792,7 +792,7 @@ double tan(double x) {
 }
 
 
-static int randSeed = 0;
+static unsigned int randSeed = 0;
 
 void srand(unsigned seed) {
 	randSeed = seed;
@@ -800,7 +800,7 @@ void srand(unsigned seed) {
 
 int rand(void) {
 	randSeed = (69069 * randSeed + 1);
-	return randSeed & RAND_MAX;
+	return randSeed % RAND_MAX;
 }
 
 double atof(const char *string) {
