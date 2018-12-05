@@ -330,13 +330,37 @@ static qboolean ui_randomIntToCvar( void ) {
 		maxInt = atoi(maxIntString)+1;
 		if (minInt >= maxInt) {
 			Com_Printf("maxInt (%d) must be greater than minInt (%d)\n", maxInt-1, minInt);
-			return qfalse;
+			return qtrue;
 		}
 		if (maxInt-minInt > RAND_MAX) {
 			Com_Printf("The difference between min and max (%d) is larger than %d\n", maxInt-minInt, RAND_MAX);
-			return qfalse;
+			return qtrue;
 		}
 		trap_Cvar_SetValue(cvarName, minInt+rand()%(maxInt-minInt));
+	}
+	else {
+		Com_Printf("Must be called like: ui_randomIntToCvar CVAR min max\n");
+	}
+	return qtrue;
+}
+
+static qboolean ui_randomFloatToCvar( void ) {
+	if (trap_Argc() == 4) {
+		char cvarName[MAX_QPATH];
+		char minFloatString[MAX_QPATH];
+		char maxFloatString[MAX_QPATH];
+		float minFloat = 0;
+		float maxFloat = 0;
+		Q_strncpyz(cvarName, UI_Argv(1), sizeof(cvarName));
+		Q_strncpyz(minFloatString, UI_Argv(2), sizeof(minFloatString));
+		Q_strncpyz(maxFloatString, UI_Argv(3), sizeof(maxFloatString));
+		minFloat = atof(minFloatString);
+		maxFloat = atof(maxFloatString);
+		if (minFloat >= maxFloat) {
+			Com_Printf("max (%f) must be greater than min (%f)\n", maxFloat, minFloat);
+			return qtrue;
+		}
+		trap_Cvar_SetValue(cvarName, minFloat+((maxFloat+minFloat)*(float)rand()/(float)RAND_MAX));
 	}
 	else {
 		Com_Printf("Must be called like: ui_randomIntToCvar CVAR min max\n");
@@ -405,6 +429,14 @@ qboolean UI_ConsoleCommand( int realTime ) {
 	}
 
 	if ( Q_strequal(cmd, "ui_randomIntToCvar") ) {
+		return ui_randomIntToCvar();
+	}
+
+	if ( Q_strequal(cmd, "ui_randomFloatToCvar") ) {
+		return ui_randomFloatToCvar();
+	}
+
+	if ( Q_strequal(cmd, "ui_randomFloatToCvar") ) {
 		return ui_randomIntToCvar();
 	}
 
