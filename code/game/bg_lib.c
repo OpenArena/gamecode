@@ -799,8 +799,8 @@ void srand(unsigned seed) {
 }
 
 int rand(void) {
-	randSeed = (69069 * randSeed + 1);
-	return randSeed % RAND_MAX;
+	randSeed = (1103515245 * randSeed + 12345) ;
+	return (randSeed>>16) & RAND_MAX;
 }
 
 double atof(const char *string) {
