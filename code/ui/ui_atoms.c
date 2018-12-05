@@ -436,10 +436,6 @@ qboolean UI_ConsoleCommand( int realTime ) {
 		return ui_randomFloatToCvar();
 	}
 
-	if ( Q_strequal(cmd, "ui_randomFloatToCvar") ) {
-		return ui_randomIntToCvar();
-	}
-
 	if ( Q_strequal(cmd, "ui_cdkey") ) {
 		//UI_CDKeyMenu_f();
 		return qtrue;
