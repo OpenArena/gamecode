@@ -2972,6 +2972,54 @@ static qboolean UI_OwnerDrawVisible(int flags)
 			}
 			flags &= ~UI_SHOW_DEMOAVAILABLE;
 		}
+		if (flags & UI_SHOW_ANYOBJECTIVEGAME) {
+			if (!UI_UsesKeyObjectives(uiInfo.gameTypes[ui_gameType.integer].gtEnum)) {
+				vis = qfalse;
+			}
+			flags &= ~UI_SHOW_ANYOBJECTIVEGAME;
+		}
+		if (flags & UI_SHOW_ANYNONOBJECTIVEGAME) {
+			if (UI_UsesKeyObjectives(uiInfo.gameTypes[ui_gameType.integer].gtEnum)) {
+				vis = qfalse;
+			}
+			flags &= ~UI_SHOW_ANYNONOBJECTIVEGAME;
+		}
+		if (flags & UI_SHOW_NETANYOBJECTIVEGAME) {
+			if (!UI_UsesKeyObjectives(uiInfo.gameTypes[ui_netGameType.integer].gtEnum)) {
+				vis = qfalse;
+			}
+			flags &= ~UI_SHOW_NETANYOBJECTIVEGAME;
+		}
+		if (flags & UI_SHOW_NETANYNONOBJECTIVEGAME) {
+			if (UI_UsesKeyObjectives(uiInfo.gameTypes[ui_netGameType.integer].gtEnum)) {
+				vis = qfalse;
+			}
+			flags &= ~UI_SHOW_NETANYNONOBJECTIVEGAME;
+		}
+		if (flags & UI_SHOW_ANYROUNDGAME) {
+			if (!UI_IsARoundBasedGametype(uiInfo.gameTypes[ui_gameType.integer].gtEnum)) {
+				vis = qfalse;
+			}
+			flags &= ~UI_SHOW_ANYROUNDGAME;
+		}
+		if (flags & UI_SHOW_ANYNONROUNDGAME) {
+			if (UI_IsARoundBasedGametype(uiInfo.gameTypes[ui_gameType.integer].gtEnum)) {
+				vis = qfalse;
+			}
+			flags &= ~UI_SHOW_ANYNONROUNDGAME;
+		}
+		if (flags & UI_SHOW_NETANYROUNDGAME) {
+			if (!UI_IsARoundBasedGametype(uiInfo.gameTypes[ui_netGameType.integer].gtEnum)) {
+				vis = qfalse;
+			}
+			flags &= ~UI_SHOW_NETANYROUNDGAME;
+		}
+		if (flags & UI_SHOW_NETANYNONROUNDGAME) {
+			if (UI_IsARoundBasedGametype(uiInfo.gameTypes[ui_netGameType.integer].gtEnum)) {
+				vis = qfalse;
+			}
+			flags &= ~UI_SHOW_NETANYNONROUNDGAME;
+		}
 		else {
 			flags = 0;
 		}
