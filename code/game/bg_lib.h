@@ -59,6 +59,7 @@ typedef char *  va_list;
 #define LONG_MAX      0x7fffffffL   /* maximum (signed) long value */
 #define LONG_MIN    (-LONG_MAX - 1) /* minimum (signed) long value */
 #define ULONG_MAX     0xffffffffUL  /* maximum unsigned long value */
+#define RAND_MAX      0x7fff
 
 #define isalnum(c)  (isalpha(c) || isdigit(c))
 #define isalpha(c)  (isupper(c) || islower(c))
