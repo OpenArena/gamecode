@@ -1602,7 +1602,7 @@ static void UI_DrawTeamMember(rectDef_t *rect, float scale, vec4_t color, qboole
 	else {
 		value -= 2;
 
-		if (UI_IsATeamGametype(ui_actualNetGameType.integer) && UI_UsesKeyObjectives(ui_actualNetGameType.integer)) {
+		if (UI_IsATeamGametype(ui_actualNetGameType.integer)) {
 			if (value >= uiInfo.characterCount) {
 				value = 0;
 			}
@@ -2415,7 +2415,7 @@ static void UI_DrawBotName(rectDef_t *rect, float scale, vec4_t color, int textS
 	int value = uiInfo.botIndex;
 	int game = trap_Cvar_VariableValue("g_gametype");
 	const char *text = "";
-	if (UI_IsATeamGametype(game) && UI_UsesKeyObjectives(game)) {
+	if (UI_IsATeamGametype(game)) {
 		if (value >= uiInfo.characterCount) {
 			value = 0;
 		}
@@ -3310,7 +3310,7 @@ static qboolean UI_TeamMember_HandleKey(int flags, float *special, int key, qboo
 		else {
 			value++;
 		}
-		if (UI_IsATeamGametype(ui_actualNetGameType.integer) && UI_UsesKeyObjectives(ui_actualNetGameType.integer)) {
+		if (UI_IsATeamGametype(ui_actualNetGameType.integer)) {
 			if (value >= uiInfo.characterCount + 2) {
 				value = 0;
 			}
@@ -3415,7 +3415,7 @@ static qboolean UI_BotName_HandleKey(int flags, float *special, int key)
 			value++;
 		}
 
-		if (UI_IsATeamGametype(game) && UI_UsesKeyObjectives(game)) {
+		if (UI_IsATeamGametype(game)) {
 			if (value >= uiInfo.characterCount + 2) {
 				value = 0;
 			}
@@ -3813,6 +3813,9 @@ static void UI_StartSkirmish(qboolean next, char *name)
 	trap_Cvar_Set("ui_saveCaptureLimit", va("%i", temp));
 	temp = trap_Cvar_VariableValue( "fraglimit" );
 	trap_Cvar_Set("ui_saveFragLimit", va("%i", temp));
+	/* Neon_Knight: Since the SP uses custom time limits, pass it as well. */
+	temp = trap_Cvar_VariableValue( "timelimit" );
+	trap_Cvar_Set("ui_saveTimeLimit", va("%i", temp));
 
 	UI_SetCapFragLimits(qfalse);
 
@@ -3820,14 +3823,38 @@ static void UI_StartSkirmish(qboolean next, char *name)
 	trap_Cvar_Set("ui_drawTimer", va("%i", temp));
 	temp = trap_Cvar_VariableValue( "g_doWarmup" );
 	trap_Cvar_Set("ui_doWarmup", va("%i", temp));
-	temp = trap_Cvar_VariableValue( "g_friendlyFire" );
-	trap_Cvar_Set("ui_friendlyFire", va("%i", temp));
+	/* Neon_Knight: Since the SP uses bot_minplayers, pass it as well. */
+	temp = trap_Cvar_VariableValue( "bot_minPlayers" );
+	trap_Cvar_Set("ui_minPlayers", va("%i", temp));
 	temp = trap_Cvar_VariableValue( "sv_maxClients" );
 	trap_Cvar_Set("ui_maxClients", va("%i", temp));
 	temp = trap_Cvar_VariableValue( "g_warmup" );
 	trap_Cvar_Set("ui_Warmup", va("%i", temp));
 	temp = trap_Cvar_VariableValue( "sv_pure" );
 	trap_Cvar_Set("ui_pure", va("%i", temp));
+	/* Neon_Knight: Since the SP uses game options, pass them as well. */
+	temp = trap_Cvar_VariableValue( "g_friendlyFire" );
+	trap_Cvar_Set("ui_friendlyFire", va("%i", temp));
+	temp = trap_Cvar_VariableValue( "g_vampire" );
+	trap_Cvar_Set("ui_vampire", va("%i", temp));
+	temp = trap_Cvar_VariableValue( "g_lms_lives" );
+	trap_Cvar_Set("ui_lmsLives", va("%i", temp));
+	temp = trap_Cvar_VariableValue( "g_ddCaptureTime" );
+	trap_Cvar_Set("ui_ddCaptureTime", va("%i", temp));
+	temp = trap_Cvar_VariableValue( "g_ddRespawnDelay" );
+	trap_Cvar_Set("ui_ddRespawnDelay", va("%i", temp));
+	temp = trap_Cvar_VariableValue( "g_obeliskHealth" );
+	trap_Cvar_Set("ui_obeliskHealth", va("%i", temp));
+	temp = trap_Cvar_VariableValue( "g_rockets" );
+	trap_Cvar_Set("ui_rockets", va("%i", temp));
+	temp = trap_Cvar_VariableValue( "g_gravityModifier" );
+	trap_Cvar_Set("ui_gravityModifier", va("%i", temp));
+	temp = trap_Cvar_VariableValue( "elimination_ctf_oneway" );
+	trap_Cvar_Set("ui_eCTFOneWayMode", va("%i", temp));
+	temp = trap_Cvar_VariableValue( "g_instantgib" );
+	trap_Cvar_Set("ui_instaGib", va("%i", temp));
+	temp = trap_Cvar_VariableValue( "g_harvesterFromBodies" );
+	trap_Cvar_Set("ui_harvesterFromBodies", va("%i", temp));
 
 	trap_Cvar_Set("cg_cameraOrbit", "0");
 	trap_Cvar_Set("cg_thirdPerson", "0");
@@ -3835,7 +3862,8 @@ static void UI_StartSkirmish(qboolean next, char *name)
 	trap_Cvar_Set("g_doWarmup", "1");
 	trap_Cvar_Set("g_warmup", "15");
 	trap_Cvar_Set("sv_pure", "0");
-	trap_Cvar_Set("g_friendlyFire", "0");
+	/* Neon_Knight: This interferes. Commenting. */
+	/* trap_Cvar_Set("g_friendlyFire", "0"); */
 	trap_Cvar_Set("g_redTeam", UI_Cvar_VariableString("ui_teamName"));
 	trap_Cvar_Set("g_blueTeam", UI_Cvar_VariableString("ui_opponentName"));
 
@@ -3848,7 +3876,7 @@ static void UI_StartSkirmish(qboolean next, char *name)
 
 	if (g == GT_TOURNAMENT) {
 		trap_Cvar_Set("sv_maxClients", "2");
-		Com_sprintf( buff, sizeof(buff), "wait ; addbot %s %f "", %i \n", uiInfo.mapList[ui_currentMap.integer].opponentName, skill, delay);
+		Com_sprintf( buff, sizeof(buff), "addbot %s %f "", %i \n", uiInfo.mapList[ui_currentMap.integer].opponentName, skill, delay);
 		trap_Cmd_ExecuteText( EXEC_APPEND, buff );
 	}
 	else if (!UI_IsATeamGametype(g) && g != GT_TOURNAMENT) { // leilei - parse the opponentname as a list of bots instead like q3_ui's arena parsing
@@ -3926,7 +3954,7 @@ static void UI_StartSkirmish(qboolean next, char *name)
 		}
 		/* /Neon_Knight */
 	}
-	if (UI_IsATeamGametype(g) && UI_UsesKeyObjectives(g)) {
+	if (UI_IsATeamGametype(g)) {
 		trap_Cmd_ExecuteText( EXEC_APPEND, "wait 5; team Red\n" );
 	}
 }
@@ -4131,7 +4159,7 @@ static void UI_RunMenuScript(char **args)
 			for (i = 0; i < PLAYERS_PER_TEAM; i++) {
 				int bot = trap_Cvar_VariableValue( va("ui_blueteam%i", i+1));
 				if (bot > 1) {
-					if (UI_IsATeamGametype(ui_actualNetGameType.integer) && UI_UsesKeyObjectives(ui_actualNetGameType.integer)) {
+					if (UI_IsATeamGametype(ui_actualNetGameType.integer)) {
 						Com_sprintf( buff, sizeof(buff), "addbot %s %f %s\n", uiInfo.characterList[bot-2].name, skill, "Blue");
 					}
 					else {
@@ -4141,7 +4169,7 @@ static void UI_RunMenuScript(char **args)
 				}
 				bot = trap_Cvar_VariableValue( va("ui_redteam%i", i+1));
 				if (bot > 1) {
-					if (UI_IsATeamGametype(ui_actualNetGameType.integer) && UI_UsesKeyObjectives(ui_actualNetGameType.integer)) {
+					if (UI_IsATeamGametype(ui_actualNetGameType.integer)) {
 						Com_sprintf( buff, sizeof(buff), "addbot %s %f %s\n", uiInfo.characterList[bot-2].name, skill, "Red");
 					}
 					else {
@@ -4476,10 +4504,10 @@ static void UI_RunMenuScript(char **args)
 		else if (Q_strequal(name, "addBot") ) {
 			/* Neon_Knight: Missionpack checks, if != 0, enables this. */
 			if (ui_missionpackChecks.integer) {
-			if (UI_IsATeamGametype(trap_Cvar_VariableValue("g_gametype")) && UI_UsesKeyObjectives(trap_Cvar_VariableValue("g_gametype"))) {
-				/* /Neon_Knight */
+				if (UI_IsATeamGametype(trap_Cvar_VariableValue("g_gametype"))) {
+					/* /Neon_Knight */
 					trap_Cmd_ExecuteText( EXEC_APPEND, va("addbot %s %i %s\n", UI_GetBotNameByNumber(uiInfo.botIndex), uiInfo.skillIndex+1, (uiInfo.redBlue == 0) ? "Red" : "Blue") );
-				}
+					}
 			} else {
 				trap_Cmd_ExecuteText( EXEC_APPEND, va("addbot %s %i %s\n", uiInfo.characterList[uiInfo.botIndex].name, uiInfo.skillIndex+1, (uiInfo.redBlue == 0) ? "Red" : "Blue") );
 			}
