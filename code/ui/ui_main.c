@@ -1847,7 +1847,7 @@ static void UI_DrawOC(rectDef_t *rect)
 
 static void UI_DrawNetSource(rectDef_t *rect, float scale, vec4_t color, int textStyle)
 {
-	if (ui_netSource.integer < 0 || ui_netSource.integer > numNetSources) {
+	if (ui_netSource.integer < 0 || ui_netSource.integer >= numNetSources) {
 		ui_netSource.integer = 0;
 	}
 	// Changed RD
@@ -1888,7 +1888,7 @@ static void UI_DrawNetMapCinematic(rectDef_t *rect, float scale, vec4_t color)
 
 static void UI_DrawNetFilter(rectDef_t *rect, float scale, vec4_t color, int textStyle)
 {
-	if (ui_serverFilterType.integer < 0 || ui_serverFilterType.integer > numServerFilters) {
+	if (ui_serverFilterType.integer < 0 || ui_serverFilterType.integer >= numServerFilters) {
 		ui_serverFilterType.integer = 0;
 	}
 	Text_Paint(rect->x, rect->y, scale, color, va("Filter: %s", serverFilters[ui_serverFilterType.integer].description), 0, 0, textStyle);
@@ -1939,7 +1939,7 @@ static void UI_DrawTierMapName(rectDef_t *rect, float scale, vec4_t color, int t
 		i = 0;
 	}
 	j = trap_Cvar_VariableValue("ui_currentMap");
-	if (j < 0 || j > MAPS_PER_TIER) {
+	if (j < 0 || j >= MAPS_PER_TIER) {
 		j = 0;
 	}
 
@@ -2366,13 +2366,13 @@ static int UI_OwnerDrawWidth(int ownerDraw, float scale)
 		s = va("%i. %s", ownerDraw-UI_REDTEAM1 + 1, text);
 		break;
 	case UI_NETSOURCE:
-		if (ui_netSource.integer < 0 || ui_netSource.integer > uiInfo.numJoinGameTypes) {
+		if (ui_netSource.integer < 0 || ui_netSource.integer >= uiInfo.numJoinGameTypes) {
 			ui_netSource.integer = 0;
 		}
 		s = va("Source: %s", netSources[ui_netSource.integer]);
 		break;
 	case UI_NETFILTER:
-		if (ui_serverFilterType.integer < 0 || ui_serverFilterType.integer > numServerFilters) {
+		if (ui_serverFilterType.integer < 0 || ui_serverFilterType.integer >= numServerFilters) {
 			ui_serverFilterType.integer = 0;
 		}
 		s = va("Filter: %s", serverFilters[ui_serverFilterType.integer].description );
@@ -3636,6 +3636,47 @@ void UI_ServersSort(int column, qboolean force)
 	uiInfo.serverStatus.sortKey = column;
 	qsort( &uiInfo.serverStatus.displayServers[0], uiInfo.serverStatus.numDisplayServers, sizeof(int), UI_ServersQsortCompare);
 }
+
+/* Neon_Knight: Readding this here. May be useful in a future. */
+/*
+static void UI_StartSinglePlayer(void) {
+	int i,j, k, skill;
+	char buff[1024];
+	i = trap_Cvar_VariableValue( "ui_currentTier" );
+  if (i < 0 || i >= tierCount) {
+    i = 0;
+  }
+	j = trap_Cvar_VariableValue("ui_currentMap");
+	if (j < 0 || j >= MAPS_PER_TIER) {
+		j = 0;
+	}
+
+ 	trap_Cvar_SetValue( "singleplayer", 1 );
+ 	trap_Cvar_SetValue( "g_gametype", Com_Clamp( 0, GT_MAX_GAME_TYPE-1, tierList[i].gameTypes[j] ) );
+	trap_Cmd_ExecuteText( EXEC_APPEND, va( "wait ; wait ; map %s\n", tierList[i].maps[j] ) );
+	skill = trap_Cvar_VariableValue( "g_spSkill" );
+
+	if (j == MAPS_PER_TIER-1) {
+		k = UI_TeamIndexFromName(UI_Cvar_VariableString("ui_opponentName"));
+		Com_sprintf( buff, sizeof(buff), "wait ; addbot %s %i %s 250 %s\n", UI_AIFromName(teamList[k].teamMembers[0]), skill, "", teamList[k].teamMembers[0]);
+	} else {
+		k = UI_TeamIndexFromName(UI_Cvar_VariableString("ui_opponentName"));
+		for (i = 0; i < PLAYERS_PER_TEAM; i++) {
+			Com_sprintf( buff, sizeof(buff), "wait ; addbot %s %i %s 250 %s\n", UI_AIFromName(teamList[k].teamMembers[i]), skill, "Blue", teamList[k].teamMembers[i]);
+			trap_Cmd_ExecuteText( EXEC_APPEND, buff );
+		}
+
+		k = UI_TeamIndexFromName(UI_Cvar_VariableString("ui_teamName"));
+		for (i = 1; i < PLAYERS_PER_TEAM; i++) {
+			Com_sprintf( buff, sizeof(buff), "wait ; addbot %s %i %s 250 %s\n", UI_AIFromName(teamList[k].teamMembers[i]), skill, "Red", teamList[k].teamMembers[i]);
+			trap_Cmd_ExecuteText( EXEC_APPEND, buff );
+		}
+		trap_Cmd_ExecuteText( EXEC_APPEND, "wait 5; team Red\n" );
+	}
+	
+
+}
+*/
 
 
 /*
