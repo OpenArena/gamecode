@@ -5153,21 +5153,24 @@ static int UI_GetServerStatusInfo( const char *serverAddress, serverStatusInfo_t
 		// get the cvars
 		while (p && *p) {
 			p = strchr(p, '\\');
-			if (!p) break;
-			*p++ = '\0';
-			if (*p == '\\')
+			if (!p) {
 				break;
+			}
+			*p++ = '\0';
+			if (*p == '\\') {
+				break;
+			}
 			info->lines[info->numLines][0] = p;
 			info->lines[info->numLines][1] = "";
 			info->lines[info->numLines][2] = "";
 			p = strchr(p, '\\');
-			if (!p) break;
 			*p++ = '\0';
 			info->lines[info->numLines][3] = p;
 
 			info->numLines++;
-			if (info->numLines >= MAX_SERVERSTATUS_LINES)
+			if (info->numLines >= MAX_SERVERSTATUS_LINES) {
 				break;
+			}
 		}
 		// get the player list
 		if (info->numLines < MAX_SERVERSTATUS_LINES-3) {
