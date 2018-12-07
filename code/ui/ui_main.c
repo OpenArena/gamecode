@@ -5371,11 +5371,7 @@ static void UI_BuildFindPlayerList(qboolean force)
 	else {
 		// add a line that shows the number of servers found
 		if (!uiInfo.numFoundPlayerServers) {
-#if 0
-			//Sago007: This is obviously wrong (accesses array element -1). What to do?
-			Com_sprintf(uiInfo.foundPlayerServerNames[uiInfo.numFoundPlayerServers-1], sizeof(uiInfo.foundPlayerServerAddresses[0]), "no servers found");
-#endif
-		}
+			Com_sprintf(uiInfo.foundPlayerServerNames[0], sizeof(uiInfo.foundPlayerServerNames[0]), "no servers found");		}
 		else {
 			Com_sprintf(uiInfo.foundPlayerServerNames[uiInfo.numFoundPlayerServers-1], sizeof(uiInfo.foundPlayerServerAddresses[0]),
 			            "%d server%s found with player %s", uiInfo.numFoundPlayerServers-1,
