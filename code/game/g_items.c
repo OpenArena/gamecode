@@ -960,6 +960,14 @@ G_ItemDisabled
 int G_ItemDisabled( gitem_t *item )
 {
 	char name[128];
+	
+	/* Neon_Knight: Disable shouldn't work on key game objectives in online games.
+		You just can't trust people with always do the right thing. And OA shouldn't
+		suffer for that. */
+	if (item->giType == IT_TEAM) {
+		return qfalse;
+	}
+	/* /Neon_Knight */
 	if (!g_runes.integer && item->giType == IT_PERSISTANT_POWERUP) {
 		return qtrue;
 	}
