@@ -792,15 +792,15 @@ double tan(double x) {
 }
 
 
-static int randSeed = 0;
+static unsigned int randSeed = 0;
 
 void srand(unsigned seed) {
 	randSeed = seed;
 }
 
 int rand(void) {
-	randSeed = (69069 * randSeed + 1);
-	return randSeed & 0x7fff;
+	randSeed = (1103515245 * randSeed + 12345) ;
+	return (randSeed>>16) & RAND_MAX;
 }
 
 double atof(const char *string) {
