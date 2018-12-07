@@ -4685,10 +4685,10 @@ static void UI_RunMenuScript(char **args)
 				else {
 					int i;
 					for (i = 0; i < uiInfo.myTeamCount; i++) {
-						if (Q_strequal(UI_Cvar_VariableString("name"), uiInfo.teamNames[i]) ) {
+						if (uiInfo.playerNumber == uiInfo.teamClientNums[i]) {
 							continue;
 						}
-						Com_sprintf( buff, sizeof( buff ), orders, uiInfo.teamNames[i] );
+						Com_sprintf( buff, sizeof( buff ), orders, uiInfo.teamClientNums[i] );
 						trap_Cmd_ExecuteText( EXEC_APPEND, buff );
 						trap_Cmd_ExecuteText( EXEC_APPEND, "\n" );
 					}
