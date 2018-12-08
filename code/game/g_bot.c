@@ -1030,12 +1030,12 @@ void G_InitBots( qboolean restart ) {
 		    trap_Cvar_Set("bot_minplayers","2"); //Always 2 for Tourney
 		} else {
 			basedelay = MinSpawnpointCount()/2;
-			if(basedelay < 3 && !(G_IsATeamGametype(g_gametype.integer) && G_UsesKeyObjectives(g_gametype.integer)))
+			if(basedelay < 3 && !(G_IsATeamGametype(g_gametype.integer) && !G_UsesKeyObjectives(g_gametype.integer)))
 			    basedelay = 3; //Minimum 3 for FFA
-			if(basedelay < 2 && !(G_IsATeamGametype(g_gametype.integer) && G_UsesKeyObjectives(g_gametype.integer)))
+			if(basedelay < 2 && (G_IsATeamGametype(g_gametype.integer) && !G_UsesKeyObjectives(g_gametype.integer)))
 			    basedelay = 2; //Minimum 2 for TEAM
 			trap_Cvar_Set("bot_minplayers",va("%i",basedelay) );
-		}
+	}
 	    }
 	}
 }
