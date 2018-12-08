@@ -139,16 +139,10 @@ void UI_LoadArenas( void ) {
 	char        dirlist[1024];
 	char*       dirptr;
 	int         i;
-	int         n;
 	int         dirlen;
-	char        *type;
 	// rfactory changes
-	// Changed RD
-	char specialgame[100];
-	// end changed RD
 
 	ui_numArenas = 0;
-	uiInfo.mapCount = 0;
 
 	trap_Cvar_Register( &arenasFile, "g_arenasFile", "", CVAR_INIT|CVAR_ROM );
 	if( *arenasFile.string ) {
@@ -172,6 +166,19 @@ void UI_LoadArenas( void ) {
 		trap_Print(S_COLOR_YELLOW"WARNING: not anough memory in pool to load all arenas\n");
 	}
 
+}
+/*
+===============
+UI_LoadArenasIntoMapList
+===============
+*/
+void UI_LoadArenasIntoMapList( void ) {
+	int			n;
+	char		*type;
+	// Changed RD
+	char specialgame[100];
+	// end changed RD
+	uiInfo.mapCount = 0;
 	for( n = 0; n < ui_numArenas; n++ ) {
 		// determine type
 
