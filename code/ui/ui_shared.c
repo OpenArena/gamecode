@@ -4211,14 +4211,22 @@ qboolean Item_Bind_HandleKey(itemDef_t *item, int key, qboolean down) {
 				id = BindingIDFromName(item->cvar);
 				if (id != -1) {
 					// Changed RD
-					if (item->bindtype == BIND_BOTH) {
+					if( g_bindings[id].bind1 != -1 ) {
+						DC->setBinding( g_bindings[id].bind1, "" );
+						g_bindings[id].bind1 = -1;
+					}
+					if( g_bindings[id].bind2 != -1 ) {
+						DC->setBinding( g_bindings[id].bind2, "" );
+						g_bindings[id].bind2 = -1;
+					}
+/*					if (item->bindtype == BIND_BOTH) {
 						g_bindings[id].bind1 = -1;
 						g_bindings[id].bind2 = -1;
 					} else if (item->bindtype == BIND_PRIMARY) {
 						g_bindings[id].bind1 = -1;
 					} else {
 						g_bindings[id].bind2 = -1;
-					}
+					} */
 					// end changed RD
 				}
 				Controls_SetConfig(qtrue);
