@@ -493,11 +493,6 @@ struct {
 	{ "say_team", qtrue, Svcmd_TeamMessage_f },
 	{ "say", qtrue, Svcmd_MessageWrapper },
 	{ "chat", qtrue, Svcmd_Chat_f },
-	/*{ "m", qtrue, Svcmd_MessageWrapper },
-	{ "a", qtrue, Svcmd_MessageWrapper },
-	{ "bp", qtrue, Svcmd_BannerPrint_f }, */
-	//Shuffle the teams
-	{ "shuffle", qfalse, ShuffleTeams },
 	//Kicks a player by number in the game logic rather than the server number
 	{ "clientkick_game", qfalse, ClientKick_f },
 	{ "endgamenow", qfalse, EndGame_f },
