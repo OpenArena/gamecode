@@ -954,26 +954,26 @@ static qboolean UI_ParseAnimationFile( const char *filename, animation_t *animat
 	while ( 1 ) {
 		prev = text_p;	// so we can unget
 		token = COM_Parse( &text_p );
-		if ( !token ) {
+		if ( !token[0] ) {
 			break;
 		}
 		if ( Q_strequal( token, "footsteps" ) ) {
 			token = COM_Parse( &text_p );
-			if ( !token ) {
+			if ( !token[0] ) {
 				break;
 			}
 			continue;
 		} else if ( Q_strequal( token, "headoffset" ) ) {
 			for ( i = 0 ; i < 3 ; i++ ) {
 				token = COM_Parse( &text_p );
-				if ( !token ) {
+				if ( !token[0] ) {
 					break;
 				}
 			}
 			continue;
 		} else if ( Q_strequal( token, "sex" ) ) {
 			token = COM_Parse( &text_p );
-			if ( !token ) {
+			if ( !token[0] ) {
 				break;
 			}
 			continue;
@@ -992,7 +992,7 @@ static qboolean UI_ParseAnimationFile( const char *filename, animation_t *animat
 	for ( i = 0 ; i < MAX_ANIMATIONS ; i++ ) {
 
 		token = COM_Parse( &text_p );
-		if ( !token ) {
+		if ( !token[0] ) {
 			break;
 		}
 		animations[i].firstFrame = atoi( token );
@@ -1005,19 +1005,19 @@ static qboolean UI_ParseAnimationFile( const char *filename, animation_t *animat
 		}
 
 		token = COM_Parse( &text_p );
-		if ( !token ) {
+		if ( !token[0] ) {
 			break;
 		}
 		animations[i].numFrames = atoi( token );
 
 		token = COM_Parse( &text_p );
-		if ( !token ) {
+		if ( !token[0] ) {
 			break;
 		}
 		animations[i].loopFrames = atoi( token );
 
 		token = COM_Parse( &text_p );
-		if ( !token ) {
+		if ( !token[0] ) {
 			break;
 		}
 		fps = atof( token );
