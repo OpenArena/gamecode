@@ -1322,7 +1322,7 @@ const char *CG_GameTypeString(void)
 	else if ( cgs.gametype == GT_DOMINATION ) {
 		return "Domination";
 	}
-	else if ( cgs.gametype == GT_DOUBLE_D ) {
+	else if ( cgs.gametype == GT_POSSESSION ) {
 		return "Possession";
 	}
 	return "";
