@@ -194,13 +194,6 @@ g_admin_cmd_t g_admin_cmds[ ] = {
 		"display a (partial) list of active bans",
 		"(^5start at ban#^7) (^5name|IP^7)"
 	},
-	//KK-OAX
-	{
-		"shuffle", G_admin_shuffle, "f",
-		"Shuffles the teams"
-		""
-	},
-
 	{
 		"slap", G_admin_slap, "S",
 		"Reduces the health of the selected player by the damage specified",
@@ -3117,14 +3110,6 @@ qboolean G_admin_warn( gentity_t *ent, int skiparg )
 		return qtrue;
 	}
 
-}
-
-qboolean G_admin_shuffle( gentity_t *ent, int skipargs )
-{
-	trap_SendConsoleCommand( EXEC_APPEND, "shuffle" );
-	AP( va( "print \"^3!shuffle: ^7teams shuffled by %s \n\"",
-	        ( ent ) ? ent->client->pers.netname : "console" ) );
-	return qtrue;
 }
 
 //KK-OAX End Additions

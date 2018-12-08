@@ -1322,7 +1322,7 @@ const char *CG_GameTypeString(void)
 	else if ( cgs.gametype == GT_DOMINATION ) {
 		return "Domination";
 	}
-	else if ( cgs.gametype == GT_DOUBLE_D ) {
+	else if ( cgs.gametype == GT_POSSESSION ) {
 		return "Possession";
 	}
 	return "";
@@ -1358,7 +1358,7 @@ static void CG_Text_Paint_Limit(float *maxX, float x, float y, float scale, vec4
 		}
 		count = 0;
 		while (s && *s && count < len) {
-			glyph = &font->glyphs[(int)*s]; // TTimo: FIXME: getting nasty warnings without the cast, hopefully this doesn't break the VM build
+			glyph = &font->glyphs[*s & 255];
 			if ( Q_IsColorString( s ) ) {
 				memcpy( newColor, g_color_table[ColorIndex(*(s+1))], sizeof( newColor ) );
 				newColor[3] = color[3];
@@ -1368,7 +1368,7 @@ static void CG_Text_Paint_Limit(float *maxX, float x, float y, float scale, vec4
 			}
 			else {
 				float yadj = useScale * glyph->top;
-				if (CG_Text_Width(s, useScale, 1) + x > max) {
+				if (CG_Text_Width(s, scale, 1) + x > max) {
 					*maxX = 0;
 					break;
 				}

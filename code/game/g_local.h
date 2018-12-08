@@ -896,7 +896,6 @@ void G_RunClient( gentity_t *ent );
 qboolean OnSameTeam( const gentity_t *ent1, const gentity_t *ent2 );
 void Team_CheckDroppedItem( const gentity_t *dropped );
 qboolean CheckObeliskAttack( const gentity_t *obelisk, const gentity_t *attacker );
-void ShuffleTeams(void);
 //KK-OAX Added for Command Handling Changes (r24)
 team_t G_TeamFromString( char *str );
 /**
