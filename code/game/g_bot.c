@@ -556,7 +556,6 @@ qboolean G_BotConnect( int clientNum, qboolean restart ) {
 
 	Q_strncpyz( settings.characterfile, Info_ValueForKey( userinfo, "characterfile" ), sizeof(settings.characterfile) );
 	settings.skill = atof( Info_ValueForKey( userinfo, "skill" ) );
-	Q_strncpyz( settings.team, Info_ValueForKey( userinfo, "team" ), sizeof(settings.team) );
 
 	if (!trap_AAS_Initialized() || !BotAISetupClient( clientNum, &settings, restart )) {
 		trap_DropClient( clientNum, "BotAISetupClient failed" );
@@ -685,7 +684,7 @@ static void G_AddBot( const char *name, float skill, const char *team, int delay
 	}
 	Info_SetValueForKey( userinfo, "characterfile", Info_ValueForKey( botinfo, "aifile" ) );
 	Info_SetValueForKey( userinfo, "skill", va( "%5.2f", skill ) );
-	Info_SetValueForKey( userinfo, "team", team );
+	Info_SetValueForKey( userinfo, "teampref", team );
 
 	bot = &g_entities[ clientNum ];
 	bot->r.svFlags |= SVF_BOT;

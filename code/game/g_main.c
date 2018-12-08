@@ -201,6 +201,7 @@ vmCvar_t        g_timestamp_startgame;
 vmCvar_t		g_execute_gametype_script;
 vmCvar_t		g_emptyCommand;
 vmCvar_t		g_emptyTime;
+vmCvar_t		g_localTeamPref;
 
 vmCvar_t		g_grapple;
 vmCvar_t		g_harvesterFromBodies;
@@ -412,6 +413,7 @@ static cvarTable_t		gameCvarTable[] = {
 	{ &g_execute_gametype_script, "g_egs", "0", CVAR_ROM, 0, qfalse },
 	{ &g_emptyCommand, "g_emptyCommand", "map_restart", CVAR_ARCHIVE, 0, qfalse},
 	{ &g_emptyTime, "g_emptytime", "0", CVAR_ARCHIVE, 0, qfalse},
+	{ &g_localTeamPref, "g_localTeamPref", "", 0, 0, qfalse },
 
 	{ &g_grapple, "g_grapple", "0", CVAR_ARCHIVE, 0, qfalse},
 	{ &g_harvesterFromBodies, "g_harvesterFromBodies", "0", CVAR_ARCHIVE, 0, qtrue},
