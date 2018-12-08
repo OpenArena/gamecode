@@ -134,12 +134,12 @@ static qboolean CG_ParseAnimationFile(const char *filename, clientInfo_t *ci) {
 	while (1) {
 		prev = text_p; // so we can unget
 		token = COM_Parse(&text_p);
-		if (!token) {
+		if ( !token[0] ) {
 			break;
 		}
 		if (Q_strequal(token, "footsteps")) {
 			token = COM_Parse(&text_p);
-			if (!token) {
+			if ( !token[0] ) {
 				break;
 			}
 			if (Q_strequal(token, "default") || Q_strequal(token, "normal")) {
@@ -159,7 +159,7 @@ static qboolean CG_ParseAnimationFile(const char *filename, clientInfo_t *ci) {
 		} else if (Q_strequal(token, "headoffset")) {
 			for (i = 0; i < 3; i++) {
 				token = COM_Parse(&text_p);
-				if (!token) {
+				if ( !token[0] ) {
 					break;
 				}
 				ci->headOffset[i] = atof(token);
@@ -168,7 +168,7 @@ static qboolean CG_ParseAnimationFile(const char *filename, clientInfo_t *ci) {
 		} else if (Q_strequal(token, "eyes")) { // leilei - EYES
 			for (i = 0; i < 3; i++) {
 				token = COM_Parse(&text_p);
-				if (!token) {
+				if ( !token[0] ) {
 					break;
 				}
 				ci->eyepos[i] = atof(token);
@@ -176,7 +176,7 @@ static qboolean CG_ParseAnimationFile(const char *filename, clientInfo_t *ci) {
 			continue;
 		} else if (Q_strequal(token, "sex")) {
 			token = COM_Parse(&text_p);
-			if (!token) {
+			if ( !token[0] ) {
 				break;
 			}
 			if (token[0] == 'f' || token[0] == 'F') {
@@ -207,7 +207,7 @@ static qboolean CG_ParseAnimationFile(const char *filename, clientInfo_t *ci) {
 	for (i = 0; i < MAX_ANIMATIONS; i++) {
 
 		token = COM_Parse(&text_p);
-		if (!token[0]) {
+		if ( !token[0] ) {
 			if (i >= TORSO_GETFLAG && i <= TORSO_NEGATIVE) {
 				animations[i] = animations[TORSO_GESTURE];
 				animations[i].reversed = qfalse;
@@ -311,7 +311,7 @@ static qboolean CG_ParseAnimationFile(const char *filename, clientInfo_t *ci) {
 		}
 
 		token = COM_Parse(&text_p);
-		if (!*token) {
+		if ( !token[0] ) {
 			break;
 		}
 		animations[i].numFrames = atoi(token);
@@ -325,13 +325,13 @@ static qboolean CG_ParseAnimationFile(const char *filename, clientInfo_t *ci) {
 		}
 
 		token = COM_Parse(&text_p);
-		if (!*token) {
+		if ( !token[0] ) {
 			break;
 		}
 		animations[i].loopFrames = atoi(token);
 
 		token = COM_Parse(&text_p);
-		if (!*token) {
+		if ( !token[0] ) {
 			break;
 		}
 		fps = atof(token);
@@ -421,7 +421,7 @@ static qboolean CG_ParseEyesFile(const char *filename, clientInfo_t *ci) {
 	// read optional parameters
 	while (1) {
 		token = COM_Parse(&text_p);
-		if (!token) {
+		if ( !token[0] ) {
 			break;
 		}
 
@@ -429,7 +429,7 @@ static qboolean CG_ParseEyesFile(const char *filename, clientInfo_t *ci) {
 		if (!Q_stricmp(token, "eyes")) { // leilei - EYES
 			for (i = 0; i < 3; i++) {
 				token = COM_Parse(&text_p);
-				if (!token) {
+				if ( !token[0] ) {
 					break;
 				}
 				ci->eyepos[i] = atof(token);
