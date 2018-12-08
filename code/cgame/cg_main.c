@@ -2766,4 +2766,14 @@ Checks if the gametype uses team-colored obelisks.
 qboolean CG_UsesTeamObelisks(int check) {
 	return GAMETYPE_USES_OBELISKS(check);
 }
+/*
+===================
+CG_UsesControlPoints
+
+Checks if the gametype uses team-colored obelisks.
+===================
+ */
+qboolean CG_UsesControlPoints(int check) {
+	return GAMETYPE_USES_CONTROL_POINTS(check);
+}
 /* /Neon_Knight */

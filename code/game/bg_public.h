@@ -144,6 +144,7 @@ typedef enum {
  */
 #define GAMETYPE_IS_ROUND_BASED(gametype) (gametype == GT_ELIMINATION || gametype == GT_CTF_ELIMINATION || gametype == GT_LMS)
 #define GAMETYPE_USES_OBELISKS(gametype) (gametype == GT_HARVESTER || gametype == GT_OBELISK)
+#define GAMETYPE_USES_CONTROL_POINTS(gametype) (gametype == GT_DOUBLE_D || gametype == GT_DOMINATION)
 
 typedef enum { GENDER_MALE, GENDER_FEMALE, GENDER_NEUTER } gender_t;
 
