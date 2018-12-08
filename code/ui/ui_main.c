@@ -3961,7 +3961,7 @@ static void UI_Update(const char *name)
 		switch (val) {
 		case 0:
 			trap_Cvar_SetValue( "r_depthbits", 0 );
-			trap_Cvar_SetValue( "r_stencilbits", 0 );
+			trap_Cvar_Reset( "r_stencilbits" );
 			break;
 		case 16:
 			trap_Cvar_SetValue( "r_depthbits", 16 );
@@ -3969,6 +3969,7 @@ static void UI_Update(const char *name)
 			break;
 		case 32:
 			trap_Cvar_SetValue( "r_depthbits", 24 );
+			trap_Cvar_SetValue( "r_stencilbits", 8 );
 			break;
 		}
 	}
@@ -3994,6 +3995,7 @@ static void UI_Update(const char *name)
 			trap_Cvar_SetValue( "r_lodbias", 0 );
 			trap_Cvar_SetValue( "r_colorbits", 32 );
 			trap_Cvar_SetValue( "r_depthbits", 24 );
+			trap_Cvar_SetValue( "r_stencilbits", 8 );
 			trap_Cvar_SetValue( "r_picmip", 0 );
 			trap_Cvar_SetValue( "r_mode", 4 );
 			trap_Cvar_SetValue( "r_texturebits", 32 );
@@ -4009,7 +4011,8 @@ static void UI_Update(const char *name)
 			trap_Cvar_SetValue( "r_vertexlight", 0 );
 			trap_Cvar_SetValue( "r_lodbias", 0 );
 			trap_Cvar_SetValue( "r_colorbits", 0 );
-			trap_Cvar_SetValue( "r_depthbits", 24 );
+			trap_Cvar_SetValue( "r_depthbits", 0 );
+			trap_Cvar_Reset( "r_stencilbits" );
 			trap_Cvar_SetValue( "r_picmip", 1 );
 			trap_Cvar_SetValue( "r_mode", 3 );
 			trap_Cvar_SetValue( "r_texturebits", 0 );
@@ -4026,6 +4029,7 @@ static void UI_Update(const char *name)
 			trap_Cvar_SetValue( "r_lodbias", 1 );
 			trap_Cvar_SetValue( "r_colorbits", 0 );
 			trap_Cvar_SetValue( "r_depthbits", 0 );
+			trap_Cvar_Reset( "r_stencilbits" );
 			trap_Cvar_SetValue( "r_picmip", 1 );
 			trap_Cvar_SetValue( "r_mode", 3 );
 			trap_Cvar_SetValue( "r_texturebits", 0 );
@@ -4042,6 +4046,7 @@ static void UI_Update(const char *name)
 			trap_Cvar_SetValue( "r_lodbias", 2 );
 			trap_Cvar_SetValue( "r_colorbits", 16 );
 			trap_Cvar_SetValue( "r_depthbits", 16 );
+			trap_Cvar_SetValue( "r_stencilbits", 0 );
 			trap_Cvar_SetValue( "r_mode", 3 );
 			trap_Cvar_SetValue( "r_picmip", 2 );
 			trap_Cvar_SetValue( "r_texturebits", 16 );
