@@ -3564,6 +3564,9 @@ void UI_ServersSort(int column, qboolean force)
 
 	uiInfo.serverStatus.sortKey = column;
 	qsort( &uiInfo.serverStatus.displayServers[0], uiInfo.serverStatus.numDisplayServers, sizeof(int), UI_ServersQsortCompare);
+	
+	// update displayed levelshot
+	UI_FeederSelection( FEEDER_SERVERS, uiInfo.serverStatus.currentServer );
 }
 
 /* Neon_Knight: Readding this here. May be useful in a future. */
@@ -4809,6 +4812,10 @@ static void UI_InsertServerIntoDisplayList(int num, int position)
 		uiInfo.serverStatus.displayServers[i] = uiInfo.serverStatus.displayServers[i-1];
 	}
 	uiInfo.serverStatus.displayServers[position] = num;
+	// update displayed levelshot
+	if ( position == uiInfo.serverStatus.currentServer ) {
+		UI_FeederSelection( FEEDER_SERVERS, uiInfo.serverStatus.currentServer );
+	}
 }
 
 /*
@@ -4934,7 +4941,6 @@ static void UI_BuildServerDisplayList(qboolean force, qboolean doReset)
 				clients = atoi(Info_ValueForKey(info, "g_humanplayers"));
 			else
 				clients = atoi(Info_ValueForKey(info, "clients"));
-			uiInfo.serverStatus.numPlayersOnServers += clients;
 
 			if (ui_browserShowEmpty.integer == 0) {
 				if (clients == 0) {
@@ -4982,6 +4988,7 @@ static void UI_BuildServerDisplayList(qboolean force, qboolean doReset)
 			// done with this server
 			if (ping > 0) {
 				trap_LAN_MarkServerVisible(ui_netSource.integer, i, qfalse);
+				uiInfo.serverStatus.numPlayersOnServers += clients;
 			}
 		}
 	}
@@ -5060,6 +5067,14 @@ static int UI_GetServerStatusInfo( const char *serverAddress, serverStatusInfo_t
 	char *p, *score, *ping, *name;
 	int i, len;
 
+	if (info) {
+		memset(info, 0, sizeof(*info));
+	}
+	// ignore initial unset addresses
+	if (serverAddress && *serverAddress == '\0') {
+		return qfalse;
+	}
+	// reset server status request for this address
 	if (!info) {
 		trap_LAN_ServerStatus( serverAddress, NULL, 0);
 		return qfalse;
@@ -7281,7 +7296,7 @@ static cvarTable_t		cvarTable[] = {
 	{ &ui_blueteam3, "ui_blueteam3", "0", CVAR_ARCHIVE },
 	{ &ui_blueteam4, "ui_blueteam4", "0", CVAR_ARCHIVE },
 	{ &ui_blueteam5, "ui_blueteam5", "0", CVAR_ARCHIVE },
-	{ &ui_netSource, "ui_netSource", "0", CVAR_ARCHIVE },
+	{ &ui_netSource, "ui_netSource", "1", CVAR_ARCHIVE },
 	{ &ui_menuFiles, "ui_menuFiles", "ui/menus.txt", CVAR_ARCHIVE },
 	{ &ui_currentTier, "ui_currentTier", "0", CVAR_ARCHIVE },
 	{ &ui_currentMap, "ui_currentMap", "0", CVAR_ARCHIVE },
