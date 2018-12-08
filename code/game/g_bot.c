@@ -1024,18 +1024,20 @@ void G_InitBots( qboolean restart ) {
 			G_SpawnBots( Info_ValueForKey( arenainfo, "bots" ), basedelay );
 		}
 	} else {
-	    if(bot_autominplayers.integer) {
-		//Set bot_minplayers
-		if(g_gametype.integer == GT_TOURNAMENT) {
-		    trap_Cvar_Set("bot_minplayers","2"); //Always 2 for Tourney
-		} else {
-			basedelay = MinSpawnpointCount()/2;
-			if(basedelay < 3 && !(G_IsATeamGametype(g_gametype.integer) && !G_UsesKeyObjectives(g_gametype.integer)))
-			    basedelay = 3; //Minimum 3 for FFA
-			if(basedelay < 2 && (G_IsATeamGametype(g_gametype.integer) && !G_UsesKeyObjectives(g_gametype.integer)))
-			    basedelay = 2; //Minimum 2 for TEAM
-			trap_Cvar_Set("bot_minplayers",va("%i",basedelay) );
-	}
-	    }
+		if(bot_autominplayers.integer) {
+			//Set bot_minplayers
+			if(g_gametype.integer == GT_TOURNAMENT) {
+				trap_Cvar_Set("bot_minplayers","2"); //Always 2 for Tourney
+			} else {
+				basedelay = MinSpawnpointCount()/2;
+				if(basedelay < 3 && !(G_IsATeamGametype(g_gametype.integer))) {
+					basedelay = 3; //Minimum 3 for FFA
+				}
+				if(basedelay < 2 && G_IsATeamGametype(g_gametype.integer)) {
+					basedelay = 2; //Minimum 2 for TEAM
+				}
+				trap_Cvar_Set("bot_minplayers",va("%i",basedelay) );
+			}
+		}
 	}
 }
