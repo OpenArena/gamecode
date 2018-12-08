@@ -401,6 +401,7 @@ int UI_AdjustTimeByGame(int time);
 void UI_ShowPostGame(qboolean newHigh);
 void UI_ClearScores( void );
 void UI_LoadArenas(void);
+void UI_LoadArenasIntoMapList(void);
 // rfactory change
 // Changed RD
 qboolean SP_LoadGame(char *load_game, char *loadmap);
