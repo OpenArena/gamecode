@@ -231,7 +231,7 @@ qboolean OnSameTeam( const gentity_t *ent1, const gentity_t *ent2 )
 		return qfalse;
 	}
 
-	if (!(G_IsATeamGametype(g_gametype.integer) && G_UsesKeyObjectives(g_gametype.integer))) {
+	if (!G_IsATeamGametype(g_gametype.integer)) {
 		return qfalse;
 	}
 

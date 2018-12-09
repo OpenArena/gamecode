@@ -1576,7 +1576,7 @@ static void CG_DrawUpperRight(stereoFrame_t stereoFrame) {
 
 	y = 0;
 
-	if (CG_IsATeamGametype(cgs.gametype) && CG_UsesKeyObjectives(cgs.gametype) && cg_drawTeamOverlay.integer == 1) {
+	if (CG_IsATeamGametype(cgs.gametype) && cg_drawTeamOverlay.integer == 1) {
 		y = CG_DrawTeamOverlay(y, qtrue, qtrue);
 	}
 	/*if ( cgs.gametype == GT_DOUBLE_D ) {
@@ -1659,7 +1659,7 @@ static float CG_DrawScores(float y) {
 	y1 = y;
 
 	// draw from the right side to left
-	if (CG_IsATeamGametype(cgs.gametype) && CG_UsesKeyObjectives(cgs.gametype)) {
+	if (CG_IsATeamGametype(cgs.gametype)) {
 		x = 640;
 		color[0] = 0.0f;
 		color[1] = 0.0f;
@@ -1744,9 +1744,7 @@ static float CG_DrawScores(float y) {
 			CG_DrawSmallString(x, y - 28, s, 1.0F);
 		}
 
-
-
-		if (CG_IsATeamGametype(cgs.gametype)) {
+		if (CG_UsesKeyObjectives(cgs.gametype)) {
 			v = cgs.capturelimit;
 		} else {
 			v = cgs.fraglimit;
@@ -1944,7 +1942,7 @@ static void CG_DrawLowerRight(void) {
 
 	y = 480 - ICON_SIZE;
 
-	if (CG_IsATeamGametype(cgs.gametype) && CG_UsesKeyObjectives(cgs.gametype) && cg_drawTeamOverlay.integer == 2) {
+	if (CG_IsATeamGametype(cgs.gametype) && cg_drawTeamOverlay.integer == 2) {
 		y = CG_DrawTeamOverlay(y, qtrue, qfalse);
 	}
 
@@ -1999,7 +1997,7 @@ static void CG_DrawLowerLeft(void) {
 
 	y = 480 - ICON_SIZE;
 
-	if (CG_IsATeamGametype(cgs.gametype) && CG_UsesKeyObjectives(cgs.gametype) && cg_drawTeamOverlay.integer == 3) {
+	if (CG_IsATeamGametype(cgs.gametype) && cg_drawTeamOverlay.integer == 3) {
 		y = CG_DrawTeamOverlay(y, qfalse, qfalse);
 	}
 
@@ -2959,7 +2957,7 @@ static void CG_DrawSpectator(void) {
 	CG_DrawBigString(320 - 9 * 8, 440, "SPECTATOR", 1.0F);
 	if (cgs.gametype == GT_TOURNAMENT) {
 		CG_DrawBigString(320 - 15 * 8, 460, "waiting to play", 1.0F);
-	} else if (CG_IsATeamGametype(cgs.gametype) && CG_UsesKeyObjectives(cgs.gametype)) {
+	} else if (CG_IsATeamGametype(cgs.gametype)) {
 		CG_DrawBigString(320 - 39 * 8, 460, "press ESC and use the JOIN menu to play", 1.0F);
 	}
 }
@@ -3074,7 +3072,7 @@ static qboolean CG_DrawScoreboard(void) {
 
 
 	if (menuScoreboard == NULL) {
-		if (CG_IsATeamGametype(cgs.gametype) && CG_UsesKeyObjectives(cgs.gametype)) {
+		if (CG_IsATeamGametype(cgs.gametype)) {
 			menuScoreboard = Menus_FindByName("teamscore_menu");
 		} else {
 			menuScoreboard = Menus_FindByName("score_menu");
@@ -3523,7 +3521,7 @@ static void CG_Draw2D(stereoFrame_t stereoFrame) {
 			CG_DrawReward();
 		}
 
-		if (CG_IsATeamGametype(cgs.gametype) && CG_UsesKeyObjectives(cgs.gametype)) {
+		if (CG_IsATeamGametype(cgs.gametype)) {
 #ifndef MISSIONPACK
 			CG_DrawTeamInfo();
 #endif

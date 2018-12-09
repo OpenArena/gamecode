@@ -2254,7 +2254,7 @@ TeamPlayIsOn
 ==================
  */
 int TeamPlayIsOn(void) {
-	return (G_IsATeamGametype(gametype) && G_UsesKeyObjectives(gametype));
+	return G_IsATeamGametype(gametype);
 }
 
 /*
@@ -2840,7 +2840,7 @@ int BotSameTeam(bot_state_t *bs, int entnum) {
 		//BotAI_Print(PRT_ERROR, "BotSameTeam: client out of range\n");
 		return qfalse;
 	}
-	if (G_IsATeamGametype(gametype) && G_UsesKeyObjectives(gametype)) {
+	if (G_IsATeamGametype(gametype)) {
 		/*Sago: I don't know why they decided to check the configstring instead of the real value.
 		 For some reason bots sometimes gets a wrong config string when chaning gametypes.
 		 Now we check the real value: */

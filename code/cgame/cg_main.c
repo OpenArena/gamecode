@@ -1167,7 +1167,7 @@ static void CG_RegisterGraphics(void) {
 		cgs.media.blueCubeIcon = trap_R_RegisterShader("icons/skull_blue");
 	}
 
-	if (CG_IsATeamGametype(cgs.gametype) && CG_UsesKeyObjectives(cgs.gametype)) {
+	if (CG_IsATeamGametype(cgs.gametype)) {
 		cgs.media.redOverlay = trap_R_RegisterShader("playeroverlays/playerSuit1_Red");
 		cgs.media.blueOverlay = trap_R_RegisterShader("playeroverlays/playerSuit1_Blue");
 	} else {
@@ -1235,8 +1235,7 @@ static void CG_RegisterGraphics(void) {
 	cgs.media.redKamikazeShader = trap_R_RegisterShader("models/weaphits/kamikred");
 	cgs.media.dustPuffShader = trap_R_RegisterShader("hasteSmokePuff");
 
-	if ((CG_IsATeamGametype(cgs.gametype) && CG_UsesKeyObjectives(cgs.gametype)) ||
-			cg_buildScript.integer) {
+	if (CG_IsATeamGametype(cgs.gametype) || cg_buildScript.integer) {
 
 		cgs.media.friendShader = trap_R_RegisterShader("sprites/foe");
 		cgs.media.redQuadShader = trap_R_RegisterShader("powerups/blueflag");
@@ -2043,7 +2042,7 @@ void CG_SetScoreSelection(void *p) {
 		return;
 	}
 
-	if (CG_IsATeamGametype(cgs.gametype) && CG_UsesKeyObjectives(cgs.gametype)) {
+	if (CG_IsATeamGametype(cgs.gametype)) {
 		int feeder = FEEDER_REDTEAM_LIST;
 		i = red;
 		if (cg.scores[cg.selectedScore].team == TEAM_BLUE) {
@@ -2060,7 +2059,7 @@ void CG_SetScoreSelection(void *p) {
 
 static clientInfo_t * CG_InfoFromScoreIndex(int index, int team, int *scoreIndex) {
 	int i, count;
-	if (CG_IsATeamGametype(cgs.gametype) && CG_UsesKeyObjectives(cgs.gametype)) {
+	if (CG_IsATeamGametype(cgs.gametype)) {
 		count = 0;
 		for (i = 0; i < cg.numScores; i++) {
 			if (cg.scores[i].team == team) {
@@ -2167,7 +2166,7 @@ static qhandle_t CG_FeederItemImage(float feederID, int index) {
 }
 
 static void CG_FeederSelection(float feederID, int index) {
-	if (CG_IsATeamGametype(cgs.gametype) && CG_UsesKeyObjectives(cgs.gametype)) {
+	if (CG_IsATeamGametype(cgs.gametype)) {
 		int i, count;
 		int team = (feederID == FEEDER_REDTEAM_LIST) ? TEAM_RED : TEAM_BLUE;
 		count = 0;

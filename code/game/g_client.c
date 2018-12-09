@@ -1200,7 +1200,7 @@ void ClientUserinfoChanged( int clientNum ) {
 	client->ps.stats[STAT_MAX_HEALTH] = client->pers.maxHealth;
 
 	// set model
-	if(G_IsATeamGametype(g_gametype.integer) && G_UsesKeyObjectives(g_gametype.integer)) {
+	if(G_IsATeamGametype(g_gametype.integer)) {
 		Q_strncpyz( model, Info_ValueForKey (userinfo, "team_model"), sizeof( model ) );
 		Q_strncpyz( headModel, Info_ValueForKey (userinfo, "team_headmodel"), sizeof( headModel ) );
 	} else {
@@ -1209,7 +1209,7 @@ void ClientUserinfoChanged( int clientNum ) {
 	}
 
 	// bots set their team a few frames later
-	if (G_IsATeamGametype(g_gametype.integer) && G_UsesKeyObjectives(g_gametype.integer) && g_entities[clientNum].r.svFlags & SVF_BOT) {
+	if (G_IsATeamGametype(g_gametype.integer) && g_entities[clientNum].r.svFlags & SVF_BOT) {
 		s = Info_ValueForKey( userinfo, "team" );
 		if ( Q_strequal( s, "red" ) || Q_strequal( s, "r" ) ) {
 			team = TEAM_RED;
@@ -1225,7 +1225,7 @@ void ClientUserinfoChanged( int clientNum ) {
 		team = client->sess.sessionTeam;
 	}
 
-	if (G_IsATeamGametype(g_gametype.integer) && G_UsesKeyObjectives(g_gametype.integer)) {
+	if (G_IsATeamGametype(g_gametype.integer)) {
 		client->pers.teamInfo = qtrue;
 	} else {
 		s = Info_ValueForKey( userinfo, "teamoverlay" );
@@ -1242,7 +1242,7 @@ void ClientUserinfoChanged( int clientNum ) {
 	teamLeader = client->sess.teamLeader;
 
 	// colors
-	if(G_IsATeamGametype(g_gametype.integer) && G_UsesKeyObjectives(g_gametype.integer) && g_instantgib.integer) {
+	if(G_IsATeamGametype(g_gametype.integer) && g_instantgib.integer) {
 		switch(team) {
 			case TEAM_RED:
 				c1[0] = COLOR_BLUE;
@@ -1409,7 +1409,7 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 		trap_SendServerCommand( -1, va("print \"%s" S_COLOR_WHITE " connected\n\"", client->pers.netname) );
 	}
 
-	if (G_IsATeamGametype(g_gametype.integer) && G_UsesKeyObjectives(g_gametype.integer) && client->sess.sessionTeam != TEAM_SPECTATOR ) {
+	if (G_IsATeamGametype(g_gametype.integer) && client->sess.sessionTeam != TEAM_SPECTATOR ) {
 		BroadcastTeamChange( client, -1 );
 	}
 
@@ -1522,7 +1522,7 @@ void ClientBegin( int clientNum ) {
 	countFree = TeamCount(-1,TEAM_FREE);
 	countRed = TeamCount(-1,TEAM_RED);
 	countBlue = TeamCount(-1,TEAM_BLUE);
-	if(!(G_IsATeamGametype(g_gametype.integer) && G_UsesKeyObjectives(g_gametype.integer)))
+	if(!G_IsATeamGametype(g_gametype.integer))
 	{
 		if(countFree>level.teamSize)
 			level.teamSize=countFree;

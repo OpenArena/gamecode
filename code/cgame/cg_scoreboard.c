@@ -190,7 +190,7 @@ static void CG_DrawClientScore(int y, score_t *score, float *color, float fade, 
 		localClient = qtrue;
 
 		if ((cg.snap->ps.persistant[PERS_TEAM] == TEAM_SPECTATOR) ||
-				(CG_IsATeamGametype(cgs.gametype) && CG_UsesKeyObjectives(cgs.gametype))) {
+				CG_IsATeamGametype(cgs.gametype)) {
 			// Sago: I think this means that it doesn't matter if two players are tied in team game - only team score counts
 			rank = -1;
 		} else {
@@ -324,7 +324,7 @@ qboolean CG_DrawOldScoreboard(void) {
 	}
 
 	// current rank
-	if (!(CG_IsATeamGametype(cgs.gametype) && CG_UsesKeyObjectives(cgs.gametype))) {
+	if (!CG_IsATeamGametype(cgs.gametype)) {
 		if (cg.snap->ps.persistant[PERS_TEAM] != TEAM_SPECTATOR) {
 			s = va("%s place with %i",
 					CG_PlaceString(cg.snap->ps.persistant[PERS_RANK] + 1),
@@ -374,7 +374,7 @@ qboolean CG_DrawOldScoreboard(void) {
 
 	localClient = qfalse;
 
-	if (CG_IsATeamGametype(cgs.gametype) && CG_UsesKeyObjectives(cgs.gametype)) {
+	if (CG_IsATeamGametype(cgs.gametype)) {
 		//
 		// teamplay scoreboard
 		//
@@ -505,7 +505,7 @@ void CG_DrawOldTourneyScoreboard(void) {
 	// print the two scores
 
 	y = 160;
-	if (CG_IsATeamGametype(cgs.gametype) && CG_UsesKeyObjectives(cgs.gametype)) {
+	if (CG_IsATeamGametype(cgs.gametype)) {
 		//
 		// teamplay scoreboard
 		//
