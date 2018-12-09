@@ -530,6 +530,8 @@ typedef struct {
 	int pointStatusA;			//Status of the RED (A) domination point
 	int pointStatusB;			//Status of the BLUE (B) doimination point
 	int timeTaken;				//Time team started having both points
+	int ddCaptureTime;		// Time needed to score a point
+	int ddRespawnDelay;		// Time between rounds
 	//use roundStartTime for telling, then the points respawn
 
 	//Added for standard domination
@@ -1190,6 +1192,9 @@ extern  vmCvar_t    g_maxNameChanges;
 
 extern  vmCvar_t    g_grapple;
 extern  vmCvar_t    g_harvesterFromBodies;
+
+extern  vmCvar_t    g_ddCaptureTime;
+extern  vmCvar_t    g_ddRespawnDelay;
 
 void	trap_Printf( const char *fmt );
 void	trap_Error( const char *fmt ) __attribute__((noreturn));

@@ -1222,6 +1222,8 @@ typedef struct {
 
 //Double Domination DD
 	int 				timetaken;
+	int				ddCaptureTime;
+	int				ddRespawnDelay;
 
 //Domination
 	int domination_points_count;

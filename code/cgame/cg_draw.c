@@ -1733,7 +1733,7 @@ static float CG_DrawScores(float y) {
 			//Time till capture:
 			if (((statusB == statusA) && (statusA == TEAM_RED)) ||
 					((statusB == statusA) && (statusA == TEAM_BLUE))) {
-				s = va("%i", (cgs.timetaken + 10 * 1000 - cg.time) / 1000 + 1);
+				s = va("%i", (cgs.timetaken + cgs.ddCaptureTime * 1000 - cg.time) / 1000 + 1);
 				w = CG_DrawStrlen(s) * BIGCHAR_WIDTH;
 				CG_DrawBigString(x + 32 + 8 - w / 2, y - 28, s, 1.0F);
 			}
@@ -2605,17 +2605,17 @@ static void CG_DrawCenterDDString(void) {
 	}
 
 	if (statusA == TEAM_BLUE) {
-		line = va("Blue scores in %i", (cgs.timetaken + 10 * 1000 - cg.time) / 1000 + 1);
+		line = va("Blue scores in %i", (cgs.timetaken + cgs.ddCaptureTime * 1000 - cg.time) / 1000 + 1);
 		color = colorBlue;
 	} else if (statusA == TEAM_RED) {
-		line = va("Red scores in %i", (cgs.timetaken + 10 * 1000 - cg.time) / 1000 + 1);
+		line = va("Red scores in %i", (cgs.timetaken + cgs.ddCaptureTime * 1000 - cg.time) / 1000 + 1);
 		color = colorRed;
 	} else {
 		lastDDSec = -100;
 		return;
 	}
 
-	sec = (cgs.timetaken + 10 * 1000 - cg.time) / 1000 + 1;
+	sec = (cgs.timetaken + cgs.ddCaptureTime * 1000 - cg.time) / 1000 + 1;
 	if (sec != lastDDSec) {
 		//A new number is being displayed... play the sound!
 		switch (sec) {

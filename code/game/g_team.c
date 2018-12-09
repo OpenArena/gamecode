@@ -533,7 +533,7 @@ void Team_FragBonuses(gentity_t *targ, gentity_t *inflictor, gentity_t *attacker
 
 				//We defended point A
 				//Was we dominating and maybe close to score?
-				if(attacker->client->sess.sessionTeam == level.pointStatusB && level.time - level.timeTaken > (10-DD_CLOSE)*1000)
+				if(attacker->client->sess.sessionTeam == level.pointStatusB && level.time - level.timeTaken > (g_ddCaptureTime.integer-DD_CLOSE)*1000)
 					AddScore(attacker, targ->r.currentOrigin, DD_POINT_DEFENCE_CLOSE_BONUS);
 				else
 					AddScore(attacker, targ->r.currentOrigin, DD_POINT_DEFENCE_BONUS);
@@ -569,7 +569,7 @@ void Team_FragBonuses(gentity_t *targ, gentity_t *inflictor, gentity_t *attacker
 
 				//We defended point B
 				//Was we dominating and maybe close to score?
-				if(attacker->client->sess.sessionTeam == level.pointStatusA && level.time - level.timeTaken > (10-DD_CLOSE)*1000)
+				if(attacker->client->sess.sessionTeam == level.pointStatusA && level.time - level.timeTaken > (g_ddCaptureTime.integer-DD_CLOSE)*1000)
 					AddScore(attacker, targ->r.currentOrigin, DD_POINT_DEFENCE_CLOSE_BONUS);
 				else
 					AddScore(attacker, targ->r.currentOrigin, DD_POINT_DEFENCE_BONUS);
@@ -1197,7 +1197,7 @@ int Team_TouchDoubleDominationPoint( gentity_t *ent, gentity_t *other, int team 
 
 	if(level.pointStatusA == otherTeam && level.pointStatusB == otherTeam) {
 		otherDominating = qtrue;
-		if(level.time - level.timeTaken > (10-DD_CLOSE)*1000) {
+		if(level.time - level.timeTaken > (g_ddCaptureTime.integer-DD_CLOSE)*1000) {
 			isClose = qtrue;
 		}
 	}

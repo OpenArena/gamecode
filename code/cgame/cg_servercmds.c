@@ -211,6 +211,26 @@ static void CG_ParseDDtimetaken( void ) {
 
 /*
 =================
+CG_ParseDDCaptureTime
+
+=================
+*/
+static void CG_ParseDDCaptureTime( void ) {
+	cgs.ddCaptureTime = atoi( CG_Argv( 1 ) );
+}
+
+/*
+=================
+CG_ParseDDRespawnDelay
+
+=================
+*/
+static void CG_ParseDDRespawnDelay( void ) {
+	cgs.ddRespawnDelay = atoi( CG_Argv( 1 ) );
+}
+
+/*
+=================
 CG_ParseDomPointNames
 =================
 */
@@ -1279,6 +1299,18 @@ static void CG_ServerCommand( void ) {
 
 	if ( strequals( cmd, "ddtaken" ) ) {
 		CG_ParseDDtimetaken();
+		return;
+	}
+
+
+	if ( strequals( cmd, "ddCaptureTime" ) ) {
+		CG_ParseDDCaptureTime();
+		return;
+	}
+
+
+	if ( strequals( cmd, "ddRespawnDelay" ) ) {
+		CG_ParseDDRespawnDelay();
 		return;
 	}
 

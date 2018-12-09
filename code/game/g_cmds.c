@@ -191,6 +191,26 @@ void DoubleDominationScoreTimeMessage( gentity_t *ent ) {
 
 /*
 ==================
+DoubleDominationCaptureTime
+
+==================
+*/
+void DoubleDominationCaptureTimeMessage( gentity_t *ent ) {
+	trap_SendServerCommand( ent-g_entities, va("ddCaptureTime %i", g_ddCaptureTime.integer));
+}
+
+/*
+==================
+DoubleDominationRespawnDelay
+
+==================
+*/
+void DoubleDominationRespawnDelayMessage( gentity_t *ent ) {
+	trap_SendServerCommand( ent-g_entities, va("ddRespawnDelay %i", g_ddRespawnDelay.integer));
+}
+
+/*
+==================
 DominationPointNames
 ==================
 */
