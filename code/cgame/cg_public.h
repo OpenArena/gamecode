@@ -60,6 +60,170 @@ enum {
   CGAME_EVENT_EDITHUD
 };
 
+// leilei - weapon view animations
+
+#define	NUM_WEAPONANIMS		10	// number of animations per weapon - 
+					// if you change this you must edit the sequences below!!!
+
+typedef enum {
+	NOTHING,		// for no weapon in particular; seqauence 0 frame 0
+
+	GUN_IDLE,
+	GUN_IDLE2,		// More variance
+	GUN_IDLE3,		// Even more variance
+	GUN_FIRE,
+	GUN_FIRE2,		// Unused for modders to have fun with
+	GUN_RELOADBEGIN,	// Unused for modders to have fun with
+	GUN_RELOAD,		// Unused for modders to have fun with
+	GUN_DRAW,
+	GUN_HOLSTER,
+	GUN_COCK,		// Unused for modders to have fun with
+
+	MELEE_IDLE,
+	MELEE_IDLE2,		// More variance
+	MELEE_IDLE3,		// Even more variance
+	MELEE_FIRE,
+	MELEE_FIRE2,		// Unused for modders to have fun with
+	MELEE_RELOADBEGIN,	// Unused for modders to have fun with
+	MELEE_RELOAD,		// Unused for modders to have fun with
+	MELEE_DRAW,
+	MELEE_HOLSTER,
+	MELEE_COCK,		// Unused for modders to have fun with
+
+	MGUN_IDLE,
+	MGUN_IDLE2,		// More variance
+	MGUN_IDLE3,		// Even more variance
+	MGUN_FIRE,
+	MGUN_FIRE2,		// Unused for modders to have fun with
+	MGUN_RELOADBEGIN,	// Unused for modders to have fun with
+	MGUN_RELOAD,		// Unused for modders to have fun with
+	MGUN_DRAW,
+	MGUN_HOLSTER,
+	MGUN_COCK,		// Unused for modders to have fun with
+
+	SHOTGUN_IDLE,
+	SHOTGUN_IDLE2,		// More variance
+	SHOTGUN_IDLE3,		// Even more variance
+	SHOTGUN_FIRE,
+	SHOTGUN_FIRE2,		// Unused for modders to have fun with
+	SHOTGUN_RELOADBEGIN,	// Unused for modders to have fun with
+	SHOTGUN_RELOAD,		// Unused for modders to have fun with
+	SHOTGUN_DRAW,
+	SHOTGUN_HOLSTER,
+	SHOTGUN_COCK,		// Unused for modders to have fun with
+	
+	GRENADE_IDLE,
+	GRENADE_IDLE2,		// More variance
+	GRENADE_IDLE3,		// Even more variance
+	GRENADE_FIRE,
+	GRENADE_FIRE2,		// Unused for modders to have fun with
+	GRENADE_RELOADBEGIN,	// Unused for modders to have fun with
+	GRENADE_RELOAD,		// Unused for modders to have fun with
+	GRENADE_DRAW,
+	GRENADE_HOLSTER,
+	GRENADE_COCK,		// Unused for modders to have fun with
+
+	ROCKET_IDLE,
+	ROCKET_IDLE2,		// More variance
+	ROCKET_IDLE3,		// Even more variance
+	ROCKET_FIRE,
+	ROCKET_FIRE2,		// Unused for modders to have fun with
+	ROCKET_RELOADBEGIN,	// Unused for modders to have fun with
+	ROCKET_RELOAD,		// Unused for modders to have fun with
+	ROCKET_DRAW,
+	ROCKET_HOLSTER,
+	ROCKET_COCK,		// Unused for modders to have fun with
+
+	LIGHTNING_IDLE,
+	LIGHTNING_IDLE2,		// More variance
+	LIGHTNING_IDLE3,		// Even more variance
+	LIGHTNING_FIRE,
+	LIGHTNING_FIRE2,		// Unused for modders to have fun with
+	LIGHTNING_RELOADBEGIN,	// Unused for modders to have fun with
+	LIGHTNING_RELOAD,		// Unused for modders to have fun with
+	LIGHTNING_DRAW,
+	LIGHTNING_HOLSTER,
+	LIGHTNING_COCK,		// Unused for modders to have fun with
+
+	RAIL_IDLE,
+	RAIL_IDLE2,		// More variance
+	RAIL_IDLE3,		// Even more variance
+	RAIL_FIRE,
+	RAIL_FIRE2,		// Unused for modders to have fun with
+	RAIL_RELOADBEGIN,	// Unused for modders to have fun with
+	RAIL_RELOAD,		// Unused for modders to have fun with
+	RAIL_DRAW,
+	RAIL_HOLSTER,
+	RAIL_COCK,		// Unused for modders to have fun with
+
+	PLASMA_IDLE,
+	PLASMA_IDLE2,		// More variance
+	PLASMA_IDLE3,		// Even more variance
+	PLASMA_FIRE,
+	PLASMA_FIRE2,		// Unused for modders to have fun with
+	PLASMA_RELOADBEGIN,	// Unused for modders to have fun with
+	PLASMA_RELOAD,		// Unused for modders to have fun with
+	PLASMA_DRAW,
+	PLASMA_HOLSTER,
+	PLASMA_COCK,		// Unused for modders to have fun with
+
+	BFG_IDLE,
+	BFG_IDLE2,		// More variance
+	BFG_IDLE3,		// Even more variance
+	BFG_FIRE,
+	BFG_FIRE2,		// Unused for modders to have fun with
+	BFG_RELOADBEGIN,	// Unused for modders to have fun with
+	BFG_RELOAD,		// Unused for modders to have fun with
+	BFG_DRAW,
+	BFG_HOLSTER,
+	BFG_COCK,		// Unused for modders to have fun with
+
+	NAILGUN_IDLE,
+	NAILGUN_IDLE2,		// More variance
+	NAILGUN_IDLE3,		// Even more variance
+	NAILGUN_FIRE,
+	NAILGUN_FIRE2,		// Unused for modders to have fun with
+	NAILGUN_RELOADBEGIN,	// Unused for modders to have fun with
+	NAILGUN_RELOAD,		// Unused for modders to have fun with
+	NAILGUN_DRAW,
+	NAILGUN_HOLSTER,
+	NAILGUN_COCK,		// Unused for modders to have fun with
+
+	PROX_IDLE,
+	PROX_IDLE2,		// More variance
+	PROX_IDLE3,		// Even more variance
+	PROX_FIRE,
+	PROX_FIRE2,		// Unused for modders to have fun with
+	PROX_RELOADBEGIN,	// Unused for modders to have fun with
+	PROX_RELOAD,		// Unused for modders to have fun with
+	PROX_DRAW,
+	PROX_HOLSTER,
+	PROX_COCK,		// Unused for modders to have fun with
+
+	VULCAN_IDLE,
+	VULCAN_IDLE2,		// More variance
+	VULCAN_IDLE3,		// Even more variance
+	VULCAN_FIRE,
+	VULCAN_FIRE2,		// Unused for modders to have fun with
+	VULCAN_RELOADBEGIN,	// Unused for modders to have fun with
+	VULCAN_RELOAD,		// Unused for modders to have fun with
+	VULCAN_DRAW,
+	VULCAN_HOLSTER,
+	VULCAN_COCK,		// Unused for modders to have fun with
+
+	HOOK_IDLE,
+	HOOK_IDLE2,		// More variance
+	HOOK_IDLE3,		// Even more variance
+	HOOK_FIRE,
+	HOOK_FIRE2,		// Unused for modders to have fun with
+	HOOK_RELOADBEGIN,	// Unused for modders to have fun with
+	HOOK_RELOAD,		// Unused for modders to have fun with
+	HOOK_DRAW,
+	HOOK_HOLSTER,
+	HOOK_COCK,		// Unused for modders to have fun with
+
+	MAX_WEAPONANIMATIONS
+} viewAnimNumber_t;
 
 /*
 ==================================================================

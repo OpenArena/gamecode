@@ -172,6 +172,9 @@ typedef struct {
 	vec3_t			eyelookat;	// what we seein'
 	lerpFrame_t		head;
 
+	// gun stuff
+	lerpFrame_t hand; // hand model of our player holding a weapon
+	int			gunAnim;	// the gun animation we want to play (HACK)
 } playerEntity_t;
 
 //=================================================
@@ -407,9 +410,13 @@ typedef struct {
 
 	sfxHandle_t		sounds[MAX_CUSTOM_SOUNDS];
 
-	int		isDead;
-	vec3_t			eyepos;		// leilei - eye positions loaded from anim cfg
-	int		onepiece;		// leilei - g_enableFS meshes
+	int			isDead;
+	vec3_t			eyepos;			// leilei - eye positions loaded from anim cfg
+	int			onepiece;		// leilei - g_enableFS meshes
+	qboolean		newOa3Anims;		// true if using the new new OA3 animations (strafe, sit, etc)
+	int			weapanims;		// leilei - cg_handAnims
+	animation_t		gunimations[MAX_WEAPONANIMATIONS];
+	int			gunAnim;	
 } clientInfo_t;
 
 
@@ -464,6 +471,7 @@ typedef struct weaponInfo_s {
 	qhandle_t		flashModel_type5a;		// 3rd person for 2003 style 	(cone that scales up and doesn't fade))
 
 	//float			startroll; // starting roll so it's not constantly flickering a roll every other frame.
+	qhandle_t		weaponViewModel;	// leilei - for animating the weapon itself
 } weaponInfo_t;
 
 
@@ -1393,6 +1401,10 @@ extern	vmCvar_t		cg_noProjectileTrail;
 extern	vmCvar_t		cg_oldRail;
 extern	vmCvar_t		cg_oldRocket;
 
+extern	vmCvar_t		cg_gunFlash;
+extern	vmCvar_t		cg_gunArms;
+extern	vmCvar_t		cg_gunLean;
+extern	vmCvar_t		cg_gunFollow;
 extern	vmCvar_t		cg_leiEnhancement;			// LEILEI'S LINE!
 extern	vmCvar_t		cg_leiGoreNoise;			// LEILEI'S LINE!
 extern	vmCvar_t		cg_leiBrassNoise;			// LEILEI'S LINE!
@@ -1696,7 +1708,7 @@ void CG_Bullet( vec3_t origin, int sourceEntityNum, vec3_t normal, qboolean fles
 void CG_RailTrail( clientInfo_t *ci, vec3_t start, vec3_t end );
 void CG_GrappleTrail( centity_t *ent, const weaponInfo_t *wi );
 void CG_AddViewWeapon (playerState_t *ps);
-void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent, int team );
+void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent, int team, int isView );
 void CG_DrawWeaponSelect( void );
 
 void CG_DrawWeaponBar0(int count, int bits);
@@ -1709,6 +1721,12 @@ void CG_DrawWeaponBar6(int count, int bits, float *color);
 void CG_DrawWeaponBar7(int count, int bits, float *color);
 
 void CG_OutOfAmmoChange( void );	// should this be in pmove?
+
+// leilei - weapon animations stuff
+qboolean CG_ParseGunAnimationFile( const char *filename, animation_t *animations );
+//void CG_GunLerpFrame( playerInfo_t *ci, lerpFrame_t *lf, int newAnimation );
+
+void CG_GunAnimHandler (lerpFrame_t *lf, int newAnimation, int weaponNum, float speedScale );
 
 //
 // cg_marks.c

@@ -23,6 +23,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 // cg_weapons.c -- events and effects dealing with weapons
 #include "cg_local.h"
 
+void CG_SetLerpFrameGunimation( clientInfo_t *ci, lerpFrame_t *lf, int newAnimation );
+void CG_GunLerpFrame( clientInfo_t *ci, lerpFrame_t *lf, int newAnimation, float speedScale );
+
 /*
 ==========================
 CG_MachineGunEjectBrass
@@ -922,20 +925,44 @@ void CG_RegisterWeapon( int weaponNum )
 	Q_strcat( path, sizeof(path), "_barrel.md3" );
 	weaponInfo->barrelModel = trap_R_RegisterModel( path );
 
+	// leilei - precache weapon view model
+
 	Q_strncpyz( path, item->world_model[0], MAX_QPATH );
 	COM_StripExtension(path, path, sizeof(path));
-	Q_strcat( path, sizeof(path), "_hand.md3" );
-	weaponInfo->handsModel = trap_R_RegisterModel( path );
+	Q_strcat( path, sizeof(path), "_view.mdr" );
+	weaponInfo->weaponViewModel = trap_R_RegisterModel( path );
+
+	// leilei - new weapon anim system must check for unique player model's hand
+	if ( cg_gunArms.integer ) {
+	Q_strncpyz( path, item->world_model[0], MAX_QPATH );
+	COM_StripExtension(path, path, sizeof(path));
+	Q_strcat( path, sizeof(path), "models/hands/generic/test.md3" );
+	weaponInfo->handsModel = trap_R_RegisterModel( "models/hands/generic/test.md3" );
+	}
 
 	if ( !weaponInfo->handsModel ) {
-		weaponInfo->handsModel = trap_R_RegisterModel( "models/weapons2/shotgun/shotgun_hand.md3" );
+
+		Q_strncpyz( path, item->world_model[0], MAX_QPATH );
+		COM_StripExtension(path, path, sizeof(path));
+		Q_strcat( path, sizeof(path), "_hand.md3" );
+		weaponInfo->handsModel = trap_R_RegisterModel( path );
+	
+		if ( !weaponInfo->handsModel ) {
+			weaponInfo->handsModel = trap_R_RegisterModel( "models/weapons2/shotgun/shotgun_hand.md3" );
+		}
+	
+
 	}
+
+
 
 	weaponInfo->loopFireSound = qfalse;
 
 	switch ( weaponNum ) {
 	case WP_GAUNTLET:
 		MAKERGB( weaponInfo->flashDlightColor, 0.6f, 0.6f, 1.0f );
+	if ( cg_gunFlash.integer == 2 )
+		MAKERGB( weaponInfo->flashDlightColor, 0.3f, 0.3f, 0.7f );
 		weaponInfo->firingSound = trap_S_RegisterSound( "sound/weapons/melee/fstrun.wav", qfalse );
 		weaponInfo->flashSound[0] = trap_S_RegisterSound( "sound/weapons/melee/fstatck.wav", qfalse );
 		weaponInfo->lfx = 0; //  no effect
@@ -943,6 +970,8 @@ void CG_RegisterWeapon( int weaponNum )
 
 	case WP_LIGHTNING:
 		MAKERGB( weaponInfo->flashDlightColor, 0.6f, 0.6f, 1.0f );
+	if ( cg_gunFlash.integer == 2 )
+		MAKERGB( weaponInfo->flashDlightColor, 0.0f, 0.5f, 0.7f );
 		weaponInfo->readySound = trap_S_RegisterSound( "sound/weapons/melee/fsthum.wav", qfalse );
 		weaponInfo->firingSound = trap_S_RegisterSound( "sound/weapons/lightning/lg_hum.wav", qfalse );
 
@@ -976,6 +1005,8 @@ void CG_RegisterWeapon( int weaponNum )
 		weaponInfo->loopFireSound = qtrue;
 		MAKERGB( weaponInfo->flashDlightColor, 1, 1, 0 );
 		// leilei -testing a looping firing sound instead of lots of flash sounds for performance reasons
+		if ( cg_gunFlash.integer == 2 )
+			MAKERGB( weaponInfo->flashDlightColor, 0.5f, 0.3f, 0.2f );
 		weaponInfo->flashSound[0] = trap_S_RegisterSound( "sound/weapons/vulcan/vulcanf1b.wav", qfalse );
 		weaponInfo->flashSound[1] = trap_S_RegisterSound( "sound/weapons/vulcan/vulcanf2b.wav", qfalse );
 		weaponInfo->flashSound[2] = trap_S_RegisterSound( "sound/weapons/vulcan/vulcanf3b.wav", qfalse );
@@ -988,6 +1019,8 @@ void CG_RegisterWeapon( int weaponNum )
 
 	case WP_MACHINEGUN:
 		MAKERGB( weaponInfo->flashDlightColor, 1, 1, 0 );
+	if ( cg_gunFlash.integer == 2 )
+		MAKERGB( weaponInfo->flashDlightColor, 0.5f, 0.3f, 0.2f );
 		weaponInfo->flashSound[0] = trap_S_RegisterSound( "sound/weapons/machinegun/machgf1b.wav", qfalse );
 		weaponInfo->flashSound[1] = trap_S_RegisterSound( "sound/weapons/machinegun/machgf2b.wav", qfalse );
 		weaponInfo->flashSound[2] = trap_S_RegisterSound( "sound/weapons/machinegun/machgf3b.wav", qfalse );
@@ -999,12 +1032,16 @@ void CG_RegisterWeapon( int weaponNum )
 
 	case WP_SHOTGUN:
 		MAKERGB( weaponInfo->flashDlightColor, 1, 1, 0 );
+	if ( cg_gunFlash.integer == 2 )
+		MAKERGB( weaponInfo->flashDlightColor, 0.7f, 0.5f, 0.2f );
 		weaponInfo->flashSound[0] = trap_S_RegisterSound( "sound/weapons/shotgun/sshotf1b.wav", qfalse );
 		weaponInfo->ejectBrassFunc = CG_ShotgunEjectBrass;
 		weaponInfo->lfx = 63;
 		break;
 
 	case WP_ROCKET_LAUNCHER:
+	if ( cg_gunFlash.integer == 2 )
+		MAKERGB( weaponInfo->flashDlightColor, 0.7f, 0.2f, 0.1f );
 		weaponInfo->missileModel = trap_R_RegisterModel( "models/ammo/rocket/rocket.md3" );
 		weaponInfo->missileSound = trap_S_RegisterSound( "sound/weapons/rocket/rockfly.wav", qfalse );
 		weaponInfo->missileTrailFunc = CG_RocketTrail;
@@ -1022,6 +1059,8 @@ void CG_RegisterWeapon( int weaponNum )
 
 //#ifdef MISSIONPACK
 	case WP_PROX_LAUNCHER:
+	if ( cg_gunFlash.integer == 2 )
+		MAKERGB( weaponInfo->flashDlightColor, 0.5f, 0.4f, 0.4f );
 		weaponInfo->missileModel = trap_R_RegisterModel( "models/weaphits/proxmine.md3" );
 		weaponInfo->missileTrailFunc = CG_GrenadeTrail;
 		weaponInfo->wiTrailTime = 700;
@@ -1034,6 +1073,8 @@ void CG_RegisterWeapon( int weaponNum )
 //#endif
 
 	case WP_GRENADE_LAUNCHER:
+	if ( cg_gunFlash.integer == 2 )
+		MAKERGB( weaponInfo->flashDlightColor, 0.7f, 0.3f, 0.2f );
 		weaponInfo->missileModel = trap_R_RegisterModel( "models/ammo/grenade1.md3" );
 		weaponInfo->missileTrailFunc = CG_GrenadeTrail;
 		weaponInfo->wiTrailTime = 700;
@@ -1046,6 +1087,8 @@ void CG_RegisterWeapon( int weaponNum )
 
 //#ifdef MISSIONPACK
 	case WP_NAILGUN:
+	if ( cg_gunFlash.integer == 2 )
+		MAKERGB( weaponInfo->flashDlightColor, 0.2f, 0.6f, 0.8f );
 		weaponInfo->ejectBrassFunc = CG_NailgunEjectBrass;
 		weaponInfo->missileTrailFunc = CG_NailTrail;
 //		weaponInfo->missileSound = trap_S_RegisterSound( "sound/weapons/nailgun/wnalflit.wav", qfalse );
@@ -1063,6 +1106,8 @@ void CG_RegisterWeapon( int weaponNum )
 		weaponInfo->missileTrailFunc = CG_PlasmaTrail;
 		weaponInfo->missileSound = trap_S_RegisterSound( "sound/weapons/plasma/lasfly.wav", qfalse );
 		MAKERGB( weaponInfo->flashDlightColor, 0.6f, 0.6f, 1.0f );
+	if ( cg_gunFlash.integer == 2 )
+		MAKERGB( weaponInfo->flashDlightColor, 0.2f, 0.6f, 1.0f );
 		weaponInfo->flashSound[0] = trap_S_RegisterSound( "sound/weapons/plasma/hyprbf1a.wav", qfalse );
 		cgs.media.plasmaExplosionShader = trap_R_RegisterShader( "plasmaExplosion" );
 		cgs.media.railRingsShader = trap_R_RegisterShader( "railDisc" );
@@ -1082,6 +1127,8 @@ void CG_RegisterWeapon( int weaponNum )
 	case WP_BFG:
 		weaponInfo->readySound = trap_S_RegisterSound( "sound/weapons/bfg/bfg_hum.wav", qfalse );
 		MAKERGB( weaponInfo->flashDlightColor, 1, 0.7f, 1 );
+	if ( cg_gunFlash.integer == 2 )
+		MAKERGB( weaponInfo->flashDlightColor, 0.1f, 1.0f, 0.3f );
 		weaponInfo->flashSound[0] = trap_S_RegisterSound( "sound/weapons/bfg/bfg_fire.wav", qfalse );
 		cgs.media.bfgExplosionShader = trap_R_RegisterShader( "bfgExplosion" );
 		weaponInfo->missileModel = trap_R_RegisterModel( "models/weaphits/bfg.md3" );
@@ -1181,19 +1228,81 @@ static int CG_MapTorsoToWeaponFrame( clientInfo_t *ci, int frame )
 }
 
 
+static int CG_MapTorsoToWeaponAnimation( clientInfo_t *ci, int frame ) {
+
+	// change weapon
+	if ( frame >= ci->animations[TORSO_RAISE].firstFrame 
+		&& frame < ci->animations[TORSO_RAISE].firstFrame + 9 ){
+		return GUN_DRAW;
+	}
+
+	if ( frame >= ci->animations[TORSO_DROP].firstFrame 
+		&& frame < ci->animations[TORSO_DROP].firstFrame + 9 ){
+		return GUN_HOLSTER;
+	}
+
+
+	// stand attack
+	if ( frame >= ci->animations[TORSO_ATTACK].firstFrame 
+		&& frame < ci->animations[TORSO_ATTACK].firstFrame + 6 ) {
+		return GUN_FIRE;
+	}
+
+	// stand attack 2
+	if ( frame >= ci->animations[TORSO_ATTACK2].firstFrame 
+		&& frame < ci->animations[TORSO_ATTACK2].firstFrame + 6 ) {
+		return GUN_FIRE;
+	}
+	
+	return GUN_IDLE;
+}
+
 /*
 ==============
 CG_CalculateWeaponPosition
 ==============
 */
-static void CG_CalculateWeaponPosition( vec3_t origin, vec3_t angles )
-{
+vec3_t oooh;
+vec3_t ahhh;
+
+static void CG_CalculateWeaponPosition( vec3_t origin, vec3_t angles ) {
 	float	scale;
 	int		delta;
 	float	fracsin;
 
+
+	// Instant Position/Angle (default)
 	VectorCopy( cg.refdef.vieworg, origin );
 	VectorCopy( cg.refdefViewAngles, angles );
+
+	if ( cg_gunFollow.integer ) {
+
+	// Delayed (enhanced - hl2/blood-ish)
+	//ahhh[YAW] = (ahhh[YAW] + cg.refdefViewAngles[YAW]) / 2;
+	oooh[YAW] = (oooh[YAW] + oooh[YAW] + oooh[YAW] + oooh[YAW] + cg.refdef.vieworg[YAW] + cg.refdef.vieworg[YAW] + cg.refdef.vieworg[YAW]) / 7;
+	oooh[PITCH] = (oooh[PITCH] + oooh[PITCH] + oooh[PITCH] + oooh[PITCH] + cg.refdef.vieworg[PITCH] + cg.refdef.vieworg[PITCH] + cg.refdef.vieworg[PITCH]) / 7;
+	oooh[ROLL] = (oooh[ROLL] + oooh[ROLL] + oooh[ROLL] + oooh[ROLL] + cg.refdef.vieworg[ROLL] + cg.refdef.vieworg[ROLL] + cg.refdef.vieworg[ROLL]) / 7;
+
+	// snap fix
+	if ((cg.refdefViewAngles[YAW] - ahhh[YAW]) > 100) ahhh[YAW] += 360; if ((ahhh[YAW] - cg.refdefViewAngles[YAW]) > 100) ahhh[YAW] -= 360; 
+
+	ahhh[YAW] = (ahhh[YAW] + ahhh[YAW] + ahhh[YAW] + ahhh[YAW] + ahhh[YAW] + cg.refdefViewAngles[YAW]) / 6;
+	ahhh[PITCH] = (ahhh[PITCH] + ahhh[PITCH] + ahhh[PITCH] + ahhh[PITCH] + ahhh[PITCH] + cg.refdefViewAngles[PITCH]) / 6;
+
+	//if ((angles[YAW] - ahhh[YAW]) > 350) ahhh[YAW] -= 350;
+
+
+
+	angles[YAW] = ahhh[YAW];
+	angles[PITCH] = ahhh[PITCH];
+	angles[ROLL] = cg.refdefViewAngles[ROLL];
+
+	//origin[YAW] = oooh[YAW];
+	//origin[PITCH] = oooh[PITCH];
+	//origin[ROLL] = oooh[ROLL];
+
+	}
+
 
 	// on odd legs, invert some angles
 	if ( cg.bobcycle & 1 ) {
@@ -1204,8 +1313,6 @@ static void CG_CalculateWeaponPosition( vec3_t origin, vec3_t angles )
 	}
 
 	// gun angles from bobbing
-
-
 
 	// Engoo bobbing port
 	if (cg_bobmodel.integer) {
@@ -1244,6 +1351,21 @@ static void CG_CalculateWeaponPosition( vec3_t origin, vec3_t angles )
 
 			VectorMA (origin, (sin(thebob) * 1.5) * scale2, right, origin);
 			VectorMA (origin, (sin(thebob * 2) * 0.5) * scale2, up, origin);
+		}
+
+		// Fig 8 (which may not work. :( )
+
+		if (cg_bobmodel.integer == 4){
+		bob = scale * 2 * 0.05 * (cg.bobfracsin) * 0.04;
+//		bob = sin(bob) * cos(-bob);
+
+		VectorMA (origin, bob, right, origin);
+	
+		bob = cos(scale * 0.07 * cg.bobfracsin * 0.0125) - cos(scale * 0.07 * cg.bobfracsin * 0.025);
+		bob *= 8;
+		//bob = sin(scale * M_PI) - cos(scale * M_PI);
+
+		VectorMA (origin, bob, up, origin);
 		}
 
 	}
@@ -1660,10 +1782,33 @@ Used for both the view weapon (ps is valid) and the world modelother character m
 The main player will have this called for BOTH cases, so effects like light and
 sound should only be done on the world model case.
 =============
-*/
 
-void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent, int team )
-{
+static int CG_MapTorsoToWeaponFrame( clientInfo_t *ci, int frame ) {
+
+	// change weapon
+	if ( frame >= ci->animations[TORSO_DROP].firstFrame 
+		&& frame < ci->animations[TORSO_DROP].firstFrame + 9 ) {
+		return frame - ci->animations[TORSO_DROP].firstFrame + 6;
+	}
+
+	// stand attack
+	if ( frame >= ci->animations[TORSO_ATTACK].firstFrame 
+		&& frame < ci->animations[TORSO_ATTACK].firstFrame + 6 ) {
+		return 1 + frame - ci->animations[TORSO_ATTACK].firstFrame;
+	}
+
+	// stand attack 2
+	if ( frame >= ci->animations[TORSO_ATTACK2].firstFrame 
+		&& frame < ci->animations[TORSO_ATTACK2].firstFrame + 6 ) {
+		return 1 + frame - ci->animations[TORSO_ATTACK2].firstFrame;
+	}
+	
+	return 0;
+}
+
+
+*/
+void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent, int team, int isView ) {
 	refEntity_t	gun;
 	refEntity_t	barrel;
 	refEntity_t	flash;
@@ -1672,6 +1817,7 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
 	weaponInfo_t	*weapon;
 	centity_t	*nonPredictedCent;
 	orientation_t	lerped;
+	int isReallyView = 0;
 
 
 	weaponNum = cent->currentState.weapon;
@@ -1705,6 +1851,12 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
 	}
 
 	gun.hModel = weapon->weaponModel;
+
+	// leilei - add the view model FOR FIRST PERSON ONLY!
+	if ( weapon->weaponViewModel && isView ) {
+			gun.hModel = weapon->weaponViewModel;
+			isReallyView = 1;
+		}
 	if (!gun.hModel) {
 		return;
 	}
@@ -1714,6 +1866,7 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
 		cent->pe.lightningFiring = qfalse;
 		if ( ( cent->currentState.eFlags & EF_FIRING ) && weapon->firingSound ) {
 			// lightning gun and guantlet make a different sound when fire is held down
+			// leilei TODO: do the same for chaingun to reduce sound overflow?
 			trap_S_AddLoopingSound( cent->currentState.number, cent->lerpOrigin, vec3_origin, weapon->firingSound );
 			cent->pe.lightningFiring = qtrue;
 		}
@@ -1728,6 +1881,7 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
 
 	VectorMA(gun.origin, lerped.origin[0], parent->axis[0], gun.origin);
 
+	// TODO: Fix this for arm model
 	// Make weapon appear left-handed for 2 and centered for 3
 	if(ps && cg_drawGun.integer == 2)
 		VectorMA(gun.origin, -lerped.origin[1], parent->axis[1], gun.origin);
@@ -1738,6 +1892,11 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
 
 	MatrixMultiply(lerped.axis, ((refEntity_t *)parent)->axis, gun.axis);
 	gun.backlerp = parent->backlerp;
+
+	if (isReallyView){
+		gun.frame = parent->frame;
+		gun.oldframe = parent->oldframe;
+	}
 
 	CG_AddWeaponWithPowerups( &gun, cent->currentState.powerups );
 
@@ -1769,6 +1928,22 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
 		nonPredictedCent = cent;
 	}
 
+		// leilei - HACK - reset the lfx particle effect well after the muzzleflash is drawn
+		if ( cg.time - cent->muzzleFlashTime > (MUZZLE_FLASH_TIME * 2)) {
+			weapon->lfxdrawn = 0;
+		}
+
+	// add the flash
+	if ( ( weaponNum == WP_LIGHTNING || weaponNum == WP_GAUNTLET || weaponNum == WP_GRAPPLING_HOOK )
+		&& ( nonPredictedCent->currentState.eFlags & EF_FIRING ) ) 
+	{
+		// continuous flash
+	} else {
+		// impulse flash
+		if ( cg.time - cent->muzzleFlashTime > MUZZLE_FLASH_TIME && !cent->pe.railgunFlash ) {
+			return;
+		}
+	}
 
 	// add the flash
 
@@ -1819,6 +1994,17 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
 			// don't roll the first person
 			angles[ROLL] = 0;
 		}
+	CG_PositionRotatedEntityOnTag( &flash, &gun, weapon->weaponModel, "tag_flash");
+
+	if (isView && !weapon->lfxdrawn){
+	trap_R_LFX_ParticleEffect(2, flash.origin, flash.axis[1]); // that was easy.
+		weapon->lfxdrawn = 1;
+	}
+
+//	if (!weapon->lfx && !cg_leiEnhancement.integer )
+//		flash.hModel = NULL;
+
+	trap_R_AddRefEntityToScene( &flash );
 
 		AnglesToAxis( angles, flash.axis );
 
@@ -2144,8 +2330,12 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
 		CG_SpawnRailTrail( cent, flash.origin );
 
 		if ( weapon->flashDlightColor[0] || weapon->flashDlightColor[1] || weapon->flashDlightColor[2] ) {
+		if (cg_gunFlash.integer == 2)
+			trap_R_AddLightToScene( flash.origin, 100 + (rand()&31), weapon->flashDlightColor[0],
+				weapon->flashDlightColor[1], weapon->flashDlightColor[2] );
+		else
 			trap_R_AddLightToScene( flash.origin, 300 + (rand()&31), weapon->flashDlightColor[0],
-									weapon->flashDlightColor[1], weapon->flashDlightColor[2] );
+				weapon->flashDlightColor[1], weapon->flashDlightColor[2] );
 		}
 	}
 }
@@ -2157,14 +2347,17 @@ CG_AddViewWeapon
 Add the weapon, and flash for the player's view
 ==============
 */
-void CG_AddViewWeapon( playerState_t *ps )
-{
+int fired;
+void CG_AddViewWeapon( playerState_t *ps ) {
 	refEntity_t	hand;
 	centity_t	*cent;
 	clientInfo_t	*ci;
 	float		fovOffset;
 	vec3_t		angles;
 	weaponInfo_t	*weapon;
+	int 		gunAnim; // leilei  - extended gun animations
+	int		armAvailable;
+
 
 	if ( ps->persistant[PERS_TEAM] == TEAM_SPECTATOR ) {
 		return;
@@ -2219,10 +2412,14 @@ void CG_AddViewWeapon( playerState_t *ps )
 	VectorMA( hand.origin, cg_gun_x.value, cg.refdef.viewaxis[0], hand.origin );
 	VectorMA( hand.origin, cg_gun_y.value, cg.refdef.viewaxis[1], hand.origin );
 	VectorMA( hand.origin, (cg_gun_z.value+fovOffset), cg.refdef.viewaxis[2], hand.origin );
+	//VectorMA( hand.origin, cg_gun_z.value, cg.refdef.viewaxis[2], hand.origin );
+
 
 	AnglesToAxis( angles, hand.axis );
 
 	// map torso animations to weapon animations
+
+
 	if ( cg_gun_frame.integer ) {
 		// development tool
 		hand.frame = hand.oldframe = cg_gun_frame.integer;
@@ -2231,16 +2428,60 @@ void CG_AddViewWeapon( playerState_t *ps )
 	else {
 		// get clientinfo for animation map
 		ci = &cgs.clientinfo[ cent->currentState.clientNum ];
+
 		hand.frame = CG_MapTorsoToWeaponFrame( ci, cent->pe.torso.frame );
 		hand.oldframe = CG_MapTorsoToWeaponFrame( ci, cent->pe.torso.oldFrame );
 		hand.backlerp = cent->pe.torso.backlerp;
 	}
 
+	
+
 	hand.hModel = weapon->handsModel;
 	hand.renderfx = RF_DEPTHHACK | RF_FIRST_PERSON | RF_MINLIGHT;
 
-	// add everything onto the hand
-	CG_AddPlayerWeapon( &hand, ps, &cg.predictedPlayerEntity, ps->persistant[PERS_TEAM] );
+	if ( cg_gunArms.integer ) {
+		armAvailable = 1; // force on arm
+
+	}
+		else
+		armAvailable = 0;
+
+	if (armAvailable)
+	{
+		// Animated Weapon with Arm path
+	
+		// oh, this is a hack!
+		if ( cg.predictedPlayerState.weaponstate == WEAPON_FIRING ) 	// TODO: Make weapon repeat non-looping animations
+			CG_GunLerpFrame( ci, &cent->pe.hand, (GUN_FIRE  + (NUM_WEAPONANIMS * cent->currentState.weapon))  & ~ANIM_TOGGLEBIT, 1.0 );
+	
+		if ( cg.predictedPlayerState.weaponstate == WEAPON_RAISING) 
+			CG_GunLerpFrame( ci, &cent->pe.hand, GUN_DRAW  + (NUM_WEAPONANIMS * cent->currentState.weapon) , 1.0 );
+	
+		else if ( cg.predictedPlayerState.weaponstate == WEAPON_DROPPING) 
+			CG_GunLerpFrame( ci, &cent->pe.hand, GUN_HOLSTER  + (NUM_WEAPONANIMS * cent->currentState.weapon) , 1.0 );
+	
+		if ( cg.predictedPlayerState.weaponstate == WEAPON_READY) 
+			CG_GunLerpFrame( ci, &cent->pe.hand, GUN_IDLE  + (NUM_WEAPONANIMS * cent->currentState.weapon) , 1.0 );
+	
+		hand.oldframe 	= cent->pe.hand.oldFrame;
+		hand.frame 	= cent->pe.hand.frame;
+		hand.backlerp 	= cent->pe.hand.backlerp;
+	
+	
+		// leilei - render the hand for extended weapon anims.
+		trap_R_AddRefEntityToScene( &hand );
+		// add everything onto the hand
+		CG_AddPlayerWeapon( &hand, ps, &cg.predictedPlayerEntity, ps->persistant[PERS_TEAM], 1 );
+
+
+	}
+	else
+	{
+		// add everything onto the hand
+		CG_AddPlayerWeapon( &hand, ps, &cg.predictedPlayerEntity, ps->persistant[PERS_TEAM], 0 );
+	}
+
+
 }
 
 /*
@@ -3446,6 +3687,10 @@ void CG_FireWeapon( centity_t *cent )
 		trap_S_StartSound (NULL, cent->currentState.number, CHAN_ITEM, cgs.media.quadSound );
 	}
 
+	// go through the animation
+	//CG_GunAnimHandler (&cent->pe.hand, GUN_FIRE  & ~ANIM_TOGGLEBIT, cent->currentState.weapon, 1.0 );
+
+
 	// play a sound
 	for ( c = 0 ; c < 4 ; c++ ) {
 		if ( !weap->flashSound[c] ) {
@@ -3463,6 +3708,8 @@ void CG_FireWeapon( centity_t *cent )
 	if ( weap->ejectBrassFunc && cg_brassTime.integer > 0 ) {
 		weap->ejectBrassFunc( cent );
 	}
+
+
 
 //unlagged - attack prediction #1
 	CG_PredictWeaponEffects( cent );
@@ -4214,5 +4461,321 @@ void CG_Bullet( vec3_t end, int sourceEntityNum, vec3_t normal, qboolean flesh, 
 		CG_MissileHitWall( WP_MACHINEGUN, 0, end, normal, IMPACTSOUND_DEFAULT );
 
 	}
+
+}
+
+
+
+
+
+//
+// leilei - Weapon Animations section
+//
+// 		Bunch of code for the view weapon hands system so
+//	there's a lot more life, feedback and a sensible feel that
+//	this game should have had. Remaking what Q2 and its rivals had :/
+//
+
+/*
+======================
+CG_ParseGunAnimationFile
+======================
+*/
+qboolean CG_ParseGunAnimationFile( const char *filename, animation_t *animations ) {
+	char		*text_p, *prev;
+	int			len;
+	int			i;
+	char		*token;
+	float		fps;
+	int			skip;
+	char		text[20000];
+	fileHandle_t	f;
+
+	memset( animations, 0, sizeof( animation_t ) * MAX_WEAPONANIMATIONS );
+
+	// load the file
+	len = trap_FS_FOpenFile( filename, &f, FS_READ );
+	if ( len <= 0 ) {
+		return qfalse;
+	}
+	if ( len >= ( sizeof( text ) - 1 ) ) {
+		Com_Printf( "File %s too long\n", filename );
+		trap_FS_FCloseFile( f );
+		return qfalse;
+	}
+	trap_FS_Read( text, len, f );
+	text[len] = 0;
+	trap_FS_FCloseFile( f );
+
+	// parse the text
+	text_p = text;
+	skip = 0;	// quite the compiler warning
+
+	// read optional parameters
+	while ( 1 ) {
+		prev = text_p;	// so we can unget
+		token = COM_Parse( &text_p );
+		if ( !token ) {
+			break;
+		}
+
+		// if it is a number, start parsing animations
+		if ( token[0] >= '0' && token[0] <= '9' ) {
+			text_p = prev;	// unget the token
+			break;
+		}
+
+		Com_Printf( "unknown token '%s' in %s\n", token, filename );
+	}
+
+	// read information for each frame
+	for ( i = 0 ; i < MAX_WEAPONANIMATIONS ; i++ ) {
+
+		token = COM_Parse( &text_p );
+		if ( !token ) {
+			break;
+		}
+		animations[i].firstFrame = atoi( token );
+
+		token = COM_Parse( &text_p );
+		if ( !token ) {
+			break;
+		}
+		animations[i].numFrames = atoi( token );
+
+		token = COM_Parse( &text_p );
+		if ( !token ) {
+			break;
+		}
+		animations[i].loopFrames = atoi( token );
+
+		token = COM_Parse( &text_p );
+		if ( !token ) {
+			break;
+		}
+		fps = atof( token );
+		if ( fps == 0 ) {
+			fps = 1;
+		}
+		animations[i].frameLerp = 1000 / fps;
+		animations[i].initialLerp = 1000 / fps;
+	}
+
+	if ( i != MAX_WEAPONANIMATIONS ) {
+		Com_Printf( "Error parsing animation file: %s\n", filename );
+		return qfalse;
+	}
+
+	return qtrue;
+}
+
+
+void CG_SetLerpFrameGunimation( clientInfo_t *ci, lerpFrame_t *lf, int newAnimation ) {
+	animation_t	*anim;
+
+	lf->animationNumber = newAnimation;
+	newAnimation &= ~ANIM_TOGGLEBIT;
+
+	if ( newAnimation < 0 || newAnimation >= MAX_WEAPONANIMATIONS ) {
+		CG_Error( "Bad animation number: %i", newAnimation );
+	}
+
+	anim = &ci->gunimations[ newAnimation ];
+
+	lf->animation = anim;
+	lf->animationTime = lf->frameTime + anim->initialLerp;
+
+	if ( cg_debugAnim.integer ) {
+		CG_Printf( "GunAnim: %i\n", newAnimation );
+	}
+}
+
+
+
+/*
+===============
+CG_RunLerpFrame
+
+Sets cg.snap, cg.oldFrame, and cg.backlerp
+cg.time should be between oldFrameTime and frameTime after exit
+===============
+*/
+void CG_GunLerpFrame( clientInfo_t *ci, lerpFrame_t *lf, int newAnimation, float speedScale ) {
+	int			f, numFrames;
+	animation_t	*anim;
+
+	// debugging tool to get no animations
+	if ( cg_animSpeed.integer == 0 ) {
+		lf->oldFrame = lf->frame = lf->backlerp = 0;
+		return;
+	}
+
+	// see if the animation sequence is switching
+	if ( newAnimation != lf->animationNumber || !lf->animation ) {
+		CG_SetLerpFrameGunimation( ci, lf, newAnimation );
+	}
+
+	//	if ( cg.time - cent->muzzleFlashTime > MUZZLE_FLASH_TIME && !cent->pe.railgunFlash ) {
+	//		return;
+//
+//		}
+
+	// if we have passed the current frame, move it to
+	// oldFrame and calculate a new frame
+	if ( cg.time >= lf->frameTime ) {
+		lf->oldFrame = lf->frame;
+		lf->oldFrameTime = lf->frameTime;
+
+		// get the next frame based on the animation
+		anim = lf->animation;
+		if ( !anim->frameLerp ) {
+			return;		// shouldn't happen
+		}
+		if ( cg.time < lf->animationTime ) {
+			lf->frameTime = lf->animationTime;		// initial lerp
+		} else {
+			lf->frameTime = lf->oldFrameTime + anim->frameLerp;
+		}
+		f = ( lf->frameTime - lf->animationTime ) / anim->frameLerp;
+		f *= speedScale;		// adjust for haste, etc
+
+		numFrames = anim->numFrames;
+		if (anim->flipflop) {
+			numFrames *= 2;
+		}
+		if ( f >= numFrames ) {
+			f -= numFrames;
+			if ( anim->loopFrames ) {
+				f %= anim->loopFrames;
+				f += anim->numFrames - anim->loopFrames;
+			} else {
+				f = numFrames - 1;
+				// the animation is stuck at the end, so it
+				// can immediately transition to another sequence
+				lf->frameTime = cg.time;
+			}
+		}
+		if ( anim->reversed ) {
+			lf->frame = anim->firstFrame + anim->numFrames - 1 - f;
+		}
+		else if (anim->flipflop && f>=anim->numFrames) {
+			lf->frame = anim->firstFrame + anim->numFrames - 1 - (f%anim->numFrames);
+		}
+		else {
+			lf->frame = anim->firstFrame + f;
+		}
+		if ( cg.time > lf->frameTime ) {
+			lf->frameTime = cg.time;
+			if ( cg_debugAnim.integer ) {
+				CG_Printf( "Clamp lf->frameTime\n");
+			}
+		}
+	}
+
+	if ( lf->frameTime > cg.time + 200 ) {
+		lf->frameTime = cg.time;
+	}
+
+	if ( lf->oldFrameTime > cg.time ) {
+		lf->oldFrameTime = cg.time;
+	}
+	// calculate current lerp value
+	if ( lf->frameTime == lf->oldFrameTime ) {
+		lf->backlerp = 0;
+	} else {
+		lf->backlerp = 1.0 - (float)( cg.time - lf->oldFrameTime ) / ( lf->frameTime - lf->oldFrameTime );
+	}
+}
+
+void CG_GunAnimHandler (lerpFrame_t *lf, int newAnimation, int weaponNum, float speedScale )
+{
+	clientInfo_t	*ci;
+
+		// hanlde all gun namianaton's
+
+		//int weaponNum;
+		int offset;		// the gun's offset 
+		int theAnim;		// the animation we'll ultimately play
+		centity_t	*cent;
+
+	cent = &cg.predictedPlayerEntity;	// &cg_entities[cg.snap->ps.clientNum];
+	ci = &cgs.clientinfo[ cent->currentState.clientNum ];
+
+	Com_Printf( "%i goes bang..", weaponNum);
+
+	switch ( weaponNum ) {
+	case WP_GAUNTLET:
+		offset = 1;
+		break;
+
+	case WP_MACHINEGUN:
+		offset = 2;
+		break;
+
+	case WP_SHOTGUN:
+		offset = 3;
+		break;
+
+	case WP_GRENADE_LAUNCHER:
+		offset = 4;
+		break;
+
+	case WP_ROCKET_LAUNCHER:
+		offset = 5;
+		break;
+
+	case WP_LIGHTNING:
+		offset = 6;
+		break;
+
+	case WP_RAILGUN:
+		offset = 7;
+		break;
+
+	case WP_PLASMAGUN:
+		offset = 8;
+		break;
+
+	case WP_BFG:
+		offset = 9;
+		break;
+
+	case WP_NAILGUN:
+		offset = 10;
+		break;
+
+	case WP_PROX_LAUNCHER:
+		offset = 11;
+		break;
+
+	case WP_CHAINGUN:
+		offset = 12;
+		break;
+
+	case WP_GRAPPLING_HOOK:
+		offset = 13;
+		break;
+
+	 default:
+		offset = 0;
+		break;
+	}
+
+	if (newAnimation == GUN_FIRE)
+		newAnimation = GUN_FIRE & ~ANIM_TOGGLEBIT; // make it repeat!
+
+	//theAnim = newAnimation + (NUM_WEAPONANIMS * weaponNum);
+	theAnim = (NUM_WEAPONANIMS * 1) + newAnimation;
+
+	//theAnim = SHOTGUN_FIRE & ~ANIM_TOGGLEBIT; // debug
+
+	cent->pe.gunAnim = theAnim;
+
+	//CG_GunLerpFrame( ci, &cent->pe.hand, theAnim, 1.0 );
+	//CG_GunLerpFrame( ci, &lf, theAnim, speedScale );
+
+	Com_Printf( "playing anim %i..", theAnim);
+
+
 
 }

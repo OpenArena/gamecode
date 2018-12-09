@@ -790,6 +790,16 @@ static qboolean CG_RegisterClientModelname(clientInfo_t *ci, const char *modelNa
 	}
 
 
+	// leilei - load weapon hand
+	{
+		Com_Printf( "reading gun animconf  %s\n", filename );
+		//Com_sprintf( filename, sizeof( filename ), "models/hands/%s/animation.cfg", modelName );
+		Com_sprintf( filename, sizeof( filename ), "models/hands/generic/animation.cfg" );
+		if ( !CG_ParseGunAnimationFile( filename, ci->gunimations ) ) {
+			Com_Printf( "Failed to load animation file for the gun hand, %s\n", filename );
+			
+		}
+	}
 
 
 	// leilei - load eyes
@@ -3048,7 +3058,7 @@ void CG_Player(centity_t *cent) {
 	//
 	// add the gun / barrel / flash
 	//
-	CG_AddPlayerWeapon(&torso, NULL, cent, ci->team);
+	CG_AddPlayerWeapon( &torso, NULL, cent, ci->team, 0 );
 
 	// add powerups floating behind the player
 	CG_PlayerPowerups(cent, &torso);
