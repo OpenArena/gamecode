@@ -1082,7 +1082,7 @@ static void ServerOptions_Start( void ) {
 
 	// set player's team
 	if( UI_IsATeamGametype(s_serveroptions.gametype)) {
-		trap_Cmd_ExecuteText( EXEC_APPEND, va( "wait 5; team %s\n", playerTeam_list[s_serveroptions.playerTeam[0].curvalue] ) );
+		trap_Cvar_Set( "g_localTeamPref", playerTeam_list[s_serveroptions.playerTeam[0].curvalue] );
 	}
 }
 

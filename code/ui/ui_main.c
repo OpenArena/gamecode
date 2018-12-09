@@ -3919,7 +3919,7 @@ static void UI_StartSkirmish(qboolean next, char *name)
 		/* /Neon_Knight */
 	}
 	if (UI_IsATeamGametype(g)) {
-		trap_Cmd_ExecuteText( EXEC_APPEND, "wait 5; team Red\n" );
+		trap_Cvar_Set( "g_localTeamPref", "Red" );
 	}
 }
 
@@ -7363,6 +7363,7 @@ static cvarTable_t		cvarTable[] = {
 	{ &ui_missionpackChecks, "ui_missionpackChecks", "1", CVAR_INIT },
 // leilei
 	{ &ui_colors, "ui_colors", "0x1e3072 0x7286d0 0x1fd1b2 0x606060", CVAR_ARCHIVE},
+	{ NULL, "g_localTeamPref", "", 0 },
 };
 
 // bk001129 - made static to avoid aliasing
@@ -7395,6 +7396,9 @@ void UI_UpdateCvars( void )
 	cvarTable_t	*cv;
 
 	for ( i = 0, cv = cvarTable ; i < cvarTableSize ; i++, cv++ ) {
+		if ( !cv->vmCvar ) {
+			continue;
+		}
 		trap_Cvar_Update( cv->vmCvar );
 	}
 }
