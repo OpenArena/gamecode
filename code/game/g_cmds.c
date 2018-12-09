@@ -776,7 +776,7 @@ void SetTeam( gentity_t *ent, char *s ) {
 		team = TEAM_SPECTATOR;
 		specState = SPECTATOR_FREE;
 	} 
-	else if (G_IsATeamGametype(g_gametype.integer) && G_UsesKeyObjectives(g_gametype.integer)) {
+	else if (G_IsATeamGametype(g_gametype.integer)) {
 		// if running a team game, assign player to one of the teams
 		specState = SPECTATOR_NOT;
 		if ( Q_strequal( s, "red" ) || Q_strequal( s, "r" ) ) {
@@ -1190,7 +1190,7 @@ void G_Say( gentity_t *ent, gentity_t *target, int mode, const char *chatText ) 
 
     if ((ent->r.svFlags & SVF_BOT) && trap_Cvar_VariableValue( "bot_nochat" )>1) return;
 
-	if ( !(G_IsATeamGametype(g_gametype.integer) && G_UsesKeyObjectives(g_gametype.integer)) && mode == SAY_TEAM ) {
+	if ( !G_IsATeamGametype(g_gametype.integer) && mode == SAY_TEAM ) {
 		mode = SAY_ALL;
 	}
 
@@ -1212,7 +1212,7 @@ void G_Say( gentity_t *ent, gentity_t *target, int mode, const char *chatText ) 
 		color = COLOR_CYAN;
 		break;
 	case SAY_TELL:
-		if (target && target->inuse && target->client && G_IsATeamGametype(g_gametype.integer) && G_UsesKeyObjectives(g_gametype.integer) &&
+		if (target && target->inuse && target->client && G_IsATeamGametype(g_gametype.integer) &&
 			target->client->sess.sessionTeam == ent->client->sess.sessionTeam &&
 			Team_GetLocationMsg(ent, location, sizeof(location)))
 			Com_sprintf (name, sizeof(name), EC"[%s%c%c"EC"] (%s)"EC": ", ent->client->pers.netname, Q_COLOR_ESCAPE, COLOR_WHITE, location );
@@ -1350,7 +1350,7 @@ void G_Voice( gentity_t *ent, gentity_t *target, int mode, const char *id, qbool
 	int			j;
 	gentity_t	*other;
 
-	if ( !(G_IsATeamGametype(g_gametype.integer) && G_UsesKeyObjectives(g_gametype.integer)) && mode == SAY_TEAM ) {
+	if ( !G_IsATeamGametype(g_gametype.integer) && mode == SAY_TEAM ) {
 		mode = SAY_ALL;
 	}
 
@@ -1510,7 +1510,7 @@ static void Cmd_VoiceTaunt_f( gentity_t *ent ) {
 		}
 	}
 
-	if (G_IsATeamGametype(g_gametype.integer) && G_UsesKeyObjectives(g_gametype.integer)) {
+	if (G_IsATeamGametype(g_gametype.integer)) {
 		// praise a team mate who just got a reward
 		for(i = 0; i < MAX_CLIENTS; i++) {
 			who = g_entities + i;

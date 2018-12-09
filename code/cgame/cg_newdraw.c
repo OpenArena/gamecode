@@ -1109,13 +1109,13 @@ qboolean CG_OwnerDrawVisible(int flags)
 	}
 
 	if (flags & CG_SHOW_ANYTEAMGAME) {
-		if(CG_IsATeamGametype(cgs.gametype) && CG_UsesKeyObjectives(cgs.gametype)) {
+		if(CG_IsATeamGametype(cgs.gametype)) {
 			return qtrue;
 		}
 	}
 
 	if (flags & CG_SHOW_ANYNONTEAMGAME) {
-		if(!(CG_IsATeamGametype(cgs.gametype) && CG_UsesKeyObjectives(cgs.gametype))) {
+		if(!CG_IsATeamGametype(cgs.gametype)) {
 			return qtrue;
 		}
 	}

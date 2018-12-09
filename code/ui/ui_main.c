@@ -2969,25 +2969,25 @@ static qboolean UI_OwnerDrawVisible(int flags)
 			flags &= ~UI_SHOW_DEMOAVAILABLE;
 		}
 		if (flags & UI_SHOW_ANYTEAMOBJECTIVEGAME) {
-			if (!(UI_UsesKeyObjectives(uiInfo.gameTypes[ui_gameType.integer].gtEnum) && UI_IsATeamGametype(uiInfo.gameTypes[ui_gameType.integer].gtEnum))) {
+			if (!UI_IsATeamGametype(uiInfo.gameTypes[ui_gameType.integer].gtEnum)) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_ANYTEAMOBJECTIVEGAME;
 		}
 		if (flags & UI_SHOW_ANYNONTEAMOBJECTIVEGAME) {
-			if (UI_UsesKeyObjectives(uiInfo.gameTypes[ui_gameType.integer].gtEnum) && UI_IsATeamGametype(uiInfo.gameTypes[ui_gameType.integer].gtEnum)) {
+			if (UI_IsATeamGametype(uiInfo.gameTypes[ui_gameType.integer].gtEnum)) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_ANYNONTEAMOBJECTIVEGAME;
 		}
 		if (flags & UI_SHOW_NETANYTEAMOBJECTIVEGAME) {
-			if (!(UI_UsesKeyObjectives(uiInfo.gameTypes[ui_netGameType.integer].gtEnum) && UI_IsATeamGametype(uiInfo.gameTypes[ui_netGameType.integer].gtEnum))) {
+			if (!UI_IsATeamGametype(uiInfo.gameTypes[ui_netGameType.integer].gtEnum)) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_NETANYTEAMOBJECTIVEGAME;
 		}
 		if (flags & UI_SHOW_NETANYNONTEAMOBJECTIVEGAME) {
-			if (UI_UsesKeyObjectives(uiInfo.gameTypes[ui_netGameType.integer].gtEnum) && UI_IsATeamGametype(uiInfo.gameTypes[ui_netGameType.integer].gtEnum)) {
+			if (UI_IsATeamGametype(uiInfo.gameTypes[ui_netGameType.integer].gtEnum)) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_NETANYNONTEAMOBJECTIVEGAME;

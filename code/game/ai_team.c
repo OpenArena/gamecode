@@ -2112,7 +2112,7 @@ void BotTeamAI(bot_state_t *bs) {
         if (bot_nochat.integer>2) return;
 
 	//
-	if (!(G_IsATeamGametype(gametype) && G_UsesKeyObjectives(gametype)))
+	if (!G_IsATeamGametype(gametype))
 		return;
 	// make sure we've got a valid team leader
 	if (!BotValidTeamLeader(bs)) {

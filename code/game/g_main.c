@@ -848,8 +848,7 @@ void G_InitGame( int levelTime, int randomSeed, int restart )
 	G_FindTeams();
 
 	// make sure we have flags for CTF, etc
-	if ( g_gametype.integer == GT_POSSESSION ||
-	        (G_IsATeamGametype(g_gametype.integer) && G_UsesKeyObjectives(g_gametype.integer))) {
+	if (G_UsesKeyObjectives(g_gametype.integer)) {
 		G_CheckTeamItems();
 	}
 
@@ -1281,7 +1280,7 @@ void CalculateRanks( void )
 	       sizeof(level.sortedClients[0]), SortRanks );
 
 	// set the rank value for all clients that are connected and not spectators
-	if (G_IsATeamGametype(g_gametype.integer) && G_UsesKeyObjectives(g_gametype.integer)) {
+	if (G_IsATeamGametype(g_gametype.integer)) {
 		// in team games, rank is just the order of the teams, 0=red, 1=blue, 2=tied
 		for ( i = 0;  i < level.numConnectedClients; i++ ) {
 			cl = &level.clients[ level.sortedClients[i] ];
@@ -1320,7 +1319,7 @@ void CalculateRanks( void )
 	}
 
 	// set the CS_SCORES1/2 configstrings, which will be visible to everyone
-	if (G_IsATeamGametype(g_gametype.integer) && G_UsesKeyObjectives(g_gametype.integer)) {
+	if (G_IsATeamGametype(g_gametype.integer)) {
 		trap_SetConfigstring( CS_SCORES1, va("%i", level.teamScores[TEAM_RED] ) );
 		trap_SetConfigstring( CS_SCORES2, va("%i", level.teamScores[TEAM_BLUE] ) );
 	}
@@ -1444,7 +1443,7 @@ static void SendVictoryChallenge( void )
 	default:
 		return;
 	};
-	if (G_IsATeamGametype(g_gametype.integer) && G_UsesKeyObjectives(g_gametype.integer)) {
+	if (G_IsATeamGametype(g_gametype.integer)) {
 		//Team games
 		for ( i = 0 ; i < level.maxclients ; i++ ) {
 			cl = &level.clients[i];
@@ -1850,7 +1849,7 @@ void LogExit( const char *string )
 		numSorted = 32;
 	}
 
-	if (G_IsATeamGametype(g_gametype.integer) && G_UsesKeyObjectives(g_gametype.integer)) {
+	if (G_IsATeamGametype(g_gametype.integer)) {
 		G_LogPrintf( "red:%i  blue:%i\n",
 		             level.teamScores[TEAM_RED], level.teamScores[TEAM_BLUE] );
 	}
@@ -1999,14 +1998,14 @@ qboolean ScoreIsTied( void )
 	}
 
 	//Sago: In Elimination and Oneway Flag Capture teams must win by two points.
-	if ( g_gametype.integer == GT_ELIMINATION ||
+	if ( (G_IsARoundBasedGametype(g_gametype.integer) && G_IsATeamGametype(g_gametype.integer)) ||
 	        (g_gametype.integer == GT_CTF_ELIMINATION && g_elimination_ctf_oneway.integer)) {
 		return (level.teamScores[TEAM_RED] == level.teamScores[TEAM_BLUE] ||
 		        level.teamScores[TEAM_RED] == level.teamScores[TEAM_BLUE]+1 ||
 		        level.teamScores[TEAM_RED] == level.teamScores[TEAM_BLUE]-1);
 	}
 
-	if (G_IsATeamGametype(g_gametype.integer) && G_UsesKeyObjectives(g_gametype.integer)) {
+	if (G_IsATeamGametype(g_gametype.integer)) {
 		return level.teamScores[TEAM_RED] == level.teamScores[TEAM_BLUE];
 	}
 
