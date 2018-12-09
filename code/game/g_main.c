@@ -205,6 +205,9 @@ vmCvar_t		g_emptyTime;
 
 vmCvar_t		g_grapple;
 vmCvar_t		g_harvesterFromBodies;
+/* Neon_Knight: Double Domination-specific cvars */
+vmCvar_t		g_ddCaptureTime;
+vmCvar_t		g_ddRespawnDelay;
 
 
 mapinfo_result_t mapinfo;
@@ -417,6 +420,9 @@ static cvarTable_t		gameCvarTable[] = {
 
 	{ &g_grapple, "g_grapple", "0", CVAR_ARCHIVE, 0, qfalse},
 	{ &g_harvesterFromBodies, "g_harvesterFromBodies", "0", CVAR_ARCHIVE, 0, qtrue},
+	/* Neon_Knight: Double Domination-specific cvars*/
+	{ &g_ddCaptureTime, "g_ddCaptureTime", "10", CVAR_ARCHIVE, 0, qtrue},
+	{ &g_ddRespawnDelay, "g_ddRespawnDelay", "10", CVAR_ARCHIVE, 0, qtrue},
 
 };
 
@@ -2149,10 +2155,10 @@ void CheckDoubleDomination( void )
 
 	if ( level.warmupTime != 0) {
 		if( ((level.pointStatusA == TEAM_BLUE && level.pointStatusB == TEAM_BLUE) ||
-		        (level.pointStatusA == TEAM_RED && level.pointStatusB == TEAM_RED)) &&
-		        level.timeTaken + 10*1000 <= level.time ) {
+				(level.pointStatusA == TEAM_RED && level.pointStatusB == TEAM_RED)) &&
+				level.timeTaken + g_ddCaptureTime.integer*1000 <= level.time ) {
 			Team_RemoveDoubleDominationPoints();
-			level.roundStartTime = level.time + 10*1000;
+			level.roundStartTime = level.time + g_ddRespawnDelay.integer*1000;
 			SendScoreboardMessageToAllClients();
 		}
 		return;
@@ -2165,7 +2171,8 @@ void CheckDoubleDomination( void )
 	if(level.intermissiontime)
 		return;
 
-	if(level.pointStatusA == TEAM_RED && level.pointStatusB == TEAM_RED && level.timeTaken + 10*1000 <= level.time) {
+	if(level.pointStatusA == TEAM_RED && level.pointStatusB == TEAM_RED &&
+			level.timeTaken + g_ddCaptureTime.integer*1000 <= level.time) {
 		//Red scores
 		trap_SendServerCommand( -1, "print \"Red team scores!\n\"");
 		AddTeamScore(level.intermission_origin,TEAM_RED,1);
@@ -2174,12 +2181,13 @@ void CheckDoubleDomination( void )
 		Team_DD_bonusAtPoints(TEAM_RED);
 		Team_RemoveDoubleDominationPoints();
 		//We start again in 10 seconds:
-		level.roundStartTime = level.time + 10*1000;
+		level.roundStartTime = level.time + g_ddRespawnDelay.integer*1000;
 		SendScoreboardMessageToAllClients();
 		CalculateRanks();
 	}
 
-	if(level.pointStatusA == TEAM_BLUE && level.pointStatusB == TEAM_BLUE && level.timeTaken + 10*1000 <= level.time) {
+	if(level.pointStatusA == TEAM_BLUE && level.pointStatusB == TEAM_BLUE &&
+			level.timeTaken + g_ddCaptureTime.integer*1000 <= level.time) {
 		//Blue scores
 		trap_SendServerCommand( -1, "print \"Blue team scores!\n\"");
 		AddTeamScore(level.intermission_origin,TEAM_BLUE,1);
@@ -2188,7 +2196,7 @@ void CheckDoubleDomination( void )
 		Team_DD_bonusAtPoints(TEAM_BLUE);
 		Team_RemoveDoubleDominationPoints();
 		//We start again in 10 seconds:
-		level.roundStartTime = level.time + 10*1000;
+		level.roundStartTime = level.time + g_ddRespawnDelay.integer*1000;
 		SendScoreboardMessageToAllClients();
 		CalculateRanks();
 	}

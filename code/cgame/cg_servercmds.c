@@ -205,8 +205,8 @@ CG_ParseDDtimetaken
 
 =================
 */
-static void CG_ParseDDtimetaken( void ) {
-	cgs.timetaken = atoi( CG_Argv( 1 ) );
+static void CG_ParseDDtimetakeAt( void ) {
+	cgs.takeAt = atoi( CG_Argv( 1 ) );
 }
 
 /*
@@ -1277,8 +1277,8 @@ static void CG_ServerCommand( void ) {
 	}
 
 
-	if ( strequals( cmd, "ddtaken" ) ) {
-		CG_ParseDDtimetaken();
+	if ( strequals( cmd, "ddTakeAt" ) ) {
+		CG_ParseDDtimetakeAt();
 		return;
 	}
 

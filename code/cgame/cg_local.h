@@ -1221,7 +1221,7 @@ typedef struct {
 	int				nopickup;
 
 //Double Domination DD
-	int 				timetaken;
+	int 			takeAt;
 
 //Domination
 	int domination_points_count;

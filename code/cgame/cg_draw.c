@@ -1733,7 +1733,7 @@ static float CG_DrawScores(float y) {
 			//Time till capture:
 			if (((statusB == statusA) && (statusA == TEAM_RED)) ||
 					((statusB == statusA) && (statusA == TEAM_BLUE))) {
-				s = va("%i", (cgs.timetaken + 10 * 1000 - cg.time) / 1000 + 1);
+				s = va("%i", (cgs.takeAt - cg.time) / 1000 + 1);
 				w = CG_DrawStrlen(s) * BIGCHAR_WIDTH;
 				CG_DrawBigString(x + 32 + 8 - w / 2, y - 28, s, 1.0F);
 			}
@@ -2593,27 +2593,38 @@ static void CG_DrawCenterDDString(void) {
 	if (cgs.gametype != GT_DOUBLE_D)
 		return;
 
+
 	statusA = cgs.redflag;
 	statusB = cgs.blueflag;
 
 	if (((statusB == statusA) && (statusA == TEAM_RED)) ||
 			((statusB == statusA) && (statusA == TEAM_BLUE))) {
 	} else {
+		lastDDSec = -100;
 		return; //No team is dominating
 	}
 
 	if (statusA == TEAM_BLUE) {
-		line = va("Blue scores in %i", (cgs.timetaken + 10 * 1000 - cg.time) / 1000 + 1);
+		line = va("Blue scores in %i", (cgs.takeAt - cg.time) / 1000 + 1);
 		color = colorBlue;
 	} else if (statusA == TEAM_RED) {
-		line = va("Red scores in %i", (cgs.timetaken + 10 * 1000 - cg.time) / 1000 + 1);
+		line = va("Red scores in %i", (cgs.takeAt - cg.time) / 1000 + 1);
 		color = colorRed;
 	} else {
 		lastDDSec = -100;
 		return;
 	}
 
-	sec = (cgs.timetaken + 10 * 1000 - cg.time) / 1000 + 1;
+	if (cgs.takeAt == 0) {
+		return;
+	}
+
+	sec = (cgs.takeAt - cg.time) / 1000 + 1;
+
+	if (sec < 0) {
+		return;
+	}
+
 	if (sec != lastDDSec) {
 		//A new number is being displayed... play the sound!
 		switch (sec) {
@@ -2626,10 +2637,10 @@ static void CG_DrawCenterDDString(void) {
 			case 3:
 				trap_S_StartLocalSound(cgs.media.count3Sound, CHAN_ANNOUNCER);
 				break;
-			case 10:
-				trap_S_StartLocalSound(cgs.media.doublerSound, CHAN_ANNOUNCER);
-				break;
 			default:
+				if (lastDDSec == -100) {
+					trap_S_StartLocalSound(cgs.media.doublerSound, CHAN_ANNOUNCER);
+				}
 				break;
 		}
 	}

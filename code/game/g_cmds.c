@@ -186,7 +186,7 @@ DoubleDominationScoreTime
 ==================
 */
 void DoubleDominationScoreTimeMessage( gentity_t *ent ) {
-	trap_SendServerCommand( ent-g_entities, va("ddtaken %i", level.timeTaken));
+	trap_SendServerCommand( ent-g_entities, va("ddTakeAt %i", level.timeTaken + g_ddCaptureTime.integer*1000));
 }
 
 /*
