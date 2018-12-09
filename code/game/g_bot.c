@@ -419,7 +419,7 @@ void G_CheckMinimumPlayers( void ) {
 		return; //If no AAS then don't even try
 	}
 
-	if (G_IsATeamGametype(g_gametype.integer) && G_UsesKeyObjectives(g_gametype.integer)) {
+	if (G_IsATeamGametype(g_gametype.integer)) {
 		if (minplayers >= g_maxclients.integer / 2) {
 			minplayers = (g_maxclients.integer / 2) -1;
 		}
@@ -459,7 +459,7 @@ void G_CheckMinimumPlayers( void ) {
 			}
 		}
 	}
-	else if (g_gametype.integer == GT_FFA) {
+	else {
 		if (minplayers >= g_maxclients.integer) {
 			minplayers = g_maxclients.integer-1;
 		}
