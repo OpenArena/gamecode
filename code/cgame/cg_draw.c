@@ -3575,13 +3575,6 @@ static void CG_Draw2D(stereoFrame_t stereoFrame) {
 	cg.accBoardShowing = CG_DrawAccboard();
 }
 
-static void CG_DrawTourneyScoreboard(void) {
-#ifdef MISSIONPACK
-#else
-	CG_DrawOldTourneyScoreboard();
-#endif
-}
-
 /*
 =====================
 CG_DrawActive
