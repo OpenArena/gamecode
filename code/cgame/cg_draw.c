@@ -3268,6 +3268,7 @@ CG_DrawProxWarning
 static void CG_DrawProxWarning(void) {
 	char s [32];
 	int w;
+	static int proxTime;
 	int proxTick;
 
 	if (!(cg.snap->ps.eFlags & EF_TICKING)) {
@@ -3280,9 +3281,7 @@ static void CG_DrawProxWarning(void) {
 		proxTime = cg.time;
 	} else {
 		//Times was already set
-		if (cg.time > proxTime) {
-			proxTick = 10 - ((cg.time - proxTime) / 1000);
-		}
+		proxTick = 10 - ((cg.time - proxTime) / 1000);
 	}
 
 	if (proxTick > 0 && proxTick <= 5) {
