@@ -85,7 +85,7 @@ void CG_DrawTopBottom(float x, float y, float w, float h, float size) {
 }
 /*
 ================
-UI_DrawRect
+CG_DrawRect
 
 Coordinates are 640*480 virtual values
 =================
@@ -94,7 +94,7 @@ void CG_DrawRect( float x, float y, float width, float height, float size, const
 	trap_R_SetColor( color );
 
   CG_DrawTopBottom(x, y, width, height, size);
-  CG_DrawSides(x, y, width, height, size);
+  CG_DrawSides(x, y + size, width, height - size * 2, size);
 
 	trap_R_SetColor( NULL );
 }

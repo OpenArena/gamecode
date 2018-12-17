@@ -3864,7 +3864,6 @@ int BotFuncButtonActivateGoal(bot_state_t *bs, int bspent, bot_activategoal_t *a
 	modelindex = atoi(model + 1);
 	if (!modelindex)
 		return qfalse;
-	VectorClear(angles);
 	entitynum = BotModelMinsMaxs(modelindex, ET_MOVER, 0, mins, maxs);
 	//get the lip of the button
 	trap_AAS_FloatForBSPEpairKey(bspent, "lip", &lip);
@@ -3998,7 +3997,7 @@ BotFuncDoorGoal
 int BotFuncDoorActivateGoal(bot_state_t *bs, int bspent, bot_activategoal_t *activategoal) {
 	int modelindex, entitynum;
 	char model[MAX_INFO_STRING];
-	vec3_t mins, maxs, origin, angles;
+	vec3_t mins, maxs, origin;
 
 	//shoot at the shootable door
 	trap_AAS_ValueForBSPEpairKey(bspent, "model", model, sizeof (model));
@@ -4007,7 +4006,6 @@ int BotFuncDoorActivateGoal(bot_state_t *bs, int bspent, bot_activategoal_t *act
 	modelindex = atoi(model + 1);
 	if (!modelindex)
 		return qfalse;
-	VectorClear(angles);
 	entitynum = BotModelMinsMaxs(modelindex, ET_MOVER, 0, mins, maxs);
 	//door origin
 	VectorAdd(mins, maxs, origin);
@@ -4027,13 +4025,13 @@ int BotFuncDoorActivateGoal(bot_state_t *bs, int bspent, bot_activategoal_t *act
 
 /*
 ==================
-BotTriggerMultipleGoal
+BotTriggerMultipleActivateGoal
 ==================
  */
 int BotTriggerMultipleActivateGoal(bot_state_t *bs, int bspent, bot_activategoal_t *activategoal) {
 	int i, areas[10], numareas, modelindex, entitynum;
 	char model[128];
-	vec3_t start, end, mins, maxs, angles;
+	vec3_t start, end, mins, maxs;
 	vec3_t origin, goalorigin;
 
 	activategoal->shoot = qfalse;
@@ -4045,7 +4043,6 @@ int BotTriggerMultipleActivateGoal(bot_state_t *bs, int bspent, bot_activategoal
 	modelindex = atoi(model + 1);
 	if (!modelindex)
 		return qfalse;
-	VectorClear(angles);
 	entitynum = BotModelMinsMaxs(modelindex, 0, CONTENTS_TRIGGER, mins, maxs);
 	//trigger origin
 	VectorAdd(mins, maxs, origin);
@@ -4193,7 +4190,7 @@ int BotGetActivateGoal(bot_state_t *bs, int entitynum, bot_activategoal_t *activ
 	char targetname[10][128];
 	aas_entityinfo_t entinfo;
 	aas_areainfo_t areainfo;
-	vec3_t origin, angles, absmins, absmaxs;
+	vec3_t origin, absmins, absmaxs;
 
 	memset(activategoal, 0, sizeof (bot_activategoal_t));
 	BotEntityInfo(entitynum, &entinfo);
@@ -4237,7 +4234,6 @@ int BotGetActivateGoal(bot_state_t *bs, int entitynum, bot_activategoal_t *activ
 		if (*model) {
 			modelindex = atoi(model + 1);
 			if (modelindex) {
-				VectorClear(angles);
 				BotModelMinsMaxs(modelindex, ET_MOVER, 0, absmins, absmaxs);
 				//
 				numareas = trap_AAS_BBoxAreas(absmins, absmaxs, areas, MAX_ACTIVATEAREAS * 2);
@@ -4576,7 +4572,7 @@ int BotAIPredictObstacles(bot_state_t *bs, bot_goal_t *goal) {
 	bs->predictobstacles_goalareanum = goal->areanum;
 	bs->predictobstacles_time = FloatTime();
 
-	// predict at most 100 areas or 10 seconds ahead
+	// predict at most 100 areas or 1 second ahead
 	trap_AAS_PredictRoute(&route, bs->areanum, bs->origin,
 			goal->areanum, bs->tfl, 100, 1000,
 			RSE_USETRAVELTYPE | RSE_ENTERCONTENTS,
