@@ -704,7 +704,7 @@ void Team_CheckHurtCarrier(gentity_t *targ, gentity_t *attacker)
 		flag_pw = PW_REDFLAG;
 	}
 
-	if (G_UsesTheWhiteFlag(g_gametype.integer)) {
+	if (g_gametype.integer == GT_1FCTF) {
 		flag_pw = PW_NEUTRALFLAG;
 	}
 
