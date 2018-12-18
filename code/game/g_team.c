@@ -408,6 +408,7 @@ void Team_FragBonuses(gentity_t *targ, gentity_t *inflictor, gentity_t *attacker
 	}
 
 	if (G_UsesTheWhiteFlag(g_gametype.integer)) {
+		flag_pw = PW_NEUTRALFLAG;
 		enemy_flag_pw = PW_NEUTRALFLAG;
 	}
 
@@ -496,28 +497,6 @@ void Team_FragBonuses(gentity_t *targ, gentity_t *inflictor, gentity_t *attacker
 
 		return;
 	}
-
-	if (targ->client->pers.teamState.lasthurtcarrier &&
-	        level.time - targ->client->pers.teamState.lasthurtcarrier < CTF_CARRIER_DANGER_PROTECT_TIMEOUT) {
-		// attacker is on the same team as the skull carrier and
-		AddScore(attacker, targ->r.currentOrigin, CTF_CARRIER_DANGER_PROTECT_BONUS);
-
-		attacker->client->pers.teamState.carrierdefense++;
-		targ->client->pers.teamState.lasthurtcarrier = 0;
-
-		attacker->client->ps.persistant[PERS_DEFEND_COUNT]++;
-		if(!level.hadBots)
-			ChallengeMessage(attacker,AWARD_DEFENCE);
-		G_LogPrintf( "Award: %i %i: %s gained the %s award!\n", attacker->client->ps.clientNum, 3, attacker->client->pers.netname, "DEFENCE" );
-		team = attacker->client->sess.sessionTeam;
-		// add the sprite over the player's head
-		attacker->client->ps.eFlags &= ~(EF_AWARD_IMPRESSIVE | EF_AWARD_EXCELLENT | EF_AWARD_GAUNTLET | EF_AWARD_ASSIST | EF_AWARD_DEFEND | EF_AWARD_CAP );
-		attacker->client->ps.eFlags |= EF_AWARD_DEFEND;
-		attacker->client->rewardTime = level.time + REWARD_SPRITE_TIME;
-
-		return;
-	}
-
 //We place the Double Domination bonus test here! This appears to be the best place to place them.
 	if ( g_gametype.integer == GT_DOUBLE_D ) {
 		if(attacker->client->sess.sessionTeam == level.pointStatusA ) { //Attack must defend point A
@@ -678,7 +657,7 @@ void Team_FragBonuses(gentity_t *targ, gentity_t *inflictor, gentity_t *attacker
 
 	if (carrier && carrier != attacker) {
 		VectorSubtract(targ->r.currentOrigin, carrier->r.currentOrigin, v1);
-		VectorSubtract(attacker->r.currentOrigin, carrier->r.currentOrigin, v1);
+		VectorSubtract(attacker->r.currentOrigin, carrier->r.currentOrigin, v2);
 
 		if ( ( ( VectorLength(v1) < CTF_ATTACKER_PROTECT_RADIUS &&
 		         trap_InPVS(carrier->r.currentOrigin, targ->r.currentOrigin ) ) ||
@@ -723,6 +702,10 @@ void Team_CheckHurtCarrier(gentity_t *targ, gentity_t *attacker)
 	}
 	else {
 		flag_pw = PW_REDFLAG;
+	}
+
+	if (G_UsesTheWhiteFlag(g_gametype.integer)) {
+		flag_pw = PW_NEUTRALFLAG;
 	}
 
 	// flags
