@@ -2103,7 +2103,15 @@ void CheckExitRules( void )
 		return;
 	}
 
-	if (!G_IsATeamGametype(g_gametype.integer) && g_fraglimit.integer ) {
+	if ( g_fraglimit.integer < 0 ) {
+		G_Printf( "fraglimit %i is out of range, defaulting to 0\n", g_fraglimit.integer );
+		trap_Cvar_Set( "fraglimit", "0" );
+		trap_Cvar_Update( &g_fraglimit );
+	}
+
+	if (!(G_IsATeamGametype(g_gametype.integer) &&
+			(G_UsesKeyObjectives(g_gametype.integer) || G_IsARoundBasedGametype(g_gametype.integer))) &&
+			g_fraglimit.integer ) {
 		if ( level.teamScores[TEAM_RED] >= g_fraglimit.integer ) {
 			trap_SendServerCommand( -1, "print \"Red hit the fraglimit.\n\"" );
 			LogExit( "Fraglimit hit." );
@@ -2134,7 +2142,15 @@ void CheckExitRules( void )
 		}
 	}
 
-	if ( G_IsATeamGametype(g_gametype.integer) && g_capturelimit.integer ) {
+	if ( g_capturelimit.integer < 0 ) {
+		G_Printf( "capturelimit %i is out of range, defaulting to 0\n", g_capturelimit.integer );
+		trap_Cvar_Set( "capturelimit", "0" );
+		trap_Cvar_Update( &g_capturelimit );
+	}
+
+	if ( G_IsATeamGametype(g_gametype.integer) &&
+			(G_UsesKeyObjectives(g_gametype.integer) || G_IsARoundBasedGametype(g_gametype.integer)) &&
+			g_capturelimit.integer ) {
 
 		if ( level.teamScores[TEAM_RED] >= g_capturelimit.integer ) {
 			trap_SendServerCommand( -1, "print \"Red hit the capturelimit.\n\"" );
