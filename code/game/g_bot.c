@@ -733,6 +733,9 @@ static void G_AddBot( const char *name, float skill, const char *team, int delay
 	}
 
 	Info_SetValueForKey( userinfo, "characterfile", Info_ValueForKey( botinfo, "aifile" ) );
+	// don't send tinfo to bots, they don't parse it
+	Info_SetValueForKey( userinfo, "teamoverlay", "0" );
+
 	Info_SetValueForKey( userinfo, "skill", va( "%5.2f", skill ) );
 
 	bot = &g_entities[ clientNum ];
