@@ -161,7 +161,7 @@ void CG_SelectNextPlayer( void )
 void CG_SelectPrevPlayer( void )
 {
 	CG_CheckOrderPending();
-	if (cg_currentSelectedPlayer.integer > 0 && cg_currentSelectedPlayer.integer < numSortedTeamPlayers) {
+	if (cg_currentSelectedPlayer.integer > 0 && cg_currentSelectedPlayer.integer <= numSortedTeamPlayers) {
 		cg_currentSelectedPlayer.integer--;
 	}
 	else {
