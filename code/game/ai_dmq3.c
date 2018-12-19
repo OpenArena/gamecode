@@ -5346,7 +5346,33 @@ void BotSetEntityNumForGoal(bot_goal_t *goal, char *classname) {
 		if (!ent->inuse) {
 			continue;
 		}
-		if (Q_strequal(ent->classname, classname)) {
+		if ( Q_stricmp(ent->classname, classname) != 0 ) {
+			continue;
+		}
+		VectorSubtract(goal->origin, ent->s.origin, dir);
+		if (VectorLengthSquared(dir) < Square(10)) {
+			goal->entitynum = i;
+			return;
+		}
+	}
+}
+
+/*
+==================
+BotSetEntityNumForGoalWithActivator
+==================
+*/
+void BotSetEntityNumForGoalWithActivator(bot_goal_t *goal, char *classname) {
+	gentity_t *ent;
+	int i;
+	vec3_t dir;
+
+	ent = &g_entities[0];
+	for (i = 0; i < level.num_entities; i++, ent++) {
+		if ( !ent->inuse || !ent->activator ) {
+			continue;
+		}
+		if ( Q_stricmp(ent->activator->classname, classname) != 0 ) {
 			continue;
 		}
 		VectorSubtract(goal->origin, ent->s.origin, dir);
@@ -5443,21 +5469,21 @@ void BotSetupDeathmatchAI(void) {
 			BotAI_Print(PRT_WARNING, "CTF without Blue Flag\n");
 	} else if (gametype == GT_OBELISK) {
 		if (untrap_BotGetLevelItemGoal(-1, "Red Obelisk", &redobelisk) < 0)
-			BotAI_Print(PRT_WARNING, "Obelisk without red obelisk\n");
-		BotSetEntityNumForGoal(&redobelisk, "team_redobelisk");
+			BotAI_Print(PRT_WARNING, "Overload without red obelisk\n");
+		BotSetEntityNumForGoalWithActivator(&redobelisk, "team_redobelisk");
 		if (untrap_BotGetLevelItemGoal(-1, "Blue Obelisk", &blueobelisk) < 0)
-			BotAI_Print(PRT_WARNING, "Obelisk without blue obelisk\n");
-		BotSetEntityNumForGoal(&blueobelisk, "team_blueobelisk");
+			BotAI_Print(PRT_WARNING, "Overload without blue obelisk\n");
+		BotSetEntityNumForGoalWithActivator(&blueobelisk, "team_blueobelisk");
 	} else if (gametype == GT_HARVESTER) {
 		if (untrap_BotGetLevelItemGoal(-1, "Red Obelisk", &redobelisk) < 0)
 			BotAI_Print(PRT_WARNING, "Harvester without red obelisk\n");
-		BotSetEntityNumForGoal(&redobelisk, "team_redobelisk");
+		BotSetEntityNumForGoalWithActivator(&redobelisk, "team_redobelisk");
 		if (untrap_BotGetLevelItemGoal(-1, "Blue Obelisk", &blueobelisk) < 0)
 			BotAI_Print(PRT_WARNING, "Harvester without blue obelisk\n");
-		BotSetEntityNumForGoal(&blueobelisk, "team_blueobelisk");
+		BotSetEntityNumForGoalWithActivator(&blueobelisk, "team_blueobelisk");
 		if (untrap_BotGetLevelItemGoal(-1, "Neutral Obelisk", &neutralobelisk) < 0)
 			BotAI_Print(PRT_WARNING, "Harvester without neutral obelisk\n");
-		BotSetEntityNumForGoal(&neutralobelisk, "team_neutralobelisk");
+		BotSetEntityNumForGoalWithActivator(&neutralobelisk, "team_neutralobelisk");
 	} else if (gametype == GT_POSSESSION) {
 		if (untrap_BotGetLevelItemGoal(-1, "Neutral Flag", &ctf_neutralflag) < 0)
 			BotAI_Print(PRT_WARNING, "Possession without Neutral Flag\n");
