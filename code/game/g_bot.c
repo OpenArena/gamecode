@@ -595,7 +595,6 @@ static void G_AddBot( const char *name, float skill, const char *team, int delay
 	int				teamNum;
 	int				botinfoNum;
 	char			*botinfo;
-	gentity_t		*bot;
 	char			*key;
 	char			*s;
 	char			*botname;
@@ -603,9 +602,17 @@ static void G_AddBot( const char *name, float skill, const char *team, int delay
 	char			*headmodel;
 	char			userinfo[MAX_INFO_STRING];
 
+	// have the server allocate a client slot
+	clientNum = trap_BotAllocateClient();
+	if ( clientNum == -1 ) {
+		G_Printf( S_COLOR_RED "Unable to add bot. All player slots are in use.\n" );
+		G_Printf( S_COLOR_RED "Start server with more 'open' slots (or check setting of sv_maxclients cvar).\n" );
+		return;
+	}
+
 	// set default team
 	if( !team || !*team ) {
-		if( G_IsATeamGametype(g_gametype.integer) ) {
+		if( GAMETYPE_IS_A_TEAM_GAME(g_gametype.integer) ) {
 			if( PickTeam(clientNum) == TEAM_RED) {
 				team = "red";
 			}
@@ -619,14 +626,14 @@ static void G_AddBot( const char *name, float skill, const char *team, int delay
 	}
 
 	// get the botinfo from bots.txt
-	if ( Q_stricmp( name, "random" ) == 0 ) {
-		if ( Q_stricmp( team, "red" ) == 0 || Q_stricmp( team, "r" ) == 0 ) {
+	if ( Q_strequal( name, "random" ) ) {
+		if ( Q_strequal( team, "red" ) || Q_strequal( team, "r" ) ) {
 			teamNum = TEAM_RED;
 		}
-		else if ( Q_stricmp( team, "blue" ) == 0 || Q_stricmp( team, "b" ) == 0 ) {
+		else if ( Q_strequal( team, "blue" ) || Q_strequal( team, "b" ) ) {
 			teamNum = TEAM_BLUE;
 		}
-		else if ( !Q_stricmp( team, "spectator" ) || !Q_stricmp( team, "s" ) ) {
+		else if ( Q_strequal( team, "spectator" ) || Q_strequal( team, "s" ) ) {
 			teamNum = TEAM_SPECTATOR;
 		}
 		else {
@@ -649,6 +656,7 @@ static void G_AddBot( const char *name, float skill, const char *team, int delay
 
 	if ( !botinfo ) {
 		G_Printf( S_COLOR_RED "Error: Bot '%s' not defined\n", name );
+		trap_BotFreeClient( clientNum );
 		return;
 	}
 
@@ -666,7 +674,7 @@ static void G_AddBot( const char *name, float skill, const char *team, int delay
 	Info_SetValueForKey( userinfo, "name", botname );
 	Info_SetValueForKey( userinfo, "rate", "25000" );
 	Info_SetValueForKey( userinfo, "snaps", "20" );
-	Info_SetValueForKey( userinfo, "skill", va("%1.2f", skill) );
+	Info_SetValueForKey( userinfo, "skill", va("%.2f", skill) );
 	Info_SetValueForKey( userinfo, "teampref", team );
 
 	if ( skill >= 1 && skill < 2 ) {
@@ -721,26 +729,13 @@ static void G_AddBot( const char *name, float skill, const char *team, int delay
 	s = Info_ValueForKey(botinfo, "aifile");
 	if (!*s ) {
 		trap_Printf( S_COLOR_RED "Error: bot has no aifile specified\n" );
+		trap_BotFreeClient( clientNum );
 		return;
 	}
+	Info_SetValueForKey( userinfo, "characterfile", s );
 
-	// have the server allocate a client slot
-	clientNum = trap_BotAllocateClient();
-	if ( clientNum == -1 ) {
-                G_Printf( S_COLOR_RED "Unable to add bot.  All player slots are in use.\n" );
-                G_Printf( S_COLOR_RED "Start server with more 'open' slots (or check setting of sv_maxclients cvar).\n" );
-                return;
-	}
-
-	Info_SetValueForKey( userinfo, "characterfile", Info_ValueForKey( botinfo, "aifile" ) );
 	// don't send tinfo to bots, they don't parse it
 	Info_SetValueForKey( userinfo, "teamoverlay", "0" );
-
-	Info_SetValueForKey( userinfo, "skill", va( "%5.2f", skill ) );
-
-	bot = &g_entities[ clientNum ];
-	bot->r.svFlags |= SVF_BOT;
-	bot->inuse = qtrue;
 
 	// register the userinfo
 	trap_SetUserinfo( clientNum, userinfo );
