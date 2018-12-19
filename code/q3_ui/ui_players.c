@@ -1079,7 +1079,7 @@ static qboolean UI_ParseAnimationFile( const char *filename, playerInfo_t *pi ) 
 		animations[i].initialLerp = 1000 / fps;
 	}
 
-	if ( i != MAX_ANIMATIONS ) {
+	if ( i != MAX_ANIMATIONS - (TORSO_NEGATIVE - TORSO_GETFLAG + 1) ) {
 		Com_Printf( "Error parsing animation file: %s\n", filename );
 		return qfalse;
 	}
