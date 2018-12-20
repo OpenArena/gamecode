@@ -799,9 +799,10 @@ void BotCTFSeekGoals(bot_state_t *bs) {
 		BotSetTeamStatus(bs);
 	}
 	bs->owndecision_time = FloatTime() + 5;
-#ifdef DEBUG
-	BotPrintTeamGoal(bs);
-#endif //DEBUG
+	// Print messages in Developer mode.
+	if(trap_Cvar_VariableIntegerValue("developer") != 0){
+		BotPrintTeamGoal(bs);
+	}
 }
 
 /*
@@ -1137,9 +1138,10 @@ void Bot1FCTFSeekGoals(bot_state_t *bs) {
 		BotSetTeamStatus(bs);
 	}
 	bs->owndecision_time = FloatTime() + 5;
-#ifdef DEBUG
-	BotPrintTeamGoal(bs);
-#endif //DEBUG
+	// Print messages in Developer mode.
+	if(trap_Cvar_VariableIntegerValue("developer") != 0){
+		BotPrintTeamGoal(bs);
+	}
 }
 
 /*
