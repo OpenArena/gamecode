@@ -3285,10 +3285,8 @@ static void CG_DrawProxWarning( void ) {
 
 	proxTick = 10 - ((cg.time - proxTime) / 1000);
 
-	if (proxTick > 0 && proxTick <= 5) {
-		Com_sprintf(s, sizeof(s), "INTERNAL COMBUSTION IN: %i", proxTick);
-	} else {
-		Com_sprintf(s, sizeof(s), "YOU HAVE BEEN MINED");
+	if (proxTick > 0) {
+		Com_sprintf(s, sizeof(s), "YOU HAVE BEEN MINED\rINTERNAL COMBUSTION IN: %i", proxTick);
 	}
 
 	w = CG_DrawStrlen( s ) * BIGCHAR_WIDTH;

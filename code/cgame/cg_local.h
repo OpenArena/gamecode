@@ -1483,6 +1483,8 @@ extern vmCvar_t cg_missionpackChecks;
 /* /Neon_Knight */
 extern vmCvar_t cg_leiChibi;
 
+extern vmCvar_t		cg_drawMinedMessageInstantly;
+
 //unlagged - cg_unlagged.c
 void CG_PredictWeaponEffects( centity_t *cent );
 //void CG_AddBoundingBox( centity_t *cent );
