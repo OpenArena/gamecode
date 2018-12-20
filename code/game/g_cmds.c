@@ -1845,19 +1845,6 @@ void Cmd_CallVote_f( gentity_t *ent ) {
 		}
 		//Com_sprintf( level.voteDisplayString, sizeof( level.voteDisplayString ), "%s", level.voteString );
 		Com_sprintf( level.voteDisplayString, sizeof( level.voteDisplayString ), "%s", "Next map?" );
-	} else if ( !Q_stricmp( arg1, "clientkick" ) || !Q_stricmp( arg1, "kick" ) ) {
-		i = ClientNumberFromString( ent, arg2, !Q_stricmp( arg1, "clientkick" ), !Q_stricmp( arg1, "kick" ) );
-		if ( i == -1 ) {
-			return;
-		}
-
-		if ( level.clients[i].pers.localClient ) {
-			trap_SendServerCommand( ent - g_entities, "print \"Cannot kick host player.\n\"" );
-			return;
-		}
-
-		Com_sprintf( level.voteString, sizeof( level.voteString ), "clientkick %d", i );
-		Com_sprintf( level.voteDisplayString, sizeof( level.voteDisplayString ), "kick %s", level.clients[i].pers.netname );
 	} else if ( Q_strequal( arg1, "fraglimit" ) ) {
 		i = atoi(arg2);
 		if(!allowedFraglimit(i)) {

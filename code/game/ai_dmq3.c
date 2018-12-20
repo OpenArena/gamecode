@@ -3733,13 +3733,13 @@ void BotMapScripts(bot_state_t *bs) {
 	strncpy(mapname, Info_ValueForKey(info, "mapname"), sizeof (mapname) - 1);
 	mapname[sizeof (mapname) - 1] = '\0';
 
-	if (!Q_stricmp(mapname, "q3tourney6") || !Q_stricmp(mapname, "q3tourney6_ctf") || !Q_stricmp(mapname, "mpq3tourney6")) {
+	if (Q_strequal(mapname, "q3tourney6") || Q_strequal(mapname, "q3tourney6_ctf") || Q_strequal(mapname, "mpq3tourney6")) {
 		vec3_t mins = {694, 200, 480}, maxs = {968, 472, 680};
 		vec3_t buttonorg = {304, 352, 920};
 		//NOTE: NEVER use the func_bobbing in q3tourney6
 		bs->tfl &= ~TFL_FUNCBOB;
 		//crush area is higher in mpq3tourney6
-		if (!Q_stricmp(mapname, "mpq3tourney6")) {
+		if (Q_strequal(mapname, "mpq3tourney6")) {
 			mins[2] += 64;
 			maxs[2] += 64;
 		}
@@ -5346,7 +5346,7 @@ void BotSetEntityNumForGoal(bot_goal_t *goal, char *classname) {
 		if (!ent->inuse) {
 			continue;
 		}
-		if ( Q_stricmp(ent->classname, classname) != 0 ) {
+		if ( !Q_strequal(ent->classname, classname) ) {
 			continue;
 		}
 		VectorSubtract(goal->origin, ent->s.origin, dir);
@@ -5372,7 +5372,7 @@ void BotSetEntityNumForGoalWithActivator(bot_goal_t *goal, char *classname) {
 		if ( !ent->inuse || !ent->activator ) {
 			continue;
 		}
-		if ( Q_stricmp(ent->activator->classname, classname) != 0 ) {
+		if ( !Q_strequal(ent->activator->classname, classname) ) {
 			continue;
 		}
 		VectorSubtract(goal->origin, ent->s.origin, dir);
