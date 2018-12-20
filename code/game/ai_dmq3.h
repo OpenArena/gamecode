@@ -191,6 +191,8 @@ extern vmCvar_t bot_fastchat;
 extern vmCvar_t bot_nochat;
 extern vmCvar_t bot_testrchat;
 extern vmCvar_t bot_challenge;
+/* Neon_Knight: Because the bots should have freedom of expression, lol! */
+extern vmCvar_t bot_allowTeamChat;
 
 extern bot_goal_t ctf_redflag;
 extern bot_goal_t ctf_blueflag;
