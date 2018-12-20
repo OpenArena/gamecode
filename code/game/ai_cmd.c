@@ -142,6 +142,16 @@ void BotPrintTeamGoal(bot_state_t *bs) {
 			BotAI_Print(PRT_MESSAGE, "%s: I'm gonna take care of point B for %1.0f secs\n", netname, t);
 			break;
 		}
+		case LTG_DOMCAPTURE:
+		{
+			BotAI_Print(PRT_MESSAGE, "%s: I'm gonna capture a DOM point for %1.0f secs\n", netname, t);
+			break;
+		}
+		case LTG_DOMROAM:
+		{
+			BotAI_Print(PRT_MESSAGE, "%s: I'm gonna roam the level for %1.0f secs\n", netname, t);
+			break;
+		}
 		default:
 		{
 			if (bs->ctfroam_time > FloatTime()) {
@@ -300,7 +310,7 @@ int NumPlayersOnSameTeam(bot_state_t *bs) {
 
 /*
 ==================
-TeamPlayIsOn
+BotGetPatrolWaypoints
 ==================
 */
 int BotGetPatrolWaypoints(bot_state_t *bs, bot_match_t *match) {
@@ -734,7 +744,9 @@ void BotMatch_TakeB(bot_state_t *bs, bot_match_t *match) {
 	//get the team goal time
 	bs->teamgoal_time = BotGetTime(match);
 	//set the team goal time
-	if (!bs->teamgoal_time) bs->teamgoal_time = FloatTime() + DD_POINTA;
+	if (!bs->teamgoal_time) {
+		bs->teamgoal_time = FloatTime() + DD_POINTA;
+	}
 	//away from defending
 	bs->defendaway_time = 0;
 	//
@@ -958,7 +970,7 @@ void BotMatch_GetFlag(bot_state_t *bs, bot_match_t *match) {
 	//set the team goal time
 	bs->teamgoal_time = FloatTime() + CTF_GETFLAG_TIME;
 	// get an alternate route in ctf
-	if (G_UsesTeamFlags(gametype)) {
+	if (G_UsesTeamFlags(gametype) || gametype == GT_POSSESSION) {
 		//get an alternative route goal towards the enemy base
 		BotGetAlternateRouteGoal(bs, BotOppositeTeam(bs));
 	}
@@ -1924,7 +1936,7 @@ int BotMatchMessage(bot_state_t *bs, char *message) {
 			BotMatch_Patrol(bs, &match);
 			break;
 		}
-		//CTF & 1FCTF
+		//CTF & 1FCTF & Possession
 		case MSG_GETFLAG:				//ctf get the enemy flag
 		{
 			BotMatch_GetFlag(bs, &match);

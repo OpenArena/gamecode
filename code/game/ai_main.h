@@ -61,9 +61,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 //Long term DD goals
 #define LTG_POINTA				16	//Take/Defend point A
 #define LTG_POINTB				17	//Take/Defend point B
-//Long term DD goals
-#define LTG_DOMROAM                             18      //Go for a non taken point.
-#define LTG_DOMHOLD                             19      //Pick a point and hold it.
+//Long term DOM goals
+#define LTG_DOMROAM					18	//Go for a non taken point.
+#define LTG_DOMCAPTURE				19	//Pick a point and hold it.
 //some goal dedication times
 #define TEAM_HELP_TIME				60	//1 minute teamplay help time
 #define TEAM_ACCOMPANY_TIME			600	//10 minutes teamplay accompany time

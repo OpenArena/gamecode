@@ -173,6 +173,10 @@ int ClientOnSameTeamFromName(bot_state_t *bs, char *name);
 int BotPointAreaNum(vec3_t origin);
 //
 void BotMapScripts(bot_state_t *bs);
+// DD and DOM goal seek functions
+void BotDDSeekGoals(bot_state_t *bs);
+void BotDomSeekGoals(bot_state_t *bs);
+void BotDomCurrentPoint(void);
 
 //ctf flags
 #define CTF_FLAG_NONE		0
@@ -200,3 +204,4 @@ extern bot_goal_t ctf_neutralflag;
 extern bot_goal_t redobelisk;
 extern bot_goal_t blueobelisk;
 extern bot_goal_t neutralobelisk;
+extern bot_goal_t dom_points_bot[MAX_DOMINATION_POINTS];
