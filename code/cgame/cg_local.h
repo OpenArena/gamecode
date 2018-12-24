@@ -1525,7 +1525,7 @@ void CG_RankRunFrame( void );
 void CG_SetScoreSelection(void *menu);
 //score_t *CG_GetSelectedScore( void );
 void CG_BuildSpectatorString( void );
-
+float CG_GetCVar(const char *cvar);
 //unlagged, sagos modfication
 void SnapVectorTowards( vec3_t v, vec3_t to );
 

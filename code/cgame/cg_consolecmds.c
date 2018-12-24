@@ -187,13 +187,6 @@ static void CG_scrollScoresUp_f(void) {
 	}
 }
 
-static float CG_Cvar_Got(const char *cvar) {
-	char buff[128];
-	memset(buff, 0, sizeof (buff));
-	trap_Cvar_VariableStringBuffer(cvar, buff, sizeof (buff));
-	return atof(buff);
-}
-
 static void CG_spWin_f(void) {
 	trap_Cvar_Set("cg_cameraOrbit", "2");
 	trap_Cvar_Set("cg_cameraOrbitDelay", "35");
@@ -224,7 +217,7 @@ static void CG_spWin_f(void) {
 		//s = Info_ValueForKey( info, "mapname" );
 		trap_Cvar_VariableStringBuffer("ui_currentMap", berf, sizeof (berf)); // get map number instead for list consistency
 
-		trophyhad = CG_Cvar_Got(va("ui_sp_unlock_%s", berf));
+		trophyhad = CG_GetCVar(va("ui_sp_unlock_%s", berf));
 
 		if (trophyhad > trophyearn) {
 			trophyearn = 0;
@@ -252,7 +245,7 @@ static void CG_spWin_f(void) {
 
 			for (tropees = 0; tropees < 42; tropees++) {
 				int yeah;
-				yeah = CG_Cvar_Got(va("ui_sp_unlock_%i", tropees));
+				yeah = CG_GetCVar(va("ui_sp_unlock_%i", tropees));
 				if (yeah == 1)
 					tropgold++;
 				if (yeah == 2)

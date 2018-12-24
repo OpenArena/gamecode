@@ -2184,16 +2184,12 @@ static void CG_FeederSelection(float feederID, int index) {
 }
 #endif
 
-#ifdef MISSIONPACK // bk001204 - only needed there
-
-static float CG_Cvar_Get(const char *cvar) {
-	char buff[128];
-	memset(buff, 0, sizeof (buff));
-	trap_Cvar_VariableStringBuffer(cvar, buff, sizeof (buff));
-	return atof(buff);
+float CG_GetCVar(const char *cvar) {
+	char value[128];
+	memset(value, 0, sizeof (value));
+	trap_Cvar_VariableStringBuffer(cvar, value, sizeof(value));
+	return atof(value);
 }
-#endif
-
 #ifdef MISSIONPACK
 
 void CG_Text_PaintWithCursor(float x, float y, float scale, vec4_t color, const char *text, int cursorPos, char cursor, int limit, int style) {
@@ -2273,7 +2269,7 @@ void CG_LoadHudMenu(void) {
 	cgDC.getTeamColor = &CG_GetTeamColor;
 	cgDC.setCVar = trap_Cvar_Set;
 	cgDC.getCVarString = trap_Cvar_VariableStringBuffer;
-	cgDC.getCVarValue = CG_Cvar_Get;
+	cgDC.getCVarValue = CG_GetCVar;
 	cgDC.drawTextWithCursor = &CG_Text_PaintWithCursor;
 	//cgDC.setOverstrikeMode = &trap_Key_SetOverstrikeMode;
 	//cgDC.getOverstrikeMode = &trap_Key_GetOverstrikeMode;
