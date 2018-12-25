@@ -1289,212 +1289,199 @@ extern	weaponInfo_t	cg_weapons[MAX_WEAPONS];
 extern	itemInfo_t		cg_items[MAX_ITEMS];
 extern	markPoly_t		cg_markPolys[MAX_MARK_POLYS];
 
-extern	vmCvar_t		cg_centertime;
-extern	vmCvar_t		cg_runpitch;
-extern	vmCvar_t		cg_runroll;
-extern	vmCvar_t		cg_bob;
-extern	vmCvar_t		cg_bobup;
-extern	vmCvar_t		cg_bobpitch;
-extern	vmCvar_t		cg_bobroll;
-extern	vmCvar_t		cg_bobmodel;	// leilei
-extern	vmCvar_t		cg_kickScale;
-extern	vmCvar_t		cg_swingSpeed;
-extern	vmCvar_t		cg_shadows;
-extern	vmCvar_t		cg_gibs;
-extern	vmCvar_t		cg_drawTimer;
-extern	vmCvar_t		cg_drawFPS;
-extern	vmCvar_t		cg_drawSnapshot;
-extern	vmCvar_t		cg_draw3dIcons;
-extern	vmCvar_t		cg_drawIcons;
-extern	vmCvar_t		cg_drawAmmoWarning;
-extern	vmCvar_t		cg_drawCrosshair;
-extern	vmCvar_t		cg_drawCrosshairNames;
-extern	vmCvar_t		cg_drawRewards;
-extern	vmCvar_t		cg_drawTeamOverlay;
-extern	vmCvar_t		cg_teamOverlayUserinfo;
-extern	vmCvar_t		cg_crosshairX;
-extern	vmCvar_t		cg_crosshairY;
-extern	vmCvar_t		cg_crosshairSize;
-extern	vmCvar_t		cg_crosshairHealth;
-extern	vmCvar_t		cg_drawStatus;
-extern	vmCvar_t		cg_draw2D;
-extern	vmCvar_t		cg_animSpeed;
-extern	vmCvar_t		cg_debugAnim;
-extern	vmCvar_t		cg_debugPosition;
-extern	vmCvar_t		cg_debugEvents;
-extern	vmCvar_t		cg_railTrailTime;
-extern	vmCvar_t		cg_errorDecay;
-extern	vmCvar_t		cg_nopredict;
-extern	vmCvar_t		cg_noPlayerAnims;
-extern	vmCvar_t		cg_showmiss;
-extern	vmCvar_t		cg_footsteps;
-extern	vmCvar_t		cg_addMarks;
-extern	vmCvar_t		cg_brassTime;
-extern	vmCvar_t		cg_gun_frame;
-extern	vmCvar_t		cg_gun_x;
-extern	vmCvar_t		cg_gun_y;
-extern	vmCvar_t		cg_gun_z;
-extern	vmCvar_t		cg_drawGun;
-extern	vmCvar_t		cg_viewsize;
-extern	vmCvar_t		cg_viewnudge;	// leilei
-extern	vmCvar_t		cg_tracerChance;
-extern	vmCvar_t		cg_tracerWidth;
-extern	vmCvar_t		cg_tracerLength;
-extern	vmCvar_t		cg_autoswitch;
-extern	vmCvar_t		cg_ignore;
-extern	vmCvar_t		cg_simpleItems;
-extern	vmCvar_t		cg_fov;
-extern	vmCvar_t		cg_zoomFov;
-extern	vmCvar_t		cg_thirdPersonRange;
-extern	vmCvar_t		cg_thirdPersonAngle;
-extern	vmCvar_t		cg_thirdPerson;
-extern	vmCvar_t		cg_lagometer;
-extern	vmCvar_t		cg_drawAttacker;
-extern	vmCvar_t		cg_drawSpeed;
-extern	vmCvar_t		cg_synchronousClients;
-extern	vmCvar_t		cg_teamChatTime;
-extern	vmCvar_t		cg_teamChatHeight;
-extern	vmCvar_t		cg_stats;
-extern	vmCvar_t 		cg_forceModel;
-extern	vmCvar_t 		cg_buildScript;
-extern	vmCvar_t		cg_paused;
-extern	vmCvar_t		cg_blood;
-extern	vmCvar_t		cg_predictItems;
-extern	vmCvar_t		cg_deferPlayers;
-extern	vmCvar_t		cg_drawFriend;
-extern	vmCvar_t		cg_teamChatsOnly;
-extern	vmCvar_t		cg_noVoiceChats;
-extern	vmCvar_t		cg_noVoiceText;
-extern  vmCvar_t		cg_scorePlum;
-extern	vmCvar_t		cg_obituaryOutput;
+extern vmCvar_t cg_centertime;
+extern vmCvar_t cg_runpitch;
+extern vmCvar_t cg_runroll;
+extern vmCvar_t cg_bob;
+extern vmCvar_t cg_bobup;
+extern vmCvar_t cg_bobpitch;
+extern vmCvar_t cg_bobroll;
+extern vmCvar_t cg_bobmodel;	// leilei
+extern vmCvar_t cg_kickScale;
+extern vmCvar_t cg_swingSpeed;
+extern vmCvar_t cg_shadows;
+extern vmCvar_t cg_gibs;
+extern vmCvar_t cg_drawTimer;
+extern vmCvar_t cg_drawFPS;
+extern vmCvar_t cg_drawSnapshot;
+extern vmCvar_t cg_draw3dIcons;
+extern vmCvar_t cg_drawIcons;
+extern vmCvar_t cg_drawAmmoWarning;
+extern vmCvar_t cg_drawCrosshair;
+extern vmCvar_t cg_drawCrosshairNames;
+extern vmCvar_t cg_drawRewards;
+extern vmCvar_t cg_drawTeamOverlay;
+extern vmCvar_t cg_teamOverlayUserinfo;
+extern vmCvar_t cg_crosshairX;
+extern vmCvar_t cg_crosshairY;
+extern vmCvar_t cg_crosshairSize;
+extern vmCvar_t cg_crosshairHealth;
+extern vmCvar_t cg_drawStatus;
+extern vmCvar_t cg_draw2D;
+extern vmCvar_t cg_animSpeed;
+extern vmCvar_t cg_debugAnim;
+extern vmCvar_t cg_debugPosition;
+extern vmCvar_t cg_debugEvents;
+extern vmCvar_t cg_railTrailTime;
+extern vmCvar_t cg_errorDecay;
+extern vmCvar_t cg_nopredict;
+extern vmCvar_t cg_noPlayerAnims;
+extern vmCvar_t cg_showmiss;
+extern vmCvar_t cg_footsteps;
+extern vmCvar_t cg_addMarks;
+extern vmCvar_t cg_brassTime;
+extern vmCvar_t cg_gun_frame;
+extern vmCvar_t cg_gun_x;
+extern vmCvar_t cg_gun_y;
+extern vmCvar_t cg_gun_z;
+extern vmCvar_t cg_drawGun;
+extern vmCvar_t cg_viewsize;
+extern vmCvar_t cg_viewnudge;	// leilei
+extern vmCvar_t cg_tracerChance;
+extern vmCvar_t cg_tracerWidth;
+extern vmCvar_t cg_tracerLength;
+extern vmCvar_t cg_autoswitch;
+extern vmCvar_t cg_ignore;
+extern vmCvar_t cg_simpleItems;
+extern vmCvar_t cg_fov;
+extern vmCvar_t cg_zoomFov;
+extern vmCvar_t cg_thirdPersonRange;
+extern vmCvar_t cg_thirdPersonAngle;
+extern vmCvar_t cg_thirdPerson;
+extern vmCvar_t cg_lagometer;
+extern vmCvar_t cg_drawAttacker;
+extern vmCvar_t cg_drawSpeed;
+extern vmCvar_t cg_synchronousClients;
+extern vmCvar_t cg_teamChatTime;
+extern vmCvar_t cg_teamChatHeight;
+extern vmCvar_t cg_stats;
+extern vmCvar_t cg_forceModel;
+extern vmCvar_t cg_buildScript;
+extern vmCvar_t cg_paused;
+extern vmCvar_t cg_blood;
+extern vmCvar_t cg_predictItems;
+extern vmCvar_t cg_deferPlayers;
+extern vmCvar_t cg_drawFriend;
+extern vmCvar_t cg_teamChatsOnly;
+extern vmCvar_t cg_noVoiceChats;
+extern vmCvar_t cg_noVoiceText;
+extern vmCvar_t cg_scorePlum;
+extern vmCvar_t cg_obituaryOutput;
 //unlagged - smooth clients #2
 // this is done server-side now
-//extern	vmCvar_t		cg_smoothClients;
+//extern vmCvar_t cg_smoothClients;
 //unlagged - smooth clients #2
-extern	vmCvar_t		pmove_fixed;
-extern	vmCvar_t		pmove_msec;
-extern	vmCvar_t		pmove_float;
-//extern	vmCvar_t		cg_pmove_fixed;
-extern	vmCvar_t		cg_cameraOrbit;
-extern	vmCvar_t		cg_cameraOrbitDelay;
-extern	vmCvar_t		cg_timescaleFadeEnd;
-extern	vmCvar_t		cg_timescaleFadeSpeed;
-extern	vmCvar_t		cg_timescale;
-//extern	vmCvar_t		cg_cameraMode;
-
-extern  vmCvar_t		cg_smallFont;
-extern  vmCvar_t		cg_bigFont;
-extern	vmCvar_t		cg_noTaunt;
-extern	vmCvar_t		cg_noProjectileTrail;
-extern	vmCvar_t		cg_oldRail;
-extern	vmCvar_t		cg_oldRocket;
-
-extern	vmCvar_t		cg_leiEnhancement;			// LEILEI'S LINE!
-extern	vmCvar_t		cg_leiGoreNoise;			// LEILEI'S LINE!
-extern	vmCvar_t		cg_leiBrassNoise;			// LEILEI'S LINE!
-extern	vmCvar_t		cg_leiSuperGoreyAwesome;	// LEILEI'S LINE!
-extern	vmCvar_t		cg_muzzleflashStyle;		// Leilei
-extern	vmCvar_t		cg_leiDebug;
-extern	vmCvar_t		cg_deathcam;
-extern	vmCvar_t		cg_cameramode;
-extern	vmCvar_t		cg_cameraEyes;
-extern	vmCvar_t		cg_cameraEyes_Fwd;
-extern	vmCvar_t		cg_cameraEyes_Up;
-
-extern	vmCvar_t		cg_modelEyes_Up;
-extern	vmCvar_t		cg_modelEyes_Right;
-extern	vmCvar_t		cg_modelEyes_Fwd;
-
-extern	vmCvar_t		cg_oldPlasma;
-extern	vmCvar_t		cg_trueLightning;
-extern	vmCvar_t		cg_music;
+extern vmCvar_t pmove_fixed;
+extern vmCvar_t pmove_msec;
+extern vmCvar_t pmove_float;
+//extern vmCvar_t cg_pmove_fixed;
+extern vmCvar_t cg_cameraOrbit;
+extern vmCvar_t cg_cameraOrbitDelay;
+extern vmCvar_t cg_timescaleFadeEnd;
+extern vmCvar_t cg_timescaleFadeSpeed;
+extern vmCvar_t cg_timescale;
+//extern vmCvar_t cg_cameraMode;
+extern vmCvar_t cg_smallFont;
+extern vmCvar_t cg_bigFont;
+extern vmCvar_t cg_noTaunt;
+extern vmCvar_t cg_noProjectileTrail;
+extern vmCvar_t cg_oldRail;
+extern vmCvar_t cg_oldRocket;
+extern vmCvar_t cg_leiEnhancement;			// LEILEI'S LINE!
+extern vmCvar_t cg_leiGoreNoise;			// LEILEI'S LINE!
+extern vmCvar_t cg_leiBrassNoise;			// LEILEI'S LINE!
+extern vmCvar_t cg_leiSuperGoreyAwesome;	// LEILEI'S LINE!
+extern vmCvar_t cg_muzzleflashStyle;		// Leilei
+extern vmCvar_t cg_leiDebug;
+extern vmCvar_t cg_deathcam;
+extern vmCvar_t cg_cameramode;
+extern vmCvar_t cg_cameraEyes;
+extern vmCvar_t cg_cameraEyes_Fwd;
+extern vmCvar_t cg_cameraEyes_Up;
+extern vmCvar_t cg_modelEyes_Up;
+extern vmCvar_t cg_modelEyes_Right;
+extern vmCvar_t cg_modelEyes_Fwd;
+extern vmCvar_t cg_oldPlasma;
+extern vmCvar_t cg_trueLightning;
+extern vmCvar_t cg_music;
 #ifdef MISSIONPACK
-extern	vmCvar_t		cg_redTeamName;
-extern	vmCvar_t		cg_blueTeamName;
-extern	vmCvar_t		cg_currentSelectedPlayer;
-extern	vmCvar_t		cg_currentSelectedPlayerName;
-extern	vmCvar_t		cg_singlePlayer;
-extern	vmCvar_t		cg_singlePlayerActive;
-extern  vmCvar_t		cg_recordSPDemo;
-extern  vmCvar_t		cg_recordSPDemoName;
+extern vmCvar_t cg_redTeamName;
+extern vmCvar_t cg_blueTeamName;
+extern vmCvar_t cg_currentSelectedPlayer;
+extern vmCvar_t cg_currentSelectedPlayerName;
+extern vmCvar_t cg_singlePlayer;
+extern vmCvar_t cg_singlePlayerActive;
+extern vmCvar_t cg_recordSPDemo;
+extern vmCvar_t cg_recordSPDemoName;
 #endif
 //Sago: Moved outside
-extern	vmCvar_t		cg_obeliskRespawnDelay;
-extern	vmCvar_t		cg_enableDust;
-extern	vmCvar_t		cg_enableBreath;
-
-extern	vmCvar_t		cg_enableQ;		// leilei
-extern	vmCvar_t		cg_enableFS;		// leilei
-
+extern vmCvar_t cg_obeliskRespawnDelay;
+extern vmCvar_t cg_enableDust;
+extern vmCvar_t cg_enableBreath;
+extern vmCvar_t cg_enableQ;		// leilei
+extern vmCvar_t cg_enableFS;		// leilei
 //unlagged - client options
-extern	vmCvar_t		cg_delag;
-//extern	vmCvar_t		cg_debugDelag;
-//extern	vmCvar_t		cg_drawBBox;
-extern	vmCvar_t		cg_cmdTimeNudge;
-extern	vmCvar_t		sv_fps;
-extern	vmCvar_t		cg_projectileNudge;
-extern	vmCvar_t		cg_optimizePrediction;
-extern	vmCvar_t		cl_timeNudge;
-//extern	vmCvar_t		cg_latentSnaps;
-//extern	vmCvar_t		cg_latentCmds;
-//extern	vmCvar_t		cg_plOut;
+extern vmCvar_t cg_delag;
+//extern vmCvar_t cg_debugDelag;
+//extern vmCvar_t cg_drawBBox;
+extern vmCvar_t cg_cmdTimeNudge;
+extern vmCvar_t sv_fps;
+extern vmCvar_t cg_projectileNudge;
+extern vmCvar_t cg_optimizePrediction;
+extern vmCvar_t cl_timeNudge;
+//extern vmCvar_t cg_latentSnaps;
+//extern vmCvar_t cg_latentCmds;
+//extern vmCvar_t cg_plOut;
 //unlagged - client options
-
 //extra CVARS elimination
-extern	vmCvar_t		cg_alwaysWeaponBar;
-extern	vmCvar_t		cg_hitsound;
-extern  vmCvar_t                cg_voip_teamonly;
-extern  vmCvar_t                cg_voteflags;
-extern  vmCvar_t                cg_cyclegrapple;
-extern  vmCvar_t                cg_vote_custom_commands;
-
-extern  vmCvar_t                cg_autovertex;
-
+extern vmCvar_t cg_alwaysWeaponBar;
+extern vmCvar_t cg_hitsound;
+extern vmCvar_t cg_voip_teamonly;
+extern vmCvar_t cg_voteflags;
+extern vmCvar_t cg_cyclegrapple;
+extern vmCvar_t cg_vote_custom_commands;
+extern vmCvar_t cg_autovertex;
 //Cvar to adjust the size of the fragmessage
-extern	vmCvar_t		cg_fragmsgsize;
-
-extern	vmCvar_t		cg_crosshairPulse;
-extern	vmCvar_t		cg_differentCrosshairs;
-extern	vmCvar_t		cg_ch1;
-extern	vmCvar_t		cg_ch1size;
-extern	vmCvar_t		cg_ch2;
-extern	vmCvar_t		cg_ch2size;
-extern	vmCvar_t		cg_ch3;
-extern	vmCvar_t		cg_ch3size;
-extern	vmCvar_t		cg_ch4;
-extern	vmCvar_t		cg_ch4size;
-extern	vmCvar_t		cg_ch5;
-extern	vmCvar_t		cg_ch5size;
-extern	vmCvar_t		cg_ch6;
-extern	vmCvar_t		cg_ch6size;
-extern	vmCvar_t		cg_ch7;
-extern	vmCvar_t		cg_ch7size;
-extern	vmCvar_t		cg_ch8;
-extern	vmCvar_t		cg_ch8size;
-extern	vmCvar_t		cg_ch9;
-extern	vmCvar_t		cg_ch9size;
-extern	vmCvar_t		cg_ch10;
-extern	vmCvar_t		cg_ch10size;
-extern	vmCvar_t		cg_ch11;
-extern	vmCvar_t		cg_ch11size;
-extern	vmCvar_t		cg_ch12;
-extern	vmCvar_t		cg_ch12size;
-extern	vmCvar_t		cg_ch13;
-extern	vmCvar_t		cg_ch13size;
-
-extern	vmCvar_t                cg_crosshairColorRed;
-extern	vmCvar_t                cg_crosshairColorGreen;
-extern	vmCvar_t                cg_crosshairColorBlue;
-
-extern vmCvar_t			cg_weaponBarStyle;
-
-extern vmCvar_t                 cg_weaponOrder;
-extern vmCvar_t			cg_chatBeep;
-extern vmCvar_t			cg_teamChatBeep;
-
+extern vmCvar_t cg_fragmsgsize;
+extern vmCvar_t cg_crosshairPulse;
+extern vmCvar_t cg_differentCrosshairs;
+extern vmCvar_t cg_ch1;
+extern vmCvar_t cg_ch1size;
+extern vmCvar_t cg_ch2;
+extern vmCvar_t cg_ch2size;
+extern vmCvar_t cg_ch3;
+extern vmCvar_t cg_ch3size;
+extern vmCvar_t cg_ch4;
+extern vmCvar_t cg_ch4size;
+extern vmCvar_t cg_ch5;
+extern vmCvar_t cg_ch5size;
+extern vmCvar_t cg_ch6;
+extern vmCvar_t cg_ch6size;
+extern vmCvar_t cg_ch7;
+extern vmCvar_t cg_ch7size;
+extern vmCvar_t cg_ch8;
+extern vmCvar_t cg_ch8size;
+extern vmCvar_t cg_ch9;
+extern vmCvar_t cg_ch9size;
+extern vmCvar_t cg_ch10;
+extern vmCvar_t cg_ch10size;
+extern vmCvar_t cg_ch11;
+extern vmCvar_t cg_ch11size;
+extern vmCvar_t cg_ch12;
+extern vmCvar_t cg_ch12size;
+extern vmCvar_t cg_ch13;
+extern vmCvar_t cg_ch13size;
+extern vmCvar_t cg_crosshairColorRed;
+extern vmCvar_t cg_crosshairColorGreen;
+extern vmCvar_t cg_crosshairColorBlue;
+extern vmCvar_t cg_weaponBarStyle;
+extern vmCvar_t cg_weaponOrder;
+extern vmCvar_t cg_chatBeep;
+extern vmCvar_t cg_teamChatBeep;
 /* Neon_Knight: Toggleable missionpack checks. */
-extern vmCvar_t			cg_missionpackChecks;
+extern vmCvar_t cg_missionpackChecks;
 /* /Neon_Knight */
+extern vmCvar_t cg_leiChibi;
 
 //unlagged - cg_unlagged.c
 void CG_PredictWeaponEffects( centity_t *cent );

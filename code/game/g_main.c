@@ -27,7 +27,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 level_locals_t	level;
 
 typedef struct {
-	vmCvar_t	*vmCvar;
+	vmCvar_t *vmCvar;
 	char		*cvarName;
 	char		*defaultString;
 	int			cvarFlags;
@@ -39,181 +39,164 @@ typedef struct {
 gentity_t		g_entities[MAX_GENTITIES];
 gclient_t		g_clients[MAX_CLIENTS];
 
-vmCvar_t	g_gametype;
-vmCvar_t	g_dmflags;
-vmCvar_t        g_videoflags;
-vmCvar_t	g_elimflags;
-vmCvar_t	g_voteflags;
-vmCvar_t	g_fraglimit;
-vmCvar_t	g_timelimit;
-vmCvar_t	g_capturelimit;
-vmCvar_t	g_friendlyFire;
-vmCvar_t	g_password;
-vmCvar_t	g_needpass;
-vmCvar_t	g_maxclients;
-vmCvar_t	g_maxGameClients;
-vmCvar_t	g_dedicated;
-vmCvar_t	g_speed;
-vmCvar_t	g_gravity;
-vmCvar_t	g_gravityModifier;
-vmCvar_t        g_damageModifier;
-vmCvar_t	g_cheats;
-vmCvar_t	g_knockback;
-vmCvar_t	g_quadfactor;
-vmCvar_t	g_forcerespawn;
-vmCvar_t	g_respawntime;
-vmCvar_t	g_inactivity;
-vmCvar_t	g_debugMove;
-vmCvar_t	g_debugDamage;
-vmCvar_t	g_debugAlloc;
-vmCvar_t	g_weaponRespawn;
-vmCvar_t	g_weaponTeamRespawn;
-vmCvar_t	g_motd;
-vmCvar_t        g_motdfile;
-vmCvar_t        g_votemaps;
-vmCvar_t        g_votecustom;
-vmCvar_t	g_synchronousClients;
-vmCvar_t	g_warmup;
-vmCvar_t	g_doWarmup;
-vmCvar_t	g_restarted;
-vmCvar_t	g_logfile;
-vmCvar_t	g_logfileSync;
-vmCvar_t	g_blood;
-vmCvar_t	g_podiumDist;
-vmCvar_t	g_podiumDrop;
-vmCvar_t	g_allowVote;
-vmCvar_t	g_teamAutoJoin;
-vmCvar_t	g_teamForceBalance;
-vmCvar_t	g_banIPs;
-vmCvar_t	g_filterBan;
-vmCvar_t	g_smoothClients;
-vmCvar_t	pmove_fixed;
-vmCvar_t	pmove_msec;
-vmCvar_t        pmove_float;
-vmCvar_t	g_rankings;
-vmCvar_t	g_listEntity;
-vmCvar_t	g_localTeamPref;
-vmCvar_t	g_obeliskHealth;
-vmCvar_t	g_obeliskRegenPeriod;
-vmCvar_t	g_obeliskRegenAmount;
-vmCvar_t	g_obeliskRespawnDelay;
-vmCvar_t	g_cubeTimeout;
+vmCvar_t g_gametype;
+vmCvar_t g_dmflags;
+vmCvar_t g_videoflags;
+vmCvar_t g_elimflags;
+vmCvar_t g_voteflags;
+vmCvar_t g_fraglimit;
+vmCvar_t g_timelimit;
+vmCvar_t g_capturelimit;
+vmCvar_t g_friendlyFire;
+vmCvar_t g_password;
+vmCvar_t g_needpass;
+vmCvar_t g_maxclients;
+vmCvar_t g_maxGameClients;
+vmCvar_t g_dedicated;
+vmCvar_t g_speed;
+vmCvar_t g_gravity;
+vmCvar_t g_gravityModifier;
+vmCvar_t g_damageModifier;
+vmCvar_t g_cheats;
+vmCvar_t g_knockback;
+vmCvar_t g_quadfactor;
+vmCvar_t g_forcerespawn;
+vmCvar_t g_respawntime;
+vmCvar_t g_inactivity;
+vmCvar_t g_debugMove;
+vmCvar_t g_debugDamage;
+vmCvar_t g_debugAlloc;
+vmCvar_t g_weaponRespawn;
+vmCvar_t g_weaponTeamRespawn;
+vmCvar_t g_motd;
+vmCvar_t g_motdfile;
+vmCvar_t g_votemaps;
+vmCvar_t g_votecustom;
+vmCvar_t g_synchronousClients;
+vmCvar_t g_warmup;
+vmCvar_t g_doWarmup;
+vmCvar_t g_restarted;
+vmCvar_t g_logfile;
+vmCvar_t g_logfileSync;
+vmCvar_t g_blood;
+vmCvar_t g_podiumDist;
+vmCvar_t g_podiumDrop;
+vmCvar_t g_allowVote;
+vmCvar_t g_teamAutoJoin;
+vmCvar_t g_teamForceBalance;
+vmCvar_t g_banIPs;
+vmCvar_t g_filterBan;
+vmCvar_t g_smoothClients;
+vmCvar_t pmove_fixed;
+vmCvar_t pmove_msec;
+vmCvar_t pmove_float;
+vmCvar_t g_rankings;
+vmCvar_t g_listEntity;
+vmCvar_t g_localTeamPref;
+vmCvar_t g_obeliskHealth;
+vmCvar_t g_obeliskRegenPeriod;
+vmCvar_t g_obeliskRegenAmount;
+vmCvar_t g_obeliskRespawnDelay;
+vmCvar_t g_cubeTimeout;
 #ifdef MISSIONPACK
-vmCvar_t	g_redteam;
-vmCvar_t	g_blueteam;
-vmCvar_t	g_singlePlayer;
+vmCvar_t g_redteam;
+vmCvar_t g_blueteam;
+vmCvar_t g_singlePlayer;
 #endif
-vmCvar_t	g_enableDust;
-vmCvar_t	cg_enableQ;		// leilei
-vmCvar_t	g_enableFS;		// leilei
-vmCvar_t	g_enableBreath;
-vmCvar_t	g_proxMineTimeout;
-vmCvar_t	g_music;
-vmCvar_t	g_spawnprotect;
+vmCvar_t g_enableDust;
+vmCvar_t cg_enableQ;		// leilei
+vmCvar_t g_enableFS;		// leilei
+vmCvar_t g_enableBreath;
+vmCvar_t g_proxMineTimeout;
+vmCvar_t g_music;
+vmCvar_t g_spawnprotect;
 //Following for elimination:
-vmCvar_t	g_elimination_selfdamage;
-vmCvar_t	g_elimination_startHealth;
-vmCvar_t	g_elimination_startArmor;
-vmCvar_t	g_elimination_bfg;
-vmCvar_t	g_elimination_roundtime;
-vmCvar_t	g_elimination_warmup;
-vmCvar_t	g_elimination_activewarmup;
-vmCvar_t	g_elimination_allgametypes;
-vmCvar_t	g_elimination_machinegun;
-vmCvar_t	g_elimination_shotgun;
-vmCvar_t	g_elimination_grenade;
-vmCvar_t	g_elimination_rocket;
-vmCvar_t	g_elimination_railgun;
-vmCvar_t	g_elimination_lightning;
-vmCvar_t	g_elimination_plasmagun;
-vmCvar_t	g_elimination_chain;
-vmCvar_t	g_elimination_mine;
-vmCvar_t	g_elimination_nail;
-
-vmCvar_t	g_elimination_lockspectator;
-
-vmCvar_t	g_rockets;
-
+vmCvar_t g_elimination_selfdamage;
+vmCvar_t g_elimination_startHealth;
+vmCvar_t g_elimination_startArmor;
+vmCvar_t g_elimination_bfg;
+vmCvar_t g_elimination_roundtime;
+vmCvar_t g_elimination_warmup;
+vmCvar_t g_elimination_activewarmup;
+vmCvar_t g_elimination_allgametypes;
+vmCvar_t g_elimination_machinegun;
+vmCvar_t g_elimination_shotgun;
+vmCvar_t g_elimination_grenade;
+vmCvar_t g_elimination_rocket;
+vmCvar_t g_elimination_railgun;
+vmCvar_t g_elimination_lightning;
+vmCvar_t g_elimination_plasmagun;
+vmCvar_t g_elimination_chain;
+vmCvar_t g_elimination_mine;
+vmCvar_t g_elimination_nail;
+vmCvar_t g_elimination_lockspectator;
+vmCvar_t g_rockets;
 //dmn_clowns suggestions (with my idea of implementing):
-vmCvar_t	g_instantgib;
-vmCvar_t	g_vampire;
-vmCvar_t	g_vampireMaxHealth;
+vmCvar_t g_instantgib;
+vmCvar_t g_vampire;
+vmCvar_t g_vampireMaxHealth;
 //Regen
-vmCvar_t	g_regen;
-vmCvar_t	g_lms_lives;
-vmCvar_t	g_lms_mode;
-vmCvar_t	g_elimination_ctf_oneway;
-vmCvar_t        g_awardpushing; //The server can decide if players are awarded for pushing people in lave etc.
+vmCvar_t g_regen;
+vmCvar_t g_lms_lives;
+vmCvar_t g_lms_mode;
+vmCvar_t g_elimination_ctf_oneway;
+vmCvar_t g_awardpushing; //The server can decide if players are awarded for pushing people in lave etc.
 vmCvar_t g_runes; //Allow missionpack style persistant powerups?
-
-vmCvar_t        g_catchup; //Favors the week players
-
-vmCvar_t         g_autonextmap; //Autochange map
-vmCvar_t         g_mappools; //mappools to be used for autochange
-
-vmCvar_t        g_voteNames;
-vmCvar_t        g_voteBan;
-vmCvar_t        g_voteGametypes;
-vmCvar_t        g_voteMinTimelimit;
-vmCvar_t        g_voteMaxTimelimit;
-vmCvar_t        g_voteMinFraglimit;
-vmCvar_t        g_voteMaxFraglimit;
-vmCvar_t        g_maxvotes;
-
-vmCvar_t        g_humanplayers;
-
+vmCvar_t g_catchup; //Favors the week players
+vmCvar_t g_autonextmap; //Autochange map
+vmCvar_t g_mappools; //mappools to be used for autochange
+vmCvar_t g_voteNames;
+vmCvar_t g_voteBan;
+vmCvar_t g_voteGametypes;
+vmCvar_t g_voteMinTimelimit;
+vmCvar_t g_voteMaxTimelimit;
+vmCvar_t g_voteMinFraglimit;
+vmCvar_t g_voteMaxFraglimit;
+vmCvar_t g_maxvotes;
+vmCvar_t g_humanplayers;
 //used for voIP
-vmCvar_t         g_redTeamClientNumbers;
-vmCvar_t         g_blueTeamClientNumbers;
-
+vmCvar_t g_redTeamClientNumbers;
+vmCvar_t g_blueTeamClientNumbers;
 //unlagged - server options
-vmCvar_t	g_delagHitscan;
-vmCvar_t	g_truePing;
-vmCvar_t	sv_fps;
-vmCvar_t        g_lagLightning; //Adds a little lag to the lightninggun to make it less powerfull
+vmCvar_t g_delagHitscan;
+vmCvar_t g_truePing;
+vmCvar_t sv_fps;
+vmCvar_t g_lagLightning; //Adds a little lag to the lightninggun to make it less powerfull
 //unlagged - server options
 //KK-OAX
-vmCvar_t        g_sprees;
-vmCvar_t        g_altExcellent;
-vmCvar_t        g_spreeDiv;
-
+vmCvar_t g_sprees;
+vmCvar_t g_altExcellent;
+vmCvar_t g_spreeDiv;
 //Command/Chat spamming/flooding
-vmCvar_t        g_floodMaxDemerits;
-vmCvar_t        g_floodMinTime;
-
+vmCvar_t g_floodMaxDemerits;
+vmCvar_t g_floodMinTime;
 //Admin
-vmCvar_t        g_admin;
-vmCvar_t        g_adminLog;
-vmCvar_t        g_adminParseSay;
-vmCvar_t        g_adminNameProtect;
-vmCvar_t        g_adminTempBan;
-vmCvar_t        g_adminMaxBan;
-vmCvar_t        g_specChat;
-vmCvar_t        g_publicAdminMessages;
-
-vmCvar_t        g_maxWarnings;
-vmCvar_t        g_warningExpire;
-
-vmCvar_t        g_minNameChangePeriod;
-vmCvar_t        g_maxNameChanges;
-
-vmCvar_t        g_timestamp_startgame;
-
-vmCvar_t		g_execute_gametype_script;
-vmCvar_t		g_emptyCommand;
-vmCvar_t		g_emptyTime;
-
-vmCvar_t		g_grapple;
-vmCvar_t		g_harvesterFromBodies;
+vmCvar_t g_admin;
+vmCvar_t g_adminLog;
+vmCvar_t g_adminParseSay;
+vmCvar_t g_adminNameProtect;
+vmCvar_t g_adminTempBan;
+vmCvar_t g_adminMaxBan;
+vmCvar_t g_specChat;
+vmCvar_t g_publicAdminMessages;
+vmCvar_t g_maxWarnings;
+vmCvar_t g_warningExpire;
+vmCvar_t g_minNameChangePeriod;
+vmCvar_t g_maxNameChanges;
+vmCvar_t g_timestamp_startgame;
+vmCvar_t g_execute_gametype_script;
+vmCvar_t g_emptyCommand;
+vmCvar_t g_emptyTime;
+vmCvar_t g_grapple;
+vmCvar_t g_harvesterFromBodies;
 /* Neon_Knight: Double Domination-specific cvars */
-vmCvar_t		g_ddCaptureTime;
-vmCvar_t		g_ddRespawnDelay;
-
+vmCvar_t g_ddCaptureTime;
+vmCvar_t g_ddRespawnDelay;
 
 mapinfo_result_t mapinfo;
 
 // bk001129 - made static to avoid aliasing
-static cvarTable_t		gameCvarTable[] = {
+static cvarTable_t gameCvarTable[] = {
 	// don't override the cheat state set by the system
 	{ &g_cheats, "sv_cheats", "", 0, 0, qfalse },
 

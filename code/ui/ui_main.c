@@ -138,11 +138,6 @@ This is the only way control passes into the module.
 This must be the very first function compiled into the .qvm file
 ================
 */
-vmCvar_t  ui_new;
-vmCvar_t  ui_leidebug;
-vmCvar_t  ui_debug;
-vmCvar_t  ui_initialized;
-vmCvar_t  ui_teamArenaFirstRun;
 
 void _UI_Init( qboolean, int randomSeed );
 void _UI_Shutdown( void );
@@ -6998,191 +6993,173 @@ cvars
 */
 
 typedef struct {
-	vmCvar_t	*vmCvar;
+	vmCvar_t *vmCvar;
 	char		*cvarName;
 	char		*defaultString;
 	int			cvarFlags;
 } cvarTable_t;
 
-vmCvar_t	ui_ffa_fraglimit;
-vmCvar_t	ui_ffa_timelimit;
-
-vmCvar_t	ui_tourney_fraglimit;
-vmCvar_t	ui_tourney_timelimit;
-
-vmCvar_t	ui_team_fraglimit;
-vmCvar_t	ui_team_timelimit;
-vmCvar_t	ui_team_friendly;
-
-vmCvar_t	ui_ctf_capturelimit;
-vmCvar_t	ui_ctf_timelimit;
-vmCvar_t	ui_ctf_friendly;
-
-vmCvar_t	ui_1fctf_capturelimit;
-vmCvar_t	ui_1fctf_timelimit;
-vmCvar_t	ui_1fctf_friendly;
-
-vmCvar_t	ui_overload_capturelimit;
-vmCvar_t	ui_overload_timelimit;
-vmCvar_t	ui_overload_friendly;
-
-vmCvar_t	ui_harvester_capturelimit;
-vmCvar_t	ui_harvester_timelimit;
-vmCvar_t	ui_harvester_friendly;
-
-vmCvar_t	ui_elimination_capturelimit;
-vmCvar_t	ui_elimination_timelimit;
-
-vmCvar_t	ui_ctf_elimination_capturelimit;
-vmCvar_t	ui_ctf_elimination_timelimit;
-
-vmCvar_t	ui_lms_fraglimit;
-vmCvar_t	ui_lms_timelimit;
-
-vmCvar_t	ui_dd_capturelimit;
-vmCvar_t	ui_dd_timelimit;
-vmCvar_t	ui_dd_friendly;
-
-vmCvar_t	ui_dom_capturelimit;
-vmCvar_t	ui_dom_timelimit;
-vmCvar_t	ui_dom_friendly;
-
-vmCvar_t	ui_pos_scorelimit;
-vmCvar_t	ui_pos_timelimit;
-
-vmCvar_t	ui_arenasFile;
-vmCvar_t	ui_botsFile;
-vmCvar_t	ui_spScores1;
-vmCvar_t	ui_spScores2;
-vmCvar_t	ui_spScores3;
-vmCvar_t	ui_spScores4;
-vmCvar_t	ui_spScores5;
-vmCvar_t	ui_spAwards;
-vmCvar_t	ui_spVideos;
-vmCvar_t	ui_spSkill;
-
-vmCvar_t	ui_spSelection;
-
-vmCvar_t	ui_browserMaster;
-vmCvar_t	ui_browserGameType;
-vmCvar_t	ui_browserSortKey;
-vmCvar_t	ui_browserShowFull;
-vmCvar_t	ui_browserShowEmpty;
-
-vmCvar_t	ui_brassTime;
-vmCvar_t	ui_drawCrosshair;
-vmCvar_t	ui_drawCrosshairNames;
-vmCvar_t	ui_marks;
-
-vmCvar_t	ui_server1;
-vmCvar_t	ui_server2;
-vmCvar_t	ui_server3;
-vmCvar_t	ui_server4;
-vmCvar_t	ui_server5;
-vmCvar_t	ui_server6;
-vmCvar_t	ui_server7;
-vmCvar_t	ui_server8;
-vmCvar_t	ui_server9;
-vmCvar_t	ui_server10;
-vmCvar_t	ui_server11;
-vmCvar_t	ui_server12;
-vmCvar_t	ui_server13;
-vmCvar_t	ui_server14;
-vmCvar_t	ui_server15;
-vmCvar_t	ui_server16;
-
-vmCvar_t	ui_cdkeychecked;
-
-vmCvar_t	ui_redteam;
-vmCvar_t	ui_redteam1;
-vmCvar_t	ui_redteam2;
-vmCvar_t	ui_redteam3;
-vmCvar_t	ui_redteam4;
-vmCvar_t	ui_redteam5;
-vmCvar_t	ui_blueteam;
-vmCvar_t	ui_blueteam1;
-vmCvar_t	ui_blueteam2;
-vmCvar_t	ui_blueteam3;
-vmCvar_t	ui_blueteam4;
-vmCvar_t	ui_blueteam5;
-vmCvar_t	ui_teamName;
-vmCvar_t	ui_dedicated;
-vmCvar_t	ui_gameType;
-vmCvar_t	ui_netGameType;
-vmCvar_t	ui_actualNetGameType;
-vmCvar_t	ui_joinGameType;
-vmCvar_t	ui_netSource;
-vmCvar_t	ui_serverFilterType;
-vmCvar_t	ui_opponentName;
-vmCvar_t	ui_menuFiles;
-vmCvar_t	ui_currentTier;
-vmCvar_t	ui_currentMap;
-vmCvar_t	ui_currentNetMap;
-vmCvar_t	ui_mapIndex;
-vmCvar_t	ui_currentOpponent;
-vmCvar_t	ui_selectedPlayer;
-vmCvar_t	ui_selectedPlayerName;
-vmCvar_t	ui_lastServerRefresh_0;
-vmCvar_t	ui_lastServerRefresh_1;
-vmCvar_t	ui_lastServerRefresh_2;
-vmCvar_t	ui_lastServerRefresh_3;
-vmCvar_t	ui_singlePlayerActive;
-vmCvar_t	ui_scoreAccuracy;
-vmCvar_t	ui_scoreImpressives;
-vmCvar_t	ui_scoreExcellents;
-vmCvar_t	ui_scoreCaptures;
-vmCvar_t	ui_scoreDefends;
-vmCvar_t	ui_scoreAssists;
-vmCvar_t	ui_scoreGauntlets;
-vmCvar_t	ui_scoreScore;
-vmCvar_t	ui_scorePerfect;
-vmCvar_t	ui_scoreTeam;
-vmCvar_t	ui_scoreBase;
-vmCvar_t	ui_scoreTimeBonus;
-vmCvar_t	ui_scoreSkillBonus;
-vmCvar_t	ui_scoreShutoutBonus;
-vmCvar_t	ui_scoreTime;
-vmCvar_t	ui_captureLimit;
-vmCvar_t	ui_fragLimit;
-vmCvar_t	ui_smallFont;
-vmCvar_t	ui_bigFont;
-vmCvar_t	ui_findPlayer;
-vmCvar_t	ui_Q3Model;
-vmCvar_t	ui_hudFiles;
-vmCvar_t	ui_recordSPDemo;
-vmCvar_t	ui_realCaptureLimit;
-vmCvar_t	ui_realWarmUp;
-vmCvar_t	ui_serverStatusTimeOut;
+vmCvar_t ui_ffa_fraglimit;
+vmCvar_t ui_ffa_timelimit;
+vmCvar_t ui_tourney_fraglimit;
+vmCvar_t ui_tourney_timelimit;
+vmCvar_t ui_team_fraglimit;
+vmCvar_t ui_team_timelimit;
+vmCvar_t ui_team_friendly;
+vmCvar_t ui_ctf_capturelimit;
+vmCvar_t ui_ctf_timelimit;
+vmCvar_t ui_ctf_friendly;
+vmCvar_t ui_1fctf_capturelimit;
+vmCvar_t ui_1fctf_timelimit;
+vmCvar_t ui_1fctf_friendly;
+vmCvar_t ui_overload_capturelimit;
+vmCvar_t ui_overload_timelimit;
+vmCvar_t ui_overload_friendly;
+vmCvar_t ui_harvester_capturelimit;
+vmCvar_t ui_harvester_timelimit;
+vmCvar_t ui_harvester_friendly;
+vmCvar_t ui_elimination_capturelimit;
+vmCvar_t ui_elimination_timelimit;
+vmCvar_t ui_ctf_elimination_capturelimit;
+vmCvar_t ui_ctf_elimination_timelimit;
+vmCvar_t ui_lms_fraglimit;
+vmCvar_t ui_lms_timelimit;
+vmCvar_t ui_dd_capturelimit;
+vmCvar_t ui_dd_timelimit;
+vmCvar_t ui_dd_friendly;
+vmCvar_t ui_dom_capturelimit;
+vmCvar_t ui_dom_timelimit;
+vmCvar_t ui_dom_friendly;
+vmCvar_t ui_pos_scorelimit;
+vmCvar_t ui_pos_timelimit;
+vmCvar_t ui_arenasFile;
+vmCvar_t ui_botsFile;
+vmCvar_t ui_spScores1;
+vmCvar_t ui_spScores2;
+vmCvar_t ui_spScores3;
+vmCvar_t ui_spScores4;
+vmCvar_t ui_spScores5;
+vmCvar_t ui_spAwards;
+vmCvar_t ui_spVideos;
+vmCvar_t ui_spSkill;
+vmCvar_t ui_spSelection;
+vmCvar_t ui_browserMaster;
+vmCvar_t ui_browserGameType;
+vmCvar_t ui_browserSortKey;
+vmCvar_t ui_browserShowFull;
+vmCvar_t ui_browserShowEmpty;
+vmCvar_t ui_brassTime;
+vmCvar_t ui_drawCrosshair;
+vmCvar_t ui_drawCrosshairNames;
+vmCvar_t ui_marks;
+vmCvar_t ui_server1;
+vmCvar_t ui_server2;
+vmCvar_t ui_server3;
+vmCvar_t ui_server4;
+vmCvar_t ui_server5;
+vmCvar_t ui_server6;
+vmCvar_t ui_server7;
+vmCvar_t ui_server8;
+vmCvar_t ui_server9;
+vmCvar_t ui_server10;
+vmCvar_t ui_server11;
+vmCvar_t ui_server12;
+vmCvar_t ui_server13;
+vmCvar_t ui_server14;
+vmCvar_t ui_server15;
+vmCvar_t ui_server16;
+vmCvar_t ui_cdkeychecked;
+vmCvar_t ui_redteam;
+vmCvar_t ui_redteam1;
+vmCvar_t ui_redteam2;
+vmCvar_t ui_redteam3;
+vmCvar_t ui_redteam4;
+vmCvar_t ui_redteam5;
+vmCvar_t ui_blueteam;
+vmCvar_t ui_blueteam1;
+vmCvar_t ui_blueteam2;
+vmCvar_t ui_blueteam3;
+vmCvar_t ui_blueteam4;
+vmCvar_t ui_blueteam5;
+vmCvar_t ui_teamName;
+vmCvar_t ui_dedicated;
+vmCvar_t ui_gameType;
+vmCvar_t ui_netGameType;
+vmCvar_t ui_actualNetGameType;
+vmCvar_t ui_joinGameType;
+vmCvar_t ui_netSource;
+vmCvar_t ui_serverFilterType;
+vmCvar_t ui_opponentName;
+vmCvar_t ui_menuFiles;
+vmCvar_t ui_currentTier;
+vmCvar_t ui_currentMap;
+vmCvar_t ui_currentNetMap;
+vmCvar_t ui_mapIndex;
+vmCvar_t ui_currentOpponent;
+vmCvar_t ui_selectedPlayer;
+vmCvar_t ui_selectedPlayerName;
+vmCvar_t ui_lastServerRefresh_0;
+vmCvar_t ui_lastServerRefresh_1;
+vmCvar_t ui_lastServerRefresh_2;
+vmCvar_t ui_lastServerRefresh_3;
+vmCvar_t ui_singlePlayerActive;
+vmCvar_t ui_scoreAccuracy;
+vmCvar_t ui_scoreImpressives;
+vmCvar_t ui_scoreExcellents;
+vmCvar_t ui_scoreCaptures;
+vmCvar_t ui_scoreDefends;
+vmCvar_t ui_scoreAssists;
+vmCvar_t ui_scoreGauntlets;
+vmCvar_t ui_scoreScore;
+vmCvar_t ui_scorePerfect;
+vmCvar_t ui_scoreTeam;
+vmCvar_t ui_scoreBase;
+vmCvar_t ui_scoreTimeBonus;
+vmCvar_t ui_scoreSkillBonus;
+vmCvar_t ui_scoreShutoutBonus;
+vmCvar_t ui_scoreTime;
+vmCvar_t ui_captureLimit;
+vmCvar_t ui_fragLimit;
+vmCvar_t ui_smallFont;
+vmCvar_t ui_bigFont;
+vmCvar_t ui_findPlayer;
+vmCvar_t ui_Q3Model;
+vmCvar_t ui_hudFiles;
+vmCvar_t ui_recordSPDemo;
+vmCvar_t ui_realCaptureLimit;
+vmCvar_t ui_realWarmUp;
+vmCvar_t ui_serverStatusTimeOut;
 // Changed RD
-vmCvar_t	ui_LowerAnim;
-vmCvar_t	ui_UpperAnim;
-vmCvar_t	ui_Weapon;
-vmCvar_t	ui_PlayerViewAngleYaw;
-vmCvar_t	ui_PlayerViewAnglePitch;
-vmCvar_t	ui_PlayerMoveAngleYaw;
-vmCvar_t	ui_PlayerMoveAnglePitch;
-vmCvar_t	ui_SaveGame;
-vmCvar_t	ui_LoadGame;
-vmCvar_t	ui_CustomServer;
-vmCvar_t	ui_HostName;
-vmCvar_t	ui_SpecialGame;
-vmCvar_t	ui_TeamMembers;
-vmCvar_t	ui_loading;
-vmCvar_t	ui_transitionkey;
-vmCvar_t	ui_applychanges;
-vmCvar_t	Save_Loading;
-vmCvar_t	persid;
-vmCvar_t	gameover; // ai script
+vmCvar_t ui_LowerAnim;
+vmCvar_t ui_UpperAnim;
+vmCvar_t ui_Weapon;
+vmCvar_t ui_PlayerViewAngleYaw;
+vmCvar_t ui_PlayerViewAnglePitch;
+vmCvar_t ui_PlayerMoveAngleYaw;
+vmCvar_t ui_PlayerMoveAnglePitch;
+vmCvar_t ui_SaveGame;
+vmCvar_t ui_LoadGame;
+vmCvar_t ui_CustomServer;
+vmCvar_t ui_HostName;
+vmCvar_t ui_SpecialGame;
+vmCvar_t ui_TeamMembers;
+vmCvar_t ui_loading;
+vmCvar_t ui_transitionkey;
+vmCvar_t ui_applychanges;
+vmCvar_t Save_Loading;
+vmCvar_t persid;
+vmCvar_t gameover; // ai script
 // end changed RD
-
 // leilei
-vmCvar_t	ui_introPlayed;
-
-vmCvar_t	ui_colors;
-
+vmCvar_t ui_introPlayed;
+vmCvar_t ui_colors;
 vmCvar_t ui_humansonly;
-
 vmCvar_t ui_missionpackChecks;
+vmCvar_t ui_new;
+vmCvar_t ui_leidebug;
+vmCvar_t ui_debug;
+vmCvar_t ui_initialized;
+vmCvar_t ui_teamArenaFirstRun;
 
 // bk001129 - made static to avoid aliasing
 static cvarTable_t		cvarTable[] = {

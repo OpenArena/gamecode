@@ -175,10 +175,10 @@ vmCvar_t cg_scorePlum;
 vmCvar_t cg_obituaryOutput;
 //unlagged - smooth clients #2
 // this is done server-side now
-//vmCvar_t 	cg_smoothClients;
+//vmCvar_t cg_smoothClients;
 //unlagged - smooth clients #2
 vmCvar_t pmove_fixed;
-//vmCvar_t	cg_pmove_fixed;
+//vmCvar_t cg_pmove_fixed;
 vmCvar_t pmove_msec;
 vmCvar_t pmove_float;
 vmCvar_t cg_pmove_msec;
@@ -237,16 +237,16 @@ vmCvar_t cg_enableQ;
 
 //unlagged - client options
 vmCvar_t cg_delag;
-//vmCvar_t	cg_debugDelag;
-//vmCvar_t	cg_drawBBox;
+//vmCvar_t cg_debugDelag;
+//vmCvar_t cg_drawBBox;
 vmCvar_t cg_cmdTimeNudge;
 vmCvar_t sv_fps;
 vmCvar_t cg_projectileNudge;
 vmCvar_t cg_optimizePrediction;
 vmCvar_t cl_timeNudge;
-//vmCvar_t	cg_latentSnaps;
-//vmCvar_t	cg_latentCmds;
-//vmCvar_t	cg_plOut;
+//vmCvar_t cg_latentSnaps;
+//vmCvar_t cg_latentCmds;
+//vmCvar_t cg_plOut;
 //unlagged - client options
 
 //elimination addition

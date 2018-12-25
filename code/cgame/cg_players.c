@@ -2507,8 +2507,6 @@ int CG_LightVerts(vec3_t normal, int numVerts, polyVert_t *verts) {
 CG_Player
 ===============
  */
-extern vmCvar_t cg_leiChibi;
-
 void CG_Player(centity_t *cent) {
 	clientInfo_t *ci;
 	refEntity_t legs;
