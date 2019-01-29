@@ -77,18 +77,18 @@ static const serverFilter_t serverFilters[] = {
 };
 
 static const char *teamArenaGameTypes[] = {
-	"FFA",
+	"FREE FOR ALL",
 	"TOURNAMENT",
-	"SP",
+	"SINGLE PLAYER",
 	"TEAM DM",
-	"CTF",
-	"1FCTF",
+	"CAP. THE FLAG",
+	"ONE FLAG CTF",
 	"OVERLOAD",
 	"HARVESTER",
 	"ELIMINATION",
-	"CTFELIMINATION",
-	"LMS",
-	"DOUBLE D",
+	"CTF ELIMIN.",
+	"LAST M. STAND",
+	"DOUBLE DOM.",
 	"DOMINATION",
 	"POSSESSION"
 };

@@ -136,7 +136,7 @@ static const char *servertype_items[] = {
 	"Team Deathmatch",
 	"Tournament",
 	"Capture the Flag",
-	"One Flag Capture",
+	"One Flag CTF",
 	"Overload",
 	"Harvester",
 	"Elimination",
@@ -144,7 +144,7 @@ static const char *servertype_items[] = {
 	"Last Man Standing",
 	"Double Domination",
 	"Domination",
-	"Poseession",
+	"Possession",
 	NULL
 };
 
@@ -159,19 +159,20 @@ static const char *sortkey_items[] = {
 };
 
 static char* gamenames[] = {
-	"DM ",	// deathmatch
-	"1v1",	// tournament
-	"SP ",	// single player
+	"Free F/All",	// deathmatch
+	"Tourney",	// tournament
+	"Single",	// single player
 	"Team DM",	// team deathmatch
-	"CTF",	// capture the flag
+	"Cap. The Flag",	// capture the flag
 	"One Flag CTF",		// one flag ctf
-	"OverLoad",				// Overload
+	"Overload",				// Overload
 	"Harvester",			// Harvester
 	"Elimination",
-	"CTF Elimination",
-	"Last Man Standing",
-	"Double Domination",
+	"CTF Elimin.",
+	"L. M. Stand.",
+	"Double DOM",
 	"Domination",	// Dom replaces Rocket Arena 3
+	"Possession",
 	"Q3F",						// Q3F
 	"Urban Terror",		// Urban Terror
 	"OSP",						// Orange Smoothie Productions
