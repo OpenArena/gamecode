@@ -159,21 +159,21 @@ static const char *sortkey_items[] = {
 };
 
 static char* gamenames[] = {
-	"DM ",	// deathmatch
-	"1v1",	// tournament
-	"SP ",	// single player
-	"Team DM",	// team deathmatch
-	"CTF",	// capture the flag
-	"One Flag CTF",		// one flag ctf
-	"OverLoad",				// Overload
-	"Harvester",			// Harvester
+	"DM ",  // deathmatch
+	"1v1",  // tournament
+	"SP ",  // single player
+	"Team DM",  // team deathmatch
+	"CTF",  // capture the flag
+	"One Flag CTF",  // one flag ctf
+	"OverLoad",  // Overload
+	"Harvester",  // Harvester
 	"Elimination",
 	"CTF Elimination",
 	"Last Man Standing",
 	"Double Domination",
-	"Domination",	// Dom replaces Rocket Arena 3
-	"Possession",						// Q3F
-	"???",			// unknown
+	"Domination",
+	"Possession",
+	"???",  // unknown
 	NULL
 };
 
@@ -193,20 +193,19 @@ typedef struct {
 } pinglist_t;
 
 typedef struct servernode_s {
-	char	adrstr[MAX_ADDRESSLENGTH];
-	char	hostname[MAX_HOSTNAMELENGTH+3];
-	char	mapname[MAX_MAPNAMELENGTH];
-	int		numclients;
-	int             humanclients;
-	qboolean        needPass;
-	int		maxclients;
-	int		pingtime;
-	int		gametype;
-	char	gamename[16];
-	int		nettype;
-	int		minPing;
-	int		maxPing;
-	//qboolean bPB;
+	char     adrstr[MAX_ADDRESSLENGTH];
+	char     hostname[MAX_HOSTNAMELENGTH+3];
+	char     mapname[MAX_MAPNAMELENGTH];
+	int      numclients;
+	int      humanclients;
+	qboolean needPass;
+	int      maxclients;
+	int      pingtime;
+	int      gametype;
+	char     gamename[16];
+	int      nettype;
+	int      minPing;
+	int      maxPing;
 	qboolean	local;
 
 } servernode_t; 
@@ -226,9 +225,9 @@ typedef struct {
 	menulist_s			sortkey;
 	menuradiobutton_s	showfull;
 	menuradiobutton_s	showempty;
-        
-        menuradiobutton_s	onlyhumans;
-        menuradiobutton_s	hideprivate;
+
+	menuradiobutton_s	onlyhumans;
+	menuradiobutton_s	hideprivate;
 
 	menulist_s			list;
 	menubitmap_s		mappic;
@@ -388,17 +387,17 @@ static int QDECL ArenaServers_Compare( const void *arg1, const void *arg2 ) {
 		}
 		return -1;
 
-        case SORT_HUMANS:
-                f1 = t1->humanclients;
-                f2 = t2->humanclients;
+	case SORT_HUMANS:
+		f1 = t1->humanclients;
+		f2 = t2->humanclients;
 
-                if( f1 < f2 ) {
-                    return 1;
-                }
-                if( f1 == f2 ) {
-                    return 0;
-                }
-                return -1;
+		if( f1 < f2 ) {
+			return 1;
+		}
+		if( f1 == f2 ) {
+			return 0;
+		}
+		return -1;
 
 	case SORT_GAME:
 		if( t1->gametype < t2->gametype ) {
@@ -513,7 +512,6 @@ const char *s;
 	while( count < numChars )
 	{
 		*d = ' ';
-                //d[len] = ' ';
 		d++;
 		len++;
 		count++;
@@ -550,8 +548,8 @@ static void ArenaServers_UpdateMenu( void ) {
 			g_arenaservers.gametype.generic.flags	&= ~QMF_GRAYED;
 			g_arenaservers.sortkey.generic.flags	&= ~QMF_GRAYED;
 			g_arenaservers.showempty.generic.flags	&= ~QMF_GRAYED;
-                        g_arenaservers.onlyhumans.generic.flags	&= ~QMF_GRAYED;
-                        g_arenaservers.hideprivate.generic.flags	&= ~QMF_GRAYED;
+			g_arenaservers.onlyhumans.generic.flags	&= ~QMF_GRAYED;
+			g_arenaservers.hideprivate.generic.flags	&= ~QMF_GRAYED;
 			g_arenaservers.showfull.generic.flags	&= ~QMF_GRAYED;
 			g_arenaservers.list.generic.flags		&= ~QMF_GRAYED;
 			g_arenaservers.refresh.generic.flags	&= ~QMF_GRAYED;
@@ -578,8 +576,8 @@ static void ArenaServers_UpdateMenu( void ) {
 			g_arenaservers.gametype.generic.flags	|= QMF_GRAYED;
 			g_arenaservers.sortkey.generic.flags	|= QMF_GRAYED;
 			g_arenaservers.showempty.generic.flags	|= QMF_GRAYED;
-                        g_arenaservers.onlyhumans.generic.flags	|= QMF_GRAYED;
-                        g_arenaservers.hideprivate.generic.flags	|= QMF_GRAYED;
+			g_arenaservers.onlyhumans.generic.flags	|= QMF_GRAYED;
+			g_arenaservers.hideprivate.generic.flags	|= QMF_GRAYED;
 			g_arenaservers.showfull.generic.flags	|= QMF_GRAYED;
 			g_arenaservers.list.generic.flags		|= QMF_GRAYED;
 			//g_arenaservers.refresh.generic.flags	|= QMF_GRAYED; // Allow to press Refresh once again to stop
@@ -606,8 +604,8 @@ static void ArenaServers_UpdateMenu( void ) {
 			g_arenaservers.gametype.generic.flags	&= ~QMF_GRAYED;
 			g_arenaservers.sortkey.generic.flags	&= ~QMF_GRAYED;
 			g_arenaservers.showempty.generic.flags	&= ~QMF_GRAYED;
-                        g_arenaservers.onlyhumans.generic.flags	&= ~QMF_GRAYED;
-                        g_arenaservers.hideprivate.generic.flags	&= ~QMF_GRAYED;
+			g_arenaservers.onlyhumans.generic.flags	&= ~QMF_GRAYED;
+			g_arenaservers.hideprivate.generic.flags	&= ~QMF_GRAYED;
 			g_arenaservers.showfull.generic.flags	&= ~QMF_GRAYED;
 			g_arenaservers.list.generic.flags		|= QMF_GRAYED;
 			g_arenaservers.refresh.generic.flags	&= ~QMF_GRAYED;
@@ -646,8 +644,8 @@ static void ArenaServers_UpdateMenu( void ) {
 			continue;
 		}
 
-                //If "Show only humans" and "Hide empty server" are enabled hide servers that only have bots
-                if( !g_emptyservers && g_onlyhumans && !servernodeptr->humanclients ) {
+		//If "Show only humans" and "Hide empty server" are enabled hide servers that only have bots
+		if( !g_emptyservers && g_onlyhumans && !servernodeptr->humanclients ) {
 			continue;
 		}
 
@@ -683,19 +681,19 @@ static void ArenaServers_UpdateMenu( void ) {
 			}
 			break;
 
-                case GAMES_1FCTF:
+		case GAMES_1FCTF:
 			if( servernodeptr->gametype != GT_1FCTF ) {
 				continue;
 			}
 			break;
 
-                case GAMES_OBELISK:
+		case GAMES_OBELISK:
 			if( servernodeptr->gametype != GT_OBELISK ) {
 				continue;
 			}
 			break;
 
-                case GAMES_HARVESTER:
+		case GAMES_HARVESTER:
 			if( servernodeptr->gametype != GT_HARVESTER ) {
 				continue;
 			}
@@ -725,7 +723,7 @@ static void ArenaServers_UpdateMenu( void ) {
 			}
 			break;
 
-                case GAMES_DOM:
+		case GAMES_DOM:
 			if( servernodeptr->gametype != GT_DOMINATION ) {
 				continue;
 			}
@@ -737,9 +735,9 @@ static void ArenaServers_UpdateMenu( void ) {
 			}
 			break;
 		}
-                
-                if(g_hideprivate && servernodeptr->needPass)
-                    continue;
+
+		if(g_hideprivate && servernodeptr->needPass)
+			continue;
 
 		if( servernodeptr->pingtime < servernodeptr->minPing ) {
 			pingColor = S_COLOR_BLUE;
@@ -757,39 +755,39 @@ static void ArenaServers_UpdateMenu( void ) {
 			pingColor = S_COLOR_RED;
 		}
 
-                /*
+		/*
 		Com_sprintf( buff, MAX_LISTBOXWIDTH, "%-20.20s %-12.12s %2d/%2d %-8.8s %3s %s%3d ", 
 			servernodeptr->hostname, servernodeptr->mapname, servernodeptr->numclients,
  			servernodeptr->maxclients, servernodeptr->gamename,
 			netnames[servernodeptr->nettype], pingColor, servernodeptr->pingtime ); //, servernodeptr->bPB ? "Yes" : "No"
-                 */
-                b = buff;
-                *b++ = '^';
-                *b++ = '7';
+		*/
+		b = buff;
+		*b++ = '^';
+		*b++ = '7';
 		bufAddr = Q_strcpyColor( servernodeptr->hostname, b, 30 );
 		b += bufAddr; 
 		*b++ = ' ';
-                *b++ = '^';
-                *b++ = '7';
+		*b++ = '^';
+		*b++ = '7';
 	
 		bufAddr = Q_strcpyColor( servernodeptr->mapname, b, 16 );
 		b += bufAddr;
 		*b++ = ' ';
 	
-                if(g_onlyhumans == 0)
-                    Com_sprintf( b, 8, "%2d/%2d ", servernodeptr->numclients, servernodeptr->maxclients );
-                else
-                    Com_sprintf( b, 8, "%2d/%2d ", servernodeptr->humanclients, servernodeptr->maxclients );
+		if(g_onlyhumans == 0)
+			Com_sprintf( b, 8, "%2d/%2d ", servernodeptr->numclients, servernodeptr->maxclients );
+		else
+			Com_sprintf( b, 8, "%2d/%2d ", servernodeptr->humanclients, servernodeptr->maxclients );
 		b += 6;
 	
 		bufAddr = Q_strcpyColor( servernodeptr->gamename, b, 8 );
 		b += bufAddr;
 		*b++ = ' ';
-                
-                bufAddr = Q_strcpyColor( netnames[servernodeptr->nettype], b, 3 );
-                b += bufAddr;
-                *b++ = ' ';
-                
+
+		bufAddr = Q_strcpyColor( netnames[servernodeptr->nettype], b, 3 );
+		b += bufAddr;
+		*b++ = ' ';
+
 		Com_sprintf( b, 12, "%s%3d ", 	pingColor, servernodeptr->pingtime );
 		j++;
 	}
@@ -797,7 +795,7 @@ static void ArenaServers_UpdateMenu( void ) {
 	g_arenaservers.list.numitems = j;
 	g_arenaservers.list.curvalue = 0;
 	g_arenaservers.list.top      = 0;
-        
+
 	// update picture
 	ArenaServers_UpdatePicture();
 }
@@ -824,7 +822,7 @@ static void ArenaServers_Remove( void )
 	tableptr      = &g_arenaservers.table[g_arenaservers.list.curvalue];
 	servernodeptr = tableptr->servernode;
 
-        // find address in master list
+	// find address in master list
 	for (i=0; i<g_arenaservers.numfavoriteaddresses; i++)
 	{
 		if (Q_strequal(g_arenaservers.favoriteaddresses[i],servernodeptr->adrstr))
@@ -838,7 +836,7 @@ static void ArenaServers_Remove( void )
  			g_arenaservers.numfavoriteaddresses--;
  			memset( &g_arenaservers.favoriteaddresses[g_arenaservers.numfavoriteaddresses], 0, MAX_ADDRESSLENGTH );
  			break;
-                }
+		}
 	}	
 
 	// find address in server list
@@ -847,15 +845,15 @@ static void ArenaServers_Remove( void )
 		if (&g_favoriteserverlist[i] == servernodeptr)
 		{
 			// delete address from server list
- 			if (i < g_numfavoriteservers-1)
- 			{
- 				// shift items up
- 				memcpy( &g_favoriteserverlist[i], &g_favoriteserverlist[i+1], (g_numfavoriteservers - i - 1)*sizeof(servernode_t));
- 			}
- 			g_numfavoriteservers--;
- 			memset( &g_favoriteserverlist[ g_numfavoriteservers ], 0, sizeof(servernode_t));
- 			break;
-                }
+			if (i < g_numfavoriteservers-1)
+			{
+				// shift items up
+				memcpy( &g_favoriteserverlist[i], &g_favoriteserverlist[i+1], (g_numfavoriteservers - i - 1)*sizeof(servernode_t));
+			}
+			g_numfavoriteservers--;
+			memset( &g_favoriteserverlist[ g_numfavoriteservers ], 0, sizeof(servernode_t));
+			break;
+		}
 	}	
 
 	g_arenaservers.numqueriedservers = g_arenaservers.numfavoriteaddresses;
@@ -1100,9 +1098,8 @@ static void ArenaServers_DoRefresh( void )
 	char	adrstr[MAX_ADDRESSLENGTH];
 	char	info[MAX_INFO_STRING];
 
-	if (uis.realtime < g_arenaservers.refreshtime)
-	{
-	  if (g_servertype != UIAS_FAVORITES) {
+	if (uis.realtime < g_arenaservers.refreshtime) {
+		if (g_servertype != UIAS_FAVORITES) {
 			if (g_servertype == UIAS_LOCAL || g_servertype == UIAS_ALL_LOCAL) {
 				if (!trap_LAN_GetServerCount(ArenaServers_SourceForLAN())) {
 					return;
@@ -1112,7 +1109,7 @@ static void ArenaServers_DoRefresh( void )
 			  // still waiting for response
 			  return;
 			}
-	  }
+		}
 	}
 
 	if (uis.realtime < g_arenaservers.nextpingtime)
@@ -1136,9 +1133,10 @@ static void ArenaServers_DoRefresh( void )
 		}
 
 		// find ping result in our local list
-		for (j=0; j<MAX_PINGREQUESTS; j++)
+		for (j=0; j<MAX_PINGREQUESTS; j++) {
 			if (Q_strequal( adrstr, g_arenaservers.pinglist[j].adrstr ))
 				break;
+		}
 
 		if (j < MAX_PINGREQUESTS)
 		{
@@ -1169,7 +1167,7 @@ static void ArenaServers_DoRefresh( void )
 
 			// clear this query from internal list
 			g_arenaservers.pinglist[j].adrstr[0] = '\0';
-   		}
+		}
 
 		// clear this query from external list
 		trap_LAN_ClearPing( i );
@@ -1178,9 +1176,9 @@ static void ArenaServers_DoRefresh( void )
 	// get results of servers query
 	// counts can increase as servers respond
 	if (g_servertype == UIAS_FAVORITES) {
-	  g_arenaservers.numqueriedservers = g_arenaservers.numfavoriteaddresses;
+		g_arenaservers.numqueriedservers = g_arenaservers.numfavoriteaddresses;
 	} else {
-	  g_arenaservers.numqueriedservers = trap_LAN_GetServerCount(ArenaServers_SourceForLAN());
+		g_arenaservers.numqueriedservers = trap_LAN_GetServerCount(ArenaServers_SourceForLAN());
 	}
 
 //	if (g_arenaservers.numqueriedservers > g_arenaservers.maxservers)
@@ -1197,20 +1195,22 @@ static void ArenaServers_DoRefresh( void )
 		}
 
 		// find empty slot
-		for (j=0; j<MAX_PINGREQUESTS; j++)
+		for (j=0; j<MAX_PINGREQUESTS; j++) {
 			if (!g_arenaservers.pinglist[j].adrstr[0])
 				break;
+		}
 
-		if (j >= MAX_PINGREQUESTS)
+		if (j >= MAX_PINGREQUESTS) {
 			// no empty slots available yet - wait for timeout
 			break;
+		}
 
 		// get an address to ping
 
 		if (g_servertype == UIAS_FAVORITES) {
-		  strcpy( adrstr, g_arenaservers.favoriteaddresses[g_arenaservers.currentping] );
+			strcpy( adrstr, g_arenaservers.favoriteaddresses[g_arenaservers.currentping] );
 		} else {
-		  trap_LAN_GetServerAddressString(ArenaServers_SourceForLAN(), g_arenaservers.currentping, adrstr, MAX_ADDRESSLENGTH);
+			trap_LAN_GetServerAddressString(ArenaServers_SourceForLAN(), g_arenaservers.currentping, adrstr, MAX_ADDRESSLENGTH);
 		}
 
 		strcpy( g_arenaservers.pinglist[j].adrstr, adrstr );
@@ -1325,13 +1325,13 @@ static void ArenaServers_StartRefreshNoClearList( void )
 			strcpy( myargs, " dd" );
 			break;
 
-                case GAMES_DOM:
-                    strcpy( myargs, " dom" );
-                    break;
+		case GAMES_DOM:
+			strcpy( myargs, " dom" );
+			break;
 
-                case GAMES_POS:
-                    strcpy( myargs, " pos" );
-                    break;
+		case GAMES_POS:
+			strcpy( myargs, " pos" );
+			break;
 		}
 
 
@@ -1492,16 +1492,16 @@ static void ArenaServers_Event( void* ptr, int event ) {
 		g_emptyservers = g_arenaservers.showempty.curvalue;
 		ArenaServers_UpdateMenu();
 		break;
-                
-        case ID_ONLY_HUMANS:
+
+	case ID_ONLY_HUMANS:
 		trap_Cvar_SetValue( "ui_browserOnlyHumans", g_arenaservers.onlyhumans.curvalue );
-                g_onlyhumans = g_arenaservers.onlyhumans.curvalue;
+		g_onlyhumans = g_arenaservers.onlyhumans.curvalue;
 		ArenaServers_UpdateMenu();
 		break;
-                
-        case ID_HIDE_PRIVATE:
+
+	case ID_HIDE_PRIVATE:
 		//trap_Cvar_SetValue( "ui_browserHidePrivate", g_arenaservers.hideprivate.curvalue );
-                g_hideprivate = g_arenaservers.hideprivate.curvalue;
+		g_hideprivate = g_arenaservers.hideprivate.curvalue;
 		ArenaServers_UpdateMenu();
 		break;
 
@@ -1591,15 +1591,14 @@ static sfxHandle_t ArenaServers_MenuKey( int key ) {
 		ArenaServers_StopRefresh();
 		ArenaServers_SaveChanges();
 	}
-        
-        if( key == K_MWHEELUP ) {
-            ScrollList_Key( &g_arenaservers.list, K_UPARROW );
-        }
-        
-        if( key == K_MWHEELDOWN ) {
-            ScrollList_Key( &g_arenaservers.list, K_DOWNARROW );
-        }
 
+	if( key == K_MWHEELUP ) {
+		ScrollList_Key( &g_arenaservers.list, K_UPARROW );
+	}
+
+	if( key == K_MWHEELDOWN ) {
+		ScrollList_Key( &g_arenaservers.list, K_DOWNARROW );
+	}
 
 	return Menu_DefaultKey( &g_arenaservers.menu, key );
 }
@@ -1680,8 +1679,8 @@ static void ArenaServers_MenuInit( void ) {
 	g_arenaservers.showempty.generic.id			= ID_SHOW_EMPTY;
 	g_arenaservers.showempty.generic.x			= 320;
 	g_arenaservers.showempty.generic.y			= y;
-        
-        y += SMALLCHAR_HEIGHT;
+
+	y += SMALLCHAR_HEIGHT;
 	g_arenaservers.onlyhumans.generic.type		= MTYPE_RADIOBUTTON;
 	g_arenaservers.onlyhumans.generic.name		= "Only humans:";
 	g_arenaservers.onlyhumans.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
@@ -1689,8 +1688,8 @@ static void ArenaServers_MenuInit( void ) {
 	g_arenaservers.onlyhumans.generic.id			= ID_ONLY_HUMANS;
 	g_arenaservers.onlyhumans.generic.x			= 320;
 	g_arenaservers.onlyhumans.generic.y			= y;
-        
-        y += SMALLCHAR_HEIGHT;
+
+	y += SMALLCHAR_HEIGHT;
 	g_arenaservers.hideprivate.generic.type		= MTYPE_RADIOBUTTON;
 	g_arenaservers.hideprivate.generic.name		= "Hide private:";
 	g_arenaservers.hideprivate.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
@@ -1839,8 +1838,8 @@ static void ArenaServers_MenuInit( void ) {
 	Menu_AddItem( &g_arenaservers.menu, (void*) &g_arenaservers.sortkey );
 	Menu_AddItem( &g_arenaservers.menu, (void*) &g_arenaservers.showfull);
 	Menu_AddItem( &g_arenaservers.menu, (void*) &g_arenaservers.showempty );
-        Menu_AddItem( &g_arenaservers.menu, (void*) &g_arenaservers.onlyhumans );
-        Menu_AddItem( &g_arenaservers.menu, (void*) &g_arenaservers.hideprivate );
+	Menu_AddItem( &g_arenaservers.menu, (void*) &g_arenaservers.onlyhumans );
+	Menu_AddItem( &g_arenaservers.menu, (void*) &g_arenaservers.hideprivate );
 
 	Menu_AddItem( &g_arenaservers.menu, (void*) &g_arenaservers.mappic );
 	Menu_AddItem( &g_arenaservers.menu, (void*) &g_arenaservers.list );
@@ -1880,11 +1879,11 @@ static void ArenaServers_MenuInit( void ) {
 	g_emptyservers = Com_Clamp( 0, 1, ui_browserShowEmpty.integer );
 	g_arenaservers.showempty.curvalue = g_emptyservers;
 	
-        g_arenaservers.onlyhumans.curvalue = Com_Clamp( 0, 1, ui_browserOnlyHumans.integer );
-        g_onlyhumans = ui_browserOnlyHumans.integer;
-        
-        g_arenaservers.hideprivate.curvalue = 1; //Com_Clamp( 0, 1, ui_browserOnlyHumans.integer );
-        g_hideprivate = 1; //ui_browserOnlyHumans.integer;
+	g_arenaservers.onlyhumans.curvalue = Com_Clamp( 0, 1, ui_browserOnlyHumans.integer );
+	g_onlyhumans = ui_browserOnlyHumans.integer;
+
+	g_arenaservers.hideprivate.curvalue = 1; //Com_Clamp( 0, 1, ui_browserOnlyHumans.integer );
+	g_hideprivate = 1; //ui_browserOnlyHumans.integer;
 
 	// force to initial state and refresh
 	g_arenaservers.master.curvalue = g_servertype = ArenaServers_SetType(g_servertype);
@@ -1924,4 +1923,4 @@ UI_ArenaServersMenu
 void UI_ArenaServersMenu( void ) {
 	ArenaServers_MenuInit();
 	UI_PushMenu( &g_arenaservers.menu );
-}						  
+}
