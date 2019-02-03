@@ -144,7 +144,7 @@ static const char *servertype_items[] = {
 	"Last Man Standing",
 	"Double Domination",
 	"Domination",
-	"Poseession",
+	"Possession",
 	NULL
 };
 
@@ -172,9 +172,7 @@ static char* gamenames[] = {
 	"Last Man Standing",
 	"Double Domination",
 	"Domination",	// Dom replaces Rocket Arena 3
-	"Q3F",						// Q3F
-	"Urban Terror",		// Urban Terror
-	"OSP",						// Orange Smoothie Productions
+	"Possession",						// Q3F
 	"???",			// unknown
 	NULL
 };
@@ -902,8 +900,8 @@ static void ArenaServers_Insert( char* adrstr, char* info, int pingtime )
 	Q_strupr( servernodeptr->mapname );
 
 	servernodeptr->numclients = atoi( Info_ValueForKey( info, "clients") );
-        servernodeptr->humanclients = atoi( Info_ValueForKey( info, "g_humanplayers") );
-        servernodeptr->needPass = atoi( Info_ValueForKey( info, "g_needpass") );
+	servernodeptr->humanclients = atoi( Info_ValueForKey( info, "g_humanplayers") );
+	servernodeptr->needPass = atoi( Info_ValueForKey( info, "g_needpass") );
 	servernodeptr->maxclients = atoi( Info_ValueForKey( info, "sv_maxclients") );
 	servernodeptr->pingtime   = pingtime;
 	servernodeptr->minPing    = atoi( Info_ValueForKey( info, "minPing") );
@@ -932,8 +930,8 @@ static void ArenaServers_Insert( char* adrstr, char* info, int pingtime )
 	if( i < 0 ) {
 		i = 0;
 	}
-	else if( i > 11 ) {
-		i = 12;
+	else if( i > ARRAY_LEN(gamenames)-2 ) {
+		i = ARRAY_LEN(gamenames)-2;  //Second to last entry in gamenames is "???"
 	}
 	if( *s ) {
 		servernodeptr->gametype = i;//-1;
