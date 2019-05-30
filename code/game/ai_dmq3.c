@@ -442,6 +442,13 @@ void BotSetTeamStatus(bot_state_t *bs) {
 				teamtask = TEAMTASK_OFFENSE;
 			else
 				teamtask = TEAMTASK_DEFENSE;
+			break;
+		case LTG_DOMCAPTURE:
+			teamtask = TEAMTASK_OFFENSE;
+			break;
+		case LTG_DOMROAM:
+			teamtask = TEAMTASK_PATROL;
+			break;
 		default:
 			teamtask = TEAMTASK_PATROL;
 			break;
@@ -818,35 +825,6 @@ void BotCTFRetreatGoals(bot_state_t *bs) {
 
 /*
 ==================
-BotDomSeekGoals
-==================
- */
-
-/*void BotDomSeekGoals(bot_state_t *bs) {
-	int index;
-	bs->ltgtype = LTG_DOMHOLD; //For debugging we are forcing roam
-    
-	index=0;
-	//dom_points_bot[i]
-    
-	if(bs->ltgtype == LTG_DOMHOLD) {
-		//index = 0;
-		index = ((rand()) % (level.domination_points_count));
-	}
-    
-	//if(bs->ltgtype == LTG_DOMROAM) {
-        
-	//}
-        
-	memcpy(&bs->teamgoal, &dom_points_bot[index], sizeof(bot_goal_t));
-
-	BotAlternateRoute(bs, &bs->teamgoal);
-
-	BotSetTeamStatus(bs);
-}*/
-
-/*
-==================
 BotDDSeekGoals
 ==================
  */
@@ -891,6 +869,60 @@ void BotDDSeekGoals(bot_state_t *bs) {
 
 
 }
+
+/*
+==================
+BotDomSeekGoals
+==================
+ */
+
+void BotDomSeekGoals(bot_state_t *bs) {
+	int currentPoint;
+	if(bot_developer.integer) {
+		bs->ltgtype = LTG_DOMROAM; //For debugging we are forcing roam
+	}
+	// The control point the bot cares about.
+	if (!trap_Cvar_VariableIntegerValue("ai_domCurrentPoint")) {
+		BotDomCurrentPoint();
+	}
+	currentPoint = (int)trap_Cvar_VariableIntegerValue("ai_domCurrentPoint");
+
+	if (bs->ltgtype == LTG_DOMCAPTURE)
+		memcpy(&bs->teamgoal, &dom_points_bot[currentPoint], sizeof (bot_goal_t));
+
+	if (rand() % 2 == 0)
+		bs->ltgtype = LTG_DOMCAPTURE;
+	else
+		bs->ltgtype = LTG_DOMROAM;
+
+	if (bs->ltgtype == LTG_DOMCAPTURE) {
+		memcpy(&bs->teamgoal, &dom_points_bot[currentPoint], sizeof (bot_goal_t));
+		if (BotTeam(bs) == TEAM_BLUE && (level.pointStatusDom[currentPoint] == TEAM_RED || level.pointStatusDom[currentPoint] == TEAM_NONE)) {
+			BotSetUserInfo(bs, "teamtask", va("%d", TEAMTASK_OFFENSE));
+		} else if (BotTeam(bs) == TEAM_BLUE && (level.pointStatusDom[currentPoint] == TEAM_BLUE)) {
+			BotSetUserInfo(bs, "teamtask", va("%d", TEAMTASK_DEFENSE));
+		} else if (BotTeam(bs) == TEAM_RED && (level.pointStatusDom[currentPoint] == TEAM_BLUE || level.pointStatusDom[currentPoint] == TEAM_NONE)) {
+			BotSetUserInfo(bs, "teamtask", va("%d", TEAMTASK_OFFENSE));
+		} else if (BotTeam(bs) == TEAM_RED && (level.pointStatusDom[currentPoint] == TEAM_RED)) {
+			BotSetUserInfo(bs, "teamtask", va("%d", TEAMTASK_DEFENSE));
+		} else {
+			BotSetUserInfo(bs, "teamtask", va("%d", TEAMTASK_PATROL));
+			BotDomCurrentPoint();
+		}
+	}
+}
+
+/*
+==================
+BotDomCurrentPoint
+Saves a
+==================
+ */
+void BotDomCurrentPoint(void) {
+	int index = rand() % level.domination_points_count;
+	trap_Cvar_Set("ai_domCurrentPoint", va("%i",index));
+}
+
 
 /*
 ==================
@@ -1441,8 +1473,8 @@ void BotTeamGoals(bot_state_t *bs, int retreat) {
 	if (gametype == GT_DOUBLE_D) //Don't care about retreat
 		BotDDSeekGoals(bs);
 
-	//if(gametype == GT_DOMINATION) //Don't care about retreat
-	//	BotDomSeekGoals(bs);
+	if(gametype == GT_DOMINATION) //Don't care about retreat
+		BotDomSeekGoals(bs);
 
 	// reset the order time which is used to see if
 	// we decided to refuse an order
