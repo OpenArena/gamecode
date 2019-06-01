@@ -1777,7 +1777,7 @@ void BotCheckItemPickup(bot_state_t *bs, int *oldinventory) {
 							((!(G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype))) ||
 							((bs->redflagstatus == 0) &&
 							(bs->blueflagstatus == 0))) &&
-							((gametype != GT_1FCTF) ||
+							(G_UsesTheWhiteFlag(gametype) ||
 							(bs->neutralflagstatus == 0))) {
 						// tell the leader we want to be on offence
 						BotVoiceChat(bs, leader, VOICECHAT_WANTONOFFENSE);
@@ -1801,7 +1801,7 @@ void BotCheckItemPickup(bot_state_t *bs, int *oldinventory) {
 						((!(G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype))) ||
 						((bs->redflagstatus == 0) &&
 						(bs->blueflagstatus == 0))) &&
-						((gametype != GT_1FCTF) ||
+						(G_UsesTheWhiteFlag(gametype) ||
 						(bs->neutralflagstatus == 0))) {
 
 					// tell the leader we want to be on defense
@@ -1941,9 +1941,9 @@ void BotUseKamikaze(bot_state_t *bs) {
 				return;
 			}
 		}
-	} else if (gametype == GT_1FCTF) {
-		//never use kamikaze if the team flag carrier is visible
-		if (Bot1FCTFCarryingFlag(bs))
+	} else if (G_UsesTheWhiteFlag(gametype)) {
+		//never use kamikaze if the team flag carrier is visible in 1FCTF
+		if (Bot1FCTFCarryingFlag(bs) && gametype == GT_1FCTF)
 			return;
 		c = BotTeamFlagCarrierVisible(bs);
 		if (c >= 0) {
@@ -2052,9 +2052,9 @@ void BotUseInvulnerability(bot_state_t *bs) {
 				return;
 			}
 		}
-	} else if (gametype == GT_1FCTF) {
+	} else if (G_UsesTheWhiteFlag(gametype)) {
 		//never use kamikaze if the team flag carrier is visible
-		if (Bot1FCTFCarryingFlag(bs))
+		if (Bot1FCTFCarryingFlag(bs) && gametype == GT_1FCTF)
 			return;
 		c = BotEnemyFlagCarrierVisible(bs);
 		if (c >= 0)
