@@ -1405,6 +1405,8 @@ int BotSelectActivateWeapon(bot_state_t *bs) {
 		return WEAPONINDEX_ROCKET_LAUNCHER;
 	else if (bs->inventory[INVENTORY_BFG10K] > 0 && bs->inventory[INVENTORY_BFGAMMO] > 0)
 		return WEAPONINDEX_BFG;
+	else if (bs->inventory[INVENTORY_GRAPPLINGHOOK] > 0)
+		return WEAPONINDEX_GRAPPLING_HOOK;
 	else {
 		return -1;
 	}

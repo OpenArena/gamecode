@@ -1840,11 +1840,8 @@ void BotUpdateInventory(bot_state_t *bs) {
 	bs->inventory[INVENTORY_BFG10K] = (bs->cur_ps.stats[STAT_WEAPONS] & (1 << WP_BFG)) != 0;
 	bs->inventory[INVENTORY_GRAPPLINGHOOK] = (bs->cur_ps.stats[STAT_WEAPONS] & (1 << WP_GRAPPLING_HOOK)) != 0;
 	bs->inventory[INVENTORY_NAILGUN] = (bs->cur_ps.stats[STAT_WEAPONS] & (1 << WP_NAILGUN)) != 0;
-	;
 	bs->inventory[INVENTORY_PROXLAUNCHER] = (bs->cur_ps.stats[STAT_WEAPONS] & (1 << WP_PROX_LAUNCHER)) != 0;
-	;
 	bs->inventory[INVENTORY_CHAINGUN] = (bs->cur_ps.stats[STAT_WEAPONS] & (1 << WP_CHAINGUN)) != 0;
-	;
 	//ammo
 	bs->inventory[INVENTORY_SHELLS] = bs->cur_ps.ammo[WP_SHOTGUN];
 	bs->inventory[INVENTORY_BULLETS] = bs->cur_ps.ammo[WP_MACHINEGUN];
@@ -2423,7 +2420,7 @@ int BotWantsToChase(bot_state_t *bs) {
 		BotEntityInfo(bs->enemy, &entinfo);
 		if (EntityCarriesFlag(&entinfo))
 			return qtrue;
-	} else if (gametype == GT_1FCTF) {
+	} else if (G_UsesTheWhiteFlag(gametype)) {
 		//never chase if carrying the flag
 		if (Bot1FCTFCarryingFlag(bs))
 			return qfalse;
