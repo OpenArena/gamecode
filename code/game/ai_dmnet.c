@@ -1560,7 +1560,9 @@ int AINode_Seek_ActivateEntity(bot_state_t *bs) {
 	}
 	//
 	bs->tfl = TFL_DEFAULT;
-	if (bot_grapple.integer) bs->tfl |= TFL_GRAPPLEHOOK;
+	if (BotCanAndWantsToUseTheGrapple(bs)) {
+		bs->tfl |= TFL_GRAPPLEHOOK;
+	}
 	// if in lava or slime the bot should be able to get out
 	if (BotInLavaOrSlime(bs)) bs->tfl |= TFL_LAVA|TFL_SLIME;
 	// map specific code
@@ -1773,7 +1775,9 @@ int AINode_Seek_NBG(bot_state_t *bs) {
 	}
 	//
 	bs->tfl = TFL_DEFAULT;
-	if (bot_grapple.integer) bs->tfl |= TFL_GRAPPLEHOOK;
+	if (BotCanAndWantsToUseTheGrapple(bs)) {
+		bs->tfl |= TFL_GRAPPLEHOOK;
+	}
 	//if in lava or slime the bot should be able to get out
 	if (BotInLavaOrSlime(bs)) bs->tfl |= TFL_LAVA|TFL_SLIME;
 	//
@@ -1916,7 +1920,9 @@ int AINode_Seek_LTG(bot_state_t *bs)
 	}
 	//
 	bs->tfl = TFL_DEFAULT;
-	if (bot_grapple.integer) bs->tfl |= TFL_GRAPPLEHOOK;
+	if (BotCanAndWantsToUseTheGrapple(bs)) {
+		bs->tfl |= TFL_GRAPPLEHOOK;
+	}
 	//if in lava or slime the bot should be able to get out
 	if (BotInLavaOrSlime(bs)) bs->tfl |= TFL_LAVA|TFL_SLIME;
 	//
@@ -2190,7 +2196,9 @@ int AINode_Battle_Fight(bot_state_t *bs) {
 	BotBattleUseItems(bs);
 	//
 	bs->tfl = TFL_DEFAULT;
-	if (bot_grapple.integer) bs->tfl |= TFL_GRAPPLEHOOK;
+	if (BotCanAndWantsToUseTheGrapple(bs)) {
+		bs->tfl |= TFL_GRAPPLEHOOK;
+	}
 	//if in lava or slime the bot should be able to get out
 	if (BotInLavaOrSlime(bs)) bs->tfl |= TFL_LAVA|TFL_SLIME;
 	//
@@ -2283,7 +2291,9 @@ int AINode_Battle_Chase(bot_state_t *bs)
 	}
 	//
 	bs->tfl = TFL_DEFAULT;
-	if (bot_grapple.integer) bs->tfl |= TFL_GRAPPLEHOOK;
+	if (BotCanAndWantsToUseTheGrapple(bs)) {
+		bs->tfl |= TFL_GRAPPLEHOOK;
+	}
 	//if in lava or slime the bot should be able to get out
 	if (BotInLavaOrSlime(bs)) bs->tfl |= TFL_LAVA|TFL_SLIME;
 	//
@@ -2420,7 +2430,9 @@ int AINode_Battle_Retreat(bot_state_t *bs) {
 	}
 	//
 	bs->tfl = TFL_DEFAULT;
-	if (bot_grapple.integer) bs->tfl |= TFL_GRAPPLEHOOK;
+	if (BotCanAndWantsToUseTheGrapple(bs)) {
+		bs->tfl |= TFL_GRAPPLEHOOK;
+	}
 	//if in lava or slime the bot should be able to get out
 	if (BotInLavaOrSlime(bs)) bs->tfl |= TFL_LAVA|TFL_SLIME;
 	//map specific code
@@ -2597,7 +2609,9 @@ int AINode_Battle_NBG(bot_state_t *bs) {
 	}
 	//
 	bs->tfl = TFL_DEFAULT;
-	if (bot_grapple.integer) bs->tfl |= TFL_GRAPPLEHOOK;
+	if (BotCanAndWantsToUseTheGrapple(bs)) {
+		bs->tfl |= TFL_GRAPPLEHOOK;
+	}
 	//if in lava or slime the bot should be able to get out
 	if (BotInLavaOrSlime(bs)) bs->tfl |= TFL_LAVA|TFL_SLIME;
 	//
@@ -2692,3 +2706,22 @@ int AINode_Battle_NBG(bot_state_t *bs) {
 	return qtrue;
 }
 
+/*
+==================
+BotCanAndWantsToUseTheGrapple
+Before switching to the grapple, checks if the bot has it in its inventory.
+==================
+*/
+int BotCanAndWantsToUseTheGrapple(bot_state_t *bs) {
+	float grappler;
+	// Bots won't use the grapple if:
+	// * grappling for them is disabled
+	if (!bot_grapple.integer) return qfalse;
+	// * they don't have the Grappling Hook
+	if (!bs->inventory[INVENTORY_GRAPPLINGHOOK]) return qfalse;
+	// * if their own bot file settings allow for it
+	grappler = trap_Characteristic_BFloat(bs->character, CHARACTERISTIC_GRAPPLE_USER, 0, 1);
+	if (grappler < 0.5) return qfalse;
+	// Else they'll be happy to use it
+	return qtrue;
+}
