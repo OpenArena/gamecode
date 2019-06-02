@@ -2288,6 +2288,7 @@ int TeamPlayIsOn(void) {
 /*
 ==================
 BotAggression
+Checks in order to decide if the bot is going to act more aggressively.
 ==================
  */
 float BotAggression(bot_state_t *bs) {
@@ -2336,19 +2337,23 @@ float BotAggression(bot_state_t *bs) {
 /*
 ==================
 BotFeelingBad
+Check for certain conditions to decide strategic planning (a.k.a. retreating)
 ==================
  */
 float BotFeelingBad(bot_state_t *bs) {
+	if (bs->inventory[INVENTORY_HEALTH] < 20 && bs->inventory[INVENTORY_ARMOR] < 10) {
+		return 100;
+	}
 	if (bs->weaponnum == WP_GAUNTLET) {
 		return 100;
 	}
-	if (bs->inventory[INVENTORY_HEALTH] < 40) {
+	if (bs->inventory[INVENTORY_HEALTH] < 40 && bs->inventory[INVENTORY_ARMOR] < 20) {
 		return 100;
 	}
 	if (bs->weaponnum == WP_MACHINEGUN) {
 		return 90;
 	}
-	if (bs->inventory[INVENTORY_HEALTH] < 60) {
+	if (bs->inventory[INVENTORY_HEALTH] < 60 && bs->inventory[INVENTORY_ARMOR] < 30) {
 		return 80;
 	}
 	return 0;
@@ -2443,11 +2448,6 @@ int BotWantsToChase(bot_state_t *bs) {
 		BotEntityInfo(bs->enemy, &entinfo);
 		// always chase if the enemy is carrying cubes
 		if (EntityCarriesCubes(&entinfo)) return qtrue;
-	} else if (gametype == GT_POSSESSION) {
-		//always chase if the enemy is carrying a flag
-		BotEntityInfo(bs->enemy, &entinfo);
-		if (EntityCarriesFlag(&entinfo))
-			return qtrue;
 	}
 	//if the bot is getting the flag
 	if (bs->ltgtype == LTG_GETFLAG)
