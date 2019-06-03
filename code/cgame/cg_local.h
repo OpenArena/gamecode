@@ -1482,6 +1482,9 @@ extern vmCvar_t cg_teamChatBeep;
 extern vmCvar_t cg_missionpackChecks;
 /* /Neon_Knight */
 extern vmCvar_t cg_leiChibi;
+/* Neon_Knight: Developer mode. */
+extern vmCvar_t cg_developer;
+/* /Neon_Knight */
 
 //unlagged - cg_unlagged.c
 void CG_PredictWeaponEffects( centity_t *cent );

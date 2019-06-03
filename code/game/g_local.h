@@ -1175,6 +1175,7 @@ extern vmCvar_t g_grapple;
 extern vmCvar_t g_harvesterFromBodies;
 extern vmCvar_t g_ddCaptureTime;
 extern vmCvar_t g_ddRespawnDelay;
+extern vmCvar_t g_developer;
 
 void	trap_Printf( const char *fmt );
 void	trap_Error( const char *fmt ) __attribute__((noreturn));

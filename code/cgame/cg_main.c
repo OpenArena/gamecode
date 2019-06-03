@@ -301,6 +301,9 @@ vmCvar_t cg_teamChatBeep;
 /* Neon_Knight: Missionpack checks toggle. Just because. */
 vmCvar_t cg_missionpackChecks;
 /* /Neon_Knight */
+/* Neon_Knight: Developer mode. */
+vmCvar_t cg_developer;
+/* /Neon_Knight */
 
 typedef struct {
 	vmCvar_t *vmCvar;
@@ -515,7 +518,10 @@ static cvarTable_t cvarTable[] = {// bk001129
 	{&cg_teamChatBeep, "cg_teamChatBeep", "1", CVAR_ARCHIVE},
 	{ &cg_muzzleflashStyle, "cg_muzzleflashStyle", "1", CVAR_ARCHIVE},
 /* Neon_Knight: Enables MP checks. */
-	{ &cg_missionpackChecks, "cg_missionpackChecks", "1", CVAR_ARCHIVE}
+	{ &cg_missionpackChecks, "cg_missionpackChecks", "1", CVAR_ARCHIVE},
+/* /Neon_Knight */
+/* Neon_Knight: Enables MP checks. */
+	{ &cg_developer, "developer", "0", CVAR_ARCHIVE | CVAR_CHEAT}
 /* /Neon_Knight */
 };
 
