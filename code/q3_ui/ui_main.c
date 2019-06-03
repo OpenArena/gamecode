@@ -265,7 +265,7 @@ static cvarTable_t cvarTable[] = {
 	{ &ui_server16, "server16", "", CVAR_ARCHIVE },
 	{ &ui_browserOnlyHumans, "ui_browserOnlyHumans", "0", CVAR_ARCHIVE },
 	{ &ui_setupchecked, "ui_setupchecked", "0", CVAR_ARCHIVE },
-	{ &ui_developer, "developer", "0", CVAR_ARCHIVE | CVAR_CHEAT },
+	{ &ui_developer, "developer", "0", CVAR_CHEAT },
 	{ NULL, "g_localTeamPref", "", 0 }
 };
 
