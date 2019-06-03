@@ -872,10 +872,8 @@ typedef struct {
 	qhandle_t	lmarkbullet3;
 	qhandle_t	lmarkbullet4;
 
-//#ifdef MISSIONPACK
 	qhandle_t	nailPuffShader;
 	qhandle_t	blueProxMine;
-//#endif
 
 	qhandle_t	numberShaders[11];
 
@@ -926,7 +924,6 @@ typedef struct {
 	// special effects models
 	qhandle_t	teleportEffectModel;
 	qhandle_t	teleportEffectShader;
-//#ifdef MISSIONPACK
 	qhandle_t	kamikazeEffectModel;
 	qhandle_t	kamikazeShockWave;
 	qhandle_t	kamikazeHeadModel;
@@ -940,7 +937,6 @@ typedef struct {
 	qhandle_t	medkitUsageModel;
 	qhandle_t	dustPuffShader;
 	qhandle_t	heartShader;
-//#endif
 	qhandle_t	invulnerabilityPowerupModel;
 
 	// scoreboard headers
@@ -990,7 +986,6 @@ typedef struct {
 	sfxHandle_t	sfx_railg;
 	sfxHandle_t	sfx_rockexp;
 	sfxHandle_t	sfx_plasmaexp;
-//#ifdef MISSIONPACK
 	sfxHandle_t	sfx_proxexp;
 	sfxHandle_t	sfx_nghit;
 	sfxHandle_t	sfx_nghitflesh;
@@ -1013,7 +1008,6 @@ typedef struct {
 	sfxHandle_t	winnerSound;
 	sfxHandle_t	loserSound;
 	sfxHandle_t	youSuckSound;
-//#endif
 	sfxHandle_t	gibSound;
 	sfxHandle_t	gibBounce1Sound;
 	sfxHandle_t	gibBounce2Sound;
@@ -1482,6 +1476,9 @@ extern vmCvar_t cg_teamChatBeep;
 extern vmCvar_t cg_missionpackChecks;
 /* /Neon_Knight */
 extern vmCvar_t cg_leiChibi;
+/* Neon_Knight: Developer mode. */
+extern vmCvar_t cg_developer;
+/* /Neon_Knight */
 
 //unlagged - cg_unlagged.c
 void CG_PredictWeaponEffects( centity_t *cent );
@@ -1726,14 +1723,12 @@ localEntity_t *CG_SmokePuff( const vec3_t p,
 				   qhandle_t hShader );
 void CG_BubbleTrail( vec3_t start, vec3_t end, float spacing );
 void CG_SpawnEffect( vec3_t org );
-//#ifdef MISSIONPACK
 void CG_KamikazeEffect( vec3_t org );
 void CG_ObeliskExplode( vec3_t org, int entityNum );
 void CG_ObeliskPain( vec3_t org );
 void CG_InvulnerabilityImpact( vec3_t org, vec3_t angles );
 void CG_InvulnerabilityJuiced( vec3_t org );
 void CG_LightningBoltBeam( vec3_t start, vec3_t end );
-//#endif
 void CG_ScorePlum( int client, vec3_t org, int score );
 
 void CG_GibPlayer( vec3_t playerOrigin );

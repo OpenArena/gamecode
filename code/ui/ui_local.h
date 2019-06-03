@@ -196,6 +196,7 @@ extern vmCvar_t ui_blueteam3;
 extern vmCvar_t ui_blueteam4;
 extern vmCvar_t ui_blueteam5;
 extern vmCvar_t ui_teamName;
+extern vmCvar_t ui_developer;
 
 //
 // ui_qmenu.c

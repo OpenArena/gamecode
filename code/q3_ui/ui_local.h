@@ -112,6 +112,7 @@ extern vmCvar_t ui_server16;
 extern vmCvar_t ui_setupchecked;
 //new in beta 23:
 extern vmCvar_t ui_browserOnlyHumans;
+extern vmCvar_t ui_developer;
 
 //
 // ui_qmenu.c

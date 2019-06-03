@@ -647,10 +647,10 @@ void G_GlobalSound( int soundIndex )
 	//Let's avoid the S_FindName error if soundIndex is 0.
 	//Sago: And let's check that the sound index is within the allowed range.
 	if( ( soundIndex <= 0 ) ||  soundIndex >= MAX_SOUNDS ) {
-		//Display this message when debugging
-#ifdef DEBUG
-		G_Printf( "GlobalSound: Error, no soundIndex specified. Check your code!\n" );
-#endif
+		if (g_developer.integer){
+			//Display this message when debugging
+			G_Printf( "GlobalSound: Error, no soundIndex specified. Check your code!\n" );
+		}
 		return;
 	}
 	//Spawn a Temporary Entity at the origin point for Intermission with the event EV_GLOBAL_SOUND
