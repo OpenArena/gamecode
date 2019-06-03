@@ -142,6 +142,16 @@ void BotPrintTeamGoal(bot_state_t *bs) {
 			BotAI_Print(PRT_MESSAGE, "%s: I'm gonna take care of point B for %1.0f secs\n", netname, t);
 			break;
 		}
+		case LTG_DOMCAPTURE:
+		{
+			BotAI_Print(PRT_MESSAGE, "%s: I'm gonna capture a DOM point for %1.0f secs\n", netname, t);
+			break;
+		}
+		case LTG_DOMROAM:
+		{
+			BotAI_Print(PRT_MESSAGE, "%s: I'm gonna roam the level for %1.0f secs\n", netname, t);
+			break;
+		}
 		default:
 		{
 			if (bs->ctfroam_time > FloatTime()) {
