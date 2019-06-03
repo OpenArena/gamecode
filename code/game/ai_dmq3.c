@@ -84,8 +84,6 @@ vmCvar_t bot_challenge;
 vmCvar_t bot_predictobstacles;
 vmCvar_t bot_spSkill;
 
-extern vmCvar_t bot_developer;
-
 vec3_t lastteleport_origin; //last teleport event origin
 float lastteleport_time; //last teleport event time
 int max_bspmodelindex; //maximum BSP model index
@@ -792,9 +790,10 @@ void BotCTFSeekGoals(bot_state_t *bs) {
 		BotSetTeamStatus(bs);
 	}
 	bs->owndecision_time = FloatTime() + 5;
-#ifdef DEBUG
-	BotPrintTeamGoal(bs);
-#endif //DEBUG
+	// Developer mode outputs a message.
+	if(bot_developer.integer == 1) {
+		BotPrintTeamGoal(bs);
+	}
 }
 
 /*
@@ -1108,9 +1107,10 @@ void Bot1FCTFSeekGoals(bot_state_t *bs) {
 		BotSetTeamStatus(bs);
 	}
 	bs->owndecision_time = FloatTime() + 5;
-#ifdef DEBUG
-	BotPrintTeamGoal(bs);
-#endif //DEBUG
+	// Developer mode outputs a message.
+	if(bot_developer.integer == 1) {
+		BotPrintTeamGoal(bs);
+	}
 }
 
 /*
@@ -4276,7 +4276,7 @@ int BotGetActivateGoal(bot_state_t *bs, int entitynum, bot_activategoal_t *activ
 	}
 	// get the targetname so we can find an entity with a matching target
 	if (!trap_AAS_ValueForBSPEpairKey(ent, "targetname", targetname[0], sizeof (targetname[0]))) {
-		if (bot_developer.integer) {
+		if(bot_developer.integer == 1) {
 			BotAI_Print(PRT_ERROR, "BotGetActivateGoal: entity with model \"%s\" has no targetname\n", model);
 		}
 		return 0;
@@ -4292,14 +4292,14 @@ int BotGetActivateGoal(bot_state_t *bs, int entitynum, bot_activategoal_t *activ
 			}
 		}
 		if (!ent) {
-			if (bot_developer.integer) {
+			if(bot_developer.integer == 1) {
 				BotAI_Print(PRT_ERROR, "BotGetActivateGoal: no entity with target \"%s\"\n", targetname[i]);
 			}
 			i--;
 			continue;
 		}
 		if (!trap_AAS_ValueForBSPEpairKey(ent, "classname", classname, sizeof (classname))) {
-			if (bot_developer.integer) {
+			if(bot_developer.integer == 1) {
 				BotAI_Print(PRT_ERROR, "BotGetActivateGoal: entity with target \"%s\" has no classname\n", targetname[i]);
 			}
 			continue;
@@ -4363,9 +4363,9 @@ int BotGetActivateGoal(bot_state_t *bs, int entitynum, bot_activategoal_t *activ
 			}
 		}
 	}
-#ifdef OBSTACLEDEBUG
-	BotAI_Print(PRT_ERROR, "BotGetActivateGoal: no valid activator for entity with target \"%s\"\n", targetname[0]);
-#endif
+	if(bot_developer.integer >= 2) {
+		BotAI_Print(PRT_ERROR, "BotGetActivateGoal: no valid activator for entity with target \"%s\"\n", targetname[0]);
+	}
 	return 0;
 }
 
@@ -4456,9 +4456,6 @@ open, which buttons to activate etc.
 ==================
  */
 void BotAIBlocked(bot_state_t *bs, bot_moveresult_t *moveresult, int activate) {
-#ifdef OBSTACLEDEBUG
-	char netname[MAX_NETNAME];
-#endif
 	int movetype, bspent;
 	vec3_t hordir, start, sideward, angles, up = {0, 0, 1};
 	aas_entityinfo_t entinfo;
@@ -4478,10 +4475,12 @@ void BotAIBlocked(bot_state_t *bs, bot_moveresult_t *moveresult, int activate) {
 	}
 	// get info for the entity that is blocking the bot
 	BotEntityInfo(moveresult->blockentity, &entinfo);
-#ifdef OBSTACLEDEBUG
-	ClientName(bs->client, netname, sizeof (netname));
-	BotAI_Print(PRT_MESSAGE, "%s: I'm blocked by model %d\n", netname, entinfo.modelindex);
-#endif // OBSTACLEDEBUG
+	if(bot_developer.integer >= 2) {
+		char netname[MAX_NETNAME];
+
+		ClientName(bs->client, netname, sizeof (netname));
+		BotAI_Print(PRT_MESSAGE, "%s: I'm blocked by model %d\n", netname, entinfo.modelindex);
+	}
 	// if blocked by a bsp model and the bot wants to activate it
 	if (activate && entinfo.modelindex > 0 && entinfo.modelindex <= max_bspmodelindex) {
 		// find the bsp entity which should be activated in order to get the blocking entity out of the way
@@ -5282,16 +5281,13 @@ void BotDeathmatchAI(bot_state_t *bs, float thinktime) {
 	//if the bot removed itself :)
 	if (!bs->inuse) return;
 	//if the bot executed too many AI nodes
-	//Sago: FIXME - Outcommented this test... this is wrong
-#ifdef DEBUG
-	if (i >= MAX_NODESWITCHES) {
+	if (i >= MAX_NODESWITCHES && (bot_developer.integer == 1)) {
 		trap_BotDumpGoalStack(bs->gs);
 		trap_BotDumpAvoidGoals(bs->gs);
 		BotDumpNodeSwitches(bs);
 		ClientName(bs->client, name, sizeof (name));
 		BotAI_Print(PRT_ERROR, "%s at %1.1f switched more than %d AI nodes\n", name, FloatTime(), MAX_NODESWITCHES);
 	}
-#endif
 	//
 	bs->lastframe_health = bs->inventory[INVENTORY_HEALTH];
 	bs->lasthitcount = bs->cur_ps.persistant[PERS_HITS];

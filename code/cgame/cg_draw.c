@@ -1001,8 +1001,8 @@ static float CG_DrawDoubleDominationThings( float y ) {
 	statusA = cgs.redflag;
 	statusB = cgs.blueflag;
 
-	// This is only useful in Developer mode.
-	if(!cg_developer.integer) {
+	// This is only useful in code development mode.
+	if(!cg_developer.integer == 1) {
 		return;
 	}
 	
