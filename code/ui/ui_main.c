@@ -7338,7 +7338,7 @@ static cvarTable_t		cvarTable[] = {
 	{ &gameover, "gameover", "0", CVAR_INIT}, // ai script
 // end changed RD
 	{ &ui_introPlayed, "ui_introPlayed", "0", CVAR_INIT },
-	{ &ui_missionpackChecks, "ui_missionpackChecks", "1", CVAR_INIT },
+	{ &ui_missionpackChecks, "missionpackChecks", "1", CVAR_INIT },
 // leilei
 	{ &ui_colors, "ui_colors", "0x1e3072 0x7286d0 0x1fd1b2 0x606060", CVAR_ARCHIVE},
 	{ &ui_developer, "developer", "0", CVAR_ARCHIVE | CVAR_CHEAT },
