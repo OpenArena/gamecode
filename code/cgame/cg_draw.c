@@ -991,17 +991,21 @@ static float CG_DrawTimer(float y) {
 
 /*
 CG_DrawDoubleDominationThings
- *
- *Sago: Might be relevant for debugging missionpack.
+Might be relevant for debugging missionpack.
  */
-
-/*static float CG_DrawDoubleDominationThings( float y ) {
+/*
+static float CG_DrawDoubleDominationThings( float y ) {
 	char		*s;
 	int			w;
 	int 		statusA, statusB;
 	statusA = cgs.redflag;
 	statusB = cgs.blueflag;
 
+	// This is only useful in Developer mode.
+	if(!cg_developer.integer) {
+		return;
+	}
+	
 	if(statusA == TEAM_NONE) {
 		s = va("Point A not spawned");
 	} else
@@ -1044,8 +1048,8 @@ CG_DrawDoubleDominationThings
 	}
 
 	return y + SMALLCHAR_HEIGHT+4;
-}*/
-
+}
+*/
 /*
 =================
 CG_DrawLMSmode
@@ -3187,12 +3191,7 @@ void trap_Cmd_ExecuteText(int exec_when, const char *text); // leilei - for unlo
 
 static void CG_DrawIntermission(void) {
 	//	int key;
-#ifdef MISSIONPACK
-	//if (cg_singlePlayer.integer) {
-	//	CG_DrawCenterString();
-	//	return;
-	//}
-#else
+#ifndef MISSIONPACK
 	if (cgs.gametype == GT_SINGLE_PLAYER) {
 		CG_DrawCenterString();
 		return;
