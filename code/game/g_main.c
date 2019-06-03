@@ -408,7 +408,7 @@ static cvarTable_t gameCvarTable[] = {
 	{ &g_ddCaptureTime, "g_ddCaptureTime", "10", CVAR_ARCHIVE, 0, qtrue},
 	{ &g_ddRespawnDelay, "g_ddRespawnDelay", "10", CVAR_ARCHIVE, 0, qtrue},
 	/* Neon_Knight: Developer mode*/
-	{ &g_developer, "developer", "0", CVAR_ARCHIVE | CVAR_CHEAT, 0, qtrue}
+	{ &g_developer, "developer", "0", CVAR_CHEAT, 0, qtrue}
 
 };
 
