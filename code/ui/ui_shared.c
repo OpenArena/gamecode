@@ -710,7 +710,7 @@ void Window_Paint(Window *w, float fadeAmount, float fadeClamp, float fadeCycle)
 	}
 
 }
-//extern vmCvar_t  ui_leidebug;
+extern vmCvar_t  ui_leidebug;
 extern int realVidWidth;
 extern int realVidHeight;
 

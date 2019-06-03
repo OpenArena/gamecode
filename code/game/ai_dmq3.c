@@ -84,6 +84,9 @@ vmCvar_t bot_challenge;
 vmCvar_t bot_predictobstacles;
 vmCvar_t bot_spSkill;
 vmCvar_t bot_developer;
+vmCvar_t bot_debugChat;
+vmCvar_t bot_debugLTG;
+vmCvar_t bot_debugPaths;
 
 vec3_t lastteleport_origin; //last teleport event origin
 float lastteleport_time; //last teleport event time
@@ -816,7 +819,8 @@ void BotCTFSeekGoals(bot_state_t *bs) {
 		BotSetTeamStatus(bs);
 	}
 	bs->owndecision_time = FloatTime() + 5;
-	if (bot_developer.integer & BOTDEV_REPORTACTIONS) {
+	// Developer mode outputs a message.
+	if (bot_developer.integer && bot_debugLTG.integer) {
 		BotPrintTeamGoal(bs);
 	}
 }
@@ -929,9 +933,10 @@ void BotDomSeekGoals(bot_state_t *bs) {
 		BotSetTeamStatus(bs);
 	}
 	bs->owndecision_time = FloatTime() + 5;
-#ifdef DEBUG
-	BotPrintTeamGoal(bs);
-#endif //DEBUG
+	// Developer mode outputs a message.
+	if (bot_developer.integer && bot_debugLTG.integer) {
+		BotPrintTeamGoal(bs);
+	}
 }
 
 /*
@@ -1027,9 +1032,10 @@ void BotDDSeekGoals(bot_state_t *bs) {
 	}
 	BotSetTeamStatus(bs);
 	bs->owndecision_time = FloatTime() + 5;
-#ifdef DEBUG
-	BotPrintTeamGoal(bs);
-#endif //DEBUG
+	// Developer mode outputs a message.
+	if (bot_developer.integer && bot_debugLTG.integer) {
+		BotPrintTeamGoal(bs);
+	}
 }
 
 /*
@@ -1246,7 +1252,8 @@ void Bot1FCTFSeekGoals(bot_state_t *bs) {
 		BotSetTeamStatus(bs);
 	}
 	bs->owndecision_time = FloatTime() + 5;
-	if (bot_developer.integer & BOTDEV_REPORTACTIONS) {
+	// Developer mode outputs a message.
+	if (bot_developer.integer && bot_debugLTG.integer) {
 		BotPrintTeamGoal(bs);
 	}
 }
@@ -4334,7 +4341,6 @@ BotGetActivateGoal
   goal->entitynum will be set to the game entity to activate
 ==================
  */
-
 int BotGetActivateGoal(bot_state_t *bs, int entitynum, bot_activategoal_t *activategoal) {
 	int i, ent, cur_entities[10], spawnflags, modelindex, areas[MAX_ACTIVATEAREAS * 2], numareas, t;
 	char model[MAX_INFO_STRING], tmpmodel[128];
@@ -4423,7 +4429,7 @@ int BotGetActivateGoal(bot_state_t *bs, int entitynum, bot_activategoal_t *activ
 	}
 	// get the targetname so we can find an entity with a matching target
 	if (!trap_AAS_ValueForBSPEpairKey(ent, "targetname", targetname[0], sizeof (targetname[0]))) {
-		if (bot_developer.integer & BOTDEV_REPORTACTIONS) {
+		if (bot_developer.integer && bot_debugLTG.integer) {
 			BotAI_Print(PRT_ERROR, "BotGetActivateGoal: entity with model \"%s\" has no targetname\n", model);
 		}
 		return 0;
@@ -4439,14 +4445,14 @@ int BotGetActivateGoal(bot_state_t *bs, int entitynum, bot_activategoal_t *activ
 			}
 		}
 		if (!ent) {
-			if (bot_developer.integer & BOTDEV_REPORTACTIONS) {
+			if (bot_developer.integer && bot_debugLTG.integer) {
 				BotAI_Print(PRT_ERROR, "BotGetActivateGoal: no entity with target \"%s\"\n", targetname[i]);
 			}
 			i--;
 			continue;
 		}
 		if (!trap_AAS_ValueForBSPEpairKey(ent, "classname", classname, sizeof (classname))) {
-			if (bot_developer.integer & BOTDEV_REPORTACTIONS) {
+			if (bot_developer.integer && bot_debugLTG.integer) {
 				BotAI_Print(PRT_ERROR, "BotGetActivateGoal: entity with target \"%s\" has no classname\n", targetname[i]);
 			}
 			continue;
@@ -4510,7 +4516,7 @@ int BotGetActivateGoal(bot_state_t *bs, int entitynum, bot_activategoal_t *activ
 			}
 		}
 	}
-	if (bot_developer.integer & BOTDEV_TESTOBSTACLE) {
+	if (bot_developer.integer && bot_debugLTG.integer) {
 		BotAI_Print(PRT_ERROR, "BotGetActivateGoal: no valid activator for entity with target \"%s\"\n", targetname[0]);
 	}
 	return 0;
@@ -4622,7 +4628,7 @@ void BotAIBlocked(bot_state_t *bs, bot_moveresult_t *moveresult, int activate) {
 	}
 	// get info for the entity that is blocking the bot
 	BotEntityInfo(moveresult->blockentity, &entinfo);
-	if (bot_developer.integer & BOTDEV_TESTOBSTACLE) {
+	if (bot_developer.integer && bot_debugLTG.integer) {
 		char netname[MAX_NETNAME];
 
 		ClientName(bs->client, netname, sizeof (netname));
@@ -4807,7 +4813,7 @@ void BotCheckConsoleMessages(bot_state_t *bs) {
 		//if there's no match
 		if (!BotMatchMessage(bs, m.message)) {
 			//if it is a chat message
-			if (m.type == CMS_CHAT && !bot_nochat.integer && !(bot_developer.integer & BOTDEV_DISABLECHAT)) {
+			if (m.type == CMS_CHAT && !bot_nochat.integer && !bot_developer.integer && !bot_debugChat.integer) {
 				//
 				if (!trap_BotFindMatch(m.message, &match, MTCONTEXT_REPLYCHAT)) {
 					trap_BotRemoveConsoleMessage(bs->cs, handle);
@@ -5428,16 +5434,15 @@ void BotDeathmatchAI(bot_state_t *bs, float thinktime) {
 	//if the bot removed itself :)
 	if (!bs->inuse) return;
 	//if the bot executed too many AI nodes
-	//Sago: FIXME - Outcommented this test... this is wrong
-#ifdef DEBUG
 	if (i >= MAX_NODESWITCHES) {
-		trap_BotDumpGoalStack(bs->gs);
-		trap_BotDumpAvoidGoals(bs->gs);
-		BotDumpNodeSwitches(bs);
-		ClientName(bs->client, name, sizeof (name));
-		BotAI_Print(PRT_ERROR, "%s at %1.1f switched more than %d AI nodes\n", name, FloatTime(), MAX_NODESWITCHES);
+		if (bot_developer.integer && bot_debugLTG.integer) {
+			trap_BotDumpGoalStack(bs->gs);
+			trap_BotDumpAvoidGoals(bs->gs);
+			BotDumpNodeSwitches(bs);
+			ClientName(bs->client, name, sizeof (name));
+			BotAI_Print(PRT_ERROR, "%s at %1.1f switched more than %d AI nodes\n", name, FloatTime(), MAX_NODESWITCHES);
+		}
 	}
-#endif
 	//
 	bs->lastframe_health = bs->inventory[INVENTORY_HEALTH];
 	bs->lasthitcount = bs->cur_ps.persistant[PERS_HITS];

@@ -988,8 +988,8 @@ static float CG_DrawDoubleDominationThings( float y ) {
 	statusA = cgs.redflag;
 	statusB = cgs.blueflag;
 
-	// This is only useful in Developer mode.
-	if(!cg_developer.integer) {
+	// This is only useful in code development mode.
+	if (!cg_developer.integer && !cg_debugDD.integer) {
 		return;
 	}
 	
@@ -1578,10 +1578,10 @@ static void CG_DrawUpperRight(stereoFrame_t stereoFrame) {
 	if (CG_IsATeamGametype(cgs.gametype) && cg_drawTeamOverlay.integer == 1) {
 		y = CG_DrawTeamOverlay(y, qtrue, qtrue);
 	}
-	/*if ( cgs.gametype == GT_DOUBLE_D ) {
+	/* if ( cgs.gametype == GT_DOUBLE_D ) {
 		y = CG_DrawDoubleDominationThings(y);
-	} 
-	else*/
+	}  */
+	else
 	if (cgs.gametype == GT_LMS && cg.showScores) {
 		y = CG_DrawLMSmode(y);
 	} else

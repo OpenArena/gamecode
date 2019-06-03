@@ -68,9 +68,10 @@ void BotPrintTeamGoal(bot_state_t *bs) {
 	float t;
 
 	// Exit if not in the adequate devmode for bots.
-	if (!(bot_developer.integer & BOTDEV_REPORTACTIONS)) {
+	if (!bot_developer.integer && !bot_debugLTG.integer) {
 		return;
 	}
+
 	ClientName(bs->client, netname, sizeof(netname));
 	t = bs->teamgoal_time - FloatTime();
 	switch(bs->ltgtype) {
@@ -657,7 +658,8 @@ void BotMatch_HelpAccompany(bot_state_t *bs, bot_match_t *match) {
 		// remember last ordered task
 		BotRememberLastOrderedTask(bs);
 	}
-	if (bot_developer.integer & BOTDEV_REPORTACTIONS) {
+	// Actual outputting of the message requires developer mode.
+	if (bot_developer.integer && bot_debugLTG.integer) {
 		BotPrintTeamGoal(bs);
 	}
 }
@@ -717,7 +719,8 @@ void BotMatch_DefendKeyArea(bot_state_t *bs, bot_match_t *match) {
 	BotSetTeamStatus(bs);
 	// remember last ordered task
 	BotRememberLastOrderedTask(bs);
-	if (bot_developer.integer & BOTDEV_REPORTACTIONS) {
+	// Actual outputting of the message requires developer mode.
+	if (bot_developer.integer && bot_debugLTG.integer) {
 		BotPrintTeamGoal(bs);
 	}
 }
@@ -766,7 +769,8 @@ void BotMatch_TakeA(bot_state_t *bs, bot_match_t *match) {
 	BotSetTeamStatus(bs);
 	// remember last ordered task
 	BotRememberLastOrderedTask(bs);
-	if (bot_developer.integer & BOTDEV_REPORTACTIONS) {
+	// Actual outputting of the message requires developer mode.
+	if (bot_developer.integer && bot_debugLTG.integer) {
 		BotPrintTeamGoal(bs);
 	}
 }
@@ -815,9 +819,10 @@ void BotMatch_TakeB(bot_state_t *bs, bot_match_t *match) {
 	BotSetTeamStatus(bs);
 	// remember last ordered task
 	BotRememberLastOrderedTask(bs);
-#ifdef DEBUG
-	BotPrintTeamGoal(bs);
-#endif //DEBUG
+	// Actual outputting of the message requires developer mode.
+	if (bot_developer.integer && bot_debugLTG.integer) {
+		BotPrintTeamGoal(bs);
+	}
 }
 
 /*
@@ -857,7 +862,8 @@ void BotMatch_HoldDOMPoint(bot_state_t *bs, bot_match_t *match) {
 	BotSetTeamStatus(bs);
 	// remember last ordered task
 	BotRememberLastOrderedTask(bs);
-	if (bot_developer.integer & BOTDEV_REPORTACTIONS) {
+	// Actual outputting of the message requires developer mode.
+	if (bot_developer.integer && bot_debugLTG.integer) {
 		BotPrintTeamGoal(bs);
 	}
 }
@@ -897,7 +903,8 @@ void BotMatch_GetItem(bot_state_t *bs, bot_match_t *match) {
 	bs->teamgoal_time = FloatTime() + TEAM_GETITEM_TIME;
 	//
 	BotSetTeamStatus(bs);
-	if (bot_developer.integer & BOTDEV_REPORTACTIONS) {
+	// Actual outputting of the message requires developer mode.
+	if (bot_developer.integer && bot_debugLTG.integer) {
 		BotPrintTeamGoal(bs);
 	}
 }
@@ -989,7 +996,8 @@ void BotMatch_Camp(bot_state_t *bs, bot_match_t *match) {
 	BotSetTeamStatus(bs);
 	// remember last ordered task
 	BotRememberLastOrderedTask(bs);
-	if (bot_developer.integer & BOTDEV_REPORTACTIONS) {
+	// Actual outputting of the message requires developer mode.
+	if (bot_developer.integer && bot_debugLTG.integer) {
 		BotPrintTeamGoal(bs);
 	}
 }
@@ -1028,7 +1036,8 @@ void BotMatch_Patrol(bot_state_t *bs, bot_match_t *match) {
 	BotSetTeamStatus(bs);
 	// remember last ordered task
 	BotRememberLastOrderedTask(bs);
-	if (bot_developer.integer & BOTDEV_REPORTACTIONS) {
+	// Actual outputting of the message requires developer mode.
+	if (bot_developer.integer && bot_debugLTG.integer) {
 		BotPrintTeamGoal(bs);
 	}
 }
@@ -1082,7 +1091,8 @@ void BotMatch_GetFlag(bot_state_t *bs, bot_match_t *match) {
 	BotSetTeamStatus(bs);
 	// remember last ordered task
 	BotRememberLastOrderedTask(bs);
-	if (bot_developer.integer & BOTDEV_REPORTACTIONS) {
+	// Actual outputting of the message requires developer mode.
+	if (bot_developer.integer && bot_debugLTG.integer) {
 		BotPrintTeamGoal(bs);
 	}
 }
@@ -1138,7 +1148,8 @@ void BotMatch_AttackEnemyBase(bot_state_t *bs, bot_match_t *match) {
 	BotSetTeamStatus(bs);
 	// remember last ordered task
 	BotRememberLastOrderedTask(bs);
-	if (bot_developer.integer & BOTDEV_REPORTACTIONS) {
+	// Actual outputting of the message requires developer mode.
+	if (bot_developer.integer && bot_debugLTG.integer) {
 		BotPrintTeamGoal(bs);
 	}
 }
@@ -1180,7 +1191,8 @@ void BotMatch_Harvest(bot_state_t *bs, bot_match_t *match) {
 	BotSetTeamStatus(bs);
 	// remember last ordered task
 	BotRememberLastOrderedTask(bs);
-	if (bot_developer.integer & BOTDEV_REPORTACTIONS) {
+	// Actual outputting of the message requires developer mode.
+	if (bot_developer.integer && bot_debugLTG.integer) {
 		BotPrintTeamGoal(bs);
 	}
 }
@@ -1224,7 +1236,8 @@ void BotMatch_RushBase(bot_state_t *bs, bot_match_t *match) {
 	bs->rushbaseaway_time = 0;
 	//
 	BotSetTeamStatus(bs);
-	if (bot_developer.integer & BOTDEV_REPORTACTIONS) {
+	// Actual outputting of the message requires developer mode.
+	if (bot_developer.integer && bot_debugLTG.integer) {
 		BotPrintTeamGoal(bs);
 	}
 }
@@ -1310,7 +1323,8 @@ void BotMatch_ReturnFlag(bot_state_t *bs, bot_match_t *match) {
 	bs->rushbaseaway_time = 0;
 	//
 	BotSetTeamStatus(bs);
-	if (bot_developer.integer & BOTDEV_REPORTACTIONS) {
+	// Actual outputting of the message requires developer mode.
+	if (bot_developer.integer && bot_debugLTG.integer) {
 		BotPrintTeamGoal(bs);
 	}
 }
@@ -1364,7 +1378,7 @@ void BotMatch_LeaveSubteam(bot_state_t *bs, bot_match_t *match) {
 
 /*
 ==================
-BotMatch_LeaveSubteam
+BotMatch_WhichTeam
 ==================
 */
 void BotMatch_WhichTeam(bot_state_t *bs, bot_match_t *match) {
@@ -1935,7 +1949,8 @@ void BotMatch_Kill(bot_state_t *bs, bot_match_t *match) {
 	bs->teamgoal_time = FloatTime() + TEAM_KILL_SOMEONE;
 	//
 	BotSetTeamStatus(bs);
-	if (bot_developer.integer & BOTDEV_REPORTACTIONS) {
+	// Actual outputting of the message requires developer mode.
+	if (bot_developer.integer && bot_debugLTG.integer) {
 		BotPrintTeamGoal(bs);
 	}
 }
