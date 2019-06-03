@@ -1745,7 +1745,7 @@ void BotCheckItemPickup(bot_state_t *bs, int *oldinventory) {
 							((!(G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype))) ||
 							((bs->redflagstatus == 0) &&
 							(bs->blueflagstatus == 0))) &&
-							((gametype != GT_1FCTF) ||
+							(G_UsesTheWhiteFlag(gametype) ||
 							(bs->neutralflagstatus == 0))) {
 						// tell the leader we want to be on offence
 						BotVoiceChat(bs, leader, VOICECHAT_WANTONOFFENSE);
@@ -1769,7 +1769,7 @@ void BotCheckItemPickup(bot_state_t *bs, int *oldinventory) {
 						((!(G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype))) ||
 						((bs->redflagstatus == 0) &&
 						(bs->blueflagstatus == 0))) &&
-						((gametype != GT_1FCTF) ||
+						(G_UsesTheWhiteFlag(gametype) ||
 						(bs->neutralflagstatus == 0))) {
 
 					// tell the leader we want to be on defense
@@ -1808,11 +1808,8 @@ void BotUpdateInventory(bot_state_t *bs) {
 	bs->inventory[INVENTORY_BFG10K] = (bs->cur_ps.stats[STAT_WEAPONS] & (1 << WP_BFG)) != 0;
 	bs->inventory[INVENTORY_GRAPPLINGHOOK] = (bs->cur_ps.stats[STAT_WEAPONS] & (1 << WP_GRAPPLING_HOOK)) != 0;
 	bs->inventory[INVENTORY_NAILGUN] = (bs->cur_ps.stats[STAT_WEAPONS] & (1 << WP_NAILGUN)) != 0;
-	;
 	bs->inventory[INVENTORY_PROXLAUNCHER] = (bs->cur_ps.stats[STAT_WEAPONS] & (1 << WP_PROX_LAUNCHER)) != 0;
-	;
 	bs->inventory[INVENTORY_CHAINGUN] = (bs->cur_ps.stats[STAT_WEAPONS] & (1 << WP_CHAINGUN)) != 0;
-	;
 	//ammo
 	bs->inventory[INVENTORY_SHELLS] = bs->cur_ps.ammo[WP_SHOTGUN];
 	bs->inventory[INVENTORY_BULLETS] = bs->cur_ps.ammo[WP_MACHINEGUN];
@@ -1912,9 +1909,9 @@ void BotUseKamikaze(bot_state_t *bs) {
 				return;
 			}
 		}
-	} else if (gametype == GT_1FCTF) {
-		//never use kamikaze if the team flag carrier is visible
-		if (Bot1FCTFCarryingFlag(bs))
+	} else if (G_UsesTheWhiteFlag(gametype)) {
+		//never use kamikaze if the team flag carrier is visible in 1FCTF
+		if (Bot1FCTFCarryingFlag(bs) && gametype == GT_1FCTF)
 			return;
 		c = BotTeamFlagCarrierVisible(bs);
 		if (c >= 0) {
@@ -2023,9 +2020,9 @@ void BotUseInvulnerability(bot_state_t *bs) {
 				return;
 			}
 		}
-	} else if (gametype == GT_1FCTF) {
+	} else if (G_UsesTheWhiteFlag(gametype)) {
 		//never use kamikaze if the team flag carrier is visible
-		if (Bot1FCTFCarryingFlag(bs))
+		if (Bot1FCTFCarryingFlag(bs) && gametype == GT_1FCTF)
 			return;
 		c = BotEnemyFlagCarrierVisible(bs);
 		if (c >= 0)
@@ -2363,10 +2360,8 @@ int BotWantsToRetreat(bot_state_t *bs) {
 		BotEntityInfo(bs->enemy, &entinfo);
 		// if the enemy is carrying a flag
 		if (EntityCarriesFlag(&entinfo)) return qfalse;
-#ifdef MISSIONPACK
 		// if the enemy is carrying cubes
 		if (EntityCarriesCubes(&entinfo)) return qfalse;
-#endif
 	}
 	//if the bot is getting the flag
 	if (bs->ltgtype == LTG_GETFLAG)
@@ -2393,7 +2388,7 @@ int BotWantsToChase(bot_state_t *bs) {
 		BotEntityInfo(bs->enemy, &entinfo);
 		if (EntityCarriesFlag(&entinfo))
 			return qtrue;
-	} else if (gametype == GT_1FCTF) {
+	} else if (G_UsesTheWhiteFlag(gametype)) {
 		//never chase if carrying the flag
 		if (Bot1FCTFCarryingFlag(bs))
 			return qfalse;

@@ -196,11 +196,7 @@ int BotNearbyGoal(bot_state_t *bs, int tfl, bot_goal_t *ltg, float range) {
 	//check if the bot should go for air
 	if (BotGoForAir(bs, tfl, ltg, range)) return qtrue;
 	// if the bot is carrying a flag or cubes
-	if (BotCTFCarryingFlag(bs)
-#ifdef MISSIONPACK
-		|| Bot1FCTFCarryingFlag(bs) || BotHarvesterCarryingCubes(bs)
-#endif
-		) {
+	if (BotCTFCarryingFlag(bs) || Bot1FCTFCarryingFlag(bs) || BotHarvesterCarryingCubes(bs)) {
 		//if the bot is just a few secs away from the base 
 		if (trap_AAS_AreaTravelTimeToGoalArea(bs->areanum, bs->origin,
 				bs->teamgoal.areanum, TFL_DEFAULT) < 300) {
@@ -836,7 +832,6 @@ int BotGetLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal) 
 		memcpy(goal, &bs->curpatrolpoint->goal, sizeof(bot_goal_t));
 		return qtrue;
 	}
-#ifdef CTF
 	if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
 		//if going for enemy flag
 		if (bs->ltgtype == LTG_GETFLAG) {
@@ -921,8 +916,7 @@ int BotGetLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal) 
 			return qtrue;
 		}
 	}
-#endif //CTF
-	else if (gametype == GT_1FCTF) {
+	else if (G_UsesTheWhiteFlag(gametype)) {
 		if (bs->ltgtype == LTG_GETFLAG) {
 			//check for bot typing status message
 			if (bs->teammessage_time && bs->teammessage_time < FloatTime()) {
@@ -932,78 +926,85 @@ int BotGetLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal) 
 				bs->teammessage_time = 0;
 			}
 			memcpy(goal, &ctf_neutralflag, sizeof(bot_goal_t));
-			//if touching the flag
+			//if touching the flag - 1FCTF: Deliver to the enemy base; POS: Go on patrol.
 			if (trap_BotTouchingGoal(bs->origin, goal)) {
-				bs->ltgtype = 0;
+				if (G_UsesTeamFlags(gametype)) {		// 1FCTF
+					bs->ltgtype = LTG_PATROL;
+				} else if (!G_UsesTeamFlags(gametype)) {	// POS
+					bs->ltgtype = 0;
+				}
 			}
 			//stop after 3 minutes
 			if (bs->teamgoal_time < FloatTime()) {
 				bs->ltgtype = 0;
 			}
 			return qtrue;
-		}
-		//if rushing to the base
-		if (bs->ltgtype == LTG_RUSHBASE) {
-			switch(BotTeam(bs)) {
-				case TEAM_RED: memcpy(goal, &ctf_blueflag, sizeof(bot_goal_t)); break;
-				case TEAM_BLUE: memcpy(goal, &ctf_redflag, sizeof(bot_goal_t)); break;
-				default: bs->ltgtype = 0; return qfalse;
+		} 
+		//1FCTF-exclusive logic
+		if(G_UsesTeamFlags(gametype)) {
+			//if rushing to the base
+			if (bs->ltgtype == LTG_RUSHBASE) {
+				switch(BotTeam(bs)) {
+					case TEAM_RED: memcpy(goal, &ctf_blueflag, sizeof(bot_goal_t)); break;
+					case TEAM_BLUE: memcpy(goal, &ctf_redflag, sizeof(bot_goal_t)); break;
+					default: bs->ltgtype = 0; return qfalse;
+				}
+				//if not carrying the flag anymore
+				if (!Bot1FCTFCarryingFlag(bs)) {
+					bs->ltgtype = 0;
+				}
+				//quit rushing after 2 minutes
+				if (bs->teamgoal_time < FloatTime()) {
+					bs->ltgtype = 0;
+				}
+				//if touching the base flag the bot should loose the enemy flag
+				if (trap_BotTouchingGoal(bs->origin, goal)) {
+					bs->ltgtype = 0;
+				}
+				BotAlternateRoute(bs, goal);
+				return qtrue;
 			}
-			//if not carrying the flag anymore
-			if (!Bot1FCTFCarryingFlag(bs)) {
-				bs->ltgtype = 0;
+			//attack the enemy base
+			if (bs->ltgtype == LTG_ATTACKENEMYBASE &&
+					bs->attackaway_time < FloatTime()) {
+				//check for bot typing status message
+				if (bs->teammessage_time && bs->teammessage_time < FloatTime()) {
+					BotAI_BotInitialChat(bs, "attackenemybase_start", NULL);
+					trap_BotEnterChat(bs->cs, 0, CHAT_TEAM);
+					BotVoiceChatOnly(bs, -1, VOICECHAT_ONOFFENSE);
+					bs->teammessage_time = 0;
+				}
+				switch(BotTeam(bs)) {
+					case TEAM_RED: memcpy(goal, &ctf_blueflag, sizeof(bot_goal_t)); break;
+					case TEAM_BLUE: memcpy(goal, &ctf_redflag, sizeof(bot_goal_t)); break;
+					default: bs->ltgtype = 0; return qfalse;
+				}
+				//quit rushing after 2 minutes
+				if (bs->teamgoal_time < FloatTime()) {
+					bs->ltgtype = 0;
+				}
+				//if touching the base flag the bot should loose the enemy flag
+				if (trap_BotTouchingGoal(bs->origin, goal)) {
+					bs->attackaway_time = FloatTime() + 2 + 5 * random();
+				}
+				return qtrue;
 			}
-			//quit rushing after 2 minutes
-			if (bs->teamgoal_time < FloatTime()) {
-				bs->ltgtype = 0;
+			//returning flag
+			if (bs->ltgtype == LTG_RETURNFLAG) {
+				//check for bot typing status message
+				if (bs->teammessage_time && bs->teammessage_time < FloatTime()) {
+					BotAI_BotInitialChat(bs, "returnflag_start", NULL);
+					trap_BotEnterChat(bs->cs, 0, CHAT_TEAM);
+					BotVoiceChatOnly(bs, -1, VOICECHAT_ONRETURNFLAG);
+					bs->teammessage_time = 0;
+				}
+				//
+				if (bs->teamgoal_time < FloatTime()) {
+					bs->ltgtype = 0;
+				}
+				//just roam around
+				return BotGetItemLongTermGoal(bs, tfl, goal);
 			}
-			//if touching the base flag the bot should loose the enemy flag
-			if (trap_BotTouchingGoal(bs->origin, goal)) {
-				bs->ltgtype = 0;
-			}
-			BotAlternateRoute(bs, goal);
-			return qtrue;
-		}
-		//attack the enemy base
-		if (bs->ltgtype == LTG_ATTACKENEMYBASE &&
-				bs->attackaway_time < FloatTime()) {
-			//check for bot typing status message
-			if (bs->teammessage_time && bs->teammessage_time < FloatTime()) {
-				BotAI_BotInitialChat(bs, "attackenemybase_start", NULL);
-				trap_BotEnterChat(bs->cs, 0, CHAT_TEAM);
-				BotVoiceChatOnly(bs, -1, VOICECHAT_ONOFFENSE);
-				bs->teammessage_time = 0;
-			}
-			switch(BotTeam(bs)) {
-				case TEAM_RED: memcpy(goal, &ctf_blueflag, sizeof(bot_goal_t)); break;
-				case TEAM_BLUE: memcpy(goal, &ctf_redflag, sizeof(bot_goal_t)); break;
-				default: bs->ltgtype = 0; return qfalse;
-			}
-			//quit rushing after 2 minutes
-			if (bs->teamgoal_time < FloatTime()) {
-				bs->ltgtype = 0;
-			}
-			//if touching the base flag the bot should loose the enemy flag
-			if (trap_BotTouchingGoal(bs->origin, goal)) {
-				bs->attackaway_time = FloatTime() + 2 + 5 * random();
-			}
-			return qtrue;
-		}
-		//returning flag
-		if (bs->ltgtype == LTG_RETURNFLAG) {
-			//check for bot typing status message
-			if (bs->teammessage_time && bs->teammessage_time < FloatTime()) {
-				BotAI_BotInitialChat(bs, "returnflag_start", NULL);
-				trap_BotEnterChat(bs->cs, 0, CHAT_TEAM);
-				BotVoiceChatOnly(bs, -1, VOICECHAT_ONRETURNFLAG);
-				bs->teammessage_time = 0;
-			}
-			//
-			if (bs->teamgoal_time < FloatTime()) {
-				bs->ltgtype = 0;
-			}
-			//just roam around
-			return BotGetItemLongTermGoal(bs, tfl, goal);
 		}
 	}
 	else if (gametype == GT_OBELISK) {
@@ -1961,13 +1962,11 @@ int AINode_Seek_LTG(bot_state_t *bs)
 		if (bs->ltgtype == LTG_DEFENDKEYAREA) range = 400;
 		else range = 150;
 		//
-#ifdef CTF
 		if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
 			//if carrying a flag the bot shouldn't be distracted too much
 			if (BotCTFCarryingFlag(bs))
 				range = 50;
 		}
-#endif //CTF
 		else if (G_UsesTheWhiteFlag(gametype)) {
 			if (Bot1FCTFCarryingFlag(bs))
 				range = 50;
@@ -2172,12 +2171,10 @@ int AINode_Battle_Fight(bot_state_t *bs) {
 	}
 	//if the enemy is not visible
 	if (!BotEntityVisible(bs->entitynum, bs->eye, bs->viewangles, 360, bs->enemy)) {
-#ifdef MISSIONPACK
 		if (bs->enemy == redobelisk.entitynum || bs->enemy == blueobelisk.entitynum) {
 			AIEnter_Battle_Chase(bs, "battle fight: obelisk out of sight");
 			return qfalse;
 		}
-#endif
 		if (BotWantsToChase(bs)) {
 			AIEnter_Battle_Chase(bs, "battle fight: enemy out of sight");
 			return qfalse;
@@ -2481,13 +2478,11 @@ int AINode_Battle_Retreat(bot_state_t *bs) {
 	if (bs->check_time < FloatTime()) {
 		bs->check_time = FloatTime() + 1;
 		range = 150;
-#ifdef CTF
 		if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
 			//if carrying a flag the bot shouldn't be distracted too much
 			if (BotCTFCarryingFlag(bs))
 				range = 50;
 		}
-#endif //CTF
 		else if (G_UsesTheWhiteFlag(gametype)) {
 			if (Bot1FCTFCarryingFlag(bs))
 				range = 50;

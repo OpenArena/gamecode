@@ -958,7 +958,7 @@ void BotMatch_GetFlag(bot_state_t *bs, bot_match_t *match) {
 	//set the team goal time
 	bs->teamgoal_time = FloatTime() + CTF_GETFLAG_TIME;
 	// get an alternate route in ctf
-	if (G_UsesTeamFlags(gametype)) {
+	if (G_UsesTeamFlags(gametype) || gametype == GT_POSSESSION) {
 		//get an alternative route goal towards the enemy base
 		BotGetAlternateRouteGoal(bs, BotOppositeTeam(bs));
 	}
@@ -980,14 +980,17 @@ void BotMatch_AttackEnemyBase(bot_state_t *bs, bot_match_t *match) {
 	char netname[MAX_MESSAGE_SIZE];
 	int client;
 
+	// In gametypes where the enemy flag must be taken, they are sent to retrieve it.
 	if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
 		BotMatch_GetFlag(bs, match);
-	}
-	else if (gametype == GT_1FCTF || G_UsesTeamObelisks(gametype)) {
+	// In gametypes where a neutral flag must be taken, they are sent to retrieve it.
+	} else if (G_UsesTheWhiteFlag(gametype)) {
+		BotMatch_GetFlag(bs, match);
+	// Check for gametypes where a neutral objective appears.
+	} else if ((G_UsesTeamFlags(gametype) && G_UsesTheWhiteFlag(gametype)) || G_UsesTeamObelisks(gametype)) {
 		if (!redobelisk.areanum || !blueobelisk.areanum)
 			return;
-	}
-	else {
+	} else {
 		return;
 	}
 	//if not addressed to this bot
@@ -1924,7 +1927,7 @@ int BotMatchMessage(bot_state_t *bs, char *message) {
 			BotMatch_Patrol(bs, &match);
 			break;
 		}
-		//CTF & 1FCTF
+		//CTF & 1FCTF & Possession
 		case MSG_GETFLAG:				//ctf get the enemy flag
 		{
 			BotMatch_GetFlag(bs, &match);
