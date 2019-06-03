@@ -2448,27 +2448,49 @@ BotCanAndWantsToRocketJump
 int BotCanAndWantsToRocketJump(bot_state_t *bs) {
 	float rocketjumper;
 
-	//if rocket jumping is disabled
-	if (!bot_rocketjump.integer) return qfalse;
-	//if no rocket launcher
-	if (bs->inventory[INVENTORY_ROCKETLAUNCHER] <= 0) return qfalse;
-	//if low on rockets
-	if (bs->inventory[INVENTORY_ROCKETS] < 3) return qfalse;
-	//Sago: Special rule - always happy to rocket jump in elimination, eCTF end LMS if
-	if (G_IsARoundBasedGametype(g_gametype.integer) && g_elimination_selfdamage.integer == 0) {
+	// Bots won't rocketjump if:
+	// * rocket jumping for them is disabled
+	if (!bot_rocketjump.integer) {
+		return qfalse;
+	}
+	// * they can use (and have) the Grappling Hook (it's the safer alternative)
+	if (bot_grapple.integer && bs->inventory[INVENTORY_GRAPPLINGHOOK]) {
+		return qfalse;
+	}
+	// * they don't have the Rocket Launcher
+	if (!bs->inventory[INVENTORY_ROCKETLAUNCHER]) {
+		return qfalse;
+	}
+	// * they have less than three rockets
+	if (bs->inventory[INVENTORY_ROCKETS] < 3) {
+		return qfalse;
+	}
+	// * [Sago: Special rule - always happy to rocket jump in round-based modes if selfdamage is disabled]
+	if (GAMETYPE_IS_ROUND_BASED(g_gametype.integer) && g_elimination_selfdamage.integer == 0) {
 		return qtrue;
 	}
-	//never rocket jump with the Quad
-	if (bs->inventory[INVENTORY_QUAD]) return qfalse;
-	//if low on health
-	if (bs->inventory[INVENTORY_HEALTH] < 60) return qfalse;
-	//if not full health
-	if (bs->inventory[INVENTORY_HEALTH] < 90) {
-		//if the bot has insufficient armor
-		if (bs->inventory[INVENTORY_ARMOR] < 40) return qfalse;
+	// * they have the Quad
+	if (bs->inventory[INVENTORY_QUAD]) {
+		// (They may RJ IF they also have the Battle Suit... but only if they feel like it)
+		if (bs->inventory[INVENTORY_ENVIRONMENTSUIT] && random() > 0.5) {
+			return qtrue;
+		}
+		return qfalse;
 	}
+	// * if very low on health
+	if (bs->inventory[INVENTORY_HEALTH] < 60) {
+		return qfalse;
+	}
+	// * if low on health and also have low armor
+	if ((bs->inventory[INVENTORY_HEALTH] < 90) && (bs->inventory[INVENTORY_ARMOR] < 40)) {
+			return qfalse;
+	}
+	// * if their own bot file settings allow for it
 	rocketjumper = trap_Characteristic_BFloat(bs->character, CHARACTERISTIC_WEAPONJUMPING, 0, 1);
-	if (rocketjumper < 0.5) return qfalse;
+	if (rocketjumper < 0.5) {
+		return qfalse;
+	}
+	// Else they'll be happy to jump
 	return qtrue;
 }
 
