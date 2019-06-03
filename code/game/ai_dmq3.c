@@ -83,6 +83,7 @@ vmCvar_t bot_testrchat;
 vmCvar_t bot_challenge;
 vmCvar_t bot_predictobstacles;
 vmCvar_t g_spSkill;
+vmCvar_t bot_chatInOneOnOne;
 
 extern vmCvar_t bot_developer;
 
@@ -5434,6 +5435,7 @@ void BotSetupDeathmatchAI(void) {
 	trap_Cvar_Register(&bot_challenge, "bot_challenge", "0", 0);
 	trap_Cvar_Register(&bot_predictobstacles, "bot_predictobstacles", "1", 0);
 	trap_Cvar_Register(&g_spSkill, "g_spSkill", "2", 0);
+	trap_Cvar_Register(&bot_chatInOneOnOne, "bot_chatInOneOnOne", "0", 0);
 	//
 	if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
 		if (untrap_BotGetLevelItemGoal(-1, "Red Flag", &ctf_redflag) < 0)
