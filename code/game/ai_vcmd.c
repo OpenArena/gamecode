@@ -102,7 +102,7 @@ void BotVoiceChat_GetFlag(bot_state_t *bs, int client, int mode) {
 	// remember last ordered task
 	BotRememberLastOrderedTask(bs);
 	// Developer mode outputs a message.
-	if(bot_developer.integer == 1) {
+	if(bot_developer.integer & DEVMODE_FOR_CODERS) {
 		BotPrintTeamGoal(bs);
 	}
 }
@@ -153,7 +153,7 @@ void BotVoiceChat_Offense(bot_state_t *bs, int client, int mode) {
 		BotRememberLastOrderedTask(bs);
 	}
 	// Developer mode outputs a message.
-	if(bot_developer.integer == 1) {
+	if(bot_developer.integer & DEVMODE_FOR_CODERS) {
 		BotPrintTeamGoal(bs);
 	}
 }
@@ -201,7 +201,7 @@ void BotVoiceChat_Defend(bot_state_t *bs, int client, int mode) {
 	// remember last ordered task
 	BotRememberLastOrderedTask(bs);
 	// Developer mode outputs a message.
-	if(bot_developer.integer == 1) {
+	if(bot_developer.integer & DEVMODE_FOR_CODERS) {
 		BotPrintTeamGoal(bs);
 	}
 }
@@ -234,7 +234,7 @@ void BotVoiceChat_Patrol(bot_state_t *bs, int client, int mode) {
 	//
 	BotSetTeamStatus(bs);
 	// Developer mode outputs a message.
-	if(bot_developer.integer == 1) {
+	if(bot_developer.integer & DEVMODE_FOR_CODERS) {
 		BotPrintTeamGoal(bs);
 	}
 }
@@ -291,7 +291,7 @@ void BotVoiceChat_Camp(bot_state_t *bs, int client, int mode) {
 	// remember last ordered task
 	BotRememberLastOrderedTask(bs);
 	// Developer mode outputs a message.
-	if(bot_developer.integer == 1) {
+	if(bot_developer.integer & DEVMODE_FOR_CODERS) {
 		BotPrintTeamGoal(bs);
 	}
 }
@@ -346,7 +346,7 @@ void BotVoiceChat_FollowMe(bot_state_t *bs, int client, int mode) {
 	// remember last ordered task
 	BotRememberLastOrderedTask(bs);
 	// Developer mode outputs a message.
-	if(bot_developer.integer == 1) {
+	if(bot_developer.integer & DEVMODE_FOR_CODERS) {
 		BotPrintTeamGoal(bs);
 	}
 }
@@ -363,7 +363,7 @@ void BotVoiceChat_FollowFlagCarrier(bot_state_t *bs, int client, int mode) {
 	if (carrier >= 0)
 		BotVoiceChat_FollowMe(bs, carrier, mode);
 	// Developer mode outputs a message.
-	if(bot_developer.integer == 1) {
+	if(bot_developer.integer & DEVMODE_FOR_CODERS) {
 		BotPrintTeamGoal(bs);
 	}
 }
@@ -391,7 +391,7 @@ void BotVoiceChat_ReturnFlag(bot_state_t *bs, int client, int mode) {
 	bs->rushbaseaway_time = 0;
 	BotSetTeamStatus(bs);
 	// Developer mode outputs a message.
-	if(bot_developer.integer == 1) {
+	if(bot_developer.integer & DEVMODE_FOR_CODERS) {
 		BotPrintTeamGoal(bs);
 	}
 }

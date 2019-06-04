@@ -67,8 +67,8 @@ void BotPrintTeamGoal(bot_state_t *bs) {
 	char netname[MAX_NETNAME];
 	float t;
 
-	//If not in the proper developer mode, exit.
-	if (bot_developer.integer != 1) {
+	//If not in the coder developer mode, exit.
+	if (!(bot_developer.integer & DEVMODE_FOR_CODERS)) {
 		return;
 	}
 
@@ -599,7 +599,7 @@ void BotMatch_HelpAccompany(bot_state_t *bs, bot_match_t *match) {
 		BotRememberLastOrderedTask(bs);
 	}
 	// Actual outputting of the message requires developer mode.
-	if (bot_developer.integer == 1) {
+	if (bot_developer.integer & DEVMODE_FOR_CODERS) {
 		BotPrintTeamGoal(bs);
 	}
 }
@@ -648,7 +648,7 @@ void BotMatch_DefendKeyArea(bot_state_t *bs, bot_match_t *match) {
 	// remember last ordered task
 	BotRememberLastOrderedTask(bs);
 	// Actual outputting of the message requires developer mode.
-	if (bot_developer.integer == 1) {
+	if (bot_developer.integer & DEVMODE_FOR_CODERS) {
 		BotPrintTeamGoal(bs);
 	}
 }
@@ -698,7 +698,7 @@ void BotMatch_TakeA(bot_state_t *bs, bot_match_t *match) {
 	// remember last ordered task
 	BotRememberLastOrderedTask(bs);
 	// Actual outputting of the message requires developer mode.
-	if (bot_developer.integer == 1) {
+	if (bot_developer.integer & DEVMODE_FOR_CODERS) {
 		BotPrintTeamGoal(bs);
 	}
 }
@@ -748,7 +748,7 @@ void BotMatch_TakeB(bot_state_t *bs, bot_match_t *match) {
 	// remember last ordered task
 	BotRememberLastOrderedTask(bs);
 	// Actual outputting of the message requires developer mode.
-	if (bot_developer.integer == 1) {
+	if (bot_developer.integer & DEVMODE_FOR_CODERS) {
 		BotPrintTeamGoal(bs);
 	}
 }
@@ -789,7 +789,7 @@ void BotMatch_GetItem(bot_state_t *bs, bot_match_t *match) {
 	//
 	BotSetTeamStatus(bs);
 	// Actual outputting of the message requires developer mode.
-	if (bot_developer.integer == 1) {
+	if (bot_developer.integer & DEVMODE_FOR_CODERS) {
 		BotPrintTeamGoal(bs);
 	}
 }
@@ -882,7 +882,7 @@ void BotMatch_Camp(bot_state_t *bs, bot_match_t *match) {
 	// remember last ordered task
 	BotRememberLastOrderedTask(bs);
 	// Actual outputting of the message requires developer mode.
-	if (bot_developer.integer == 1) {
+	if (bot_developer.integer & DEVMODE_FOR_CODERS) {
 		BotPrintTeamGoal(bs);
 	}
 }
@@ -922,7 +922,7 @@ void BotMatch_Patrol(bot_state_t *bs, bot_match_t *match) {
 	// remember last ordered task
 	BotRememberLastOrderedTask(bs);
 	// Actual outputting of the message requires developer mode.
-	if (bot_developer.integer == 1) {
+	if (bot_developer.integer & DEVMODE_FOR_CODERS) {
 		BotPrintTeamGoal(bs);
 	}
 }
@@ -977,7 +977,7 @@ void BotMatch_GetFlag(bot_state_t *bs, bot_match_t *match) {
 	// remember last ordered task
 	BotRememberLastOrderedTask(bs);
 	// Actual outputting of the message requires developer mode.
-	if (bot_developer.integer == 1) {
+	if (bot_developer.integer & DEVMODE_FOR_CODERS) {
 		BotPrintTeamGoal(bs);
 	}
 }
@@ -1024,7 +1024,7 @@ void BotMatch_AttackEnemyBase(bot_state_t *bs, bot_match_t *match) {
 	// remember last ordered task
 	BotRememberLastOrderedTask(bs);
 	// Actual outputting of the message requires developer mode.
-	if (bot_developer.integer == 1) {
+	if (bot_developer.integer & DEVMODE_FOR_CODERS) {
 		BotPrintTeamGoal(bs);
 	}
 }
@@ -1067,7 +1067,7 @@ void BotMatch_Harvest(bot_state_t *bs, bot_match_t *match) {
 	// remember last ordered task
 	BotRememberLastOrderedTask(bs);
 	// Actual outputting of the message requires developer mode.
-	if (bot_developer.integer == 1) {
+	if (bot_developer.integer & DEVMODE_FOR_CODERS) {
 		BotPrintTeamGoal(bs);
 	}
 }
@@ -1112,7 +1112,7 @@ void BotMatch_RushBase(bot_state_t *bs, bot_match_t *match) {
 	//
 	BotSetTeamStatus(bs);
 	// Actual outputting of the message requires developer mode.
-	if (bot_developer.integer == 1) {
+	if (bot_developer.integer & DEVMODE_FOR_CODERS) {
 		BotPrintTeamGoal(bs);
 	}
 }
@@ -1199,7 +1199,7 @@ void BotMatch_ReturnFlag(bot_state_t *bs, bot_match_t *match) {
 	//
 	BotSetTeamStatus(bs);
 	// Actual outputting of the message requires developer mode.
-	if (bot_developer.integer == 1) {
+	if (bot_developer.integer & DEVMODE_FOR_CODERS) {
 		BotPrintTeamGoal(bs);
 	}
 }
@@ -1822,7 +1822,7 @@ void BotMatch_Kill(bot_state_t *bs, bot_match_t *match) {
 	//
 	BotSetTeamStatus(bs);
 	// Actual outputting of the message requires developer mode.
-	if (bot_developer.integer == 1) {
+	if (bot_developer.integer & DEVMODE_FOR_CODERS) {
 		BotPrintTeamGoal(bs);
 	}
 }

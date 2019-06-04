@@ -64,6 +64,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define QUACK_SCALE		0.85
 #define	QUACK_VIEWHEIGHT	22
 
+/* Neon_Knight: Developer modes */
+#define DEVMODE_FOR_CODERS	1
+#define DEVMODE_FOR_MAPPERS	2
+
 //
 // config strings are a general means of communicating variable length strings
 // from the server to all connected clients.

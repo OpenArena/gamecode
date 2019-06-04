@@ -509,7 +509,7 @@ CG_StartOrbit_f
 
 static void CG_StartOrbit_f(void) {
 	// If not in code development mode, exit.
-	if (!cg_developer.integer == 1) {
+	if (!cg_developer.integer & DEVMODE_FOR_CODERS) {
 		return;
 	}
 	if (cg_cameraOrbit.value != 0) {

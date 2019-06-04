@@ -1087,13 +1087,15 @@ void ClientUserinfoChanged( int clientNum ) {
 	client->pers.cmdTimeNudge = atoi( s );
 
 	// see if the player wants to debug the backward reconciliation
-	/*s = Info_ValueForKey( userinfo, "cg_debugDelag" );
-	if ( !atoi( s ) ) {
-		client->pers.debugDelag = qfalse;
+	if(g_developer.integer & DEVMODE_FOR_CODERS ) {
+		s = Info_ValueForKey( userinfo, "cg_debugDelag" );
+		if ( !atoi( s ) ) {
+			client->pers.debugDelag = qfalse;
+		}
+		else {
+			client->pers.debugDelag = qtrue;
+		}
 	}
-	else {
-		client->pers.debugDelag = qtrue;
-	}*/
 
 	// see if the player is simulating incoming latency
 	//s = Info_ValueForKey( userinfo, "cg_latentSnaps" );

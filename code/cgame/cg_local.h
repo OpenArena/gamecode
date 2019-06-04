@@ -1416,7 +1416,7 @@ extern vmCvar_t cg_enableQ;		// leilei
 extern vmCvar_t cg_enableFS;		// leilei
 //unlagged - client options
 extern vmCvar_t cg_delag;
-//extern vmCvar_t cg_debugDelag;
+extern vmCvar_t cg_debugDelag;
 //extern vmCvar_t cg_drawBBox;
 extern vmCvar_t cg_cmdTimeNudge;
 extern vmCvar_t sv_fps;

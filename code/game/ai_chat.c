@@ -382,7 +382,8 @@ int BotChat_EnterGame(bot_state_t *bs) {
 	char name[32];
 	float rnd;
 	//don't chat in developer mode
-	if (bot_developer.integer >= 1) {
+	if ((bot_developer.integer & DEVMODE_FOR_CODERS) ||
+			(bot_developer.integer & DEVMODE_FOR_MAPPERS)) {
 		return qfalse;
 	}
 	if (bot_nochat.integer) return qfalse;
@@ -418,7 +419,8 @@ int BotChat_ExitGame(bot_state_t *bs) {
 	char name[32];
 	float rnd;
 	//don't chat in developer mode
-	if (bot_developer.integer >= 1) {
+	if ((bot_developer.integer & DEVMODE_FOR_CODERS) ||
+			(bot_developer.integer & DEVMODE_FOR_MAPPERS)) {
 		return qfalse;
 	}
 	if (bot_nochat.integer) return qfalse;
@@ -454,7 +456,8 @@ int BotChat_StartLevel(bot_state_t *bs) {
 	char name[32];
 	float rnd;
 	//don't chat in developer mode
-	if (bot_developer.integer >= 1) {
+	if ((bot_developer.integer & DEVMODE_FOR_CODERS) ||
+			(bot_developer.integer & DEVMODE_FOR_MAPPERS)) {
 		return qfalse;
 	}
 	if (bot_nochat.integer) return qfalse;
@@ -489,7 +492,8 @@ int BotChat_EndLevel(bot_state_t *bs) {
 	char name[32];
 	float rnd;
 	//don't chat in developer mode
-	if (bot_developer.integer >= 1) {
+	if ((bot_developer.integer & DEVMODE_FOR_CODERS) ||
+			(bot_developer.integer & DEVMODE_FOR_MAPPERS)) {
 		return qfalse;
 	}
 	if (bot_nochat.integer) return qfalse;
@@ -552,7 +556,8 @@ int BotChat_Death(bot_state_t *bs) {
 	char name[32];
 	float rnd;
 	//don't chat in developer mode
-	if (bot_developer.integer >= 1) {
+	if ((bot_developer.integer & DEVMODE_FOR_CODERS) ||
+			(bot_developer.integer & DEVMODE_FOR_MAPPERS)) {
 		return qfalse;
 	}
 	if (bot_nochat.integer) return qfalse;
@@ -654,7 +659,8 @@ int BotChat_Kill(bot_state_t *bs) {
 	char name[32];
 	float rnd;
 	//don't chat in developer mode
-	if (bot_developer.integer >= 1) {
+	if ((bot_developer.integer & DEVMODE_FOR_CODERS) ||
+			(bot_developer.integer & DEVMODE_FOR_MAPPERS)) {
 		return qfalse;
 	}
 	if (bot_nochat.integer) return qfalse;
@@ -719,7 +725,8 @@ int BotChat_EnemySuicide(bot_state_t *bs) {
 	char name[32];
 	float rnd;
 	//don't chat in developer mode
-	if (bot_developer.integer >= 1) {
+	if ((bot_developer.integer & DEVMODE_FOR_CODERS) ||
+			(bot_developer.integer & DEVMODE_FOR_MAPPERS)) {
 		return qfalse;
 	}
 	if (bot_nochat.integer) return qfalse;
@@ -757,7 +764,8 @@ int BotChat_HitTalking(bot_state_t *bs) {
 	int lasthurt_client;
 	float rnd;
 	//don't chat in developer mode
-	if (bot_developer.integer >= 1) {
+	if ((bot_developer.integer & DEVMODE_FOR_CODERS) ||
+			(bot_developer.integer & DEVMODE_FOR_MAPPERS)) {
 		return qfalse;
 	}
 	if (bot_nochat.integer) return qfalse;
@@ -800,7 +808,8 @@ int BotChat_HitNoDeath(bot_state_t *bs) {
 	int lasthurt_client;
 	aas_entityinfo_t entinfo;
 	//don't chat in developer mode
-	if (bot_developer.integer >= 1) {
+	if ((bot_developer.integer & DEVMODE_FOR_CODERS) ||
+			(bot_developer.integer & DEVMODE_FOR_MAPPERS)) {
 		return qfalse;
 	}
 	lasthurt_client = g_entities[bs->client].client->lasthurt_client;
@@ -847,7 +856,8 @@ int BotChat_HitNoKill(bot_state_t *bs) {
 	float rnd;
 	aas_entityinfo_t entinfo;
 	//don't chat in developer mode
-	if (bot_developer.integer >= 1) {
+	if ((bot_developer.integer & DEVMODE_FOR_CODERS) ||
+			(bot_developer.integer & DEVMODE_FOR_MAPPERS)) {
 		return qfalse;
 	}
 	if (bot_nochat.integer) return qfalse;
@@ -887,7 +897,8 @@ int BotChat_Random(bot_state_t *bs) {
 	float rnd;
 	char name[32];
 	//don't chat in developer mode
-	if (bot_developer.integer >= 1) {
+	if ((bot_developer.integer & DEVMODE_FOR_CODERS) ||
+			(bot_developer.integer & DEVMODE_FOR_MAPPERS)) {
 		return qfalse;
 	}
 	if (bot_nochat.integer) return qfalse;

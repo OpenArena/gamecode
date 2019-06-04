@@ -1322,7 +1322,7 @@ static void CG_SetLerpFrameAnimation(clientInfo_t *ci, lerpFrame_t *lf, int newA
 	lf->animation = anim;
 	lf->animationTime = lf->frameTime + anim->initialLerp;
 
-	if (cg_debugAnim.integer) {
+	if (cg_debugAnim.integer && (cg_developer.integer & DEVMODE_FOR_CODERS)) {
 		CG_Printf("Anim: %i\n", newAnimation);
 	}
 }
@@ -1394,7 +1394,7 @@ static void CG_RunLerpFrame(clientInfo_t *ci, lerpFrame_t *lf, int newAnimation,
 		}
 		if (cg.time > lf->frameTime) {
 			lf->frameTime = cg.time;
-			if (cg_debugAnim.integer) {
+			if (cg_debugAnim.integer & DEVMODE_FOR_CODERS) {
 				CG_Printf("Clamp lf->frameTime\n");
 			}
 		}
@@ -3099,7 +3099,7 @@ void CG_ResetPlayerEntity(centity_t *cent) {
 
 
 
-	if (cg_debugPosition.integer) {
+	if (cg_debugPosition.integer & DEVMODE_FOR_CODERS) {
 		CG_Printf("%i ResetPlayerEntity yaw=%f\n", cent->currentState.number, cent->pe.torso.yawAngle);
 	}
 }
