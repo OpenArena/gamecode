@@ -71,7 +71,7 @@ BotVoiceChat_GetFlag
 */
 void BotVoiceChat_GetFlag(bot_state_t *bs, int client, int mode) {
 	//
-	if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
+	if (GAMETYPE_USES_RED_AND_BLUE_FLAG(gametype) && !GAMETYPE_USES_WHITE_FLAG(gametype)) {
 		if (!ctf_redflag.areanum || !ctf_blueflag.areanum)
 			return;
 	}
@@ -93,7 +93,7 @@ void BotVoiceChat_GetFlag(bot_state_t *bs, int client, int mode) {
 	//set the team goal time
 	bs->teamgoal_time = FloatTime() + CTF_GETFLAG_TIME;
 	// get an alternate route in ctf
-	if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
+	if (GAMETYPE_USES_RED_AND_BLUE_FLAG(gametype) && !GAMETYPE_USES_WHITE_FLAG(gametype)) {
 		//get an alternative route goal towards the enemy base
 		BotGetAlternateRouteGoal(bs, BotOppositeTeam(bs));
 	}
@@ -112,7 +112,7 @@ BotVoiceChat_Offense
 ==================
 */
 void BotVoiceChat_Offense(bot_state_t *bs, int client, int mode) {
-	if (G_UsesTeamFlags(gametype)) {
+	if (GAMETYPE_USES_RED_AND_BLUE_FLAG(gametype)) {
 		BotVoiceChat_GetFlag(bs, client, mode);
 		return;
 	}
@@ -162,7 +162,7 @@ BotVoiceChat_Defend
 ==================
 */
 void BotVoiceChat_Defend(bot_state_t *bs, int client, int mode) {
-	if (G_UsesTeamObelisks(gametype)) {
+	if (GAMETYPE_USES_OBELISKS(gametype)) {
 		//
 		switch(BotTeam(bs)) {
 			case TEAM_RED: memcpy(&bs->teamgoal, &redobelisk, sizeof(bot_goal_t)); break;
@@ -171,7 +171,7 @@ void BotVoiceChat_Defend(bot_state_t *bs, int client, int mode) {
 		}
 	}
 	else
-		if (G_UsesTeamFlags(gametype)) {
+		if (GAMETYPE_USES_RED_AND_BLUE_FLAG(gametype)) {
                     //
                     switch(BotTeam(bs)) {
 			case TEAM_RED: memcpy(&bs->teamgoal, &ctf_redflag, sizeof(bot_goal_t)); break;
@@ -368,7 +368,7 @@ BotVoiceChat_ReturnFlag
 */
 void BotVoiceChat_ReturnFlag(bot_state_t *bs, int client, int mode) {
 	//if not in CTF mode
-	if (!G_UsesTeamFlags(gametype)) {
+	if (!GAMETYPE_USES_RED_AND_BLUE_FLAG(gametype)) {
 		return;
 	}
 	//

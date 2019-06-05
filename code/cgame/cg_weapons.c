@@ -3411,7 +3411,7 @@ void CG_FireWeapon( centity_t *cent )
 	int				c;
 	weaponInfo_t	*weap;
 
-	if(CG_IsARoundBasedGametype(cgs.gametype) && CG_IsATeamGametype(cgs.gametype) && cgs.roundStartTime>=cg.time)
+	if(GAMETYPE_IS_ROUND_BASED(cgs.gametype) && GAMETYPE_IS_A_TEAM_GAME(cgs.gametype) && cgs.roundStartTime>=cg.time)
 		return; //if we havn't started in ELIMINATION then do not fire
 
 	ent = &cent->currentState;

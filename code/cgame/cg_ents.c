@@ -864,7 +864,7 @@ static void CG_TeamBase( centity_t *cent ) {
 	int t, h;
 	float c;
 
-	if ( CG_UsesTeamFlags(cgs.gametype) ) {
+	if ( GAMETYPE_USES_RED_AND_BLUE_FLAG(cgs.gametype) ) {
 		// show the flag base
 		memset(&model, 0, sizeof(model));
 		model.reType = RT_MODEL;

@@ -393,7 +393,7 @@ static void CG_DenyOrder_f(void) {
 }
 
 static void CG_TaskOffense_f(void) {
-	if (CG_UsesTeamFlags(cgs.gametype)) {
+	if (GAMETYPE_USES_RED_AND_BLUE_FLAG(cgs.gametype)) {
 		trap_SendConsoleCommand(va("cmd vsay_team %s\n", VOICECHAT_ONGETFLAG));
 	} else {
 		trap_SendConsoleCommand(va("cmd vsay_team %s\n", VOICECHAT_ONOFFENSE));

@@ -263,10 +263,10 @@ static void CG_TouchItem( centity_t *cent ) {
 	//For instantgib
 	qboolean	canBePicked;
 
-	if(CG_IsARoundBasedGametype(cgs.gametype) && !CG_UsesTeamFlags(cgs.gametype))
+	if(GAMETYPE_IS_ROUND_BASED(cgs.gametype) && !GAMETYPE_USES_RED_AND_BLUE_FLAG(cgs.gametype))
 		return; //No weapon pickup in elimination
 
-	if(CG_IsARoundBasedGametype(cgs.gametype) && cgs.roundStartTime > cgs.roundtime)
+	if(GAMETYPE_IS_ROUND_BASED(cgs.gametype) && cgs.roundStartTime > cgs.roundtime)
 		return; //We cannot pickup before the round has started
 
 	//normally we can
@@ -307,7 +307,7 @@ static void CG_TouchItem( centity_t *cent ) {
 		}
 	}
 	
-	if (cgs.gametype == GT_CTF || cgs.gametype == GT_CTF_ELIMINATION ) {
+	if((GAMETYPE_USES_RED_AND_BLUE_FLAG(cgs.gametype) && !GAMETYPE_USES_WHITE_FLAG(cgs.gametype)) || cgs.gametype == GT_HARVESTER ) {
 		if (cg.predictedPlayerState.persistant[PERS_TEAM] == TEAM_RED &&
 			item->giType == IT_TEAM && item->giTag == PW_REDFLAG)
 			return;

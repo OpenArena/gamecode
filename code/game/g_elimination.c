@@ -188,7 +188,7 @@ void CheckElimination(void) {
 	int countHumans;
 
 	if ( level.numPlayingClients < 1 ) {
-		if( G_IsARoundBasedGametype(g_gametype.integer) && G_IsATeamGametype(g_gametype.integer) && ( level.time+1000*g_elimination_warmup.integer-500>level.roundStartTime )) {
+		if( GAMETYPE_IS_ROUND_BASED(g_gametype.integer) && GAMETYPE_IS_A_TEAM_GAME(g_gametype.integer) && ( level.time+1000*g_elimination_warmup.integer-500>level.roundStartTime )) {
 			RestartEliminationRound(); //For spectators
 		}
 		return;
@@ -203,7 +203,7 @@ void CheckElimination(void) {
 		return;
 	}	
 	
-	if(!(G_IsARoundBasedGametype(g_gametype.integer) && G_IsATeamGametype(g_gametype.integer))) {
+	if(!(GAMETYPE_IS_ROUND_BASED(g_gametype.integer) && GAMETYPE_IS_A_TEAM_GAME(g_gametype.integer))) {
 		return;
 	}
 

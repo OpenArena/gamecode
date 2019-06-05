@@ -88,7 +88,7 @@ int Pickup_Powerup( gentity_t *ent, gentity_t *other )
 
 		// if same team in team game, no sound
 		// cannot use OnSameTeam as it expects to g_entities, not clients
-		if (G_IsATeamGametype(g_gametype.integer) && other->client->sess.sessionTeam == client->sess.sessionTeam  ) {
+		if (GAMETYPE_IS_A_TEAM_GAME(g_gametype.integer) && other->client->sess.sessionTeam == client->sess.sessionTeam  ) {
 			continue;
 		}
 
@@ -631,7 +631,7 @@ gentity_t *LaunchItem( gitem_t *item, vec3_t origin, vec3_t velocity )
 	VectorCopy( velocity, dropped->s.pos.trDelta );
 
 	dropped->s.eFlags |= EF_BOUNCE_HALF;
-	if ((G_UsesTeamFlags(g_gametype.integer) || G_UsesTheWhiteFlag(g_gametype.integer) || g_gametype.integer == GT_DOUBLE_D)
+	if ((GAMETYPE_USES_RED_AND_BLUE_FLAG(g_gametype.integer) || GAMETYPE_USES_WHITE_FLAG(g_gametype.integer) || g_gametype.integer == GT_DOUBLE_D)
 	        && item->giType == IT_TEAM) { // Special case for CTF flags
 		dropped->think = Team_DroppedFlagThink;
 		dropped->nextthink = level.time + 30000;
@@ -741,7 +741,7 @@ void FinishSpawningItem( gentity_t *ent )
 
 
 	// powerups don't spawn in for a while (but not in elimination)
-	if(!G_IsARoundBasedGametype(g_gametype.integer) && !g_instantgib.integer && !g_elimination_allgametypes.integer && !g_rockets.integer )
+	if(!GAMETYPE_IS_ROUND_BASED(g_gametype.integer) && !g_instantgib.integer && !g_elimination_allgametypes.integer && !g_rockets.integer )
 		if ( ent->item->giType == IT_POWERUP ) {
 			float	respawn;
 
@@ -771,7 +771,7 @@ void G_CheckTeamItems( void )
 	// Set up team stuff
 	Team_InitGame();
 
-	if( (G_UsesTeamFlags(g_gametype.integer) && !G_UsesTheWhiteFlag(g_gametype.integer)) || g_gametype.integer == GT_DOUBLE_D) {
+	if( (GAMETYPE_USES_RED_AND_BLUE_FLAG(g_gametype.integer) && !GAMETYPE_USES_WHITE_FLAG(g_gametype.integer)) || g_gametype.integer == GT_DOUBLE_D) {
 		gitem_t	*item;
 
 		// check for the two flags
@@ -865,7 +865,7 @@ void ClearRegisteredItems( void )
 		// players always start with the base weapon
 		RegisterItem( BG_FindItemForWeapon( WP_MACHINEGUN ) );
 		RegisterItem( BG_FindItemForWeapon( WP_GAUNTLET ) );
-		if(G_IsARoundBasedGametype(g_gametype.integer) || g_elimination_allgametypes.integer) {
+		if(GAMETYPE_IS_ROUND_BASED(g_gametype.integer) || g_elimination_allgametypes.integer) {
 			RegisterItem( BG_FindItemForWeapon( WP_SHOTGUN ) );
 			RegisterItem( BG_FindItemForWeapon( WP_GRENADE_LAUNCHER ) );
 			RegisterItem( BG_FindItemForWeapon( WP_ROCKET_LAUNCHER ) );
@@ -995,7 +995,7 @@ void G_SpawnItem (gentity_t *ent, gitem_t *item)
 
 	ent->physicsBounce = 0.50;		// items are bouncy
 
-	if ((G_IsARoundBasedGametype(g_gametype.integer) && !G_UsesTeamFlags(g_gametype.integer)) ||
+	if ((GAMETYPE_IS_ROUND_BASED(g_gametype.integer) && !GAMETYPE_USES_RED_AND_BLUE_FLAG(g_gametype.integer)) ||
 	        ( item->giType != IT_TEAM && (g_instantgib.integer || g_rockets.integer || g_elimination_allgametypes.integer || g_gametype.integer==GT_CTF_ELIMINATION) ) ) {
 		ent->s.eFlags |= EF_NODRAW; //Invisible in elimination
 		ent->r.svFlags |= SVF_NOCLIENT;  //Don't broadcast
@@ -1006,7 +1006,7 @@ void G_SpawnItem (gentity_t *ent, gitem_t *item)
 		ent->s.eFlags |= EF_NODRAW; //Don't draw the flag models/persistant powerups
 	}
 
-	if( !G_UsesTheWhiteFlag(g_gametype.integer) && strequals(ent->classname, "team_CTF_neutralflag")) {
+	if( !GAMETYPE_USES_WHITE_FLAG(g_gametype.integer) && strequals(ent->classname, "team_CTF_neutralflag")) {
 		ent->s.eFlags |= EF_NODRAW; // Don't draw the flag in CTF_elimination
 	}
 

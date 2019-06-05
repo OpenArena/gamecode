@@ -288,7 +288,7 @@ void G_RunStreakLogic( gentity_t *attacker, gentity_t *victim )
 		&& ( attacker != victim ) ) {
 
 		//Check the gametype--If FFA enabled, everybody's on the same team. 
-		if(G_IsATeamGametype(g_gametype.integer)) {
+		if(GAMETYPE_IS_A_TEAM_GAME(g_gametype.integer)) {
 			//If they are on the same team we don't want to count it towards a killing spree. 
 			if( OnSameTeam( victim, attacker ) ) {
 				return;

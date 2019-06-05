@@ -452,7 +452,7 @@ void G_SpawnGEntityFromSpawnVars( void ) {
 		}
 	}
 	// check for "notteam" flag
-	if (G_IsATeamGametype(g_gametype.integer)) {
+	if (GAMETYPE_IS_A_TEAM_GAME(g_gametype.integer)) {
 		G_SpawnInt( "notteam", "0", &i );
 		if ( i ) {
 			G_FreeEntity( ent );

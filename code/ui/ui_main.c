@@ -1596,7 +1596,7 @@ static void UI_DrawTeamMember(rectDef_t *rect, float scale, vec4_t color, qboole
 	else {
 		value -= 2;
 
-		if (UI_IsATeamGametype(ui_actualNetGameType.integer)) {
+		if (GAMETYPE_IS_A_TEAM_GAME(ui_actualNetGameType.integer)) {
 			if (value >= uiInfo.characterCount) {
 				value = 0;
 			}
@@ -2412,7 +2412,7 @@ static void UI_DrawBotName(rectDef_t *rect, float scale, vec4_t color, int textS
 	int value = uiInfo.botIndex;
 	int game = trap_Cvar_VariableValue("g_gametype");
 	const char *text;
-	if (UI_IsATeamGametype(game)) {
+	if (GAMETYPE_IS_A_TEAM_GAME(game)) {
 		text = uiInfo.characterList[value].name;
 	}
 	else {
@@ -2861,14 +2861,14 @@ static qboolean UI_OwnerDrawVisible(int flags)
 	while (flags) {
 
 		if (flags & UI_SHOW_FFA) {
-			if (UI_IsATeamGametype(trap_Cvar_VariableValue("g_gametype")) || trap_Cvar_VariableValue("g_gametype") == GT_TOURNAMENT) {
+			if (GAMETYPE_IS_A_TEAM_GAME(trap_Cvar_VariableValue("g_gametype")) || trap_Cvar_VariableValue("g_gametype") == GT_TOURNAMENT) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_FFA;
 		}
 
 		if (flags & UI_SHOW_NOTFFA) {
-			if (!UI_IsATeamGametype(trap_Cvar_VariableValue("g_gametype")) && trap_Cvar_VariableValue("g_gametype") != GT_TOURNAMENT) {
+			if (!GAMETYPE_IS_A_TEAM_GAME(trap_Cvar_VariableValue("g_gametype")) && trap_Cvar_VariableValue("g_gametype") != GT_TOURNAMENT) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_NOTFFA;
@@ -2913,25 +2913,25 @@ static qboolean UI_OwnerDrawVisible(int flags)
 			flags &= ~UI_SHOW_NOTFAVORITESERVERS;
 		}
 		if (flags & UI_SHOW_ANYTEAMGAME) {
-			if (!UI_IsATeamGametype(uiInfo.gameTypes[ui_gameType.integer].gtEnum)) {
+			if (!GAMETYPE_IS_A_TEAM_GAME(uiInfo.gameTypes[ui_gameType.integer].gtEnum)) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_ANYTEAMGAME;
 		}
 		if (flags & UI_SHOW_ANYNONTEAMGAME) {
-			if (UI_IsATeamGametype(uiInfo.gameTypes[ui_gameType.integer].gtEnum)) {
+			if (GAMETYPE_IS_A_TEAM_GAME(uiInfo.gameTypes[ui_gameType.integer].gtEnum)) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_ANYNONTEAMGAME;
 		}
 		if (flags & UI_SHOW_NETANYTEAMGAME) {
-			if (!UI_IsATeamGametype(uiInfo.gameTypes[ui_netGameType.integer].gtEnum)) {
+			if (!GAMETYPE_IS_A_TEAM_GAME(uiInfo.gameTypes[ui_netGameType.integer].gtEnum)) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_NETANYTEAMGAME;
 		}
 		if (flags & UI_SHOW_NETANYNONTEAMGAME) {
-			if (UI_IsATeamGametype(uiInfo.gameTypes[ui_netGameType.integer].gtEnum)) {
+			if (GAMETYPE_IS_A_TEAM_GAME(uiInfo.gameTypes[ui_netGameType.integer].gtEnum)) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_NETANYNONTEAMGAME;
@@ -2964,73 +2964,73 @@ static qboolean UI_OwnerDrawVisible(int flags)
 			flags &= ~UI_SHOW_DEMOAVAILABLE;
 		}
 		if (flags & UI_SHOW_ANYTEAMOBJECTIVEGAME) {
-			if (!UI_IsATeamGametype(uiInfo.gameTypes[ui_gameType.integer].gtEnum)) {
+			if (!GAMETYPE_IS_A_TEAM_GAME(uiInfo.gameTypes[ui_gameType.integer].gtEnum)) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_ANYTEAMOBJECTIVEGAME;
 		}
 		if (flags & UI_SHOW_ANYNONTEAMOBJECTIVEGAME) {
-			if (UI_IsATeamGametype(uiInfo.gameTypes[ui_gameType.integer].gtEnum)) {
+			if (GAMETYPE_IS_A_TEAM_GAME(uiInfo.gameTypes[ui_gameType.integer].gtEnum)) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_ANYNONTEAMOBJECTIVEGAME;
 		}
 		if (flags & UI_SHOW_NETANYTEAMOBJECTIVEGAME) {
-			if (!UI_IsATeamGametype(uiInfo.gameTypes[ui_netGameType.integer].gtEnum)) {
+			if (!GAMETYPE_IS_A_TEAM_GAME(uiInfo.gameTypes[ui_netGameType.integer].gtEnum)) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_NETANYTEAMOBJECTIVEGAME;
 		}
 		if (flags & UI_SHOW_NETANYNONTEAMOBJECTIVEGAME) {
-			if (UI_IsATeamGametype(uiInfo.gameTypes[ui_netGameType.integer].gtEnum)) {
+			if (GAMETYPE_IS_A_TEAM_GAME(uiInfo.gameTypes[ui_netGameType.integer].gtEnum)) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_NETANYNONTEAMOBJECTIVEGAME;
 		}
 		if (flags & UI_SHOW_ANYROUNDGAME) {
-			if (!UI_IsARoundBasedGametype(uiInfo.gameTypes[ui_gameType.integer].gtEnum)) {
+			if (!GAMETYPE_IS_ROUND_BASED(uiInfo.gameTypes[ui_gameType.integer].gtEnum)) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_ANYROUNDGAME;
 		}
 		if (flags & UI_SHOW_ANYNONROUNDGAME) {
-			if (UI_IsARoundBasedGametype(uiInfo.gameTypes[ui_gameType.integer].gtEnum)) {
+			if (GAMETYPE_IS_ROUND_BASED(uiInfo.gameTypes[ui_gameType.integer].gtEnum)) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_ANYNONROUNDGAME;
 		}
 		if (flags & UI_SHOW_NETANYROUNDGAME) {
-			if (!UI_IsARoundBasedGametype(uiInfo.gameTypes[ui_netGameType.integer].gtEnum)) {
+			if (!GAMETYPE_IS_ROUND_BASED(uiInfo.gameTypes[ui_netGameType.integer].gtEnum)) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_NETANYROUNDGAME;
 		}
 		if (flags & UI_SHOW_NETANYNONROUNDGAME) {
-			if (UI_IsARoundBasedGametype(uiInfo.gameTypes[ui_netGameType.integer].gtEnum)) {
+			if (GAMETYPE_IS_ROUND_BASED(uiInfo.gameTypes[ui_netGameType.integer].gtEnum)) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_NETANYNONROUNDGAME;
 		}
 		if (flags & UI_SHOW_ANYTEAMROUNDGAME) {
-			if (!(UI_IsARoundBasedGametype(uiInfo.gameTypes[ui_gameType.integer].gtEnum) && UI_IsATeamGametype(uiInfo.gameTypes[ui_gameType.integer].gtEnum))) {
+			if (!(GAMETYPE_IS_ROUND_BASED(uiInfo.gameTypes[ui_gameType.integer].gtEnum) && GAMETYPE_IS_A_TEAM_GAME(uiInfo.gameTypes[ui_gameType.integer].gtEnum))) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_ANYTEAMROUNDGAME;
 		}
 		if (flags & UI_SHOW_ANYNONTEAMROUNDGAME) {
-			if (UI_IsARoundBasedGametype(uiInfo.gameTypes[ui_gameType.integer].gtEnum) && UI_IsATeamGametype(uiInfo.gameTypes[ui_gameType.integer].gtEnum)) {
+			if (GAMETYPE_IS_ROUND_BASED(uiInfo.gameTypes[ui_gameType.integer].gtEnum) && GAMETYPE_IS_A_TEAM_GAME(uiInfo.gameTypes[ui_gameType.integer].gtEnum)) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_ANYNONTEAMROUNDGAME;
 		}
 		if (flags & UI_SHOW_NETANYTEAMROUNDGAME) {
-			if (!(UI_IsARoundBasedGametype(uiInfo.gameTypes[ui_netGameType.integer].gtEnum) && UI_IsATeamGametype(uiInfo.gameTypes[ui_gameType.integer].gtEnum))) {
+			if (!(GAMETYPE_IS_ROUND_BASED(uiInfo.gameTypes[ui_netGameType.integer].gtEnum) && GAMETYPE_IS_A_TEAM_GAME(uiInfo.gameTypes[ui_gameType.integer].gtEnum))) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_NETANYTEAMROUNDGAME;
 		}
 		if (flags & UI_SHOW_NETANYNONTEAMROUNDGAME) {
-			if (UI_IsARoundBasedGametype(uiInfo.gameTypes[ui_netGameType.integer].gtEnum) && UI_IsATeamGametype(uiInfo.gameTypes[ui_gameType.integer].gtEnum)) {
+			if (GAMETYPE_IS_ROUND_BASED(uiInfo.gameTypes[ui_netGameType.integer].gtEnum) && GAMETYPE_IS_A_TEAM_GAME(uiInfo.gameTypes[ui_gameType.integer].gtEnum)) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_NETANYNONTEAMROUNDGAME;
@@ -3140,7 +3140,7 @@ static qboolean UI_GameType_HandleKey(int flags, float *special, int key, qboole
 		}
 		// end changed RD
 
-		if (!UI_IsATeamGametype(uiInfo.gameTypes[ui_gameType.integer].gtEnum)) {
+		if (!GAMETYPE_IS_A_TEAM_GAME(uiInfo.gameTypes[ui_gameType.integer].gtEnum)) {
 			trap_Cvar_SetValue( "ui_Q3Model", 1 );
 		}
 		else {
@@ -3254,7 +3254,7 @@ static qboolean UI_TeamMember_HandleKey(int flags, float *special, int key, qboo
 
 		value += select;
 
-		if (UI_IsATeamGametype(ui_actualNetGameType.integer)) {
+		if (GAMETYPE_IS_A_TEAM_GAME(ui_actualNetGameType.integer)) {
 			if (value >= uiInfo.characterCount + 2) {
 				value = 0;
 			}
@@ -3340,7 +3340,7 @@ static qboolean UI_BotName_HandleKey(int flags, float *special, int key)
 
 		value += select;
 
-		if (UI_IsATeamGametype(game)) {
+		if (GAMETYPE_IS_A_TEAM_GAME(game)) {
 			if (value >= uiInfo.characterCount) {
 				value = 0;
 			}
@@ -3838,7 +3838,7 @@ static void UI_StartSkirmish(qboolean next, char *name)
 		Com_sprintf( buff, sizeof(buff), "addbot %s %f "", %i \n", uiInfo.mapList[ui_currentMap.integer].opponentName, skill, delay);
 		trap_Cmd_ExecuteText( EXEC_APPEND, buff );
 	}
-	else if (!UI_IsATeamGametype(g) && g != GT_TOURNAMENT) { // leilei - parse the opponentname as a list of bots instead like q3_ui's arena parsing
+	else if (!GAMETYPE_IS_A_TEAM_GAME(g) && g != GT_TOURNAMENT) { // leilei - parse the opponentname as a list of bots instead like q3_ui's arena parsing
 		char		*p;
 		char		*bot;
 		const char	*botInfo;
@@ -3913,7 +3913,7 @@ static void UI_StartSkirmish(qboolean next, char *name)
 		}
 		/* /Neon_Knight */
 	}
-	if (UI_IsATeamGametype(g)) {
+	if (GAMETYPE_IS_A_TEAM_GAME(g)) {
 		trap_Cvar_Set( "g_localTeamPref", "Red" );
 	}
 }
@@ -4123,7 +4123,7 @@ static void UI_RunMenuScript(char **args)
 			for (i = 0; i < PLAYERS_PER_TEAM; i++) {
 				int bot = trap_Cvar_VariableValue( va("ui_blueteam%i", i+1));
 				if (bot > 1) {
-					if (UI_IsATeamGametype(ui_actualNetGameType.integer)) {
+					if (GAMETYPE_IS_A_TEAM_GAME(ui_actualNetGameType.integer)) {
 						Com_sprintf( buff, sizeof(buff), "addbot %s %f %s\n", uiInfo.characterList[bot-2].name, skill, "Blue");
 					}
 					else {
@@ -4133,7 +4133,7 @@ static void UI_RunMenuScript(char **args)
 				}
 				bot = trap_Cvar_VariableValue( va("ui_redteam%i", i+1));
 				if (bot > 1) {
-					if (UI_IsATeamGametype(ui_actualNetGameType.integer)) {
+					if (GAMETYPE_IS_A_TEAM_GAME(ui_actualNetGameType.integer)) {
 						Com_sprintf( buff, sizeof(buff), "addbot %s %f %s\n", uiInfo.characterList[bot-2].name, skill, "Red");
 					}
 					else {
@@ -4468,7 +4468,7 @@ static void UI_RunMenuScript(char **args)
 		else if (Q_strequal(name, "addBot") ) {
 			/* Neon_Knight: Missionpack checks, if != 0, enables this. */
 			if (ui_missionpackChecks.integer) {
-				if (UI_IsATeamGametype(trap_Cvar_VariableValue("g_gametype"))) {
+				if (GAMETYPE_IS_A_TEAM_GAME(trap_Cvar_VariableValue("g_gametype"))) {
 					trap_Cmd_ExecuteText( EXEC_APPEND, va("addbot %s %i %s\n", UI_GetBotNameByNumber(uiInfo.botIndex), uiInfo.skillIndex+1, (uiInfo.redBlue == 0) ? "Red" : "Blue") );
 					}
 			} else {
@@ -7518,69 +7518,3 @@ static void UI_StartServerRefresh(qboolean full)
 		}
 	}
 }
-
-/* Neon_Knight: Useful check in order to have code consistency. */
-/*
-===================
-UI_IsATeamGametype
-
-Checks if the gametype is a team-based game.
-(UI_IsATeamGame(check,qtrue))
-===================
- */
-qboolean UI_IsATeamGametype(int check) {
-	return GAMETYPE_IS_A_TEAM_GAME(check);
-}
-/*
-===================
-UI_UsesKeyObjectives
-
-Checks if the gametype makes use of gametype-specific objectives.
-(Flags, obelisks, control points...)
-(UI_IsATeamGame(check,qfalse))
-===================
- */
-qboolean UI_UsesKeyObjectives(int check) {
-	return GAMETYPE_USES_KEY_OBJECTIVES(check);
-}
-/*
-===================
-UI_UsesTeamFlags
-
-Checks if the gametype makes use of the red and blue flags.
-===================
- */
-qboolean UI_UsesTeamFlags(int check) {
-	return GAMETYPE_USES_RED_AND_BLUE_FLAG(check);
-}
-/*
-===================
-UI_UsesTheWhiteFlag
-
-Checks if the gametype makes use of the neutral flag.
-===================
- */
-qboolean UI_UsesTheWhiteFlag(int check) {
-	return GAMETYPE_USES_WHITE_FLAG(check);
-}
-/*
-===================
-UI_IsARoundBasedGametype
-
-Checks if the gametype has a round-based system.
-===================
- */
-qboolean UI_IsARoundBasedGametype(int check) {
-	return GAMETYPE_IS_ROUND_BASED(check);
-}
-/*
-===================
-CG_UsesTeamObelisks
-
-Checks if the gametype uses team-colored obelisks.
-===================
- */
-qboolean UI_UsesTeamObelisks(int check) {
-	return GAMETYPE_USES_OBELISKS(check);
-}
-/* /Neon_Knight */

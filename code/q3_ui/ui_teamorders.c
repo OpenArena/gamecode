@@ -357,13 +357,13 @@ static void UI_TeamOrdersMenu_ListEvent( void *ptr, int event )
 
 	if( id == ID_LIST_BOTS ) {
 		teamOrdersMenuInfo.selectedBot = selection;
-		if(UI_UsesTeamFlags(teamOrdersMenuInfo.gametype) && !UI_UsesTheWhiteFlag(teamOrdersMenuInfo.gametype)) {
+		if(GAMETYPE_USES_RED_AND_BLUE_FLAG(teamOrdersMenuInfo.gametype) && !GAMETYPE_USES_WHITE_FLAG(teamOrdersMenuInfo.gametype)) {
 			UI_TeamOrdersMenu_SetList( ID_LIST_CTF_ORDERS );
 		}
 		if( teamOrdersMenuInfo.gametype == GT_1FCTF ) {
 			UI_TeamOrdersMenu_SetList( ID_LIST_CTF1F_ORDERS );
 		}
-		if( UI_UsesTeamObelisks(teamOrdersMenuInfo.gametype) ) {
+		if( GAMETYPE_USES_OBELISKS(teamOrdersMenuInfo.gametype) ) {
 			UI_TeamOrdersMenu_SetList( ID_LIST_BASE_ORDERS );
 		}
 		if( teamOrdersMenuInfo.gametype == GT_TEAM || teamOrdersMenuInfo.gametype == GT_ELIMINATION || teamOrdersMenuInfo.gametype == GT_DOMINATION ) {
@@ -548,7 +548,7 @@ void UI_TeamOrdersMenu_f( void )
 	// make sure it's a team game
 	trap_GetConfigString( CS_SERVERINFO, info, sizeof(info) );
 	teamOrdersMenuInfo.gametype = atoi( Info_ValueForKey( info, "g_gametype" ) );
-	if(!UI_IsATeamGametype(teamOrdersMenuInfo.gametype)) {
+	if(!GAMETYPE_IS_A_TEAM_GAME(teamOrdersMenuInfo.gametype)) {
 		return;
 	}
 

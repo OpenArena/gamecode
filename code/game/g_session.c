@@ -118,7 +118,7 @@ void G_InitSessionData( gclient_t *client, char *userinfo ) {
 	}
 
 	// initial team determination
-	if (G_IsATeamGametype(g_gametype.integer)) {
+	if (GAMETYPE_IS_A_TEAM_GAME(g_gametype.integer)) {
 		// always spawn as spectator in team games
 		sess->sessionTeam = TEAM_SPECTATOR;
 		sess->spectatorState = SPECTATOR_FREE;

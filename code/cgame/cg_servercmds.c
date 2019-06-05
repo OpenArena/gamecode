@@ -79,7 +79,7 @@ static void CG_ParseScores( void ) {
 	cgs.roundStartTime = atoi( CG_Argv( 4 ) );
 
 	//Update thing in lower-right corner
-	if(CG_IsARoundBasedGametype(cgs.gametype) && CG_IsATeamGametype(cgs.gametype))
+	if(GAMETYPE_IS_ROUND_BASED(cgs.gametype) && GAMETYPE_IS_A_TEAM_GAME(cgs.gametype))
 	{
 		cgs.scores1 = cg.teamScores[0];
 		cgs.scores2 = cg.teamScores[1];
@@ -145,7 +145,7 @@ CG_ParseElimination
 =================
 */
 static void CG_ParseElimination( void ) {
-	if(CG_IsARoundBasedGametype(cgs.gametype) && CG_IsATeamGametype(cgs.gametype))
+	if(GAMETYPE_IS_ROUND_BASED(cgs.gametype) && GAMETYPE_IS_A_TEAM_GAME(cgs.gametype))
 	{
 		cgs.scores1 = atoi( CG_Argv( 1 ) );
 		cgs.scores2 = atoi( CG_Argv( 2 ) );
@@ -400,7 +400,7 @@ static void CG_ParseWarmup( void ) {
 
 	} else if ( warmup > 0 && cg.warmup <= 0 ) {
 #ifdef MISSIONPACK
-		if (CG_IsATeamGametype(cgs.gametype)) {
+		if (GAMETYPE_IS_A_TEAM_GAME(cgs.gametype)) {
 			trap_S_StartLocalSound( cgs.media.countPrepareTeamSound, CHAN_ANNOUNCER );
 		} else
 #endif
@@ -425,13 +425,13 @@ void CG_SetConfigValues( void ) {
 	cgs.scores1 = atoi( CG_ConfigString( CS_SCORES1 ) );
 	cgs.scores2 = atoi( CG_ConfigString( CS_SCORES2 ) );
 	cgs.levelStartTime = atoi( CG_ConfigString( CS_LEVEL_START_TIME ) );
-	if((CG_UsesTeamFlags(cgs.gametype) && !CG_UsesTheWhiteFlag(cgs.gametype)) || cgs.gametype == GT_DOUBLE_D) {
+	if((GAMETYPE_USES_RED_AND_BLUE_FLAG(cgs.gametype) && !GAMETYPE_USES_WHITE_FLAG(cgs.gametype)) || cgs.gametype == GT_DOUBLE_D) {
 		s = CG_ConfigString( CS_FLAGSTATUS );
 		cgs.redflag = s[0] - '0';
 		cgs.blueflag = s[1] - '0';
 	}
 //#ifdef MISSIONPACK
-	else if( CG_UsesTheWhiteFlag(cgs.gametype) ) {
+	else if( GAMETYPE_USES_WHITE_FLAG(cgs.gametype) ) {
 		s = CG_ConfigString( CS_FLAGSTATUS );
 		cgs.flagStatus = s[0] - '0';
 	}
@@ -551,12 +551,12 @@ static void CG_ConfigStringModified( void ) {
 		CG_NewClientInfo( num - CS_PLAYERS );
 		CG_BuildSpectatorString();
 	} else if ( num == CS_FLAGSTATUS ) {
-		if((CG_UsesTeamFlags(cgs.gametype) && CG_UsesTheWhiteFlag(cgs.gametype)) || cgs.gametype == GT_DOUBLE_D) {
+		if((GAMETYPE_USES_RED_AND_BLUE_FLAG(cgs.gametype) && GAMETYPE_USES_WHITE_FLAG(cgs.gametype)) || cgs.gametype == GT_DOUBLE_D) {
 			// format is rb where its red/blue, 0 is at base, 1 is taken, 2 is dropped
 			cgs.redflag = str[0] - '0';
 			cgs.blueflag = str[1] - '0';
 		}
-		else if( CG_UsesTheWhiteFlag(cgs.gametype) ) {
+		else if( GAMETYPE_USES_WHITE_FLAG(cgs.gametype) ) {
 			cgs.flagStatus = str[0] - '0';
 		}
 	}
@@ -1109,7 +1109,7 @@ void CG_VoiceChatLocal( int mode, qboolean voiceOnly, int clientNum, int color, 
 		return;
 	}
 
-	if ( mode == SAY_ALL && CG_IsATeamGametype(cgs.gametype) && cg_teamChatsOnly.integer ) {
+	if ( mode == SAY_ALL && GAMETYPE_IS_A_TEAM_GAME(cgs.gametype) && cg_teamChatsOnly.integer ) {
 		return;
 	}
 
@@ -1228,7 +1228,7 @@ static void CG_ServerCommand( void ) {
 	}
 
 	if ( strequals( cmd, "chat" ) ) {
-		if ( CG_IsATeamGametype(cgs.gametype) && cg_teamChatsOnly.integer ) {
+		if ( GAMETYPE_IS_A_TEAM_GAME(cgs.gametype) && cg_teamChatsOnly.integer ) {
 			return;
 		}
 		if( cg_chatBeep.integer ) {

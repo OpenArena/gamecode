@@ -842,7 +842,7 @@ void G_InitGame( int levelTime, int randomSeed, int restart )
 	G_FindTeams();
 
 	// make sure we have flags for CTF, etc
-	if (G_UsesKeyObjectives(g_gametype.integer)) {
+	if (GAMETYPE_USES_KEY_OBJECTIVES(g_gametype.integer)) {
 		G_CheckTeamItems();
 	}
 
@@ -1193,7 +1193,7 @@ int QDECL SortRanks( const void *a, const void *b )
 	}
 
 	//In elimination and CTF elimination, sort dead players last
-	if(G_UsesTeamFlags(g_gametype.integer) && !G_UsesTheWhiteFlag(g_gametype.integer)
+	if(GAMETYPE_USES_RED_AND_BLUE_FLAG(g_gametype.integer) && !GAMETYPE_USES_WHITE_FLAG(g_gametype.integer)
 	        && level.roundNumber==level.roundNumberStarted && (ca->isEliminated != cb->isEliminated)) {
 		if( ca->isEliminated )
 			return 1;
@@ -1276,7 +1276,7 @@ void CalculateRanks( void )
 	       sizeof(level.sortedClients[0]), SortRanks );
 
 	// set the rank value for all clients that are connected and not spectators
-	if (G_IsATeamGametype(g_gametype.integer)) {
+	if (GAMETYPE_IS_A_TEAM_GAME(g_gametype.integer)) {
 		// in team games, rank is just the order of the teams, 0=red, 1=blue, 2=tied
 		for ( i = 0;  i < level.numConnectedClients; i++ ) {
 			cl = &level.clients[ level.sortedClients[i] ];
@@ -1315,7 +1315,7 @@ void CalculateRanks( void )
 	}
 
 	// set the CS_SCORES1/2 configstrings, which will be visible to everyone
-	if (G_IsATeamGametype(g_gametype.integer)) {
+	if (GAMETYPE_IS_A_TEAM_GAME(g_gametype.integer)) {
 		trap_SetConfigstring( CS_SCORES1, va("%i", level.teamScores[TEAM_RED] ) );
 		trap_SetConfigstring( CS_SCORES2, va("%i", level.teamScores[TEAM_BLUE] ) );
 	}
@@ -1439,7 +1439,7 @@ static void SendVictoryChallenge( void )
 	default:
 		return;
 	};
-	if (G_IsATeamGametype(g_gametype.integer)) {
+	if (GAMETYPE_IS_A_TEAM_GAME(g_gametype.integer)) {
 		//Team games
 		for ( i = 0 ; i < level.maxclients ; i++ ) {
 			cl = &level.clients[i];
@@ -1846,7 +1846,7 @@ void LogExit( const char *string )
 		numSorted = 32;
 	}
 
-	if (G_IsATeamGametype(g_gametype.integer)) {
+	if (GAMETYPE_IS_A_TEAM_GAME(g_gametype.integer)) {
 		G_LogPrintf( "red:%i  blue:%i\n",
 		             level.teamScores[TEAM_RED], level.teamScores[TEAM_BLUE] );
 	}
@@ -1870,7 +1870,7 @@ void LogExit( const char *string )
 		if (g_singlePlayer.integer && !(g_entities[cl - level.clients].r.svFlags & SVF_BOT)) {
 			team = cl->sess.sessionTeam;
 		}
-		if (g_singlePlayer.integer && G_IsATeamGametype(g_gametype.integer) && G_UsesKeyObjectives(g_gametype.integer)) {
+		if (g_singlePlayer.integer && GAMETYPE_IS_A_TEAM_GAME(g_gametype.integer) && GAMETYPE_USES_KEY_OBJECTIVES(g_gametype.integer)) {
 			if (g_entities[cl - level.clients].r.svFlags & SVF_BOT && cl->ps.persistant[PERS_RANK] == 0) {
 				won = qfalse;
 			}
@@ -1881,7 +1881,7 @@ void LogExit( const char *string )
 
 #ifdef MISSIONPACK
  	if (g_singlePlayer.integer) {
-		if (G_IsATeamGametype(g_gametype.integer)) {
+		if (GAMETYPE_IS_A_TEAM_GAME(g_gametype.integer)) {
 			if (team == TEAM_BLUE) {
 				won = level.teamScores[TEAM_BLUE] > level.teamScores[TEAM_RED];
 			} else {
@@ -2002,14 +2002,14 @@ qboolean ScoreIsTied( void )
 	}
 
 	//Sago: In Elimination and Oneway Flag Capture teams must win by two points.
-	if ( (G_IsARoundBasedGametype(g_gametype.integer) && G_IsATeamGametype(g_gametype.integer)) ||
+	if ( (GAMETYPE_IS_ROUND_BASED(g_gametype.integer) && GAMETYPE_IS_A_TEAM_GAME(g_gametype.integer)) ||
 	        (g_gametype.integer == GT_CTF_ELIMINATION && g_elimination_ctf_oneway.integer)) {
 		return (level.teamScores[TEAM_RED] == level.teamScores[TEAM_BLUE] ||
 		        level.teamScores[TEAM_RED] == level.teamScores[TEAM_BLUE]+1 ||
 		        level.teamScores[TEAM_RED] == level.teamScores[TEAM_BLUE]-1);
 	}
 
-	if (G_IsATeamGametype(g_gametype.integer)) {
+	if (GAMETYPE_IS_A_TEAM_GAME(g_gametype.integer)) {
 		return level.teamScores[TEAM_RED] == level.teamScores[TEAM_BLUE];
 	}
 
@@ -2095,8 +2095,8 @@ void CheckExitRules( void )
 		trap_Cvar_Update( &g_fraglimit );
 	}
 
-	if (!(G_IsATeamGametype(g_gametype.integer) &&
-			(G_UsesKeyObjectives(g_gametype.integer) || G_IsARoundBasedGametype(g_gametype.integer))) &&
+	if (!(GAMETYPE_IS_A_TEAM_GAME(g_gametype.integer) &&
+			(GAMETYPE_USES_KEY_OBJECTIVES(g_gametype.integer) || GAMETYPE_IS_ROUND_BASED(g_gametype.integer))) &&
 			g_fraglimit.integer ) {
 		if ( level.teamScores[TEAM_RED] >= g_fraglimit.integer ) {
 			trap_SendServerCommand( -1, "print \"Red hit the fraglimit.\n\"" );
@@ -2134,8 +2134,8 @@ void CheckExitRules( void )
 		trap_Cvar_Update( &g_capturelimit );
 	}
 
-	if ( G_IsATeamGametype(g_gametype.integer) &&
-			(G_UsesKeyObjectives(g_gametype.integer) || G_IsARoundBasedGametype(g_gametype.integer)) &&
+	if ( GAMETYPE_IS_A_TEAM_GAME(g_gametype.integer) &&
+			(GAMETYPE_USES_KEY_OBJECTIVES(g_gametype.integer) || GAMETYPE_IS_ROUND_BASED(g_gametype.integer)) &&
 			g_capturelimit.integer ) {
 
 		if ( level.teamScores[TEAM_RED] >= g_capturelimit.integer ) {
@@ -2344,7 +2344,7 @@ void CheckTournament( void )
 		int		counts[TEAM_NUM_TEAMS];
 		qboolean	notEnough = qfalse;
 
-		if(!G_IsATeamGametype(g_gametype.integer)) {
+		if(!GAMETYPE_IS_A_TEAM_GAME(g_gametype.integer)) {
 			counts[TEAM_BLUE] = TeamCount( -1, TEAM_BLUE );
 			counts[TEAM_RED] = TeamCount( -1, TEAM_RED );
 
@@ -2620,7 +2620,7 @@ void G_RunFrame( int levelTime )
 	// get any cvar changes
 	G_UpdateCvars();
 
-	if( (G_IsARoundBasedGametype(g_gametype.integer) && G_IsATeamGametype(g_gametype.integer)) && !(g_elimflags.integer & EF_NO_FREESPEC) && g_elimination_lockspectator.integer>1)
+	if( (GAMETYPE_IS_ROUND_BASED(g_gametype.integer) && GAMETYPE_IS_A_TEAM_GAME(g_gametype.integer)) && !(g_elimflags.integer & EF_NO_FREESPEC) && g_elimination_lockspectator.integer>1)
 		trap_Cvar_Set("elimflags",va("%i",g_elimflags.integer|EF_NO_FREESPEC));
 	else if( (g_elimflags.integer & EF_NO_FREESPEC) && g_elimination_lockspectator.integer<2)
 		trap_Cvar_Set("elimflags",va("%i",g_elimflags.integer&(~EF_NO_FREESPEC) ) );
@@ -2803,66 +2803,3 @@ void MapInfoPrint(mapinfo_result_t *info)
 	G_Printf("Capturelimit: %i\n",info->captureLimit);
 	G_Printf("minTeamSize: %i\n",info->minTeamSize);
 }
-
-/* Neon_Knight: Useful check in order to have code consistency. */
-/*
-===================
-G_IsATeamGametype
-
-Checks if the gametype is a team-based game.
-===================
- */
-qboolean G_IsATeamGametype(int check) {
-	return GAMETYPE_IS_A_TEAM_GAME(check);
-}
-/*
-===================
-G_UsesKeyObjectives
-
-Checks if the gametype makes use of gametype-specific objectives.
-===================
- */
-qboolean G_UsesKeyObjectives(int check) {
-	return GAMETYPE_USES_KEY_OBJECTIVES(check);
-}
-/*
-===================
-G_UsesTeamFlags
-
-Checks if the gametype makes use of the red and blue flags.
-===================
- */
-qboolean G_UsesTeamFlags(int check) {
-	return GAMETYPE_USES_RED_AND_BLUE_FLAG(check);
-}
-/*
-===================
-G_UsesTheWhiteFlag
-
-Checks if the gametype makes use of the neutral flag.
-===================
- */
-qboolean G_UsesTheWhiteFlag(int check) {
-	return GAMETYPE_USES_WHITE_FLAG(check);
-}
-/*
-===================
-G_IsARoundBasedGametype
-
-Checks if the gametype has a round-based system.
-===================
- */
-qboolean G_IsARoundBasedGametype(int check) {
-	return GAMETYPE_IS_ROUND_BASED(check);
-}
-/*
-===================
-G_UsesTeamObelisks
-
-Checks if the gametype uses team-colored obelisks.
-===================
- */
-qboolean G_UsesTeamObelisks(int check) {
-	return GAMETYPE_USES_OBELISKS(check);
-}
-/* /Neon_Knight */
