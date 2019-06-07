@@ -699,7 +699,7 @@ void CG_EntityEvent(centity_t *cent, vec3_t position) {
 	es = &cent->currentState;
 	event = es->event & ~EV_EVENT_BITS;
 
-	if (cg_debugEvents.integer) {
+	if (cg_debugEvents.integer && (cg_developer & DEVMODE_FOR_MAPPERS)) {
 		CG_Printf("ent:%3i  event:%3i ", es->number, event);
 	}
 

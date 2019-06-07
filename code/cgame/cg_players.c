@@ -3099,7 +3099,7 @@ void CG_ResetPlayerEntity(centity_t *cent) {
 
 
 
-	if (cg_debugPosition.integer & DEVMODE_FOR_CODERS) {
+	if (cg_debugPosition.integer && (cg_developer & DEVMODE_FOR_CODERS) {
 		CG_Printf("%i ResetPlayerEntity yaw=%f\n", cent->currentState.number, cent->pe.torso.yawAngle);
 	}
 }
