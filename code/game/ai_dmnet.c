@@ -160,7 +160,7 @@ int BotGoForAir(bot_state_t *bs, int tfl, bot_goal_t *ltg, float range) {
 	//if the bot needs air
 	if (bs->lastair_time < FloatTime() - 6) {
 		// Developer mode outputs a message.
-		if(bot_developer.integer & DEVMODE_FOR_CODERS) {
+		if (bot_developer.integer & DEVMODE_FOR_CODERS) {
 			BotAI_Print(PRT_MESSAGE, "going for air\n");
 		}
 		//if we can find an air goal
@@ -310,7 +310,7 @@ int BotGetItemLongTermGoal(bot_state_t *bs, int tfl, bot_goal_t *goal) {
 		}
 		else {//the bot gets sorta stuck with all the avoid timings, shouldn't happen though
 			// Developer mode outputs a message.
-			if(bot_developer.integer & DEVMODE_FOR_CODERS){
+			if (bot_developer.integer & DEVMODE_FOR_CODERS) {
 				char netname[128];
 				BotAI_Print(PRT_MESSAGE, "%s: no valid ltg (probably stuck)\n", ClientName(bs->client, netname, sizeof(netname)));
 			}
@@ -1597,7 +1597,7 @@ int AINode_Seek_ActivateEntity(bot_state_t *bs) {
 		// if the entity the bot shoots at moved
 		if (!VectorCompare(bs->activatestack->origin, entinfo.origin)) {
 			// Developer mode outputs a message.
-			if(bot_developer.integer & DEVMODE_FOR_CODERS) {
+			if (bot_developer.integer & DEVMODE_FOR_CODERS) {
 				BotAI_Print(PRT_MESSAGE, "hit shootable button or trigger\n");
 			}
 			bs->activatestack->time = 0;
@@ -1625,7 +1625,7 @@ int AINode_Seek_ActivateEntity(bot_state_t *bs) {
 			//if the bot touches the current goal
 			if (trap_BotTouchingGoal(bs->origin, goal)) {
 				// Developer mode outputs a message.
-				if(bot_developer.integer & DEVMODE_FOR_CODERS) {
+				if (bot_developer.integer & DEVMODE_FOR_CODERS) {
 					BotAI_Print(PRT_MESSAGE, "touched button or trigger\n");
 				}
 				bs->activatestack->time = 0;
@@ -2094,8 +2094,10 @@ int AINode_Battle_Fight(bot_state_t *bs) {
 		return qfalse;
 	}
 	//if there is another better enemy (only available in Developer mode)
-	if (BotFindEnemy(bs, bs->enemy) && (bot_developer.integer & DEVMODE_FOR_CODERS)) {
-		BotAI_Print(PRT_MESSAGE, "found new better enemy\n");
+	if (BotFindEnemy(bs, bs->enemy)) {
+		if (bot_developer.integer & DEVMODE_FOR_CODERS) {
+			BotAI_Print(PRT_MESSAGE, "found new better enemy\n");
+		}
 	}
 	//if no enemy
 	if (bs->enemy < 0) {
@@ -2411,9 +2413,11 @@ int AINode_Battle_Retreat(bot_state_t *bs) {
 		AIEnter_Seek_LTG(bs, "battle retreat: enemy dead");
 		return qfalse;
 	}
-	//if there is another better enemy (only available in Developer mode)
-	if (BotFindEnemy(bs, bs->enemy) && (bot_developer.integer & DEVMODE_FOR_CODERS)) {
-		BotAI_Print(PRT_MESSAGE, "found new better enemy\n");
+	//if there is another better enemy
+	if (BotFindEnemy(bs, bs->enemy)) {
+		if (bot_developer.integer & DEVMODE_FOR_CODERS) {
+			BotAI_Print(PRT_MESSAGE, "found new better enemy\n");
+		}
 	}
 	//
 	bs->tfl = TFL_DEFAULT;

@@ -77,7 +77,7 @@ void CG_PredictWeaponEffects( centity_t *cent ) {
 			/* THIS IS FOR DEBUGGING!
 			 you definitely *will* want something like this to test the backward reconciliation
 			// to make sure it's working *exactly* right */
-			if ( cg_debugDelag.integer && (cg_developer.integer & DEVMODE_FOR_CODERS)) {
+			if (cg_debugDelag.integer && (cg_developer.integer & DEVMODE_FOR_CODERS)) {
 				/* Sago: There are some problems with some unlagged code. People will just have to trust it*/
 				// trace forward
 				CG_Trace( &trace, muzzlePoint, vec3_origin, vec3_origin, endPoint, cent->currentState.number, CONTENTS_BODY|CONTENTS_SOLID );

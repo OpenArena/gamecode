@@ -1087,7 +1087,7 @@ void ClientUserinfoChanged( int clientNum ) {
 	client->pers.cmdTimeNudge = atoi( s );
 
 	// see if the player wants to debug the backward reconciliation
-	if(g_developer.integer & DEVMODE_FOR_CODERS ) {
+	if (g_developer.integer & DEVMODE_FOR_CODERS) {
 		s = Info_ValueForKey( userinfo, "cg_debugDelag" );
 		if ( !atoi( s ) ) {
 			client->pers.debugDelag = qfalse;
