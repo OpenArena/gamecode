@@ -2249,15 +2249,6 @@ void BotInitWaypoints(void) {
 
 /*
 ==================
-TeamPlayIsOn
-==================
- */
-int TeamPlayIsOn(void) {
-	return G_IsATeamGametype(gametype);
-}
-
-/*
-==================
 BotAggression
 ==================
  */
@@ -4703,7 +4694,7 @@ void BotCheckConsoleMessages(bot_state_t *bs) {
 						BotAI_Print(PRT_MESSAGE, "**** no valid reply ****\n");
 					}
 				}					//if at a valid chat position and not chatting already and not in teamplay
-				else if (bs->ainode != AINode_Stand && BotValidChatPosition(bs) && !TeamPlayIsOn()) {
+				else if (bs->ainode != AINode_Stand && BotValidChatPosition(bs) && !GAMETYPE_IS_A_TEAM_GAME(gametype)) {
 					chat_reply = trap_Characteristic_BFloat(bs->character, CHARACTERISTIC_CHAT_REPLY, 0, 1);
 					if (random() < 1.5 / (NumBots() + 1) && random() < chat_reply) {
 						//if bot replies with a chat message

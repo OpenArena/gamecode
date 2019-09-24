@@ -487,7 +487,7 @@ void BotMatch_HelpAccompany(bot_state_t *bs, bot_match_t *match) {
 	bot_match_t teammatematch;
 	aas_entityinfo_t entinfo;
 
-	if (!TeamPlayIsOn()) return;
+	if (!GAMETYPE_IS_A_TEAM_GAME(gametype)) return;
 	//if not addressed to this bot
 	if (!BotAddressedToBot(bs, match)) return;
 	//get the team mate name
@@ -610,7 +610,7 @@ void BotMatch_DefendKeyArea(bot_state_t *bs, bot_match_t *match) {
 	char netname[MAX_MESSAGE_SIZE];
 	int client;
 
-	if (!TeamPlayIsOn()) return;
+	if (!GAMETYPE_IS_A_TEAM_GAME(gametype)) return;
 	//if not addressed to this bot
 	if (!BotAddressedToBot(bs, match)) return;
 	//get the match variable
@@ -659,7 +659,7 @@ void BotMatch_TakeA(bot_state_t *bs, bot_match_t *match) {
 	char netname[MAX_MESSAGE_SIZE];
 	int client;
 
-	if (!TeamPlayIsOn()) return;
+	if (!GAMETYPE_IS_A_TEAM_GAME(gametype)) return;
 	//if not addressed to this bot
 	if (!BotAddressedToBot(bs, match)) return;
 	//get the match variable
@@ -708,7 +708,7 @@ void BotMatch_TakeB(bot_state_t *bs, bot_match_t *match) {
 	char netname[MAX_MESSAGE_SIZE];
 	int client;
 
-	if (!TeamPlayIsOn()) return;
+	if (!GAMETYPE_IS_A_TEAM_GAME(gametype)) return;
 	//if not addressed to this bot
 	if (!BotAddressedToBot(bs, match)) return;
 	//get the match variable
@@ -756,7 +756,7 @@ void BotMatch_GetItem(bot_state_t *bs, bot_match_t *match) {
 	char netname[MAX_MESSAGE_SIZE];
 	int client;
 
-	if (!TeamPlayIsOn()) return;
+	if (!GAMETYPE_IS_A_TEAM_GAME(gametype)) return;
 	//if not addressed to this bot
 	if (!BotAddressedToBot(bs, match)) return;
 	//get the match variable
@@ -797,7 +797,7 @@ void BotMatch_Camp(bot_state_t *bs, bot_match_t *match) {
 	char itemname[MAX_MESSAGE_SIZE];
 	aas_entityinfo_t entinfo;
 
-	if (!TeamPlayIsOn()) return;
+	if (!GAMETYPE_IS_A_TEAM_GAME(gametype)) return;
 	//if not addressed to this bot
 	if (!BotAddressedToBot(bs, match)) return;
 	//
@@ -887,7 +887,7 @@ void BotMatch_Patrol(bot_state_t *bs, bot_match_t *match) {
 	char netname[MAX_MESSAGE_SIZE];
 	int client;
 
-	if (!TeamPlayIsOn()) return;
+	if (!GAMETYPE_IS_A_TEAM_GAME(gametype)) return;
 	//if not addressed to this bot
 	if (!BotAddressedToBot(bs, match)) return;
 	//get the patrol waypoints
@@ -1198,7 +1198,7 @@ void BotMatch_JoinSubteam(bot_state_t *bs, bot_match_t *match) {
 	char netname[MAX_MESSAGE_SIZE];
 	int client;
 
-	if (!TeamPlayIsOn()) return;
+	if (!GAMETYPE_IS_A_TEAM_GAME(gametype)) return;
 	//if not addressed to this bot
 	if (!BotAddressedToBot(bs, match)) return;
 	//get the sub team name
@@ -1222,7 +1222,7 @@ void BotMatch_LeaveSubteam(bot_state_t *bs, bot_match_t *match) {
 	char netname[MAX_MESSAGE_SIZE];
 	int client;
 
-	if (!TeamPlayIsOn()) return;
+	if (!GAMETYPE_IS_A_TEAM_GAME(gametype)) return;
 	//if not addressed to this bot
 	if (!BotAddressedToBot(bs, match)) return;
 	//
@@ -1242,7 +1242,7 @@ BotMatch_LeaveSubteam
 ==================
 */
 void BotMatch_WhichTeam(bot_state_t *bs, bot_match_t *match) {
-	if (!TeamPlayIsOn()) return;
+	if (!GAMETYPE_IS_A_TEAM_GAME(gametype)) return;
 	//if not addressed to this bot
 	if (!BotAddressedToBot(bs, match)) return;
 
@@ -1268,7 +1268,7 @@ void BotMatch_CheckPoint(bot_state_t *bs, bot_match_t *match) {
 	vec3_t position;
 	bot_waypoint_t *cp;
 
-	if (!TeamPlayIsOn()) return;
+	if (!GAMETYPE_IS_A_TEAM_GAME(gametype)) return;
 	//
 	trap_BotMatchVariable(match, POSITION, buf, MAX_MESSAGE_SIZE);
 	VectorClear(position);
@@ -1322,7 +1322,7 @@ void BotMatch_FormationSpace(bot_state_t *bs, bot_match_t *match) {
 	char buf[MAX_MESSAGE_SIZE];
 	float space;
 
-	if (!TeamPlayIsOn()) return;
+	if (!GAMETYPE_IS_A_TEAM_GAME(gametype)) return;
 	//if not addressed to this bot
 	if (!BotAddressedToBot(bs, match)) return;
 	//
@@ -1345,7 +1345,7 @@ void BotMatch_Dismiss(bot_state_t *bs, bot_match_t *match) {
 	char netname[MAX_MESSAGE_SIZE];
 	int client;
 
-	if (!TeamPlayIsOn()) return;
+	if (!GAMETYPE_IS_A_TEAM_GAME(gametype)) return;
 	//if not addressed to this bot
 	if (!BotAddressedToBot(bs, match)) return;
 	trap_BotMatchVariable(match, NETNAME, netname, sizeof(netname));
@@ -1370,7 +1370,7 @@ void BotMatch_Suicide(bot_state_t *bs, bot_match_t *match) {
 	char netname[MAX_MESSAGE_SIZE];
 	int client;
 
-	if (!TeamPlayIsOn()) return;
+	if (!GAMETYPE_IS_A_TEAM_GAME(gametype)) return;
 	//if not addressed to this bot
 	if (!BotAddressedToBot(bs, match)) return;
 	//
@@ -1392,7 +1392,7 @@ void BotMatch_StartTeamLeaderShip(bot_state_t *bs, bot_match_t *match) {
 	int client;
 	char teammate[MAX_MESSAGE_SIZE];
 
-	if (!TeamPlayIsOn()) return;
+	if (!GAMETYPE_IS_A_TEAM_GAME(gametype)) return;
 	//if chats for him or herself
 	if (match->subtype & ST_I) {
 		//get the team mate that will be the team leader
@@ -1419,7 +1419,7 @@ void BotMatch_StopTeamLeaderShip(bot_state_t *bs, bot_match_t *match) {
 	char teammate[MAX_MESSAGE_SIZE];
 	char netname[MAX_MESSAGE_SIZE];
 
-	if (!TeamPlayIsOn()) return;
+	if (!GAMETYPE_IS_A_TEAM_GAME(gametype)) return;
 	//get the team mate that stops being the team leader
 	trap_BotMatchVariable(match, TEAMMATE, teammate, sizeof(teammate));
 	//if chats for him or herself
@@ -1447,7 +1447,7 @@ BotMatch_WhoIsTeamLeader
 void BotMatch_WhoIsTeamLeader(bot_state_t *bs, bot_match_t *match) {
 	char netname[MAX_MESSAGE_SIZE];
 
-	if (!TeamPlayIsOn()) return;
+	if (!GAMETYPE_IS_A_TEAM_GAME(gametype)) return;
 
 	ClientName(bs->client, netname, sizeof(netname));
 	//if this bot IS the team leader
@@ -1651,7 +1651,7 @@ void BotMatch_WhereAreYou(bot_state_t *bs, bot_match_t *match) {
 		NULL
 	};
 	//
-	if (!TeamPlayIsOn())
+	if (!GAMETYPE_IS_A_TEAM_GAME(gametype))
 		return;
 
 	//if not addressed to this bot
@@ -1713,7 +1713,7 @@ void BotMatch_LeadTheWay(bot_state_t *bs, bot_match_t *match) {
 	char netname[MAX_MESSAGE_SIZE], teammate[MAX_MESSAGE_SIZE];
 	int client, areanum, other;
 
-	if (!TeamPlayIsOn()) return;
+	if (!GAMETYPE_IS_A_TEAM_GAME(gametype)) return;
 	//if not addressed to this bot
 	if (!BotAddressedToBot(bs, match)) return;
 	//if someone asks for someone else
@@ -1782,7 +1782,7 @@ void BotMatch_Kill(bot_state_t *bs, bot_match_t *match) {
 	char netname[MAX_MESSAGE_SIZE];
 	int client;
 
-	if (!TeamPlayIsOn()) return;
+	if (!GAMETYPE_IS_A_TEAM_GAME(gametype)) return;
 	//if not addressed to this bot
 	if (!BotAddressedToBot(bs, match)) return;
 

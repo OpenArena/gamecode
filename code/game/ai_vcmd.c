@@ -419,7 +419,7 @@ BotVoiceChat_WhoIsLeader
 void BotVoiceChat_WhoIsLeader(bot_state_t *bs, int client, int mode) {
 	char netname[MAX_MESSAGE_SIZE];
 
-	if (!TeamPlayIsOn()) return;
+	if (!GAMETYPE_IS_A_TEAM_GAME(gametype)) return;
 
 	ClientName(bs->client, netname, sizeof(netname));
 	//if this bot IS the team leader
@@ -497,7 +497,7 @@ int BotVoiceChatCommand(bot_state_t *bs, int mode, char *voiceChat) {
 	int i, clientNum;
 	char *ptr, buf[MAX_MESSAGE_SIZE], *cmd;
 
-	if (!TeamPlayIsOn()) {
+	if (!GAMETYPE_IS_A_TEAM_GAME(gametype)) {
 		return qfalse;
 	}
 
