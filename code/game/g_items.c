@@ -429,35 +429,75 @@ void Touch_Item (gentity_t *ent, gentity_t *other, trace_t *trace)
 	int			respawn;
 	qboolean	predict;
 
-	//instant gib
-	if ((g_instantgib.integer || g_rockets.integer || g_gametype.integer == GT_CTF_ELIMINATION || g_elimination_allgametypes.integer)
-	        && ent->item->giType != IT_TEAM)
-		return;
-
-	//Cannot touch flag before round starts
-	if(g_gametype.integer == GT_CTF_ELIMINATION && level.roundNumber != level.roundNumberStarted)
-		return;
-
-	//Cannot take ctf elimination oneway
-	if(g_gametype.integer == GT_CTF_ELIMINATION && g_elimination_ctf_oneway.integer!=0 && (
-	            (other->client->sess.sessionTeam==TEAM_BLUE && (level.eliminationSides+level.roundNumber)%2 == 0 ) ||
-	            (other->client->sess.sessionTeam==TEAM_RED && (level.eliminationSides+level.roundNumber)%2 != 0 ) ))
-		return;
-
-	if (g_gametype.integer == GT_ELIMINATION)
-		return;		//nothing to pick up in elimination
-
-	if (!other->client)
-		return;
-	if (other->health < 1)
-		return;		// dead people can't pickup
-
-	// the same pickup rules are used for client side and server side
-	if ( !BG_CanItemBeGrabbed( g_gametype.integer, &ent->s, &other->client->ps ) ) {
+	// Non key objective-based gametypes won't allow interaction with them.
+	if (!GAMETYPE_USES_KEY_OBJECTIVES(g_gametype.integer) && ent->item->giType == IT_TEAM) {
 		return;
 	}
 
-	//In double DD we cannot "pick up" a flag we already got
+	// Round-based and elimination-based gametypes won't allow interactions with items.
+	if ((GAMETYPE_IS_ROUND_BASED(g_gametype.integer) || g_instantgib.integer || g_rockets.integer ||
+			g_elimination_allgametypes.integer) && ent->item->giType != IT_TEAM) {
+		return;
+	}
+
+	// Gametypes that don't use team-colored flags won't allow interaction with them.
+	if (!GAMETYPE_USES_RED_AND_BLUE_FLAG(g_gametype.integer) && g_gametype.integer != GT_DOUBLE_D &&
+			(strequals(ent->classname, "team_CTF_redflag") || strequals(ent->classname, "team_CTF_blueflag"))) {
+		return;
+	}
+
+	// Gametypes that don't use the neutral flag won't allow interaction with it.
+	if (!GAMETYPE_USES_WHITE_FLAG(g_gametype.integer) && strequals(ent->classname, "team_CTF_neutralflag")) {
+		return;
+	}
+
+	// Gametypes that don't use team-colored obelisks won't allow interaction with them.
+	if (!GAMETYPE_USES_OBELISKS(g_gametype.integer) && (strequals(ent->classname, "team_blueobelisk") ||
+			strequals(ent->classname, "team_redobelisk"))) {
+		return;
+	}
+
+	// Gametypes that don't use the neutral obelisk won't allow interaction with it.
+	if (!GAMETYPE_USES_NEUTRAL_OBELISK(g_gametype.integer) && (strequals(ent->classname, "team_neutralobelisk"))) {
+		return;
+	}
+
+	// eCTF unified checks
+	if(g_gametype.integer == GT_CTF_ELIMINATION) {
+		// Flags cannot be interacted with before the round starts
+		if(level.roundNumber != level.roundNumberStarted) {
+			return;
+		}
+		// In One-Way mode eCTF, the defender team cannot take the attacker team's flag
+		if(g_elimination_ctf_oneway.integer!=0 && (
+	            (other->client->sess.sessionTeam==TEAM_BLUE && (level.eliminationSides + level.roundNumber)%2 == 0 ) ||
+	            (other->client->sess.sessionTeam==TEAM_RED && (level.eliminationSides + level.roundNumber)%2 != 0 ) )) {
+			return;
+		}
+	}
+
+	// For flag-based gametypes that don't involve neutral flags.
+	if(GAMETYPE_USES_RED_AND_BLUE_FLAG(g_gametype.integer) && !GAMETYPE_USES_WHITE_FLAG(g_gametype.integer) &&
+			g_gametype.integer != GT_DOUBLE_D) {
+		// Unless a team has the enemy flag, the team's own flag cannot be touched.
+		if((other->client->sess.sessionTeam==TEAM_BLUE && strequals(ent->classname, "team_CTF_blueflag") &&
+				!other->client->ps.powerups[PW_REDFLAG]) || (other->client->sess.sessionTeam==TEAM_RED &&
+				strequals(ent->classname, "team_CTF_redflag") && !other->client->ps.powerups[PW_BLUEFLAG])) {
+			return;
+		}
+	}
+
+	// For flag-based gametypes that involve neutral flags.
+	if(GAMETYPE_USES_RED_AND_BLUE_FLAG(g_gametype.integer) && GAMETYPE_USES_WHITE_FLAG(g_gametype.integer)) {
+		// Unless a team has the neutral flag, the team's own flag cannot be touched.
+		if((other->client->sess.sessionTeam==TEAM_BLUE && strequals(ent->classname, "team_CTF_blueflag")
+				&& !other->client->ps.powerups[PW_NEUTRALFLAG]) || (other->client->sess.sessionTeam==TEAM_RED &&
+				strequals(ent->classname, "team_CTF_redflag") && !other->client->ps.powerups[PW_NEUTRALFLAG])) {
+			return;
+		}
+	}
+
+	// In Double Domination we cannot "pick up" a point we already got
 	if(g_gametype.integer == GT_DOUBLE_D) {
 		if( strequals(ent->classname, "team_CTF_redflag") ) {
 			if(other->client->sess.sessionTeam == level.pointStatusA) {
@@ -469,6 +509,16 @@ void Touch_Item (gentity_t *ent, gentity_t *other, trace_t *trace)
 				return;
 			}
 		}
+	}
+
+	if (!other->client)
+		return;
+	if (other->health < 1)
+		return;		// dead people can't pickup
+
+	// the same pickup rules are used for client side and server side
+	if ( !BG_CanItemBeGrabbed( g_gametype.integer, &ent->s, &other->client->ps ) ) {
+		return;
 	}
 
 	G_LogPrintf( "Item: %i %s\n", other->s.number, ent->item->classname );
@@ -995,28 +1045,56 @@ void G_SpawnItem (gentity_t *ent, gitem_t *item)
 
 	ent->physicsBounce = 0.50;		// items are bouncy
 
-	if ((G_IsARoundBasedGametype(g_gametype.integer) && !G_UsesTeamFlags(g_gametype.integer)) ||
-	        ( item->giType != IT_TEAM && (g_instantgib.integer || g_rockets.integer || g_elimination_allgametypes.integer || g_gametype.integer==GT_CTF_ELIMINATION) ) ) {
+	// Non key objective-based gametypes won't spawn them.
+	if (!GAMETYPE_USES_KEY_OBJECTIVES(g_gametype.integer) && item->giType == IT_TEAM) {
 		ent->s.eFlags |= EF_NODRAW; //Invisible in elimination
 		ent->r.svFlags |= SVF_NOCLIENT;  //Don't broadcast
 	}
 
-	if(g_gametype.integer == GT_DOUBLE_D && (strequals(ent->classname, "team_CTF_redflag") || strequals(ent->classname, "team_CTF_blueflag")
-	        || strequals(ent->classname, "team_CTF_neutralflag") || item->giType == IT_PERSISTANT_POWERUP  )) {
+	// Round-based gametypes won't spawn items.
+	if ((GAMETYPE_IS_ROUND_BASED(g_gametype.integer) || g_instantgib.integer || g_rockets.integer ||
+			g_elimination_allgametypes.integer) && item->giType != IT_TEAM) {
+		ent->s.eFlags |= EF_NODRAW; //Invisible in elimination
+		ent->r.svFlags |= SVF_NOCLIENT;  //Don't broadcast
+	}
+
+	// Gametypes that don't use team-colored flags won't spawn them.
+	if ((!GAMETYPE_USES_RED_AND_BLUE_FLAG(g_gametype.integer) || g_gametype.integer == GT_DOUBLE_D) &&
+			(strequals(ent->classname, "team_CTF_redflag") || strequals(ent->classname, "team_CTF_blueflag"))) {
+		ent->s.eFlags |= EF_NODRAW; //Invisible in elimination
+		ent->r.svFlags |= SVF_NOCLIENT;  //Don't broadcast
+	}
+
+	// Gametypes that don't use the neutral flag won't spawn it.
+	if (!GAMETYPE_USES_WHITE_FLAG(g_gametype.integer) && strequals(ent->classname, "team_CTF_neutralflag")) {
+		ent->s.eFlags |= EF_NODRAW; //Invisible in elimination
+		ent->r.svFlags |= SVF_NOCLIENT;  //Don't broadcast
+	}
+
+	// Gametypes that don't use team-colored obelisks won't spawn them.
+	if (!GAMETYPE_USES_OBELISKS(g_gametype.integer) && (strequals(ent->classname, "team_blueobelisk") ||
+			strequals(ent->classname, "team_redobelisk"))) {
+		ent->s.eFlags |= EF_NODRAW; //Invisible in elimination
+		ent->r.svFlags |= SVF_NOCLIENT;  //Don't broadcast
+	}
+
+	// Gametypes that don't use the neutral obelisk won't spawn it.
+	if (!GAMETYPE_USES_NEUTRAL_OBELISK(g_gametype.integer) && (strequals(ent->classname, "team_neutralobelisk"))) {
+		ent->s.eFlags |= EF_NODRAW; //Invisible in elimination
+		ent->r.svFlags |= SVF_NOCLIENT;  //Don't broadcast
+	}
+
+	// Runes don't spawn in team-based, team-neutral gametypes.
+	if ((g_gametype.integer == GT_DOUBLE_D || g_gametype.integer == GT_DOMINATION) && item->giType == IT_PERSISTANT_POWERUP) {
 		ent->s.eFlags |= EF_NODRAW; //Don't draw the flag models/persistant powerups
+		ent->r.svFlags |= SVF_NOCLIENT;  //Don't broadcast
 	}
 
-	if( !G_UsesTheWhiteFlag(g_gametype.integer) && strequals(ent->classname, "team_CTF_neutralflag")) {
-		ent->s.eFlags |= EF_NODRAW; // Don't draw the flag in CTF_elimination
-	}
-
-	if( g_gametype.integer == GT_POSSESSION && (strequals(ent->classname, "team_CTF_redflag") || strequals(ent->classname, "team_CTF_blueflag") ) ) {
-		ent->s.eFlags |= EF_NODRAW; // Don't draw the flag colored flags in possession
-	}
-
+	// Domination points aren't drawn, they're just pointers to where the Domination points should be placed.
 	if (strequals(ent->classname, "domination_point")) {
-		ent->s.eFlags |= EF_NODRAW; // Don't draw domination_point. It is just a pointer to where the Domination points should be placed
+		ent->s.eFlags |= EF_NODRAW;
 	}
+
 	if ( item->giType == IT_POWERUP ) {
 		G_SoundIndex( "sound/items/poweruprespawn.wav" );
 		G_SpawnFloat( "noglobalsound", "0", &ent->speed);

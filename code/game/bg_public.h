@@ -135,8 +135,8 @@ typedef enum {
 	
 } gametype_t;
 
-#define GAMETYPE_IS_A_TEAM_GAME(gametype) (gametype != GT_FFA && gametype != GT_TOURNAMENT && gametype != GT_SINGLE_PLAYER && gametype != GT_LMS && gametype != GT_POSSESSION)
-#define GAMETYPE_USES_KEY_OBJECTIVES(gametype) (gametype != GT_FFA && gametype != GT_TOURNAMENT && gametype != GT_SINGLE_PLAYER && gametype != GT_TEAM && gametype != GT_LMS && gametype != GT_POSSESSION)
+#define GAMETYPE_IS_A_TEAM_GAME(gametype) (gametype == GT_TEAM || gametype == GT_CTF || gametype == GT_1FCTF || gametype == GT_HARVESTER || gametype == GT_OBELISK || gametype == GT_ELIMINATION || gametype == GT_CTF_ELIMINATION || gametype == GT_DOUBLE_D || gametype == GT_DOMINATION)
+#define GAMETYPE_USES_KEY_OBJECTIVES(gametype) (gametype == GT_CTF || gametype == GT_1FCTF || gametype == GT_HARVESTER || gametype == GT_OBELISK || gametype == GT_CTF_ELIMINATION || gametype == GT_DOUBLE_D || gametype == GT_DOMINATION || gametype == GT_POSSESSION)
 #define GAMETYPE_USES_RED_AND_BLUE_FLAG(gametype) (gametype == GT_CTF || gametype == GT_1FCTF || gametype == GT_CTF_ELIMINATION)
 #define GAMETYPE_USES_WHITE_FLAG(gametype) (gametype == GT_1FCTF || gametype == GT_POSSESSION)
 /*
@@ -144,6 +144,8 @@ typedef enum {
  */
 #define GAMETYPE_IS_ROUND_BASED(gametype) (gametype == GT_ELIMINATION || gametype == GT_CTF_ELIMINATION || gametype == GT_LMS)
 #define GAMETYPE_USES_OBELISKS(gametype) (gametype == GT_HARVESTER || gametype == GT_OBELISK)
+#define GAMETYPE_USES_NEUTRAL_OBELISK(gametype) (gametype == GT_HARVESTER)
+#define GAMETYPE_USES_CONTROL_POINTS(gametype) (gametype == GT_DOMINATION)
 
 typedef enum { GENDER_MALE, GENDER_FEMALE, GENDER_NEUTER } gender_t;
 
