@@ -29,7 +29,7 @@ cd windows\build\cgame
 %cc%  ../../../code/cgame/cg_main.c
 %cc%  ../../../code/cgame/cg_marks.c
 %cc%  ../../../code/cgame/cg_newdraw.c
-%cc%  ../../../code/cgame/cg_particles.c
+rem %cc%  ../../../code/cgame/cg_particles.c
 %cc%  ../../../code/cgame/cg_players.c
 %cc%  ../../../code/cgame/cg_playerstate.c
 %cc%  ../../../code/cgame/cg_predict.c

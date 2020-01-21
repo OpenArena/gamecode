@@ -36,7 +36,7 @@ cd windows\build\game
 %cc%  ../../../code/game/g_cmds.c
 %cc%  ../../../code/game/g_cmds_ext.c
 %cc%  ../../../code/game/g_combat.c
-%cc%  ../../../code/game/g_elimination.c^M
+%cc%  ../../../code/game/g_elimination.c
 %cc%  ../../../code/game/g_items.c
 %cc%  ../../../code/game/g_main.c
 %cc%  ../../../code/game/bg_alloc.c
@@ -46,6 +46,7 @@ cd windows\build\game
 %cc%  ../../../code/game/g_missile.c
 %cc%  ../../../code/game/g_mover.c
 %cc%  ../../../code/game/g_playerstore.c
+%cc%  ../../../code/game/g_possession.c
 rem %cc%  ../../../code/game/g_rankings.c
 %cc%  ../../../code/game/g_session.c
 %cc%  ../../../code/game/g_spawn.c

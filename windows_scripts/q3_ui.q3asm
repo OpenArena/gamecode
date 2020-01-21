@@ -14,7 +14,6 @@ ui_menu
 ui_ingame
 ui_confirm
 ui_setup
-ui_options
 ui_display
 ui_firstconnect
 ui_sound

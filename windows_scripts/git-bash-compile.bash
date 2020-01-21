@@ -7,4 +7,6 @@ cmd.exe "/c windows_compile_ui_missionpack.bat"
 pushd ../windows/baseoa
 ../../windows_scripts/zip oax.pk3 vm/*.qvm
 popd
-
+pushd ../windows/missionpack
+../../windows_scripts/zip oax-mp.pk3 vm/*.qvm
+popd
