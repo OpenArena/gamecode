@@ -38,7 +38,7 @@ cd windows\build\q3_ui
 %cc%  ../../../code/q3_ui/ui_mfield.c
 %cc%  ../../../code/q3_ui/ui_mods.c
 %cc%  ../../../code/q3_ui/ui_network.c
-%cc%  ../../../code/q3_ui/ui_options.c
+rem %cc%  ../../../code/q3_ui/ui_options.c
 %cc%  ../../../code/q3_ui/ui_password.c
 %cc%  ../../../code/q3_ui/ui_playermodel.c
 %cc%  ../../../code/q3_ui/ui_players.c
