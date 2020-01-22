@@ -1764,12 +1764,15 @@ static qboolean UI_ParseAnimationFile( const char *filename, playerInfo_t *pi ) 
 	memset( animations, 0, sizeof( animation_t ) * MAX_ANIMATIONS );
 	pi->fixedlegs = qfalse;
 	pi->fixedtorso = qfalse;
+	Com_Printf( "Going to load %s !!!\n", token, filename );
 
 	// load the file
 	len = trap_FS_FOpenFile( filename, &f, FS_READ );
 	if ( len <= 0 ) {
+		Com_Printf( "The %s file was empty HOW THE\n", filename );
 		return qfalse;
 	}
+
 	if ( len >= ( sizeof( text ) - 1 ) ) {
 		Com_Printf( "File %s too long\n", filename );
 		trap_FS_FCloseFile( f );
@@ -1778,8 +1781,11 @@ static qboolean UI_ParseAnimationFile( const char *filename, playerInfo_t *pi ) 
 	trap_FS_Read( text, len, f );
 	text[len] = 0;
 	trap_FS_FCloseFile( f );
+	Com_Printf( "got %s in, now compressing\n", filename );
 
 	COM_Compress(text);
+
+	Com_Printf( "compressing passed, now parsing\n", filename );
 
 	// parse the text
 	text_p = text;
@@ -1789,6 +1795,7 @@ static qboolean UI_ParseAnimationFile( const char *filename, playerInfo_t *pi ) 
 	while ( 1 ) {
 		prev = text_p;	// so we can unget
 		token = COM_Parse( &text_p );
+		Com_Printf( "parsing %s \n", token);
 		if ( !token[0] ) {
 			break;
 		}
@@ -2041,18 +2048,18 @@ qboolean UI_RegisterClientModelname( playerInfo_t *pi, const char *modelSkinName
 	// load the animations
 	Com_sprintf( filename, sizeof( filename ), "models/players/%s/animation.cfg", modelName );
 	if ( !UI_ParseAnimationFile( filename, pi ) ) {
-		Com_sprintf( filename, sizeof( filename ), "models/players/characters/%s/animation.cfg", modelName );
-		if ( !UI_ParseAnimationFile( filename, pi ) ) {
+	//	Com_sprintf( filename, sizeof( filename ), "models/players/characters/%s/animation.cfg", modelName );
+	//	if ( !UI_ParseAnimationFile( filename, pi ) ) {
 			Com_Printf( "Failed to load animation file %s\n", filename );
-			return qfalse;
-		}
+	//		return qfalse;
+	//	}
 	}
 
 	// load eyes
 
 	Com_sprintf( filename, sizeof( filename ), "models/players/%s/eyes.cfg", modelName );
 	if ( !UI_ParseEyesFile( filename, pi ) ) {
-		//	Com_Printf( "Failed to load eyes %s\n", filename );
+			Com_Printf( "Failed to load eyes %s\n", filename );
 	}
 
 	return qtrue;

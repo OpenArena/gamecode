@@ -33,11 +33,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define MAX_ITEMTEXT 64
 #define MAX_ITEMACTION 64
 #define MAX_MENUDEFFILE 4096
-#define MAX_MENUFILE 32768
+#define MAX_MENUFILE 32768 // was 32768
 #define MAX_MENUS 64
 // Changed RD
-#define MAX_MENUITEMS 128
-#define MAX_SCRIPTSIZE 4096
+#define MAX_MENUITEMS 256	// was 128
+#define MAX_SCRIPTSIZE 4096	// was 4096
 // end changed RD
 #define MAX_COLOR_RANGES 10
 #define MAX_OPEN_MENUS 16
@@ -74,6 +74,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 // leilei - alterable colors
 #define WINDOW_HEXCOLORSET   0x08000000 // we're set from a scheme
+
 
 // CGAME cursor type bits
 #define CURSOR_NONE     0x00000001
@@ -165,6 +166,7 @@ typedef struct {
 	vec4_t outlineColor; // border color
 	qhandle_t background; // background asset
 	vec4_t hexColor; // leilei - defined colors
+	int choshex[16];	// leilei - chosen hex colors
 } windowDef_t;
 
 typedef windowDef_t Window;
@@ -316,6 +318,7 @@ typedef struct itemDef_s {
 	float scralignfactor; // leilei - factor of adjustment
 	int viewsizemin; // leilei - hide this if viewsize 
 	int viewsizemax; // leilei - hide this if viewsize 
+	int bitflag;	// leilei - check for bits
 } itemDef_t;
 
 typedef struct {
