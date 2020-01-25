@@ -266,6 +266,9 @@ static void CG_TouchItem( centity_t *cent ) {
 	if(CG_IsARoundBasedGametype(cgs.gametype) && !CG_UsesTeamFlags(cgs.gametype))
 		return; //No weapon pickup in elimination
 
+	if(CG_IsARoundBasedGametype(cgs.gametype) && cgs.roundStartTime > cgs.roundtime)
+		return; //We cannot pickup before the round has started
+
 	//normally we can
 	canBePicked = qtrue;
 
@@ -304,7 +307,7 @@ static void CG_TouchItem( centity_t *cent ) {
 		}
 	}
 	
-	if((CG_UsesTeamFlags(cgs.gametype) && !CG_UsesTheWhiteFlag(cgs.gametype)) || cgs.gametype == GT_HARVESTER ) {
+	if (cgs.gametype == GT_CTF || cgs.gametype == GT_CTF_ELIMINATION ) {
 		if (cg.predictedPlayerState.persistant[PERS_TEAM] == TEAM_RED &&
 			item->giType == IT_TEAM && item->giTag == PW_REDFLAG)
 			return;
