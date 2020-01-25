@@ -444,7 +444,7 @@ void Touch_Item (gentity_t *ent, gentity_t *other, trace_t *trace)
 	            (other->client->sess.sessionTeam==TEAM_RED && (level.eliminationSides+level.roundNumber)%2 != 0 ) ))
 		return;
 
-	if (G_IsARoundBasedGametype(g_gametype.integer) && !G_UsesTeamFlags(g_gametype.integer))
+	if (g_gametype.integer == GT_ELIMINATION)
 		return;		//nothing to pick up in elimination
 
 	if (!other->client)

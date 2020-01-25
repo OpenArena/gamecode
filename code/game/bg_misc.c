@@ -1327,7 +1327,8 @@ qboolean BG_CanItemBeGrabbed(int gametype, const entityState_t *ent, const playe
 			}
 
 			if (gametype == GT_HARVESTER) {
-				return qtrue;
+				if ( strequals(item->classname, "item_redcube") || strequals(item->classname, "item_bluecube") )
+					return qtrue;
 			}
 			return qfalse;
 
