@@ -356,7 +356,7 @@ void RespawnItem( gentity_t *ent )
 	//Don't spawn quad if quadfactor are 1.0 or less
 	if(ent->item->giType == IT_POWERUP && ent->item->giTag == PW_QUAD && g_quadfactor.value <= 1.0)
 		return;
-	
+
 	// randomly select from teamed entities
 	if (ent->team) {
 		gentity_t	*master;
@@ -430,7 +430,8 @@ void Touch_Item (gentity_t *ent, gentity_t *other, trace_t *trace)
 	qboolean	predict;
 
 	//instant gib
-	if ((g_instantgib.integer || g_rockets.integer) && ent->item->giType != IT_TEAM)
+	if ((g_instantgib.integer || g_rockets.integer || g_gametype.integer == GT_CTF_ELIMINATION || g_elimination_allgametypes.integer)
+	        && ent->item->giType != IT_TEAM)
 		return;
 
 	//Cannot touch flag before round starts
@@ -442,15 +443,9 @@ void Touch_Item (gentity_t *ent, gentity_t *other, trace_t *trace)
 	            (other->client->sess.sessionTeam==TEAM_BLUE && (level.eliminationSides+level.roundNumber)%2 == 0 ) ||
 	            (other->client->sess.sessionTeam==TEAM_RED && (level.eliminationSides+level.roundNumber)%2 != 0 ) ))
 		return;
-	
-	//Cannot take flags in gametypes that don't use them. It doesn't make sense.
-	if(GAMETYPE_USES_KEY_OBJECTIVES(g_gametype.integer) && !GAMETYPE_USES_RED_AND_BLUE_FLAG(g_gametype.integer) &&
-		!GAMETYPE_USES_WHITE_FLAG(g_gametype.integer) && (strequals(ent->classname, "team_CTF_redflag") ||
-		strequals(ent->classname, "team_CTF_blueflag") || strequals(ent->classname, "team_CTF_neutralflag")))
-		return;
-	
-	if (G_IsARoundBasedGametype(g_gametype.integer) || g_elimination_allgametypes.integer)
-		return;		//nothing to pick up in elimination-based gamemodes
+
+	if (G_IsARoundBasedGametype(g_gametype.integer) && !G_UsesTeamFlags(g_gametype.integer))
+		return;		//nothing to pick up in elimination
 
 	if (!other->client)
 		return;
