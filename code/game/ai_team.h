@@ -37,3 +37,14 @@ void BotVoiceChat(bot_state_t *bs, int toclient, char *voicechat);
 void BotVoiceChatOnly(bot_state_t *bs, int toclient, char *voicechat);
 
 
+void BotAI_GiveRoleToTheBot(bot_state_t *bs, int teammate, char *name, int order, char *botToFollow);
+
+#define ORDER_GETTHEFLAG			1
+#define ORDER_FOLLOWME				2
+#define ORDER_FOLLOWTEAMMATE		3
+#define ORDER_DEFENDTHEBASE			4
+#define ORDER_TAKEPOINTA			5
+#define ORDER_TAKEPOINTB			6
+#define ORDER_ATTACKTHEENEMYBASE	7
+#define ORDER_RETURNOURFLAG			8
+#define ORDER_HARVESTSOMESKULLS		9
