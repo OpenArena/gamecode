@@ -71,39 +71,25 @@ BotVoiceChat_GetFlag
 */
 void BotVoiceChat_GetFlag(bot_state_t *bs, int client, int mode) {
 	//
-	if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
+	if (!(GAMETYPE_USES_RED_AND_BLUE_FLAG(gametype) || GAMETYPE_USES_WHITE_FLAG(gametype))) {
+		return;
+	}
+	if (GAMETYPE_USES_RED_AND_BLUE_FLAG(gametype)) {
 		if (!ctf_redflag.areanum || !ctf_blueflag.areanum)
 			return;
 	}
-	else if (gametype == GT_1FCTF) {
-		if (!ctf_neutralflag.areanum || !ctf_redflag.areanum || !ctf_blueflag.areanum)
+	else if (GAMETYPE_USES_WHITE_FLAG(gametype)) {
+		if (!ctf_neutralflag.areanum)
 			return;
 	}
 	else {
 		return;
 	}
-	//
-	bs->decisionmaker = client;
-	bs->ordered = qtrue;
-	bs->order_time = FloatTime();
-	//set the time to send a message to the team mates
-	bs->teammessage_time = FloatTime() + 2 * random();
-	//set the ltg type
-	bs->ltgtype = LTG_GETFLAG;
-	//set the team goal time
-	bs->teamgoal_time = FloatTime() + CTF_GETFLAG_TIME;
-	// get an alternate route in ctf
-	if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
-		//get an alternative route goal towards the enemy base
-		BotGetAlternateRouteGoal(bs, BotOppositeTeam(bs));
-	}
-	//
-	BotSetTeamStatus(bs);
-	// remember last ordered task
-	BotRememberLastOrderedTask(bs);
-#ifdef DEBUG
-	BotPrintTeamGoal(bs);
-#endif //DEBUG
+	// Get an alternate route towards the enemy base in CTF/eCTF.
+	if (GAMETYPE_USES_RED_AND_BLUE_FLAG(gametype) && !GAMETYPE_USES_WHITE_FLAG(gametype)) {
+ 		BotGetAlternateRouteGoal(bs, BotOppositeTeam(bs));
+ 	}
+	BotChat_SetAction(bs, client, LTG_GETFLAG, CTF_GETFLAG_TIME);
 }
 
 /*
@@ -112,48 +98,23 @@ BotVoiceChat_Offense
 ==================
 */
 void BotVoiceChat_Offense(bot_state_t *bs, int client, int mode) {
-	if (G_UsesTeamFlags(gametype)) {
+	if(!(GAMETYPE_IS_A_TEAM_GAME(gametype) || GAMETYPE_USES_KEY_OBJECTIVES(gametype))) {
+		return;
+	}
+	if (GAMETYPE_USES_RED_AND_BLUE_FLAG(gametype)) {
 		BotVoiceChat_GetFlag(bs, client, mode);
 		return;
 	}
 	if (gametype == GT_HARVESTER) {
-		//
-		bs->decisionmaker = client;
-		bs->ordered = qtrue;
-		bs->order_time = FloatTime();
-		//set the time to send a message to the team mates
-		bs->teammessage_time = FloatTime() + 2 * random();
-		//set the ltg type
-		bs->ltgtype = LTG_HARVEST;
-		//set the team goal time
-		bs->teamgoal_time = FloatTime() + TEAM_HARVEST_TIME;
-		bs->harvestaway_time = 0;
-		//
-		BotSetTeamStatus(bs);
-		// remember last ordered task
-		BotRememberLastOrderedTask(bs);
+		//away from harvesting
+ 		bs->harvestaway_time = 0;
+		BotChat_SetAction(bs, client, LTG_HARVEST, TEAM_HARVEST_TIME);
 	}
-	else
-	{
-		//
-		bs->decisionmaker = client;
-		bs->ordered = qtrue;
-		bs->order_time = FloatTime();
-		//set the time to send a message to the team mates
-		bs->teammessage_time = FloatTime() + 2 * random();
-		//set the ltg type
-		bs->ltgtype = LTG_ATTACKENEMYBASE;
-		//set the team goal time
-		bs->teamgoal_time = FloatTime() + TEAM_ATTACKENEMYBASE_TIME;
-		bs->attackaway_time = 0;
-		//
-		BotSetTeamStatus(bs);
-		// remember last ordered task
-		BotRememberLastOrderedTask(bs);
+	if (gametype == GT_OBELISK) {
+		//away from attacking
+ 		bs->attackaway_time = 0;
+		BotChat_SetAction(bs, client, LTG_ATTACKENEMYBASE, TEAM_ATTACKENEMYBASE_TIME);
 	}
-#ifdef DEBUG
-	BotPrintTeamGoal(bs);
-#endif //DEBUG
 }
 
 /*
@@ -162,7 +123,10 @@ BotVoiceChat_Defend
 ==================
 */
 void BotVoiceChat_Defend(bot_state_t *bs, int client, int mode) {
-	if (G_UsesTeamObelisks(gametype)) {
+	if(!(GAMETYPE_IS_A_TEAM_GAME(gametype) || GAMETYPE_USES_KEY_OBJECTIVES(gametype))) {
+		return;
+	}
+	if (GAMETYPE_USES_OBELISKS(gametype)) {
 		//
 		switch(BotTeam(bs)) {
 			case TEAM_RED: memcpy(&bs->teamgoal, &redobelisk, sizeof(bot_goal_t)); break;
@@ -171,7 +135,7 @@ void BotVoiceChat_Defend(bot_state_t *bs, int client, int mode) {
 		}
 	}
 	else
-		if (G_UsesTeamFlags(gametype)) {
+		if (GAMETYPE_USES_RED_AND_BLUE_FLAG(gametype)) {
                     //
                     switch(BotTeam(bs)) {
 			case TEAM_RED: memcpy(&bs->teamgoal, &ctf_redflag, sizeof(bot_goal_t)); break;
@@ -182,25 +146,9 @@ void BotVoiceChat_Defend(bot_state_t *bs, int client, int mode) {
 	else {
 		return;
 	}
-	//
-	bs->decisionmaker = client;
-	bs->ordered = qtrue;
-	bs->order_time = FloatTime();
-	//set the time to send a message to the team mates
-	bs->teammessage_time = FloatTime() + 2 * random();
-	//set the ltg type
-	bs->ltgtype = LTG_DEFENDKEYAREA;
-	//get the team goal time
-	bs->teamgoal_time = FloatTime() + TEAM_DEFENDKEYAREA_TIME;
 	//away from defending
 	bs->defendaway_time = 0;
-	//
-	BotSetTeamStatus(bs);
-	// remember last ordered task
-	BotRememberLastOrderedTask(bs);
-#ifdef DEBUG
-	BotPrintTeamGoal(bs);
-#endif //DEBUG
+	BotChat_SetAction(bs, client, LTG_DEFENDKEYAREA, TEAM_DEFENDKEYAREA_TIME);
 }
 
 /*
@@ -251,15 +199,15 @@ void BotVoiceChat_Camp(bot_state_t *bs, int client, int mode) {
 	//if info is valid (in PVS)
 	if (entinfo.valid) {
 		areanum = BotPointAreaNum(entinfo.origin);
-		if (areanum) { // && trap_AAS_AreaReachability(areanum)) {
+		if (areanum) { /* && trap_AAS_AreaReachability(areanum)) {
 			//NOTE: just assume the bot knows where the person is
-			//if (BotEntityVisible(bs->entitynum, bs->eye, bs->viewangles, 360, client)) {
+			//if (BotEntityVisible(bs->entitynum, bs->eye, bs->viewangles, 360, client)) { */
 				bs->teamgoal.entitynum = client;
 				bs->teamgoal.areanum = areanum;
 				VectorCopy(entinfo.origin, bs->teamgoal.origin);
 				VectorSet(bs->teamgoal.mins, -8, -8, -8);
 				VectorSet(bs->teamgoal.maxs, 8, 8, 8);
-			//}
+			/* } */
 		}
 	}
 	//if the other is not visible
@@ -268,27 +216,11 @@ void BotVoiceChat_Camp(bot_state_t *bs, int client, int mode) {
 		trap_BotEnterChat(bs->cs, client, CHAT_TELL);
 		return;
 	}
-	//
-	bs->decisionmaker = client;
-	bs->ordered = qtrue;
-	bs->order_time = FloatTime();
-	//set the time to send a message to the team mates
-	bs->teammessage_time = FloatTime() + 2 * random();
-	//set the ltg type
-	bs->ltgtype = LTG_CAMPORDER;
-	//get the team goal time
-	bs->teamgoal_time = FloatTime() + TEAM_CAMP_TIME;
-	//the teammate that requested the camping
+ 	//the teammate that requested the camping
 	bs->teammate = client;
 	//not arrived yet
 	bs->arrive_time = 0;
-	//
-	BotSetTeamStatus(bs);
-	// remember last ordered task
-	BotRememberLastOrderedTask(bs);
-#ifdef DEBUG
-	BotPrintTeamGoal(bs);
-#endif //DEBUG
+	BotChat_SetAction(bs, client, LTG_CAMPORDER, TEAM_CAMP_TIME);
 }
 
 /*
@@ -320,29 +252,13 @@ void BotVoiceChat_FollowMe(bot_state_t *bs, int client, int mode) {
 		trap_BotEnterChat(bs->cs, client, CHAT_TELL);
 		return;
 	}
-	//
-	bs->decisionmaker = client;
-	bs->ordered = qtrue;
-	bs->order_time = FloatTime();
 	//the team mate
 	bs->teammate = client;
 	//last time the team mate was assumed visible
 	bs->teammatevisible_time = FloatTime();
-	//set the time to send a message to the team mates
-	bs->teammessage_time = FloatTime() + 2 * random();
-	//get the team goal time
-	bs->teamgoal_time = FloatTime() + TEAM_ACCOMPANY_TIME;
-	//set the ltg type
-	bs->ltgtype = LTG_TEAMACCOMPANY;
 	bs->formation_dist = 3.5 * 32;		//3.5 meter
 	bs->arrive_time = 0;
-	//
-	BotSetTeamStatus(bs);
-	// remember last ordered task
-	BotRememberLastOrderedTask(bs);
-#ifdef DEBUG
-	BotPrintTeamGoal(bs);
-#endif //DEBUG
+	BotChat_SetAction(bs, client, LTG_TEAMACCOMPANY, TEAM_ACCOMPANY_TIME);
 }
 
 /*
@@ -368,24 +284,15 @@ BotVoiceChat_ReturnFlag
 */
 void BotVoiceChat_ReturnFlag(bot_state_t *bs, int client, int mode) {
 	//if not in CTF mode
-	if (!G_UsesTeamFlags(gametype)) {
+	if (!GAMETYPE_USES_RED_AND_BLUE_FLAG(gametype)) {
 		return;
 	}
-	//
-	bs->decisionmaker = client;
-	bs->ordered = qtrue;
-	bs->order_time = FloatTime();
-	//set the time to send a message to the team mates
-	bs->teammessage_time = FloatTime() + 2 * random();
-	//set the ltg type
-	bs->ltgtype = LTG_RETURNFLAG;
-	//set the team goal time
-	bs->teamgoal_time = FloatTime() + CTF_RETURNFLAG_TIME;
+	//Also not valid for 1FCTF
+	if (GAMETYPE_USES_WHITE_FLAG(gametype)) {
+		return;
+	}
 	bs->rushbaseaway_time = 0;
-	BotSetTeamStatus(bs);
-#ifdef DEBUG
-	BotPrintTeamGoal(bs);
-#endif //DEBUG
+	BotChat_SetAction(bs, client, LTG_RETURNFLAG, CTF_RETURNFLAG_TIME);
 }
 
 /*
@@ -419,7 +326,10 @@ BotVoiceChat_WhoIsLeader
 void BotVoiceChat_WhoIsLeader(bot_state_t *bs, int client, int mode) {
 	char netname[MAX_MESSAGE_SIZE];
 
-	if (!TeamPlayIsOn()) return;
+	// Only in team-based games.
+	if (!GAMETYPE_IS_A_TEAM_GAME(gametype)) {
+		return;
+	}
 
 	ClientName(bs->client, netname, sizeof(netname));
 	//if this bot IS the team leader
@@ -497,7 +407,7 @@ int BotVoiceChatCommand(bot_state_t *bs, int mode, char *voiceChat) {
 	int i, clientNum;
 	char *ptr, buf[MAX_MESSAGE_SIZE], *cmd;
 
-	if (!TeamPlayIsOn()) {
+	if (!GAMETYPE_IS_A_TEAM_GAME(gametype)) {
 		return qfalse;
 	}
 
