@@ -487,7 +487,7 @@ void BotMatch_HelpAccompany(bot_state_t *bs, bot_match_t *match) {
 	bot_match_t teammatematch;
 	aas_entityinfo_t entinfo;
 
-	if (!TeamPlayIsOn()) return;
+	if (!GAMETYPE_IS_A_TEAM_GAME(gametype)) return;
 	//if not addressed to this bot
 	if (!BotAddressedToBot(bs, match)) return;
 	//get the team mate name
@@ -610,7 +610,7 @@ void BotMatch_DefendKeyArea(bot_state_t *bs, bot_match_t *match) {
 	char netname[MAX_MESSAGE_SIZE];
 	int client;
 
-	if (!TeamPlayIsOn()) return;
+	if (!GAMETYPE_IS_A_TEAM_GAME(gametype)) return;
 	//if not addressed to this bot
 	if (!BotAddressedToBot(bs, match)) return;
 	//get the match variable
@@ -659,7 +659,7 @@ void BotMatch_TakeA(bot_state_t *bs, bot_match_t *match) {
 	char netname[MAX_MESSAGE_SIZE];
 	int client;
 
-	if (!TeamPlayIsOn()) return;
+	if (!GAMETYPE_IS_A_TEAM_GAME(gametype)) return;
 	//if not addressed to this bot
 	if (!BotAddressedToBot(bs, match)) return;
 	//get the match variable
@@ -708,7 +708,7 @@ void BotMatch_TakeB(bot_state_t *bs, bot_match_t *match) {
 	char netname[MAX_MESSAGE_SIZE];
 	int client;
 
-	if (!TeamPlayIsOn()) return;
+	if (!GAMETYPE_IS_A_TEAM_GAME(gametype)) return;
 	//if not addressed to this bot
 	if (!BotAddressedToBot(bs, match)) return;
 	//get the match variable
@@ -756,7 +756,7 @@ void BotMatch_GetItem(bot_state_t *bs, bot_match_t *match) {
 	char netname[MAX_MESSAGE_SIZE];
 	int client;
 
-	if (!TeamPlayIsOn()) return;
+	if (!GAMETYPE_IS_A_TEAM_GAME(gametype)) return;
 	//if not addressed to this bot
 	if (!BotAddressedToBot(bs, match)) return;
 	//get the match variable
@@ -797,7 +797,7 @@ void BotMatch_Camp(bot_state_t *bs, bot_match_t *match) {
 	char itemname[MAX_MESSAGE_SIZE];
 	aas_entityinfo_t entinfo;
 
-	if (!TeamPlayIsOn()) return;
+	if (!GAMETYPE_IS_A_TEAM_GAME(gametype)) return;
 	//if not addressed to this bot
 	if (!BotAddressedToBot(bs, match)) return;
 	//
@@ -830,15 +830,15 @@ void BotMatch_Camp(bot_state_t *bs, bot_match_t *match) {
 		//if info is valid (in PVS)
 		if (entinfo.valid) {
 			areanum = BotPointAreaNum(entinfo.origin);
-			if (areanum) {// && trap_AAS_AreaReachability(areanum)) {
+			if (areanum) {/* && trap_AAS_AreaReachability(areanum)) {
 				//NOTE: just assume the bot knows where the person is
-				//if (BotEntityVisible(bs->entitynum, bs->eye, bs->viewangles, 360, client)) {
+				//if (BotEntityVisible(bs->entitynum, bs->eye, bs->viewangles, 360, client)) { */
 					bs->teamgoal.entitynum = client;
 					bs->teamgoal.areanum = areanum;
 					VectorCopy(entinfo.origin, bs->teamgoal.origin);
 					VectorSet(bs->teamgoal.mins, -8, -8, -8);
 					VectorSet(bs->teamgoal.maxs, 8, 8, 8);
-				//}
+				/* } */
 			}
 		}
 		//if the other is not visible
@@ -887,7 +887,7 @@ void BotMatch_Patrol(bot_state_t *bs, bot_match_t *match) {
 	char netname[MAX_MESSAGE_SIZE];
 	int client;
 
-	if (!TeamPlayIsOn()) return;
+	if (!GAMETYPE_IS_A_TEAM_GAME(gametype)) return;
 	//if not addressed to this bot
 	if (!BotAddressedToBot(bs, match)) return;
 	//get the patrol waypoints
@@ -925,18 +925,21 @@ BotMatch_GetFlag
 void BotMatch_GetFlag(bot_state_t *bs, bot_match_t *match) {
 	char netname[MAX_MESSAGE_SIZE];
 	int client;
-
-	if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
-		if (!ctf_redflag.areanum || !ctf_blueflag.areanum)
-			return;
+	
+	if(!GAMETYPE_USES_RED_AND_BLUE_FLAG(gametype) && !GAMETYPE_USES_WHITE_FLAG(gametype)) {
+		return;
 	}
-	else if (gametype == GT_1FCTF) {
-		if (!ctf_neutralflag.areanum || !ctf_redflag.areanum || !ctf_blueflag.areanum)
-			return;
+	if (GAMETYPE_USES_RED_AND_BLUE_FLAG(gametype) &&
+			(!ctf_redflag.areanum || !ctf_blueflag.areanum)) {
+		return;
 	}
-	else if (gametype == GT_POSSESSION) {
-		if (!ctf_neutralflag.areanum)
-			return;
+	if (GAMETYPE_USES_RED_AND_BLUE_FLAG(gametype) && GAMETYPE_USES_WHITE_FLAG(gametype) &&
+			(!ctf_neutralflag.areanum || !ctf_redflag.areanum || !ctf_blueflag.areanum)) {
+		return;
+	}
+	if (!GAMETYPE_USES_RED_AND_BLUE_FLAG(gametype) && GAMETYPE_USES_WHITE_FLAG(gametype) &&
+			!ctf_neutralflag.areanum) {
+		return;
 	}
 	else {
 		return;
@@ -948,6 +951,11 @@ void BotMatch_GetFlag(bot_state_t *bs, bot_match_t *match) {
 	//
 	client = FindClientByName(netname);
 	//
+	// get an alternate route in  CTF, 1FCTF and eCTF
+	if (GAMETYPE_USES_RED_AND_BLUE_FLAG(gametype)) {
+		//get an alternative route goal towards the enemy base
+		BotGetAlternateRouteGoal(bs, BotOppositeTeam(bs));
+	}
 	bs->decisionmaker = client;
 	bs->ordered = qtrue;
 	bs->order_time = FloatTime();
@@ -957,11 +965,6 @@ void BotMatch_GetFlag(bot_state_t *bs, bot_match_t *match) {
 	bs->ltgtype = LTG_GETFLAG;
 	//set the team goal time
 	bs->teamgoal_time = FloatTime() + CTF_GETFLAG_TIME;
-	// get an alternate route in ctf
-	if (G_UsesTeamFlags(gametype)) {
-		//get an alternative route goal towards the enemy base
-		BotGetAlternateRouteGoal(bs, BotOppositeTeam(bs));
-	}
 	//
 	BotSetTeamStatus(bs);
 	// remember last ordered task
@@ -980,10 +983,10 @@ void BotMatch_AttackEnemyBase(bot_state_t *bs, bot_match_t *match) {
 	char netname[MAX_MESSAGE_SIZE];
 	int client;
 
-	if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
+	if (GAMETYPE_USES_RED_AND_BLUE_FLAG(gametype)) {
 		BotMatch_GetFlag(bs, match);
 	}
-	else if (gametype == GT_1FCTF || G_UsesTeamObelisks(gametype)) {
+	else if (GAMETYPE_USES_OBELISKS(gametype)) {
 		if (!redobelisk.areanum || !blueobelisk.areanum)
 			return;
 	}
@@ -1067,11 +1070,15 @@ void BotMatch_RushBase(bot_state_t *bs, bot_match_t *match) {
 	char netname[MAX_MESSAGE_SIZE];
 	int client;
 
-	if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
+	if(!GAMETYPE_USES_RED_AND_BLUE_FLAG(gametype) && !GAMETYPE_USES_OBELISKS(gametype)) {
+		return;
+	}
+
+	if (GAMETYPE_USES_RED_AND_BLUE_FLAG(gametype)) {
 		if (!ctf_redflag.areanum || !ctf_blueflag.areanum)
 			return;
 	}
-	else if (gametype == GT_1FCTF || gametype == GT_HARVESTER) {
+	else if (GAMETYPE_USES_OBELISKS(gametype)) {
 		if (!redobelisk.areanum || !blueobelisk.areanum)
 			return;
 	}
@@ -1161,7 +1168,7 @@ void BotMatch_ReturnFlag(bot_state_t *bs, bot_match_t *match) {
 	int client;
 
 	//if not in CTF mode
-	if (G_UsesTeamFlags(gametype))
+	if (GAMETYPE_USES_RED_AND_BLUE_FLAG(gametype) && !GAMETYPE_USES_WHITE_FLAG(gametype))
 		return;
 	//if not addressed to this bot
 	if (!BotAddressedToBot(bs, match))
@@ -1198,7 +1205,7 @@ void BotMatch_JoinSubteam(bot_state_t *bs, bot_match_t *match) {
 	char netname[MAX_MESSAGE_SIZE];
 	int client;
 
-	if (!TeamPlayIsOn()) return;
+	if (!GAMETYPE_IS_A_TEAM_GAME(gametype)) return;
 	//if not addressed to this bot
 	if (!BotAddressedToBot(bs, match)) return;
 	//get the sub team name
@@ -1222,7 +1229,7 @@ void BotMatch_LeaveSubteam(bot_state_t *bs, bot_match_t *match) {
 	char netname[MAX_MESSAGE_SIZE];
 	int client;
 
-	if (!TeamPlayIsOn()) return;
+	if (!GAMETYPE_IS_A_TEAM_GAME(gametype)) return;
 	//if not addressed to this bot
 	if (!BotAddressedToBot(bs, match)) return;
 	//
@@ -1242,7 +1249,7 @@ BotMatch_LeaveSubteam
 ==================
 */
 void BotMatch_WhichTeam(bot_state_t *bs, bot_match_t *match) {
-	if (!TeamPlayIsOn()) return;
+	if (!GAMETYPE_IS_A_TEAM_GAME(gametype)) return;
 	//if not addressed to this bot
 	if (!BotAddressedToBot(bs, match)) return;
 
@@ -1268,7 +1275,7 @@ void BotMatch_CheckPoint(bot_state_t *bs, bot_match_t *match) {
 	vec3_t position;
 	bot_waypoint_t *cp;
 
-	if (!TeamPlayIsOn()) return;
+	if (!GAMETYPE_IS_A_TEAM_GAME(gametype)) return;
 	//
 	trap_BotMatchVariable(match, POSITION, buf, MAX_MESSAGE_SIZE);
 	VectorClear(position);
@@ -1322,7 +1329,7 @@ void BotMatch_FormationSpace(bot_state_t *bs, bot_match_t *match) {
 	char buf[MAX_MESSAGE_SIZE];
 	float space;
 
-	if (!TeamPlayIsOn()) return;
+	if (!GAMETYPE_IS_A_TEAM_GAME(gametype)) return;
 	//if not addressed to this bot
 	if (!BotAddressedToBot(bs, match)) return;
 	//
@@ -1345,7 +1352,7 @@ void BotMatch_Dismiss(bot_state_t *bs, bot_match_t *match) {
 	char netname[MAX_MESSAGE_SIZE];
 	int client;
 
-	if (!TeamPlayIsOn()) return;
+	if (!GAMETYPE_IS_A_TEAM_GAME(gametype)) return;
 	//if not addressed to this bot
 	if (!BotAddressedToBot(bs, match)) return;
 	trap_BotMatchVariable(match, NETNAME, netname, sizeof(netname));
@@ -1370,7 +1377,7 @@ void BotMatch_Suicide(bot_state_t *bs, bot_match_t *match) {
 	char netname[MAX_MESSAGE_SIZE];
 	int client;
 
-	if (!TeamPlayIsOn()) return;
+	if (!GAMETYPE_IS_A_TEAM_GAME(gametype)) return;
 	//if not addressed to this bot
 	if (!BotAddressedToBot(bs, match)) return;
 	//
@@ -1392,7 +1399,7 @@ void BotMatch_StartTeamLeaderShip(bot_state_t *bs, bot_match_t *match) {
 	int client;
 	char teammate[MAX_MESSAGE_SIZE];
 
-	if (!TeamPlayIsOn()) return;
+	if (!GAMETYPE_IS_A_TEAM_GAME(gametype)) return;
 	//if chats for him or herself
 	if (match->subtype & ST_I) {
 		//get the team mate that will be the team leader
@@ -1419,7 +1426,7 @@ void BotMatch_StopTeamLeaderShip(bot_state_t *bs, bot_match_t *match) {
 	char teammate[MAX_MESSAGE_SIZE];
 	char netname[MAX_MESSAGE_SIZE];
 
-	if (!TeamPlayIsOn()) return;
+	if (!GAMETYPE_IS_A_TEAM_GAME(gametype)) return;
 	//get the team mate that stops being the team leader
 	trap_BotMatchVariable(match, TEAMMATE, teammate, sizeof(teammate));
 	//if chats for him or herself
@@ -1447,7 +1454,7 @@ BotMatch_WhoIsTeamLeader
 void BotMatch_WhoIsTeamLeader(bot_state_t *bs, bot_match_t *match) {
 	char netname[MAX_MESSAGE_SIZE];
 
-	if (!TeamPlayIsOn()) return;
+	if (!GAMETYPE_IS_A_TEAM_GAME(gametype)) return;
 
 	ClientName(bs->client, netname, sizeof(netname));
 	//if this bot IS the team leader
@@ -1651,7 +1658,7 @@ void BotMatch_WhereAreYou(bot_state_t *bs, bot_match_t *match) {
 		NULL
 	};
 	//
-	if (!TeamPlayIsOn())
+	if (!GAMETYPE_IS_A_TEAM_GAME(gametype))
 		return;
 
 	//if not addressed to this bot
@@ -1668,7 +1675,7 @@ void BotMatch_WhereAreYou(bot_state_t *bs, bot_match_t *match) {
 		}
 	}
 	if (bestitem != -1) {
-		if (G_UsesTeamFlags(gametype)) {
+		if (GAMETYPE_USES_RED_AND_BLUE_FLAG(gametype)) {
 			redtt = trap_AAS_AreaTravelTimeToGoalArea(bs->areanum, bs->origin, ctf_redflag.areanum, TFL_DEFAULT);
 			bluett = trap_AAS_AreaTravelTimeToGoalArea(bs->areanum, bs->origin, ctf_blueflag.areanum, TFL_DEFAULT);
 			if (redtt < (redtt + bluett) * 0.4) {
@@ -1681,7 +1688,7 @@ void BotMatch_WhereAreYou(bot_state_t *bs, bot_match_t *match) {
 				BotAI_BotInitialChat(bs, "location", nearbyitems[bestitem], NULL);
 			}
 		}
-		else if (G_UsesTeamObelisks(gametype)) {
+		else if (GAMETYPE_USES_OBELISKS(gametype)) {
 			redtt = trap_AAS_AreaTravelTimeToGoalArea(bs->areanum, bs->origin, redobelisk.areanum, TFL_DEFAULT);
 			bluett = trap_AAS_AreaTravelTimeToGoalArea(bs->areanum, bs->origin, blueobelisk.areanum, TFL_DEFAULT);
 			if (redtt < (redtt + bluett) * 0.4) {
@@ -1713,7 +1720,7 @@ void BotMatch_LeadTheWay(bot_state_t *bs, bot_match_t *match) {
 	char netname[MAX_MESSAGE_SIZE], teammate[MAX_MESSAGE_SIZE];
 	int client, areanum, other;
 
-	if (!TeamPlayIsOn()) return;
+	if (!GAMETYPE_IS_A_TEAM_GAME(gametype)) return;
 	//if not addressed to this bot
 	if (!BotAddressedToBot(bs, match)) return;
 	//if someone asks for someone else
@@ -1782,7 +1789,7 @@ void BotMatch_Kill(bot_state_t *bs, bot_match_t *match) {
 	char netname[MAX_MESSAGE_SIZE];
 	int client;
 
-	if (!TeamPlayIsOn()) return;
+	if (!GAMETYPE_IS_A_TEAM_GAME(gametype)) return;
 	//if not addressed to this bot
 	if (!BotAddressedToBot(bs, match)) return;
 
@@ -1818,8 +1825,12 @@ BotMatch_CTF
 void BotMatch_CTF(bot_state_t *bs, bot_match_t *match) {
 
 	char flag[128], netname[MAX_NETNAME];
+	
+	if (!GAMETYPE_USES_RED_AND_BLUE_FLAG(gametype)) {
+		return;
+	}
 
-	if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
+	if (!GAMETYPE_USES_WHITE_FLAG(gametype)) {
 		trap_BotMatchVariable(match, FLAG, flag, sizeof(flag));
 		if (match->subtype & ST_GOTFLAG) {
 			if (Q_strequal(flag, "red")) {
@@ -1851,7 +1862,7 @@ void BotMatch_CTF(bot_state_t *bs, bot_match_t *match) {
 			bs->flagstatuschanged = 1;
 		}
 	}
-	else if (G_UsesTheWhiteFlag(gametype)) {
+	else {
 		if (match->subtype & ST_1FCTFGOTFLAG) {
 			trap_BotMatchVariable(match, NETNAME, netname, sizeof(netname));
 			bs->flagcarrier = ClientFromName(netname);
