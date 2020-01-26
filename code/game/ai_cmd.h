@@ -35,3 +35,4 @@ extern int notleader[MAX_CLIENTS];
 int BotMatchMessage(bot_state_t *bs, char *message);
 void BotPrintTeamGoal(bot_state_t *bs);
 
+void BotChat_SetAction(bot_state_t *bs, int client, int ltg, int teamgoal);
