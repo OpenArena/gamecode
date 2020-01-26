@@ -286,6 +286,9 @@ typedef struct bot_state_s
 	bot_waypoint_t *patrolpoints;					//patrol points
 	bot_waypoint_t *curpatrolpoint;					//current patrol point the bot is going for
 	int patrolflags;								//patrol flags
+	// DD relevant
+	float dd_pointaaway_time;						//time away from taking Point A
+	float dd_pointbaway_time;						//time away from taking Point B
 } bot_state_t;
 
 //resets the whole bot state

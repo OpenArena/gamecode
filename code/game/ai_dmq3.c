@@ -1748,6 +1748,8 @@ void BotCheckItemPickup(bot_state_t *bs, int *oldinventory) {
 					if ((bs->ltgtype != LTG_GETFLAG) &&
 							(bs->ltgtype != LTG_ATTACKENEMYBASE) &&
 							(bs->ltgtype != LTG_HARVEST) &&
+							(bs->ltgtype != LTG_POINTA) &&
+							(bs->ltgtype != LTG_POINTB) &&
 							((!(GAMETYPE_USES_RED_AND_BLUE_FLAG(gametype) && !GAMETYPE_USES_WHITE_FLAG(gametype))) ||
 							((bs->redflagstatus == 0) &&
 							(bs->blueflagstatus == 0))) &&
@@ -2253,15 +2255,6 @@ void BotInitWaypoints(void) {
 
 /*
 ==================
-TeamPlayIsOn
-==================
- */
-int TeamPlayIsOn(void) {
-	return G_IsATeamGametype(gametype);
-}
-
-/*
-==================
 BotAggression
 ==================
  */
@@ -2591,7 +2584,9 @@ int BotWantsToCamp(bot_state_t *bs) {
 			bs->ltgtype == LTG_RUSHBASE ||
 			bs->ltgtype == LTG_CAMP ||
 			bs->ltgtype == LTG_CAMPORDER ||
-			bs->ltgtype == LTG_PATROL) {
+			bs->ltgtype == LTG_PATROL ||
+			bs->ltgtype == LTG_POINTA ||
+			bs->ltgtype == LTG_POINTB) {
 		return qfalse;
 	}
 	//if camped recently

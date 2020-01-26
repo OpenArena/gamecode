@@ -115,6 +115,18 @@ void BotVoiceChat_Offense(bot_state_t *bs, int client, int mode) {
  		bs->attackaway_time = 0;
 		BotChat_SetAction(bs, client, LTG_ATTACKENEMYBASE, TEAM_ATTACKENEMYBASE_TIME);
 	}
+	if (gametype == GT_DOUBLE_D) {
+		if (bs->ltgtype == LTG_POINTA) {
+			//away from controlling point A
+			bs->dd_pointaaway_time = 0;
+			BotChat_SetAction(bs, client, LTG_POINTA, DD_POINTA);
+		}
+		else if (bs->ltgtype == LTG_POINTB) {
+			//away from controlling point B
+			bs->dd_pointbaway_time = 0;
+			BotChat_SetAction(bs, client, LTG_POINTB, DD_POINTB);
+		}
+	}
 }
 
 /*
@@ -123,7 +135,7 @@ BotVoiceChat_Defend
 ==================
 */
 void BotVoiceChat_Defend(bot_state_t *bs, int client, int mode) {
-	if(!(GAMETYPE_IS_A_TEAM_GAME(gametype) || GAMETYPE_USES_KEY_OBJECTIVES(gametype))) {
+	if(!GAMETYPE_IS_A_TEAM_GAME(gametype) && !GAMETYPE_USES_KEY_OBJECTIVES(gametype)) {
 		return;
 	}
 	if (GAMETYPE_USES_OBELISKS(gametype)) {
@@ -141,6 +153,28 @@ void BotVoiceChat_Defend(bot_state_t *bs, int client, int mode) {
 			case TEAM_RED: memcpy(&bs->teamgoal, &ctf_redflag, sizeof(bot_goal_t)); break;
 			case TEAM_BLUE: memcpy(&bs->teamgoal, &ctf_blueflag, sizeof(bot_goal_t)); break;
 			default: return;
+		}
+	}
+	else if (gametype == GT_DOUBLE_D) {
+		switch(BotTeam(bs)) {
+			case TEAM_RED:
+				if(level.pointStatusA == TEAM_RED) {
+					memcpy(&bs->teamgoal, &ctf_redflag, sizeof(bot_goal_t));
+				}
+				else if(level.pointStatusB == TEAM_RED) {
+					memcpy(&bs->teamgoal, &ctf_blueflag, sizeof(bot_goal_t));
+				}
+				break;
+			case TEAM_BLUE:
+				if(level.pointStatusA == TEAM_BLUE) {
+					memcpy(&bs->teamgoal, &ctf_redflag, sizeof(bot_goal_t));
+				}
+				else if(level.pointStatusB == TEAM_BLUE) {
+					memcpy(&bs->teamgoal, &ctf_blueflag, sizeof(bot_goal_t));
+				}
+				break;
+			default:
+				break;
 		}
 	}
 	else {

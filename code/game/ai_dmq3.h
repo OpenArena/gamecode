@@ -102,8 +102,6 @@ int BotWantsToCamp(bot_state_t *bs);
 bot_moveresult_t BotAttackMove(bot_state_t *bs, int tfl);
 //returns true if the bot and the entity are in the same team
 int BotSameTeam(bot_state_t *bs, int entnum);
-//returns true if teamplay is on
-int TeamPlayIsOn(void);
 // returns the client number of the team mate flag carrier (-1 if none)
 int BotTeamFlagCarrier(bot_state_t *bs);
 //returns visible team mate flag carrier if available
@@ -146,6 +144,8 @@ void BotRememberLastOrderedTask(bot_state_t *bs);
 void BotCTFSeekGoals(bot_state_t *bs);
 //set ctf goals (defend base, get enemy flag) during retreat
 void BotCTFRetreatGoals(bot_state_t *bs);
+//set dd goals (take point a, take point b) during seek
+void BotDDSeekGoals(bot_state_t *bs);
 //
 int Bot1FCTFCarryingFlag(bot_state_t *bs);
 int BotHarvesterCarryingCubes(bot_state_t *bs);
