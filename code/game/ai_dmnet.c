@@ -196,11 +196,7 @@ int BotNearbyGoal(bot_state_t *bs, int tfl, bot_goal_t *ltg, float range) {
 	//check if the bot should go for air
 	if (BotGoForAir(bs, tfl, ltg, range)) return qtrue;
 	// if the bot is carrying a flag or cubes
-	if (BotCTFCarryingFlag(bs)
-#ifdef MISSIONPACK
-		|| Bot1FCTFCarryingFlag(bs) || BotHarvesterCarryingCubes(bs)
-#endif
-		) {
+	if (BotCTFCarryingFlag(bs) || Bot1FCTFCarryingFlag(bs) || BotHarvesterCarryingCubes(bs)) {
 		//if the bot is just a few secs away from the base 
 		if (trap_AAS_AreaTravelTimeToGoalArea(bs->areanum, bs->origin,
 				bs->teamgoal.areanum, TFL_DEFAULT) < 300) {
@@ -584,38 +580,7 @@ int BotGetLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal) 
 		}
 		return qtrue;
 	}
-        //if (bs->ltgtype == LTG_DOMHOLD &&
-	//			bs->defendaway_time < FloatTime()) {
-            //check for bot typing status message
-		/*if (bs->teammessage_time && bs->teammessage_time < FloatTime()) {
-			trap_BotGoalName(bs->teamgoal.number, buf, sizeof(buf));
-			BotAI_BotInitialChat(bs, "dd_start_pointb", buf, NULL);
-			trap_BotEnterChat(bs->cs, 0, CHAT_TEAM);
-			//BotVoiceChatOnly(bs, -1, VOICECHAT_ONDEFENSE);
-			bs->teammessage_time = 0;
-		}*/
-		//set the bot goal
-	//	memcpy(goal, &bs->teamgoal, sizeof(bot_goal_t));
-		//if very close... go away for some time
-	//	VectorSubtract(goal->origin, bs->origin, dir);
-	//	if (VectorLengthSquared(dir) < Square(30)) {
-			/*trap_BotResetAvoidReach(bs->ms);
-			bs->defendaway_time = FloatTime() + 3 + 3 * random();
-			if (BotHasPersistantPowerupAndWeapon(bs)) {
-				bs->defendaway_range = 100;
-			}
-			else {
-				bs->defendaway_range = 350;
-			}*/
-          //              memcpy(&bs->teamgoal, &dom_points_bot[((rand()) % (level.domination_points_count))], sizeof(bot_goal_t));
-            //            BotAlternateRoute(bs, &bs->teamgoal);
-              //          BotSetTeamStatus(bs);
-
-		//}
-		//return qtrue;
-
-       // }
-	//if defending a key area
+ 	//if defending a key area
 	if (bs->ltgtype == LTG_DEFENDKEYAREA && !retreat &&
 				bs->defendaway_time < FloatTime()) {
 		//check for bot typing status message
@@ -1557,7 +1522,9 @@ int AINode_Seek_ActivateEntity(bot_state_t *bs) {
 	}
 	//
 	bs->tfl = TFL_DEFAULT;
-	if (bot_grapple.integer) bs->tfl |= TFL_GRAPPLEHOOK;
+	if (BotCanAndWantsToUseTheGrapple(bs)) {
+		bs->tfl |= TFL_GRAPPLEHOOK;
+	}
 	// if in lava or slime the bot should be able to get out
 	if (BotInLavaOrSlime(bs)) bs->tfl |= TFL_LAVA|TFL_SLIME;
 	// map specific code
@@ -1770,7 +1737,9 @@ int AINode_Seek_NBG(bot_state_t *bs) {
 	}
 	//
 	bs->tfl = TFL_DEFAULT;
-	if (bot_grapple.integer) bs->tfl |= TFL_GRAPPLEHOOK;
+	if (BotCanAndWantsToUseTheGrapple(bs)) {
+		bs->tfl |= TFL_GRAPPLEHOOK;
+	}
 	//if in lava or slime the bot should be able to get out
 	if (BotInLavaOrSlime(bs)) bs->tfl |= TFL_LAVA|TFL_SLIME;
 	//
@@ -1913,7 +1882,9 @@ int AINode_Seek_LTG(bot_state_t *bs)
 	}
 	//
 	bs->tfl = TFL_DEFAULT;
-	if (bot_grapple.integer) bs->tfl |= TFL_GRAPPLEHOOK;
+	if (BotCanAndWantsToUseTheGrapple(bs)) {
+		bs->tfl |= TFL_GRAPPLEHOOK;
+	}
 	//if in lava or slime the bot should be able to get out
 	if (BotInLavaOrSlime(bs)) bs->tfl |= TFL_LAVA|TFL_SLIME;
 	//
@@ -1961,14 +1932,14 @@ int AINode_Seek_LTG(bot_state_t *bs)
 		if (bs->ltgtype == LTG_DEFENDKEYAREA) range = 400;
 		else range = 150;
 		//
-#ifdef CTF
-		if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
+
+		if (GAMETYPE_USES_RED_AND_BLUE_FLAG(gametype) && !GAMETYPE_USES_WHITE_FLAG(gametype)) {
 			//if carrying a flag the bot shouldn't be distracted too much
 			if (BotCTFCarryingFlag(bs))
 				range = 50;
 		}
-#endif //CTF
-		else if (G_UsesTheWhiteFlag(gametype)) {
+
+		else if (GAMETYPE_USES_WHITE_FLAG(gametype)) {
 			if (Bot1FCTFCarryingFlag(bs))
 				range = 50;
 		}
@@ -2172,12 +2143,10 @@ int AINode_Battle_Fight(bot_state_t *bs) {
 	}
 	//if the enemy is not visible
 	if (!BotEntityVisible(bs->entitynum, bs->eye, bs->viewangles, 360, bs->enemy)) {
-#ifdef MISSIONPACK
 		if (bs->enemy == redobelisk.entitynum || bs->enemy == blueobelisk.entitynum) {
 			AIEnter_Battle_Chase(bs, "battle fight: obelisk out of sight");
 			return qfalse;
 		}
-#endif
 		if (BotWantsToChase(bs)) {
 			AIEnter_Battle_Chase(bs, "battle fight: enemy out of sight");
 			return qfalse;
@@ -2191,7 +2160,9 @@ int AINode_Battle_Fight(bot_state_t *bs) {
 	BotBattleUseItems(bs);
 	//
 	bs->tfl = TFL_DEFAULT;
-	if (bot_grapple.integer) bs->tfl |= TFL_GRAPPLEHOOK;
+	if (BotCanAndWantsToUseTheGrapple(bs)) {
+		bs->tfl |= TFL_GRAPPLEHOOK;
+	}
 	//if in lava or slime the bot should be able to get out
 	if (BotInLavaOrSlime(bs)) bs->tfl |= TFL_LAVA|TFL_SLIME;
 	//
@@ -2284,7 +2255,9 @@ int AINode_Battle_Chase(bot_state_t *bs)
 	}
 	//
 	bs->tfl = TFL_DEFAULT;
-	if (bot_grapple.integer) bs->tfl |= TFL_GRAPPLEHOOK;
+	if (BotCanAndWantsToUseTheGrapple(bs)) {
+		bs->tfl |= TFL_GRAPPLEHOOK;
+	}
 	//if in lava or slime the bot should be able to get out
 	if (BotInLavaOrSlime(bs)) bs->tfl |= TFL_LAVA|TFL_SLIME;
 	//
@@ -2421,7 +2394,9 @@ int AINode_Battle_Retreat(bot_state_t *bs) {
 	}
 	//
 	bs->tfl = TFL_DEFAULT;
-	if (bot_grapple.integer) bs->tfl |= TFL_GRAPPLEHOOK;
+	if (BotCanAndWantsToUseTheGrapple(bs)) {
+		bs->tfl |= TFL_GRAPPLEHOOK;
+	}
 	//if in lava or slime the bot should be able to get out
 	if (BotInLavaOrSlime(bs)) bs->tfl |= TFL_LAVA|TFL_SLIME;
 	//map specific code
@@ -2481,14 +2456,12 @@ int AINode_Battle_Retreat(bot_state_t *bs) {
 	if (bs->check_time < FloatTime()) {
 		bs->check_time = FloatTime() + 1;
 		range = 150;
-#ifdef CTF
-		if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
+		if (GAMETYPE_USES_RED_AND_BLUE_FLAG(gametype) && !GAMETYPE_USES_WHITE_FLAG(gametype)) {
 			//if carrying a flag the bot shouldn't be distracted too much
 			if (BotCTFCarryingFlag(bs))
 				range = 50;
 		}
-#endif //CTF
-		else if (G_UsesTheWhiteFlag(gametype)) {
+		else if (GAMETYPE_USES_WHITE_FLAG(gametype)) {
 			if (Bot1FCTFCarryingFlag(bs))
 				range = 50;
 		}
@@ -2600,7 +2573,9 @@ int AINode_Battle_NBG(bot_state_t *bs) {
 	}
 	//
 	bs->tfl = TFL_DEFAULT;
-	if (bot_grapple.integer) bs->tfl |= TFL_GRAPPLEHOOK;
+	if (BotCanAndWantsToUseTheGrapple(bs)) {
+		bs->tfl |= TFL_GRAPPLEHOOK;
+	}
 	//if in lava or slime the bot should be able to get out
 	if (BotInLavaOrSlime(bs)) bs->tfl |= TFL_LAVA|TFL_SLIME;
 	//
