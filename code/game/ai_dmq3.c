@@ -4964,6 +4964,9 @@ void BotCheckEvents(bot_state_t *bs, entityState_t *state) {
 				trap_GetConfigstring(CS_SOUNDS + state->eventParm, buf, sizeof (buf));
 				//if falling into a death pit
 				if (strequals(buf, "*falling1.wav")) {
+					if (BotCanAndWantsToUseTheGrapple(bs)) {
+						//To-Do: Add Grappling Hook handling.
+					}
 					//if the bot has a personal teleporter
 					if (bs->inventory[INVENTORY_TELEPORTER] > 0) {
 						//use the holdable item
@@ -5509,4 +5512,30 @@ BotShutdownDeathmatchAI
  */
 void BotShutdownDeathmatchAI(void) {
 	altroutegoals_setup = qfalse;
+}
+
+/*
+==================
+BotCanAndWantsToUseTheGrapple
+Before switching to the grapple, checks if the bot has it in its inventory.
+==================
+*/
+int BotCanAndWantsToUseTheGrapple(bot_state_t *bs) {
+	float grappler;
+	// Bots won't use the grapple if:
+	// * grappling for them is disabled
+	if (!bot_grapple.integer) {
+		return qfalse;
+	}
+	// * they don't have the Grappling Hook
+	if (!bs->inventory[INVENTORY_GRAPPLINGHOOK]) {
+		return qfalse;
+	}
+	// * if their own bot file settings allow for it
+	grappler = trap_Characteristic_BFloat(bs->character, CHARACTERISTIC_GRAPPLE_USER, 0, 1);
+	if (grappler < 0.5) {
+		return qfalse;
+	}
+	// Else they'll be happy to use it
+	return qtrue;
 }
