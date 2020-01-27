@@ -59,3 +59,5 @@ int BotValidChatPosition(bot_state_t *bs);
 // test the initial bot chats
 void BotChatTest(bot_state_t *bs);
 
+// validator for bot chats
+int BotCanChat(bot_state_t *bs, float characteristic);
