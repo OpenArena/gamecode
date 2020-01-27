@@ -71,16 +71,16 @@ BotVoiceChat_GetFlag
 */
 void BotVoiceChat_GetFlag(bot_state_t *bs, int client, int mode) {
 	//
-	if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
+	if(!GAMETYPE_USES_RED_AND_BLUE_FLAG(gametype) && !GAMETYPE_USES_WHITE_FLAG(gametype)) {
+		return;
+	}
+	if (GAMETYPE_USES_RED_AND_BLUE_FLAG(gametype) && !GAMETYPE_USES_WHITE_FLAG(gametype)) {
 		if (!ctf_redflag.areanum || !ctf_blueflag.areanum)
 			return;
 	}
-	else if (gametype == GT_1FCTF) {
-		if (!ctf_neutralflag.areanum || !ctf_redflag.areanum || !ctf_blueflag.areanum)
+	if (GAMETYPE_USES_WHITE_FLAG(gametype)) {
+		if (!ctf_neutralflag.areanum)
 			return;
-	}
-	else {
-		return;
 	}
 	//
 	bs->decisionmaker = client;

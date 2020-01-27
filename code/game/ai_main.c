@@ -292,13 +292,13 @@ void BotReportStatus(bot_state_t *bs) {
 	}
 
 	strcpy(flagstatus, "  ");
-	if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
+	if (GAMETYPE_USES_RED_AND_BLUE_FLAG(gametype) && !GAMETYPE_USES_WHITE_FLAG(gametype)) {
 		if (BotCTFCarryingFlag(bs)) {
 			if (BotTeam(bs) == TEAM_RED) strcpy(flagstatus, S_COLOR_RED"F ");
 			else strcpy(flagstatus, S_COLOR_BLUE"F ");
 		}
 	}
-	else if (gametype == GT_1FCTF) {
+	else if (GAMETYPE_USES_RED_AND_BLUE_FLAG(gametype) && GAMETYPE_USES_WHITE_FLAG(gametype)) {
 		if (Bot1FCTFCarryingFlag(bs)) {
 			if (BotTeam(bs) == TEAM_RED) strcpy(flagstatus, S_COLOR_RED"F ");
 			else strcpy(flagstatus, S_COLOR_BLUE"F ");

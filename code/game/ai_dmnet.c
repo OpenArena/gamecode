@@ -196,11 +196,7 @@ int BotNearbyGoal(bot_state_t *bs, int tfl, bot_goal_t *ltg, float range) {
 	//check if the bot should go for air
 	if (BotGoForAir(bs, tfl, ltg, range)) return qtrue;
 	// if the bot is carrying a flag or cubes
-	if (BotCTFCarryingFlag(bs)
-#ifdef MISSIONPACK
-		|| Bot1FCTFCarryingFlag(bs) || BotHarvesterCarryingCubes(bs)
-#endif
-		) {
+	if (BotCTFCarryingFlag(bs) || Bot1FCTFCarryingFlag(bs) || BotHarvesterCarryingCubes(bs)) {
 		//if the bot is just a few secs away from the base 
 		if (trap_AAS_AreaTravelTimeToGoalArea(bs->areanum, bs->origin,
 				bs->teamgoal.areanum, TFL_DEFAULT) < 300) {
@@ -836,7 +832,6 @@ int BotGetLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal) 
 		memcpy(goal, &bs->curpatrolpoint->goal, sizeof(bot_goal_t));
 		return qtrue;
 	}
-#ifdef CTF
 	if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
 		//if going for enemy flag
 		if (bs->ltgtype == LTG_GETFLAG) {
@@ -921,11 +916,10 @@ int BotGetLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal) 
 			return qtrue;
 		}
 	}
-#endif //CTF
-	else if (gametype == GT_1FCTF) {
+	else if (GAMETYPE_USES_WHITE_FLAG(gametype)) {
 		if (bs->ltgtype == LTG_GETFLAG) {
 			//check for bot typing status message
-			if (bs->teammessage_time && bs->teammessage_time < FloatTime()) {
+			if (GAMETYPE_USES_RED_AND_BLUE_FLAG(gametype) && bs->teammessage_time && bs->teammessage_time < FloatTime()) {
 				BotAI_BotInitialChat(bs, "captureflag_start", NULL);
 				trap_BotEnterChat(bs->cs, 0, CHAT_TEAM);
 				BotVoiceChatOnly(bs, -1, VOICECHAT_ONGETFLAG);
@@ -949,8 +943,8 @@ int BotGetLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal) 
 				case TEAM_BLUE: memcpy(goal, &ctf_redflag, sizeof(bot_goal_t)); break;
 				default: bs->ltgtype = 0; return qfalse;
 			}
-			//if not carrying the flag anymore
-			if (!Bot1FCTFCarryingFlag(bs)) {
+			//if not carrying the flag anymore (1FCTF only)
+			if (GAMETYPE_USES_RED_AND_BLUE_FLAG(gametype) && !Bot1FCTFCarryingFlag(bs)) {
 				bs->ltgtype = 0;
 			}
 			//quit rushing after 2 minutes
@@ -964,8 +958,8 @@ int BotGetLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal) 
 			BotAlternateRoute(bs, goal);
 			return qtrue;
 		}
-		//attack the enemy base
-		if (bs->ltgtype == LTG_ATTACKENEMYBASE &&
+		//attack the enemy base (1FCTF only)
+		if (GAMETYPE_USES_RED_AND_BLUE_FLAG(gametype) && bs->ltgtype == LTG_ATTACKENEMYBASE &&
 				bs->attackaway_time < FloatTime()) {
 			//check for bot typing status message
 			if (bs->teammessage_time && bs->teammessage_time < FloatTime()) {
@@ -989,8 +983,8 @@ int BotGetLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal) 
 			}
 			return qtrue;
 		}
-		//returning flag
-		if (bs->ltgtype == LTG_RETURNFLAG) {
+		//returning flag (1FCTF only)
+		if (GAMETYPE_USES_RED_AND_BLUE_FLAG(gametype) && bs->ltgtype == LTG_RETURNFLAG) {
 			//check for bot typing status message
 			if (bs->teammessage_time && bs->teammessage_time < FloatTime()) {
 				BotAI_BotInitialChat(bs, "returnflag_start", NULL);
@@ -2172,12 +2166,10 @@ int AINode_Battle_Fight(bot_state_t *bs) {
 	}
 	//if the enemy is not visible
 	if (!BotEntityVisible(bs->entitynum, bs->eye, bs->viewangles, 360, bs->enemy)) {
-#ifdef MISSIONPACK
 		if (bs->enemy == redobelisk.entitynum || bs->enemy == blueobelisk.entitynum) {
 			AIEnter_Battle_Chase(bs, "battle fight: obelisk out of sight");
 			return qfalse;
 		}
-#endif
 		if (BotWantsToChase(bs)) {
 			AIEnter_Battle_Chase(bs, "battle fight: enemy out of sight");
 			return qfalse;
@@ -2481,14 +2473,12 @@ int AINode_Battle_Retreat(bot_state_t *bs) {
 	if (bs->check_time < FloatTime()) {
 		bs->check_time = FloatTime() + 1;
 		range = 150;
-#ifdef CTF
-		if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
+		if (GAMETYPE_USES_RED_AND_BLUE_FLAG(gametype) && !GAMETYPE_USES_WHITE_FLAG(gametype)) {
 			//if carrying a flag the bot shouldn't be distracted too much
 			if (BotCTFCarryingFlag(bs))
 				range = 50;
 		}
-#endif //CTF
-		else if (G_UsesTheWhiteFlag(gametype)) {
+		else if (GAMETYPE_USES_WHITE_FLAG(gametype)) {
 			if (Bot1FCTFCarryingFlag(bs))
 				range = 50;
 		}

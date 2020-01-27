@@ -1416,9 +1416,9 @@ BotTeamGoals
 void BotTeamGoals(bot_state_t *bs, int retreat) {
 
 	if (retreat) {
-		if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
+		if (GAMETYPE_USES_RED_AND_BLUE_FLAG(gametype) && !GAMETYPE_USES_WHITE_FLAG(gametype)) {
 			BotCTFRetreatGoals(bs);
-		} else if (gametype == GT_1FCTF) {
+		} else if (GAMETYPE_USES_RED_AND_BLUE_FLAG(gametype) && GAMETYPE_USES_WHITE_FLAG(gametype)) {
 			Bot1FCTFRetreatGoals(bs);
 		} else if (gametype == GT_OBELISK) {
 			BotObeliskRetreatGoals(bs);
@@ -1426,10 +1426,10 @@ void BotTeamGoals(bot_state_t *bs, int retreat) {
 			BotHarvesterRetreatGoals(bs);
 		}
 	} else {
-		if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
+		if (GAMETYPE_USES_RED_AND_BLUE_FLAG(gametype) && !GAMETYPE_USES_WHITE_FLAG(gametype)) {
 			//decide what to do in CTF mode
 			BotCTFSeekGoals(bs);
-		} else if (G_UsesTheWhiteFlag(gametype)) {
+		} else if (GAMETYPE_USES_RED_AND_BLUE_FLAG(gametype) && GAMETYPE_USES_WHITE_FLAG(gametype)) {
 			Bot1FCTFSeekGoals(bs);
 		} else if (gametype == GT_OBELISK) {
 			BotObeliskSeekGoals(bs);
@@ -1745,7 +1745,7 @@ void BotCheckItemPickup(bot_state_t *bs, int *oldinventory) {
 							((!(G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype))) ||
 							((bs->redflagstatus == 0) &&
 							(bs->blueflagstatus == 0))) &&
-							((gametype != GT_1FCTF) ||
+							(!GAMETYPE_USES_WHITE_FLAG(gametype) ||
 							(bs->neutralflagstatus == 0))) {
 						// tell the leader we want to be on offence
 						BotVoiceChat(bs, leader, VOICECHAT_WANTONOFFENSE);
@@ -1769,7 +1769,7 @@ void BotCheckItemPickup(bot_state_t *bs, int *oldinventory) {
 						((!(G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype))) ||
 						((bs->redflagstatus == 0) &&
 						(bs->blueflagstatus == 0))) &&
-						((gametype != GT_1FCTF) ||
+						(!GAMETYPE_USES_WHITE_FLAG(gametype) ||
 						(bs->neutralflagstatus == 0))) {
 
 					// tell the leader we want to be on defense
@@ -1912,9 +1912,9 @@ void BotUseKamikaze(bot_state_t *bs) {
 				return;
 			}
 		}
-	} else if (gametype == GT_1FCTF) {
+	} else if (GAMETYPE_USES_WHITE_FLAG(gametype)) {
 		//never use kamikaze if the team flag carrier is visible
-		if (Bot1FCTFCarryingFlag(bs))
+		if (Bot1FCTFCarryingFlag(bs) && GAMETYPE_USES_RED_AND_BLUE_FLAG(gametype))
 			return;
 		c = BotTeamFlagCarrierVisible(bs);
 		if (c >= 0) {
@@ -1998,14 +1998,14 @@ void BotUseInvulnerability(bot_state_t *bs) {
 	if (bs->invulnerability_time > FloatTime())
 		return;
 	bs->invulnerability_time = FloatTime() + 0.2;
-	if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
-		//never use kamikaze if the team flag carrier is visible
+	if (GAMETYPE_USES_RED_AND_BLUE_FLAG(gametype) && !GAMETYPE_USES_WHITE_FLAG(gametype)) {
+		//never use invulnerability if the team flag carrier is visible
 		if (BotCTFCarryingFlag(bs))
 			return;
 		c = BotEnemyFlagCarrierVisible(bs);
 		if (c >= 0)
 			return;
-		//if near enemy flag and the flag is visible
+		//if near enemy flag and the flag is visible (1FCTF only)
 		switch (BotTeam(bs)) {
 			case TEAM_RED: goal = &ctf_blueflag;
 				break;
@@ -2023,19 +2023,21 @@ void BotUseInvulnerability(bot_state_t *bs) {
 				return;
 			}
 		}
-	} else if (gametype == GT_1FCTF) {
+	} else if (GAMETYPE_USES_WHITE_FLAG(gametype)) {
 		//never use kamikaze if the team flag carrier is visible
-		if (Bot1FCTFCarryingFlag(bs))
+		if (Bot1FCTFCarryingFlag(bs) && GAMETYPE_USES_RED_AND_BLUE_FLAG(gametype))
 			return;
 		c = BotEnemyFlagCarrierVisible(bs);
 		if (c >= 0)
 			return;
-		//if near enemy flag and the flag is visible
-		switch (BotTeam(bs)) {
-			case TEAM_RED: goal = &ctf_blueflag;
-				break;
-			default: goal = &ctf_redflag;
-				break;
+		//if near enemy flag and the flag is visible (1FCTF only)
+		if(GAMETYPE_USES_RED_AND_BLUE_FLAG(gametype)) {
+			switch (BotTeam(bs)) {
+				case TEAM_RED: goal = &ctf_blueflag;
+					break;
+				default: goal = &ctf_redflag;
+					break;
+			}
 		}
 		//if the obelisk is visible
 		VectorCopy(goal->origin, target);
@@ -2363,10 +2365,8 @@ int BotWantsToRetreat(bot_state_t *bs) {
 		BotEntityInfo(bs->enemy, &entinfo);
 		// if the enemy is carrying a flag
 		if (EntityCarriesFlag(&entinfo)) return qfalse;
-#ifdef MISSIONPACK
 		// if the enemy is carrying cubes
 		if (EntityCarriesCubes(&entinfo)) return qfalse;
-#endif
 	}
 	//if the bot is getting the flag
 	if (bs->ltgtype == LTG_GETFLAG)
@@ -2393,7 +2393,7 @@ int BotWantsToChase(bot_state_t *bs) {
 		BotEntityInfo(bs->enemy, &entinfo);
 		if (EntityCarriesFlag(&entinfo))
 			return qtrue;
-	} else if (gametype == GT_1FCTF) {
+	} else if (GAMETYPE_USES_WHITE_FLAG(gametype)) {
 		//never chase if carrying the flag
 		if (Bot1FCTFCarryingFlag(bs))
 			return qfalse;
@@ -2416,7 +2416,7 @@ int BotWantsToChase(bot_state_t *bs) {
 		BotEntityInfo(bs->enemy, &entinfo);
 		// always chase if the enemy is carrying cubes
 		if (EntityCarriesCubes(&entinfo)) return qtrue;
-	} else if (gametype == GT_POSSESSION) {
+	} else if (!GAMETYPE_USES_RED_AND_BLUE_FLAG(gametype) && GAMETYPE_USES_WHITE_FLAG(gametype)) {
 		//always chase if the enemy is carrying a flag
 		BotEntityInfo(bs->enemy, &entinfo);
 		if (EntityCarriesFlag(&entinfo))
@@ -4881,7 +4881,7 @@ void BotCheckEvents(bot_state_t *bs, entityState_t *state) {
 		}
 		case EV_GLOBAL_TEAM_SOUND:
 		{
-			if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
+			if (GAMETYPE_USES_RED_AND_BLUE_FLAG(gametype) && !GAMETYPE_USES_WHITE_FLAG(gametype)) {
 				switch (state->eventParm) {
 					case GTS_RED_CAPTURE:
 						bs->blueflagstatus = 0;
@@ -4914,7 +4914,7 @@ void BotCheckEvents(bot_state_t *bs, entityState_t *state) {
 						bs->flagstatuschanged = qtrue;
 						break; //see BotMatch_CTF
 				}
-			} else if (gametype == GT_1FCTF) {
+			} else if (GAMETYPE_USES_RED_AND_BLUE_FLAG(gametype) && GAMETYPE_USES_WHITE_FLAG(gametype)) {
 				switch (state->eventParm) {
 					case GTS_RED_CAPTURE:
 						bs->neutralflagstatus = 0;
@@ -5141,7 +5141,7 @@ void BotSetupAlternativeRouteGoals(void) {
 
 	if (altroutegoals_setup)
 		return;
-	if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
+	if (GAMETYPE_USES_RED_AND_BLUE_FLAG(gametype) && !GAMETYPE_USES_WHITE_FLAG(gametype)) {
 		if (trap_BotGetLevelItemGoal(-1, "Neutral Flag", &ctf_neutralflag) < 0)
 			BotAI_Print(PRT_WARNING, "No alt routes without Neutral Flag\n");
 		if (ctf_neutralflag.areanum) {
@@ -5159,7 +5159,7 @@ void BotSetupAlternativeRouteGoals(void) {
 					ALTROUTEGOAL_CLUSTERPORTALS |
 					ALTROUTEGOAL_VIEWPORTALS);
 		}
-	} else if (gametype == GT_1FCTF) {
+	} else if (GAMETYPE_USES_RED_AND_BLUE_FLAG(gametype) && GAMETYPE_USES_WHITE_FLAG(gametype)) {
 		if (trap_BotGetLevelItemGoal(-1, "Neutral Obelisk", &neutralobelisk) < 0)
 			BotAI_Print(PRT_WARNING, "One Flag CTF without Neutral Obelisk\n");
 		red_numaltroutegoals = trap_AAS_AlternativeRouteGoals(
@@ -5460,7 +5460,7 @@ void BotSetupDeathmatchAI(void) {
 				BotSetEntityNumForGoal(&dom_points_bot[0], va("domination_point%i", i));
 		}
 		//MAX_DOMINATION_POINTS
-	} else if (gametype == GT_1FCTF) {
+	} else if (GAMETYPE_USES_RED_AND_BLUE_FLAG(gametype) && GAMETYPE_USES_WHITE_FLAG(gametype)) {
 		if (untrap_BotGetLevelItemGoal(-1, "Neutral Flag", &ctf_neutralflag) < 0)
 			BotAI_Print(PRT_WARNING, "One Flag CTF without Neutral Flag\n");
 		if (untrap_BotGetLevelItemGoal(-1, "Red Flag", &ctf_redflag) < 0)

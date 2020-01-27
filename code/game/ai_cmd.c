@@ -926,20 +926,15 @@ void BotMatch_GetFlag(bot_state_t *bs, bot_match_t *match) {
 	char netname[MAX_MESSAGE_SIZE];
 	int client;
 
-	if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
+	if (!GAMETYPE_USES_RED_AND_BLUE_FLAG(gametype) && !GAMETYPE_USES_WHITE_FLAG(gametype)) {
+	}
+	if (GAMETYPE_USES_RED_AND_BLUE_FLAG(gametype)) {
 		if (!ctf_redflag.areanum || !ctf_blueflag.areanum)
 			return;
 	}
-	else if (gametype == GT_1FCTF) {
-		if (!ctf_neutralflag.areanum || !ctf_redflag.areanum || !ctf_blueflag.areanum)
-			return;
-	}
-	else if (gametype == GT_POSSESSION) {
+	if (GAMETYPE_USES_WHITE_FLAG(gametype)) {
 		if (!ctf_neutralflag.areanum)
 			return;
-	}
-	else {
-		return;
 	}
 	//if not addressed to this bot
 	if (!BotAddressedToBot(bs, match)) return;
@@ -983,7 +978,7 @@ void BotMatch_AttackEnemyBase(bot_state_t *bs, bot_match_t *match) {
 	if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
 		BotMatch_GetFlag(bs, match);
 	}
-	else if (gametype == GT_1FCTF || G_UsesTeamObelisks(gametype)) {
+	else if (G_UsesTeamObelisks(gametype)) {
 		if (!redobelisk.areanum || !blueobelisk.areanum)
 			return;
 	}
@@ -1071,7 +1066,7 @@ void BotMatch_RushBase(bot_state_t *bs, bot_match_t *match) {
 		if (!ctf_redflag.areanum || !ctf_blueflag.areanum)
 			return;
 	}
-	else if (gametype == GT_1FCTF || gametype == GT_HARVESTER) {
+	else if (gametype == GT_HARVESTER) {
 		if (!redobelisk.areanum || !blueobelisk.areanum)
 			return;
 	}
