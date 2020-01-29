@@ -385,7 +385,7 @@ int BotChat_EnterGame(bot_state_t *bs) {
 	if (bot_nochat.integer) return qfalse;
 	if (bs->lastchat_time > FloatTime() - TIME_BETWEENCHATTING) return qfalse;
 	//don't chat in teamplay
-	if (TeamPlayIsOn()) return qfalse;
+	if (GAMETYPE_IS_A_TEAM_GAME(gametype)) return qfalse;
 	// don't chat in tournament mode
 	if (gametype == GT_TOURNAMENT) return qfalse;
 	rnd = trap_Characteristic_BFloat(bs->character, CHARACTERISTIC_CHAT_ENTEREXITGAME, 0, 1);
@@ -418,7 +418,7 @@ int BotChat_ExitGame(bot_state_t *bs) {
 	if (bot_nochat.integer) return qfalse;
 	if (bs->lastchat_time > FloatTime() - TIME_BETWEENCHATTING) return qfalse;
 	//don't chat in teamplay
-	if (TeamPlayIsOn()) return qfalse;
+	if (GAMETYPE_IS_A_TEAM_GAME(gametype)) return qfalse;
 	// don't chat in tournament mode
 	if (gametype == GT_TOURNAMENT) return qfalse;
 	rnd = trap_Characteristic_BFloat(bs->character, CHARACTERISTIC_CHAT_ENTEREXITGAME, 0, 1);
@@ -452,7 +452,7 @@ int BotChat_StartLevel(bot_state_t *bs) {
 	if (BotIsObserver(bs)) return qfalse;
 	if (bs->lastchat_time > FloatTime() - TIME_BETWEENCHATTING) return qfalse;
 	//don't chat in teamplay
-	if (TeamPlayIsOn()) {
+	if (GAMETYPE_IS_A_TEAM_GAME(gametype)) {
 	    trap_EA_Command(bs->client, "vtaunt");
 	    return qfalse;
 	}
@@ -484,7 +484,7 @@ int BotChat_EndLevel(bot_state_t *bs) {
 	if (BotIsObserver(bs)) return qfalse;
 	if (bs->lastchat_time > FloatTime() - TIME_BETWEENCHATTING) return qfalse;
 	// teamplay
-	if (TeamPlayIsOn()) 
+	if (GAMETYPE_IS_A_TEAM_GAME(gametype)) 
 	{
 		if (BotIsFirstInRankings(bs)) {
 			trap_EA_Command(bs->client, "vtaunt");
@@ -556,7 +556,7 @@ int BotChat_Death(bot_state_t *bs) {
 	else
 		strcpy(name, "[world]");
 	//
-	if (TeamPlayIsOn() && BotSameTeam(bs, bs->lastkilledby)) {
+	if (GAMETYPE_IS_A_TEAM_GAME(gametype) && BotSameTeam(bs, bs->lastkilledby)) {
 		if (bs->lastkilledby == bs->client) return qfalse;
 		BotAI_BotInitialChat(bs, "death_teammate", name, NULL);
 		bs->chatto = CHAT_TEAM;
@@ -564,7 +564,7 @@ int BotChat_Death(bot_state_t *bs) {
 	else
 	{
 		//teamplay
-		if (TeamPlayIsOn()) {
+		if (GAMETYPE_IS_A_TEAM_GAME(gametype)) {
 			trap_EA_Command(bs->client, "vtaunt");
 			return qtrue;
 		}
@@ -657,14 +657,14 @@ int BotChat_Kill(bot_state_t *bs) {
 	EasyClientName(bs->lastkilledplayer, name, 32);
 	//
 	bs->chatto = CHAT_ALL;
-	if (TeamPlayIsOn() && BotSameTeam(bs, bs->lastkilledplayer)) {
+	if (GAMETYPE_IS_A_TEAM_GAME(gametype) && BotSameTeam(bs, bs->lastkilledplayer)) {
 		BotAI_BotInitialChat(bs, "kill_teammate", name, NULL);
 		bs->chatto = CHAT_TEAM;
 	}
 	else
 	{
 		//don't chat in teamplay
-		if (TeamPlayIsOn()) {
+		if (GAMETYPE_IS_A_TEAM_GAME(gametype)) {
 			trap_EA_Command(bs->client, "vtaunt");
 			return qfalse;			// don't wait
 		}
@@ -707,7 +707,7 @@ int BotChat_EnemySuicide(bot_state_t *bs) {
 	//
 	rnd = trap_Characteristic_BFloat(bs->character, CHARACTERISTIC_CHAT_ENEMYSUICIDE, 0, 1);
 	//don't chat in teamplay
-	if (TeamPlayIsOn()) return qfalse;
+	if (GAMETYPE_IS_A_TEAM_GAME(gametype)) return qfalse;
 	// don't chat in tournament mode
 	if (gametype == GT_TOURNAMENT) return qfalse;
 	//if fast chat is off
@@ -747,7 +747,7 @@ int BotChat_HitTalking(bot_state_t *bs) {
 	//
 	rnd = trap_Characteristic_BFloat(bs->character, CHARACTERISTIC_CHAT_HITTALKING, 0, 1);
 	//don't chat in teamplay
-	if (TeamPlayIsOn()) return qfalse;
+	if (GAMETYPE_IS_A_TEAM_GAME(gametype)) return qfalse;
 	// don't chat in tournament mode
 	if (gametype == GT_TOURNAMENT) return qfalse;
 	//if fast chat is off
@@ -787,7 +787,7 @@ int BotChat_HitNoDeath(bot_state_t *bs) {
 	if (BotNumActivePlayers() <= 1) return qfalse;
 	rnd = trap_Characteristic_BFloat(bs->character, CHARACTERISTIC_CHAT_HITNODEATH, 0, 1);
 	//don't chat in teamplay
-	if (TeamPlayIsOn()) return qfalse;
+	if (GAMETYPE_IS_A_TEAM_GAME(gametype)) return qfalse;
 	// don't chat in tournament mode
 	if (gametype == GT_TOURNAMENT) return qfalse;
 	//if fast chat is off
@@ -825,7 +825,7 @@ int BotChat_HitNoKill(bot_state_t *bs) {
 	if (BotNumActivePlayers() <= 1) return qfalse;
 	rnd = trap_Characteristic_BFloat(bs->character, CHARACTERISTIC_CHAT_HITNOKILL, 0, 1);
 	//don't chat in teamplay
-	if (TeamPlayIsOn()) return qfalse;
+	if (GAMETYPE_IS_A_TEAM_GAME(gametype)) return qfalse;
 	// don't chat in tournament mode
 	if (gametype == GT_TOURNAMENT) return qfalse;
 	//if fast chat is off
@@ -885,7 +885,7 @@ int BotChat_Random(bot_state_t *bs) {
 	else {
 		EasyClientName(bs->lastkilledplayer, name, sizeof(name));
 	}
-	if (TeamPlayIsOn()) {
+	if (GAMETYPE_IS_A_TEAM_GAME(gametype)) {
 		trap_EA_Command(bs->client, "vtaunt");
 		return qfalse;			// don't wait
 	}
