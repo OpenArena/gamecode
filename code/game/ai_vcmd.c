@@ -251,15 +251,15 @@ void BotVoiceChat_Camp(bot_state_t *bs, int client, int mode) {
 	//if info is valid (in PVS)
 	if (entinfo.valid) {
 		areanum = BotPointAreaNum(entinfo.origin);
-		if (areanum) { // && trap_AAS_AreaReachability(areanum)) {
+		if (areanum) { /* && trap_AAS_AreaReachability(areanum)) {
 			//NOTE: just assume the bot knows where the person is
-			//if (BotEntityVisible(bs->entitynum, bs->eye, bs->viewangles, 360, client)) {
+			//if (BotEntityVisible(bs->entitynum, bs->eye, bs->viewangles, 360, client)) { */
 				bs->teamgoal.entitynum = client;
 				bs->teamgoal.areanum = areanum;
 				VectorCopy(entinfo.origin, bs->teamgoal.origin);
 				VectorSet(bs->teamgoal.mins, -8, -8, -8);
 				VectorSet(bs->teamgoal.maxs, 8, 8, 8);
-			//}
+			/* } */
 		}
 	}
 	//if the other is not visible
