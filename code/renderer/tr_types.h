@@ -117,6 +117,11 @@ typedef struct {
 	vec3_t		eyepos[2];			// looking from
 	vec3_t		eyelook;			// looking from
 
+	int		glow;
+	int		glowcol;
+
+	int		tethering;			// fake physics lookups
+	vec3_t		tetherpos;			// position of tether
 
 } refEntity_t;
 

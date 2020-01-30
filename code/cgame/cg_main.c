@@ -146,6 +146,7 @@ vmCvar_t cg_tracerLength;
 vmCvar_t cg_autoswitch;
 vmCvar_t cg_ignore;
 vmCvar_t cg_simpleItems;
+vmCvar_t cg_alternateShell;
 vmCvar_t cg_fov;
 vmCvar_t cg_zoomFov;
 vmCvar_t cg_thirdPerson;
@@ -341,6 +342,7 @@ static cvarTable_t cvarTable[] = {// bk001129
 	{ &cg_crosshairY, "cg_crosshairY", "0", CVAR_ARCHIVE},
 	{ &cg_brassTime, "cg_brassTime", "2500", CVAR_ARCHIVE},
 	{ &cg_simpleItems, "cg_simpleItems", "0", CVAR_ARCHIVE},
+	{ &cg_alternateShell, "cg_alternateShell", "0", CVAR_ARCHIVE},
 	{ &cg_addMarks, "cg_marks", "1", CVAR_ARCHIVE},
 	{ &cg_lagometer, "cg_lagometer", "1", CVAR_ARCHIVE},
 	{ &cg_railTrailTime, "cg_railTrailTime", "600", CVAR_ARCHIVE},

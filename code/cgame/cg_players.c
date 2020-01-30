@@ -2402,7 +2402,6 @@ static void CG_PlayerSplash(centity_t *cent) {
 
 	trap_R_AddPolyToScene(cgs.media.wakeMarkShader, 4, verts);
 }
-
 /*
 ===============
 CG_AddRefEntityWithPowerups
@@ -2419,43 +2418,86 @@ void CG_AddRefEntityWithPowerups(refEntity_t *ent, entityState_t *state, int tea
 			trap_R_AddRefEntityToScene(ent);
 		}
 	} else {
+		if (cg_alternateShell.integer < 2)	// leilei - skip the shell for the glow
 		trap_R_AddRefEntityToScene(ent);
 		if (!isMissile && (cgs.dmflags & DF_PLAYER_OVERLAY) && !(state->eFlags & EF_DEAD)) {
-			switch (team) {
-				case TEAM_RED:
-					ent->customShader = cgs.media.redOverlay;
-					trap_R_AddRefEntityToScene(ent);
-					break;
-				case TEAM_BLUE:
-					ent->customShader = cgs.media.blueOverlay;
-					trap_R_AddRefEntityToScene(ent);
-					break;
-				default:
-					ent->customShader = cgs.media.neutralOverlay;
-					trap_R_AddRefEntityToScene(ent);
-			}
+				if (cg_alternateShell.integer > 1){
+					ent->glow = 1337;
+					switch (team) {
+						case TEAM_RED:
+							ent->glowcol = 0xF80A85;
+							break;
+						case TEAM_BLUE:
+							ent->glowcol = 0x0585FD;
+							break;
+						default:
+							ent->glowcol = 0xA0A0A0;
+					}
+				}
+				else
+				{
+					switch (team) {
+						case TEAM_RED:
+							ent->customShader = cgs.media.redOverlay;
+							trap_R_AddRefEntityToScene(ent);
+							break;
+						case TEAM_BLUE:
+							ent->customShader = cgs.media.blueOverlay;
+							trap_R_AddRefEntityToScene(ent);
+							break;
+						default:
+							ent->customShader = cgs.media.neutralOverlay;
+							trap_R_AddRefEntityToScene(ent);
+					}
+				}
 		}
 
 		if (state->powerups & (1 << PW_QUAD)) {
+			if (cg_alternateShell.integer > 1){
+				ent->glow = 1338;
+				if (team == TEAM_RED)
+				ent->glowcol = 0xFF3040;
+				else
+				ent->glowcol = 0x0040E2;
+
+			}
+			else
+			{
 			if (team == TEAM_RED)
 				ent->customShader = cgs.media.redQuadShader;
 			else
 				ent->customShader = cgs.media.quadShader;
 			trap_R_AddRefEntityToScene(ent);
+			}
 		}
 		if (state->powerups & (1 << PW_REGEN)) {
 			if (((cg.time / 100) % 10) == 1) {
-				ent->customShader = cgs.media.regenShader;
-				trap_R_AddRefEntityToScene(ent);
+				if (cg_alternateShell.integer > 1){
+					ent->glow = 1337;
+					ent->glowcol = 0xFF6080;
+				}
+				else
+				{
+					ent->customShader = cgs.media.regenShader;
+					trap_R_AddRefEntityToScene(ent);
+				}
 			}
 		}
 		if (state->powerups & (1 << PW_BATTLESUIT)) {
-			ent->customShader = cgs.media.battleSuitShader;
-			trap_R_AddRefEntityToScene(ent);
+				if (cg_alternateShell.integer > 1){
+					ent->glow = 1340;
+					ent->glowcol = 0xE29000;
+				}
+				else
+				{
+					ent->customShader = cgs.media.battleSuitShader;
+					trap_R_AddRefEntityToScene(ent);
+				}
 		}
+		if (cg_alternateShell.integer > 1)	// NOW add the entity for the glow
+		trap_R_AddRefEntityToScene(ent);
 	}
 }
-
 /*
 =================
 CG_LightVerts
