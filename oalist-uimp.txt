@@ -1,0 +1,9 @@
+code/ui/ui_atoms.c
+code/ui/ui_gameinfo.c
+code/ui/ui_main.c
+code/ui/ui_players.c
+code/ui/ui_shared.c
+code/game/bg_lib.c
+code/game/bg_misc.c
+code/qcommon/q_math.c
+code/qcommon/q_shared.c
