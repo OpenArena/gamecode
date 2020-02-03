@@ -133,11 +133,8 @@ void TossClientItems( gentity_t *self )
 		}
 	}
 
-	if (g_instantgib.integer || g_rockets.integer || g_gametype.integer == GT_CTF_ELIMINATION || g_elimination_allgametypes.integer) {
-		//Nothing!
-	}
-	else if ( weapon > WP_MACHINEGUN && weapon != WP_GRAPPLING_HOOK &&
-	          self->client->ps.ammo[ weapon ] ) {
+	if ((!G_HasEliminationRules(g_gametype.integer) || (G_IsARoundBasedGametype(g_gametype.integer) && !G_UsesTeamFlags(g_gametype.integer))) &&
+			(weapon > WP_MACHINEGUN && weapon != WP_GRAPPLING_HOOK && self->client->ps.ammo[weapon])) {
 		// find the item type for this weapon
 		item = BG_FindItemForWeapon( weapon );
 

@@ -429,9 +429,8 @@ void Touch_Item (gentity_t *ent, gentity_t *other, trace_t *trace)
 	int			respawn;
 	qboolean	predict;
 
-	//instant gib
-	if ((g_instantgib.integer || g_rockets.integer || g_gametype.integer == GT_CTF_ELIMINATION || g_elimination_allgametypes.integer)
-	        && ent->item->giType != IT_TEAM)
+	//In non-Elimination-based games, only key objectives are needed.
+	if (G_HasEliminationRules(g_gametype.integer) && ent->item->giType != IT_TEAM)
 		return;
 
 	//Cannot touch flag before round starts
@@ -443,9 +442,6 @@ void Touch_Item (gentity_t *ent, gentity_t *other, trace_t *trace)
 	            (other->client->sess.sessionTeam==TEAM_BLUE && (level.eliminationSides+level.roundNumber)%2 == 0 ) ||
 	            (other->client->sess.sessionTeam==TEAM_RED && (level.eliminationSides+level.roundNumber)%2 != 0 ) ))
 		return;
-
-	if (g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_LMS)
-		return;		//nothing to pick up in elimination
 
 	if (!other->client)
 		return;
@@ -741,18 +737,16 @@ void FinishSpawningItem( gentity_t *ent )
 
 
 	// powerups don't spawn in for a while (but not in elimination)
-	if(!G_IsARoundBasedGametype(g_gametype.integer) && !g_instantgib.integer && !g_elimination_allgametypes.integer && !g_rockets.integer )
-		if ( ent->item->giType == IT_POWERUP ) {
-			float	respawn;
+	if (!G_HasEliminationRules(g_gametype.integer) && ent->item->giType == IT_POWERUP ) {
+		float	respawn;
 
-			respawn = 45 + crandom() * 15;
-			ent->s.eFlags |= EF_NODRAW;
-			ent->r.contents = 0;
-			ent->nextthink = level.time + respawn * 1000;
-			ent->think = RespawnItem;
-			return;
-		}
-
+		respawn = 45 + crandom() * 15;
+		ent->s.eFlags |= EF_NODRAW;
+		ent->r.contents = 0;
+		ent->nextthink = level.time + respawn * 1000;
+		ent->think = RespawnItem;
+		return;
+	}
 
 	trap_LinkEntity (ent);
 }
@@ -995,8 +989,7 @@ void G_SpawnItem (gentity_t *ent, gitem_t *item)
 
 	ent->physicsBounce = 0.50;		// items are bouncy
 
-	if (g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_LMS ||
-	        ( item->giType != IT_TEAM && (g_instantgib.integer || g_rockets.integer || g_elimination_allgametypes.integer || g_gametype.integer==GT_CTF_ELIMINATION) ) ) {
+	if (G_HasEliminationRules(g_gametype.integer) && item->giType != IT_TEAM) {
 		ent->s.eFlags |= EF_NODRAW; //Invisible in elimination
 		ent->r.svFlags |= SVF_NOCLIENT;  //Don't broadcast
 	}

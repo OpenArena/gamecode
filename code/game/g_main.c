@@ -130,6 +130,7 @@ vmCvar_t g_elimination_chain;
 vmCvar_t g_elimination_mine;
 vmCvar_t g_elimination_nail;
 vmCvar_t g_elimination_lockspectator;
+vmCvar_t g_elimination_keepItems;
 vmCvar_t g_rockets;
 //dmn_clowns suggestions (with my idea of implementing):
 vmCvar_t g_instantgib;
@@ -339,6 +340,8 @@ static cvarTable_t gameCvarTable[] = {
 	{ &g_elimination_ctf_oneway, "elimination_ctf_oneway", "0", CVAR_ARCHIVE, 0, qtrue },
 
 	{ &g_elimination_lockspectator, "elimination_lockspectator", "0", 0, qtrue },
+
+	{ &g_elimination_keepItems, "elimination_keepItems", "0", CVAR_ARCHIVE, qtrue },
 
 	{ &g_awardpushing, "g_awardpushing", "1", CVAR_ARCHIVE, 0, qtrue },
 
@@ -2871,5 +2874,36 @@ Checks if the gametype has a round-based system.
  */
 qboolean G_IsARoundBasedGametype(int check) {
 	return GAMETYPE_IS_ROUND_BASED(check);
+}
+/*
+===================
+G_HasEliminationRules
+
+Checks if the gametype uses Elimination (all weapons at start, no pickups) rules.
+===================
+ */
+qboolean G_HasEliminationRules(int check) {
+	// The gametype doesn't use Elimination rules if:
+	if (G_IsARoundBasedGametype (check)) {
+		// Is a round-based no-item game.
+		if (!g_elimination_keepItems.integer) {
+			return qtrue;
+		}
+	}
+	else {
+		// Is a non-round-based Elimination game.
+		if (g_elimination_allgametypes.integer) {
+			return qtrue;
+		}
+	}
+	// Is an Instagib match.
+	if (g_instantgib.integer) {
+		return qtrue;
+	}
+	// Is an All Rockets match.
+	if (g_rockets.integer) {
+		return qtrue;
+	}
+	return qfalse;
 }
 /* /Neon_Knight */

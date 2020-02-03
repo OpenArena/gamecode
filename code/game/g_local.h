@@ -1115,6 +1115,7 @@ extern vmCvar_t g_elimination_mine;
 extern vmCvar_t g_elimination_nail;
 //If lockspectator: 0=no limit, 1 = cannot follow enemy, 2 = must follow friend
 extern vmCvar_t g_elimination_lockspectator;
+extern vmCvar_t g_elimination_keepItems;
 extern vmCvar_t g_rockets;
 //new in elimination Beta2
 extern vmCvar_t g_instantgib;
@@ -1431,4 +1432,5 @@ qboolean G_IsATeamGametype(int check);	/* Whether the gametype is team-based or 
 qboolean G_UsesTeamFlags(int check);	/* Whether the gametype uses the red and blue flags. */
 qboolean G_UsesTheWhiteFlag(int check);	/* Whether the gametype uses the neutral flag. */
 qboolean G_IsARoundBasedGametype(int check);	/* Whether the gametype uses the neutral flag. */
+qboolean G_HasEliminationRules(int check);	/* Whether the current game uses Elimination rules (all weapons at start, no pickups). */
 /* /Neon_Knight */
