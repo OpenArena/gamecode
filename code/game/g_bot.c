@@ -873,7 +873,7 @@ static void G_SpawnBots( char *botList, int baseDelay ) {
 	delay = baseDelay;
 	while( *p ) {
 		//skip spaces
-		while( *p && *p == ' ' ) {
+		while( *p == ' ' ) {
 			p++;
 		}
 		if( !*p ) {
