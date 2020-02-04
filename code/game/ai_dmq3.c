@@ -437,11 +437,13 @@ void BotSetTeamStatus(bot_state_t *bs) {
 				teamtask = TEAMTASK_OFFENSE;
 			else
 				teamtask = TEAMTASK_DEFENSE;
+			break;
 		case LTG_POINTB:
 			if (BotTeam(bs) == TEAM_RED)
 				teamtask = TEAMTASK_OFFENSE;
 			else
 				teamtask = TEAMTASK_DEFENSE;
+			break;
 		default:
 			teamtask = TEAMTASK_PATROL;
 			break;
