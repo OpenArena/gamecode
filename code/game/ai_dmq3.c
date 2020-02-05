@@ -5506,3 +5506,29 @@ BotShutdownDeathmatchAI
 void BotShutdownDeathmatchAI(void) {
 	altroutegoals_setup = qfalse;
 }
+
+/*
+==================
+BotCanAndWantsToUseTheGrapple
+Before using the Grappling Hook, runs a series of checks.
+==================
+*/
+int BotCanAndWantsToUseTheGrapple(bot_state_t *bs) {
+	float grappler;
+	// Bots won't use the grapple if:
+	// * grappling for them is disabled
+	if (!bot_grapple.integer) {
+		return qfalse;
+	}
+	// * they don't have the Grappling Hook
+	if (!bs->inventory[INVENTORY_GRAPPLINGHOOK]) {
+		return qfalse;
+	}
+	// * if their own bot file settings allow for it
+	grappler = trap_Characteristic_BFloat(bs->character, CHARACTERISTIC_GRAPPLE_USER, 0, 1);
+	if (grappler < 0.5) {
+		return qfalse;
+	}
+	// Else they'll be happy to use it
+	return qtrue;
+}
