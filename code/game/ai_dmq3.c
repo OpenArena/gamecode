@@ -1701,7 +1701,9 @@ BotCheckItemPickup
 void BotCheckItemPickup(bot_state_t *bs, int *oldinventory) {
 	int offence, leader;
 
-	if (!G_UsesKeyObjectives(gametype))
+	if (!G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype) &&
+			!G_UsesTeamObelisks(gametype) && !G_UsesTheWhiteObelisk(gametype) &&
+			gametype != GT_DOUBLE_D && gametype != GT_DOMINATION)
 		return;
 
 	offence = -1;

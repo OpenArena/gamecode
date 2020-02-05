@@ -900,11 +900,10 @@ void UI_RankStatusMenu( void );
 #endif
 
 /* Neon_Knight: Useful check in order to have code consistency. */
-qboolean UI_IsATeamGametype(int check);	/* Whether the gametype is team-based or not.*/
-qboolean UI_UsesKeyObjectives(int check);	/* Whether the gametype uses key objectives or not. */
-qboolean UI_UsesTeamFlags(int check);	/* Whether the gametype uses the red and blue flags. */
-qboolean UI_UsesTheWhiteFlag(int check);	/* Whether the gametype uses the neutral flag. */
+qboolean UI_IsATeamGametype(int check);			/* Whether the gametype is team-based or not.*/
+qboolean UI_UsesTeamFlags(int check);			/* Whether the gametype uses the red and blue flags. */
+qboolean UI_UsesTheWhiteFlag(int check);		/* Whether the gametype uses the neutral flag. */
+qboolean UI_UsesTeamObelisks(int check);		/* Whether the gametype uses team obelisks. */
+qboolean UI_UsesTheWhiteObelisk(int check);		/* Whether the gametype uses team obelisks. */
 qboolean UI_IsARoundBasedGametype(int check);	/* Whether the gametype uses the neutral flag. */
-qboolean UI_UsesTeamObelisks(int check);	/* Whether the gametype uses team obelisks. */
-qboolean UI_UsesControlPoints(int check);	/* Whether the gametype uses control points. */
 /* /Neon_Knight */

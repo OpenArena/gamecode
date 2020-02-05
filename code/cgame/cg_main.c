@@ -803,7 +803,7 @@ static void CG_RegisterSounds(void) {
 	// N_G: Another condition that makes no sense to me, see for
 	// yourself if you really meant this
 	// Sago: Makes perfect sense: Load team game stuff if the gametype is a teamgame and not an exception (like GT_LMS)
-	if ((CG_IsATeamGametype(cgs.gametype) && CG_UsesKeyObjectives(cgs.gametype)) ||
+	if ((CG_IsATeamGametype(cgs.gametype)) ||
 			cg_buildScript.integer) {
 
 		cgs.media.captureAwardSound = trap_S_RegisterSound("sound/teamplay/flagcapture_yourteam.wav", qtrue);
@@ -831,14 +831,14 @@ static void CG_RegisterSounds(void) {
 			cgs.media.yourTeamTookEnemyFlagSound = trap_S_RegisterSound("sound/teamplay/voc_team_flag.wav", qtrue);
 		}
 
-		if (cgs.gametype == GT_1FCTF || cg_buildScript.integer) {
+		if (CG_UsesTheWhiteFlag(cgs.gametype) || cg_buildScript.integer) {
 			// FIXME: get a replacement for this sound ?
 			cgs.media.neutralFlagReturnedSound = trap_S_RegisterSound("sound/teamplay/flagreturn_opponent.wav", qtrue);
 			cgs.media.yourTeamTookTheFlagSound = trap_S_RegisterSound("sound/teamplay/voc_team_1flag.wav", qtrue);
 			cgs.media.enemyTookTheFlagSound = trap_S_RegisterSound("sound/teamplay/voc_enemy_1flag.wav", qtrue);
 		}
 
-		if (cgs.gametype == GT_OBELISK || cg_buildScript.integer) {
+		if ((CG_UsesTeamObelisks(cgs.gametype) && !CG_UsesTheWhiteObelisk(cgs.gametype)) || cg_buildScript.integer) {
 			cgs.media.yourBaseIsUnderAttackSound = trap_S_RegisterSound("sound/teamplay/voc_base_attack.wav", qtrue);
 			// loadingscreen
 #ifdef SCRIPTHUD
@@ -2704,8 +2704,6 @@ void CG_FairCvars() {
 	do_vid_restart = qtrue;
 }
 
-
-
 /* Neon_Knight: Useful check in order to have code consistency. */
 /*
 ===================
@@ -2717,16 +2715,7 @@ Checks if the gametype is a team-based game.
 qboolean CG_IsATeamGametype(int gametype) {
 	return GAMETYPE_IS_A_TEAM_GAME(gametype);
 }
-/*
-===================
-CG_UsesKeyObjectives
 
-Checks if the gametype makes use of gametype-specific objectives.
-===================
- */
-qboolean CG_UsesKeyObjectives(int check) {
-	return GAMETYPE_USES_KEY_OBJECTIVES(check);
-}
 /*
 ===================
 CG_UsesTeamFlags
@@ -2737,6 +2726,7 @@ Checks if the gametype makes use of the red and blue flags.
 qboolean CG_UsesTeamFlags(int check) {
 	return GAMETYPE_USES_RED_AND_BLUE_FLAG(check);
 }
+
 /*
 ===================
 CG_UsesTheWhiteFlag
@@ -2747,6 +2737,29 @@ Checks if the gametype makes use of the neutral flag.
 qboolean CG_UsesTheWhiteFlag(int check) {
 	return GAMETYPE_USES_WHITE_FLAG(check);
 }
+
+/*
+===================
+CG_UsesTeamObelisks
+
+Checks if the gametype uses team-colored obelisks.
+===================
+ */
+qboolean CG_UsesTeamObelisks(int check) {
+	return GAMETYPE_USES_RED_AND_BLUE_OBELISK(check);
+}
+
+/*
+===================
+CG_UsesTheWhiteObelisk
+
+Checks if the gametype uses the neutral obelisks.
+===================
+ */
+qboolean CG_UsesTheWhiteObelisk(int check) {
+	return GAMETYPE_USES_WHITE_OBELISK(check);
+}
+
 /*
 ===================
 CG_IsARoundBasedGametype
@@ -2756,15 +2769,5 @@ Checks if the gametype has a round-based system.
  */
 qboolean CG_IsARoundBasedGametype(int check) {
 	return GAMETYPE_IS_ROUND_BASED(check);
-}
-/*
-===================
-CG_UsesTeamObelisks
-
-Checks if the gametype uses team-colored obelisks.
-===================
- */
-qboolean CG_UsesTeamObelisks(int check) {
-	return GAMETYPE_USES_OBELISKS(check);
 }
 /* /Neon_Knight */

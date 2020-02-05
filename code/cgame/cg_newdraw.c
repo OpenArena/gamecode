@@ -1268,7 +1268,7 @@ static void CG_Draw2ndPlace(rectDef_t *rect, float scale, vec4_t color, qhandle_
 const char *CG_GetGameStatusText(void)
 {
 	const char *s = "";
-	if (!(CG_IsATeamGametype(cgs.gametype) && CG_UsesKeyObjectives(cgs.gametype))) {
+	if (!CG_IsATeamGametype(cgs.gametype)) {
 		if (cg.snap->ps.persistant[PERS_TEAM] != TEAM_SPECTATOR ) {
 			s = va("%s place with %i",CG_PlaceString( cg.snap->ps.persistant[PERS_RANK] + 1 ),cg.snap->ps.persistant[PERS_SCORE] );
 		}

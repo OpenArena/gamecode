@@ -2039,11 +2039,10 @@ void	trap_R_LFX_ParticleEffect( int effect, const vec3_t origin, const vec3_t ve
 // LEILEI ENHANCEMENT
 
 /* Neon_Knight: Useful check in order to have code consistency. */
-qboolean CG_IsATeamGametype(int check);	/* Whether the gametype is team-based or not.*/
-qboolean CG_UsesKeyObjectives(int check);	/* Whether the gametype uses key objectives or not. */
-qboolean CG_UsesTeamFlags(int check);	/* Whether the gametype uses the red and blue flags. */
-qboolean CG_UsesTheWhiteFlag(int check);	/* Whether the gametype uses the neutral flag. */
+qboolean CG_IsATeamGametype(int check);			/* Whether the gametype is team-based or not.*/
+qboolean CG_UsesTeamFlags(int check);			/* Whether the gametype uses the red and blue flags. */
+qboolean CG_UsesTheWhiteFlag(int check);		/* Whether the gametype uses the neutral flag. */
+qboolean CG_UsesTeamObelisks(int check);		/* Whether the gametype uses team obelisks. */
+qboolean CG_UsesTheWhiteObelisk(int check);		/* Whether the gametype uses team obelisks. */
 qboolean CG_IsARoundBasedGametype(int check);	/* Whether the gametype uses the neutral flag. */
-qboolean CG_UsesTeamObelisks(int check);	/* Whether the gametype uses team obelisks. */
-qboolean CG_UsesControlPoints(int check);	/* Whether the gametype uses control points. */
 /* /Neon_Knight */

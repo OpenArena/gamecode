@@ -2297,7 +2297,7 @@ void SP_team_redobelisk( gentity_t *ent )
 {
 	gentity_t *obelisk;
 
-	if (!G_UsesKeyObjectives(g_gametype.integer)) {
+	if (!G_UsesTeamObelisks(g_gametype.integer)) {
 		G_FreeEntity(ent);
 		return;
 	}
@@ -2323,7 +2323,7 @@ void SP_team_blueobelisk( gentity_t *ent )
 {
 	gentity_t *obelisk;
 
-	if (!G_UsesKeyObjectives(g_gametype.integer)) {
+	if (!G_UsesTeamObelisks(g_gametype.integer)) {
 		G_FreeEntity(ent);
 		return;
 	}

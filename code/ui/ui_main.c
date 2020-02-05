@@ -7532,24 +7532,12 @@ static void UI_StartServerRefresh(qboolean full)
 UI_IsATeamGametype
 
 Checks if the gametype is a team-based game.
-(UI_IsATeamGame(check,qtrue))
 ===================
  */
-qboolean UI_IsATeamGametype(int check) {
-	return GAMETYPE_IS_A_TEAM_GAME(check);
+qboolean UI_IsATeamGametype(int gametype) {
+	return GAMETYPE_IS_A_TEAM_GAME(gametype);
 }
-/*
-===================
-UI_UsesKeyObjectives
 
-Checks if the gametype makes use of gametype-specific objectives.
-(Flags, obelisks, control points...)
-(UI_IsATeamGame(check,qfalse))
-===================
- */
-qboolean UI_UsesKeyObjectives(int check) {
-	return GAMETYPE_USES_KEY_OBJECTIVES(check);
-}
 /*
 ===================
 UI_UsesTeamFlags
@@ -7560,6 +7548,7 @@ Checks if the gametype makes use of the red and blue flags.
 qboolean UI_UsesTeamFlags(int check) {
 	return GAMETYPE_USES_RED_AND_BLUE_FLAG(check);
 }
+
 /*
 ===================
 UI_UsesTheWhiteFlag
@@ -7570,6 +7559,29 @@ Checks if the gametype makes use of the neutral flag.
 qboolean UI_UsesTheWhiteFlag(int check) {
 	return GAMETYPE_USES_WHITE_FLAG(check);
 }
+
+/*
+===================
+UI_UsesTeamObelisks
+
+Checks if the gametype uses team-colored obelisks.
+===================
+ */
+qboolean UI_UsesTeamObelisks(int check) {
+	return GAMETYPE_USES_RED_AND_BLUE_OBELISK(check);
+}
+
+/*
+===================
+UI_UsesTheWhiteObelisk
+
+Checks if the gametype uses the neutral obelisks.
+===================
+ */
+qboolean UI_UsesTheWhiteObelisk(int check) {
+	return GAMETYPE_USES_WHITE_OBELISK(check);
+}
+
 /*
 ===================
 UI_IsARoundBasedGametype
@@ -7579,15 +7591,5 @@ Checks if the gametype has a round-based system.
  */
 qboolean UI_IsARoundBasedGametype(int check) {
 	return GAMETYPE_IS_ROUND_BASED(check);
-}
-/*
-===================
-CG_UsesTeamObelisks
-
-Checks if the gametype uses team-colored obelisks.
-===================
- */
-qboolean UI_UsesTeamObelisks(int check) {
-	return GAMETYPE_USES_OBELISKS(check);
 }
 /* /Neon_Knight */
