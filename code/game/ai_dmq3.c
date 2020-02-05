@@ -153,19 +153,6 @@ void BotSetUserInfo(bot_state_t *bs, char *key, char *value) {
 
 /*
 ==================
-BotCTFCarryingFlag
-==================
- */
-int BotCTFCarryingFlag(bot_state_t *bs) {
-	if (!G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) return CTF_FLAG_NONE;
-
-	if (bs->inventory[INVENTORY_REDFLAG] > 0) return CTF_FLAG_RED;
-	else if (bs->inventory[INVENTORY_BLUEFLAG] > 0) return CTF_FLAG_BLUE;
-	return CTF_FLAG_NONE;
-}
-
-/*
-==================
 BotTeam
 ==================
  */
@@ -339,32 +326,6 @@ qboolean EntityCarriesCubes(aas_entityinfo_t *entinfo) {
 
 /*
 ==================
-Bot1FCTFCarryingFlag
-==================
- */
-int Bot1FCTFCarryingFlag(bot_state_t *bs) {
-	if (!G_UsesTheWhiteFlag(gametype)) return qfalse;
-
-	if (bs->inventory[INVENTORY_NEUTRALFLAG] > 0) return qtrue;
-	return qfalse;
-}
-
-/*
-==================
-BotHarvesterCarryingCubes
-==================
- */
-int BotHarvesterCarryingCubes(bot_state_t *bs) {
-	if (gametype != GT_HARVESTER) return qfalse;
-
-	if (bs->inventory[INVENTORY_REDCUBE] > 0) return qtrue;
-	if (bs->inventory[INVENTORY_BLUECUBE] > 0) return qtrue;
-	return qfalse;
-}
-//#endif
-
-/*
-==================
 BotRememberLastOrderedTask
 ==================
  */
@@ -531,7 +492,7 @@ void BotCTFSeekGoals(bot_state_t *bs) {
 	aas_entityinfo_t entinfo;
 
 	//when carrying a flag in ctf the bot should rush to the base
-	if (BotCTFCarryingFlag(bs)) {
+	if (BotCarriesObjective(bs)) {
 		//if not already rushing to the base
 		if (bs->ltgtype != LTG_RUSHBASE) {
 			BotRefuseOrder(bs);
@@ -804,7 +765,7 @@ BotCTFRetreatGoals
  */
 void BotCTFRetreatGoals(bot_state_t *bs) {
 	//when carrying a flag in ctf the bot should rush to the base
-	if (BotCTFCarryingFlag(bs)) {
+	if (BotCarriesObjective(bs)) {
 		//if not already rushing to the base
 		if (bs->ltgtype != LTG_RUSHBASE) {
 			BotRefuseOrder(bs);
@@ -905,7 +866,7 @@ void Bot1FCTFSeekGoals(bot_state_t *bs) {
 	int c;
 
 	//when carrying a flag in ctf the bot should rush to the base
-	if (Bot1FCTFCarryingFlag(bs)) {
+	if (BotCarriesObjective(bs)) {
 		//if not already rushing to the base
 		if (bs->ltgtype != LTG_RUSHBASE) {
 			BotRefuseOrder(bs);
@@ -1120,7 +1081,7 @@ Bot1FCTFRetreatGoals
  */
 void Bot1FCTFRetreatGoals(bot_state_t *bs) {
 	//when carrying a flag in ctf the bot should rush to the enemy base
-	if (Bot1FCTFCarryingFlag(bs)) {
+	if (BotCarriesObjective(bs)) {
 		//if not already rushing to the base
 		if (bs->ltgtype != LTG_RUSHBASE) {
 			BotRefuseOrder(bs);
@@ -1262,7 +1223,7 @@ void BotHarvesterSeekGoals(bot_state_t *bs) {
 	int c;
 
 	//when carrying cubes in harvester the bot should rush to the base
-	if (BotHarvesterCarryingCubes(bs)) {
+	if (BotCarriesObjective(bs)) {
 		//if not already rushing to the base
 		if (bs->ltgtype != LTG_RUSHBASE) {
 			BotRefuseOrder(bs);
@@ -1394,7 +1355,7 @@ BotHarvesterRetreatGoals
  */
 void BotHarvesterRetreatGoals(bot_state_t *bs) {
 	//when carrying cubes in harvester the bot should rush to the base
-	if (BotHarvesterCarryingCubes(bs)) {
+	if (BotCarriesObjective(bs)) {
 		//if not already rushing to the base
 		if (bs->ltgtype != LTG_RUSHBASE) {
 			BotRefuseOrder(bs);
@@ -1896,36 +1857,18 @@ void BotUseKamikaze(bot_state_t *bs) {
 	if (bs->kamikaze_time > FloatTime())
 		return;
 	bs->kamikaze_time = FloatTime() + 0.2;
-	if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
-		//never use kamikaze if the team flag carrier is visible
-		if (BotCTFCarryingFlag(bs))
-			return;
-		c = BotTeamFlagCarrierVisible(bs);
-		if (c >= 0) {
-			BotEntityInfo(c, &entinfo);
-			VectorSubtract(entinfo.origin, bs->origin, dir);
-			if (VectorLengthSquared(dir) < Square(KAMIKAZE_DIST))
+	if (G_UsesTeamFlags(gametype) || G_UsesTheWhiteFlag(gametype)) {
+		//never use kamikaze if the team flag carrier is visible (only in team games)
+		if (G_IsATeamGametype(gametype)) {
+			if (BotCarriesObjective(bs))
 				return;
-		}
-		c = BotEnemyFlagCarrierVisible(bs);
-		if (c >= 0) {
-			BotEntityInfo(c, &entinfo);
-			VectorSubtract(entinfo.origin, bs->origin, dir);
-			if (VectorLengthSquared(dir) < Square(KAMIKAZE_DIST)) {
-				trap_EA_Use(bs->client);
-				return;
+			c = BotTeamFlagCarrierVisible(bs);
+			if (c >= 0) {
+				BotEntityInfo(c, &entinfo);
+				VectorSubtract(entinfo.origin, bs->origin, dir);
+				if (VectorLengthSquared(dir) < Square(KAMIKAZE_DIST))
+					return;
 			}
-		}
-	} else if (gametype == GT_1FCTF) {
-		//never use kamikaze if the team flag carrier is visible
-		if (Bot1FCTFCarryingFlag(bs))
-			return;
-		c = BotTeamFlagCarrierVisible(bs);
-		if (c >= 0) {
-			BotEntityInfo(c, &entinfo);
-			VectorSubtract(entinfo.origin, bs->origin, dir);
-			if (VectorLengthSquared(dir) < Square(KAMIKAZE_DIST))
-				return;
 		}
 		c = BotEnemyFlagCarrierVisible(bs);
 		if (c >= 0) {
@@ -1956,7 +1899,7 @@ void BotUseKamikaze(bot_state_t *bs) {
 		}
 	} else if (gametype == GT_HARVESTER) {
 		//
-		if (BotHarvesterCarryingCubes(bs))
+		if (BotCarriesObjective(bs))
 			return;
 		//never use kamikaze if a team mate carrying cubes is visible
 		c = BotTeamCubeCarrierVisible(bs);
@@ -2002,35 +1945,13 @@ void BotUseInvulnerability(bot_state_t *bs) {
 	if (bs->invulnerability_time > FloatTime())
 		return;
 	bs->invulnerability_time = FloatTime() + 0.2;
-	if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
-		//never use kamikaze if the team flag carrier is visible
-		if (BotCTFCarryingFlag(bs))
-			return;
-		c = BotEnemyFlagCarrierVisible(bs);
-		if (c >= 0)
-			return;
-		//if near enemy flag and the flag is visible
-		switch (BotTeam(bs)) {
-			case TEAM_RED: goal = &ctf_blueflag;
-				break;
-			default: goal = &ctf_redflag;
-				break;
-		}
-		//if the obelisk is visible
-		VectorCopy(goal->origin, target);
-		target[2] += 1;
-		VectorSubtract(bs->origin, target, dir);
-		if (VectorLengthSquared(dir) < Square(200)) {
-			BotAI_Trace(&trace, bs->eye, NULL, NULL, target, bs->client, CONTENTS_SOLID);
-			if (trace.fraction >= 1 || trace.ent == goal->entitynum) {
-				trap_EA_Use(bs->client);
+	if (G_UsesTeamFlags(gametype) || G_UsesTheWhiteFlag(gametype)) {
+		//never use kamikaze if the team flag carrier is visible (1FCTF only)
+		if (G_IsATeamGametype(gametype)) {
+			if (BotCarriesObjective(bs)) {
 				return;
 			}
 		}
-	} else if (gametype == GT_1FCTF) {
-		//never use kamikaze if the team flag carrier is visible
-		if (Bot1FCTFCarryingFlag(bs))
-			return;
 		c = BotEnemyFlagCarrierVisible(bs);
 		if (c >= 0)
 			return;
@@ -2072,7 +1993,7 @@ void BotUseInvulnerability(bot_state_t *bs) {
 		}
 	} else if (gametype == GT_HARVESTER) {
 		//
-		if (BotHarvesterCarryingCubes(bs))
+		if (BotCarriesObjective(bs))
 			return;
 		c = BotEnemyCubeCarrierVisible(bs);
 		if (c >= 0)
@@ -2106,10 +2027,7 @@ BotBattleUseItems
 void BotBattleUseItems(bot_state_t *bs) {
 	if (bs->inventory[INVENTORY_HEALTH] < 40) {
 		if (bs->inventory[INVENTORY_TELEPORTER] > 0) {
-			if (!BotCTFCarryingFlag(bs)
-					&& !Bot1FCTFCarryingFlag(bs)
-					&& !BotHarvesterCarryingCubes(bs)
-					) {
+			if (!BotCarriesObjective(bs)) {
 				trap_EA_Use(bs->client);
 			}
 		}
@@ -2328,13 +2246,9 @@ BotWantsToRetreat
 int BotWantsToRetreat(bot_state_t *bs) {
 	aas_entityinfo_t entinfo;
 
-	if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
-		//always retreat when carrying a CTF flag
-		if (BotCTFCarryingFlag(bs))
-			return qtrue;
-	} else if (G_UsesTheWhiteFlag(gametype)) {
+	if (G_UsesTeamFlags(gametype) || G_UsesTheWhiteFlag(gametype)) {
 		//if carrying the flag then always retreat
-		if (Bot1FCTFCarryingFlag(bs))
+		if (BotCarriesObjective(bs))
 			return qtrue;
 	} else if (gametype == GT_OBELISK) {
 		//the bots should be dedicated to attacking the enemy obelisk
@@ -2350,7 +2264,7 @@ int BotWantsToRetreat(bot_state_t *bs) {
 		return qfalse;
 	} else if (gametype == GT_HARVESTER) {
 		//if carrying cubes then always retreat
-		if (BotHarvesterCarryingCubes(bs)) return qtrue;
+		if (BotCarriesObjective(bs)) return qtrue;
 	}
 	//
 	if (bs->enemy >= 0) {
@@ -2378,18 +2292,13 @@ BotWantsToChase
 int BotWantsToChase(bot_state_t *bs) {
 	aas_entityinfo_t entinfo;
 
-	if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
-		//never chase when carrying a CTF flag
-		if (BotCTFCarryingFlag(bs))
-			return qfalse;
-		//always chase if the enemy is carrying a flag
-		BotEntityInfo(bs->enemy, &entinfo);
-		if (EntityCarriesFlag(&entinfo))
-			return qtrue;
-	} else if (gametype == GT_1FCTF) {
-		//never chase if carrying the flag
-		if (Bot1FCTFCarryingFlag(bs))
-			return qfalse;
+	if (G_UsesTeamFlags(gametype) || G_UsesTheWhiteFlag(gametype)) {
+		//never chase if carrying the flag in team games
+		if (G_IsATeamGametype(gametype)) {
+			if (BotCarriesObjective(bs)) {
+				return qfalse;
+			}
+		}
 		//always chase if the enemy is carrying a flag
 		BotEntityInfo(bs->enemy, &entinfo);
 		if (EntityCarriesFlag(&entinfo))
@@ -2404,16 +2313,11 @@ int BotWantsToChase(bot_state_t *bs) {
 		}
 	} else if (gametype == GT_HARVESTER) {
 		//never chase if carrying cubes
-		if (BotHarvesterCarryingCubes(bs)) return qfalse;
+		if (BotCarriesObjective(bs)) return qfalse;
 
 		BotEntityInfo(bs->enemy, &entinfo);
 		// always chase if the enemy is carrying cubes
 		if (EntityCarriesCubes(&entinfo)) return qtrue;
-	} else if (gametype == GT_POSSESSION) {
-		//always chase if the enemy is carrying a flag
-		BotEntityInfo(bs->enemy, &entinfo);
-		if (EntityCarriesFlag(&entinfo))
-			return qtrue;
 	}
 	//if the bot is getting the flag
 	if (bs->ltgtype == LTG_GETFLAG)
@@ -5502,4 +5406,46 @@ BotShutdownDeathmatchAI
  */
 void BotShutdownDeathmatchAI(void) {
 	altroutegoals_setup = qfalse;
+}
+
+/*
+==================
+BotCarriesObjective
+General function which checks if a bot is carrying a key objective with them.
+==================
+ */
+int BotCarriesObjective(bot_state_t *bs) {
+	// Only for gametypes that use key objectives.
+	if (!G_UsesTeamFlags(gametype) &&
+			!G_UsesTheWhiteFlag(gametype) &&
+			gametype != GT_HARVESTER) {
+		return qfalse;
+	}
+	// CTF and eCTF
+	if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
+		if (bs->inventory[INVENTORY_REDFLAG] > 0) {
+			return CTF_FLAG_RED;
+		}
+		else if (bs->inventory[INVENTORY_BLUEFLAG] > 0) {
+			return CTF_FLAG_BLUE;
+		}
+		return CTF_FLAG_NONE;
+	}
+	// 1FCTF and Possession
+	else if (G_UsesTheWhiteFlag(gametype)) {
+		if (bs->inventory[INVENTORY_NEUTRALFLAG] > 0) {
+			return qtrue;
+		}
+		return qfalse;
+	}
+	// Well...
+	else if (gametype == GT_HARVESTER) {
+		if (bs->inventory[INVENTORY_REDCUBE] > 0) {
+			return qtrue;
+		}
+		if (bs->inventory[INVENTORY_BLUECUBE] > 0) {
+			return qtrue;
+		}
+	}
+	return qfalse;
 }

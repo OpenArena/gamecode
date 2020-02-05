@@ -292,20 +292,12 @@ void BotReportStatus(bot_state_t *bs) {
 	}
 
 	strcpy(flagstatus, "  ");
-	if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
-		if (BotCTFCarryingFlag(bs)) {
+	if (G_UsesTeamFlags(gametype) || G_UsesTheWhiteFlag(gametype)) {
 			if (BotTeam(bs) == TEAM_RED) strcpy(flagstatus, S_COLOR_RED"F ");
 			else strcpy(flagstatus, S_COLOR_BLUE"F ");
-		}
-	}
-	else if (gametype == GT_1FCTF) {
-		if (Bot1FCTFCarryingFlag(bs)) {
-			if (BotTeam(bs) == TEAM_RED) strcpy(flagstatus, S_COLOR_RED"F ");
-			else strcpy(flagstatus, S_COLOR_BLUE"F ");
-		}
 	}
 	else if (gametype == GT_HARVESTER) {
-		if (BotHarvesterCarryingCubes(bs)) {
+		if (BotCarriesObjective(bs)) {
 			if (BotTeam(bs) == TEAM_RED) Com_sprintf(flagstatus, sizeof(flagstatus), S_COLOR_RED"%2d", bs->inventory[INVENTORY_REDCUBE]);
 			else Com_sprintf(flagstatus, sizeof(flagstatus), S_COLOR_BLUE"%2d", bs->inventory[INVENTORY_BLUECUBE]);
 		}
@@ -454,18 +446,13 @@ void BotSetInfoConfigString(bot_state_t *bs) {
 	}
 
 	strcpy(carrying, "  ");
-	if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
-		if (BotCTFCarryingFlag(bs)) {
-			strcpy(carrying, "F ");
-		}
-	}
-	else if (G_UsesTheWhiteFlag(gametype)) {
-		if (Bot1FCTFCarryingFlag(bs)) {
+	if (G_UsesTeamFlags(gametype) || G_UsesTheWhiteFlag(gametype)) {
+		if (BotCarriesObjective(bs)) {
 			strcpy(carrying, "F ");
 		}
 	}
 	else if (gametype == GT_HARVESTER) {
-		if (BotHarvesterCarryingCubes(bs)) {
+		if (BotCarriesObjective(bs)) {
 			if (BotTeam(bs) == TEAM_RED) Com_sprintf(carrying, sizeof(carrying), "%2d", bs->inventory[INVENTORY_REDCUBE]);
 			else Com_sprintf(carrying, sizeof(carrying), "%2d", bs->inventory[INVENTORY_BLUECUBE]);
 		}
