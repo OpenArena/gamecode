@@ -444,7 +444,7 @@ void Touch_Item (gentity_t *ent, gentity_t *other, trace_t *trace)
 	            (other->client->sess.sessionTeam==TEAM_RED && (level.eliminationSides+level.roundNumber)%2 != 0 ) ))
 		return;
 
-	if (g_gametype.integer == GT_ELIMINATION)
+	if (g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_LMS)
 		return;		//nothing to pick up in elimination
 
 	if (!other->client)
@@ -995,7 +995,7 @@ void G_SpawnItem (gentity_t *ent, gitem_t *item)
 
 	ent->physicsBounce = 0.50;		// items are bouncy
 
-	if ((G_IsARoundBasedGametype(g_gametype.integer) && !G_UsesTeamFlags(g_gametype.integer)) ||
+	if (g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_LMS ||
 	        ( item->giType != IT_TEAM && (g_instantgib.integer || g_rockets.integer || g_elimination_allgametypes.integer || g_gametype.integer==GT_CTF_ELIMINATION) ) ) {
 		ent->s.eFlags |= EF_NODRAW; //Invisible in elimination
 		ent->r.svFlags |= SVF_NOCLIENT;  //Don't broadcast
