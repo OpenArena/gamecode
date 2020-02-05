@@ -62,7 +62,7 @@ void Possession_SpawnFlag( void ) {
 		//If not pick a random domination point
 		ent = SelectRandomEntity("domination_point");
 	}
-	if (!ent) {z
+	if (!ent) {
 		//Else pick a random deathmatch point
 		ent = SelectRandomEntityFilter("info_player_deathmatch", EntityFilterNoBotsOrHumanOnly);
 	}
