@@ -468,7 +468,7 @@ void CG_CheckLocalSounds( playerState_t *ps, playerState_t *ops ) {
 	}
 
 	// fraglimit warnings
-	if ((!CG_IsATeamGametype(cgs.gametype) && cgs.gametype != GT_POSSESSION) || cgs.gametype == GT_TEAM) {
+	if (CG_GametypeUsesFragLimit(cgs.gametype)) {
 		highScore = cgs.scores1;
 
 		if (cgs.gametype == GT_TEAM && cgs.scores2 > highScore) {

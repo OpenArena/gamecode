@@ -43,6 +43,7 @@ ui_votemenu
 ui_votemenu_custom
 ui_votemenu_gametype
 ui_votemenu_fraglimit
+ui_votemenu_scorelimit
 ui_votemenu_kick
 ui_votemenu_map
 ui_votemenu_timelimit

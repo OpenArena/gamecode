@@ -1919,6 +1919,9 @@ void MapInfoGet(const char* mapname, int gametype, mapinfo_result_t *result) {
 		if (Q_strequal(keyBuffer, "fragLimit")) {
 			if (mayRead) result->fragLimit = atoi(token);
 		}
+		if (Q_strequal(keyBuffer, "scoreLimit")) {
+			if (mayRead) result->scoreLimit = atoi(token);
+		}
 		if (Q_strequal(keyBuffer, "maxPlayers")) {
 			if (mayRead) result->maxPlayers = atoi(token);
 		}

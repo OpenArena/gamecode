@@ -115,19 +115,19 @@ vmCvar_t ui_1fctf_friendly;
 vmCvar_t ui_overload_capturelimit;
 vmCvar_t ui_overload_timelimit;
 vmCvar_t ui_overload_friendly;
-vmCvar_t ui_harvester_capturelimit;
+vmCvar_t ui_harvester_fraglimit;
 vmCvar_t ui_harvester_timelimit;
 vmCvar_t ui_harvester_friendly;
 vmCvar_t ui_elimination_capturelimit;
 vmCvar_t ui_elimination_timelimit;
 vmCvar_t ui_ctf_elimination_capturelimit;
 vmCvar_t ui_ctf_elimination_timelimit;
-vmCvar_t ui_lms_fraglimit;
+vmCvar_t ui_lms_capturelimit;
 vmCvar_t ui_lms_timelimit;
 vmCvar_t ui_dd_capturelimit;
 vmCvar_t ui_dd_timelimit;
 vmCvar_t ui_dd_friendly;
-vmCvar_t ui_dom_capturelimit;
+vmCvar_t ui_dom_scorelimit;
 vmCvar_t ui_dom_timelimit;
 vmCvar_t ui_dom_friendly;
 vmCvar_t ui_pos_scorelimit;
@@ -200,7 +200,7 @@ static cvarTable_t cvarTable[] = {
 	{ &ui_overload_timelimit, "ui_overload_timelimit", GT_OBELISK_DEFAULT_TIMELIMIT, CVAR_ARCHIVE },
 	{ &ui_overload_friendly, "ui_overload_friendly",  "0", CVAR_ARCHIVE },
 
-	{ &ui_harvester_capturelimit, "ui_harvester_capturelimit", GT_HARVESTER_DEFAULT_SCORELIMIT, CVAR_ARCHIVE },
+	{ &ui_harvester_fraglimit, "ui_harvester_fraglimit", GT_HARVESTER_DEFAULT_SCORELIMIT, CVAR_ARCHIVE },
 	{ &ui_harvester_timelimit, "ui_harvester_timelimit", GT_HARVESTER_DEFAULT_TIMELIMIT, CVAR_ARCHIVE },
 	{ &ui_harvester_friendly, "ui_harvester_friendly",  "0", CVAR_ARCHIVE },
 
@@ -217,7 +217,7 @@ static cvarTable_t cvarTable[] = {
 	{ &ui_dd_timelimit, "ui_dd_timelimit", GT_DOUBLE_D_DEFAULT_TIMELIMIT, CVAR_ARCHIVE },
 	{ &ui_dd_friendly, "ui_dd_friendly",  "0", CVAR_ARCHIVE },
 
-	{ &ui_dom_capturelimit, "ui_dom_capturelimit", GT_DOMINATION_DEFAULT_SCORELIMIT, CVAR_ARCHIVE },
+	{ &ui_dom_scorelimit, "ui_dom_scorelimit", GT_DOMINATION_DEFAULT_SCORELIMIT, CVAR_ARCHIVE },
 	{ &ui_dom_timelimit, "ui_dom_timelimit", GT_DOMINATION_DEFAULT_TIMELIMIT, CVAR_ARCHIVE },
 	{ &ui_dom_friendly, "ui_dom_friendly",  "0", CVAR_ARCHIVE },
 
@@ -358,5 +358,38 @@ Checks if the gametype has a round-based system.
  */
 qboolean UI_IsARoundBasedGametype(int check) {
 	return GAMETYPE_IS_ROUND_BASED(check);
+}
+/* /Neon_Knight */
+
+/* Neon_Knight: Checks for score limits */
+/*
+===================
+UI_GametypeUsesFragLimit
+
+Checks if the gametype uses fraglimit.
+===================
+ */
+qboolean UI_GametypeUsesFragLimit(int check) {
+	return GAMETYPE_USES_FRAG_LIMIT(check);
+}
+/*
+===================
+UI_GametypeUsesCaptureLimit
+
+Checks if the gametype uses capturelimit.
+===================
+ */
+qboolean UI_GametypeUsesCaptureLimit(int check) {
+	return GAMETYPE_USES_CAPTURE_LIMIT(check);
+}
+/*
+===================
+UI_GametypeUsesScoreLimit
+
+Checks if the gametype uses scorelimit.
+===================
+ */
+qboolean UI_GametypeUsesScoreLimit(int check) {
+	return GAMETYPE_USES_SCORE_LIMIT(check);
 }
 /* /Neon_Knight */

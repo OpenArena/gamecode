@@ -67,6 +67,7 @@ rem %cc%  ../../../code/q3_ui/ui_spreset.c
 %cc%  ../../../code/q3_ui/ui_video.c
 %cc%  ../../../code/q3_ui/ui_votemenu.c
 %cc%  ../../../code/q3_ui/ui_votemenu_fraglimit.c
+%cc%  ../../../code/q3_ui/ui_votemenu_scorelimit.c
 %cc%  ../../../code/q3_ui/ui_votemenu_custom.c
 %cc%  ../../../code/q3_ui/ui_votemenu_gametype.c
 %cc%  ../../../code/q3_ui/ui_votemenu_kick.c

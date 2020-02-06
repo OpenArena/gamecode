@@ -226,6 +226,24 @@ int allowedFraglimit(int limit) {
 	return qtrue;
 }
 
+/*
+==================
+allowedScorelimit
+==================
+ */
+int allowedScorelimit(int limit) {
+	int min, max;
+	min = g_voteMinScorelimit.integer;
+	max = g_voteMaxScorelimit.integer;
+	if(limit<min && limit != 0)
+		return qfalse;
+	if(max != 0 && limit>max)
+		return qfalse;
+	if(limit==0 && max > 0)
+		return qfalse;
+	return qtrue;
+}
+
 #define MAX_CUSTOM_VOTES    12
 
 char            custom_vote_info[1024];

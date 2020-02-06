@@ -1177,6 +1177,7 @@ typedef struct {
 	int				teamflags;
 	int				fraglimit;
 	int				capturelimit;
+	int				scorelimit;
 	int				timelimit;
 	int				maxclients;
 	char			mapname[MAX_QPATH];
@@ -2043,4 +2044,9 @@ qboolean CG_IsATeamGametype(int check);	/* Whether the gametype is team-based or
 qboolean CG_UsesTeamFlags(int check);	/* Whether the gametype uses the red and blue flags. */
 qboolean CG_UsesTheWhiteFlag(int check);	/* Whether the gametype uses the neutral flag. */
 qboolean CG_IsARoundBasedGametype(int check);	/* Whether the gametype uses the neutral flag. */
+/* /Neon_Knight */
+/* Neon_Knight: Useful limit checks in order to have code consistency. */
+qboolean CG_GametypeUsesFragLimit(int check);
+qboolean CG_GametypeUsesCaptureLimit(int check);
+qboolean CG_GametypeUsesScoreLimit(int check);
 /* /Neon_Knight */
