@@ -1967,7 +1967,7 @@ qboolean G_admin_mute( gentity_t *ent, int skiparg )
 
 	G_SayArgv( skiparg, command, sizeof( command ) );
 	cmd = command;
-	if( cmd && *cmd == '!' )
+	if( *cmd == '!' )
 		cmd++;
 	if( G_SayArgc() < 2 + skiparg ) {
 		ADMP( va( "^3!%s: ^7usage: !%s [name|slot#]\n", cmd, cmd ) );

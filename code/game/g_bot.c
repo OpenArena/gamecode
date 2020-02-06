@@ -323,13 +323,11 @@ G_AddRandomBot
 */
 void G_AddRandomBot( int team ) {
 	char	*teamstr;
-	float	skill;
 
-	skill = trap_Cvar_VariableValue( "g_spSkill" );
 	if (team == TEAM_RED) teamstr = "red";
 	else if (team == TEAM_BLUE) teamstr = "blue";
 	else teamstr = "free";
-	trap_SendConsoleCommand( EXEC_INSERT, va("addbot random %f %s %i\n", skill, teamstr, 0) );
+	trap_SendConsoleCommand( EXEC_INSERT, va("addbot random %f %s %i\n", g_spSkill.integer, teamstr, 0) );
 }
 
 /*
@@ -856,7 +854,6 @@ G_SpawnBots
 static void G_SpawnBots( char *botList, int baseDelay ) {
 	char		*bot;
 	char		*p;
-	float		skill;
 	int			delay;
 	char		bots[MAX_INFO_VALUE];
 
@@ -864,14 +861,11 @@ static void G_SpawnBots( char *botList, int baseDelay ) {
 	podium2 = NULL;
 	podium3 = NULL;
 
-	skill = trap_Cvar_VariableValue( "g_spSkill" );
-	if( skill < 1 ) {
-		trap_Cvar_Set( "g_spSkill", "1" );
-		skill = 1;
+	if( g_spSkill.integer < 1 ) {
+		g_spSkill.integer = 1;
 	}
-	else if ( skill > 5 ) {
-		trap_Cvar_Set( "g_spSkill", "5" );
-		skill = 5;
+	else if ( g_spSkill.integer > 5 ) {
+		g_spSkill.integer = 5;
 	}
 
 	Q_strncpyz( bots, botList, sizeof(bots) );
@@ -879,7 +873,7 @@ static void G_SpawnBots( char *botList, int baseDelay ) {
 	delay = baseDelay;
 	while( *p ) {
 		//skip spaces
-		while( *p && *p == ' ' ) {
+		while( *p == ' ' ) {
 			p++;
 		}
 		if( !*p ) {
@@ -899,7 +893,7 @@ static void G_SpawnBots( char *botList, int baseDelay ) {
 
 		// we must add the bot this way, calling G_AddBot directly at this stage
 		// does "Bad Things"
-		trap_SendConsoleCommand( EXEC_INSERT, va("addbot %s %f free %i\n", bot, skill, delay) );
+		trap_SendConsoleCommand( EXEC_INSERT, va("addbot %s %f free %i\n", bot, g_spSkill.integer, delay) );
 
 		delay += BOT_BEGIN_DELAY_INCREMENT;
 	}

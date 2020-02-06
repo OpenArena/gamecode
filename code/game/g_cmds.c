@@ -885,9 +885,6 @@ void SetTeam( gentity_t *ent, const char *s ) {
 			level.teamScores[ ent->client->sess.sessionTeam ] = teamscore;
 		}
 
-	}
-
-	if(oldTeam!=TEAM_SPECTATOR) {
 		PlayerStore_store(Info_ValueForKey(userinfo,"cl_guid"),client->ps);
 	}
 // they go to the end of the line for tournements
@@ -1183,7 +1180,7 @@ static void G_SayTo( gentity_t *ent, gentity_t *other, int mode, int color, cons
 		return;
 	}
 
-	if ((ent->r.svFlags & SVF_BOT) && trap_Cvar_VariableValue( "bot_nochat" )>1) return;
+	if ((ent->r.svFlags & SVF_BOT) && g_bot_noChat.integer > 1) return;
 
 	// no chatting to players in tournements
 	if ( (g_gametype.integer == GT_TOURNAMENT )
@@ -1208,7 +1205,13 @@ void G_Say( gentity_t *ent, gentity_t *target, int mode, const char *chatText ) 
 	char		text[MAX_SAY_TEXT];
 	char		location[64];
 
-    if ((ent->r.svFlags & SVF_BOT) && trap_Cvar_VariableValue( "bot_nochat" )>1) return;
+	if (!ent) {
+		return;
+	}
+
+	if ((ent->r.svFlags & SVF_BOT) && g_bot_noChat.integer > 1) {
+		return;
+	}
 
 	if ( !G_IsATeamGametype(g_gametype.integer) && mode == SAY_TEAM ) {
 		mode = SAY_ALL;
