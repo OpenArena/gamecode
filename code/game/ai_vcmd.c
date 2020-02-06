@@ -162,7 +162,7 @@ BotVoiceChat_Defend
 ==================
 */
 void BotVoiceChat_Defend(bot_state_t *bs, int client, int mode) {
-	if (G_UsesTeamObelisks(gametype)) {
+	if (gametype == GT_HARVESTER || gametype == GT_OBELISK) {
 		//
 		switch(BotTeam(bs)) {
 			case TEAM_RED: memcpy(&bs->teamgoal, &redobelisk, sizeof(bot_goal_t)); break;

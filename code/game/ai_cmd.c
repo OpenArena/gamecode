@@ -983,7 +983,8 @@ void BotMatch_AttackEnemyBase(bot_state_t *bs, bot_match_t *match) {
 	if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
 		BotMatch_GetFlag(bs, match);
 	}
-	else if (gametype == GT_1FCTF || G_UsesTeamObelisks(gametype)) {
+	else if ((G_UsesTeamFlags(gametype) && G_UsesTheWhiteFlag(gametype)) ||
+			gametype == GT_HARVESTER || gametype == GT_OBELISK) {
 		if (!redobelisk.areanum || !blueobelisk.areanum)
 			return;
 	}
@@ -1681,7 +1682,7 @@ void BotMatch_WhereAreYou(bot_state_t *bs, bot_match_t *match) {
 				BotAI_BotInitialChat(bs, "location", nearbyitems[bestitem], NULL);
 			}
 		}
-		else if (G_UsesTeamObelisks(gametype)) {
+		else if (gametype == GT_HARVESTER || gametype == GT_OBELISK) {
 			redtt = trap_AAS_AreaTravelTimeToGoalArea(bs->areanum, bs->origin, redobelisk.areanum, TFL_DEFAULT);
 			bluett = trap_AAS_AreaTravelTimeToGoalArea(bs->areanum, bs->origin, blueobelisk.areanum, TFL_DEFAULT);
 			if (redtt < (redtt + bluett) * 0.4) {

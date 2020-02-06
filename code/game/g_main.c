@@ -842,7 +842,9 @@ void G_InitGame( int levelTime, int randomSeed, int restart )
 	G_FindTeams();
 
 	// make sure we have flags for CTF, etc
-	if (G_UsesKeyObjectives(g_gametype.integer)) {
+	if (G_UsesTeamFlags(g_gametype.integer) || G_UsesTheWhiteFlag(g_gametype.integer) ||
+			g_gametype.integer == GT_HARVESTER || g_gametype.integer == GT_OBELISK ||
+			g_gametype.integer == GT_DOUBLE_D || g_gametype.integer == GT_DOMINATION) {
 		G_CheckTeamItems();
 	}
 
@@ -1870,7 +1872,10 @@ void LogExit( const char *string )
 		if (g_singlePlayer.integer && !(g_entities[cl - level.clients].r.svFlags & SVF_BOT)) {
 			team = cl->sess.sessionTeam;
 		}
-		if (g_singlePlayer.integer && G_IsATeamGametype(g_gametype.integer) && G_UsesKeyObjectives(g_gametype.integer)) {
+		if (g_singlePlayer.integer && G_IsATeamGametype(g_gametype.integer) &&
+				(G_UsesTeamFlags(g_gametype.integer) || G_UsesTheWhiteFlag(g_gametype.integer) ||
+				g_gametype.integer == GT_HARVESTER || g_gametype.integer == GT_OBELISK ||
+				g_gametype.integer == GT_DOUBLE_D || g_gametype.integer == GT_DOMINATION)) {
 			if (g_entities[cl - level.clients].r.svFlags & SVF_BOT && cl->ps.persistant[PERS_RANK] == 0) {
 				won = qfalse;
 			}
@@ -2095,35 +2100,36 @@ void CheckExitRules( void )
 		trap_Cvar_Update( &g_fraglimit );
 	}
 
-	if (!(G_IsATeamGametype(g_gametype.integer) &&
-			(G_UsesKeyObjectives(g_gametype.integer) || G_IsARoundBasedGametype(g_gametype.integer))) &&
-			g_fraglimit.integer ) {
-		if ( level.teamScores[TEAM_RED] >= g_fraglimit.integer ) {
-			trap_SendServerCommand( -1, "print \"Red hit the fraglimit.\n\"" );
-			LogExit( "Fraglimit hit." );
-			return;
-		}
-
-		if ( level.teamScores[TEAM_BLUE] >= g_fraglimit.integer ) {
-			trap_SendServerCommand( -1, "print \"Blue hit the fraglimit.\n\"" );
-			LogExit( "Fraglimit hit." );
-			return;
-		}
-
-		for ( i=0 ; i< g_maxclients.integer ; i++ ) {
-			cl = level.clients + i;
-			if ( cl->pers.connected != CON_CONNECTED ) {
-				continue;
-			}
-			if ( cl->sess.sessionTeam != TEAM_FREE ) {
-				continue;
-			}
-
-			if ( cl->ps.persistant[PERS_SCORE] >= g_fraglimit.integer ) {
+	if ( g_fraglimit.integer ) {
+		if ( G_IsATeamGametype(g_gametype.integer) ) {
+			if ( level.teamScores[TEAM_RED] >= g_fraglimit.integer ) {
+				trap_SendServerCommand( -1, "print \"Red hit the fraglimit.\n\"" );
 				LogExit( "Fraglimit hit." );
-				trap_SendServerCommand( -1, va("print \"%s" S_COLOR_WHITE " hit the fraglimit.\n\"",
-				                               cl->pers.netname ) );
 				return;
+			}
+
+			if ( level.teamScores[TEAM_BLUE] >= g_fraglimit.integer ) {
+				trap_SendServerCommand( -1, "print \"Blue hit the fraglimit.\n\"" );
+				LogExit( "Fraglimit hit." );
+				return;
+			}
+		}
+		else {
+			for ( i=0 ; i< g_maxclients.integer ; i++ ) {
+				cl = level.clients + i;
+				if ( cl->pers.connected != CON_CONNECTED ) {
+					continue;
+				}
+				if ( cl->sess.sessionTeam != TEAM_FREE ) {
+					continue;
+				}
+
+				if ( cl->ps.persistant[PERS_SCORE] >= g_fraglimit.integer ) {
+					LogExit( "Fraglimit hit." );
+					trap_SendServerCommand( -1, va("print \"%s" S_COLOR_WHITE " hit the fraglimit.\n\"",
+												   cl->pers.netname ) );
+					return;
+				}
 			}
 		}
 	}
@@ -2134,20 +2140,37 @@ void CheckExitRules( void )
 		trap_Cvar_Update( &g_capturelimit );
 	}
 
-	if ( G_IsATeamGametype(g_gametype.integer) &&
-			(G_UsesKeyObjectives(g_gametype.integer) || G_IsARoundBasedGametype(g_gametype.integer)) &&
-			g_capturelimit.integer ) {
+	if ( g_capturelimit.integer ) {
+		if ( G_IsATeamGametype(g_gametype.integer) ) {
+			if ( level.teamScores[TEAM_RED] >= g_capturelimit.integer ) {
+				trap_SendServerCommand( -1, "print \"Red hit the capturelimit.\n\"" );
+				LogExit( "Capturelimit hit." );
+				return;
+			}
 
-		if ( level.teamScores[TEAM_RED] >= g_capturelimit.integer ) {
-			trap_SendServerCommand( -1, "print \"Red hit the capturelimit.\n\"" );
-			LogExit( "Capturelimit hit." );
-			return;
+			if ( level.teamScores[TEAM_BLUE] >= g_capturelimit.integer ) {
+				trap_SendServerCommand( -1, "print \"Blue hit the capturelimit.\n\"" );
+				LogExit( "Capturelimit hit." );
+				return;
+			}
 		}
+		else {
+			for ( i=0 ; i< g_maxclients.integer ; i++ ) {
+				cl = level.clients + i;
+				if ( cl->pers.connected != CON_CONNECTED ) {
+					continue;
+				}
+				if ( cl->sess.sessionTeam != TEAM_FREE ) {
+					continue;
+				}
 
-		if ( level.teamScores[TEAM_BLUE] >= g_capturelimit.integer ) {
-			trap_SendServerCommand( -1, "print \"Blue hit the capturelimit.\n\"" );
-			LogExit( "Capturelimit hit." );
-			return;
+				if ( cl->ps.persistant[PERS_SCORE] >= g_capturelimit.integer ) {
+					LogExit( "Capturelimit hit." );
+					trap_SendServerCommand( -1, va("print \"%s" S_COLOR_WHITE " hit the capturelimit.\n\"",
+												   cl->pers.netname ) );
+					return;
+				}
+			}
 		}
 	}
 }
@@ -2817,16 +2840,6 @@ qboolean G_IsATeamGametype(int check) {
 }
 /*
 ===================
-G_UsesKeyObjectives
-
-Checks if the gametype makes use of gametype-specific objectives.
-===================
- */
-qboolean G_UsesKeyObjectives(int check) {
-	return GAMETYPE_USES_KEY_OBJECTIVES(check);
-}
-/*
-===================
 G_UsesTeamFlags
 
 Checks if the gametype makes use of the red and blue flags.
@@ -2854,15 +2867,5 @@ Checks if the gametype has a round-based system.
  */
 qboolean G_IsARoundBasedGametype(int check) {
 	return GAMETYPE_IS_ROUND_BASED(check);
-}
-/*
-===================
-G_UsesTeamObelisks
-
-Checks if the gametype uses team-colored obelisks.
-===================
- */
-qboolean G_UsesTeamObelisks(int check) {
-	return GAMETYPE_USES_OBELISKS(check);
 }
 /* /Neon_Knight */

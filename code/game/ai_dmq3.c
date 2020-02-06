@@ -1418,7 +1418,7 @@ void BotTeamGoals(bot_state_t *bs, int retreat) {
 	if (retreat) {
 		if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
 			BotCTFRetreatGoals(bs);
-		} else if (gametype == GT_1FCTF) {
+		} else if (G_UsesTheWhiteFlag(gametype)) {
 			Bot1FCTFRetreatGoals(bs);
 		} else if (gametype == GT_OBELISK) {
 			BotObeliskRetreatGoals(bs);
@@ -1701,7 +1701,9 @@ BotCheckItemPickup
 void BotCheckItemPickup(bot_state_t *bs, int *oldinventory) {
 	int offence, leader;
 
-	if (!G_UsesKeyObjectives(gametype))
+	if (!G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype) &&
+			gametype != GT_HARVESTER && gametype != GT_OBELISK &&
+			gametype != GT_DOUBLE_D && gametype != GT_DOMINATION)
 		return;
 
 	offence = -1;
