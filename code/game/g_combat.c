@@ -1071,6 +1071,10 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 
 	vec3_t		bouncedir, impactpoint;
 
+	if (!targ) {
+		return;
+	}
+
 	if (!targ->takedamage) {
 		return;
 	}
@@ -1253,7 +1257,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 		damage *= 0.5;
 	}
 
-	if(targ && targ->client && attacker->client ) {
+	if(targ->client && attacker->client ) {
 		damage = catchup_damage(damage, attacker->client->ps.persistant[PERS_SCORE], targ->client->ps.persistant[PERS_SCORE]);
 	}
 

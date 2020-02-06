@@ -193,6 +193,8 @@ vmCvar_t g_harvesterFromBodies;
 vmCvar_t g_ddCaptureTime;
 vmCvar_t g_ddRespawnDelay;
 vmCvar_t g_developer;
+vmCvar_t g_spSkill;
+vmCvar_t g_bot_noChat;
 
 mapinfo_result_t mapinfo;
 
@@ -408,7 +410,9 @@ static cvarTable_t gameCvarTable[] = {
 	{ &g_ddCaptureTime, "g_ddCaptureTime", "10", CVAR_ARCHIVE, 0, qtrue},
 	{ &g_ddRespawnDelay, "g_ddRespawnDelay", "10", CVAR_ARCHIVE, 0, qtrue},
 	/* Neon_Knight: Developer mode*/
-	{ &g_developer, "developer", "0", CVAR_CHEAT, 0, qtrue}
+	{ &g_developer, "developer", "0", CVAR_CHEAT, 0, qtrue},
+	{ &g_spSkill, "g_spSkill", "2", 0, 0, qtrue},
+	{ &g_bot_noChat, "bot_nochat", "0", 0, 0, qtrue}
 
 };
 
