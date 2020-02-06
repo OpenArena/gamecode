@@ -2297,7 +2297,7 @@ void SP_team_redobelisk( gentity_t *ent )
 {
 	gentity_t *obelisk;
 
-	if (!G_UsesKeyObjectives(g_gametype.integer)) {
+	if (g_gametype.integer != GT_HARVESTER && g_gametype.integer != GT_OBELISK) {
 		G_FreeEntity(ent);
 		return;
 	}
@@ -2323,7 +2323,7 @@ void SP_team_blueobelisk( gentity_t *ent )
 {
 	gentity_t *obelisk;
 
-	if (!G_UsesKeyObjectives(g_gametype.integer)) {
+	if (g_gametype.integer != GT_HARVESTER && g_gametype.integer != GT_OBELISK) {
 		G_FreeEntity(ent);
 		return;
 	}
@@ -2347,15 +2347,13 @@ void SP_team_blueobelisk( gentity_t *ent )
 */
 void SP_team_neutralobelisk( gentity_t *ent )
 {
-	if (!G_UsesTheWhiteFlag(g_gametype.integer) && g_gametype.integer != GT_HARVESTER ) {
+	if (g_gametype.integer != GT_HARVESTER) {
 		G_FreeEntity(ent);
 		return;
 	}
 	ObeliskInit( ent );
-	if ( g_gametype.integer == GT_HARVESTER) {
-		neutralObelisk = SpawnObelisk( ent->s.origin, ent->r.mins, ent->r.maxs, TEAM_FREE );
-		neutralObelisk->activator = ent;
-	}
+	neutralObelisk = SpawnObelisk( ent->s.origin, ent->r.mins, ent->r.maxs, TEAM_FREE );
+	neutralObelisk->activator = ent;
 	ent->s.modelindex = TEAM_FREE;
 	trap_LinkEntity(ent);
 }

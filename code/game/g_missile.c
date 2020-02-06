@@ -191,7 +191,7 @@ static void ProximityMine_Activate( gentity_t *ent )
 		}
 	}
 
-	if (G_UsesTeamObelisks(g_gametype.integer)) {
+	if (g_gametype.integer == GT_HARVESTER || g_gametype.integer == GT_OBELISK) {
 		switch (ent->s.generic1) {
 		case TEAM_RED:
 			c = "team_redobelisk";

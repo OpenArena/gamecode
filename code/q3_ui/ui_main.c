@@ -329,16 +329,6 @@ qboolean UI_IsATeamGametype(int check) {
 }
 /*
 ===================
-UI_UsesKeyObjectives
-
-Checks if the gametype makes use of gametype-specific objectives.
-===================
- */
-qboolean UI_UsesKeyObjectives(int check) {
-	return GAMETYPE_USES_KEY_OBJECTIVES(check);
-}
-/*
-===================
 UI_UsesTeamFlags
 
 Checks if the gametype makes use of the red and blue flags.
@@ -366,15 +356,5 @@ Checks if the gametype has a round-based system.
  */
 qboolean UI_IsARoundBasedGametype(int check) {
 	return GAMETYPE_IS_ROUND_BASED(check);
-}
-/*
-===================
-CG_UsesTeamObelisks
-
-Checks if the gametype uses team-colored obelisks.
-===================
- */
-qboolean UI_UsesTeamObelisks(int check) {
-	return GAMETYPE_USES_OBELISKS(check);
 }
 /* /Neon_Knight */
