@@ -140,7 +140,9 @@ void G_RankRunFrame()
 		}
 
 		// don't let ranked games last forever
-		if( ((g_fraglimit.integer == 0) || (g_fraglimit.integer > 100)) && 
+		if( ((g_fraglimit.integer == 0) || (g_fraglimit.integer > 100) ||
+			(g_capturelimit.integer == 0) || (g_capturelimit.integer > 50) ||
+			(g_scorelimit.integer == 0) || (g_scorelimit.integer > 1000)) && 
 			((g_timelimit.integer == 0) || (g_timelimit.integer > 1000)) )
 		{
 			trap_Cvar_Set( "timelimit", "1000" );
@@ -1099,11 +1101,23 @@ void G_RankGameOver( void )
 	// gametype
 	num = trap_Cvar_VariableIntegerValue("g_gametype");
 	trap_RankReportInt( -1, -1, QGR_KEY_GAMETYPE, num, 0 );
-	
-	// fraglimit
-	num = trap_Cvar_VariableIntegerValue("fraglimit");
-	trap_RankReportInt( -1, -1, QGR_KEY_FRAGLIMIT, num, 0 );
-	
+
+	if (G_UsesFragLimit(g_gametype.integer)) {
+		// fraglimit
+		num = trap_Cvar_VariableIntegerValue("fraglimit");
+		trap_RankReportInt( -1, -1, QGR_KEY_FRAGLIMIT, num, 0 );
+	}
+	else if (G_UsesCaptureLimit(g_gametype.integer)) {
+		// capturelimit
+		num = trap_Cvar_VariableIntegerValue("capturelimit");
+		trap_RankReportInt( -1, -1, QGR_KEY_CAPTURELIMIT, num, 0 );
+	}
+	else if (G_UsesScoreLimit(g_gametype.integer)) {
+		// scorelimit
+		num = trap_Cvar_VariableIntegerValue("scorelimit");
+		trap_RankReportInt( -1, -1, QGR_KEY_SCORELIMIT, num, 0 );
+	}
+
 	// timelimit
 	num = trap_Cvar_VariableIntegerValue("timelimit");
 	trap_RankReportInt( -1, -1, QGR_KEY_TIMELIMIT, num, 0 );

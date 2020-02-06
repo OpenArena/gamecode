@@ -47,6 +47,7 @@ vmCvar_t g_voteflags;
 vmCvar_t g_fraglimit;
 vmCvar_t g_timelimit;
 vmCvar_t g_capturelimit;
+vmCvar_t g_scorelimit;
 vmCvar_t g_friendlyFire;
 vmCvar_t g_password;
 vmCvar_t g_needpass;
@@ -152,6 +153,8 @@ vmCvar_t g_voteMinTimelimit;
 vmCvar_t g_voteMaxTimelimit;
 vmCvar_t g_voteMinFraglimit;
 vmCvar_t g_voteMaxFraglimit;
+vmCvar_t g_voteMinScorelimit;
+vmCvar_t g_voteMaxScorelimit;
 vmCvar_t g_maxvotes;
 vmCvar_t g_humanplayers;
 //used for voIP
@@ -219,9 +222,10 @@ static cvarTable_t gameCvarTable[] = {
 	{ &g_videoflags, "videoflags", "7", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qtrue  },
 	{ &g_elimflags, "elimflags", "0", CVAR_SERVERINFO, 0, qfalse  },
 	{ &g_voteflags, "voteflags", "0", CVAR_SERVERINFO, 0, qfalse  },
-	{ &g_fraglimit, "fraglimit", "20", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
+	{ &g_fraglimit, "fraglimit", "15", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
 	{ &g_timelimit, "timelimit", "0", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
-	{ &g_capturelimit, "capturelimit", "8", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
+	{ &g_capturelimit, "capturelimit", "5", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
+	{ &g_scorelimit, "scorelimit", "100", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
 
 	{ &g_synchronousClients, "g_synchronousClients", "0", CVAR_SYSTEMINFO, 0, qfalse  },
 
@@ -268,13 +272,15 @@ static cvarTable_t gameCvarTable[] = {
 	//Votes start:
 	{ &g_allowVote, "g_allowVote", "1", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse },
 	{ &g_maxvotes, "g_maxVotes", MAX_VOTE_COUNT, CVAR_ARCHIVE, 0, qfalse },
-	{ &g_voteNames, "g_voteNames", "/map_restart/nextmap/map/g_gametype/kick/clientkick/g_doWarmup/timelimit/fraglimit/", CVAR_ARCHIVE, 0, qfalse },
+	{ &g_voteNames, "g_voteNames", "/map_restart/nextmap/map/g_gametype/kick/clientkick/g_doWarmup/timelimit/fraglimit/scorelimit/", CVAR_ARCHIVE, 0, qfalse },
 	{ &g_voteBan, "g_voteBan", "0", CVAR_ARCHIVE, 0, qfalse },
 	{ &g_voteGametypes, "g_voteGametypes", "/0/1/3/4/5/6/7/8/9/10/11/12/13/", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse },
 	{ &g_voteMaxTimelimit, "g_voteMaxTimelimit", "1000", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse },
 	{ &g_voteMinTimelimit, "g_voteMinTimelimit", "0", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse },
 	{ &g_voteMaxFraglimit, "g_voteMaxFraglimit", "0", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse },
 	{ &g_voteMinFraglimit, "g_voteMinFraglimit", "0", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse },
+	{ &g_voteMaxScorelimit, "g_voteMaxScorelimit", "0", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse },
+	{ &g_voteMinScorelimit, "g_voteMinScorelimit", "0", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse },
 	{ &g_votemaps, "g_votemapsfile", "votemaps.cfg", 0, 0, qfalse },
 	{ &g_votecustom, "g_votecustomfile", "votecustom.cfg", 0, 0, qfalse },
 
@@ -670,6 +676,9 @@ void G_UpdateCvars( void )
 					if( allowedVote("custom") )
 						voteflags|=VF_custom;
 
+					if( allowedVote("scorelimit") )
+						voteflags|=VF_scoreLimit;
+
 					trap_Cvar_Set("voteflags",va("%i",voteflags));
 				}
 
@@ -925,6 +934,9 @@ void G_InitGame( int levelTime, int randomSeed, int restart )
 
 		if( allowedVote("custom") )
 			voteflags|=VF_custom;
+
+		if( allowedVote("scorelimit") )
+			voteflags|=VF_scoreLimit;
 
 		trap_Cvar_Set("voteflags",va("%i",voteflags));
 	}
@@ -2105,7 +2117,7 @@ void CheckExitRules( void )
 	}
 
 	if ( g_fraglimit.integer ) {
-		if ( G_IsATeamGametype(g_gametype.integer) ) {
+		if ( G_UsesFragLimit(g_gametype.integer) ) {
 			if ( level.teamScores[TEAM_RED] >= g_fraglimit.integer ) {
 				trap_SendServerCommand( -1, "print \"Red hit the fraglimit.\n\"" );
 				LogExit( "Fraglimit hit." );
@@ -2145,7 +2157,7 @@ void CheckExitRules( void )
 	}
 
 	if ( g_capturelimit.integer ) {
-		if (G_IsATeamGametype(g_gametype.integer) && g_gametype.integer != GT_TEAM) {
+		if ( G_UsesCaptureLimit(g_gametype.integer) ) {
 			if ( level.teamScores[TEAM_RED] >= g_capturelimit.integer ) {
 				trap_SendServerCommand( -1, "print \"Red hit the capturelimit.\n\"" );
 				LogExit( "Capturelimit hit." );
@@ -2171,6 +2183,46 @@ void CheckExitRules( void )
 				if ( cl->ps.persistant[PERS_SCORE] >= g_capturelimit.integer ) {
 					LogExit( "Capturelimit hit." );
 					trap_SendServerCommand( -1, va("print \"%s" S_COLOR_WHITE " hit the capturelimit.\n\"",
+												   cl->pers.netname ) );
+					return;
+				}
+			}
+		}
+	}
+
+	if ( g_scorelimit.integer < 0 ) {
+		G_Printf( "scorelimit %i is out of range, defaulting to 0\n", g_scorelimit.integer );
+		trap_Cvar_Set( "scorelimit", "0" );
+		trap_Cvar_Update( &g_scorelimit );
+	}
+
+	if ( g_scorelimit.integer ) {
+		if ( G_UsesScoreLimit(g_gametype.integer) ) {
+			if ( level.teamScores[TEAM_RED] >= g_scorelimit.integer ) {
+				trap_SendServerCommand( -1, "print \"Red hit the scorelimit.\n\"" );
+				LogExit( "Scorelimit hit." );
+				return;
+			}
+
+			if ( level.teamScores[TEAM_BLUE] >= g_scorelimit.integer ) {
+				trap_SendServerCommand( -1, "print \"Blue hit the scorelimit.\n\"" );
+				LogExit( "Scorelimit hit." );
+				return;
+			}
+		}
+		else {
+			for ( i=0 ; i< g_maxclients.integer ; i++ ) {
+				cl = level.clients + i;
+				if ( cl->pers.connected != CON_CONNECTED ) {
+					continue;
+				}
+				if ( cl->sess.sessionTeam != TEAM_FREE ) {
+					continue;
+				}
+
+				if ( cl->ps.persistant[PERS_SCORE] >= g_scorelimit.integer ) {
+					LogExit( "Scorelimit hit." );
+					trap_SendServerCommand( -1, va("print \"%s" S_COLOR_WHITE " hit the scorelimit.\n\"",
 												   cl->pers.netname ) );
 					return;
 				}
@@ -2827,6 +2879,7 @@ void MapInfoPrint(mapinfo_result_t *info)
 	G_Printf("Auther: %s\n",info->author);
 	G_Printf("Fraglimit: %i\n",info->fragLimit);
 	G_Printf("Capturelimit: %i\n",info->captureLimit);
+	G_Printf("Scorelimit: %i\n",info->scoreLimit);
 	G_Printf("minTeamSize: %i\n",info->minTeamSize);
 }
 
@@ -2870,5 +2923,38 @@ Checks if the gametype has a round-based system.
  */
 qboolean G_IsARoundBasedGametype(int check) {
 	return GAMETYPE_IS_ROUND_BASED(check);
+}
+/* /Neon_Knight */
+
+/* Neon_Knight: Checks for score limits */
+/*
+===================
+G_UsesFragLimit
+
+Checks if the gametype uses fraglimit.
+===================
+ */
+qboolean G_UsesFragLimit(int check) {
+	return GAMETYPE_USES_FRAG_LIMIT(check);
+}
+/*
+===================
+G_UsesCaptureLimit
+
+Checks if the gametype uses capturelimit.
+===================
+ */
+qboolean G_UsesCaptureLimit(int check) {
+	return GAMETYPE_USES_CAPTURE_LIMIT(check);
+}
+/*
+===================
+G_UsesScoreLimit
+
+Checks if the gametype uses scorelimit.
+===================
+ */
+qboolean G_UsesScoreLimit(int check) {
+	return GAMETYPE_USES_SCORE_LIMIT(check);
 }
 /* /Neon_Knight */

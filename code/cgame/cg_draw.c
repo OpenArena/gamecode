@@ -930,8 +930,8 @@ static float CG_DrawPossessionString(float y) {
 
 	line = "Find the flag";
 	timeUntilWon = -1;
-	if (cgs.fraglimit > 0 && cgs.fraglimit < 1000) {
-		timeUntilWon = cgs.fraglimit - cg.snap->ps.persistant[PERS_SCORE];
+	if (cgs.scorelimit > 0 && cgs.scorelimit < 1000) {
+		timeUntilWon = cgs.scorelimit - cg.snap->ps.persistant[PERS_SCORE];
 	}
 	color = &colorYellow;
 
@@ -1756,10 +1756,12 @@ static float CG_DrawScores(float y) {
 			CG_DrawSmallString(x, y - 28, s, 1.0F);
 		}
 
-		if (CG_IsATeamGametype(cgs.gametype) && cgs.gametype != GT_TEAM) {
-			v = cgs.capturelimit;
-		} else {
+		if (CG_UsesFragLimit(cgs.gametype)) {
 			v = cgs.fraglimit;
+		} else if (CG_UsesScoreLimit(cgs.gametype)) {
+			v = cgs.scorelimit;
+		} else {
+			v = cgs.capturelimit;
 		}
 		if (v) {
 			s = va("%2i", v);
@@ -1822,8 +1824,22 @@ static float CG_DrawScores(float y) {
 			CG_DrawBigString(x + 4, y, s, 1.0F);
 		}
 
-		if (cgs.fraglimit) {
+		if (cgs.fraglimit && CG_UsesFragLimit(cgs.gametype)) {
 			s = va("%2i", cgs.fraglimit);
+			w = CG_DrawStrlen(s) * BIGCHAR_WIDTH + 8;
+			x -= w;
+			CG_DrawBigString(x + 4, y, s, 1.0F);
+		}
+
+		if (cgs.scorelimit && CG_UsesScoreLimit(cgs.gametype)) {
+			s = va("%2i", cgs.scorelimit);
+			w = CG_DrawStrlen(s) * BIGCHAR_WIDTH + 8;
+			x -= w;
+			CG_DrawBigString(x + 4, y, s, 1.0F);
+		}
+
+		if (cgs.capturelimit && CG_UsesCaptureLimit(cgs.gametype)) {
+			s = va("%2i", cgs.capturelimit);
 			w = CG_DrawStrlen(s) * BIGCHAR_WIDTH + 8;
 			x -= w;
 			CG_DrawBigString(x + 4, y, s, 1.0F);

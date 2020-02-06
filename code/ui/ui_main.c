@@ -1424,33 +1424,36 @@ static void UI_SetCapFragLimits(qboolean uiVars)
 {
 	int cap = 5;
 	int frag = 10;
+	int harv = 30;
+	int score = 100;
 	if (uiVars) {
 		if (uiVars == qtrue) {
 			trap_Cvar_Set("ui_captureLimit", va("%d", cap));
 			trap_Cvar_Set("ui_fragLimit", va("%d", frag));
+			trap_Cvar_Set("ui_scoreLimit", va("%d", score));
 		}
 		else if (uiVars == qfalse) {
 			trap_Cvar_Set("capturelimit", va("%d", cap));
 			trap_Cvar_Set("fraglimit", va("%d", frag));
+			trap_Cvar_Set("scoreLimit", va("%d", score));
 		}
 	}
 	else
 	{
-		if (uiInfo.gameTypes[ui_gameType.integer].gtEnum == GT_OBELISK) {
-			cap = 4;
-			frag = 0;
-		}
-		else if (uiInfo.gameTypes[ui_gameType.integer].gtEnum == GT_HARVESTER) {
-			cap = 15;
-			frag = 0;
-		}
-		else if (uiInfo.gameTypes[ui_gameType.integer].gtEnum == GT_DOMINATION) {
-			cap = 125;
-			frag = 0;
-		}
-		else if (uiInfo.gameTypes[ui_gameType.integer].gtEnum == GT_POSSESSION) {
-			frag = 125;
+		if (UI_UsesFragLimit(uiInfo.gameTypes[ui_gameType.integer].gtEnum)) {
 			cap = 0;
+			frag = 10;
+			score = 0;
+		}
+		if (UI_UsesCaptureLimit(uiInfo.gameTypes[ui_gameType.integer].gtEnum)) {
+			cap = 5;
+			frag = 0;
+			score = 0;
+		}
+		if (UI_UsesScoreLimit(uiInfo.gameTypes[ui_gameType.integer].gtEnum)) {
+			frag = 0;
+			cap = 0;
+			score = 150;
 		}
 	}
 }
@@ -3772,6 +3775,8 @@ static void UI_StartSkirmish(qboolean next, char *name)
 	trap_Cvar_Set("ui_saveCaptureLimit", va("%i", temp));
 	temp = trap_Cvar_VariableValue( "fraglimit" );
 	trap_Cvar_Set("ui_saveFragLimit", va("%i", temp));
+	temp = trap_Cvar_VariableValue( "scorelimit" );
+	trap_Cvar_Set("ui_saveScoreLimit", va("%i", temp));
 	/* Neon_Knight: Since the SP uses custom time limits, pass it as well. */
 	temp = trap_Cvar_VariableValue( "timelimit" );
 	trap_Cvar_Set("ui_saveTimeLimit", va("%i", temp));
@@ -5012,6 +5017,7 @@ serverStatusCvar_t serverStatusCvars[] = {
 	{"timelimit", ""},
 	{"fraglimit", ""},
 	{"capturelimit", ""},
+	{"scorelimit", ""},
 	{NULL, NULL}
 };
 
@@ -7021,19 +7027,19 @@ vmCvar_t ui_1fctf_friendly;
 vmCvar_t ui_overload_capturelimit;
 vmCvar_t ui_overload_timelimit;
 vmCvar_t ui_overload_friendly;
-vmCvar_t ui_harvester_capturelimit;
+vmCvar_t ui_harvester_fraglimit;
 vmCvar_t ui_harvester_timelimit;
 vmCvar_t ui_harvester_friendly;
 vmCvar_t ui_elimination_capturelimit;
 vmCvar_t ui_elimination_timelimit;
 vmCvar_t ui_ctf_elimination_capturelimit;
 vmCvar_t ui_ctf_elimination_timelimit;
-vmCvar_t ui_lms_fraglimit;
+vmCvar_t ui_lms_capturelimit;
 vmCvar_t ui_lms_timelimit;
 vmCvar_t ui_dd_capturelimit;
 vmCvar_t ui_dd_timelimit;
 vmCvar_t ui_dd_friendly;
-vmCvar_t ui_dom_capturelimit;
+vmCvar_t ui_dom_scorelimit;
 vmCvar_t ui_dom_timelimit;
 vmCvar_t ui_dom_friendly;
 vmCvar_t ui_pos_scorelimit;
@@ -7126,6 +7132,7 @@ vmCvar_t ui_scoreShutoutBonus;
 vmCvar_t ui_scoreTime;
 vmCvar_t ui_captureLimit;
 vmCvar_t ui_fragLimit;
+vmCvar_t ui_scoreLimit;
 vmCvar_t ui_smallFont;
 vmCvar_t ui_bigFont;
 vmCvar_t ui_findPlayer;
@@ -7133,6 +7140,7 @@ vmCvar_t ui_Q3Model;
 vmCvar_t ui_hudFiles;
 vmCvar_t ui_recordSPDemo;
 vmCvar_t ui_realCaptureLimit;
+vmCvar_t ui_realScoreLimit;
 vmCvar_t ui_realWarmUp;
 vmCvar_t ui_serverStatusTimeOut;
 // Changed RD
@@ -7170,50 +7178,50 @@ vmCvar_t ui_developer;
 
 // bk001129 - made static to avoid aliasing
 static cvarTable_t		cvarTable[] = {
-	{ &ui_ffa_fraglimit, "ui_ffa_fraglimit", "20", CVAR_ARCHIVE },
+	{ &ui_ffa_fraglimit, "ui_ffa_fraglimit", "15", CVAR_ARCHIVE },
 	{ &ui_ffa_timelimit, "ui_ffa_timelimit", "0", CVAR_ARCHIVE },
 
-	{ &ui_tourney_fraglimit, "ui_tourney_fraglimit", "0", CVAR_ARCHIVE },
+	{ &ui_tourney_fraglimit, "ui_tourney_fraglimit", "15", CVAR_ARCHIVE },
 	{ &ui_tourney_timelimit, "ui_tourney_timelimit", "15", CVAR_ARCHIVE },
 
-	{ &ui_team_fraglimit, "ui_team_fraglimit", "0", CVAR_ARCHIVE },
+	{ &ui_team_fraglimit, "ui_team_fraglimit", "50", CVAR_ARCHIVE },
 	{ &ui_team_timelimit, "ui_team_timelimit", "20", CVAR_ARCHIVE },
 	{ &ui_team_friendly, "ui_team_friendly",  "1", CVAR_ARCHIVE },
 
-	{ &ui_ctf_capturelimit, "ui_ctf_capturelimit", "8", CVAR_ARCHIVE },
+	{ &ui_ctf_capturelimit, "ui_ctf_capturelimit", "5", CVAR_ARCHIVE },
 	{ &ui_ctf_timelimit, "ui_ctf_timelimit", "30", CVAR_ARCHIVE },
 	{ &ui_ctf_friendly, "ui_ctf_friendly",  "0", CVAR_ARCHIVE },
 
-	{ &ui_1fctf_capturelimit, "ui_1fctf_capturelimit", "8", CVAR_ARCHIVE },
+	{ &ui_1fctf_capturelimit, "ui_1fctf_capturelimit", "5", CVAR_ARCHIVE },
 	{ &ui_1fctf_timelimit, "ui_1fctf_timelimit", "30", CVAR_ARCHIVE },
 	{ &ui_1fctf_friendly, "ui_1fctf_friendly",  "0", CVAR_ARCHIVE },
 
-	{ &ui_overload_capturelimit, "ui_overload_capturelimit", "8", CVAR_ARCHIVE },
+	{ &ui_overload_capturelimit, "ui_overload_capturelimit", "5", CVAR_ARCHIVE },
 	{ &ui_overload_timelimit, "ui_overload_timelimit", "30", CVAR_ARCHIVE },
 	{ &ui_overload_friendly, "ui_overload_friendly",  "0", CVAR_ARCHIVE },
 
-	{ &ui_harvester_capturelimit, "ui_harvester_capturelimit", "20", CVAR_ARCHIVE },
+	{ &ui_harvester_fraglimit, "ui_harvester_fraglimit", "30", CVAR_ARCHIVE },
 	{ &ui_harvester_timelimit, "ui_harvester_timelimit", "30", CVAR_ARCHIVE },
 	{ &ui_harvester_friendly, "ui_harvester_friendly",  "0", CVAR_ARCHIVE },
 
-	{ &ui_elimination_capturelimit, "ui_elimination_capturelimit", "8", CVAR_ARCHIVE },
+	{ &ui_elimination_capturelimit, "ui_elimination_capturelimit", "5", CVAR_ARCHIVE },
 	{ &ui_elimination_timelimit, "ui_elimination_timelimit", "20", CVAR_ARCHIVE },
 
-	{ &ui_ctf_elimination_capturelimit, "ui_ctf_elimination_capturelimit", "8", CVAR_ARCHIVE },
+	{ &ui_ctf_elimination_capturelimit, "ui_ctf_elimination_capturelimit", "5", CVAR_ARCHIVE },
 	{ &ui_ctf_elimination_timelimit, "ui_ctf_elimination_timelimit", "30", CVAR_ARCHIVE },
 
-	{ &ui_lms_fraglimit, "ui_lms_fraglimit", "20", CVAR_ARCHIVE },
+	{ &ui_lms_capturelimit, "ui_lms_capturelimit", "20", CVAR_ARCHIVE },
 	{ &ui_lms_timelimit, "ui_lms_timelimit", "0", CVAR_ARCHIVE },
 
-	{ &ui_dd_capturelimit, "ui_dd_capturelimit", "8", CVAR_ARCHIVE },
+	{ &ui_dd_capturelimit, "ui_dd_capturelimit", "5", CVAR_ARCHIVE },
 	{ &ui_dd_timelimit, "ui_dd_timelimit", "30", CVAR_ARCHIVE },
 	{ &ui_dd_friendly, "ui_dd_friendly",  "0", CVAR_ARCHIVE },
 
-	{ &ui_dom_capturelimit, "ui_dom_capturelimit", "500", CVAR_ARCHIVE },
+	{ &ui_dom_scorelimit, "ui_dom_scorelimit", "100", CVAR_ARCHIVE },
 	{ &ui_dom_timelimit, "ui_dom_timelimit", "30", CVAR_ARCHIVE },
 	{ &ui_dom_friendly, "ui_dom_friendly",  "0", CVAR_ARCHIVE },
 
-	{ &ui_pos_scorelimit, "ui_pos_scorelimit", "120", CVAR_ARCHIVE },
+	{ &ui_pos_scorelimit, "ui_pos_scorelimit", "100", CVAR_ARCHIVE },
 	{ &ui_pos_timelimit, "ui_pos_timelimit", "20", CVAR_ARCHIVE },
 
 	{ &ui_arenasFile, "g_arenasFile", "", CVAR_INIT|CVAR_ROM },
@@ -7309,8 +7317,9 @@ static cvarTable_t		cvarTable[] = {
 	{ &ui_scoreTimeBonus, "ui_scoreTimeBonus", "0", CVAR_ARCHIVE},
 	{ &ui_scoreSkillBonus, "ui_scoreSkillBonus", "0", CVAR_ARCHIVE},
 	{ &ui_scoreShutoutBonus, "ui_scoreShutoutBonus", "0", CVAR_ARCHIVE},
-	{ &ui_fragLimit, "ui_fragLimit", "10", 0},
+	{ &ui_fragLimit, "ui_fragLimit", "15", 0},
 	{ &ui_captureLimit, "ui_captureLimit", "5", 0},
+	{ &ui_scoreLimit, "ui_scoreLimit", "100", 0},
 	{ &ui_smallFont, "ui_smallFont", "0.25", CVAR_ARCHIVE},
 	{ &ui_bigFont, "ui_bigFont", "0.4", CVAR_ARCHIVE},
 	{ &ui_findPlayer, "ui_findPlayer", "Sarge", CVAR_ARCHIVE},
@@ -7319,7 +7328,8 @@ static cvarTable_t		cvarTable[] = {
 	{ &ui_recordSPDemo, "ui_recordSPDemo", "0", CVAR_ARCHIVE},
 	{ &ui_teamArenaFirstRun, "ui_teamArenaFirstRun", "0", CVAR_ARCHIVE},
 	{ &ui_realWarmUp, "g_warmup", "20", CVAR_ARCHIVE},
-	{ &ui_realCaptureLimit, "capturelimit", "8", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART},
+	{ &ui_realCaptureLimit, "capturelimit", "5", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART},
+	{ &ui_realScoreLimit, "scorelimit", "100", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART},
 	{ &ui_serverStatusTimeOut, "ui_serverStatusTimeOut", "7000", CVAR_ARCHIVE},
 	{ &ui_humansonly, "ui_humansonly", "0", CVAR_ARCHIVE},
 // Changed RD
@@ -7567,5 +7577,38 @@ Checks if the gametype has a round-based system.
  */
 qboolean UI_IsARoundBasedGametype(int check) {
 	return GAMETYPE_IS_ROUND_BASED(check);
+}
+/* /Neon_Knight */
+
+/* Neon_Knight: Checks for score limits */
+/*
+===================
+UI_UsesFragLimit
+
+Checks if the gametype uses fraglimit.
+===================
+ */
+qboolean UI_UsesFragLimit(int check) {
+	return GAMETYPE_USES_FRAG_LIMIT(check);
+}
+/*
+===================
+UI_UsesCaptureLimit
+
+Checks if the gametype uses capturelimit.
+===================
+ */
+qboolean UI_UsesCaptureLimit(int check) {
+	return GAMETYPE_USES_CAPTURE_LIMIT(check);
+}
+/*
+===================
+UI_UsesScoreLimit
+
+Checks if the gametype uses scorelimit.
+===================
+ */
+qboolean UI_UsesScoreLimit(int check) {
+	return GAMETYPE_USES_SCORE_LIMIT(check);
 }
 /* /Neon_Knight */

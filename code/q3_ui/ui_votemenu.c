@@ -48,8 +48,10 @@ static char* votemenu_artlist[] =
 #define ID_TIME     108
 #define ID_GAMETYPE 109
 #define ID_CUSTOM   110
+#define ID_HARVEST  111
 #define ID_YES      112
 #define ID_NO       113
+#define ID_SCORE    114
 
 
 //This sorta dependend on number of vote options
@@ -66,6 +68,7 @@ typedef struct
 	qboolean        map;
 	qboolean        gametype;
 	qboolean        fraglimit;
+	qboolean        scorelimit;
 	qboolean        timelimit;
 	qboolean        custom;
 } votemenu_logic_t;
@@ -92,6 +95,7 @@ static ui_menuitem_t s_items[] = {
 	{ID_FRAG,"Change fraglimit", &s_votemenu_logic.fraglimit},
 	{ID_TIME,"Change timelimit", &s_votemenu_logic.timelimit},
 	{ID_CUSTOM,"Custom vote", &s_votemenu_logic.custom},
+	{ID_SCORE,"Change scorelimit", &s_votemenu_logic.scorelimit},
 	{ID_YES,"Vote yes", &alwaysTrue},
 	{ID_NO,"Vote no", &alwaysTrue}
 };
@@ -129,6 +133,7 @@ static void VoteMenu_CheckVoteNames( void ) {
 	s_votemenu_logic.g_doWarmup = voteflags&VF_g_doWarmup;
 	s_votemenu_logic.timelimit = voteflags&VF_timelimit;
 	s_votemenu_logic.fraglimit = voteflags&VF_fraglimit;
+	s_votemenu_logic.scorelimit = voteflags&VF_scoreLimit;
 	s_votemenu_logic.custom = voteflags&VF_custom;
 }
 
@@ -167,6 +172,10 @@ static void VoteMenu_Event( void* ptr, int event )
 			break;
 		case ID_FRAG:
 			UI_VoteFraglimitMenu();
+			//Don't pop! It will do a double pop if successfull
+			break;
+		case ID_SCORE:
+			UI_VoteScorelimitMenu();
 			//Don't pop! It will do a double pop if successfull
 			break;
 		case ID_CUSTOM:
