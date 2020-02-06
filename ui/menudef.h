@@ -127,6 +127,14 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define CG_SHOW_OTHERTEAMHASFLAG          0x00020000
 #define CG_SHOW_YOURTEAMHASENEMYFLAG      0x00040000
 #define CG_SHOW_ANYNONTEAMGAME            0x00080000
+#define CG_SHOW_FREEFORALL                0x00100000
+#define CG_SHOW_TEAMDEATHMATCH            0x00200000
+#define CG_SHOW_ELIMINATION               0x00400000
+#define CG_SHOW_CTFELIMINATION            0x00800000
+#define CG_SHOW_LASTMANSTANDING           0x01000000
+#define CG_SHOW_DOUBLEDOMINATION          0x02000000
+#define CG_SHOW_DOMINATION                0x04000000
+#define CG_SHOW_POSSESSION                0x08000000
 #define CG_SHOW_2DONLY										0x10000000
 
 
