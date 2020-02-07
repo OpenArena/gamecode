@@ -196,11 +196,7 @@ int BotNearbyGoal(bot_state_t *bs, int tfl, bot_goal_t *ltg, float range) {
 	//check if the bot should go for air
 	if (BotGoForAir(bs, tfl, ltg, range)) return qtrue;
 	// if the bot is carrying a flag or cubes
-	if (BotCTFCarryingFlag(bs)
-#ifdef MISSIONPACK
-		|| Bot1FCTFCarryingFlag(bs) || BotHarvesterCarryingCubes(bs)
-#endif
-		) {
+	if (BotCarryingObjective(bs)) {
 		//if the bot is just a few secs away from the base 
 		if (trap_AAS_AreaTravelTimeToGoalArea(bs->areanum, bs->origin,
 				bs->teamgoal.areanum, TFL_DEFAULT) < 300) {
@@ -877,14 +873,14 @@ int BotGetLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal) 
 				default: bs->ltgtype = 0; return qfalse;
 			}
 			//if not carrying the flag anymore
-			if (!BotCTFCarryingFlag(bs)) bs->ltgtype = 0;
+			if (!BotCarryingObjective(bs)) bs->ltgtype = 0;
 			//quit rushing after 2 minutes
 			if (bs->teamgoal_time < FloatTime()) bs->ltgtype = 0;
 			//if touching the base flag the bot should loose the enemy flag
 			if (trap_BotTouchingGoal(bs->origin, goal)) {
 				//if the bot is still carrying the enemy flag then the
 				//base flag is gone, now just walk near the base a bit
-				if (BotCTFCarryingFlag(bs)) {
+				if (BotCarryingObjective(bs)) {
 					trap_BotResetAvoidReach(bs->ms);
 					bs->rushbaseaway_time = FloatTime() + 5 + 10 * random();
 					//FIXME: add chat to tell the others to get back the flag
@@ -950,7 +946,7 @@ int BotGetLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal) 
 				default: bs->ltgtype = 0; return qfalse;
 			}
 			//if not carrying the flag anymore
-			if (!Bot1FCTFCarryingFlag(bs)) {
+			if (!BotCarryingObjective(bs)) {
 				bs->ltgtype = 0;
 			}
 			//quit rushing after 2 minutes
@@ -1053,7 +1049,7 @@ int BotGetLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal) 
 				default: BotGoHarvest(bs); return qfalse;
 			}
 			//if not carrying any cubes
-			if (!BotHarvesterCarryingCubes(bs)) {
+			if (!BotCarryingObjective(bs)) {
 				BotGoHarvest(bs);
 				return qfalse;
 			}
@@ -1961,19 +1957,13 @@ int AINode_Seek_LTG(bot_state_t *bs)
 		if (bs->ltgtype == LTG_DEFENDKEYAREA) range = 400;
 		else range = 150;
 		//
-#ifdef CTF
-		if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
+		if (G_UsesTeamFlags(gametype) || G_UsesTheWhiteFlag(gametype)) {
 			//if carrying a flag the bot shouldn't be distracted too much
-			if (BotCTFCarryingFlag(bs))
-				range = 50;
-		}
-#endif //CTF
-		else if (G_UsesTheWhiteFlag(gametype)) {
-			if (Bot1FCTFCarryingFlag(bs))
+			if (BotCarryingObjective(bs))
 				range = 50;
 		}
 		else if (gametype == GT_HARVESTER) {
-			if (BotHarvesterCarryingCubes(bs))
+			if (BotCarryingObjective(bs))
 				range = 80;
 		}
 		//
@@ -2481,19 +2471,13 @@ int AINode_Battle_Retreat(bot_state_t *bs) {
 	if (bs->check_time < FloatTime()) {
 		bs->check_time = FloatTime() + 1;
 		range = 150;
-#ifdef CTF
-		if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
+		if (G_UsesTeamFlags(gametype) || G_UsesTheWhiteFlag(gametype)) {
 			//if carrying a flag the bot shouldn't be distracted too much
-			if (BotCTFCarryingFlag(bs))
-				range = 50;
-		}
-#endif //CTF
-		else if (G_UsesTheWhiteFlag(gametype)) {
-			if (Bot1FCTFCarryingFlag(bs))
+			if (BotCarryingObjective(bs))
 				range = 50;
 		}
 		else if (gametype == GT_HARVESTER) {
-			if (BotHarvesterCarryingCubes(bs))
+			if (BotCarryingObjective(bs))
 				range = 80;
 		}
 		//

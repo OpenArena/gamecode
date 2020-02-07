@@ -137,16 +137,13 @@ int BotTeam(bot_state_t *bs);
 //retuns the opposite team of the bot
 int BotOppositeTeam(bot_state_t *bs);
 //returns the flag the bot is carrying (CTFFLAG_?)
-int BotCTFCarryingFlag(bot_state_t *bs);
+int BotCarryingObjective(bot_state_t *bs);
 //remember the last ordered task
 void BotRememberLastOrderedTask(bot_state_t *bs);
 //set ctf goals (defend base, get enemy flag) during seek
 void BotCTFSeekGoals(bot_state_t *bs);
 //set ctf goals (defend base, get enemy flag) during retreat
 void BotCTFRetreatGoals(bot_state_t *bs);
-//
-int Bot1FCTFCarryingFlag(bot_state_t *bs);
-int BotHarvesterCarryingCubes(bot_state_t *bs);
 void Bot1FCTFSeekGoals(bot_state_t *bs);
 void Bot1FCTFRetreatGoals(bot_state_t *bs);
 void BotObeliskSeekGoals(bot_state_t *bs);
