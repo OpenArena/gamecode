@@ -157,10 +157,6 @@ BotCarryingObjective
 ==================
  */
 int BotCarryingObjective(bot_state_t *bs) {
-	if (!G_UsesTeamFlags(gametype) || !G_UsesTheWhiteFlag(gametype) ||
-			gametype != GT_HARVESTER)
-		return 0;
-
 	if(G_UsesTeamFlags(gametype)) {
 		if (bs->inventory[INVENTORY_REDFLAG] > 0)
 			return CTF_FLAG_RED;
