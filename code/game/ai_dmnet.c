@@ -584,37 +584,6 @@ int BotGetLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal) 
 		}
 		return qtrue;
 	}
-        //if (bs->ltgtype == LTG_DOMHOLD &&
-	//			bs->defendaway_time < FloatTime()) {
-            //check for bot typing status message
-		/*if (bs->teammessage_time && bs->teammessage_time < FloatTime()) {
-			trap_BotGoalName(bs->teamgoal.number, buf, sizeof(buf));
-			BotAI_BotInitialChat(bs, "dd_start_pointb", buf, NULL);
-			trap_BotEnterChat(bs->cs, 0, CHAT_TEAM);
-			//BotVoiceChatOnly(bs, -1, VOICECHAT_ONDEFENSE);
-			bs->teammessage_time = 0;
-		}*/
-		//set the bot goal
-	//	memcpy(goal, &bs->teamgoal, sizeof(bot_goal_t));
-		//if very close... go away for some time
-	//	VectorSubtract(goal->origin, bs->origin, dir);
-	//	if (VectorLengthSquared(dir) < Square(30)) {
-			/*trap_BotResetAvoidReach(bs->ms);
-			bs->defendaway_time = FloatTime() + 3 + 3 * random();
-			if (BotHasPersistantPowerupAndWeapon(bs)) {
-				bs->defendaway_range = 100;
-			}
-			else {
-				bs->defendaway_range = 350;
-			}*/
-          //              memcpy(&bs->teamgoal, &dom_points_bot[((rand()) % (level.domination_points_count))], sizeof(bot_goal_t));
-            //            BotAlternateRoute(bs, &bs->teamgoal);
-              //          BotSetTeamStatus(bs);
-
-		//}
-		//return qtrue;
-
-       // }
 	//if defending a key area
 	if (bs->ltgtype == LTG_DEFENDKEYAREA && !retreat &&
 				bs->defendaway_time < FloatTime()) {
@@ -1117,7 +1086,43 @@ int BotGetLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal) 
 			return qtrue;
 		}
 	}
-//#endif
+	else if (gametype == GT_DOMINATION) {
+		// If the bot has an assigned control point that falls outside of the limits,
+		// assign a new one before proceeding.
+		if (!(bs->currentPoint >= 0 &&
+				bs->currentPoint < MAX_DOMINATION_POINTS &&
+				bs->currentPoint < level.domination_points_count)) {
+			BotSetDominationPoint(bs,-1);
+		}
+		if ((bs->ltgtype == LTG_DEFENDKEYAREA) ||
+				(bs->ltgtype == LTG_ATTACKENEMYBASE) ||
+				(bs->ltgtype == LTG_HOLDDOMPOINT)) {
+			//check for bot typing status message
+			if (bs->teammessage_time && bs->teammessage_time < FloatTime()) {
+				trap_BotGoalName(bs->teamgoal.number, buf, sizeof(buf));
+				BotAI_BotInitialChat(bs, "dom_point_hold_start", buf, level.domination_points_names[bs->currentPoint]);
+				trap_BotEnterChat(bs->cs, 0, CHAT_TEAM);
+				//BotVoiceChatOnly(bs, -1, VOICECHAT_ONDEFENSE);
+				bs->teammessage_time = 0;
+			}
+			//set the bot goal
+			memcpy(goal, &dom_points_bot[bs->currentPoint], sizeof(bot_goal_t));
+			//if very close... go away for some time
+			VectorSubtract(goal->origin, bs->origin, dir);
+			if (VectorLengthSquared(dir) < Square(70)) {
+				trap_BotResetAvoidReach(bs->ms);
+				bs->defendaway_time = FloatTime() + 3 + 3 * random();
+				if (BotHasPersistantPowerupAndWeapon(bs)) {
+					bs->defendaway_range = 100;
+				}
+				else {
+					bs->defendaway_range = 350;
+				}
+			}
+			return qtrue;
+		}
+	}
+
 	//normal goal stuff
 	return BotGetItemLongTermGoal(bs, tfl, goal);
 }
