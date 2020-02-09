@@ -2247,7 +2247,6 @@ void CheckDoubleDomination( void )
 	}
 
 	if((level.pointStatusA == TEAM_NONE || level.pointStatusB == TEAM_NONE) && level.time>level.roundStartTime) {
-		trap_SendServerCommand( -1, "print \"A new round has started\n\"");
 		Team_SpawnDoubleDominationPoints();
 		SendScoreboardMessageToAllClients();
 	}
