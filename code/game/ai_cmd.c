@@ -132,12 +132,12 @@ void BotPrintTeamGoal(bot_state_t *bs) {
 			BotAI_Print(PRT_MESSAGE, "%s: I'm gonna patrol for %1.0f secs\n", netname, t);
 			break;
 		}
-		case LTG_POINTA:
+		case LTG_HOLDPOINTA:
 		{
 			BotAI_Print(PRT_MESSAGE, "%s: I'm gonna take care of point A for %1.0f secs\n", netname, t);
 			break;
 		}
-		case LTG_POINTB:
+		case LTG_HOLDPOINTB:
 		{
 			BotAI_Print(PRT_MESSAGE, "%s: I'm gonna take care of point B for %1.0f secs\n", netname, t);
 			break;
@@ -474,6 +474,9 @@ int BotGPSToPosition(char *buf, vec3_t position) {
 	return qtrue;
 }
 
+void BotMatch_TakeA(bot_state_t *bs, bot_match_t *match);
+void BotMatch_TakeB(bot_state_t *bs, bot_match_t *match);
+
 /*
 ==================
 BotMatch_HelpAccompany
@@ -611,6 +614,12 @@ void BotMatch_DefendKeyArea(bot_state_t *bs, bot_match_t *match) {
 	int client;
 
 	if (!G_IsATeamGametype(gametype)) return;
+	// Double Domination had other rules
+	if (gametype == GT_DOUBLE_D) {
+		// "Defend" will make bots to focus on point B.
+		BotMatch_TakeB(bs,match);
+		return;
+	}
 	//if not addressed to this bot
 	if (!BotAddressedToBot(bs, match)) return;
 	//get the match variable
@@ -659,7 +668,7 @@ void BotMatch_TakeA(bot_state_t *bs, bot_match_t *match) {
 	char netname[MAX_MESSAGE_SIZE];
 	int client;
 
-	if (!G_IsATeamGametype(gametype)) return;
+	if (gametype != GT_DOUBLE_D) return;
 	//if not addressed to this bot
 	if (!BotAddressedToBot(bs, match)) return;
 	//get the match variable
@@ -681,11 +690,11 @@ void BotMatch_TakeA(bot_state_t *bs, bot_match_t *match) {
 	//set the time to send a message to the team mates
 	bs->teammessage_time = FloatTime() + 2 * random();
 	//set the ltg type
-	bs->ltgtype = LTG_POINTA;
+	bs->ltgtype = LTG_HOLDPOINTA;
 	//get the team goal time
 	bs->teamgoal_time = BotGetTime(match);
 	//set the team goal time
-	if (!bs->teamgoal_time) bs->teamgoal_time = FloatTime() + DD_POINTA;
+	if (!bs->teamgoal_time) bs->teamgoal_time = FloatTime() + TEAM_HOLDPOINTA_TIME;
 	//away from defending
 	bs->defendaway_time = 0;
 	//
@@ -708,7 +717,7 @@ void BotMatch_TakeB(bot_state_t *bs, bot_match_t *match) {
 	char netname[MAX_MESSAGE_SIZE];
 	int client;
 
-	if (!G_IsATeamGametype(gametype)) return;
+	if (gametype != GT_DOUBLE_D) return;
 	//if not addressed to this bot
 	if (!BotAddressedToBot(bs, match)) return;
 	//get the match variable
@@ -730,11 +739,11 @@ void BotMatch_TakeB(bot_state_t *bs, bot_match_t *match) {
 	//set the time to send a message to the team mates
 	bs->teammessage_time = FloatTime() + 2 * random();
 	//set the ltg type
-	bs->ltgtype = LTG_POINTB;
+	bs->ltgtype = LTG_HOLDPOINTB;
 	//get the team goal time
 	bs->teamgoal_time = BotGetTime(match);
 	//set the team goal time
-	if (!bs->teamgoal_time) bs->teamgoal_time = FloatTime() + DD_POINTA;
+	if (!bs->teamgoal_time) bs->teamgoal_time = FloatTime() + TEAM_HOLDPOINTB_TIME;
 	//away from defending
 	bs->defendaway_time = 0;
 	//
@@ -987,6 +996,11 @@ void BotMatch_AttackEnemyBase(bot_state_t *bs, bot_match_t *match) {
 			gametype == GT_HARVESTER || gametype == GT_OBELISK) {
 		if (!redobelisk.areanum || !blueobelisk.areanum)
 			return;
+	}
+	else if (gametype == GT_DOUBLE_D) {
+		// "Attack" will make a bot to focus on point A.
+		BotMatch_TakeA(bs,match);
+		return;
 	}
 	else {
 		return;
@@ -1536,14 +1550,14 @@ void BotMatch_WhatAreYouDoing(bot_state_t *bs, bot_match_t *match) {
 			break;
 		}
 //#endif
-		case LTG_POINTA:
+		case LTG_HOLDPOINTA:
 		{
-			BotAI_BotInitialChat(bs, "dd_pointa", NULL);
+			BotAI_BotInitialChat(bs, "dd_holdingpointa", NULL);
 			break;
 		}
-		case LTG_POINTB:
+		case LTG_HOLDPOINTB:
 		{
-			BotAI_BotInitialChat(bs, "dd_pointb", NULL);
+			BotAI_BotInitialChat(bs, "dd_holdingpointb", NULL);
 			break;
 		}
 		default:
@@ -2073,12 +2087,12 @@ int BotMatchMessage(bot_state_t *bs, char *message) {
 			BotMatch_Suicide(bs, &match);
 			break;
 		}
-		case MSG_TAKEA:
+		case MSG_HOLDPOINTA:
 		{
 			BotMatch_TakeA(bs, &match);
 			break;
 		}
-		case MSG_TAKEB:
+		case MSG_HOLDPOINTB:
 		{
 			BotMatch_TakeB(bs, &match);
 			break;
