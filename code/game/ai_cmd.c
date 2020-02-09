@@ -142,6 +142,11 @@ void BotPrintTeamGoal(bot_state_t *bs) {
 			BotAI_Print(PRT_MESSAGE, "%s: I'm gonna take care of point B for %1.0f secs\n", netname, t);
 			break;
 		}
+		case LTG_HOLDDOMPOINT:
+		{
+			BotAI_Print(PRT_MESSAGE, "%s: I'm gonna defend a DOM point for %1.0f secs\n", netname, t);
+			break;
+		}
 		default:
 		{
 			if (bs->ctfroam_time > FloatTime()) {
@@ -474,6 +479,48 @@ int BotGPSToPosition(char *buf, vec3_t position) {
 	return qtrue;
 }
 
+void BotMatch_HoldDOMPoint(bot_state_t *bs, bot_match_t *match);
+
+/*
+==================
+BotSetDominationPoint
+Selects a point for Domination. It's saved in the field currentPoint.
+==================
+*/
+void BotSetDominationPoint(bot_state_t *bs, int controlPoint) {
+	int i;
+	qboolean allTaken = qtrue;
+
+	// Domination only
+	if (gametype != GT_DOMINATION) return;
+	// If there are no points, just assign the neutral one.
+	if (level.domination_points_count > 1) {
+		bs->currentPoint = 0;
+		return;
+	}
+	// If a control point point has been passed,
+	// and falls inside of both gametype AND map limits, assign it.
+	if (controlPoint >= 0 &&
+			controlPoint < level.domination_points_count &&
+			controlPoint < MAX_DOMINATION_POINTS) {
+		bs->currentPoint = controlPoint;
+		return;
+	}
+	// Search for points our team don't own.
+	for (i=1;i<level.domination_points_count;i++) {
+		if ((BotTeam(bs) == TEAM_RED && level.pointStatusDom[i] != TEAM_RED) ||
+				(BotTeam(bs) == TEAM_BLUE && level.pointStatusDom[i] != TEAM_BLUE)) {
+			allTaken = qfalse;
+			bs->currentPoint = i;
+			break;
+		}
+	}
+	// If we own all of the points, operate in a random one.
+	if (allTaken == qfalse) {
+		bs->currentPoint = rand() % level.domination_points_count;
+	}
+}
+
 /*
 ==================
 BotMatch_HelpAccompany
@@ -611,6 +658,13 @@ void BotMatch_DefendKeyArea(bot_state_t *bs, bot_match_t *match) {
 	int client;
 
 	if (!G_IsATeamGametype(gametype)) return;
+	// Domination has clear rules
+	if (gametype == GT_DOMINATION) {
+		// Reroll to get a different DOM point.
+		BotSetDominationPoint(bs,-1);
+		BotMatch_HoldDOMPoint(bs,match);
+		return;
+	}
 	//if not addressed to this bot
 	if (!BotAddressedToBot(bs, match)) return;
 	//get the match variable
@@ -735,6 +789,48 @@ void BotMatch_TakeB(bot_state_t *bs, bot_match_t *match) {
 	bs->teamgoal_time = BotGetTime(match);
 	//set the team goal time
 	if (!bs->teamgoal_time) bs->teamgoal_time = FloatTime() + DD_POINTA;
+	//away from defending
+	bs->defendaway_time = 0;
+	//
+	BotSetTeamStatus(bs);
+	// remember last ordered task
+	BotRememberLastOrderedTask(bs);
+#ifdef DEBUG
+	BotPrintTeamGoal(bs);
+#endif //DEBUG
+}
+
+/*
+==================
+BotMatch_HoldDOMPoint
+For Domination
+==================
+*/
+void BotMatch_HoldDOMPoint(bot_state_t *bs, bot_match_t *match) {
+	char netname[MAX_MESSAGE_SIZE];
+	int client;
+
+	if (gametype != GT_DOMINATION) return;
+	if (level.domination_points_count < 1) return;
+	//if not addressed to this bot
+	if (!BotAddressedToBot(bs, match)) return;
+	//get the match variable
+	//
+	trap_BotMatchVariable(match, NETNAME, netname, sizeof(netname));
+	//
+	client = ClientFromName(netname);
+	//the team mate who ordered
+	bs->decisionmaker = client;
+	bs->ordered = qtrue;
+	bs->order_time = FloatTime();
+	//set the time to send a message to the team mates
+	bs->teammessage_time = FloatTime() + 2 * random();
+	//set the ltg type
+	bs->ltgtype = LTG_HOLDDOMPOINT;
+	//get the team goal time
+	bs->teamgoal_time = BotGetTime(match);
+	//set the team goal time
+	if (!bs->teamgoal_time) bs->teamgoal_time = FloatTime() + TEAM_HOLDDOMPOINT_TIME;
 	//away from defending
 	bs->defendaway_time = 0;
 	//
@@ -987,6 +1083,12 @@ void BotMatch_AttackEnemyBase(bot_state_t *bs, bot_match_t *match) {
 			gametype == GT_HARVESTER || gametype == GT_OBELISK) {
 		if (!redobelisk.areanum || !blueobelisk.areanum)
 			return;
+	}
+	else if (gametype == GT_DOMINATION) {
+		// Reroll to get a different DOM point.
+		BotSetDominationPoint(bs,-1);
+		BotMatch_HoldDOMPoint(bs,match);
+		return;
 	}
 	else {
 		return;
@@ -1546,6 +1648,11 @@ void BotMatch_WhatAreYouDoing(bot_state_t *bs, bot_match_t *match) {
 			BotAI_BotInitialChat(bs, "dd_pointb", NULL);
 			break;
 		}
+		case LTG_HOLDDOMPOINT:
+		{
+			BotAI_BotInitialChat(bs, "dom_holdpoint", NULL);
+			break;
+		}
 		default:
 		{
 			BotAI_BotInitialChat(bs, "roaming", NULL);
@@ -1867,6 +1974,10 @@ void BotMatch_EnterGame(bot_state_t *bs, bot_match_t *match) {
 	if (client >= 0) {
 		notleader[client] = qfalse;
 	}
+	if (gametype == GT_DOMINATION) {
+		// Assign a control point at start.
+		BotSetDominationPoint(bs,-1);
+	}
 	//NOTE: eliza chats will catch this
 	//Com_sprintf(buf, sizeof(buf), "heya %s", netname);
 	//EA_Say(bs->client, buf);
@@ -2081,6 +2192,11 @@ int BotMatchMessage(bot_state_t *bs, char *message) {
 		case MSG_TAKEB:
 		{
 			BotMatch_TakeB(bs, &match);
+			break;
+		}
+		case MSG_HOLDDOMPOINT:
+		{
+			BotMatch_HoldDOMPoint(bs, &match);
 			break;
 		}
 		default:

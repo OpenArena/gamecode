@@ -2106,6 +2106,68 @@ void BotHarvesterOrders(bot_state_t *bs) {
 
 /*
 ==================
+BotDomOrders
+
+All will roam.
+==================
+*/
+/*void BotDomOrders_AllPointsTaken(bot_state_t *bs) {
+}
+
+void BotDomOrders_NoPointsTaken(bot_state_t *bs) {
+}
+
+void BotDomOrders_SomePointsTaken(bot_state_t *bs) {
+}*/
+void BotDomOrders_Standard(bot_state_t *bs) {
+	int numteammates, i;
+	int teammates[MAX_CLIENTS];
+	char name[MAX_NETNAME];
+
+	if (bot_nochat.integer>2) return;
+
+	//sort team mates by travel time to base
+	numteammates = BotSortTeamMatesByBaseTravelTime(bs, teammates, sizeof(teammates));
+	//sort team mates by CTF preference
+	BotSortTeamMatesByTaskPreference(bs, teammates, numteammates);
+
+	for (i = 0; i < numteammates; i++) {
+		//
+		ClientName(teammates[i], name, sizeof(name));
+		BotAI_BotInitialChat(bs, "cmd_holddompoint", name, NULL);
+		BotSayTeamOrder(bs, teammates[i]);
+		BotSayVoiceTeamOrder(bs, teammates[i], VOICECHAT_DEFEND);
+	}
+}
+
+/*
+==================
+BotDomOrders
+==================
+*/
+void BotDomOrders(bot_state_t *bs) {
+	/*int i,pointsTaken=0;*/
+
+	/*for(i=0;i<=level.domination_points_count;i++) {
+		if(level.pointStatusDom[i] == BotTeam(bs)) {
+			pointsTaken++;
+		}
+	}
+
+	if (pointsTaken == level.domination_points_count) {
+		BotDomOrders_AllPointsTaken(bs);
+	}
+	else if (pointsTaken == 0) {
+		BotDomOrders_NoPointsTaken(bs);
+	}
+	else if (pointsTaken > (level.domination_points_count/2)) {
+		BotDomOrders_SomePointsTaken(bs);
+	}*/
+	BotDomOrders_Standard(bs);
+}
+
+/*
+==================
 FindHumanTeamLeader
 ==================
 */
@@ -2312,6 +2374,24 @@ void BotTeamAI(bot_state_t *bs) {
 				BotHarvesterOrders(bs);
 				//give orders again after 30 seconds
 				bs->teamgiveorders_time = FloatTime() + 30;
+			}
+			break;
+		}
+		case GT_DOMINATION:
+		{
+			//if the number of team mates changed or the domination point status changed
+			//or someone wants to know what to do
+			if (bs->numteammates != numteammates || bs->flagstatuschanged || bs->forceorders) {
+				bs->teamgiveorders_time = FloatTime();
+				bs->numteammates = numteammates;
+				bs->flagstatuschanged = qfalse;
+				bs->forceorders = qfalse;
+			}
+			//if it's time to give orders
+			if (bs->teamgiveorders_time && bs->teamgiveorders_time < FloatTime() - 3) {
+				BotDomOrders(bs);
+				//
+				bs->teamgiveorders_time = 0;
 			}
 			break;
 		}

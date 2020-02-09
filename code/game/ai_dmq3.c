@@ -444,6 +444,23 @@ void BotSetTeamStatus(bot_state_t *bs) {
 			else
 				teamtask = TEAMTASK_DEFENSE;
 			break;
+		case LTG_HOLDDOMPOINT:
+			// If the bot has an invalid CP, reroll.
+			if (!(bs->currentPoint >= 0 &&
+					bs->currentPoint < MAX_DOMINATION_POINTS &&
+					bs->currentPoint < level.domination_points_count)) {
+				BotSetDominationPoint(bs,-1);
+			}
+			if ((BotTeam(bs) == TEAM_BLUE && level.pointStatusDom[bs->currentPoint] == TEAM_BLUE) ||
+					(BotTeam(bs) == TEAM_RED && level.pointStatusDom[bs->currentPoint] == TEAM_RED))
+				teamtask = TEAMTASK_DEFENSE;
+			else if ((BotTeam(bs) == TEAM_BLUE && level.pointStatusDom[bs->currentPoint] != TEAM_BLUE) ||
+					(BotTeam(bs) == TEAM_RED && level.pointStatusDom[bs->currentPoint] != TEAM_RED))
+				teamtask = TEAMTASK_OFFENSE;
+			else {
+				teamtask = TEAMTASK_PATROL;
+			}
+			break;
 		default:
 			teamtask = TEAMTASK_PATROL;
 			break;
@@ -823,29 +840,92 @@ void BotCTFRetreatGoals(bot_state_t *bs) {
 BotDomSeekGoals
 ==================
  */
+void BotDomSeekGoals(bot_state_t *bs) {
+	float rnd, l1;
 
-/*void BotDomSeekGoals(bot_state_t *bs) {
-	int index;
-	bs->ltgtype = LTG_DOMHOLD; //For debugging we are forcing roam
-    
-	index=0;
-	//dom_points_bot[i]
-    
-	if(bs->ltgtype == LTG_DOMHOLD) {
-		//index = 0;
-		index = ((rand()) % (level.domination_points_count));
+	// DD only
+	if (gametype != GT_DOMINATION) return;
+	// if the map has no points, just roam
+	if (level.domination_points_count < 1) {
+		bs->ltgtype = LTG_PATROL;
+		BotSetUserInfo(bs, "teamtask", va("%d", TEAMTASK_PATROL));
+		BotSetTeamStatus(bs);
+		return;
 	}
-    
-	//if(bs->ltgtype == LTG_DOMROAM) {
-        
-	//}
-        
-	memcpy(&bs->teamgoal, &dom_points_bot[index], sizeof(bot_goal_t));
-
-	BotAlternateRoute(bs, &bs->teamgoal);
-
-	BotSetTeamStatus(bs);
-}*/
+	// don't just do something wait for the bot team leader to give orders
+	if (BotTeamLeader(bs)) {
+		return;
+	}
+	// if the bot is ordered to do something
+	if (bs->lastgoal_ltgtype) {
+		bs->teamgoal_time += 60;
+	}
+	// if the bot decided to do something on it's own and has a last ordered goal
+	if (!bs->ordered && bs->lastgoal_ltgtype) {
+		bs->ltgtype = 0;
+	}
+	//if already a CTF or team goal
+	if (bs->ltgtype == LTG_TEAMHELP ||
+			bs->ltgtype == LTG_TEAMACCOMPANY ||
+			bs->ltgtype == LTG_CAMPORDER ||
+			bs->ltgtype == LTG_PATROL ||
+			bs->ltgtype == LTG_GETITEM ||
+			bs->ltgtype == LTG_MAKELOVE_UNDER ||
+			bs->ltgtype == LTG_MAKELOVE_ONTOP ||
+			bs->ltgtype == LTG_HOLDDOMPOINT) {
+		return;
+	}
+	//
+	if (BotSetLastOrderedTask(bs))
+		return;
+	//
+	if (bs->owndecision_time > FloatTime())
+		return;
+	;
+	//if the bot is roaming
+	if (bs->ctfroam_time > FloatTime())
+		return;
+	//if the bot has enough aggression to decide what to do
+	if (BotAggression(bs) < 50)
+		return;
+	// If the bot has no set control point, reroll
+	if (!(bs->currentPoint >= 0 &&
+			bs->currentPoint < MAX_DOMINATION_POINTS &&
+			bs->currentPoint < level.domination_points_count)) {
+		BotSetDominationPoint(bs,-1);
+	}
+	//set the time to send a message to the team mates
+	bs->teammessage_time = FloatTime() + 2 * random();
+	//
+	if (bs->teamtaskpreference & TEAMTP_ATTACKER) {
+		l1 = 0.7f;
+	} else {
+		l1 = 0.2f;
+	}
+	//pick a point
+	rnd = random();
+	if (rnd < l1) {
+		bs->decisionmaker = bs->client;
+		bs->ordered = qfalse;
+		//
+		memcpy(&bs->teamgoal, &dom_points_bot[bs->currentPoint], sizeof (bot_goal_t));
+		//set the ltg type
+		bs->ltgtype = LTG_HOLDDOMPOINT;
+		//set the time the bot stops defending the base
+		bs->teamgoal_time = FloatTime() + TEAM_HOLDDOMPOINT_TIME;
+		bs->defendaway_time = 0;
+		BotSetTeamStatus(bs);
+	} else {
+		bs->ltgtype = LTG_PATROL;
+		//set the time the bot will stop roaming
+		bs->ctfroam_time = FloatTime() + CTF_ROAM_TIME;
+		BotSetTeamStatus(bs);
+	}
+	bs->owndecision_time = FloatTime() + 5;
+#ifdef DEBUG
+	BotPrintTeamGoal(bs);
+#endif //DEBUG
+}
 
 /*
 ==================
@@ -1443,8 +1523,8 @@ void BotTeamGoals(bot_state_t *bs, int retreat) {
 	if (gametype == GT_DOUBLE_D) //Don't care about retreat
 		BotDDSeekGoals(bs);
 
-	//if(gametype == GT_DOMINATION) //Don't care about retreat
-	//	BotDomSeekGoals(bs);
+	if(gametype == GT_DOMINATION) //Don't care about retreat
+		BotDomSeekGoals(bs);
 
 	// reset the order time which is used to see if
 	// we decided to refuse an order
@@ -1767,6 +1847,7 @@ void BotCheckItemPickup(bot_state_t *bs, int *oldinventory) {
 					//trap_BotEnterChat(bs->cs, leader, CHAT_TELL);
 				} else if ((bot_spSkill.integer <= 3) &&
 						(bs->ltgtype != LTG_DEFENDKEYAREA) &&
+						(bs->ltgtype != LTG_HOLDDOMPOINT) &&
 						((!(G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype))) ||
 						((bs->redflagstatus == 0) &&
 						(bs->blueflagstatus == 0))) &&
