@@ -324,17 +324,7 @@ qboolean CG_DrawOldScoreboard(void) {
 	}
 
 	// current rank
-	if (!CG_IsATeamGametype(cgs.gametype)) {
-		if (cg.snap->ps.persistant[PERS_TEAM] != TEAM_SPECTATOR) {
-			s = va("%s place with %i",
-					CG_PlaceString(cg.snap->ps.persistant[PERS_RANK] + 1),
-					cg.snap->ps.persistant[PERS_SCORE]);
-			w = CG_DrawStrlen(s) * BIGCHAR_WIDTH;
-			x = (SCREEN_WIDTH - w) / 2;
-			y = 60;
-			CG_DrawBigString(x, y, s, fade);
-		}
-	} else {
+	if (CG_IsATeamGametype(cgs.gametype)) {
 		if (cg.teamScores[0] == cg.teamScores[1]) {
 			s = va("Teams are tied at %i", cg.teamScores[0]);
 		} else if (cg.teamScores[0] >= cg.teamScores[1]) {
@@ -347,6 +337,16 @@ qboolean CG_DrawOldScoreboard(void) {
 		x = (SCREEN_WIDTH - w) / 2;
 		y = 60;
 		CG_DrawBigString(x, y, s, fade);
+	} else {
+		if (cg.snap->ps.persistant[PERS_TEAM] != TEAM_SPECTATOR) {
+			s = va("%s place with %i",
+					CG_PlaceString(cg.snap->ps.persistant[PERS_RANK] + 1),
+					cg.snap->ps.persistant[PERS_SCORE]);
+			w = CG_DrawStrlen(s) * BIGCHAR_WIDTH;
+			x = (SCREEN_WIDTH - w) / 2;
+			y = 60;
+			CG_DrawBigString(x, y, s, fade);
+		}
 	}
 
 	// scoreboard
