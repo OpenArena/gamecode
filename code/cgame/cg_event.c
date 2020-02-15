@@ -254,17 +254,15 @@ static void CG_Obituary(entityState_t *ent) {
 	if (attacker == cg.snap->ps.clientNum) {
 		char *s;
 
-		if (!CG_IsATeamGametype(cgs.gametype) && !CG_UsesTeamFlags(cgs.gametype) &&
-				!CG_UsesTheWhiteFlag(cgs.gametype) && !CG_IsARoundBasedGametype(cgs.gametype) &&
-				cgs.gametype != GT_DOUBLE_D && cgs.gametype != GT_DOMINATION) {
-			s = va("You fragged %s\n%s place with %i", targetName,
-					CG_PlaceString(cg.snap->ps.persistant[PERS_RANK] + 1),
-					cg.snap->ps.persistant[PERS_SCORE]);
-		} else {
+		if (CG_IsATeamGametype(cgs.gametype)) {
 			if (ent->generic1)
 				s = va("You fragged your ^1TEAMMATE^7 %s", targetName);
 			else
 				s = va("You fragged %s", targetName);
+		} else {
+			s = va("You fragged %s\n%s place with %i", targetName,
+					CG_PlaceString(cg.snap->ps.persistant[PERS_RANK] + 1),
+					cg.snap->ps.persistant[PERS_SCORE]);
 		}
 #ifdef MISSIONPACK
 		if (!(cg_singlePlayerActive.integer && cg_cameraOrbit.integer)) {
