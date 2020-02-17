@@ -72,7 +72,7 @@ void DeathmatchScoreboardMessage( gentity_t *ent ) {
 		}
 		perfect = ( cl->ps.persistant[PERS_RANK] == 0 && cl->ps.persistant[PERS_KILLED] == 0 ) ? 1 : 0;
 
-		if(g_gametype.integer == GT_LMS) {
+		if(G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_LMS)) {
 			Com_sprintf (entry, sizeof(entry),
 				" %i %i %i %i %i %i %i %i %i %i %i %i %i %i %i", level.sortedClients[i],
 				cl->ps.persistant[PERS_SCORE], ping, (level.time - cl->pers.enterTime)/60000,
@@ -785,7 +785,7 @@ void SetTeam( gentity_t *ent, const char *s ) {
 		team = TEAM_SPECTATOR;
 		specState = SPECTATOR_FREE;
 	} 
-	else if (G_IsATeamGametype(g_gametype.integer)) {
+	else if (G_IsATeamGametype(g_gametype.integer,g_subgametype.integer)) {
 		// if running a team game, assign player to one of the teams
 		specState = SPECTATOR_NOT;
 		if ( Q_strequal( s, "red" ) || Q_strequal( s, "r" ) ) {
@@ -826,7 +826,7 @@ void SetTeam( gentity_t *ent, const char *s ) {
 	}
 	if ( !force ) {
 		// override decision if limiting the players
-		if ( (g_gametype.integer == GT_TOURNAMENT)
+		if (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_TOURNAMENT)
 			&& level.numNonSpectatorClients >= 2 ) {
 			team = TEAM_SPECTATOR;
 		} else if ( g_maxGameClients.integer > 0 && 
@@ -874,7 +874,8 @@ void SetTeam( gentity_t *ent, const char *s ) {
 	if ( oldTeam != TEAM_SPECTATOR ) {
 		int teamscore = -99;
 		//Prevent a team from loosing point because of player leaving team
-		if(g_gametype.integer == GT_TEAM && ent->client->ps.stats[STAT_HEALTH]) {
+		if(G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_TEAM) &&
+				ent->client->ps.stats[STAT_HEALTH]) {
 			teamscore = level.teamScores[ ent->client->sess.sessionTeam ];
 		}
 		// Kill him (makes sure he loses flags, etc)
@@ -929,7 +930,7 @@ to free floating spectator mode
 =================
 */
 void StopFollowing( gentity_t *ent ) {
-	if(!G_IsARoundBasedGametype(g_gametype.integer))
+	if(!G_IsARoundBasedGametype(g_gametype.integer,g_subgametype.integer))
 	{
 		//Shouldn't this already be the case?
 		ent->client->ps.persistant[ PERS_TEAM ] = TEAM_SPECTATOR;	
@@ -991,7 +992,7 @@ void Cmd_Team_f( gentity_t *ent ) {
 	}
 
 	// if they are playing a tournement game, count as a loss
-	if ( (g_gametype.integer == GT_TOURNAMENT )
+	if (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_TOURNAMENT)
 		&& ent->client->sess.sessionTeam == TEAM_FREE ) {
 		ent->client->sess.losses++;
 	}
@@ -1039,14 +1040,17 @@ void Cmd_Follow_f( gentity_t *ent ) {
 		return;
 	}
 
-	if ( G_IsARoundBasedGametype(g_gametype.integer) && G_IsATeamGametype(g_gametype.integer) && g_elimination_lockspectator.integer
-		&&  ((ent->client->sess.sessionTeam == TEAM_RED && level.clients[ i ].sess.sessionTeam == TEAM_BLUE) ||
-			 (ent->client->sess.sessionTeam == TEAM_BLUE && level.clients[ i ].sess.sessionTeam == TEAM_RED) ) ) {
+	if ( G_IsARoundBasedGametype(g_gametype.integer,g_subgametype.integer) &&
+			G_IsATeamGametype(g_gametype.integer,g_subgametype.integer) &&
+			g_elimination_lockspectator.integer && ((ent->client->sess.sessionTeam == TEAM_RED &&
+			level.clients[ i ].sess.sessionTeam == TEAM_BLUE) ||
+			(ent->client->sess.sessionTeam == TEAM_BLUE &&
+			level.clients[ i ].sess.sessionTeam == TEAM_RED) ) ) {
 		return;
 	}
 
 	// if they are playing a tournement game, count as a loss
-	if ( (g_gametype.integer == GT_TOURNAMENT )
+	if (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_TOURNAMENT)
 		&& ent->client->sess.sessionTeam == TEAM_FREE ) {
 		ent->client->sess.losses++;
 	}
@@ -1090,7 +1094,7 @@ void Cmd_FollowCycle_f( gentity_t *ent ) {
 	}
 
 	// if they are playing a tournement game, count as a loss
-	if ( (g_gametype.integer == GT_TOURNAMENT )
+	if (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_TOURNAMENT)
 		&& ent->client->sess.sessionTeam == TEAM_FREE ) {
 		ent->client->sess.losses++;
 	}
@@ -1141,9 +1145,11 @@ void Cmd_FollowCycle_f( gentity_t *ent ) {
 		}
 
 		//Stop players from spectating players on the enemy team in elimination modes.
-		if ( (G_IsARoundBasedGametype(g_gametype.integer) && G_IsATeamGametype(g_gametype.integer)) && g_elimination_lockspectator.integer
-			&&  ((ent->client->sess.sessionTeam == TEAM_RED && level.clients[ clientnum ].sess.sessionTeam == TEAM_BLUE) ||
-				 (ent->client->sess.sessionTeam == TEAM_BLUE && level.clients[ clientnum ].sess.sessionTeam == TEAM_RED) ) ) {
+		if ( (G_IsARoundBasedGametype(g_gametype.integer,g_subgametype.integer) &&
+				G_IsATeamGametype(g_gametype.integer,g_subgametype.integer)) &&
+				g_elimination_lockspectator.integer &&
+				((ent->client->sess.sessionTeam == TEAM_RED && level.clients[ clientnum ].sess.sessionTeam == TEAM_BLUE) ||
+				(ent->client->sess.sessionTeam == TEAM_BLUE && level.clients[ clientnum ].sess.sessionTeam == TEAM_RED) ) ) {
 			continue;
 		}
 
@@ -1183,7 +1189,7 @@ static void G_SayTo( gentity_t *ent, gentity_t *other, int mode, int color, cons
 	if ((ent->r.svFlags & SVF_BOT) && g_bot_noChat.integer > 1) return;
 
 	// no chatting to players in tournements
-	if ( (g_gametype.integer == GT_TOURNAMENT )
+	if (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_TOURNAMENT)
 		&& other->client->sess.sessionTeam == TEAM_FREE
 		&& ent->client->sess.sessionTeam != TEAM_FREE ) {
 		return;
@@ -1213,7 +1219,7 @@ void G_Say( gentity_t *ent, gentity_t *target, int mode, const char *chatText ) 
 		return;
 	}
 
-	if ( !G_IsATeamGametype(g_gametype.integer) && mode == SAY_TEAM ) {
+	if ( !G_IsATeamGametype(g_gametype.integer,g_subgametype.integer) && mode == SAY_TEAM ) {
 		mode = SAY_ALL;
 	}
 
@@ -1235,7 +1241,7 @@ void G_Say( gentity_t *ent, gentity_t *target, int mode, const char *chatText ) 
 		color = COLOR_CYAN;
 		break;
 	case SAY_TELL:
-		if (target && target->inuse && target->client && G_IsATeamGametype(g_gametype.integer) &&
+		if (target && target->inuse && target->client && G_IsATeamGametype(g_gametype.integer,g_subgametype.integer) &&
 			target->client->sess.sessionTeam == ent->client->sess.sessionTeam &&
 			Team_GetLocationMsg(ent, location, sizeof(location)))
 			Com_sprintf (name, sizeof(name), EC"[%s%c%c"EC"] (%s)"EC": ", ent->client->pers.netname, Q_COLOR_ESCAPE, COLOR_WHITE, location );
@@ -1360,7 +1366,7 @@ static void G_VoiceTo( gentity_t *ent, gentity_t *other, int mode, const char *i
 		return;
 	}
 	// no chatting to players in tournements
-	if ( g_gametype.integer == GT_TOURNAMENT ) {
+	if (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_TOURNAMENT)) {
 		return;
 	}
 
@@ -1384,7 +1390,7 @@ void G_Voice( gentity_t *ent, gentity_t *target, int mode, const char *id, qbool
 	int			j;
 	gentity_t	*other;
 
-	if ( !G_IsATeamGametype(g_gametype.integer) && mode == SAY_TEAM ) {
+	if ( !G_IsATeamGametype(g_gametype.integer,g_subgametype.integer) && mode == SAY_TEAM ) {
 		mode = SAY_ALL;
 	}
 
@@ -1539,7 +1545,7 @@ static void Cmd_VoiceTaunt_f( gentity_t *ent ) {
 		}
 	}
 
-	if (G_IsATeamGametype(g_gametype.integer)) {
+	if (G_IsATeamGametype(g_gametype.integer,g_subgametype.integer)) {
 		// praise a team mate who just got a reward
 		for(i = 0; i < MAX_CLIENTS; i++) {
 			who = g_entities + i;
@@ -1909,7 +1915,7 @@ void Cmd_CallVote_f( gentity_t *ent ) {
 		Com_sprintf( level.voteDisplayString, sizeof( level.voteDisplayString ), "Kick %s?" , level.clients[i].pers.netname );
 	} 
 	else if ( Q_strequal( arg1, "shuffle" ) ) {
-		if(!G_IsATeamGametype(g_gametype.integer)) { //Not a team game
+		if(!G_IsATeamGametype(g_gametype.integer,g_subgametype.integer)) { //Not a team game
 			trap_SendServerCommand( ent-g_entities, "print \"Can only be used in team games.\n\"" );
 			return;
 		}

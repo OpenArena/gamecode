@@ -1171,6 +1171,7 @@ typedef struct {
 
 	// parsed from serverinfo
 	gametype_t		gametype;
+	gametype_t		subgametype;
 	int				dmflags;
         int                             videoflags;
         int				elimflags;
@@ -2038,9 +2039,11 @@ void	trap_R_LFX_ParticleEffect( int effect, const vec3_t origin, const vec3_t ve
 
 // LEILEI ENHANCEMENT
 
-/* Neon_Knight: Useful check in order to have code consistency. */
-qboolean CG_IsATeamGametype(int check);	/* Whether the gametype is team-based or not.*/
-qboolean CG_UsesTeamFlags(int check);	/* Whether the gametype uses the red and blue flags. */
-qboolean CG_UsesTheWhiteFlag(int check);	/* Whether the gametype uses the neutral flag. */
-qboolean CG_IsARoundBasedGametype(int check);	/* Whether the gametype uses the neutral flag. */
+/* Neon_Knight: Useful check in order to have code consistency.
+Extended in order to also account for subgametypes. */
+qboolean CG_IsATeamGametype(int gametype, int subgametype);	/* Whether the gametype is team-based or not.*/
+qboolean CG_UsesTeamFlags(int gametype, int subgametype);	/* Whether the gametype uses the red and blue flags. */
+qboolean CG_UsesTheWhiteFlag(int gametype, int subgametype);	/* Whether the gametype uses the neutral flag. */
+qboolean CG_IsARoundBasedGametype(int gametype, int subgametype);	/* Whether the gametype is round-based. */
+qboolean CG_SingleGametypeCheck(int gametype, int subgametype, int check);	/* Whether the game takes place in a particular gametype. */
 /* /Neon_Knight */

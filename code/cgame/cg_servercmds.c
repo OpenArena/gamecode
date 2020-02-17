@@ -79,7 +79,7 @@ static void CG_ParseScores( void ) {
 	cgs.roundStartTime = atoi( CG_Argv( 4 ) );
 
 	//Update thing in lower-right corner
-	if(CG_IsARoundBasedGametype(cgs.gametype) && CG_IsATeamGametype(cgs.gametype))
+	if(CG_IsARoundBasedGametype(cgs.gametype,cgs.subgametype) && CG_IsATeamGametype(cgs.gametype,cgs.subgametype))
 	{
 		cgs.scores1 = cg.teamScores[0];
 		cgs.scores2 = cg.teamScores[1];
@@ -145,7 +145,7 @@ CG_ParseElimination
 =================
 */
 static void CG_ParseElimination( void ) {
-	if(CG_IsARoundBasedGametype(cgs.gametype) && CG_IsATeamGametype(cgs.gametype))
+	if(CG_IsARoundBasedGametype(cgs.gametype,cgs.subgametype) && CG_IsATeamGametype(cgs.gametype,cgs.subgametype))
 	{
 		cgs.scores1 = atoi( CG_Argv( 1 ) );
 		cgs.scores2 = atoi( CG_Argv( 2 ) );
@@ -353,6 +353,8 @@ void CG_ParseServerinfo( void ) {
 	info = CG_ConfigString( CS_SERVERINFO );
 	cgs.gametype = atoi( Info_ValueForKey( info, "g_gametype" ) );
 	trap_Cvar_Set("g_gametype", va("%i", cgs.gametype));
+	cgs.subgametype = atoi( Info_ValueForKey( info, "g_subgametype" ) );
+	trap_Cvar_Set("g_subgametype", va("%i", cgs.gametype));
 	cgs.dmflags = atoi( Info_ValueForKey( info, "dmflags" ) );
 	cgs.videoflags = atoi( Info_ValueForKey( info, "videoflags" ) );
 	cgs.elimflags = atoi( Info_ValueForKey( info, "elimflags" ) );
@@ -400,7 +402,7 @@ static void CG_ParseWarmup( void ) {
 
 	} else if ( warmup > 0 && cg.warmup <= 0 ) {
 #ifdef MISSIONPACK
-		if (CG_IsATeamGametype(cgs.gametype)) {
+		if (CG_IsATeamGametype(cgs.gametype,cgs.subgametype)) {
 			trap_S_StartLocalSound( cgs.media.countPrepareTeamSound, CHAN_ANNOUNCER );
 		} else
 #endif
@@ -425,13 +427,14 @@ void CG_SetConfigValues( void ) {
 	cgs.scores1 = atoi( CG_ConfigString( CS_SCORES1 ) );
 	cgs.scores2 = atoi( CG_ConfigString( CS_SCORES2 ) );
 	cgs.levelStartTime = atoi( CG_ConfigString( CS_LEVEL_START_TIME ) );
-	if((CG_UsesTeamFlags(cgs.gametype) && !CG_UsesTheWhiteFlag(cgs.gametype)) || cgs.gametype == GT_DOUBLE_D) {
+	if((CG_UsesTeamFlags(cgs.gametype,cgs.subgametype) && !CG_UsesTheWhiteFlag(cgs.gametype,cgs.subgametype)) ||
+			CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_DOUBLE_D)) {
 		s = CG_ConfigString( CS_FLAGSTATUS );
 		cgs.redflag = s[0] - '0';
 		cgs.blueflag = s[1] - '0';
 	}
 //#ifdef MISSIONPACK
-	else if( CG_UsesTheWhiteFlag(cgs.gametype) ) {
+	else if( CG_UsesTheWhiteFlag(cgs.gametype,cgs.subgametype) ) {
 		s = CG_ConfigString( CS_FLAGSTATUS );
 		cgs.flagStatus = s[0] - '0';
 	}
@@ -548,12 +551,13 @@ static void CG_ConfigStringModified( void ) {
 		CG_NewClientInfo( num - CS_PLAYERS );
 		CG_BuildSpectatorString();
 	} else if ( num == CS_FLAGSTATUS ) {
-		if((CG_UsesTeamFlags(cgs.gametype) && CG_UsesTheWhiteFlag(cgs.gametype)) || cgs.gametype == GT_DOUBLE_D) {
+		if((CG_UsesTeamFlags(cgs.gametype,cgs.subgametype) && CG_UsesTheWhiteFlag(cgs.gametype,cgs.subgametype)) ||
+				CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_DOUBLE_D)) {
 			// format is rb where its red/blue, 0 is at base, 1 is taken, 2 is dropped
 			cgs.redflag = str[0] - '0';
 			cgs.blueflag = str[1] - '0';
 		}
-		else if( CG_UsesTheWhiteFlag(cgs.gametype) ) {
+		else if( CG_UsesTheWhiteFlag(cgs.gametype,cgs.subgametype) ) {
 			cgs.flagStatus = str[0] - '0';
 		}
 	}
@@ -675,7 +679,7 @@ static void CG_MapRestart( void ) {
 	// we really should clear more parts of cg here and stop sounds
 
 	// play the "fight" sound if this is a restart without warmup
-	if ( cg.warmup == 0 /* && cgs.gametype == GT_TOURNAMENT */) {
+	if ( cg.warmup == 0 /* && CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_TOURNAMENT) */) {
 		trap_S_StartLocalSound( cgs.media.countFightSound, CHAN_ANNOUNCER );
 		CG_CenterPrint( "FIGHT!", 120, GIANTCHAR_WIDTH*2 );
 	}
@@ -1106,7 +1110,7 @@ void CG_VoiceChatLocal( int mode, qboolean voiceOnly, int clientNum, int color, 
 		return;
 	}
 
-	if ( mode == SAY_ALL && CG_IsATeamGametype(cgs.gametype) && cg_teamChatsOnly.integer ) {
+	if ( mode == SAY_ALL && CG_IsATeamGametype(cgs.gametype,cgs.subgametype) && cg_teamChatsOnly.integer ) {
 		return;
 	}
 
@@ -1225,7 +1229,7 @@ static void CG_ServerCommand( void ) {
 	}
 
 	if ( strequals( cmd, "chat" ) ) {
-		if ( CG_IsATeamGametype(cgs.gametype) && cg_teamChatsOnly.integer ) {
+		if ( CG_IsATeamGametype(cgs.gametype,cgs.subgametype) && cg_teamChatsOnly.integer ) {
 			return;
 		}
 		if( cg_chatBeep.integer ) {

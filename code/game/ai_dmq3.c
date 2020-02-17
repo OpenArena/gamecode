@@ -74,6 +74,7 @@ bot_waypoint_t *botai_freewaypoints;
 
 //NOTE: not using a cvars which can be updated because the game should be reloaded anyway
 int gametype; //game type
+int subgametype; //sub game type for SP
 
 vmCvar_t bot_grapple;
 vmCvar_t bot_rocketjump;
@@ -119,6 +120,7 @@ int untrap_BotGetLevelItemGoal(int start, char *classname, void /* struct bot_go
 		"ctf", "lms", "dd", "dom", "pos"};
 	char allowedGametypes[MAX_EPAIRKEY];
 	char *gametypeName;
+	char *subgametypeName;
 
 	start = trap_BotGetLevelItemGoal(start, classname, goal);
 	while (start>-1) {
@@ -126,11 +128,21 @@ int untrap_BotGetLevelItemGoal(int start, char *classname, void /* struct bot_go
 			return start; //No gametype flag
 		if (gametype >= GT_FFA && gametype < ARRAY_LEN(gametypeNames)) {
 			gametypeName = gametypeNames[gametype];
-			if (strstr(allowedGametypes, gametypeName)) {
-				//In gametype strig
-				return start;
+			if (gametype == GT_SINGLE_PLAYER && subgametype >= GT_FFA && subgametype < ARRAY_LEN(gametypeNames)) {
+				subgametypeName = gametypeNames[gametype];
+				if (strstr(allowedGametypes, subgametypeName)) {
+					//In gametype string
+					return start;
+				}
 			}
-		} else
+			else {
+				if (strstr(allowedGametypes, gametypeName)) {
+					//In gametype string
+					return start;
+				}
+			}
+		}
+		else
 			return start;
 		start = trap_BotGetLevelItemGoal(start, classname, goal);
 	}
@@ -157,7 +169,7 @@ BotCTFCarryingFlag
 ==================
  */
 int BotCTFCarryingFlag(bot_state_t *bs) {
-	if (!G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) return CTF_FLAG_NONE;
+	if (!G_UsesTeamFlags(gametype,subgametype) && !G_UsesTheWhiteFlag(gametype,subgametype)) return CTF_FLAG_NONE;
 
 	if (bs->inventory[INVENTORY_REDFLAG] > 0) return CTF_FLAG_RED;
 	else if (bs->inventory[INVENTORY_BLUEFLAG] > 0) return CTF_FLAG_BLUE;
@@ -328,7 +340,7 @@ EntityCarriesCubes
 qboolean EntityCarriesCubes(aas_entityinfo_t *entinfo) {
 	entityState_t state;
 
-	if (gametype != GT_HARVESTER)
+	if (!G_SingleGametypeCheck(gametype,subgametype,GT_HARVESTER))
 		return qfalse;
 	//FIXME: get this info from the aas_entityinfo_t ?
 	BotAI_GetEntityState(entinfo->number, &state);
@@ -343,7 +355,7 @@ Bot1FCTFCarryingFlag
 ==================
  */
 int Bot1FCTFCarryingFlag(bot_state_t *bs) {
-	if (!G_UsesTheWhiteFlag(gametype)) return qfalse;
+	if (!G_UsesTheWhiteFlag(gametype,subgametype)) return qfalse;
 
 	if (bs->inventory[INVENTORY_NEUTRALFLAG] > 0) return qtrue;
 	return qfalse;
@@ -355,7 +367,7 @@ BotHarvesterCarryingCubes
 ==================
  */
 int BotHarvesterCarryingCubes(bot_state_t *bs) {
-	if (gametype != GT_HARVESTER) return qfalse;
+	if (!G_SingleGametypeCheck(gametype,subgametype,GT_HARVESTER)) return qfalse;
 
 	if (bs->inventory[INVENTORY_REDCUBE] > 0) return qtrue;
 	if (bs->inventory[INVENTORY_BLUECUBE] > 0) return qtrue;
@@ -394,8 +406,8 @@ void BotSetTeamStatus(bot_state_t *bs) {
 			break;
 		case LTG_TEAMACCOMPANY:
 			BotEntityInfo(bs->teammate, &entinfo);
-			if ((G_UsesTeamFlags(gametype) && EntityCarriesFlag(&entinfo)) ||
-				(gametype == GT_HARVESTER && EntityCarriesCubes(&entinfo))) {
+			if ((G_UsesTeamFlags(gametype,subgametype) && EntityCarriesFlag(&entinfo)) ||
+				(G_SingleGametypeCheck(gametype,subgametype,GT_HARVESTER) && EntityCarriesCubes(&entinfo))) {
 				teamtask = TEAMTASK_ESCORT;
 			} else {
 				teamtask = TEAMTASK_FOLLOW;
@@ -458,7 +470,7 @@ BotSetLastOrderedTask
  */
 int BotSetLastOrderedTask(bot_state_t *bs) {
 
-	if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
+	if (G_UsesTeamFlags(gametype,subgametype) && !G_UsesTheWhiteFlag(gametype,subgametype)) {
 		// don't go back to returning the flag if it's at the base
 		if (bs->lastgoal_ltgtype == LTG_RETURNFLAG) {
 			if (BotTeam(bs) == TEAM_RED) {
@@ -482,7 +494,7 @@ int BotSetLastOrderedTask(bot_state_t *bs) {
 		bs->teamgoal_time = FloatTime() + 300;
 		BotSetTeamStatus(bs);
 		//
-		if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
+		if (G_UsesTeamFlags(gametype,subgametype) && !G_UsesTheWhiteFlag(gametype,subgametype)) {
 			if (bs->ltgtype == LTG_GETFLAG) {
 				bot_goal_t *tb, *eb;
 				int tt, et;
@@ -1418,32 +1430,32 @@ BotTeamGoals
 void BotTeamGoals(bot_state_t *bs, int retreat) {
 
 	if (retreat) {
-		if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
+		if (G_UsesTeamFlags(gametype,subgametype) && !G_UsesTheWhiteFlag(gametype,subgametype)) {
 			BotCTFRetreatGoals(bs);
-		} else if (G_UsesTheWhiteFlag(gametype)) {
+		} else if (G_UsesTheWhiteFlag(gametype,subgametype)) {
 			Bot1FCTFRetreatGoals(bs);
-		} else if (gametype == GT_OBELISK) {
+		} else if (G_SingleGametypeCheck(gametype,subgametype,GT_OBELISK)) {
 			BotObeliskRetreatGoals(bs);
-		} else if (gametype == GT_HARVESTER) {
+		} else if (G_SingleGametypeCheck(gametype,subgametype,GT_HARVESTER)) {
 			BotHarvesterRetreatGoals(bs);
 		}
 	} else {
-		if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
+		if (G_UsesTeamFlags(gametype,subgametype) && !G_UsesTheWhiteFlag(gametype,subgametype)) {
 			//decide what to do in CTF mode
 			BotCTFSeekGoals(bs);
-		} else if (G_UsesTheWhiteFlag(gametype)) {
+		} else if (G_UsesTheWhiteFlag(gametype,subgametype)) {
 			Bot1FCTFSeekGoals(bs);
-		} else if (gametype == GT_OBELISK) {
+		} else if (G_SingleGametypeCheck(gametype,subgametype,GT_OBELISK)) {
 			BotObeliskSeekGoals(bs);
-		} else if (gametype == GT_HARVESTER) {
+		} else if (G_SingleGametypeCheck(gametype,subgametype,GT_HARVESTER)) {
 			BotHarvesterSeekGoals(bs);
 		}
 	}
 
-	if (gametype == GT_DOUBLE_D) //Don't care about retreat
+	if (G_SingleGametypeCheck(gametype,subgametype,GT_DOUBLE_D)) //Don't care about retreat
 		BotDDSeekGoals(bs);
 
-	//if(gametype == GT_DOMINATION) //Don't care about retreat
+	//if(G_SingleGametypeCheck(gametype,subgametype,GT_DOMINATION)) //Don't care about retreat
 	//	BotDomSeekGoals(bs);
 
 	// reset the order time which is used to see if
@@ -1617,13 +1629,13 @@ int BotSynonymContext(bot_state_t *bs) {
 
 	context = CONTEXT_NORMAL | CONTEXT_NEARBYITEM | CONTEXT_NAMES;
 	//
-	if (G_UsesTeamFlags(gametype)) {
+	if (G_UsesTeamFlags(gametype,subgametype)) {
 		if (BotTeam(bs) == TEAM_RED) context |= CONTEXT_CTFREDTEAM;
 		else context |= CONTEXT_CTFBLUETEAM;
-	} else if (gametype == GT_OBELISK) {
+	} else if (G_SingleGametypeCheck(gametype,subgametype,GT_OBELISK)) {
 		if (BotTeam(bs) == TEAM_RED) context |= CONTEXT_OBELISKREDTEAM;
 		else context |= CONTEXT_OBELISKBLUETEAM;
-	} else if (gametype == GT_HARVESTER) {
+	} else if (G_SingleGametypeCheck(gametype,subgametype,GT_HARVESTER)) {
 		if (BotTeam(bs) == TEAM_RED) context |= CONTEXT_HARVESTERREDTEAM;
 		else context |= CONTEXT_HARVESTERBLUETEAM;
 	}
@@ -1700,9 +1712,7 @@ BotCheckItemPickup
 void BotCheckItemPickup(bot_state_t *bs, int *oldinventory) {
 	int offence, leader;
 
-	if (!G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype) &&
-			gametype != GT_HARVESTER && gametype != GT_OBELISK &&
-			gametype != GT_DOUBLE_D && gametype != GT_DOMINATION)
+	if (!(G_IsATeamGametype(gametype,subgametype) && !(G_SingleGametypeCheck(gametype,subgametype,GT_TEAM))))
 		return;
 
 	offence = -1;
@@ -1743,10 +1753,10 @@ void BotCheckItemPickup(bot_state_t *bs, int *oldinventory) {
 					if ((bs->ltgtype != LTG_GETFLAG) &&
 							(bs->ltgtype != LTG_ATTACKENEMYBASE) &&
 							(bs->ltgtype != LTG_HARVEST) &&
-							((!(G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype))) ||
+							((!(G_UsesTeamFlags(gametype,subgametype) && !G_UsesTheWhiteFlag(gametype,subgametype))) ||
 							((bs->redflagstatus == 0) &&
 							(bs->blueflagstatus == 0))) &&
-							((gametype != GT_1FCTF) ||
+							((!G_SingleGametypeCheck(gametype,subgametype,GT_1FCTF)) ||
 							(bs->neutralflagstatus == 0))) {
 						// tell the leader we want to be on offence
 						BotVoiceChat(bs, leader, VOICECHAT_WANTONOFFENSE);
@@ -1767,10 +1777,10 @@ void BotCheckItemPickup(bot_state_t *bs, int *oldinventory) {
 					//trap_BotEnterChat(bs->cs, leader, CHAT_TELL);
 				} else if ((bot_spSkill.integer <= 3) &&
 						(bs->ltgtype != LTG_DEFENDKEYAREA) &&
-						((!(G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype))) ||
+						((!(G_UsesTeamFlags(gametype,subgametype) && !G_UsesTheWhiteFlag(gametype,subgametype))) ||
 						((bs->redflagstatus == 0) &&
 						(bs->blueflagstatus == 0))) &&
-						((gametype != GT_1FCTF) ||
+						((!G_SingleGametypeCheck(gametype,subgametype,GT_1FCTF)) ||
 						(bs->neutralflagstatus == 0))) {
 
 					// tell the leader we want to be on defense
@@ -1893,7 +1903,7 @@ void BotUseKamikaze(bot_state_t *bs) {
 	if (bs->kamikaze_time > FloatTime())
 		return;
 	bs->kamikaze_time = FloatTime() + 0.2;
-	if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
+	if (G_UsesTeamFlags(gametype,subgametype) && !G_UsesTheWhiteFlag(gametype,subgametype)) {
 		//never use kamikaze if the team flag carrier is visible
 		if (BotCTFCarryingFlag(bs))
 			return;
@@ -1913,7 +1923,7 @@ void BotUseKamikaze(bot_state_t *bs) {
 				return;
 			}
 		}
-	} else if (gametype == GT_1FCTF) {
+	} else if (G_SingleGametypeCheck(gametype,subgametype,GT_1FCTF)) {
 		//never use kamikaze if the team flag carrier is visible
 		if (Bot1FCTFCarryingFlag(bs))
 			return;
@@ -1933,7 +1943,7 @@ void BotUseKamikaze(bot_state_t *bs) {
 				return;
 			}
 		}
-	} else if (gametype == GT_OBELISK) {
+	} else if (G_SingleGametypeCheck(gametype,subgametype,GT_OBELISK)) {
 		switch (BotTeam(bs)) {
 			case TEAM_RED: goal = &blueobelisk;
 				break;
@@ -1951,7 +1961,7 @@ void BotUseKamikaze(bot_state_t *bs) {
 				return;
 			}
 		}
-	} else if (gametype == GT_HARVESTER) {
+	} else if (G_SingleGametypeCheck(gametype,subgametype,GT_HARVESTER)) {
 		//
 		if (BotHarvesterCarryingCubes(bs))
 			return;
@@ -1999,7 +2009,7 @@ void BotUseInvulnerability(bot_state_t *bs) {
 	if (bs->invulnerability_time > FloatTime())
 		return;
 	bs->invulnerability_time = FloatTime() + 0.2;
-	if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
+	if (G_UsesTeamFlags(gametype,subgametype) && !G_UsesTheWhiteFlag(gametype,subgametype)) {
 		//never use kamikaze if the team flag carrier is visible
 		if (BotCTFCarryingFlag(bs))
 			return;
@@ -2024,7 +2034,7 @@ void BotUseInvulnerability(bot_state_t *bs) {
 				return;
 			}
 		}
-	} else if (gametype == GT_1FCTF) {
+	} else if (G_SingleGametypeCheck(gametype,subgametype,GT_1FCTF)) {
 		//never use kamikaze if the team flag carrier is visible
 		if (Bot1FCTFCarryingFlag(bs))
 			return;
@@ -2049,7 +2059,7 @@ void BotUseInvulnerability(bot_state_t *bs) {
 				return;
 			}
 		}
-	} else if (gametype == GT_OBELISK) {
+	} else if (G_SingleGametypeCheck(gametype,subgametype,GT_OBELISK)) {
 		switch (BotTeam(bs)) {
 			case TEAM_RED: goal = &blueobelisk;
 				break;
@@ -2067,7 +2077,7 @@ void BotUseInvulnerability(bot_state_t *bs) {
 				return;
 			}
 		}
-	} else if (gametype == GT_HARVESTER) {
+	} else if (G_SingleGametypeCheck(gametype,subgametype,GT_HARVESTER)) {
 		//
 		if (BotHarvesterCarryingCubes(bs))
 			return;
@@ -2325,15 +2335,15 @@ BotWantsToRetreat
 int BotWantsToRetreat(bot_state_t *bs) {
 	aas_entityinfo_t entinfo;
 
-	if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
+	if (G_UsesTeamFlags(gametype,subgametype) && !G_UsesTheWhiteFlag(gametype,subgametype)) {
 		//always retreat when carrying a CTF flag
 		if (BotCTFCarryingFlag(bs))
 			return qtrue;
-	} else if (G_UsesTheWhiteFlag(gametype)) {
+	} else if (G_UsesTheWhiteFlag(gametype,subgametype)) {
 		//if carrying the flag then always retreat
 		if (Bot1FCTFCarryingFlag(bs))
 			return qtrue;
-	} else if (gametype == GT_OBELISK) {
+	} else if (G_SingleGametypeCheck(gametype,subgametype,GT_OBELISK)) {
 		//the bots should be dedicated to attacking the enemy obelisk
 		if (bs->ltgtype == LTG_ATTACKENEMYBASE) {
 			if (bs->enemy != redobelisk.entitynum &&
@@ -2345,7 +2355,7 @@ int BotWantsToRetreat(bot_state_t *bs) {
 			return qtrue;
 		}
 		return qfalse;
-	} else if (gametype == GT_HARVESTER) {
+	} else if (G_SingleGametypeCheck(gametype,subgametype,GT_HARVESTER)) {
 		//if carrying cubes then always retreat
 		if (BotHarvesterCarryingCubes(bs)) return qtrue;
 	}
@@ -2377,7 +2387,7 @@ BotWantsToChase
 int BotWantsToChase(bot_state_t *bs) {
 	aas_entityinfo_t entinfo;
 
-	if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
+	if (G_UsesTeamFlags(gametype,subgametype) && !G_UsesTheWhiteFlag(gametype,subgametype)) {
 		//never chase when carrying a CTF flag
 		if (BotCTFCarryingFlag(bs))
 			return qfalse;
@@ -2385,7 +2395,7 @@ int BotWantsToChase(bot_state_t *bs) {
 		BotEntityInfo(bs->enemy, &entinfo);
 		if (EntityCarriesFlag(&entinfo))
 			return qtrue;
-	} else if (gametype == GT_1FCTF) {
+	} else if (G_SingleGametypeCheck(gametype,subgametype,GT_1FCTF)) {
 		//never chase if carrying the flag
 		if (Bot1FCTFCarryingFlag(bs))
 			return qfalse;
@@ -2393,7 +2403,7 @@ int BotWantsToChase(bot_state_t *bs) {
 		BotEntityInfo(bs->enemy, &entinfo);
 		if (EntityCarriesFlag(&entinfo))
 			return qtrue;
-	} else if (gametype == GT_OBELISK) {
+	} else if (G_SingleGametypeCheck(gametype,subgametype,GT_OBELISK)) {
 		//the bots should be dedicated to attacking the enemy obelisk
 		if (bs->ltgtype == LTG_ATTACKENEMYBASE) {
 			if (bs->enemy != redobelisk.entitynum &&
@@ -2401,14 +2411,14 @@ int BotWantsToChase(bot_state_t *bs) {
 				return qfalse;
 			}
 		}
-	} else if (gametype == GT_HARVESTER) {
+	} else if (G_SingleGametypeCheck(gametype,subgametype,GT_HARVESTER)) {
 		//never chase if carrying cubes
 		if (BotHarvesterCarryingCubes(bs)) return qfalse;
 
 		BotEntityInfo(bs->enemy, &entinfo);
 		// always chase if the enemy is carrying cubes
 		if (EntityCarriesCubes(&entinfo)) return qtrue;
-	} else if (gametype == GT_POSSESSION) {
+	} else if (G_SingleGametypeCheck(gametype,subgametype,GT_POSSESSION)) {
 		//always chase if the enemy is carrying a flag
 		BotEntityInfo(bs->enemy, &entinfo);
 		if (EntityCarriesFlag(&entinfo))
@@ -2447,7 +2457,7 @@ int BotCanAndWantsToRocketJump(bot_state_t *bs) {
 	//if low on rockets
 	if (bs->inventory[INVENTORY_ROCKETS] < 3) return qfalse;
 	//Sago: Special rule - always happy to rocket jump in elimination, eCTF end LMS if
-	if (G_IsARoundBasedGametype(g_gametype.integer) && g_elimination_selfdamage.integer == 0) {
+	if (G_IsARoundBasedGametype(gametype,subgametype) && g_elimination_selfdamage.integer == 0) {
 		return qtrue;
 	}
 	//never rocket jump with the Quad
@@ -2831,7 +2841,7 @@ int BotSameTeam(bot_state_t *bs, int entnum) {
 		//BotAI_Print(PRT_ERROR, "BotSameTeam: client out of range\n");
 		return qfalse;
 	}
-	if (G_IsATeamGametype(gametype)) {
+	if (G_IsATeamGametype(gametype,subgametype)) {
 		/*Sago: I don't know why they decided to check the configstring instead of the real value.
 		 For some reason bots sometimes gets a wrong config string when chaning gametypes.
 		 Now we check the real value: */
@@ -3002,7 +3012,7 @@ int BotFindEnemy(bot_state_t *bs, int curenemy) {
 	} else {
 		cursquaredist = 0;
 	}
-	if (gametype == GT_OBELISK) {
+	if (G_SingleGametypeCheck(gametype,subgametype,GT_OBELISK)) {
 		vec3_t target;
 		bot_goal_t *goal;
 		bsp_trace_t trace;
@@ -4695,7 +4705,7 @@ void BotCheckConsoleMessages(bot_state_t *bs) {
 					}
 				}					//if at a valid chat position and not chatting already and not in teamplay
 				else if (bs->ainode != AINode_Stand && BotValidChatPosition(bs) &&
-						!G_IsATeamGametype(gametype)) {
+						!G_IsATeamGametype(gametype,subgametype)) {
 					chat_reply = trap_Characteristic_BFloat(bs->character, CHARACTERISTIC_CHAT_REPLY, 0, 1);
 					if (random() < 1.5 / (NumBots() + 1) && random() < chat_reply) {
 						//if bot replies with a chat message
@@ -4830,7 +4840,7 @@ void BotCheckEvents(bot_state_t *bs, entityState_t *state) {
 				bs->enemysuicide = qtrue;
 			}
 			//	
-			if (G_UsesTheWhiteFlag(gametype)) {
+			if (G_UsesTheWhiteFlag(gametype,subgametype)) {
 				//
 				BotEntityInfo(target, &entinfo);
 				if (entinfo.powerups & (1 << PW_NEUTRALFLAG)) {
@@ -4873,7 +4883,7 @@ void BotCheckEvents(bot_state_t *bs, entityState_t *state) {
 		}
 		case EV_GLOBAL_TEAM_SOUND:
 		{
-			if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
+			if (G_UsesTeamFlags(gametype,subgametype) && !G_UsesTheWhiteFlag(gametype,subgametype)) {
 				switch (state->eventParm) {
 					case GTS_RED_CAPTURE:
 						bs->blueflagstatus = 0;
@@ -4906,7 +4916,7 @@ void BotCheckEvents(bot_state_t *bs, entityState_t *state) {
 						bs->flagstatuschanged = qtrue;
 						break; //see BotMatch_CTF
 				}
-			} else if (gametype == GT_1FCTF) {
+			} else if (G_SingleGametypeCheck(gametype,subgametype,GT_1FCTF)) {
 				switch (state->eventParm) {
 					case GTS_RED_CAPTURE:
 						bs->neutralflagstatus = 0;
@@ -5133,7 +5143,7 @@ void BotSetupAlternativeRouteGoals(void) {
 
 	if (altroutegoals_setup)
 		return;
-	if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
+	if (G_UsesTeamFlags(gametype,subgametype) && !G_UsesTheWhiteFlag(gametype,subgametype)) {
 		if (trap_BotGetLevelItemGoal(-1, "Neutral Flag", &ctf_neutralflag) < 0)
 			BotAI_Print(PRT_WARNING, "No alt routes without Neutral Flag\n");
 		if (ctf_neutralflag.areanum) {
@@ -5151,7 +5161,7 @@ void BotSetupAlternativeRouteGoals(void) {
 					ALTROUTEGOAL_CLUSTERPORTALS |
 					ALTROUTEGOAL_VIEWPORTALS);
 		}
-	} else if (gametype == GT_1FCTF) {
+	} else if (G_SingleGametypeCheck(gametype,subgametype,GT_1FCTF)) {
 		if (trap_BotGetLevelItemGoal(-1, "Neutral Obelisk", &neutralobelisk) < 0)
 			BotAI_Print(PRT_WARNING, "One Flag CTF without Neutral Obelisk\n");
 		red_numaltroutegoals = trap_AAS_AlternativeRouteGoals(
@@ -5166,7 +5176,7 @@ void BotSetupAlternativeRouteGoals(void) {
 				blue_altroutegoals, MAX_ALTROUTEGOALS,
 				ALTROUTEGOAL_CLUSTERPORTALS |
 				ALTROUTEGOAL_VIEWPORTALS);
-	} else if (gametype == GT_OBELISK) {
+	} else if (G_SingleGametypeCheck(gametype,subgametype,GT_OBELISK)) {
 		if (trap_BotGetLevelItemGoal(-1, "Neutral Obelisk", &neutralobelisk) < 0)
 			BotAI_Print(PRT_WARNING, "Obelisk without neutral obelisk\n");
 		//
@@ -5182,7 +5192,7 @@ void BotSetupAlternativeRouteGoals(void) {
 				blue_altroutegoals, MAX_ALTROUTEGOALS,
 				ALTROUTEGOAL_CLUSTERPORTALS |
 				ALTROUTEGOAL_VIEWPORTALS);
-	} else if (gametype == GT_HARVESTER) {
+	} else if (G_SingleGametypeCheck(gametype,subgametype,GT_HARVESTER)) {
 		if (untrap_BotGetLevelItemGoal(-1, "Neutral Obelisk", &neutralobelisk) < 0)
 			BotAI_Print(PRT_WARNING, "Harvester without neutral obelisk\n");
 		//
@@ -5417,6 +5427,7 @@ void BotSetupDeathmatchAI(void) {
 	char model[128];
 
 	gametype = trap_Cvar_VariableIntegerValue("g_gametype");
+	subgametype = trap_Cvar_VariableIntegerValue("g_subgametype");
 
 	trap_Cvar_Register(&bot_rocketjump, "bot_rocketjump", "1", 0);
 	trap_Cvar_Register(&bot_grapple, "bot_grapple", "0", 0);
@@ -5427,17 +5438,17 @@ void BotSetupDeathmatchAI(void) {
 	trap_Cvar_Register(&bot_predictobstacles, "bot_predictobstacles", "1", 0);
 	trap_Cvar_Register(&bot_spSkill, "g_spSkill", "2", 0);
 	//
-	if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
+	if (G_UsesTeamFlags(gametype,subgametype) && !G_UsesTheWhiteFlag(gametype,subgametype)) {
 		if (untrap_BotGetLevelItemGoal(-1, "Red Flag", &ctf_redflag) < 0)
 			BotAI_Print(PRT_WARNING, "CTF without Red Flag\n");
 		if (untrap_BotGetLevelItemGoal(-1, "Blue Flag", &ctf_blueflag) < 0)
 			BotAI_Print(PRT_WARNING, "CTF without Blue Flag\n");
-	} else if (gametype == GT_DOUBLE_D) {
+	} else if (G_SingleGametypeCheck(gametype,subgametype,GT_DOUBLE_D)) {
 		if (untrap_BotGetLevelItemGoal(-1, "Red Flag", &ctf_redflag) < 0)
 			BotAI_Print(PRT_WARNING, "DD without Point A\n");
 		if (untrap_BotGetLevelItemGoal(-1, "Blue Flag", &ctf_blueflag) < 0)
 			BotAI_Print(PRT_WARNING, "DD without Point B\n");
-	} else if (gametype == GT_DOMINATION) {
+	} else if (G_SingleGametypeCheck(gametype,subgametype,GT_DOMINATION)) {
 		ent = untrap_BotGetLevelItemGoal(-1, "Domination point", &dom_points_bot[0]);
 		if (ent < 0)
 			BotAI_Print(PRT_WARNING, "Domination without a single domination point\n");
@@ -5452,21 +5463,21 @@ void BotSetupDeathmatchAI(void) {
 				BotSetEntityNumForGoal(&dom_points_bot[0], va("domination_point%i", i));
 		}
 		//MAX_DOMINATION_POINTS
-	} else if (gametype == GT_1FCTF) {
+	} else if (G_SingleGametypeCheck(gametype,subgametype,GT_1FCTF)) {
 		if (untrap_BotGetLevelItemGoal(-1, "Neutral Flag", &ctf_neutralflag) < 0)
 			BotAI_Print(PRT_WARNING, "One Flag CTF without Neutral Flag\n");
 		if (untrap_BotGetLevelItemGoal(-1, "Red Flag", &ctf_redflag) < 0)
 			BotAI_Print(PRT_WARNING, "CTF without Red Flag\n");
 		if (untrap_BotGetLevelItemGoal(-1, "Blue Flag", &ctf_blueflag) < 0)
 			BotAI_Print(PRT_WARNING, "CTF without Blue Flag\n");
-	} else if (gametype == GT_OBELISK) {
+	} else if (G_SingleGametypeCheck(gametype,subgametype,GT_OBELISK)) {
 		if (untrap_BotGetLevelItemGoal(-1, "Red Obelisk", &redobelisk) < 0)
 			BotAI_Print(PRT_WARNING, "Overload without red obelisk\n");
 		BotSetEntityNumForGoalWithActivator(&redobelisk, "team_redobelisk");
 		if (untrap_BotGetLevelItemGoal(-1, "Blue Obelisk", &blueobelisk) < 0)
 			BotAI_Print(PRT_WARNING, "Overload without blue obelisk\n");
 		BotSetEntityNumForGoalWithActivator(&blueobelisk, "team_blueobelisk");
-	} else if (gametype == GT_HARVESTER) {
+	} else if (G_SingleGametypeCheck(gametype,subgametype,GT_HARVESTER)) {
 		if (untrap_BotGetLevelItemGoal(-1, "Red Obelisk", &redobelisk) < 0)
 			BotAI_Print(PRT_WARNING, "Harvester without red obelisk\n");
 		BotSetEntityNumForGoalWithActivator(&redobelisk, "team_redobelisk");
@@ -5476,7 +5487,7 @@ void BotSetupDeathmatchAI(void) {
 		if (untrap_BotGetLevelItemGoal(-1, "Neutral Obelisk", &neutralobelisk) < 0)
 			BotAI_Print(PRT_WARNING, "Harvester without neutral obelisk\n");
 		BotSetEntityNumForGoalWithActivator(&neutralobelisk, "team_neutralobelisk");
-	} else if (gametype == GT_POSSESSION) {
+	} else if (G_SingleGametypeCheck(gametype,subgametype,GT_POSSESSION)) {
 		if (untrap_BotGetLevelItemGoal(-1, "Neutral Flag", &ctf_neutralflag) < 0)
 			BotAI_Print(PRT_WARNING, "Possession without Neutral Flag\n");
 	}

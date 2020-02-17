@@ -181,6 +181,7 @@ void BotMapScripts(bot_state_t *bs);
 #define CTF_SKIN_BLUETEAM	"blue"
 
 extern int gametype;		//game type
+extern int subgametype;		//sub game type for SP
 extern int maxclients;		//maximum number of clients
 
 extern vmCvar_t bot_grapple;

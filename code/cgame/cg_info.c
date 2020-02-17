@@ -234,52 +234,50 @@ void CG_DrawInformation( void ) {
 	}
 
 	// game type
-	switch ( cgs.gametype ) {
-	case GT_FFA:
+	if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_FFA)) {
 		s = "Free For All";
-		break;
-	case GT_SINGLE_PLAYER:
-		s = "Single Player";
-		break;
-	case GT_TOURNAMENT:
+	}
+	else if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_TOURNAMENT)) {
 		s = "Tournament";
-		break;
-	case GT_TEAM:
+	}
+	else if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_TEAM)) {
 		s = "Team Deathmatch";
-		break;
-	case GT_CTF:
+	}
+	else if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_CTF)) {
 		s = "Capture The Flag";
-		break;
-	case GT_1FCTF:
+	}
+	else if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_1FCTF)) {
 		s = "One Flag CTF";
-		break;
-	case GT_OBELISK:
+	}
+	else if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_OBELISK)) {
 		s = "Overload";
-		break;
-	case GT_HARVESTER:
+	}
+	else if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_HARVESTER)) {
 		s = "Harvester";
-		break;
-	case GT_ELIMINATION:
+	}
+	else if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_ELIMINATION)) {
 		s = "Elimination";
-		break;
-	case GT_CTF_ELIMINATION:
-		s = " CTF Elimination";
-		break;
-	case GT_LMS:
+	}
+	else if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_CTF_ELIMINATION)) {
+		s = "CTF Elimination";
+	}
+	else if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_LMS)) {
 		s = "Last Man Standing";
-		break;
-	case GT_DOUBLE_D:
+	}
+	else if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_DOUBLE_D)) {
 		s = "Double Domination";
-		break;
-    case GT_DOMINATION:
+	}
+	else if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_DOMINATION)) {
 		s = "Domination";
-		break;
-	case GT_POSSESSION:
+	}
+	else if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_POSSESSION)) {
 		s = "Possession";
-		break;
-	default:
+	}
+	else if (cgs.gametype == GT_SINGLE_PLAYER) {
+		s = "Single Player";
+	}
+	else {
 		s = "Unknown Gametype";
-		break;
 	}
 	UI_DrawProportionalString( 320, y, s,
 		UI_CENTER|UI_SMALLFONT|UI_DROPSHADOW, colorWhite );
@@ -292,7 +290,7 @@ void CG_DrawInformation( void ) {
 		y += PROP_HEIGHT;
 	}
 
-	if (!CG_IsATeamGametype(cgs.gametype)) {
+	if (!(CG_IsATeamGametype(cgs.gametype,cgs.subgametype) && !(CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_TEAM)))) {
 		value = atoi( Info_ValueForKey( info, "fraglimit" ) );
 		if ( value ) {
 			UI_DrawProportionalString( 320, y, va( "fraglimit %i", value ),
@@ -300,8 +298,7 @@ void CG_DrawInformation( void ) {
 			y += PROP_HEIGHT;
 		}
 	}
-
-	if (CG_IsATeamGametype(cgs.gametype) && cgs.gametype != GT_TEAM) {
+	else {
 		value = atoi( Info_ValueForKey( info, "capturelimit" ) );
 		if ( value ) {
 			UI_DrawProportionalString( 320, y, va( "capturelimit %i", value ),

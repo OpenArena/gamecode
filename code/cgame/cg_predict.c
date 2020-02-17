@@ -263,17 +263,17 @@ static void CG_TouchItem( centity_t *cent ) {
 	//For instantgib
 	qboolean	canBePicked;
 
-	if(CG_IsARoundBasedGametype(cgs.gametype) && !CG_UsesTeamFlags(cgs.gametype))
+	if(CG_IsARoundBasedGametype(cgs.gametype,cgs.subgametype) && !CG_UsesTeamFlags(cgs.gametype,cgs.subgametype))
 		return; //No weapon pickup in elimination
 
-	if(CG_IsARoundBasedGametype(cgs.gametype) && cgs.roundStartTime > cgs.roundtime)
+	if(CG_IsARoundBasedGametype(cgs.gametype,cgs.subgametype) && cgs.roundStartTime > cgs.roundtime)
 		return; //We cannot pickup before the round has started
 
 	//normally we can
 	canBePicked = qtrue;
 
 	//But in instantgib, rocket arena, and CTF_ELIMINATION we normally can't:
-	if(cgs.nopickup || cgs.gametype == GT_CTF_ELIMINATION)
+	if(cgs.nopickup || CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_CTF_ELIMINATION))
 		canBePicked = qfalse;
 
 	if ( !cg_predictItems.integer ) {
@@ -296,18 +296,18 @@ static void CG_TouchItem( centity_t *cent ) {
 
 	// Special case for flags.  
 	// We don't predict touching our own flag
-	if( cgs.gametype == GT_1FCTF ) {
+	if(CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_1FCTF)) {
 		if( item->giType == IT_TEAM && item->giTag != PW_NEUTRALFLAG ) {
 			return;
 		}
 	}
-	if (cgs.gametype == GT_POSSESSION) {
+	if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_POSSESSION)) {
 		if( item->giType == IT_TEAM && item->giTag == PW_NEUTRALFLAG ) {
 			canBePicked = qtrue;
 		}
 	}
 	
-	if (cgs.gametype == GT_CTF || cgs.gametype == GT_CTF_ELIMINATION ) {
+	if (CG_UsesTeamFlags(cgs.gametype,cgs.subgametype)) {
 		if (cg.predictedPlayerState.persistant[PERS_TEAM] == TEAM_RED &&
 			item->giType == IT_TEAM && item->giTag == PW_REDFLAG)
 			return;
@@ -324,7 +324,7 @@ static void CG_TouchItem( centity_t *cent ) {
 	}
 
 	//Currently we don't predict anything in Double Domination because it looks like we take a flag
-	if( cgs.gametype == GT_DOUBLE_D ) {
+	if(CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_DOUBLE_D)) {
 		if(cgs.redflag == TEAM_NONE)
 			return; //Can never pick if just one flag is NONE (because then the other is too)
 		if(item->giTag == PW_REDFLAG){ //at point A

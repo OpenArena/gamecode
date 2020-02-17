@@ -439,7 +439,7 @@ void CG_DrawFlagModel(float x, float y, float w, float h, int team, qboolean for
 
 		if (team == TEAM_RED) {
 			handle = cgs.media.redFlagModel;
-			if (cgs.gametype == GT_DOUBLE_D) {
+			if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_DOUBLE_D)) {
 				if (cgs.redflag == TEAM_BLUE)
 					handle = cgs.media.blueFlagModel;
 				if (cgs.redflag == TEAM_FREE)
@@ -449,7 +449,7 @@ void CG_DrawFlagModel(float x, float y, float w, float h, int team, qboolean for
 			}
 		} else if (team == TEAM_BLUE) {
 			handle = cgs.media.blueFlagModel;
-			if (cgs.gametype == GT_DOUBLE_D) {
+			if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_DOUBLE_D)) {
 				if (cgs.redflag == TEAM_BLUE)
 					handle = cgs.media.blueFlagModel;
 				if (cgs.redflag == TEAM_FREE)
@@ -650,7 +650,7 @@ static void CG_DrawStatusBar(void) {
 				cgs.media.armorModel, 0, origin, angles);
 	}
 
-	if (cgs.gametype == GT_HARVESTER) {
+	if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_HARVESTER)) {
 		origin[0] = 90;
 		origin[1] = 0;
 		origin[2] = -10;
@@ -735,7 +735,7 @@ static void CG_DrawStatusBar(void) {
 	}
 
 	//Skulls!
-	if (cgs.gametype == GT_HARVESTER) {
+	if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_HARVESTER)) {
 		value = ps->generic1;
 		if (value > 0) {
 			trap_R_SetColor(colors[0]);
@@ -924,7 +924,7 @@ static float CG_DrawPossessionString(float y) {
 	int w;
 	float distance;
 
-	if (cgs.gametype != GT_POSSESSION) {
+	if (!CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_POSSESSION)) {
 		return y;
 	}
 
@@ -1093,7 +1093,7 @@ static float CG_DrawCTFoneway(float y) {
 	int w;
 	vec4_t color;
 
-	if (cgs.gametype != GT_CTF_ELIMINATION)
+	if (!CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_CTF_ELIMINATION))
 		return y;
 
 	memcpy(color, g_color_table[ColorIndex(COLOR_WHITE)], sizeof (color));
@@ -1449,7 +1449,9 @@ static float CG_DrawFollowMessage(float y) {
 	char *s;
 	int w;
 
-	if (!(cg.snap->ps.pm_flags & PMF_FOLLOW) || ((cgs.elimflags & EF_NO_FREESPEC) && CG_IsARoundBasedGametype(cgs.gametype) && CG_IsATeamGametype(cgs.gametype))) {
+	if (!(cg.snap->ps.pm_flags & PMF_FOLLOW) || ((cgs.elimflags & EF_NO_FREESPEC) &&
+			CG_IsARoundBasedGametype(cgs.gametype,cgs.subgametype) &&
+			CG_IsATeamGametype(cgs.gametype,cgs.subgametype))) {
 		return y;
 	}
 
@@ -1588,22 +1590,22 @@ static void CG_DrawUpperRight(stereoFrame_t stereoFrame) {
 
 	y = 0;
 
-	if (CG_IsATeamGametype(cgs.gametype) && cg_drawTeamOverlay.integer == 1) {
+	if (CG_IsATeamGametype(cgs.gametype,cgs.subgametype) && cg_drawTeamOverlay.integer == 1) {
 		y = CG_DrawTeamOverlay(y, qtrue, qtrue);
 	}
-	/*if ( cgs.gametype == GT_DOUBLE_D ) {
+	/*if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_DOUBLE_D)) {
 		y = CG_DrawDoubleDominationThings(y);
 	} 
-	else*/
-	if (cgs.gametype == GT_LMS && cg.showScores) {
+	else*/ if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_LMS) && cg.showScores) {
 		y = CG_DrawLMSmode(y);
-	} else
-		if (cgs.gametype == GT_CTF_ELIMINATION) {
+	}
+	else if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_CTF_ELIMINATION)) {
 		y = CG_DrawCTFoneway(y);
-	} else
-		if (cgs.gametype == GT_DOMINATION) {
+	}
+	else if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_DOMINATION)) {
 		y = CG_DrawDomStatus(y);
-	} else if (cgs.gametype == GT_POSSESSION) {
+	}
+	else if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_POSSESSION)) {
 		y = CG_DrawPossessionString(y);
 	}
 
@@ -1613,7 +1615,8 @@ static void CG_DrawUpperRight(stereoFrame_t stereoFrame) {
 	if (cg_drawFPS.integer && (stereoFrame == STEREO_CENTER || stereoFrame == STEREO_RIGHT)) {
 		y = CG_DrawFPS(y);
 	}
-	if (CG_IsARoundBasedGametype(cgs.gametype) || cgs.gametype == GT_DOUBLE_D) {
+	if (CG_IsARoundBasedGametype(cgs.gametype,cgs.subgametype) || cgs.gametype == GT_DOUBLE_D
+			|| (cgs.gametype == GT_SINGLE_PLAYER && cgs.subgametype == GT_DOUBLE_D)) {
 		y = CG_DrawCountdownTimer(y);
 		/*if (cgs.clientinfo[ cg.clientNum ].isDead)
 			y = CG_DrawEliminationDeathMessage( y);*/
@@ -1671,7 +1674,7 @@ static float CG_DrawScores(float y) {
 	y1 = y;
 
 	// draw from the right side to left
-	if (CG_IsATeamGametype(cgs.gametype)) {
+	if (CG_IsATeamGametype(cgs.gametype,cgs.subgametype)) {
 		x = 640;
 		color[0] = 0.0f;
 		color[1] = 0.0f;
@@ -1686,7 +1689,7 @@ static float CG_DrawScores(float y) {
 		}
 		CG_DrawBigString(x + 4, y, s, 1.0F);
 
-		if (CG_UsesTeamFlags(cgs.gametype) && !CG_UsesTheWhiteFlag(cgs.gametype)) {
+		if (CG_UsesTeamFlags(cgs.gametype,cgs.subgametype) && !CG_UsesTheWhiteFlag(cgs.gametype,cgs.subgametype)) {
 			// Display flag status
 			item = BG_FindItemForPowerup(PW_BLUEFLAG);
 
@@ -1698,7 +1701,7 @@ static float CG_DrawScores(float y) {
 			}
 		}
 
-		if (cgs.gametype == GT_DOUBLE_D) {
+		if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_DOUBLE_D)) {
 			// Display Domination point status
 
 			y1 = y - 32; //BIGCHAR_HEIGHT - 8;
@@ -1720,7 +1723,7 @@ static float CG_DrawScores(float y) {
 		}
 		CG_DrawBigString(x + 4, y, s, 1.0F);
 
-		if (CG_UsesTeamFlags(cgs.gametype) && !CG_UsesTheWhiteFlag(cgs.gametype)) {
+		if (CG_UsesTeamFlags(cgs.gametype,cgs.subgametype) && !CG_UsesTheWhiteFlag(cgs.gametype,cgs.subgametype)) {
 			// Display flag status
 			item = BG_FindItemForPowerup(PW_REDFLAG);
 
@@ -1732,7 +1735,7 @@ static float CG_DrawScores(float y) {
 			}
 		}
 
-		if (cgs.gametype == GT_DOUBLE_D) {
+		if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_DOUBLE_D)) {
 			// Display Domination point status
 
 			y1 = y - 32; //BIGCHAR_HEIGHT - 8;
@@ -1751,12 +1754,13 @@ static float CG_DrawScores(float y) {
 			}
 		}
 
-		if (cgs.gametype == GT_OBELISK) {
+		if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_OBELISK)) {
 			s = va("^1%3i%% ^4%3i%%", cg.redObeliskHealth, cg.blueObeliskHealth);
 			CG_DrawSmallString(x, y - 28, s, 1.0F);
 		}
 
-		if (CG_IsATeamGametype(cgs.gametype) && cgs.gametype != GT_TEAM) {
+		if (CG_IsATeamGametype(cgs.gametype,cgs.subgametype) &&
+				CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_TEAM)) {
 			v = cgs.capturelimit;
 		} else {
 			v = cgs.fraglimit;
@@ -1959,7 +1963,7 @@ static void CG_DrawLowerRight(void) {
 
 	y = 480 - ICON_SIZE;
 
-	if (CG_IsATeamGametype(cgs.gametype) && cg_drawTeamOverlay.integer == 2) {
+	if (CG_IsATeamGametype(cgs.gametype,cgs.subgametype) && cg_drawTeamOverlay.integer == 2) {
 		y = CG_DrawTeamOverlay(y, qtrue, qfalse);
 	}
 
@@ -2014,7 +2018,7 @@ static void CG_DrawLowerLeft(void) {
 
 	y = 480 - ICON_SIZE;
 
-	if (CG_IsATeamGametype(cgs.gametype) && cg_drawTeamOverlay.integer == 3) {
+	if (CG_IsATeamGametype(cgs.gametype,cgs.subgametype) && cg_drawTeamOverlay.integer == 3) {
 		y = CG_DrawTeamOverlay(y, qfalse, qfalse);
 	}
 
@@ -2563,7 +2567,7 @@ static void CG_DrawCenter1FctfString(void) {
 	char *line;
 	int status;
 
-	if (cgs.gametype != GT_1FCTF)
+	if (!CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_1FCTF))
 		return;
 
 	status = cgs.flagStatus;
@@ -2607,7 +2611,7 @@ static void CG_DrawCenterDDString(void) {
 	static int lastDDSec = -100;
 
 
-	if (cgs.gametype != GT_DOUBLE_D)
+	if (!CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_DOUBLE_D))
 		return;
 
 
@@ -2985,9 +2989,9 @@ CG_DrawSpectator
  */
 static void CG_DrawSpectator(void) {
 	CG_DrawBigString(320 - 9 * 8, 440, "SPECTATOR", 1.0F);
-	if (cgs.gametype == GT_TOURNAMENT) {
+	if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_TOURNAMENT)) {
 		CG_DrawBigString(320 - 15 * 8, 460, "waiting to play", 1.0F);
-	} else if (CG_IsATeamGametype(cgs.gametype)) {
+	} else if (CG_IsATeamGametype(cgs.gametype,cgs.subgametype)) {
 		CG_DrawBigString(320 - 39 * 8, 460, "press ESC and use the JOIN menu to play", 1.0F);
 	}
 }
@@ -3102,7 +3106,7 @@ static qboolean CG_DrawScoreboard(void) {
 
 
 	if (menuScoreboard == NULL) {
-		if (CG_IsATeamGametype(cgs.gametype)) {
+		if (CG_IsATeamGametype(cgs.gametype,cgs.subgametype)) {
 			menuScoreboard = Menus_FindByName("teamscore_menu");
 		} else {
 			menuScoreboard = Menus_FindByName("score_menu");
@@ -3126,7 +3130,7 @@ static qboolean CG_DrawScoreboard(void) {
 #else
 	char *s;
 	int w;
-	if (cg.respawnTime && cg.snap->ps.persistant[PERS_TEAM] != TEAM_SPECTATOR && (!CG_IsARoundBasedGametype(cgs.gametype))) {
+	if (cg.respawnTime && cg.snap->ps.persistant[PERS_TEAM] != TEAM_SPECTATOR && !CG_IsARoundBasedGametype(cgs.gametype,cgs.subgametype)) {
 		if (cg.respawnTime > cg.time) {
 			s = va("Respawn in: %2.2f", ((double) cg.respawnTime - (double) cg.time) / 1000.0);
 			w = CG_DrawStrlen(s) * SMALLCHAR_WIDTH;
@@ -3324,7 +3328,7 @@ static void CG_DrawWarmup(void) {
 		return;
 	}
 
-	if (cgs.gametype == GT_TOURNAMENT) {
+	if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_TOURNAMENT)) {
 		// find the two active players
 		ci1 = NULL;
 		ci2 = NULL;
@@ -3355,29 +3359,29 @@ static void CG_DrawWarmup(void) {
 #endif
 		}
 	} else {
-		if (cgs.gametype == GT_FFA) {
+		if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_FFA)) {
 			s = "Free For All";
-		} else if (cgs.gametype == GT_TEAM) {
+		} else if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_TEAM)) {
 			s = "Team Deathmatch";
-		} else if (cgs.gametype == GT_CTF) {
+		} else if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_CTF)) {
 			s = "Capture the Flag";
-		} else if (cgs.gametype == GT_ELIMINATION) {
+		} else if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_ELIMINATION)) {
 			s = "Elimination";
-		} else if (cgs.gametype == GT_CTF_ELIMINATION) {
+		} else if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_CTF_ELIMINATION)) {
 			s = "CTF Elimination";
-		} else if (cgs.gametype == GT_LMS) {
+		} else if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_LMS)) {
 			s = "Last Man Standing";
-		} else if (cgs.gametype == GT_DOUBLE_D) {
+		} else if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_DOUBLE_D)) {
 			s = "Double Domination";
-		} else if (cgs.gametype == GT_1FCTF) {
+		} else if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_1FCTF)) {
 			s = "One Flag CTF";
-		} else if (cgs.gametype == GT_OBELISK) {
+		} else if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_OBELISK)) {
 			s = "Overload";
-		} else if (cgs.gametype == GT_HARVESTER) {
+		} else if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_HARVESTER)) {
 			s = "Harvester";
-		} else if (cgs.gametype == GT_DOMINATION) {
+		} else if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_DOMINATION)) {
 			s = "Domination";
-		} else if (cgs.gametype == GT_POSSESSION) {
+		} else if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_POSSESSION)) {
 			s = "Possession";
 		} else {
 			s = "";
@@ -3536,7 +3540,7 @@ static void CG_Draw2D(stereoFrame_t stereoFrame) {
 		}
 	}
 #ifndef MISSIONPACK
-	if (CG_IsATeamGametype(cgs.gametype)) {
+	if (CG_IsATeamGametype(cgs.gametype,cgs.subgametype)) {
 		CG_DrawTeamInfo();
 	}
 #endif

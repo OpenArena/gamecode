@@ -55,6 +55,7 @@ typedef struct {
 	menubitmap_s	back;
 
 	int				gametype;
+	int				subgametype;
 	int				numBots;
 	int				selectedBot;
 	char			*bots[9];
@@ -349,7 +350,7 @@ static void UI_TeamOrdersMenu_ListEvent( void *ptr, int event )
 	int		selection;
 	char	message[256];
 
-	if (event != QM_ACTIVATED || !UI_IsATeamGametype(teamOrdersMenuInfo.gametype))
+	if (event != QM_ACTIVATED || !UI_SP_IsATeamGametype(teamOrdersMenuInfo.gametype,teamOrdersMenuInfo.subgametype))
 		return;
 
 	id = ((menulist_s *)ptr)->generic.id;
@@ -357,16 +358,19 @@ static void UI_TeamOrdersMenu_ListEvent( void *ptr, int event )
 
 	if( id == ID_LIST_BOTS ) {
 		teamOrdersMenuInfo.selectedBot = selection;
-		if( UI_UsesTeamFlags(teamOrdersMenuInfo.gametype) && !UI_UsesTheWhiteFlag(teamOrdersMenuInfo.gametype) ) {
+		if( UI_SP_UsesTeamFlags(teamOrdersMenuInfo.gametype,teamOrdersMenuInfo.subgametype) &&
+				!UI_SP_UsesTheWhiteFlag(teamOrdersMenuInfo.gametype,teamOrdersMenuInfo.subgametype) ) {
 			UI_TeamOrdersMenu_SetList( ID_LIST_CTF_ORDERS );
 		}
-		if( UI_UsesTeamFlags(teamOrdersMenuInfo.gametype) && UI_UsesTheWhiteFlag(teamOrdersMenuInfo.gametype) ) {
+		if( UI_SP_UsesTeamFlags(teamOrdersMenuInfo.gametype,teamOrdersMenuInfo.subgametype) &&
+				UI_SP_UsesTheWhiteFlag(teamOrdersMenuInfo.gametype,teamOrdersMenuInfo.subgametype) ) {
 			UI_TeamOrdersMenu_SetList( ID_LIST_CTF1F_ORDERS );
 		}
-		if( teamOrdersMenuInfo.gametype == GT_HARVESTER || teamOrdersMenuInfo.gametype == GT_OBELISK ) {
+		if( UI_SP_SingleGametypeCheck(teamOrdersMenuInfo.gametype,teamOrdersMenuInfo.subgametype,GT_HARVESTER) ||
+				UI_SP_SingleGametypeCheck(teamOrdersMenuInfo.gametype,teamOrdersMenuInfo.subgametype,GT_OBELISK) ) {
 			UI_TeamOrdersMenu_SetList( ID_LIST_BASE_ORDERS );
 		}
-		if( teamOrdersMenuInfo.gametype == GT_DOUBLE_D ) {
+		if( UI_SP_SingleGametypeCheck(teamOrdersMenuInfo.gametype,teamOrdersMenuInfo.subgametype,GT_DOUBLE_D) ) {
 			UI_TeamOrdersMenu_SetList( ID_LIST_DD_ORDERS );
 		}
 		else {
@@ -424,6 +428,7 @@ static void UI_TeamOrdersMenu_BuildBotList( void )
 	trap_GetConfigString( CS_SERVERINFO, info, sizeof(info) );
 	numPlayers = atoi( Info_ValueForKey( info, "sv_maxclients" ) );
 	teamOrdersMenuInfo.gametype = atoi( Info_ValueForKey( info, "g_gametype" ) );
+	teamOrdersMenuInfo.subgametype = atoi( Info_ValueForKey( info, "g_subgametype" ) );
 
 	trap_GetConfigString( CS_PLAYERS + cs.clientNum, info, MAX_INFO_STRING );
 	playerTeam = *Info_ValueForKey( info, "t" );

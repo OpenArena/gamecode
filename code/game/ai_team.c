@@ -133,7 +133,7 @@ int BotSortTeamMatesByBaseTravelTime(bot_state_t *bs, int *teammates, int maxtea
 	int traveltimes[MAX_CLIENTS];
 	bot_goal_t *goal = NULL;
 
-	if (G_UsesTeamFlags(gametype)) {
+	if (G_UsesTeamFlags(gametype,subgametype)) {
 		if (BotTeam(bs) == TEAM_RED)
 			goal = &ctf_redflag;
 		else
@@ -2153,7 +2153,7 @@ void BotTeamAI(bot_state_t *bs) {
 	}
 
 	//
-	if (!G_IsATeamGametype(gametype))
+	if (!G_IsATeamGametype(gametype,subgametype))
 		return;
 	// make sure we've got a valid team leader
 	if (!BotValidTeamLeader(bs)) {
@@ -2197,123 +2197,109 @@ void BotTeamAI(bot_state_t *bs) {
 	//
 	numteammates = BotNumTeamMates(bs);
 	//give orders
-	switch(gametype) {
-		case GT_TEAM:
-		{
-			if (bs->numteammates != numteammates || bs->forceorders) {
-				bs->teamgiveorders_time = FloatTime();
-				bs->numteammates = numteammates;
-				bs->forceorders = qfalse;
-			}
-			//if it's time to give orders
-			if (bs->teamgiveorders_time && bs->teamgiveorders_time < FloatTime() - 5) {
-				BotTeamOrders(bs);
-				//give orders again after 120 seconds
-				bs->teamgiveorders_time = FloatTime() + 120;
-			}
-			break;
+	if (G_SingleGametypeCheck(gametype,subgametype,GT_TEAM)) {
+		if (bs->numteammates != numteammates || bs->forceorders) {
+			bs->teamgiveorders_time = FloatTime();
+			bs->numteammates = numteammates;
+			bs->forceorders = qfalse;
 		}
-		case GT_CTF:
-		case GT_CTF_ELIMINATION:
-		{
-			//if the number of team mates changed or the flag status changed
-			//or someone wants to know what to do
-			if (bs->numteammates != numteammates || bs->flagstatuschanged || bs->forceorders || lastRoundNumber != level.roundNumber) {
-				bs->teamgiveorders_time = FloatTime();
-				bs->numteammates = numteammates;
-				bs->flagstatuschanged = qfalse;
-				bs->forceorders = qfalse;
-				lastRoundNumber = level.roundNumber;
-			}
-			//if there were no flag captures the last 3 minutes
-			if (bs->lastflagcapture_time < FloatTime() - 240) {
-				bs->lastflagcapture_time = FloatTime();
-				//randomly change the CTF strategy
-				if (random() < 0.4) {
-					bs->ctfstrategy ^= CTFS_AGRESSIVE;
-					bs->teamgiveorders_time = FloatTime();
-				}
-			}
-			//if it's time to give orders
-			if (bs->teamgiveorders_time && bs->teamgiveorders_time < FloatTime() - 3) {
-				BotCTFOrders(bs);
-				//
-				bs->teamgiveorders_time = 0;
-			}
-			break;
+		//if it's time to give orders
+		if (bs->teamgiveorders_time && bs->teamgiveorders_time < FloatTime() - 5) {
+			BotTeamOrders(bs);
+			//give orders again after 120 seconds
+			bs->teamgiveorders_time = FloatTime() + 120;
 		}
-		case GT_DOUBLE_D:
-		{
-			//if the number of team mates changed or the domination point status changed
-			//or someone wants to know what to do
-			if (bs->numteammates != numteammates || bs->flagstatuschanged || bs->forceorders) {
-				bs->teamgiveorders_time = FloatTime();
-				bs->numteammates = numteammates;
-				bs->flagstatuschanged = qfalse;
-				bs->forceorders = qfalse;
-			}
-			//if it's time to give orders
-			if (bs->teamgiveorders_time && bs->teamgiveorders_time < FloatTime() - 3) {
-				BotDDorders(bs);
-				//
-				bs->teamgiveorders_time = 0;
-			}
-			break;
+	}
+	else if (G_SingleGametypeCheck(gametype,subgametype,GT_CTF) ||
+			G_SingleGametypeCheck(gametype,subgametype,GT_CTF_ELIMINATION)) {
+		//if the number of team mates changed or the flag status changed
+		//or someone wants to know what to do
+		if (bs->numteammates != numteammates || bs->flagstatuschanged || bs->forceorders || lastRoundNumber != level.roundNumber) {
+			bs->teamgiveorders_time = FloatTime();
+			bs->numteammates = numteammates;
+			bs->flagstatuschanged = qfalse;
+			bs->forceorders = qfalse;
+			lastRoundNumber = level.roundNumber;
 		}
-		case GT_1FCTF:
-		{
-			if (bs->numteammates != numteammates || bs->flagstatuschanged || bs->forceorders) {
+		//if there were no flag captures the last 3 minutes
+		if (bs->lastflagcapture_time < FloatTime() - 240) {
+			bs->lastflagcapture_time = FloatTime();
+			//randomly change the CTF strategy
+			if (random() < 0.4) {
+				bs->ctfstrategy ^= CTFS_AGRESSIVE;
 				bs->teamgiveorders_time = FloatTime();
-				bs->numteammates = numteammates;
-				bs->flagstatuschanged = qfalse;
-				bs->forceorders = qfalse;
 			}
-			//if there were no flag captures the last 4 minutes
-			if (bs->lastflagcapture_time < FloatTime() - 240) {
-				bs->lastflagcapture_time = FloatTime();
-				//randomly change the CTF strategy
-				if (random() < 0.4) {
-					bs->ctfstrategy ^= CTFS_AGRESSIVE;
-					bs->teamgiveorders_time = FloatTime();
-				}
-			}
-			//if it's time to give orders
-			if (bs->teamgiveorders_time && bs->teamgiveorders_time < FloatTime() - 2) {
-				Bot1FCTFOrders(bs);
-				//
-				bs->teamgiveorders_time = 0;
-			}
-			break;
 		}
-		case GT_OBELISK:
-		{
-			if (bs->numteammates != numteammates || bs->forceorders) {
-				bs->teamgiveorders_time = FloatTime();
-				bs->numteammates = numteammates;
-				bs->forceorders = qfalse;
-			}
-			//if it's time to give orders
-			if (bs->teamgiveorders_time && bs->teamgiveorders_time < FloatTime() - 5) {
-				BotObeliskOrders(bs);
-				//give orders again after 30 seconds
-				bs->teamgiveorders_time = FloatTime() + 30;
-			}
-			break;
+		//if it's time to give orders
+		if (bs->teamgiveorders_time && bs->teamgiveorders_time < FloatTime() - 3) {
+			BotCTFOrders(bs);
+			//
+			bs->teamgiveorders_time = 0;
 		}
-		case GT_HARVESTER:
-		{
-			if (bs->numteammates != numteammates || bs->forceorders) {
+	}
+	else if (G_SingleGametypeCheck(gametype,subgametype,GT_DOUBLE_D)) {
+		//if the number of team mates changed or the domination point status changed
+		//or someone wants to know what to do
+		if (bs->numteammates != numteammates || bs->flagstatuschanged || bs->forceorders) {
+			bs->teamgiveorders_time = FloatTime();
+			bs->numteammates = numteammates;
+			bs->flagstatuschanged = qfalse;
+			bs->forceorders = qfalse;
+		}
+		//if it's time to give orders
+		if (bs->teamgiveorders_time && bs->teamgiveorders_time < FloatTime() - 3) {
+			BotDDorders(bs);
+			//
+			bs->teamgiveorders_time = 0;
+		}
+	}
+	else if (G_SingleGametypeCheck(gametype,subgametype,GT_1FCTF)) {
+		if (bs->numteammates != numteammates || bs->flagstatuschanged || bs->forceorders) {
+			bs->teamgiveorders_time = FloatTime();
+			bs->numteammates = numteammates;
+			bs->flagstatuschanged = qfalse;
+			bs->forceorders = qfalse;
+		}
+		//if there were no flag captures the last 4 minutes
+		if (bs->lastflagcapture_time < FloatTime() - 240) {
+			bs->lastflagcapture_time = FloatTime();
+			//randomly change the CTF strategy
+			if (random() < 0.4) {
+				bs->ctfstrategy ^= CTFS_AGRESSIVE;
 				bs->teamgiveorders_time = FloatTime();
-				bs->numteammates = numteammates;
-				bs->forceorders = qfalse;
 			}
-			//if it's time to give orders
-			if (bs->teamgiveorders_time && bs->teamgiveorders_time < FloatTime() - 5) {
-				BotHarvesterOrders(bs);
-				//give orders again after 30 seconds
-				bs->teamgiveorders_time = FloatTime() + 30;
-			}
-			break;
+		}
+		//if it's time to give orders
+		if (bs->teamgiveorders_time && bs->teamgiveorders_time < FloatTime() - 2) {
+			Bot1FCTFOrders(bs);
+			//
+			bs->teamgiveorders_time = 0;
+		}
+	}
+	else if (G_SingleGametypeCheck(gametype,subgametype,GT_OBELISK)) {
+		if (bs->numteammates != numteammates || bs->forceorders) {
+			bs->teamgiveorders_time = FloatTime();
+			bs->numteammates = numteammates;
+			bs->forceorders = qfalse;
+		}
+		//if it's time to give orders
+		if (bs->teamgiveorders_time && bs->teamgiveorders_time < FloatTime() - 5) {
+			BotObeliskOrders(bs);
+			//give orders again after 30 seconds
+			bs->teamgiveorders_time = FloatTime() + 30;
+		}
+	}
+	else if (G_SingleGametypeCheck(gametype,subgametype,GT_HARVESTER)) {
+		if (bs->numteammates != numteammates || bs->forceorders) {
+			bs->teamgiveorders_time = FloatTime();
+			bs->numteammates = numteammates;
+			bs->forceorders = qfalse;
+		}
+		//if it's time to give orders
+		if (bs->teamgiveorders_time && bs->teamgiveorders_time < FloatTime() - 5) {
+			BotHarvesterOrders(bs);
+			//give orders again after 30 seconds
+			bs->teamgiveorders_time = FloatTime() + 30;
 		}
 	}
 }

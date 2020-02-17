@@ -40,6 +40,7 @@ gentity_t		g_entities[MAX_GENTITIES];
 gclient_t		g_clients[MAX_CLIENTS];
 
 vmCvar_t g_gametype;
+vmCvar_t g_subgametype;
 vmCvar_t g_dmflags;
 vmCvar_t g_videoflags;
 vmCvar_t g_elimflags;
@@ -210,6 +211,7 @@ static cvarTable_t gameCvarTable[] = {
 
 	// latched vars
 	{ &g_gametype, "g_gametype", "0", CVAR_SERVERINFO | CVAR_USERINFO | CVAR_LATCH, 0, qfalse  },
+	{ &g_subgametype, "g_subgametype", "0", CVAR_SERVERINFO, 0, qfalse  },
 
 	{ &g_maxclients, "sv_maxclients", "8", CVAR_SERVERINFO | CVAR_LATCH | CVAR_ARCHIVE, 0, qfalse  },
 	{ &g_maxGameClients, "g_maxGameClients", "0", CVAR_SERVERINFO | CVAR_LATCH | CVAR_ARCHIVE, 0, qfalse  },
@@ -753,11 +755,80 @@ void G_InitGame( int levelTime, int randomSeed, int restart )
 
 	G_UpdateTimestamp();
 
-	//disable unwanted cvars
+	//default settings for SP
 	if( g_gametype.integer == GT_SINGLE_PLAYER ) {
-		g_instantgib.integer = 0;
+		g_dmflags.integer = 0;
+		g_videoflags.integer = 7;
+		g_elimflags.integer = 0;
+		g_friendlyFire.integer = 0;
+		g_teamAutoJoin.integer = 0;
+		g_doWarmup.integer = 1;
+		g_speed.integer = 320;
+		g_gravity.integer = 800;
+		g_gravityModifier.integer = 1;
+		g_damageModifier.integer = 0;
+		g_knockback.integer = 1000;
+		g_quadfactor.integer = 3;
+		g_weaponRespawn.integer = 5;
+		g_weaponTeamRespawn.integer = 30;
+		g_forcerespawn.integer = 20;
+		g_respawntime.integer = 0;
+		g_proxMineTimeout.integer = 20000;
+		g_spawnprotect.integer = 500;
+		g_elimination_allgametypes.integer = 0;
+		g_awardpushing.integer = 1;
 		g_rockets.integer = 0;
-		g_vampire.value = 0.0f;
+		g_instantgib.integer = 0;
+		g_vampire.integer = 0;
+		g_regen.integer = 0;
+		g_vampireMaxHealth.integer = 500;
+		g_catchup.integer = 0;
+		g_grapple.integer = 0;
+		if (g_subgametype.integer == GT_OBELISK) {
+			g_obeliskHealth.integer = 2500;
+			g_obeliskRegenPeriod.integer = 1;
+			g_obeliskRegenAmount.integer = 15;
+			g_obeliskRespawnDelay.integer = 10;
+		}
+		if (g_subgametype.integer == GT_HARVESTER) {
+			g_cubeTimeout.integer = 30;
+			g_harvesterFromBodies.integer = 30;
+		}
+		if (g_subgametype.integer == GT_ELIMINATION || g_subgametype.integer == GT_CTF_ELIMINATION || g_subgametype.integer == GT_LMS) {
+			g_elimination_selfdamage.integer = 0;
+			g_elimination_startHealth.integer = 200;
+			g_elimination_startArmor.integer = 150;
+			g_elimination_bfg.integer = 0;
+			g_elimination_roundtime.integer = 120;
+			g_elimination_warmup.integer = 7;
+			g_elimination_activewarmup.integer = 5;
+			g_elimination_machinegun.integer = 500;
+			g_elimination_shotgun.integer = 500;
+			g_elimination_grenade.integer = 100;
+			g_elimination_rocket.integer = 50;
+			g_elimination_railgun.integer = 20;
+			g_elimination_lightning.integer = 300;
+			g_elimination_plasmagun.integer = 200;
+			g_elimination_chain.integer = 0;
+			g_elimination_mine.integer = 0;
+			g_elimination_nail.integer = 0;
+			g_elimination_ctf_oneway.integer = 0;
+			g_elimination_lockspectator.integer = 0;
+		}
+		if (g_subgametype.integer == GT_CTF || g_subgametype.integer == GT_1FCTF || g_subgametype.integer == GT_HARVESTER || g_subgametype.integer == GT_OBELISK) {
+			g_runes.integer = 1;
+		}
+		else {
+			g_runes.integer = 0;
+		}
+		if (g_subgametype.integer == GT_LMS) {
+			g_lms_lives.integer = 1;
+			g_lms_mode.integer = 0;
+		}
+		if (g_subgametype.integer == GT_DOUBLE_D) {
+			g_ddCaptureTime.integer = 10;
+			g_ddRespawnDelay.integer = 10;
+		}
 	}
 
 	G_ProcessIPBans();
@@ -846,9 +917,7 @@ void G_InitGame( int levelTime, int randomSeed, int restart )
 	G_FindTeams();
 
 	// make sure we have flags for CTF, etc
-	if (G_UsesTeamFlags(g_gametype.integer) || G_UsesTheWhiteFlag(g_gametype.integer) ||
-			g_gametype.integer == GT_HARVESTER || g_gametype.integer == GT_OBELISK ||
-			g_gametype.integer == GT_DOUBLE_D || g_gametype.integer == GT_DOMINATION) {
+	if (G_IsATeamGametype(g_gametype.integer,g_subgametype.integer) && !G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_TEAM)) {
 		G_CheckTeamItems();
 	}
 
@@ -856,7 +925,10 @@ void G_InitGame( int levelTime, int randomSeed, int restart )
 
 	G_Printf ("-----------------------------------\n");
 
-	if( g_gametype.integer == GT_SINGLE_PLAYER || trap_Cvar_VariableIntegerValue( "com_buildScript" ) ) {
+	if((g_gametype.integer == GT_SINGLE_PLAYER && (g_subgametype.integer == GT_FFA ||
+			g_subgametype.integer == GT_TEAM || g_subgametype.integer == GT_TOURNAMENT ||
+			g_subgametype.integer == GT_LMS || g_subgametype.integer == GT_POSSESSION)) ||
+			trap_Cvar_VariableIntegerValue( "com_buildScript" ) ) {
 		G_ModelIndex( SP_PODIUM_MODEL );
 	}
 
@@ -881,10 +953,10 @@ void G_InitGame( int levelTime, int randomSeed, int restart )
 	level.teamSize = 0;
 	level.hadBots = qfalse;
 
-	if(g_gametype.integer == GT_DOUBLE_D)
+	if(G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_DOUBLE_D))
 		Team_SpawnDoubleDominationPoints();
 
-	if(g_gametype.integer == GT_DOMINATION ) {
+	if(G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_DOMINATION)) {
 		level.dom_scoreGiven = 0;
 		for(i=0; i<MAX_DOMINATION_POINTS; i++)
 			level.pointStatusDom[i] = TEAM_NONE;
@@ -1199,7 +1271,7 @@ int QDECL SortRanks( const void *a, const void *b )
 	}
 
 	//In elimination and CTF elimination, sort dead players last
-	if(G_UsesTeamFlags(g_gametype.integer) && !G_UsesTheWhiteFlag(g_gametype.integer)
+	if(G_UsesTeamFlags(g_gametype.integer,g_subgametype.integer) && !G_UsesTheWhiteFlag(g_gametype.integer,g_subgametype.integer)
 	        && level.roundNumber==level.roundNumberStarted && (ca->isEliminated != cb->isEliminated)) {
 		if( ca->isEliminated )
 			return 1;
@@ -1282,7 +1354,7 @@ void CalculateRanks( void )
 	       sizeof(level.sortedClients[0]), SortRanks );
 
 	// set the rank value for all clients that are connected and not spectators
-	if (G_IsATeamGametype(g_gametype.integer)) {
+	if (G_IsATeamGametype(g_gametype.integer,g_subgametype.integer)) {
 		// in team games, rank is just the order of the teams, 0=red, 1=blue, 2=tied
 		for ( i = 0;  i < level.numConnectedClients; i++ ) {
 			cl = &level.clients[ level.sortedClients[i] ];
@@ -1321,7 +1393,7 @@ void CalculateRanks( void )
 	}
 
 	// set the CS_SCORES1/2 configstrings, which will be visible to everyone
-	if (G_IsATeamGametype(g_gametype.integer)) {
+	if (G_IsATeamGametype(g_gametype.integer,g_subgametype.integer)) {
 		trap_SetConfigstring( CS_SCORES1, va("%i", level.teamScores[TEAM_RED] ) );
 		trap_SetConfigstring( CS_SCORES2, va("%i", level.teamScores[TEAM_BLUE] ) );
 	}
@@ -1405,47 +1477,49 @@ static void SendVictoryChallenge( void )
 	if(level.max_humanplayers < 2 || level.hadBots)
 		return;
 
-	switch(g_gametype.integer) {
-	case GT_FFA:
+	if (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_FFA)) {
 		award = GAMETYPES_FFA_WINS;
-		break;
-	case GT_TOURNAMENT:
+	}
+	else if (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_TOURNAMENT)) {
 		award = GAMETYPES_TOURNEY_WINS;
-		break;
-	case GT_LMS:
-		award = GAMETYPES_LMS_WINS;
-		break;
-	case GT_CTF:
+	}
+	else if (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_TEAM)) {
+		award = GAMETYPES_TDM_WINS;
+	}
+	else if (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_CTF)) {
 		award = GAMETYPES_CTF_WINS;
-		break;
-	case GT_1FCTF:
+	}
+	else if (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_1FCTF)) {
 		award = GAMETYPES_1FCTF_WINS;
-		break;
-	case GT_OBELISK:
-		award = GAMETYPES_OVERLOAD_WINS;
-		break;
-	case GT_HARVESTER:
+	}
+	else if (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_HARVESTER)) {
 		award = GAMETYPES_HARVESTER_WINS;
-		break;
-	case GT_ELIMINATION:
+	}
+	else if (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_OBELISK)) {
+		award = GAMETYPES_OVERLOAD_WINS;
+	}
+	else if (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_ELIMINATION)) {
 		award = GAMETYPES_ELIMINATION_WINS;
-		break;
-	case GT_CTF_ELIMINATION:
+	}
+	else if (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_CTF_ELIMINATION)) {
 		award = GAMETYPES_CTF_ELIMINATION_WINS;
-		break;
-	case GT_DOUBLE_D:
+	}
+	else if (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_LMS)) {
+		award = GAMETYPES_LMS_WINS;
+	}
+	else if (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_DOUBLE_D)) {
 		award = GAMETYPES_DD_WINS;
-		break;
-	case GT_DOMINATION:
+	}
+	else if (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_DOMINATION)) {
 		award = GAMETYPES_DOM_WINS;
-		break;
-	case GT_POSSESSION:
+	}
+	else if (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_POSSESSION)) {
 		award = GAMETYPES_POS_WINS;
-		break;
-	default:
+	}
+	else {
 		return;
-	};
-	if (G_IsATeamGametype(g_gametype.integer)) {
+	}
+	if (G_IsATeamGametype(g_gametype.integer,g_subgametype.integer)) {
 		//Team games
 		for ( i = 0 ; i < level.maxclients ; i++ ) {
 			cl = &level.clients[i];
@@ -1852,7 +1926,7 @@ void LogExit( const char *string )
 		numSorted = 32;
 	}
 
-	if (G_IsATeamGametype(g_gametype.integer)) {
+	if (G_IsATeamGametype(g_gametype.integer,g_subgametype.integer)) {
 		G_LogPrintf( "red:%i  blue:%i\n",
 		             level.teamScores[TEAM_RED], level.teamScores[TEAM_BLUE] );
 	}
@@ -1876,8 +1950,8 @@ void LogExit( const char *string )
 		if (g_singlePlayer.integer && !(g_entities[cl - level.clients].r.svFlags & SVF_BOT)) {
 			team = cl->sess.sessionTeam;
 		}
-		if (g_singlePlayer.integer && G_IsATeamGametype(g_gametype.integer) &&
-				(G_UsesTeamFlags(g_gametype.integer) || G_UsesTheWhiteFlag(g_gametype.integer) ||
+		if (g_singlePlayer.integer && G_IsATeamGametype(g_gametype.integer,g_subgametype.integer) &&
+				(G_UsesTeamFlags(g_gametype.integer,g_subgametype.integer) || G_UsesTheWhiteFlag(g_gametype.integer,g_subgametype.integer) ||
 				g_gametype.integer == GT_HARVESTER || g_gametype.integer == GT_OBELISK ||
 				g_gametype.integer == GT_DOUBLE_D || g_gametype.integer == GT_DOMINATION)) {
 			if (g_entities[cl - level.clients].r.svFlags & SVF_BOT && cl->ps.persistant[PERS_RANK] == 0) {
@@ -1890,7 +1964,7 @@ void LogExit( const char *string )
 
 #ifdef MISSIONPACK
  	if (g_singlePlayer.integer) {
-		if (G_IsATeamGametype(g_gametype.integer)) {
+		if (G_IsATeamGametype(g_gametype.integer,g_subgametype.integer)) {
 			if (team == TEAM_BLUE) {
 				won = level.teamScores[TEAM_BLUE] > level.teamScores[TEAM_RED];
 			} else {
@@ -2011,14 +2085,14 @@ qboolean ScoreIsTied( void )
 	}
 
 	//Sago: In Elimination and Oneway Flag Capture teams must win by two points.
-	if ( (G_IsARoundBasedGametype(g_gametype.integer) && G_IsATeamGametype(g_gametype.integer)) ||
+	if ( (G_IsARoundBasedGametype(g_gametype.integer,g_subgametype.integer) && G_IsATeamGametype(g_gametype.integer,g_subgametype.integer)) ||
 	        (g_gametype.integer == GT_CTF_ELIMINATION && g_elimination_ctf_oneway.integer)) {
 		return (level.teamScores[TEAM_RED] == level.teamScores[TEAM_BLUE] ||
 		        level.teamScores[TEAM_RED] == level.teamScores[TEAM_BLUE]+1 ||
 		        level.teamScores[TEAM_RED] == level.teamScores[TEAM_BLUE]-1);
 	}
 
-	if (G_IsATeamGametype(g_gametype.integer)) {
+	if (G_IsATeamGametype(g_gametype.integer,g_subgametype.integer)) {
 		return level.teamScores[TEAM_RED] == level.teamScores[TEAM_BLUE];
 	}
 
@@ -2105,7 +2179,7 @@ void CheckExitRules( void )
 	}
 
 	if ( g_fraglimit.integer ) {
-		if ( G_IsATeamGametype(g_gametype.integer) ) {
+		if ( G_IsATeamGametype(g_gametype.integer,g_subgametype.integer) ) {
 			if ( level.teamScores[TEAM_RED] >= g_fraglimit.integer ) {
 				trap_SendServerCommand( -1, "print \"Red hit the fraglimit.\n\"" );
 				LogExit( "Fraglimit hit." );
@@ -2145,7 +2219,8 @@ void CheckExitRules( void )
 	}
 
 	if ( g_capturelimit.integer ) {
-		if (G_IsATeamGametype(g_gametype.integer) && g_gametype.integer != GT_TEAM) {
+		if ( G_IsATeamGametype(g_gametype.integer,g_subgametype.integer) &&
+				!G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_TEAM) ) {
 			if ( level.teamScores[TEAM_RED] >= g_capturelimit.integer ) {
 				trap_SendServerCommand( -1, "print \"Red hit the capturelimit.\n\"" );
 				LogExit( "Capturelimit hit." );
@@ -2370,7 +2445,7 @@ void CheckTournament( void )
 		int		counts[TEAM_NUM_TEAMS];
 		qboolean	notEnough = qfalse;
 
-		if(!G_IsATeamGametype(g_gametype.integer)) {
+		if(!G_IsATeamGametype(g_gametype.integer,g_subgametype.integer)) {
 			counts[TEAM_BLUE] = TeamCount( -1, TEAM_BLUE );
 			counts[TEAM_RED] = TeamCount( -1, TEAM_RED );
 
@@ -2646,7 +2721,7 @@ void G_RunFrame( int levelTime )
 	// get any cvar changes
 	G_UpdateCvars();
 
-	if( (G_IsARoundBasedGametype(g_gametype.integer) && G_IsATeamGametype(g_gametype.integer)) && !(g_elimflags.integer & EF_NO_FREESPEC) && g_elimination_lockspectator.integer>1)
+	if( (G_IsARoundBasedGametype(g_gametype.integer,g_subgametype.integer) && G_IsATeamGametype(g_gametype.integer,g_subgametype.integer)) && !(g_elimflags.integer & EF_NO_FREESPEC) && g_elimination_lockspectator.integer>1)
 		trap_Cvar_Set("elimflags",va("%i",g_elimflags.integer|EF_NO_FREESPEC));
 	else if( (g_elimflags.integer & EF_NO_FREESPEC) && g_elimination_lockspectator.integer<2)
 		trap_Cvar_Set("elimflags",va("%i",g_elimflags.integer&(~EF_NO_FREESPEC) ) );
@@ -2838,8 +2913,14 @@ G_IsATeamGametype
 Checks if the gametype is a team-based game.
 ===================
  */
-qboolean G_IsATeamGametype(int check) {
-	return GAMETYPE_IS_A_TEAM_GAME(check);
+qboolean G_IsATeamGametype(int gametype, int subgametype) {
+	if (gametype != GT_SINGLE_PLAYER && GAMETYPE_IS_A_TEAM_GAME(gametype)) {
+		return qtrue;
+	}
+	else if (gametype == GT_SINGLE_PLAYER && GAMETYPE_IS_A_TEAM_GAME(subgametype)) {
+		return qtrue;
+	}
+	return qfalse;
 }
 /*
 ===================
@@ -2848,8 +2929,14 @@ G_UsesTeamFlags
 Checks if the gametype makes use of the red and blue flags.
 ===================
  */
-qboolean G_UsesTeamFlags(int check) {
-	return GAMETYPE_USES_RED_AND_BLUE_FLAG(check);
+qboolean G_UsesTeamFlags(int gametype, int subgametype) {
+	if (gametype != GT_SINGLE_PLAYER && GAMETYPE_USES_RED_AND_BLUE_FLAG(gametype)) {
+		return qtrue;
+	}
+	else if (gametype == GT_SINGLE_PLAYER && GAMETYPE_USES_RED_AND_BLUE_FLAG(subgametype)) {
+		return qtrue;
+	}
+	return qfalse;
 }
 /*
 ===================
@@ -2858,8 +2945,14 @@ G_UsesTheWhiteFlag
 Checks if the gametype makes use of the neutral flag.
 ===================
  */
-qboolean G_UsesTheWhiteFlag(int check) {
-	return GAMETYPE_USES_WHITE_FLAG(check);
+qboolean G_UsesTheWhiteFlag(int gametype, int subgametype) {
+	if (gametype != GT_SINGLE_PLAYER && GAMETYPE_USES_WHITE_FLAG(gametype)) {
+		return qtrue;
+	}
+	else if (gametype == GT_SINGLE_PLAYER && GAMETYPE_USES_WHITE_FLAG(subgametype)) {
+		return qtrue;
+	}
+	return qfalse;
 }
 /*
 ===================
@@ -2868,7 +2961,30 @@ G_IsARoundBasedGametype
 Checks if the gametype has a round-based system.
 ===================
  */
-qboolean G_IsARoundBasedGametype(int check) {
-	return GAMETYPE_IS_ROUND_BASED(check);
+qboolean G_IsARoundBasedGametype(int gametype, int subgametype) {
+	if (gametype != GT_SINGLE_PLAYER && GAMETYPE_IS_ROUND_BASED(gametype)) {
+		return qtrue;
+	}
+	else if (gametype == GT_SINGLE_PLAYER && GAMETYPE_IS_ROUND_BASED(subgametype)) {
+		return qtrue;
+	}
+	return qfalse;
+}
+/*
+===================
+G_SingleGametypeCheck
+
+Checks if the game takes place in a particular gametype.
+Replaces all direct gametype calls.
+===================
+ */
+qboolean G_SingleGametypeCheck(int gametype, int subgametype, int check) {
+	if (gametype != GT_SINGLE_PLAYER && gametype == check) {
+		return qtrue;
+	}
+	else if (gametype == GT_SINGLE_PLAYER && subgametype != GT_SINGLE_PLAYER && subgametype == check) {
+		return qtrue;
+	}
+	return qfalse;
 }
 /* /Neon_Knight */

@@ -99,6 +99,7 @@ TeamMain_MenuInit
 void TeamMain_MenuInit( void ) {
 	int		y;
 	int		gametype;
+	int		subgametype;
 	char	info[MAX_INFO_STRING];
 
 	memset( &s_teammain, 0, sizeof(s_teammain) );
@@ -164,30 +165,14 @@ void TeamMain_MenuInit( void ) {
 
 	trap_GetConfigString(CS_SERVERINFO, info, MAX_INFO_STRING);   
 	gametype = atoi( Info_ValueForKey( info,"g_gametype" ) );
+	subgametype = atoi( Info_ValueForKey( info,"g_subgametype" ) );
 			      
 	// set initial states
-	switch( gametype ) {
-	case GT_SINGLE_PLAYER:
-	case GT_FFA:
-	case GT_LMS:
-	case GT_POSSESSION:
-	case GT_TOURNAMENT:
+	if(UI_SP_IsATeamGametype(gametype,subgametype)) {
+		s_teammain.joingame.string = "AUTO JOIN GAME";
+	} else {
 		s_teammain.joinred.generic.flags  |= QMF_GRAYED;
 		s_teammain.joinblue.generic.flags |= QMF_GRAYED;
-		break;
-
-	default:
-	case GT_TEAM:
-	case GT_CTF:
-	case GT_1FCTF:
-	case GT_OBELISK:
-	case GT_HARVESTER:
-	case GT_ELIMINATION:
-	case GT_CTF_ELIMINATION:
-	case GT_DOUBLE_D:
-	case GT_DOMINATION:
-		s_teammain.joingame.string           = "AUTO JOIN GAME";
-		break;
 	}
 
 	Menu_AddItem( &s_teammain.menu, (void*) &s_teammain.frame );

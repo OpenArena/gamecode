@@ -436,7 +436,7 @@ void G_CheckMinimumPlayers( void ) {
 		return; //If no AAS then don't even try
 	}
 
-	if (G_IsATeamGametype(g_gametype.integer)) {
+	if (G_IsATeamGametype(g_gametype.integer,g_subgametype.integer)) {
 		if (minplayers >= g_maxclients.integer / 2) {
 			minplayers = (g_maxclients.integer / 2) -1;
 		}
@@ -459,7 +459,7 @@ void G_CheckMinimumPlayers( void ) {
 			G_RemoveRandomBot( TEAM_BLUE );
 		}
 	}
-	else if (g_gametype.integer == GT_TOURNAMENT ) {
+	else if (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_TOURNAMENT)) {
 		if (minplayers >= g_maxclients.integer) {
 			minplayers = g_maxclients.integer-1;
 		}
@@ -610,7 +610,7 @@ static void G_AddBot( const char *name, float skill, const char *team, int delay
 
 	// set default team
 	if( !team || !*team ) {
-		if( GAMETYPE_IS_A_TEAM_GAME(g_gametype.integer) ) {
+		if( G_IsATeamGametype(g_gametype.integer,g_subgametype.integer) ) {
 			if( PickTeam(clientNum) == TEAM_RED) {
 				team = "red";
 			}
@@ -1009,7 +1009,7 @@ G_InitBots
 ===============
 */
 void G_InitBots( qboolean restart ) {
-	int			fragLimit;
+	int			scoreLimit;
 	int			timeLimit;
 	const char	*arenainfo;
 	char		*strValue;
@@ -1031,13 +1031,80 @@ void G_InitBots( qboolean restart ) {
 			return;
 		}
 
-		strValue = Info_ValueForKey( arenainfo, "fraglimit" );
-		fragLimit = atoi( strValue );
-		if ( fragLimit ) {
-			trap_Cvar_Set( "fraglimit", strValue );
+		strValue = Info_ValueForKey( arenainfo, "sptype" );
+		if (strequals(strValue,"TeamDeathmatch")) {
+			g_subgametype.integer = GT_TEAM;
+		} else if (strequals(strValue,"Tournament")) {
+			g_subgametype.integer = GT_TOURNAMENT;
+		} else if (strequals(strValue,"CaptureTheFlag")) {
+			g_subgametype.integer = GT_CTF;
+		} else if (strequals(strValue,"OneFlagCTF")) {
+			g_subgametype.integer = GT_1FCTF;
+		} else if (strequals(strValue,"Overload")) {
+			g_subgametype.integer = GT_OBELISK;
+		} else if (strequals(strValue,"Harvester")) {
+			g_subgametype.integer = GT_HARVESTER;
+		} else if (strequals(strValue,"Elimination")) {
+			g_subgametype.integer = GT_ELIMINATION;
+		} else if (strequals(strValue,"CTFElimination")) {
+			g_subgametype.integer = GT_CTF_ELIMINATION;
+		} else if (strequals(strValue,"LastManStanding")) {
+			g_subgametype.integer = GT_LMS;
+		} else if (strequals(strValue,"DoubleDomination")) {
+			g_subgametype.integer = GT_DOUBLE_D;
+		} else if (strequals(strValue,"Domination")) {
+			g_subgametype.integer = GT_DOMINATION;
+		} else if (strequals(strValue,"Possession")) {
+			g_subgametype.integer = GT_POSSESSION;
+		} else {
+			g_subgametype.integer = GT_FFA;
+		}
+
+		if (g_subgametype.integer == GT_FFA || g_subgametype.integer == GT_TEAM ||
+				g_subgametype.integer == GT_TOURNAMENT || g_subgametype.integer == GT_LMS ||
+				g_subgametype.integer == GT_POSSESSION) {
+			strValue = Info_ValueForKey( arenainfo, "fraglimit" );
+			scoreLimit = atoi( strValue );
+			if ( scoreLimit ) {
+				trap_Cvar_Set( "fraglimit", strValue );
+			}
+			else {
+				switch (g_subgametype.integer) {
+					case GT_TEAM:
+						trap_Cvar_Set( "fraglimit", "50" );
+						break;
+					case GT_POSSESSION:
+						trap_Cvar_Set( "fraglimit", "150" );
+						break;
+					default:
+						trap_Cvar_Set( "fraglimit", "15" );
+						break;
+				}
+			}
 		}
 		else {
-			trap_Cvar_Set( "fraglimit", "0" );
+			strValue = Info_ValueForKey( arenainfo, "capturelimit" );
+			scoreLimit = atoi( strValue );
+			if ( scoreLimit ) {
+				trap_Cvar_Set( "capturelimit", strValue );
+			}
+			else {
+				switch (g_subgametype.integer) {
+					case GT_HARVESTER:
+						trap_Cvar_Set( "capturelimit", "30" );
+						break;
+					case GT_OBELISK:
+					case GT_DOUBLE_D:
+						trap_Cvar_Set( "capturelimit", "5" );
+						break;
+					case GT_DOMINATION:
+						trap_Cvar_Set( "capturelimit", "150" );
+						break;
+					default:
+						trap_Cvar_Set( "capturelimit", "8" );
+						break;
+				}
+			}
 		}
 
 		strValue = Info_ValueForKey( arenainfo, "timelimit" );
@@ -1046,12 +1113,7 @@ void G_InitBots( qboolean restart ) {
 			trap_Cvar_Set( "timelimit", strValue );
 		}
 		else {
-			trap_Cvar_Set( "timelimit", "0" );
-		}
-
-		if ( !fragLimit && !timeLimit ) {
-			trap_Cvar_Set( "fraglimit", "10" );
-			trap_Cvar_Set( "timelimit", "0" );
+			trap_Cvar_Set( "timelimit", "15" );
 		}
 
 		basedelay = BOT_BEGIN_DELAY_BASE;
@@ -1066,14 +1128,14 @@ void G_InitBots( qboolean restart ) {
 	} else {
 		if(bot_autominplayers.integer) {
 			//Set bot_minplayers
-			if(g_gametype.integer == GT_TOURNAMENT) {
+			if(G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_TOURNAMENT)) {
 				trap_Cvar_Set("bot_minplayers","2"); //Always 2 for Tourney
 			} else {
 				basedelay = MinSpawnpointCount()/2;
-				if(basedelay < 3 && !(G_IsATeamGametype(g_gametype.integer))) {
+				if(basedelay < 3 && !(G_IsATeamGametype(g_gametype.integer,g_subgametype.integer))) {
 					basedelay = 3; //Minimum 3 for FFA
 				}
-				if(basedelay < 2 && G_IsATeamGametype(g_gametype.integer)) {
+				if(basedelay < 2 && G_IsATeamGametype(g_gametype.integer,g_subgametype.integer)) {
 					basedelay = 2; //Minimum 2 for TEAM
 				}
 				trap_Cvar_Set("bot_minplayers",va("%i",basedelay) );

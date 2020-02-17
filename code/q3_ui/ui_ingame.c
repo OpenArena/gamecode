@@ -168,12 +168,14 @@ void InGame_MenuInit( void ) {
 	char	info[MAX_INFO_STRING];
 	int		team;
 	int		gametype;
+	int		subgametype;
 
 	memset( &s_ingame, 0 ,sizeof(ingamemenu_t) );
 
 	InGame_Cache();
 	
 	gametype = trap_Cvar_VariableValue("g_gametype");
+	subgametype = trap_Cvar_VariableValue("g_subgametype");
 
 	s_ingame.menu.wrapAround = qtrue;
 	s_ingame.menu.fullscreen = qfalse;
@@ -236,7 +238,7 @@ void InGame_MenuInit( void ) {
 	s_ingame.teamorders.string				= "TEAM ORDERS";
 	s_ingame.teamorders.color				= color_red;
 	s_ingame.teamorders.style				= UI_CENTER|UI_SMALLFONT;
-	if(!UI_IsATeamGametype(gametype)) {
+	if(!UI_SP_IsATeamGametype(gametype,subgametype)) {
 		s_ingame.teamorders.generic.flags |= QMF_GRAYED;
 	}
 	else {
