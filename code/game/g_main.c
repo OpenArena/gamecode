@@ -2872,4 +2872,28 @@ Checks if the gametype has a round-based system.
 qboolean G_IsARoundBasedGametype(int check) {
 	return GAMETYPE_IS_ROUND_BASED(check);
 }
+/*
+===================
+G_HasEliminationRules
+
+Checks if the game has Elimination-like ruleset.
+===================
+ */
+qboolean G_HasEliminationRules(void) {
+	if (G_IsARoundBasedGametype(g_gametype.integer)) {
+		return qtrue;
+	}
+	else {
+		if (g_elimination_allgametypes.integer) {
+			return qtrue;
+		}
+	}
+	if (g_instantgib.integer) {
+		return qtrue;
+	}
+	if (g_rockets.integer) {
+		return qtrue;
+	}
+	return qfalse;
+}
 /* /Neon_Knight */

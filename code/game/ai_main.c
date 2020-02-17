@@ -188,8 +188,7 @@ int BotAI_GetEntityState( int entityNum, entityState_t *state ) {
 	memset( state, 0, sizeof(entityState_t) );
 	if (!ent->inuse) return qfalse;
 	if (!ent->r.linked) return qfalse;
-	if ( !(G_IsARoundBasedGametype(g_gametype.integer) ||g_instantgib.integer || g_rockets.integer || g_elimination_allgametypes.integer)
-	       && (ent->r.svFlags & SVF_NOCLIENT) ) {
+	if (!G_HasEliminationRules() && (ent->r.svFlags & SVF_NOCLIENT)) {
 		return qfalse;
 	}
 	memcpy( state, &ent->s, sizeof(entityState_t) );
@@ -1526,8 +1525,7 @@ int BotAIStartFrame(int time) {
 				trap_BotLibUpdateEntity(i, NULL);
 				continue;
 			}
-			if ( !(G_IsARoundBasedGametype(g_gametype.integer) ||g_instantgib.integer || g_rockets.integer || g_elimination_allgametypes.integer)
-				   && ent->r.svFlags & SVF_NOCLIENT) {
+			if (!G_HasEliminationRules() && ent->r.svFlags & SVF_NOCLIENT) {
 				trap_BotLibUpdateEntity(i, NULL);
 				continue;
 			}

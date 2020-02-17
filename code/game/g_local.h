@@ -1431,4 +1431,5 @@ qboolean G_IsATeamGametype(int check);	/* Whether the gametype is team-based or 
 qboolean G_UsesTeamFlags(int check);	/* Whether the gametype uses the red and blue flags. */
 qboolean G_UsesTheWhiteFlag(int check);	/* Whether the gametype uses the neutral flag. */
 qboolean G_IsARoundBasedGametype(int check);	/* Whether the gametype uses the neutral flag. */
+qboolean G_HasEliminationRules(void);	/* Whether the game uses an Elimination-like ruleset. */
 /* /Neon_Knight */

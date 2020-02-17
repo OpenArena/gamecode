@@ -133,16 +133,14 @@ void TossClientItems( gentity_t *self )
 		}
 	}
 
-	if (g_instantgib.integer || g_rockets.integer || g_gametype.integer == GT_CTF_ELIMINATION || g_elimination_allgametypes.integer) {
-		//Nothing!
-	}
-	else if ( weapon > WP_MACHINEGUN && weapon != WP_GRAPPLING_HOOK &&
-	          self->client->ps.ammo[ weapon ] ) {
-		// find the item type for this weapon
-		item = BG_FindItemForWeapon( weapon );
+	if (!(G_HasEliminationRules() && g_gametype.integer != GT_ELIMINATION && g_gametype.integer != GT_LMS)) {
+		if ( weapon > WP_MACHINEGUN && weapon != WP_GRAPPLING_HOOK && self->client->ps.ammo[ weapon ] ) {
+			// find the item type for this weapon
+			item = BG_FindItemForWeapon( weapon );
 
-		// spawn the item
-		Drop_Item( self, item, 0 );
+			// spawn the item
+			Drop_Item( self, item, 0 );
+		}
 	}
 
 	// drop all the powerups if not in teamplay
