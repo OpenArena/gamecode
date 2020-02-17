@@ -259,11 +259,13 @@ static void UI_AddBotsMenu_Init( void ) {
 	int		n;
 	int		y;
 	int		gametype;
+	int		subgametype;
 	int		count;
 	char	info[MAX_INFO_STRING];
 
 	trap_GetConfigString(CS_SERVERINFO, info, MAX_INFO_STRING);   
 	gametype = atoi( Info_ValueForKey( info,"g_gametype" ) );
+	subgametype = atoi( Info_ValueForKey( info,"g_subgametype" ) );
 
 	memset( &addBotsMenuInfo, 0 ,sizeof(addBotsMenuInfo) );
 	addBotsMenuInfo.menu.draw = UI_AddBotsMenu_Draw;
@@ -333,7 +335,7 @@ static void UI_AddBotsMenu_Init( void ) {
 	addBotsMenuInfo.team.generic.y			= y;
 	addBotsMenuInfo.team.generic.name		= "Team: ";
 	addBotsMenuInfo.team.generic.id			= ID_TEAM;
-	if(UI_IsATeamGametype(gametype)) {
+	if(UI_IsATeamGametype(gametype,subgametype)) {
 		addBotsMenuInfo.team.itemnames		= teamNames2;
 	}
 	else {

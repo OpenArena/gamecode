@@ -290,18 +290,19 @@ void CG_DrawInformation( void ) {
 		y += PROP_HEIGHT;
 	}
 
-	if (!(CG_IsATeamGametype(cgs.gametype,cgs.subgametype) && !(CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_TEAM)))) {
-		value = atoi( Info_ValueForKey( info, "fraglimit" ) );
+	if (CG_IsATeamGametype(cgs.gametype,cgs.subgametype) &&
+			!CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_TEAM)) {
+		value = atoi( Info_ValueForKey( info, "capturelimit" ) );
 		if ( value ) {
-			UI_DrawProportionalString( 320, y, va( "fraglimit %i", value ),
+			UI_DrawProportionalString( 320, y, va( "capturelimit %i", value ),
 				UI_CENTER|UI_SMALLFONT|UI_DROPSHADOW, colorWhite );
 			y += PROP_HEIGHT;
 		}
 	}
 	else {
-		value = atoi( Info_ValueForKey( info, "capturelimit" ) );
+		value = atoi( Info_ValueForKey( info, "fraglimit" ) );
 		if ( value ) {
-			UI_DrawProportionalString( 320, y, va( "capturelimit %i", value ),
+			UI_DrawProportionalString( 320, y, va( "fraglimit %i", value ),
 				UI_CENTER|UI_SMALLFONT|UI_DROPSHADOW, colorWhite );
 			y += PROP_HEIGHT;
 		}

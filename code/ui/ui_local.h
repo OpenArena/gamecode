@@ -109,6 +109,7 @@ extern vmCvar_t ui_gameType;
 extern vmCvar_t ui_netGameType;
 extern vmCvar_t ui_actualNetGameType;
 extern vmCvar_t ui_joinGameType;
+extern vmCvar_t ui_subGameType;
 extern vmCvar_t ui_netSource;
 extern vmCvar_t ui_serverFilterType;
 extern vmCvar_t ui_dedicated;

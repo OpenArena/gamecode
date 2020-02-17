@@ -168,7 +168,11 @@ void TeamMain_MenuInit( void ) {
 	subgametype = atoi( Info_ValueForKey( info,"g_subgametype" ) );
 			      
 	// set initial states
+<<<<<<< HEAD
 	if(UI_SP_IsATeamGametype(gametype,subgametype)) {
+=======
+	if(UI_IsATeamGametype(gametype,subgametype)) {
+>>>>>>> GT_SINGLE_PLAYER subgametype support: allows classic UI to play SP missions in gametypes other than FFA.
 		s_teammain.joingame.string = "AUTO JOIN GAME";
 	} else {
 		s_teammain.joinred.generic.flags  |= QMF_GRAYED;

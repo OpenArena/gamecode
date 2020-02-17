@@ -900,13 +900,9 @@ void UI_RankStatusMenu( void );
 #endif
 
 /* Neon_Knight: Useful check in order to have code consistency. */
-qboolean UI_SP_IsATeamGametype(int gametype, int subgametype);	/* SP: Whether the gametype is team-based or not.*/
-qboolean UI_SP_UsesTeamFlags(int gametype, int subgametype);	/* SP: Whether the gametype uses the red and blue flags. */
-qboolean UI_SP_UsesTheWhiteFlag(int gametype, int subgametype);	/* SP: Whether the gametype uses the neutral flag. */
-qboolean UI_SP_IsARoundBasedGametype(int gametype, int subgametype);	/* SP: Whether the gametype is round-based. */
-qboolean UI_SP_SingleGametypeCheck(int gametype, int subgametype, int check);	/* SP: Whether the game takes place in a particular gametype. */
-qboolean UI_IsATeamGametype(int gametype);	/* MP: Whether the gametype is team-based or not.*/
-qboolean UI_UsesTeamFlags(int gametype);	/* MP: Whether the gametype uses the red and blue flags. */
-qboolean UI_UsesTheWhiteFlag(int gametype);	/* MP: Whether the gametype uses the neutral flag. */
-qboolean UI_IsARoundBasedGametype(int gametype);	/* MP: Whether the gametype is round-based. */
+qboolean UI_IsATeamGametype(int gametype, int subgametype);	/* SP: Whether the gametype is team-based or not.*/
+qboolean UI_UsesTeamFlags(int gametype, int subgametype);	/* SP: Whether the gametype uses the red and blue flags. */
+qboolean UI_UsesTheWhiteFlag(int gametype, int subgametype);	/* SP: Whether the gametype uses the neutral flag. */
+qboolean UI_IsARoundBasedGametype(int gametype, int subgametype);	/* SP: Whether the gametype is round-based. */
+qboolean UI_SingleGametypeCheck(int gametype, int subgametype, int check);	/* SP: Whether the game takes place in a particular gametype. */
 /* /Neon_Knight */

@@ -794,7 +794,7 @@ void G_InitGame( int levelTime, int randomSeed, int restart )
 			g_cubeTimeout.integer = 30;
 			g_harvesterFromBodies.integer = 30;
 		}
-		if (g_subgametype.integer == GT_ELIMINATION || g_subgametype.integer == GT_CTF_ELIMINATION || g_subgametype.integer == GT_LMS) {
+		if (G_IsARoundBasedGametype(g_gametype.integer,g_subgametype.integer)) {
 			g_elimination_selfdamage.integer = 0;
 			g_elimination_startHealth.integer = 200;
 			g_elimination_startArmor.integer = 150;
@@ -815,7 +815,10 @@ void G_InitGame( int levelTime, int randomSeed, int restart )
 			g_elimination_ctf_oneway.integer = 0;
 			g_elimination_lockspectator.integer = 0;
 		}
-		if (g_subgametype.integer == GT_CTF || g_subgametype.integer == GT_1FCTF || g_subgametype.integer == GT_HARVESTER || g_subgametype.integer == GT_OBELISK) {
+		if (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_CTF) ||
+				G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_1FCTF) ||
+				G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_OBELISK) ||
+				G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_HARVESTER)) {
 			g_runes.integer = 1;
 		}
 		else {
@@ -925,11 +928,12 @@ void G_InitGame( int levelTime, int randomSeed, int restart )
 
 	G_Printf ("-----------------------------------\n");
 
-	if((g_gametype.integer == GT_SINGLE_PLAYER && (g_subgametype.integer == GT_FFA ||
-			g_subgametype.integer == GT_TEAM || g_subgametype.integer == GT_TOURNAMENT ||
-			g_subgametype.integer == GT_LMS || g_subgametype.integer == GT_POSSESSION)) ||
-			trap_Cvar_VariableIntegerValue( "com_buildScript" ) ) {
-		G_ModelIndex( SP_PODIUM_MODEL );
+	// The first if is necessary to block everything that isn't SP. And to avoid writing too many comparisons.
+	if (g_gametype.integer == GT_SINGLE_PLAYER) {
+		if(!G_IsATeamGametype(g_gametype.integer,g_subgametype.integer) ||
+				trap_Cvar_VariableIntegerValue( "com_buildScript" )) {
+			G_ModelIndex( SP_PODIUM_MODEL );
+		}
 	}
 
 	if ( trap_Cvar_VariableIntegerValue( "bot_enable" ) ) {

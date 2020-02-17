@@ -319,12 +319,12 @@ void UI_SetDefaultCvar(const char* cvar, const char* value) {
 /* Neon_Knight: Useful check in order to have code consistency. */
 /*
 ===================
-UI_SP_IsATeamGametype
+UI_IsATeamGametype
 
 Checks if the gametype is a team-based game.
 ===================
  */
-qboolean UI_SP_IsATeamGametype(int gametype, int subgametype) {
+qboolean UI_IsATeamGametype(int gametype, int subgametype) {
 	if (gametype != GT_SINGLE_PLAYER && GAMETYPE_IS_A_TEAM_GAME(gametype)) {
 		return qtrue;
 	}
@@ -335,12 +335,12 @@ qboolean UI_SP_IsATeamGametype(int gametype, int subgametype) {
 }
 /*
 ===================
-UI_SP_UsesTeamFlags
+UI_UsesTeamFlags
 
 Checks if the gametype makes use of the red and blue flags.
 ===================
  */
-qboolean UI_SP_UsesTeamFlags(int gametype, int subgametype) {
+qboolean UI_UsesTeamFlags(int gametype, int subgametype) {
 	if (gametype != GT_SINGLE_PLAYER && GAMETYPE_USES_RED_AND_BLUE_FLAG(gametype)) {
 		return qtrue;
 	}
@@ -351,12 +351,12 @@ qboolean UI_SP_UsesTeamFlags(int gametype, int subgametype) {
 }
 /*
 ===================
-UI_SP_UsesTheWhiteFlag
+UI_UsesTheWhiteFlag
 
 Checks if the gametype makes use of the neutral flag.
 ===================
  */
-qboolean UI_SP_UsesTheWhiteFlag(int gametype, int subgametype) {
+qboolean UI_UsesTheWhiteFlag(int gametype, int subgametype) {
 	if (gametype != GT_SINGLE_PLAYER && GAMETYPE_USES_WHITE_FLAG(gametype)) {
 		return qtrue;
 	}
@@ -367,12 +367,12 @@ qboolean UI_SP_UsesTheWhiteFlag(int gametype, int subgametype) {
 }
 /*
 ===================
-UI_SP_IsARoundBasedGametype
+UI_IsARoundBasedGametype
 
 Checks if the gametype has a round-based system.
 ===================
  */
-qboolean UI_SP_IsARoundBasedGametype(int gametype, int subgametype) {
+qboolean UI_IsARoundBasedGametype(int gametype, int subgametype) {
 	if (gametype != GT_SINGLE_PLAYER && GAMETYPE_IS_ROUND_BASED(gametype)) {
 		return qtrue;
 	}
@@ -383,13 +383,13 @@ qboolean UI_SP_IsARoundBasedGametype(int gametype, int subgametype) {
 }
 /*
 ===================
-UI_SP_SingleGametypeCheck
+UI_SingleGametypeCheck
 
 Checks if the game takes place in a particular gametype.
 Replaces all direct gametype calls.
 ===================
  */
-qboolean UI_SP_SingleGametypeCheck(int gametype, int subgametype, int check) {
+qboolean UI_SingleGametypeCheck(int gametype, int subgametype, int check) {
 	if (gametype != GT_SINGLE_PLAYER && gametype == check) {
 		return qtrue;
 	}
@@ -397,45 +397,5 @@ qboolean UI_SP_SingleGametypeCheck(int gametype, int subgametype, int check) {
 		return qtrue;
 	}
 	return qfalse;
-}
-/*
-===================
-UI_IsATeamGametype
-
-Checks if the gametype is a team-based game.
-===================
- */
-qboolean UI_IsATeamGametype(int gametype) {
-	return GAMETYPE_IS_A_TEAM_GAME(gametype);
-}
-/*
-===================
-UI_UsesTeamFlags
-
-Checks if the gametype makes use of the red and blue flags.
-===================
- */
-qboolean UI_UsesTeamFlags(int gametype) {
-	return GAMETYPE_USES_RED_AND_BLUE_FLAG(gametype);
-}
-/*
-===================
-UI_UsesTheWhiteFlag
-
-Checks if the gametype makes use of the neutral flag.
-===================
- */
-qboolean UI_UsesTheWhiteFlag(int gametype) {
-	return GAMETYPE_USES_WHITE_FLAG(gametype);
-}
-/*
-===================
-UI_IsARoundBasedGametype
-
-Checks if the gametype has a round-based system.
-===================
- */
-qboolean UI_IsARoundBasedGametype(int gametype) {
-	return GAMETYPE_IS_ROUND_BASED(gametype);
 }
 /* /Neon_Knight */

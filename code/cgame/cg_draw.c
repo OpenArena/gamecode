@@ -1760,7 +1760,7 @@ static float CG_DrawScores(float y) {
 		}
 
 		if (CG_IsATeamGametype(cgs.gametype,cgs.subgametype) &&
-				CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_TEAM)) {
+				!CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_TEAM)) {
 			v = cgs.capturelimit;
 		} else {
 			v = cgs.fraglimit;

@@ -1792,8 +1792,13 @@ void Cmd_CallVote_f( gentity_t *ent ) {
 	if ( Q_strequal( arg1, "g_gametype" ) ) {
 		char	s[MAX_STRING_CHARS];
 		i = atoi( arg2 );
-		if( i == GT_SINGLE_PLAYER || i < GT_FFA || i >= GT_MAX_GAME_TYPE) {
+		if( i < GT_FFA || i >= GT_MAX_GAME_TYPE) {
 			trap_SendServerCommand( ent-g_entities, "print \"Invalid gametype.\n\"" );
+			return;
+		}
+
+		if ( i == GT_SINGLE_PLAYER && (g_subgametype.integer < GT_FFA || g_subgametype.integer >= GT_MAX_GAME_TYPE)) {
+			trap_SendServerCommand( ent-g_entities, "print \"Invalid subgametype for SP.\n\"" );
 			return;
 		}
 

@@ -1060,29 +1060,8 @@ void G_InitBots( qboolean restart ) {
 			g_subgametype.integer = GT_FFA;
 		}
 
-		if (g_subgametype.integer == GT_FFA || g_subgametype.integer == GT_TEAM ||
-				g_subgametype.integer == GT_TOURNAMENT || g_subgametype.integer == GT_LMS ||
-				g_subgametype.integer == GT_POSSESSION) {
-			strValue = Info_ValueForKey( arenainfo, "fraglimit" );
-			scoreLimit = atoi( strValue );
-			if ( scoreLimit ) {
-				trap_Cvar_Set( "fraglimit", strValue );
-			}
-			else {
-				switch (g_subgametype.integer) {
-					case GT_TEAM:
-						trap_Cvar_Set( "fraglimit", "50" );
-						break;
-					case GT_POSSESSION:
-						trap_Cvar_Set( "fraglimit", "150" );
-						break;
-					default:
-						trap_Cvar_Set( "fraglimit", "15" );
-						break;
-				}
-			}
-		}
-		else {
+		// We can put this safely as the SP check is already in place.
+		if (G_IsATeamGametype(g_gametype.integer,g_subgametype.integer)) {
 			strValue = Info_ValueForKey( arenainfo, "capturelimit" );
 			scoreLimit = atoi( strValue );
 			if ( scoreLimit ) {
@@ -1102,6 +1081,26 @@ void G_InitBots( qboolean restart ) {
 						break;
 					default:
 						trap_Cvar_Set( "capturelimit", "8" );
+						break;
+				}
+			}
+		}
+		else {
+			strValue = Info_ValueForKey( arenainfo, "fraglimit" );
+			scoreLimit = atoi( strValue );
+			if ( scoreLimit ) {
+				trap_Cvar_Set( "fraglimit", strValue );
+			}
+			else {
+				switch (g_subgametype.integer) {
+					case GT_TEAM:
+						trap_Cvar_Set( "fraglimit", "50" );
+						break;
+					case GT_POSSESSION:
+						trap_Cvar_Set( "fraglimit", "150" );
+						break;
+					default:
+						trap_Cvar_Set( "fraglimit", "15" );
 						break;
 				}
 			}

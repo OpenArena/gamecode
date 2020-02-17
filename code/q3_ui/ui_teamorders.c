@@ -350,7 +350,11 @@ static void UI_TeamOrdersMenu_ListEvent( void *ptr, int event )
 	int		selection;
 	char	message[256];
 
+<<<<<<< HEAD
 	if (event != QM_ACTIVATED || !UI_SP_IsATeamGametype(teamOrdersMenuInfo.gametype,teamOrdersMenuInfo.subgametype))
+=======
+	if (event != QM_ACTIVATED || !UI_IsATeamGametype(teamOrdersMenuInfo.gametype,teamOrdersMenuInfo.subgametype))
+>>>>>>> GT_SINGLE_PLAYER subgametype support: allows classic UI to play SP missions in gametypes other than FFA.
 		return;
 
 	id = ((menulist_s *)ptr)->generic.id;
@@ -358,6 +362,7 @@ static void UI_TeamOrdersMenu_ListEvent( void *ptr, int event )
 
 	if( id == ID_LIST_BOTS ) {
 		teamOrdersMenuInfo.selectedBot = selection;
+<<<<<<< HEAD
 		if( UI_SP_UsesTeamFlags(teamOrdersMenuInfo.gametype,teamOrdersMenuInfo.subgametype) &&
 				!UI_SP_UsesTheWhiteFlag(teamOrdersMenuInfo.gametype,teamOrdersMenuInfo.subgametype) ) {
 			UI_TeamOrdersMenu_SetList( ID_LIST_CTF_ORDERS );
@@ -371,6 +376,21 @@ static void UI_TeamOrdersMenu_ListEvent( void *ptr, int event )
 			UI_TeamOrdersMenu_SetList( ID_LIST_BASE_ORDERS );
 		}
 		if( UI_SP_SingleGametypeCheck(teamOrdersMenuInfo.gametype,teamOrdersMenuInfo.subgametype,GT_DOUBLE_D) ) {
+=======
+		if( UI_UsesTeamFlags(teamOrdersMenuInfo.gametype,teamOrdersMenuInfo.subgametype) &&
+				!UI_UsesTheWhiteFlag(teamOrdersMenuInfo.gametype,teamOrdersMenuInfo.subgametype) ) {
+			UI_TeamOrdersMenu_SetList( ID_LIST_CTF_ORDERS );
+		}
+		if( UI_UsesTeamFlags(teamOrdersMenuInfo.gametype,teamOrdersMenuInfo.subgametype) &&
+				UI_UsesTheWhiteFlag(teamOrdersMenuInfo.gametype,teamOrdersMenuInfo.subgametype) ) {
+			UI_TeamOrdersMenu_SetList( ID_LIST_CTF1F_ORDERS );
+		}
+		if( UI_SingleGametypeCheck(teamOrdersMenuInfo.gametype,teamOrdersMenuInfo.subgametype,GT_HARVESTER) ||
+				UI_SingleGametypeCheck(teamOrdersMenuInfo.gametype,teamOrdersMenuInfo.subgametype,GT_OBELISK) ) {
+			UI_TeamOrdersMenu_SetList( ID_LIST_BASE_ORDERS );
+		}
+		if( UI_SingleGametypeCheck(teamOrdersMenuInfo.gametype,teamOrdersMenuInfo.subgametype,GT_DOUBLE_D) ) {
+>>>>>>> GT_SINGLE_PLAYER subgametype support: allows classic UI to play SP missions in gametypes other than FFA.
 			UI_TeamOrdersMenu_SetList( ID_LIST_DD_ORDERS );
 		}
 		else {
@@ -555,7 +575,8 @@ void UI_TeamOrdersMenu_f( void )
 	// make sure it's a team game
 	trap_GetConfigString( CS_SERVERINFO, info, sizeof(info) );
 	teamOrdersMenuInfo.gametype = atoi( Info_ValueForKey( info, "g_gametype" ) );
-	if(!UI_IsATeamGametype(teamOrdersMenuInfo.gametype)) {
+	teamOrdersMenuInfo.subgametype = atoi( Info_ValueForKey( info, "g_subgametype" ) );
+	if(!UI_IsATeamGametype(teamOrdersMenuInfo.gametype,teamOrdersMenuInfo.subgametype)) {
 		return;
 	}
 
