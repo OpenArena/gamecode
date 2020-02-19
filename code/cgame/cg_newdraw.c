@@ -1247,7 +1247,7 @@ static void CG_DrawKiller(rectDef_t *rect, float scale, vec4_t color, qhandle_t 
 
 static void CG_DrawCapFragLimit(rectDef_t *rect, float scale, vec4_t color, qhandle_t shader, int textStyle)
 {
-	int limit = (CG_IsATeamGametype(cgs.gametype)) ? cgs.capturelimit : cgs.fraglimit;
+	int limit = (CG_IsATeamGametype(cgs.gametype) && cgs.gametype != GT_TEAM) ? cgs.capturelimit : cgs.fraglimit;
 	CG_Text_Paint(rect->x, rect->y, scale, color, va("%2i", limit),0, 0, textStyle);
 }
 
@@ -1977,9 +1977,9 @@ static void CG_DrawCaptureLimit( rectDef_t *rect, float text_x, float text_y, ve
 	int			value;
 	info = CG_ConfigString( CS_SERVERINFO );
 	value = atoi( Info_ValueForKey( info, "capturelimit" ) );
-	if (CG_IsATeamGametype(cgs.gametype))
+	if (CG_IsATeamGametype(cgs.gametype) && cgs.gametype != GT_TEAM)
 		value = atoi( Info_ValueForKey( info, "capturelimit" ) );
-	if (!CG_IsATeamGametype(cgs.gametype))
+	else
 		value = atoi( Info_ValueForKey( info, "fraglimit" ) );
 	if ( value ) {
 		CG_DrawLoadingString( rect, text_x, text_y, color, scale, align, textStyle, va( "%i", value ));
