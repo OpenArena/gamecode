@@ -2145,7 +2145,7 @@ void CheckExitRules( void )
 	}
 
 	if ( g_capturelimit.integer ) {
-		if ( G_IsATeamGametype(g_gametype.integer) ) {
+		if (G_IsATeamGametype(g_gametype.integer) && g_gametype.integer != GT_TEAM) {
 			if ( level.teamScores[TEAM_RED] >= g_capturelimit.integer ) {
 				trap_SendServerCommand( -1, "print \"Red hit the capturelimit.\n\"" );
 				LogExit( "Capturelimit hit." );

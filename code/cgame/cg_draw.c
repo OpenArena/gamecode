@@ -1753,8 +1753,7 @@ static float CG_DrawScores(float y) {
 			CG_DrawSmallString(x, y - 28, s, 1.0F);
 		}
 
-		if (CG_UsesTeamFlags(cgs.gametype) || CG_UsesTheWhiteFlag(cgs.gametype) ||
-				CG_IsARoundBasedGametype(cgs.gametype) || cgs.gametype == GT_DOUBLE_D) {
+		if (CG_IsATeamGametype(cgs.gametype) && cgs.gametype != GT_TEAM) {
 			v = cgs.capturelimit;
 		} else {
 			v = cgs.fraglimit;

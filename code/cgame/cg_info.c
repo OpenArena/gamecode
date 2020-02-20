@@ -301,7 +301,7 @@ void CG_DrawInformation( void ) {
 		}
 	}
 
-	if (CG_IsATeamGametype(cgs.gametype)) {
+	if (CG_IsATeamGametype(cgs.gametype) && cgs.gametype != GT_TEAM) {
 		value = atoi( Info_ValueForKey( info, "capturelimit" ) );
 		if ( value ) {
 			UI_DrawProportionalString( 320, y, va( "capturelimit %i", value ),
