@@ -13,25 +13,14 @@ copy windows_scripts\ui.q3asm windows\build\
 set LIBRARY=
 set INCLUDE=
 
-set cc=lcc -DMISSIONPACK -DSCRIPTHUD  -DQ3_VM -S -Wf-target=bytecode -Wf-g -I..\..\..\code\ui -I..\..\..\code\qcommon %1
+set cc=lcc -DMISSIONPACK -DSCRIPTHUD  -DQ3_VM -S -Wf-target=bytecode -Wf-g -I..\..\..\code\ui -I..\..\..\code\qcommon
 
 cd windows\build\ui
 
-%cc%  ../../../code/ui/ui_atoms.c
-%cc%  ../../../code/ui/ui_gameinfo.c
-%cc%  ../../../code/ui/ui_main.c
-%cc%  ../../../code/ui/ui_players.c
-%cc%  ../../../code/ui/ui_shared.c
-
 copy  ..\..\..\code\ui\ui_syscalls.asm ..
 
-%cc%  ../../../code/game/bg_lib.c
-%cc%  ../../../code/game/bg_misc.c
-
-%cc%  ../../../code/qcommon/q_math.c
-%cc%  ../../../code/qcommon/q_shared.c
+for /f "tokens=*" %%i in (../../../oalist-uimp.txt) DO %cc% ../../../%%i
 
 q3asm -f ../ui
 
 cd ..\..\..
-pause
