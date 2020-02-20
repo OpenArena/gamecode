@@ -1086,7 +1086,7 @@ qboolean CG_YourTeamHasFlag(void)
 //
 qboolean CG_OwnerDrawVisible(int flags)
 {
-
+	// General
 	if (flags & CG_SHOW_TEAMINFO) {
 		return (cg_currentSelectedPlayer.integer == numSortedTeamPlayers);
 	}
@@ -1095,66 +1095,10 @@ qboolean CG_OwnerDrawVisible(int flags)
 		return !(cg_currentSelectedPlayer.integer == numSortedTeamPlayers);
 	}
 
-	if (flags & CG_SHOW_OTHERTEAMHASFLAG) {
-		return CG_OtherTeamHasFlag();
-	}
-
-	if (flags & CG_SHOW_YOURTEAMHASENEMYFLAG) {
-		return CG_YourTeamHasFlag();
-	}
-
-	if (flags & (CG_SHOW_BLUE_TEAM_HAS_REDFLAG | CG_SHOW_RED_TEAM_HAS_BLUEFLAG)) {
-		if (flags & CG_SHOW_BLUE_TEAM_HAS_REDFLAG && (cgs.redflag == FLAG_TAKEN || cgs.flagStatus == FLAG_TAKEN_RED)) {
+	// In-game
+	if (flags & CG_SHOW_IF_PLAYER_HAS_FLAG) {
+		if (cg.snap->ps.powerups[PW_REDFLAG] || cg.snap->ps.powerups[PW_BLUEFLAG] || cg.snap->ps.powerups[PW_NEUTRALFLAG]) {
 			return qtrue;
-		}
-		else if (flags & CG_SHOW_RED_TEAM_HAS_BLUEFLAG && (cgs.blueflag == FLAG_TAKEN || cgs.flagStatus == FLAG_TAKEN_BLUE)) {
-			return qtrue;
-		}
-		return qfalse;
-	}
-
-	if (flags & CG_SHOW_ANYTEAMGAME) {
-		if(CG_IsATeamGametype(cgs.gametype)) {
-			return qtrue;
-		}
-	}
-
-	if (flags & CG_SHOW_ANYNONTEAMGAME) {
-		if(!CG_IsATeamGametype(cgs.gametype)) {
-			return qtrue;
-		}
-	}
-
-	if (flags & CG_SHOW_HARVESTER) {
-		if( cgs.gametype == GT_HARVESTER ) {
-			return qtrue;
-		}
-		else {
-			return qfalse;
-		}
-	}
-
-	if (flags & CG_SHOW_ONEFLAG) {
-		if( cgs.gametype == GT_1FCTF ) {
-			return qtrue;
-		}
-		else {
-			return qfalse;
-		}
-	}
-
-	if (flags & CG_SHOW_CTF) {
-		if(CG_UsesTeamFlags(cgs.gametype) && !CG_UsesTheWhiteFlag(cgs.gametype)) {
-			return qtrue;
-		}
-	}
-
-	if (flags & CG_SHOW_OBELISK) {
-		if( cgs.gametype == GT_OBELISK ) {
-			return qtrue;
-		}
-		else {
-			return qfalse;
 		}
 	}
 
@@ -1170,8 +1114,41 @@ qboolean CG_OwnerDrawVisible(int flags)
 		}
 	}
 
-	if (flags & CG_SHOW_SINGLEPLAYER) {
-		if( cgs.gametype == GT_SINGLE_PLAYER ) {
+	if (flags & (CG_SHOW_BLUE_TEAM_HAS_REDFLAG | CG_SHOW_RED_TEAM_HAS_BLUEFLAG)) {
+		if (flags & CG_SHOW_BLUE_TEAM_HAS_REDFLAG && (cgs.redflag == FLAG_TAKEN || cgs.flagStatus == FLAG_TAKEN_RED)) {
+			return qtrue;
+		}
+		else if (flags & CG_SHOW_RED_TEAM_HAS_BLUEFLAG && (cgs.blueflag == FLAG_TAKEN || cgs.flagStatus == FLAG_TAKEN_BLUE)) {
+			return qtrue;
+		}
+	}
+
+	if (flags & CG_SHOW_OTHERTEAMHASFLAG) {
+		return CG_OtherTeamHasFlag();
+	}
+
+	if (flags & CG_SHOW_YOURTEAMHASENEMYFLAG) {
+		return CG_YourTeamHasFlag();
+	}
+
+	if (flags & CG_SHOW_DURINGINCOMINGVOICE) {
+	}
+
+	// Gametypes
+	if (flags & CG_SHOW_ANYTEAMGAME) {
+		if(CG_IsATeamGametype(cgs.gametype)) {
+			return qtrue;
+		}
+	}
+
+	if (flags & CG_SHOW_ANYNONTEAMGAME) {
+		if(!CG_IsATeamGametype(cgs.gametype)) {
+			return qtrue;
+		}
+	}
+
+	if (flags & CG_SHOW_FREEFORALL) {
+		if( cgs.gametype == GT_FFA ) {
 			return qtrue;
 		}
 	}
@@ -1182,14 +1159,79 @@ qboolean CG_OwnerDrawVisible(int flags)
 		}
 	}
 
-	if (flags & CG_SHOW_DURINGINCOMINGVOICE) {
-	}
-
-	if (flags & CG_SHOW_IF_PLAYER_HAS_FLAG) {
-		if (cg.snap->ps.powerups[PW_REDFLAG] || cg.snap->ps.powerups[PW_BLUEFLAG] || cg.snap->ps.powerups[PW_NEUTRALFLAG]) {
+	if (flags & CG_SHOW_SINGLEPLAYER) {
+		if( cgs.gametype == GT_SINGLE_PLAYER ) {
 			return qtrue;
 		}
 	}
+
+	if (flags & CG_SHOW_TEAMDEATHMATCH) {
+		if( cgs.gametype == GT_TEAM ) {
+			return qtrue;
+		}
+	}
+
+	if (flags & CG_SHOW_CTF) {
+		if( cgs.gametype == GT_CTF ) {
+			return qtrue;
+		}
+	}
+
+	if (flags & CG_SHOW_ONEFLAG) {
+		if( cgs.gametype == GT_1FCTF ) {
+			return qtrue;
+		}
+	}
+
+	if (flags & CG_SHOW_OBELISK) {
+		if( cgs.gametype == GT_OBELISK ) {
+			return qtrue;
+		}
+	}
+
+	if (flags & CG_SHOW_HARVESTER) {
+		if( cgs.gametype == GT_HARVESTER ) {
+			return qtrue;
+		}
+	}
+
+	if (flags & CG_SHOW_ELIMINATION) {
+		if( cgs.gametype == GT_ELIMINATION ) {
+			return qtrue;
+		}
+	}
+
+	if (flags & CG_SHOW_CTFELIMINATION) {
+		if( cgs.gametype == GT_CTF_ELIMINATION ) {
+			return qtrue;
+		}
+	}
+
+	if (flags & CG_SHOW_LASTMANSTANDING) {
+		if( cgs.gametype == GT_LMS ) {
+			return qtrue;
+		}
+	}
+
+	if (flags & CG_SHOW_DOUBLEDOMINATION) {
+		if( cgs.gametype == GT_DOUBLE_D ) {
+			return qtrue;
+		}
+	}
+
+	if (flags & CG_SHOW_DOMINATION) {
+		if( cgs.gametype == GT_DOMINATION ) {
+			return qtrue;
+		}
+	}
+
+	if (flags & CG_SHOW_POSSESSION) {
+		if( cgs.gametype == GT_POSSESSION ) {
+			return qtrue;
+		}
+	}
+
+	// End
 	return qfalse;
 }
 
