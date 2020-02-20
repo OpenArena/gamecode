@@ -45,8 +45,8 @@ rem %cc%  ../../../code/q3_ui/ui_options.c
 %cc%  ../../../code/q3_ui/ui_playersettings.c
 %cc%  ../../../code/q3_ui/ui_preferences.c
 %cc%  ../../../code/q3_ui/ui_qmenu.c
-%cc%  ../../../code/q3_ui/ui_rankings.c
-%cc%  ../../../code/q3_ui/ui_rankstatus.c
+rem %cc%  ../../../code/q3_ui/ui_rankings.c
+rem %cc%  ../../../code/q3_ui/ui_rankstatus.c
 %cc%  ../../../code/q3_ui/ui_removebots.c
 %cc%  ../../../code/q3_ui/ui_saveconfig.c
 %cc%  ../../../code/q3_ui/ui_serverinfo.c
@@ -59,7 +59,7 @@ rem %cc%  ../../../code/q3_ui/ui_signup.c
 %cc%  ../../../code/q3_ui/ui_specifyserver.c
 %cc%  ../../../code/q3_ui/ui_splevel.c
 %cc%  ../../../code/q3_ui/ui_sppostgame.c
-%cc%  ../../../code/q3_ui/ui_spreset.c
+rem %cc%  ../../../code/q3_ui/ui_spreset.c
 %cc%  ../../../code/q3_ui/ui_spskill.c
 %cc%  ../../../code/q3_ui/ui_startserver.c
 %cc%  ../../../code/q3_ui/ui_team.c
