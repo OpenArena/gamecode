@@ -54,19 +54,19 @@ extern vmCvar_t ui_1fctf_friendly;
 extern vmCvar_t ui_overload_capturelimit;
 extern vmCvar_t ui_overload_timelimit;
 extern vmCvar_t ui_overload_friendly;
-extern vmCvar_t ui_harvester_capturelimit;
+extern vmCvar_t ui_harvester_fraglimit;
 extern vmCvar_t ui_harvester_timelimit;
 extern vmCvar_t ui_harvester_friendly;
 extern vmCvar_t ui_elimination_capturelimit;
 extern vmCvar_t ui_elimination_timelimit;
 extern vmCvar_t ui_ctf_elimination_capturelimit;
 extern vmCvar_t ui_ctf_elimination_timelimit;
-extern vmCvar_t ui_lms_fraglimit;
+extern vmCvar_t ui_lms_capturelimit;
 extern vmCvar_t ui_lms_timelimit;
 extern vmCvar_t ui_dd_capturelimit;
 extern vmCvar_t ui_dd_timelimit;
 extern vmCvar_t ui_dd_friendly;
-extern vmCvar_t ui_dom_capturelimit;
+extern vmCvar_t ui_dom_scorelimit;
 extern vmCvar_t ui_dom_timelimit;
 extern vmCvar_t ui_dom_friendly;
 extern vmCvar_t ui_pos_scorelimit;
@@ -506,6 +506,11 @@ extern void UI_VoteMenuMenu( void );
 extern void UI_VoteFraglimitMenu( void );
 
 //
+// ui_votemenu_scorelimit.c
+//
+extern void UI_VoteScorelimitMenu( void );
+
+//
 // ui_votemenu_timelimit.c
 //
 extern void UI_VoteTimelimitMenu( void );
@@ -904,4 +909,9 @@ qboolean UI_IsATeamGametype(int check);	/* Whether the gametype is team-based or
 qboolean UI_UsesTeamFlags(int check);	/* Whether the gametype uses the red and blue flags. */
 qboolean UI_UsesTheWhiteFlag(int check);	/* Whether the gametype uses the neutral flag. */
 qboolean UI_IsARoundBasedGametype(int check);	/* Whether the gametype uses the neutral flag. */
+/* /Neon_Knight */
+/* Neon_Knight: Useful limit checks in order to have code consistency. */
+qboolean UI_UsesFragLimit(int check);
+qboolean UI_UsesCaptureLimit(int check);
+qboolean UI_UsesScoreLimit(int check);
 /* /Neon_Knight */

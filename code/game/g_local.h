@@ -1000,6 +1000,7 @@ extern int allowedMap(const char *mapname);
 extern int allowedGametype(const char *gametypeStr);
 extern int allowedTimelimit(int limit);
 extern int allowedFraglimit(int limit);
+extern int allowedScorelimit(int limit);
 extern int VoteParseCustomVotes( void );
 extern t_customvote getCustomVote(char* votecommand);
 
@@ -1043,6 +1044,7 @@ extern vmCvar_t g_voteflags;
 extern vmCvar_t g_fraglimit;
 extern vmCvar_t g_timelimit;
 extern vmCvar_t g_capturelimit;
+extern vmCvar_t g_scorelimit;
 extern vmCvar_t g_friendlyFire;
 extern vmCvar_t g_password;
 extern vmCvar_t g_needpass;
@@ -1137,6 +1139,8 @@ extern vmCvar_t g_voteMinTimelimit;
 extern vmCvar_t g_voteMaxTimelimit;
 extern vmCvar_t g_voteMinFraglimit;
 extern vmCvar_t g_voteMaxFraglimit;
+extern vmCvar_t g_voteMinScorelimit;
+extern vmCvar_t g_voteMaxScorelimit;
 extern vmCvar_t g_maxvotes;
 extern vmCvar_t g_humanplayers;
 //used for voIP
@@ -1431,4 +1435,9 @@ qboolean G_IsATeamGametype(int check);	/* Whether the gametype is team-based or 
 qboolean G_UsesTeamFlags(int check);	/* Whether the gametype uses the red and blue flags. */
 qboolean G_UsesTheWhiteFlag(int check);	/* Whether the gametype uses the neutral flag. */
 qboolean G_IsARoundBasedGametype(int check);	/* Whether the gametype uses the neutral flag. */
+/* /Neon_Knight */
+/* Neon_Knight: Useful limit checks in order to have code consistency. */
+qboolean G_UsesFragLimit(int check);
+qboolean G_UsesCaptureLimit(int check);
+qboolean G_UsesScoreLimit(int check);
 /* /Neon_Knight */

@@ -190,6 +190,8 @@ void UI_LoadArenasIntoMapList( void ) {
 		uiInfo.mapList[uiInfo.mapCount].botName = String_Alloc(Info_ValueForKey(ui_arenaInfos[n], "bots"));
 		uiInfo.mapList[uiInfo.mapCount].special = String_Alloc(Info_ValueForKey(ui_arenaInfos[n], "special"));
 		uiInfo.mapList[uiInfo.mapCount].fraglimit = atoi(Info_ValueForKey( ui_arenaInfos[n], "fraglimit" ));
+		uiInfo.mapList[uiInfo.mapCount].capturelimit = atoi(Info_ValueForKey( ui_arenaInfos[n], "capturelimit" ));
+		uiInfo.mapList[uiInfo.mapCount].scorelimit = atoi(Info_ValueForKey( ui_arenaInfos[n], "scorelimit" ));
 		// end changed RD
 		uiInfo.mapList[uiInfo.mapCount].levelShot = -1;
 		uiInfo.mapList[uiInfo.mapCount].imageName = String_Alloc(va("levelshots/%s", uiInfo.mapList[uiInfo.mapCount].mapLoadName));

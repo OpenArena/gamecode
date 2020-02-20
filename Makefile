@@ -2548,6 +2548,7 @@ Q3UIOBJ_ = \
   $(B)/$(BASEGAME)/ui/ui_video.o \
   $(B)/$(BASEGAME)/ui/ui_votemenu.o \
   $(B)/$(BASEGAME)/ui/ui_votemenu_fraglimit.o \
+  $(B)/$(BASEGAME)/ui/ui_votemenu_scorelimit.o \
   $(B)/$(BASEGAME)/ui/ui_votemenu_timelimit.o \
   $(B)/$(BASEGAME)/ui/ui_votemenu_gametype.o \
   $(B)/$(BASEGAME)/ui/ui_votemenu_kick.o \

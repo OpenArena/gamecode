@@ -2747,3 +2747,36 @@ qboolean CG_IsARoundBasedGametype(int check) {
 	return GAMETYPE_IS_ROUND_BASED(check);
 }
 /* /Neon_Knight */
+
+/* Neon_Knight: Checks for score limits */
+/*
+===================
+CG_UsesFragLimit
+
+Checks if the gametype uses fraglimit.
+===================
+ */
+qboolean CG_UsesFragLimit(int check) {
+	return GAMETYPE_USES_FRAG_LIMIT(check);
+}
+/*
+===================
+CG_UsesCaptureLimit
+
+Checks if the gametype uses capturelimit.
+===================
+ */
+qboolean CG_UsesCaptureLimit(int check) {
+	return GAMETYPE_USES_CAPTURE_LIMIT(check);
+}
+/*
+===================
+CG_UsesScoreLimit
+
+Checks if the gametype uses scorelimit.
+===================
+ */
+qboolean CG_UsesScoreLimit(int check) {
+	return GAMETYPE_USES_SCORE_LIMIT(check);
+}
+/* /Neon_Knight */
