@@ -1229,7 +1229,7 @@ int AINode_Intermission(bot_state_t *bs) {
 	//if the intermission ended
 	if (!BotIntermission(bs)) {
 		if (BotChat_StartLevel(bs)) {
-			bs->stand_time = FloatTime() + BotChatTime(bs);
+			bs->stand_time = FloatTime() + BOTCHATTIME;
 		}
 		else {
 			bs->stand_time = FloatTime() + 2;
@@ -1285,8 +1285,8 @@ int AINode_Stand(bot_state_t *bs) {
 	//if the bot's health decreased
 	if (bs->lastframe_health > bs->inventory[INVENTORY_HEALTH]) {
 		if (BotChat_HitTalking(bs)) {
-			bs->standfindenemy_time = FloatTime() + BotChatTime(bs) + 0.1;
-			bs->stand_time = FloatTime() + BotChatTime(bs) + 0.1;
+			bs->standfindenemy_time = FloatTime() + BOTCHATTIME + 0.1;
+			bs->stand_time = FloatTime() + BOTCHATTIME + 0.1;
 		}
 	}
 	if (bs->standfindenemy_time < FloatTime()) {
@@ -1322,7 +1322,7 @@ void AIEnter_Respawn(bot_state_t *bs, char *s) {
 	trap_BotResetAvoidReach(bs->ms);
 	//if the bot wants to chat
 	if (BotChat_Death(bs)) {
-		bs->respawn_time = FloatTime() + BotChatTime(bs);
+		bs->respawn_time = FloatTime() + BOTCHATTIME;
 		bs->respawnchat_time = FloatTime();
 	}
 	else {
@@ -1901,7 +1901,7 @@ int AINode_Seek_LTG(bot_state_t *bs)
 	}
 	//
 	if (BotChat_Random(bs)) {
-		bs->stand_time = FloatTime() + BotChatTime(bs);
+		bs->stand_time = FloatTime() + BOTCHATTIME;
 		AIEnter_Stand(bs, "seek ltg: random chat");
 		return qfalse;
 	}
@@ -2106,7 +2106,7 @@ int AINode_Battle_Fight(bot_state_t *bs) {
 				BotChat_EnemySuicide(bs);
 			}
 			if (bs->lastkilledplayer == bs->enemy && BotChat_Kill(bs)) {
-				bs->stand_time = FloatTime() + BotChatTime(bs);
+				bs->stand_time = FloatTime() + BOTCHATTIME;
 				AIEnter_Stand(bs, "battle fight: enemy dead");
 			}
 			else {
@@ -2149,7 +2149,7 @@ int AINode_Battle_Fight(bot_state_t *bs) {
 	//if the bot's health decreased
 	if (bs->lastframe_health > bs->inventory[INVENTORY_HEALTH]) {
 		if (BotChat_HitNoDeath(bs)) {
-			bs->stand_time = FloatTime() + BotChatTime(bs);
+			bs->stand_time = FloatTime() + BOTCHATTIME;
 			AIEnter_Stand(bs, "battle fight: chat health decreased");
 			return qfalse;
 		}
@@ -2157,7 +2157,7 @@ int AINode_Battle_Fight(bot_state_t *bs) {
 	//if the bot hit someone
 	if (bs->cur_ps.persistant[PERS_HITS] > bs->lasthitcount) {
 		if (BotChat_HitNoKill(bs)) {
-			bs->stand_time = FloatTime() + BotChatTime(bs);
+			bs->stand_time = FloatTime() + BOTCHATTIME;
 			AIEnter_Stand(bs, "battle fight: chat hit someone");
 			return qfalse;
 		}
