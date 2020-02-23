@@ -30,7 +30,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  *
  *****************************************************************************/
 
-//#define DEBUG
 #define CTF
 
 #define MAX_ITEMS					256
@@ -97,6 +96,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define PRESENCE_CROUCH				4
 //
 #define MAX_PROXMINES				64
+// For bot_developer mode
+#define BOTDEV_REPORTACTIONS		0x00000001
+#define BOTDEV_DISABLECHAT			0x00000002
+#define BOTDEV_TESTOBSTACLE			0x00000004
 
 //check points
 typedef struct bot_waypoint_s
