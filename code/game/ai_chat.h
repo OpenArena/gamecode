@@ -52,8 +52,6 @@ int BotChat_Kill(bot_state_t *bs);
 int BotChat_EnemySuicide(bot_state_t *bs);
 //
 int BotChat_Random(bot_state_t *bs);
-// time the selected chat takes to type in
-float BotChatTime(bot_state_t *bs);
 // returns true if the bot can chat at the current position
 int BotValidChatPosition(bot_state_t *bs);
 // test the initial bot chats
