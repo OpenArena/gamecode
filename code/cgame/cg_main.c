@@ -809,6 +809,8 @@ static void CG_RegisterSounds(void) {
 		// Events
 		cgs.media.countFightSound = trap_S_RegisterSound(ANNOUNCER_FIGHT, qtrue);
 		cgs.media.fiveMinuteSound = trap_S_RegisterSound(ANNOUNCER_FIVEMINUTESLEFT, qtrue);
+		cgs.media.threeMinuteSound = trap_S_RegisterSound(ANNOUNCER_THREEMINUTESLEFT, qtrue);
+		cgs.media.twoMinuteSound = trap_S_RegisterSound(ANNOUNCER_TWOMINUTESLEFT, qtrue);
 		cgs.media.oneMinuteSound = trap_S_RegisterSound(ANNOUNCER_ONEMINUTELEFT, qtrue);
 		cgs.media.threeFragSound = trap_S_RegisterSound(ANNOUNCER_THREEFRAGSLEFT, qtrue);
 		cgs.media.twoFragSound = trap_S_RegisterSound(ANNOUNCER_TWOFRAGSLEFT, qtrue);
@@ -922,6 +924,8 @@ static void CG_RegisterSounds(void) {
 		cgs.media.count1Sound = trap_S_RegisterSound("sound/feedback/one.wav", qtrue);
 		cgs.media.countFightSound = trap_S_RegisterSound("sound/feedback/fight.wav", qtrue);
 		cgs.media.fiveMinuteSound = trap_S_RegisterSound("sound/feedback/5_minute.wav", qtrue);
+		cgs.media.threeMinuteSound = trap_S_RegisterSound("sound/misc/silence.wav", qtrue);
+		cgs.media.twoMinuteSound = trap_S_RegisterSound("sound/misc/silence.wav", qtrue);
 		cgs.media.oneMinuteSound = trap_S_RegisterSound("sound/feedback/1_minute.wav", qtrue);
 		cgs.media.threeFragSound = trap_S_RegisterSound("sound/feedback/3_frags.wav", qtrue);
 		cgs.media.twoFragSound = trap_S_RegisterSound("sound/feedback/2_frags.wav", qtrue);

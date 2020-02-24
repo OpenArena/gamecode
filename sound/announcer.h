@@ -45,6 +45,8 @@
 #define ANNOUNCER_SIX				"sound/misc/silence.wav"
 #define ANNOUNCER_FIVE			"sound/misc/silence.wav"
 #define ANNOUNCER_FOUR			"sound/misc/silence.wav"
+#define ANNOUNCER_TWOMINUTESLEFT	"sound/misc/silence.wav"
+#define ANNOUNCER_THREEMINUTESLEFT	"sound/misc/silence.wav"
 // Teamplay
 #define ANNOUNCER_REDSCORES		"sound/teamplay/voc_red_scores.wav"
 #define ANNOUNCER_BLUESCORES		"sound/teamplay/voc_blue_scores.wav"

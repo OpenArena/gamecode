@@ -1041,6 +1041,8 @@ typedef struct {
 // LEILEI END
 
 	sfxHandle_t oneMinuteSound;
+	sfxHandle_t twoMinuteSound;
+	sfxHandle_t threeMinuteSound;
 	sfxHandle_t fiveMinuteSound;
 	sfxHandle_t suddenDeathSound;
 
