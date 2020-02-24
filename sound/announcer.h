@@ -37,6 +37,14 @@
 #define ANNOUNCER_FRAGS			"sound/feedback/frags.wav"
 #define ANNOUNCER_PERFECT			"sound/feedback/perfect.wav"
 #define ANNOUNCER_NEWHIGHSCORE	"sound/feedback/voc_newhighscore.wav"
+// New feedback
+#define ANNOUNCER_TEN			"sound/misc/silence.wav"
+#define ANNOUNCER_NINE			"sound/misc/silence.wav"
+#define ANNOUNCER_EIGHT			"sound/misc/silence.wav"
+#define ANNOUNCER_SEVEN			"sound/misc/silence.wav"
+#define ANNOUNCER_SIX				"sound/misc/silence.wav"
+#define ANNOUNCER_FIVE			"sound/misc/silence.wav"
+#define ANNOUNCER_FOUR			"sound/misc/silence.wav"
 // Teamplay
 #define ANNOUNCER_REDSCORES		"sound/teamplay/voc_red_scores.wav"
 #define ANNOUNCER_BLUESCORES		"sound/teamplay/voc_blue_scores.wav"

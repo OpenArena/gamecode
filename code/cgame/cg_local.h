@@ -1106,6 +1106,13 @@ typedef struct {
 	sfxHandle_t holyShitSound;
 
 	// tournament sounds
+	sfxHandle_t	count10Sound;
+	sfxHandle_t	count9Sound;
+	sfxHandle_t	count8Sound;
+	sfxHandle_t	count7Sound;
+	sfxHandle_t	count6Sound;
+	sfxHandle_t	count5Sound;
+	sfxHandle_t	count4Sound;
 	sfxHandle_t	count3Sound;
 	sfxHandle_t	count2Sound;
 	sfxHandle_t	count1Sound;

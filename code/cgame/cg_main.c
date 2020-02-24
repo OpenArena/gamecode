@@ -795,10 +795,18 @@ static void CG_RegisterSounds(void) {
 			cgs.media.tiedLeadSound = trap_S_RegisterSound(ANNOUNCER_YOURETIEDFORTHELEAD, qtrue);
 			cgs.media.lostLeadSound = trap_S_RegisterSound(ANNOUNCER_YOUHAVELOSTTHELEAD, qtrue);
 		}
-		// Events
+		// Countdown
+		cgs.media.count10Sound = trap_S_RegisterSound(ANNOUNCER_TEN, qtrue);
+		cgs.media.count9Sound = trap_S_RegisterSound(ANNOUNCER_NINE, qtrue);
+		cgs.media.count8Sound = trap_S_RegisterSound(ANNOUNCER_EIGHT, qtrue);
+		cgs.media.count7Sound = trap_S_RegisterSound(ANNOUNCER_SEVEN, qtrue);
+		cgs.media.count6Sound = trap_S_RegisterSound(ANNOUNCER_SIX, qtrue);
+		cgs.media.count5Sound = trap_S_RegisterSound(ANNOUNCER_FIVE, qtrue);
+		cgs.media.count4Sound = trap_S_RegisterSound(ANNOUNCER_FOUR, qtrue);
 		cgs.media.count3Sound = trap_S_RegisterSound(ANNOUNCER_THREE, qtrue);
 		cgs.media.count2Sound = trap_S_RegisterSound(ANNOUNCER_TWO, qtrue);
 		cgs.media.count1Sound = trap_S_RegisterSound(ANNOUNCER_ONE, qtrue);
+		// Events
 		cgs.media.countFightSound = trap_S_RegisterSound(ANNOUNCER_FIGHT, qtrue);
 		cgs.media.fiveMinuteSound = trap_S_RegisterSound(ANNOUNCER_FIVEMINUTESLEFT, qtrue);
 		cgs.media.oneMinuteSound = trap_S_RegisterSound(ANNOUNCER_ONEMINUTELEFT, qtrue);
@@ -902,6 +910,13 @@ static void CG_RegisterSounds(void) {
 			cgs.media.lostLeadSound = trap_S_RegisterSound("sound/feedback/lostlead.wav", qtrue);
 		}
 		// Events
+		cgs.media.count10Sound = trap_S_RegisterSound("sound/misc/silence.wav", qtrue);
+		cgs.media.count9Sound = trap_S_RegisterSound("sound/misc/silence.wav", qtrue);
+		cgs.media.count8Sound = trap_S_RegisterSound("sound/misc/silence.wav", qtrue);
+		cgs.media.count7Sound = trap_S_RegisterSound("sound/misc/silence.wav", qtrue);
+		cgs.media.count6Sound = trap_S_RegisterSound("sound/misc/silence.wav", qtrue);
+		cgs.media.count5Sound = trap_S_RegisterSound("sound/misc/silence.wav", qtrue);
+		cgs.media.count4Sound = trap_S_RegisterSound("sound/misc/silence.wav", qtrue);
 		cgs.media.count3Sound = trap_S_RegisterSound("sound/feedback/three.wav", qtrue);
 		cgs.media.count2Sound = trap_S_RegisterSound("sound/feedback/two.wav", qtrue);
 		cgs.media.count1Sound = trap_S_RegisterSound("sound/feedback/one.wav", qtrue);
