@@ -1107,6 +1107,7 @@ typedef struct {
 	sfxHandle_t	count1Sound;
 	sfxHandle_t	countFightSound;
 	sfxHandle_t	countPrepareSound;
+	sfxHandle_t	countPrepareTeamSound;
 
 #ifdef MISSIONPACK
 	// new stuff
@@ -1120,7 +1121,6 @@ typedef struct {
 	qhandle_t escortShader;
         qhandle_t deathShader;
 	qhandle_t flagShaders[3];
-	sfxHandle_t	countPrepareTeamSound;
 #endif
 
 	sfxHandle_t ammoregenSound;
@@ -1479,6 +1479,7 @@ extern vmCvar_t cg_leiChibi;
 /* Neon_Knight: Developer mode. */
 extern vmCvar_t cg_developer;
 /* /Neon_Knight */
+extern vmCvar_t cg_customAnnouncer;
 
 //unlagged - cg_unlagged.c
 void CG_PredictWeaponEffects( centity_t *cent );

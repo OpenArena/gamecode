@@ -235,7 +235,12 @@ void AssetCache( void )
 		uiInfo.uiDC.Assets.crosshairShader[n] = trap_R_RegisterShaderNoMip( va("gfx/2d/crosshair%c", 'a' + n ) );
 	}
 
-	uiInfo.newHighScoreSound = trap_S_RegisterSound(ANNOUNCER_NEWHIGHSCORE, qfalse);
+	if (ui_customAnnouncer.integer) {
+		uiInfo.newHighScoreSound = trap_S_RegisterSound(ANNOUNCER_NEWHIGHSCORE, qfalse);
+	}
+	else {
+		uiInfo.newHighScoreSound = trap_S_RegisterSound("sound/feedback/voc_newhighscore.wav", qfalse);
+	}
 // Changed RD
 	uiInfo.uiDC.Assets.mainname = String_Alloc("main");
 	uiInfo.uiDC.Assets.ingamename = String_Alloc("ingame");
@@ -7168,6 +7173,7 @@ vmCvar_t ui_debug;
 vmCvar_t ui_initialized;
 vmCvar_t ui_teamArenaFirstRun;
 vmCvar_t ui_developer;
+vmCvar_t ui_customAnnouncer;
 
 // bk001129 - made static to avoid aliasing
 static cvarTable_t		cvarTable[] = {
@@ -7350,6 +7356,7 @@ static cvarTable_t		cvarTable[] = {
 	{ &ui_colors, "ui_colors", "0x1e3072 0x7286d0 0x1fd1b2 0x606060", CVAR_ARCHIVE},
 	{ &ui_developer, "developer", "0", CVAR_CHEAT },
 	{ NULL, "ui_videomode", "", CVAR_ROM },
+	{ &ui_customAnnouncer, "cg_customAnnouncer", "0", CVAR_ARCHIVE },
 	{ NULL, "g_localTeamPref", "", 0 },
 };
 

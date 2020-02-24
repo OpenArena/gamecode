@@ -399,11 +399,9 @@ static void CG_ParseWarmup( void ) {
 	if ( warmup == 0 && cg.warmup ) {
 
 	} else if ( warmup > 0 && cg.warmup <= 0 ) {
-#ifdef MISSIONPACK
 		if (CG_IsATeamGametype(cgs.gametype)) {
 			trap_S_StartLocalSound( cgs.media.countPrepareTeamSound, CHAN_ANNOUNCER );
 		} else
-#endif
 		{
 			trap_S_StartLocalSound( cgs.media.countPrepareSound, CHAN_ANNOUNCER );
 		}

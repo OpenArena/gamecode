@@ -699,7 +699,12 @@ void UI_SPLevelMenu_Cache( void ) {
 
 	for( n = 0; n < 6; n++ ) {
 		trap_R_RegisterShaderNoMip( ui_medalPicNames[n] );
-		levelMenuInfo.awardSounds[n] = trap_S_RegisterSound( ui_medalSounds[n], qfalse );
+		if (ui_customAnnouncer.integer) {
+			levelMenuInfo.awardSounds[n] = trap_S_RegisterSound( ui_medalSoundsAnnouncer[n], qfalse );
+		}
+		else {
+			levelMenuInfo.awardSounds[n] = trap_S_RegisterSound( ui_medalSoundsDefault[n], qfalse );
+		}
 	}
 
 	levelMenuInfo.levelSelectedPic = trap_R_RegisterShaderNoMip( ART_LEVELFRAME_SELECTED );

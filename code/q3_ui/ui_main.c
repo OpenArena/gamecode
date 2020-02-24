@@ -174,6 +174,7 @@ vmCvar_t        ui_browserOnlyHumans;
 //new in beta 37:
 vmCvar_t        ui_setupchecked;
 vmCvar_t ui_developer;
+vmCvar_t ui_customAnnouncer;
 
 // bk001129 - made static to avoid aliasing.
 static cvarTable_t cvarTable[] = {
@@ -266,6 +267,7 @@ static cvarTable_t cvarTable[] = {
 	{ &ui_browserOnlyHumans, "ui_browserOnlyHumans", "0", CVAR_ARCHIVE },
 	{ &ui_setupchecked, "ui_setupchecked", "0", CVAR_ARCHIVE },
 	{ &ui_developer, "developer", "0", CVAR_CHEAT },
+	{ &ui_customAnnouncer, "cg_customAnnouncer", "0", CVAR_ARCHIVE },
 	{ NULL, "g_localTeamPref", "", 0 }
 };
 

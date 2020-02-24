@@ -197,6 +197,7 @@ extern vmCvar_t ui_blueteam4;
 extern vmCvar_t ui_blueteam5;
 extern vmCvar_t ui_teamName;
 extern vmCvar_t ui_developer;
+extern vmCvar_t ui_customAnnouncer;
 
 //
 // ui_qmenu.c
@@ -401,7 +402,8 @@ extern vec4_t		text_color_highlight;
 
 extern char	*ui_medalNames[];
 extern char	*ui_medalPicNames[];
-extern char	*ui_medalSounds[];
+extern char	*ui_medalSoundsAnnouncer[];
+extern char	*ui_medalSoundsDefault[];
 
 //
 // ui_mfield.c
