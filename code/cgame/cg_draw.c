@@ -2656,7 +2656,7 @@ static void CG_DrawCenterDDString(void) {
 				break;
 			default:
 				if (lastDDSec == -100) {
-					trap_S_StartLocalSound(cgs.media.doublerSound, CHAN_ANNOUNCER);
+					trap_S_StartLocalSound(cgs.media.useNothingSound, CHAN_ANNOUNCER);
 				}
 				break;
 		}

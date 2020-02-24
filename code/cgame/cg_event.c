@@ -904,26 +904,144 @@ void CG_EntityEvent(centity_t *cent, vec3_t position) {
 			}
 			item = &bg_itemlist[ index ];
 
-			// powerups and team items will have a separate global sound, this one
+			// powerups, holdables and team items will have a separate global sound, this one
 			// will be played at prediction time
-			if (item->giType == IT_POWERUP || item->giType == IT_TEAM) {
+			if (item->giType == IT_TEAM) {
 				trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.n_healthSound);
-			} else if (item->giType == IT_PERSISTANT_POWERUP) {
+			}
+			else if (item->giType == IT_POWERUP) {
 				switch (item->giTag) {
-					case PW_SCOUT:
-						trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.scoutSound);
+					case PW_QUAD:
+						if (cg_announcePowerups.integer & ANNOUNCE_POWERUPS) {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.quadAnnouncerSound);
+						}
+						else {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.quadSpawnSound);
+						}
 						break;
-					case PW_GUARD:
-						trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.guardSound);
+					case PW_BATTLESUIT:
+						if (cg_announcePowerups.integer & ANNOUNCE_POWERUPS) {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.enviroAnnouncerSound);
+						}
+						else {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.enviroSpawnSound);
+						}
 						break;
-					case PW_DOUBLER:
-						trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.doublerSound);
+					case PW_HASTE:
+						if (cg_announcePowerups.integer & ANNOUNCE_POWERUPS) {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.hasteAnnouncerSound);
+						}
+						else {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.hasteSpawnSound);
+						}
 						break;
-					case PW_AMMOREGEN:
-						trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.ammoregenSound);
+					case PW_INVIS:
+						if (cg_announcePowerups.integer & ANNOUNCE_POWERUPS) {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.invisAnnouncerSound);
+						}
+						else {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.invisSpawnSound);
+						}
+						break;
+					case PW_REGEN:
+						if (cg_announcePowerups.integer & ANNOUNCE_POWERUPS) {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.regenAnnouncerSound);
+						}
+						else {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.regenSpawnSound);
+						}
+						break;
+					case PW_FLIGHT:
+						if (cg_announcePowerups.integer & ANNOUNCE_POWERUPS) {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.flightAnnouncerSound);
+						}
+						else {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.flightSpawnSound);
+						}
 						break;
 				}
-			} else {
+			}
+			else if (item->giType == IT_HOLDABLE) {
+				switch (item->giTag) {
+					case HI_TELEPORTER:
+						if (cg_announcePowerups.integer & ANNOUNCE_HOLDABLES) {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.teleporterAnnouncerSound);
+						}
+						else {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.teleporterSpawnSound);
+						}
+						break;
+					case HI_MEDKIT:
+						if (cg_announcePowerups.integer & ANNOUNCE_HOLDABLES) {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.medkitAnnouncerSound);
+						}
+						else {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.medkitSpawnSound);
+						}
+						break;
+					case HI_KAMIKAZE:
+						if (cg_announcePowerups.integer & ANNOUNCE_HOLDABLES) {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.kamiAnnouncerSound);
+						}
+						else {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.kamiSpawnSound);
+						}
+						break;
+					case HI_INVULNERABILITY:
+						if (cg_announcePowerups.integer & ANNOUNCE_HOLDABLES) {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.invulAnnouncerSound);
+						}
+						else {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.invulSpawnSound);
+						}
+						break;
+					/*case HI_PORTAL:
+						if (cg_announcePowerups.integer & ANNOUNCE_HOLDABLES) {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.portalAnnouncerSound);
+						}
+						else {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.portalSpawnSound);
+						}
+						break;*/
+				}
+			}
+			else if (item->giType == IT_PERSISTANT_POWERUP) {
+				switch (item->giTag) {
+					case PW_SCOUT:
+						if (cg_announcePowerups.integer & ANNOUNCE_RUNES) {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.scoutAnnouncerSound);
+						}
+						else {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.scoutSpawnSound);
+						}
+						break;
+					case PW_GUARD:
+						if (cg_announcePowerups.integer & ANNOUNCE_RUNES) {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.guardAnnouncerSound);
+						}
+						else {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.guardSpawnSound);
+						}
+						break;
+					case PW_DOUBLER:
+						if (cg_announcePowerups.integer & ANNOUNCE_RUNES) {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.doublerAnnouncerSound);
+						}
+						else {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.doublerSpawnSound);
+						}
+						break;
+					case PW_AMMOREGEN:
+						if (cg_announcePowerups.integer & ANNOUNCE_RUNES) {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.ammoRegenAnnouncerSound);
+						}
+						else {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.ammoRegenSpawnSound);
+						}
+						break;
+				}
+			}
+			else {
 				trap_S_StartSound(NULL, es->number, CHAN_AUTO, trap_S_RegisterSound(item->pickup_sound, qfalse));
 			}
 

@@ -306,6 +306,7 @@ vmCvar_t cg_missionpackChecks;
 vmCvar_t cg_developer;
 /* /Neon_Knight */
 vmCvar_t cg_customAnnouncer;
+vmCvar_t cg_announcePowerups;
 
 typedef struct {
 	vmCvar_t *vmCvar;
@@ -525,7 +526,8 @@ static cvarTable_t cvarTable[] = {// bk001129
 /* Neon_Knight: Enables MP checks. */
 	{ &cg_developer, "developer", "0", CVAR_CHEAT},
 /* /Neon_Knight */
-	{ &cg_customAnnouncer, "cg_customAnnouncer", "0", CVAR_ARCHIVE}
+	{ &cg_customAnnouncer, "cg_customAnnouncer", "0", CVAR_ARCHIVE},
+	{ &cg_announcePowerups, "cg_announcePowerups", "0", CVAR_ARCHIVE}
 };
 
 static int cvarTableSize = sizeof ( cvarTable) / sizeof ( cvarTable[0]);
@@ -821,10 +823,40 @@ static void CG_RegisterSounds(void) {
 		cgs.media.firstExcellentSound = trap_S_RegisterSound(ANNOUNCER_EXCELLENT_FIRST, qtrue);
 		cgs.media.firstHumiliationSound = trap_S_RegisterSound(ANNOUNCER_HUMILIATION_FIRST, qtrue);
 		// Items
-		cgs.media.ammoregenSound = trap_S_RegisterSound(ANNOUNCER_AMMOREGEN, qfalse);
-		cgs.media.doublerSound = trap_S_RegisterSound(ANNOUNCER_DOUBLER, qfalse);
-		cgs.media.guardSound = trap_S_RegisterSound(ANNOUNCER_GUARD, qfalse);
-		cgs.media.scoutSound = trap_S_RegisterSound(ANNOUNCER_SCOUT, qfalse);
+		if (cg_announcePowerups.integer) {
+			cgs.media.quadAnnouncerSound = trap_S_RegisterSound(ANNOUNCER_QUADDAMAGE, qfalse);
+			cgs.media.enviroAnnouncerSound = trap_S_RegisterSound(ANNOUNCER_BATTLESUIT, qfalse);
+			cgs.media.invisAnnouncerSound = trap_S_RegisterSound(ANNOUNCER_INVISIBILITY, qfalse);
+			cgs.media.regenAnnouncerSound = trap_S_RegisterSound(ANNOUNCER_REGENERATION, qfalse);
+			cgs.media.flightAnnouncerSound = trap_S_RegisterSound(ANNOUNCER_FLIGHT, qfalse);
+			cgs.media.hasteAnnouncerSound = trap_S_RegisterSound(ANNOUNCER_HASTE, qfalse);
+			cgs.media.teleporterAnnouncerSound = trap_S_RegisterSound(ANNOUNCER_TELEPORTER, qfalse);
+			cgs.media.medkitAnnouncerSound = trap_S_RegisterSound(ANNOUNCER_MEDKIT, qfalse);
+			cgs.media.invulAnnouncerSound = trap_S_RegisterSound(ANNOUNCER_INVULNERABILITY, qfalse);
+			cgs.media.kamiAnnouncerSound = trap_S_RegisterSound(ANNOUNCER_KAMIKAZE, qfalse);
+			//cgs.media.portalAnnouncerSound = trap_S_RegisterSound(ANNOUNCER_PORTAL, qfalse);
+			cgs.media.ammoRegenAnnouncerSound = trap_S_RegisterSound(ANNOUNCER_AMMOREGEN, qfalse);
+			cgs.media.doublerAnnouncerSound = trap_S_RegisterSound(ANNOUNCER_DOUBLER, qfalse);
+			cgs.media.guardAnnouncerSound = trap_S_RegisterSound(ANNOUNCER_GUARD, qfalse);
+			cgs.media.scoutAnnouncerSound = trap_S_RegisterSound(ANNOUNCER_SCOUT, qfalse);
+		}
+		else {
+			cgs.media.quadSpawnSound = trap_S_RegisterSound("sound/items/quaddamage.wav", qfalse);
+			cgs.media.enviroSpawnSound = trap_S_RegisterSound("sound/items/protect.wav", qfalse);
+			cgs.media.invisSpawnSound = trap_S_RegisterSound("sound/items/invisibility.wav", qfalse);
+			cgs.media.regenSpawnSound = trap_S_RegisterSound("sound/items/regeneration.wav", qfalse);
+			cgs.media.flightSpawnSound = trap_S_RegisterSound("sound/items/flight.wav", qfalse);
+			cgs.media.hasteSpawnSound = trap_S_RegisterSound("sound/items/haste.wav", qfalse);
+			cgs.media.teleporterSpawnSound = trap_S_RegisterSound("sound/items/holdable.wav", qfalse);
+			cgs.media.medkitSpawnSound = trap_S_RegisterSound("sound/items/holdable.wav", qfalse);
+			cgs.media.invulSpawnSound = trap_S_RegisterSound("sound/items/holdable.wav", qfalse);
+			cgs.media.kamiSpawnSound = trap_S_RegisterSound("sound/items/holdable.wav", qfalse);
+			//cgs.media.portalSpawnSound = trap_S_RegisterSound("sound/items/holdable.wav", qfalse);
+			cgs.media.ammoRegenSpawnSound = trap_S_RegisterSound("sound/items/cl_ammoregen.wav", qfalse);
+			cgs.media.doublerSpawnSound = trap_S_RegisterSound("sound/items/cl_doubler.wav", qfalse);
+			cgs.media.guardSpawnSound = trap_S_RegisterSound("sound/items/cl_guard.wav", qfalse);
+			cgs.media.scoutSpawnSound = trap_S_RegisterSound("sound/items/cl_scout.wav", qfalse);
+		}
 		// Teamgame announcements
 		if (CG_IsATeamGametype(cgs.gametype) || cg_buildScript.integer) {
 			cgs.media.redLeadsSound = trap_S_RegisterSound(ANNOUNCER_REDLEADS, qtrue);
@@ -897,10 +929,40 @@ static void CG_RegisterSounds(void) {
 		cgs.media.firstExcellentSound = trap_S_RegisterSound("sound/feedback/first_excellent.wav", qtrue);
 		cgs.media.firstHumiliationSound = trap_S_RegisterSound("sound/feedback/first_gauntlet.wav", qtrue);
 		// Items
-		cgs.media.ammoregenSound = trap_S_RegisterSound("sound/items/cl_ammoregen.wav", qfalse);
-		cgs.media.doublerSound = trap_S_RegisterSound("sound/items/cl_doubler.wav", qfalse);
-		cgs.media.guardSound = trap_S_RegisterSound("sound/items/cl_guard.wav", qfalse);
-		cgs.media.scoutSound = trap_S_RegisterSound("sound/items/cl_scout.wav", qfalse);
+		if (cg_announcePowerups.integer) {
+			cgs.media.quadAnnouncerSound = trap_S_RegisterSound("sound/items/quaddamage.wav", qfalse);
+			cgs.media.enviroAnnouncerSound = trap_S_RegisterSound("sound/items/protect.wav", qfalse);
+			cgs.media.invisAnnouncerSound = trap_S_RegisterSound("sound/items/invisibility.wav", qfalse);
+			cgs.media.regenAnnouncerSound = trap_S_RegisterSound("sound/items/regeneration.wav", qfalse);
+			cgs.media.flightAnnouncerSound = trap_S_RegisterSound("sound/items/flight.wav", qfalse);
+			cgs.media.hasteAnnouncerSound = trap_S_RegisterSound("sound/items/haste.wav", qfalse);
+			cgs.media.teleporterAnnouncerSound = trap_S_RegisterSound("sound/items/holdable.wav", qfalse);
+			cgs.media.medkitAnnouncerSound = trap_S_RegisterSound("sound/items/holdable.wav", qfalse);
+			cgs.media.invulAnnouncerSound = trap_S_RegisterSound("sound/items/holdable.wav", qfalse);
+			cgs.media.kamiAnnouncerSound = trap_S_RegisterSound("sound/items/holdable.wav", qfalse);
+			//cgs.media.portalAnnouncerSound = trap_S_RegisterSound("sound/items/holdable.wav", qfalse);
+			cgs.media.ammoRegenAnnouncerSound = trap_S_RegisterSound("sound/items/cl_ammoregen.wav", qfalse);
+			cgs.media.doublerAnnouncerSound = trap_S_RegisterSound("sound/items/cl_doubler.wav", qfalse);
+			cgs.media.guardAnnouncerSound = trap_S_RegisterSound("sound/items/cl_guard.wav", qfalse);
+			cgs.media.scoutAnnouncerSound = trap_S_RegisterSound("sound/items/cl_scout.wav", qfalse);
+		}
+		else {
+			cgs.media.quadSpawnSound = trap_S_RegisterSound("sound/items/quaddamage.wav", qfalse);
+			cgs.media.enviroSpawnSound = trap_S_RegisterSound("sound/items/protect.wav", qfalse);
+			cgs.media.invisSpawnSound = trap_S_RegisterSound("sound/items/invisibility.wav", qfalse);
+			cgs.media.regenSpawnSound = trap_S_RegisterSound("sound/items/regeneration.wav", qfalse);
+			cgs.media.flightSpawnSound = trap_S_RegisterSound("sound/items/flight.wav", qfalse);
+			cgs.media.hasteSpawnSound = trap_S_RegisterSound("sound/items/haste.wav", qfalse);
+			cgs.media.teleporterSpawnSound = trap_S_RegisterSound("sound/items/holdable.wav", qfalse);
+			cgs.media.medkitSpawnSound = trap_S_RegisterSound("sound/items/holdable.wav", qfalse);
+			cgs.media.invulSpawnSound = trap_S_RegisterSound("sound/items/holdable.wav", qfalse);
+			cgs.media.kamiSpawnSound = trap_S_RegisterSound("sound/items/holdable.wav", qfalse);
+			//cgs.media.portalSpawnSound = trap_S_RegisterSound("sound/items/holdable.wav", qfalse);
+			cgs.media.ammoRegenSpawnSound = trap_S_RegisterSound("sound/items/cl_ammoregen.wav", qfalse);
+			cgs.media.doublerSpawnSound = trap_S_RegisterSound("sound/items/cl_doubler.wav", qfalse);
+			cgs.media.guardSpawnSound = trap_S_RegisterSound("sound/items/cl_guard.wav", qfalse);
+			cgs.media.scoutSpawnSound = trap_S_RegisterSound("sound/items/cl_scout.wav", qfalse);
+		}
 		// Teamgame announcements
 		if (CG_IsATeamGametype(cgs.gametype) || cg_buildScript.integer) {
 			cgs.media.redLeadsSound = trap_S_RegisterSound("sound/feedback/redleads.wav", qtrue);
