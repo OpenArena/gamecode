@@ -25,6 +25,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "../qcommon/q_shared.h"
 #include "bg_public.h"
+#include "../../sound/announcer.h"
 
 /*QUAKED item_***** ( 0 0 0 ) (-16 -16 -16) (16 16 16) suspended
 DO NOT USE THIS CLASS, IT JUST HOLDS GENERAL INFORMATION.
@@ -486,7 +487,7 @@ gitem_t bg_itemlist[] ={
 	 */
 	{
 		"holdable_teleporter",
-		"sound/items/holdable.wav",
+		ANNOUNCER_TELEPORTER,
 		{ "models/powerups/holdable/teleporter.md3",
 			NULL, NULL, NULL},
 		/* icon */ "icons/teleporter",
@@ -501,7 +502,7 @@ gitem_t bg_itemlist[] ={
 	 */
 	{
 		"holdable_medkit",
-		"sound/items/holdable.wav",
+		ANNOUNCER_MEDKIT,
 		{
 			"models/powerups/holdable/medkit.md3",
 			"models/powerups/holdable/medkit_sphere.md3",
@@ -523,7 +524,7 @@ gitem_t bg_itemlist[] ={
 	 */
 	{
 		"item_quad",
-		"sound/items/quaddamage.wav",
+		ANNOUNCER_QUADDAMAGE,
 		{ "models/powerups/instant/quad.md3",
 			"models/powerups/instant/quad_ring.md3",
 			NULL, NULL},
@@ -540,7 +541,7 @@ gitem_t bg_itemlist[] ={
 	 */
 	{
 		"item_enviro",
-		"sound/items/protect.wav",
+		ANNOUNCER_BATTLESUIT,
 		{ "models/powerups/instant/enviro.md3",
 			"models/powerups/instant/enviro_ring.md3",
 			NULL, NULL},
@@ -557,7 +558,7 @@ gitem_t bg_itemlist[] ={
 	 */
 	{
 		"item_haste",
-		"sound/items/haste.wav",
+		ANNOUNCER_HASTE,
 		{ "models/powerups/instant/haste.md3",
 			"models/powerups/instant/haste_ring.md3",
 			NULL, NULL},
@@ -574,7 +575,7 @@ gitem_t bg_itemlist[] ={
 	 */
 	{
 		"item_invis",
-		"sound/items/invisibility.wav",
+		ANNOUNCER_INVISIBILITY,
 		{ "models/powerups/instant/invis.md3",
 			"models/powerups/instant/invis_ring.md3",
 			NULL, NULL},
@@ -591,7 +592,7 @@ gitem_t bg_itemlist[] ={
 	 */
 	{
 		"item_regen",
-		"sound/items/regeneration.wav",
+		ANNOUNCER_REGENERATION,
 		{ "models/powerups/instant/regen.md3",
 			"models/powerups/instant/regen_ring.md3",
 			NULL, NULL},
@@ -608,7 +609,7 @@ gitem_t bg_itemlist[] ={
 	 */
 	{
 		"item_flight",
-		"sound/items/flight.wav",
+		ANNOUNCER_FLIGHT,
 		{ "models/powerups/instant/flight.md3",
 			"models/powerups/instant/flight_ring.md3",
 			NULL, NULL},
@@ -659,7 +660,7 @@ gitem_t bg_itemlist[] ={
 	 */
 	{
 		"holdable_kamikaze",
-		"sound/items/holdable.wav",
+		ANNOUNCER_KAMIKAZE,
 		{ "models/powerups/kamikazi.md3",
 			NULL, NULL, NULL},
 		/* icon */ "icons/kamikaze",
@@ -675,7 +676,7 @@ gitem_t bg_itemlist[] ={
 	 */
 	{
 		"holdable_portal",
-		"sound/items/holdable.wav",
+		ANNOUNCER_PORTAL,
 		{ "models/powerups/holdable/porter.md3",
 			NULL, NULL, NULL},
 		/* icon */ "icons/portal",
@@ -691,7 +692,7 @@ gitem_t bg_itemlist[] ={
 	 */
 	{
 		"holdable_invulnerability",
-		"sound/items/holdable.wav",
+		ANNOUNCER_INVULNERABILITY,
 		{ "models/powerups/holdable/invulnerability.md3",
 			NULL, NULL, NULL},
 		/* icon */ "icons/invulnerability",
@@ -758,7 +759,7 @@ gitem_t bg_itemlist[] ={
 	 */
 	{
 		"item_scout",
-		"sound/items/scout.wav",
+		ANNOUNCER_SCOUT,
 		{ "models/powerups/scout.md3",
 			NULL, NULL, NULL},
 		/* icon */ "icons/scout",
@@ -774,7 +775,7 @@ gitem_t bg_itemlist[] ={
 	 */
 	{
 		"item_guard",
-		"sound/items/guard.wav",
+		ANNOUNCER_GUARD,
 		{ "models/powerups/guard.md3",
 			NULL, NULL, NULL},
 		/* icon */ "icons/guard",
@@ -790,7 +791,7 @@ gitem_t bg_itemlist[] ={
 	 */
 	{
 		"item_doubler",
-		"sound/items/doubler.wav",
+		ANNOUNCER_DOUBLER,
 		{ "models/powerups/doubler.md3",
 			NULL, NULL, NULL},
 		/* icon */ "icons/doubler",
@@ -806,7 +807,7 @@ gitem_t bg_itemlist[] ={
 	 */
 	{
 		"item_ammoregen",
-		"sound/items/ammoregen.wav",
+		ANNOUNCER_AMMOREGEN,
 		{ "models/powerups/ammo.md3",
 			NULL, NULL, NULL},
 		/* icon */ "icons/ammo_regen",

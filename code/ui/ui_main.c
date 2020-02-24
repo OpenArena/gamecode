@@ -32,6 +32,7 @@ USER INTERFACE MAIN
 //#define PRE_RELEASE_TADEMO
 
 #include "ui_local.h"
+#include "../../sound/announcer.h"
 
 uiInfo_t uiInfo;
 
@@ -234,7 +235,7 @@ void AssetCache( void )
 		uiInfo.uiDC.Assets.crosshairShader[n] = trap_R_RegisterShaderNoMip( va("gfx/2d/crosshair%c", 'a' + n ) );
 	}
 
-	uiInfo.newHighScoreSound = trap_S_RegisterSound("sound/feedback/voc_newhighscore.wav", qfalse);
+	uiInfo.newHighScoreSound = trap_S_RegisterSound(ANNOUNCER_NEWHIGHSCORE, qfalse);
 // Changed RD
 	uiInfo.uiDC.Assets.mainname = String_Alloc("main");
 	uiInfo.uiDC.Assets.ingamename = String_Alloc("ingame");

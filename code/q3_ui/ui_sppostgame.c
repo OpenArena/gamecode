@@ -29,6 +29,7 @@ SINGLE PLAYER POSTGAME MENU
 */
 
 #include "ui_local.h"
+#include "../../sound/announcer.h"
 
 #define MAX_SCOREBOARD_CLIENTS		8
 
@@ -87,12 +88,12 @@ char	*ui_medalPicNames[] = {
 	"menu/medals/medal_victory"
 };
 char	*ui_medalSounds[] = {
-	"sound/feedback/accuracy.wav",
-	"sound/feedback/impressive_a.wav",
-	"sound/feedback/excellent_a.wav",
-	"sound/feedback/gauntlet.wav",
-	"sound/feedback/frags.wav",
-	"sound/feedback/perfect.wav"
+	ANNOUNCER_ACCURACY,
+	ANNOUNCER_IMPRESSIVE,
+	ANNOUNCER_EXCELLENT,
+	ANNOUNCER_GAUNTLET,
+	ANNOUNCER_FRAGS,
+	ANNOUNCER_PERFECT
 };
 
 
