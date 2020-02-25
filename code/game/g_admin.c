@@ -89,10 +89,10 @@ g_admin_cmd_t g_admin_cmds[ ] = {
 		"disorient a player by flipping player's view and controls",
 		"[^3name|slot#^7] (^hreason^7)"
 	},
-	//{"fling", G_admin_fling, "d",
-	//  "throws the player specified",
-	//  "[^3name|slot#^7]"
-	//},
+	/* {"fling", G_admin_fling, "d",
+		"throws the player specified",
+		"[^3name|slot#^7]"
+	}, */
 
 	{
 		"help", G_admin_help, "h",
