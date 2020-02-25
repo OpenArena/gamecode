@@ -789,6 +789,11 @@ static void CG_RegisterSounds(void) {
 		cgs.media.countPrepareSound = trap_S_RegisterSound(ANNOUNCER_PREPARETOFIGHT, qtrue);
 		if (CG_IsATeamGametype(cgs.gametype)) {
 			cgs.media.countPrepareTeamSound = trap_S_RegisterSound(ANNOUNCER_PREPAREYOURTEAM, qtrue);
+			cgs.media.redLeadsSound = trap_S_RegisterSound(ANNOUNCER_REDLEADS, qtrue);
+			cgs.media.blueLeadsSound = trap_S_RegisterSound(ANNOUNCER_BLUELEADS, qtrue);
+			cgs.media.teamsTiedSound = trap_S_RegisterSound(ANNOUNCER_TEAMSARETIED, qtrue);
+			cgs.media.redScoredSound = trap_S_RegisterSound(ANNOUNCER_REDSCORES, qtrue);
+			cgs.media.blueScoredSound = trap_S_RegisterSound(ANNOUNCER_BLUESCORES, qtrue);
 		}
 		else {
 			cgs.media.takenLeadSound = trap_S_RegisterSound(ANNOUNCER_YOUHAVETAKENTHELEAD, qtrue);
@@ -867,14 +872,6 @@ static void CG_RegisterSounds(void) {
 			cgs.media.guardSpawnSound = trap_S_RegisterSound("sound/items/cl_guard.wav", qfalse);
 			cgs.media.scoutSpawnSound = trap_S_RegisterSound("sound/items/cl_scout.wav", qfalse);
 		}
-		// Teamgame announcements
-		if (CG_IsATeamGametype(cgs.gametype) || cg_buildScript.integer) {
-			cgs.media.redLeadsSound = trap_S_RegisterSound(ANNOUNCER_REDLEADS, qtrue);
-			cgs.media.blueLeadsSound = trap_S_RegisterSound(ANNOUNCER_BLUELEADS, qtrue);
-			cgs.media.teamsTiedSound = trap_S_RegisterSound(ANNOUNCER_TEAMSARETIED, qtrue);
-			cgs.media.redScoredSound = trap_S_RegisterSound(ANNOUNCER_REDSCORES, qtrue);
-			cgs.media.blueScoredSound = trap_S_RegisterSound(ANNOUNCER_BLUESCORES, qtrue);
-		}
 		// Flag-based gametype announcements
 		if (CG_UsesTeamFlags(cgs.gametype) || CG_UsesTheWhiteFlag(cgs.gametype) || cg_buildScript.integer) {
 			cgs.media.youHaveFlagSound = trap_S_RegisterSound(ANNOUNCER_YOUHAVETHEFLAG, qtrue);
@@ -886,17 +883,23 @@ static void CG_RegisterSounds(void) {
 			cgs.media.blueFlagReturnedSound = trap_S_RegisterSound(ANNOUNCER_BLUEFLAGRETURNED, qtrue);
 			cgs.media.enemyTookYourFlagSound = trap_S_RegisterSound(ANNOUNCER_THEENEMYHASYOURFLAG, qtrue);
 			cgs.media.yourTeamTookEnemyFlagSound = trap_S_RegisterSound(ANNOUNCER_YOURTEAMHASTHEENEMYFLAG, qtrue);
+			cgs.media.redTakesBlueFlagAnnouncerSound = trap_S_RegisterSound(ANNOUNCER_REDHASTHEBLUEFLAG, qfalse);
+			cgs.media.blueTakesRedFlagAnnouncerSound = trap_S_RegisterSound(ANNOUNCER_BLUEHASTHEREDFLAG, qfalse);
 		}
 		// Neutral flag gametype announcements
 		if (CG_UsesTheWhiteFlag(cgs.gametype) || cg_buildScript.integer) {
 			cgs.media.neutralFlagReturnedSound = trap_S_RegisterSound(ANNOUNCER_THEFLAGHASRETURNED, qtrue);
 			cgs.media.yourTeamTookTheFlagSound = trap_S_RegisterSound(ANNOUNCER_YOURTEAMHASTHEFLAG, qtrue);
 			cgs.media.enemyTookTheFlagSound = trap_S_RegisterSound(ANNOUNCER_THEENEMYHASTHEFLAG, qtrue);
+			cgs.media.redTakesFlagAnnouncerSound = trap_S_RegisterSound(ANNOUNCER_REDHASTHEFLAG, qfalse);
+			cgs.media.blueTakesFlagAnnouncerSound = trap_S_RegisterSound(ANNOUNCER_BLUEHASTHEFLAG, qfalse);
 		}
 		// Overload announcements
 		if (cgs.gametype == GT_OBELISK || cg_buildScript.integer) {
 			cgs.media.yourBaseIsUnderAttackSound = trap_S_RegisterSound(ANNOUNCER_YOURBASEISUNDERATTACK, qtrue);
 			cgs.media.obeliskRespawnSound = trap_S_RegisterSound(ANNOUNCER_OBELISKSRESPAWNED, qfalse);
+			cgs.media.redBaseUnderAttackAnnouncerSound = trap_S_RegisterSound(ANNOUNCER_REDBASEUNDERATTACK, qfalse);
+			cgs.media.blueBaseUnderAttackAnnouncerSound = trap_S_RegisterSound(ANNOUNCER_BLUEBASEUNDERATTACK, qfalse);
 		}
 	}
 	else {
@@ -905,6 +908,11 @@ static void CG_RegisterSounds(void) {
 		cgs.media.countPrepareSound = trap_S_RegisterSound("sound/feedback/prepare.wav", qtrue);
 		if (CG_IsATeamGametype(cgs.gametype)) {
 			cgs.media.countPrepareTeamSound = trap_S_RegisterSound("sound/feedback/prepare_team.wav", qtrue);
+			cgs.media.redLeadsSound = trap_S_RegisterSound("sound/feedback/redleads.wav", qtrue);
+			cgs.media.blueLeadsSound = trap_S_RegisterSound("sound/feedback/blueleads.wav", qtrue);
+			cgs.media.teamsTiedSound = trap_S_RegisterSound("sound/feedback/teamstied.wav", qtrue);
+			cgs.media.redScoredSound = trap_S_RegisterSound("sound/teamplay/voc_red_scores.wav", qtrue);
+			cgs.media.blueScoredSound = trap_S_RegisterSound("sound/teamplay/voc_blue_scores.wav", qtrue);
 		}
 		else {
 			cgs.media.takenLeadSound = trap_S_RegisterSound("sound/feedback/takenlead.wav", qtrue);
@@ -912,20 +920,20 @@ static void CG_RegisterSounds(void) {
 			cgs.media.lostLeadSound = trap_S_RegisterSound("sound/feedback/lostlead.wav", qtrue);
 		}
 		// Events
-		cgs.media.count10Sound = trap_S_RegisterSound("sound/misc/silence.wav", qtrue);
-		cgs.media.count9Sound = trap_S_RegisterSound("sound/misc/silence.wav", qtrue);
-		cgs.media.count8Sound = trap_S_RegisterSound("sound/misc/silence.wav", qtrue);
-		cgs.media.count7Sound = trap_S_RegisterSound("sound/misc/silence.wav", qtrue);
-		cgs.media.count6Sound = trap_S_RegisterSound("sound/misc/silence.wav", qtrue);
-		cgs.media.count5Sound = trap_S_RegisterSound("sound/misc/silence.wav", qtrue);
-		cgs.media.count4Sound = trap_S_RegisterSound("sound/misc/silence.wav", qtrue);
+		cgs.media.count10Sound = trap_S_RegisterSound("sound/feedback/ten.wav", qtrue);
+		cgs.media.count9Sound = trap_S_RegisterSound("sound/feedback/nine.wav", qtrue);
+		cgs.media.count8Sound = trap_S_RegisterSound("sound/feedback/eight.wav", qtrue);
+		cgs.media.count7Sound = trap_S_RegisterSound("sound/feedback/seven.wav", qtrue);
+		cgs.media.count6Sound = trap_S_RegisterSound("sound/feedback/six.wav", qtrue);
+		cgs.media.count5Sound = trap_S_RegisterSound("sound/feedback/five.wav", qtrue);
+		cgs.media.count4Sound = trap_S_RegisterSound("sound/feedback/four.wav", qtrue);
 		cgs.media.count3Sound = trap_S_RegisterSound("sound/feedback/three.wav", qtrue);
 		cgs.media.count2Sound = trap_S_RegisterSound("sound/feedback/two.wav", qtrue);
 		cgs.media.count1Sound = trap_S_RegisterSound("sound/feedback/one.wav", qtrue);
 		cgs.media.countFightSound = trap_S_RegisterSound("sound/feedback/fight.wav", qtrue);
 		cgs.media.fiveMinuteSound = trap_S_RegisterSound("sound/feedback/5_minute.wav", qtrue);
-		cgs.media.threeMinuteSound = trap_S_RegisterSound("sound/misc/silence.wav", qtrue);
-		cgs.media.twoMinuteSound = trap_S_RegisterSound("sound/misc/silence.wav", qtrue);
+		cgs.media.threeMinuteSound = trap_S_RegisterSound("sound/feedback/3_minute.wav", qtrue);
+		cgs.media.twoMinuteSound = trap_S_RegisterSound("sound/feedback/2_minute.wav", qtrue);
 		cgs.media.oneMinuteSound = trap_S_RegisterSound("sound/feedback/1_minute.wav", qtrue);
 		cgs.media.threeFragSound = trap_S_RegisterSound("sound/feedback/3_frags.wav", qtrue);
 		cgs.media.twoFragSound = trap_S_RegisterSound("sound/feedback/2_frags.wav", qtrue);
@@ -982,14 +990,6 @@ static void CG_RegisterSounds(void) {
 			cgs.media.guardSpawnSound = trap_S_RegisterSound("sound/items/cl_guard.wav", qfalse);
 			cgs.media.scoutSpawnSound = trap_S_RegisterSound("sound/items/cl_scout.wav", qfalse);
 		}
-		// Teamgame announcements
-		if (CG_IsATeamGametype(cgs.gametype) || cg_buildScript.integer) {
-			cgs.media.redLeadsSound = trap_S_RegisterSound("sound/feedback/redleads.wav", qtrue);
-			cgs.media.blueLeadsSound = trap_S_RegisterSound("sound/feedback/blueleads.wav", qtrue);
-			cgs.media.teamsTiedSound = trap_S_RegisterSound("sound/feedback/teamstied.wav", qtrue);
-			cgs.media.redScoredSound = trap_S_RegisterSound("sound/teamplay/voc_red_scores.wav", qtrue);
-			cgs.media.blueScoredSound = trap_S_RegisterSound("sound/teamplay/voc_blue_scores.wav", qtrue);
-		}
 		// Flag-based gametype announcements
 		if (CG_UsesTeamFlags(cgs.gametype) || CG_UsesTheWhiteFlag(cgs.gametype) || cg_buildScript.integer) {
 			cgs.media.youHaveFlagSound = trap_S_RegisterSound("sound/teamplay/voc_you_flag.wav", qtrue);
@@ -1001,17 +1001,23 @@ static void CG_RegisterSounds(void) {
 			cgs.media.blueFlagReturnedSound = trap_S_RegisterSound("sound/teamplay/voc_blue_returned.wav", qtrue);
 			cgs.media.enemyTookYourFlagSound = trap_S_RegisterSound("sound/teamplay/voc_enemy_flag.wav", qtrue);
 			cgs.media.yourTeamTookEnemyFlagSound = trap_S_RegisterSound("sound/teamplay/voc_team_flag.wav", qtrue);
+			cgs.media.redTakesBlueFlagAnnouncerSound = trap_S_RegisterSound("sound/teamplay/voc_redtookblue.wav", qfalse);
+			cgs.media.blueTakesRedFlagAnnouncerSound = trap_S_RegisterSound("sound/teamplay/voc_bluetookred.wav", qfalse);
 		}
 		// Neutral flag gametype announcements
 		if (CG_UsesTheWhiteFlag(cgs.gametype) || cg_buildScript.integer) {
 			cgs.media.neutralFlagReturnedSound = trap_S_RegisterSound("sound/teamplay/flagreturn_opponent.wav", qtrue);
 			cgs.media.yourTeamTookTheFlagSound = trap_S_RegisterSound("sound/teamplay/voc_team_1flag.wav", qtrue);
 			cgs.media.enemyTookTheFlagSound = trap_S_RegisterSound("sound/teamplay/voc_enemy_1flag.wav", qtrue);
+			cgs.media.redTakesFlagAnnouncerSound = trap_S_RegisterSound("sound/teamplay/voc_redtookneutral.wav", qfalse);
+			cgs.media.blueTakesFlagAnnouncerSound = trap_S_RegisterSound("sound/teamplay/voc_bluetookneutral.wav", qfalse);
 		}
 		// Overload announcements
 		if (cgs.gametype == GT_OBELISK || cg_buildScript.integer) {
 			cgs.media.yourBaseIsUnderAttackSound = trap_S_RegisterSound("sound/teamplay/voc_base_attack.wav", qtrue);
 			cgs.media.obeliskRespawnSound = trap_S_RegisterSound("sound/items/obelisk_respawn.wav", qfalse);
+			cgs.media.redBaseUnderAttackAnnouncerSound = trap_S_RegisterSound("sound/teamplay/voc_redunderattack.wav", qfalse);
+			cgs.media.blueBaseUnderAttackAnnouncerSound = trap_S_RegisterSound("sound/teamplay/voc_blueunderattack.wav", qfalse);
 		}
 	}
 

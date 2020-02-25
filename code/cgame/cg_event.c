@@ -1384,19 +1384,19 @@ void CG_EntityEvent(centity_t *cent, vec3_t position) {
 				case GTS_RED_CAPTURE: // CTF: red team captured the blue flag, 1FCTF: red team captured the neutral flag
 					if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_RED)
 						CG_AddBufferedSound(cgs.media.captureYourTeamSound);
-					else
+					else if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_BLUE)
 						CG_AddBufferedSound(cgs.media.captureOpponentSound);
 					break;
 				case GTS_BLUE_CAPTURE: // CTF: blue team captured the red flag, 1FCTF: blue team captured the neutral flag
 					if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_BLUE)
 						CG_AddBufferedSound(cgs.media.captureYourTeamSound);
-					else
+					else if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_RED)
 						CG_AddBufferedSound(cgs.media.captureOpponentSound);
 					break;
 				case GTS_RED_RETURN: // CTF: blue flag returned, 1FCTF: never used
 					if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_RED)
 						CG_AddBufferedSound(cgs.media.returnYourTeamSound);
-					else
+					else if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_BLUE)
 						CG_AddBufferedSound(cgs.media.returnOpponentSound);
 					//
 					CG_AddBufferedSound(cgs.media.blueFlagReturnedSound);
@@ -1404,7 +1404,7 @@ void CG_EntityEvent(centity_t *cent, vec3_t position) {
 				case GTS_BLUE_RETURN: // CTF red flag returned, 1FCTF: neutral flag returned
 					if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_BLUE)
 						CG_AddBufferedSound(cgs.media.returnYourTeamSound);
-					else
+					else if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_RED)
 						CG_AddBufferedSound(cgs.media.returnOpponentSound);
 					//
 					CG_AddBufferedSound(cgs.media.redFlagReturnedSound);
@@ -1424,6 +1424,11 @@ void CG_EntityEvent(centity_t *cent, vec3_t position) {
 								CG_AddBufferedSound(cgs.media.enemyTookTheFlagSound);
 							else
 								CG_AddBufferedSound(cgs.media.yourTeamTookEnemyFlagSound);
+						} else {
+							if (cgs.gametype == GT_1FCTF)
+								CG_AddBufferedSound(cgs.media.redTakesFlagAnnouncerSound);
+							else
+								CG_AddBufferedSound(cgs.media.redTakesBlueFlagAnnouncerSound);
 						}
 					}
 					break;
@@ -1441,17 +1446,26 @@ void CG_EntityEvent(centity_t *cent, vec3_t position) {
 								CG_AddBufferedSound(cgs.media.enemyTookTheFlagSound);
 							else
 								CG_AddBufferedSound(cgs.media.yourTeamTookEnemyFlagSound);
+						} else {
+							if (cgs.gametype == GT_1FCTF)
+								CG_AddBufferedSound(cgs.media.blueTakesFlagAnnouncerSound);
+							else
+								CG_AddBufferedSound(cgs.media.blueTakesRedFlagAnnouncerSound);
 						}
 					}
 					break;
 				case GTS_REDOBELISK_ATTACKED: // Overload: red obelisk is being attacked
 					if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_RED) {
 						CG_AddBufferedSound(cgs.media.yourBaseIsUnderAttackSound);
+					} else {
+						CG_AddBufferedSound(cgs.media.redBaseUnderAttackAnnouncerSound);
 					}
 					break;
 				case GTS_BLUEOBELISK_ATTACKED: // Overload: blue obelisk is being attacked
 					if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_BLUE) {
 						CG_AddBufferedSound(cgs.media.yourBaseIsUnderAttackSound);
+					} else {
+						CG_AddBufferedSound(cgs.media.blueBaseUnderAttackAnnouncerSound);
 					}
 					break;
 
