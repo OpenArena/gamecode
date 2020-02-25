@@ -197,10 +197,10 @@ Q_EXPORT intptr_t vmMain( int command, int arg0, int arg1, int arg2, int arg3, i
 void AssetCache( void )
 {
 	int n;
-	//if (Assets.textFont == NULL) {
-	//}
-	//Assets.background = trap_R_RegisterShaderNoMip( ASSET_BACKGROUND );
-	//Com_Printf("Menu Size: %i bytes\n", sizeof(Menus));
+	/* if (Assets.textFont == NULL) {
+	}
+	Assets.background = trap_R_RegisterShaderNoMip( ASSET_BACKGROUND );
+	Com_Printf("Menu Size: %i bytes\n", sizeof(Menus)); */
 	uiInfo.uiDC.Assets.gradientBar = trap_R_RegisterShaderNoMip( ASSET_GRADIENTBAR );
 	uiInfo.uiDC.Assets.fxBasePic = trap_R_RegisterShaderNoMip( ART_FX_BASE );
 	uiInfo.uiDC.Assets.fxPic[0] = trap_R_RegisterShaderNoMip( ART_FX_RED );
@@ -694,9 +694,9 @@ void _UI_Refresh( int realtime )
 	static int index;
 	static int	previousTimes[UI_FPS_FRAMES];
 
-	//if ( !( trap_Key_GetCatcher() & KEYCATCH_UI ) ) {
-	//	return;
-	//}
+	/* if ( !( trap_Key_GetCatcher() & KEYCATCH_UI ) ) {
+		return;
+	} */
 
 	uiInfo.uiDC.frameTime = realtime - uiInfo.uiDC.realTime;
 	uiInfo.uiDC.realTime = realtime;
@@ -1256,15 +1256,15 @@ void UI_ParseMenu(const char *menuFile)
 			break;
 		}
 
-		//if ( Q_stricmp( token, "{" ) ) {
-		//	Com_Printf( "Missing { in menu file\n" );
-		//	break;
-		//}
+		/* if ( Q_stricmp( token, "{" ) ) {
+			Com_Printf( "Missing { in menu file\n" );
+			break;
+		} */
 
-		//if ( menuCount == MAX_MENUS ) {
-		//	Com_Printf( "Too many menus!\n" );
-		//	break;
-		//}
+		/* if ( menuCount == MAX_MENUS ) {
+			Com_Printf( "Too many menus!\n" );
+			break;
+		} */
 
 		if ( token.string[0] == '}' ) {
 			break;
@@ -6069,11 +6069,11 @@ static qboolean MapList_Parse(char **p)
 				}
 			}
 
-			//mapList[mapCount].imageName = String_Alloc(va("levelshots/%s", mapList[mapCount].mapLoadName));
-			//if (uiInfo.mapCount == 0) {
-			// only load the first cinematic, selection loads the others
-			//  uiInfo.mapList[uiInfo.mapCount].cinematic = trap_CIN_PlayCinematic(va("%s.roq",uiInfo.mapList[uiInfo.mapCount].mapLoadName), qfalse, qfalse, qtrue, 0, 0, 0, 0);
-			//}
+			/* mapList[mapCount].imageName = String_Alloc(va("levelshots/%s", mapList[mapCount].mapLoadName));
+			if (uiInfo.mapCount == 0) {
+				// only load the first cinematic, selection loads the others
+				uiInfo.mapList[uiInfo.mapCount].cinematic = trap_CIN_PlayCinematic(va("%s.roq",uiInfo.mapList[uiInfo.mapCount].mapLoadName), qfalse, qfalse, qtrue, 0, 0, 0, 0);
+			} */
 			uiInfo.mapList[uiInfo.mapCount].cinematic = -1;
 			//uiInfo.mapList[uiInfo.mapCount].levelShot = trap_R_RegisterShaderNoMip(va("levelshots/%s_small", uiInfo.mapList[uiInfo.mapCount].mapLoadName));
 			// leilei - We don't have _small levelshots, memory reasons
@@ -6568,9 +6568,9 @@ void _UI_KeyEvent( int key, qboolean down )
 		}
 	}
 
-	//if ((s > 0) && (s != menu_null_sound)) {
-	//  trap_S_StartLocalSound( s, CHAN_LOCAL_SOUND );
-	//}
+	/* if ((s > 0) && (s != menu_null_sound)) {
+		trap_S_StartLocalSound( s, CHAN_LOCAL_SOUND );
+	} */
 }
 
 /*
