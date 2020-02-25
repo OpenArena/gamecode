@@ -935,6 +935,9 @@ static void CG_RegisterSounds(void) {
 		cgs.media.threeMinuteSound = trap_S_RegisterSound("sound/feedback/3_minute.wav", qtrue);
 		cgs.media.twoMinuteSound = trap_S_RegisterSound("sound/feedback/2_minute.wav", qtrue);
 		cgs.media.oneMinuteSound = trap_S_RegisterSound("sound/feedback/1_minute.wav", qtrue);
+		cgs.media.threeCaptureSound = trap_S_RegisterSound("sound/feedback/3_captures.wav", qtrue);
+		cgs.media.twoCaptureSound = trap_S_RegisterSound("sound/feedback/2_captures.wav", qtrue);
+		cgs.media.oneCaptureSound = trap_S_RegisterSound("sound/feedback/1_capture.wav", qtrue);
 		cgs.media.threeFragSound = trap_S_RegisterSound("sound/feedback/3_frags.wav", qtrue);
 		cgs.media.twoFragSound = trap_S_RegisterSound("sound/feedback/2_frags.wav", qtrue);
 		cgs.media.oneFragSound = trap_S_RegisterSound("sound/feedback/1_frag.wav", qtrue);

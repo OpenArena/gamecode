@@ -660,6 +660,8 @@ static void CG_MapRestart( void ) {
 
 	cg.timelimitWarnings = 0;
 
+	cg.capturelimitWarnings = 0;
+
 	cg.intermissionStarted = qfalse;
 
 	cgs.voteTime = 0;

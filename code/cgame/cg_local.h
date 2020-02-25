@@ -552,6 +552,7 @@ typedef struct {
 
 	int			timelimitWarnings;	// 5 min, 1 min, overtime
 	int			fraglimitWarnings;
+	int			capturelimitWarnings;
 
 	qboolean	mapRestart;			// set on a map restart to set back the weapon
 
@@ -1049,6 +1050,9 @@ typedef struct {
 	sfxHandle_t threeFragSound;
 	sfxHandle_t twoFragSound;
 	sfxHandle_t oneFragSound;
+	sfxHandle_t threeCaptureSound;
+	sfxHandle_t twoCaptureSound;
+	sfxHandle_t oneCaptureSound;
 
 	sfxHandle_t hitSound;
 	sfxHandle_t hitSoundHighArmor;
