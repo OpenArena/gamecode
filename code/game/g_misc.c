@@ -398,9 +398,9 @@ static void PortalTouch( gentity_t *self, gentity_t *other, trace_t *trace) {
 	if( !other->client ) {
 		return;
 	}
-//	if( other->client->ps.persistant[PERS_TEAM] != self->spawnflags ) {
-//		return;
-//	}
+	/* if( other->client->ps.persistant[PERS_TEAM] != self->spawnflags ) {
+		return;
+	} */
 
 	if ( other->client->ps.powerups[PW_NEUTRALFLAG] ) {		// only happens in One Flag CTF
 		Drop_Item( other, BG_FindItemForPowerup( PW_NEUTRALFLAG ), 0 );

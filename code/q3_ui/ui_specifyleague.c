@@ -123,9 +123,9 @@ static void SpecifyLeague_Event( void* ptr, int event )
 {
 	int		id;
 	id = ((menucommon_s*)ptr)->id;
-	//if( event != QM_ACTIVATED && id != ID_SPECIFYLEAGUELIST ) {
-	//	return;
-	//}
+	/* if( event != QM_ACTIVATED && id != ID_SPECIFYLEAGUELIST ) {
+		return;
+	} */
 
 	switch (id)
 	{

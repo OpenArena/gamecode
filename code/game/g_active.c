@@ -1084,7 +1084,7 @@ void ClientThink_real( gentity_t *ent ) {
 	else {
 */
 		BG_PlayerStateToEntityState( &ent->client->ps, &ent->s, qtrue );
-//	}
+	/* } */
 //unlagged - smooth clients #2
 	SendPendingPredictableEvents( &ent->client->ps );
 
@@ -1334,7 +1334,7 @@ void ClientEndFrame( gentity_t *ent ) {
 	}
 	else { */
 		BG_PlayerStateToEntityState( &ent->client->ps, &ent->s, qtrue );
-//	}
+	/* } */
 	SendPendingPredictableEvents( &ent->client->ps );
 
 //unlagged - smooth clients #1
