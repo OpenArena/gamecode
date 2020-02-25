@@ -1178,6 +1178,7 @@ extern vmCvar_t g_ddRespawnDelay;
 extern vmCvar_t g_developer;
 extern vmCvar_t g_spSkill;
 extern vmCvar_t g_bot_noChat;
+extern vmCvar_t g_criticalHit;
 
 void	trap_Printf( const char *fmt );
 void	trap_Error( const char *fmt ) __attribute__((noreturn));

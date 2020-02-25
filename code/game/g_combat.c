@@ -1265,6 +1265,21 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 		damage *= g_damageModifier.value;
 	}
 
+	if(g_criticalHit.integer) {
+		float check1,check2,check3,check4,check5;
+
+		check1 = rand() % 5;
+		check2 = rand() % 6;
+		check3 = rand() % 7;
+		check4 = rand() % 8;
+		check5 = rand() % 9;
+
+		if (check1 > 2 && check2 > 3 && check3 > 4 && check4 > 5 && check5 > 6) {
+			trap_SendServerCommand(-1, va("print \"%s did a CRITICAL HIT!\n\"", attacker->client->pers.netname));
+			damage *= 2;
+		}
+	}
+
 	if ( damage < 1 ) {
 		damage = 1;
 	}
