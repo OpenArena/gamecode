@@ -851,7 +851,7 @@ void Svcmd_BotList_f( void ) {
 G_SpawnBots
 ===============
 */
-static void G_SpawnBots( char *botList, int baseDelay ) {
+static void G_SpawnBots( char *botList, int baseDelay, int team ) {
 	char		*bot;
 	char		*p;
 	int			delay;
@@ -893,7 +893,15 @@ static void G_SpawnBots( char *botList, int baseDelay ) {
 
 		// we must add the bot this way, calling G_AddBot directly at this stage
 		// does "Bad Things"
-		trap_SendConsoleCommand( EXEC_INSERT, va("addbot %s %i free %i\n", bot, g_spSkill.integer, delay) );
+		if (team == TEAM_RED) {
+			trap_SendConsoleCommand( EXEC_INSERT, va("addbot %s %i red %i\n", bot, g_spSkill.integer, delay) );
+		}
+		else if (team == TEAM_BLUE) {
+			trap_SendConsoleCommand( EXEC_INSERT, va("addbot %s %i blue %i\n", bot, g_spSkill.integer, delay) );
+		}
+		else {
+			trap_SendConsoleCommand( EXEC_INSERT, va("addbot %s %i free %i\n", bot, g_spSkill.integer, delay) );
+		}
 
 		delay += BOT_BEGIN_DELAY_INCREMENT;
 	}
@@ -1032,36 +1040,37 @@ void G_InitBots( qboolean restart ) {
 		}
 
 		strValue = Info_ValueForKey( arenainfo, "sptype" );
-		if (strequals(strValue,"TeamDeathmatch")) {
+		if (strequals(strValue,"team")) {
 			g_subgametype.integer = GT_TEAM;
-		} else if (strequals(strValue,"Tournament")) {
+		} else if (strequals(strValue,"tourney")) {
 			g_subgametype.integer = GT_TOURNAMENT;
-		} else if (strequals(strValue,"CaptureTheFlag")) {
+		} else if (strequals(strValue,"ctf")) {
 			g_subgametype.integer = GT_CTF;
-		} else if (strequals(strValue,"OneFlagCTF")) {
+		} else if (strequals(strValue,"1fctf")) {
 			g_subgametype.integer = GT_1FCTF;
-		} else if (strequals(strValue,"Overload")) {
+		} else if (strequals(strValue,"obelisk")) {
 			g_subgametype.integer = GT_OBELISK;
-		} else if (strequals(strValue,"Harvester")) {
+		} else if (strequals(strValue,"harvester")) {
 			g_subgametype.integer = GT_HARVESTER;
-		} else if (strequals(strValue,"Elimination")) {
+		} else if (strequals(strValue,"elimination")) {
 			g_subgametype.integer = GT_ELIMINATION;
-		} else if (strequals(strValue,"CTFElimination")) {
+		} else if (strequals(strValue,"ctfelim")) {
 			g_subgametype.integer = GT_CTF_ELIMINATION;
-		} else if (strequals(strValue,"LastManStanding")) {
+		} else if (strequals(strValue,"lms")) {
 			g_subgametype.integer = GT_LMS;
-		} else if (strequals(strValue,"DoubleDomination")) {
+		} else if (strequals(strValue,"dd")) {
 			g_subgametype.integer = GT_DOUBLE_D;
-		} else if (strequals(strValue,"Domination")) {
+		} else if (strequals(strValue,"dom")) {
 			g_subgametype.integer = GT_DOMINATION;
-		} else if (strequals(strValue,"Possession")) {
+		} else if (strequals(strValue,"pos")) {
 			g_subgametype.integer = GT_POSSESSION;
 		} else {
 			g_subgametype.integer = GT_FFA;
 		}
 
 		// We can put this safely as the SP check is already in place.
-		if (G_IsATeamGametype(g_gametype.integer,g_subgametype.integer)) {
+		if (G_IsATeamGametype(g_gametype.integer,g_subgametype.integer) &&
+				!G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_TEAM)) {
 			strValue = Info_ValueForKey( arenainfo, "capturelimit" );
 			scoreLimit = atoi( strValue );
 			if ( scoreLimit ) {
@@ -1122,7 +1131,13 @@ void G_InitBots( qboolean restart ) {
 		}
 
 		if( !restart ) {
-			G_SpawnBots( Info_ValueForKey( arenainfo, "bots" ), basedelay );
+			if (G_IsATeamGametype(g_gametype.integer,g_subgametype.integer)) {
+				G_SpawnBots( Info_ValueForKey( arenainfo, "redbots" ), basedelay, TEAM_RED );
+				G_SpawnBots( Info_ValueForKey( arenainfo, "bluebots" ), basedelay, TEAM_BLUE );
+			}
+			else {
+				G_SpawnBots( Info_ValueForKey( arenainfo, "bots" ), basedelay, TEAM_FREE );
+			}
 		}
 	} else {
 		if(bot_autominplayers.integer) {
