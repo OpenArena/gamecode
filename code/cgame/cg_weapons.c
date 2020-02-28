@@ -2300,9 +2300,6 @@ void CG_DrawWeaponSelect( void )
 	}
 
 	switch(cg_weaponBarStyle.integer) {
-	case 0:
-		CG_DrawWeaponBar0(count,bits);
-		break;
 	case 1:
 		CG_DrawWeaponBar1(count,bits);
 		break;
@@ -2323,6 +2320,9 @@ void CG_DrawWeaponSelect( void )
 		break;
 	case 7:
 		CG_DrawWeaponBar7(count,bits, color);
+		break;
+	default:
+		CG_DrawWeaponBar0(count,bits);
 		break;
 	}
 	trap_R_SetColor(NULL);
