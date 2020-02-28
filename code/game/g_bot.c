@@ -324,9 +324,27 @@ G_AddRandomBot
 void G_AddRandomBot( int team ) {
 	char	*teamstr;
 
-	if (team == TEAM_RED) teamstr = "red";
-	else if (team == TEAM_BLUE) teamstr = "blue";
-	else teamstr = "free";
+	if (G_IsATeamGametype(g_gametype.integer)) {
+		// Team games will throw bots in one of two teams (red or blue).
+		if (team == TEAM_RED) {
+			teamstr = "red";
+		}
+		else if (team == TEAM_BLUE) {
+			teamstr = "blue";
+		}
+		// If no team is specified, a coin is tossed.
+		else {
+			if (rand() % 10 > 5) {
+				teamstr = "red";
+			}
+			else {
+				teamstr = "blue";
+			}
+		}
+	} else {
+		// Non-team games have only one team: free.
+		teamstr = "free";
+	}
 	trap_SendConsoleCommand( EXEC_INSERT, va("addbot random %i %s %i\n", g_spSkill.integer, teamstr, 0) );
 }
 
