@@ -866,6 +866,7 @@ typedef struct mapinfo_result_s {
 	int captureLimit;
 	char mpBots[1024];
 	char author[64];
+	char title[64];
 	char description[8192];
 	char gametypeSupported[GT_MAX_GAME_TYPE]; //y/n
 } mapinfo_result_t;
