@@ -2406,3 +2406,52 @@ qboolean CheckObeliskAttack( const gentity_t *obelisk, const gentity_t *attacker
 
 	return qfalse;
 }
+/*
+================
+ShuffleTeams
+ *Randomizes the teams based on a type of function and then restarts the map
+ *Currently there is only one type so type is ignored. You can add total randomizaion or waighted randomization later.
+ *
+ *The function will split the teams like this:
+ *1. Red team
+ *2. Blue team
+ *3. Blue team
+ *4. Red team
+ *5. Go to 1
+================
+*/
+void ShuffleTeams(void)
+{
+	int		i;
+	int		nextTeam = TEAM_RED;
+	int		count = 0;
+
+	if (!G_IsATeamGametype(g_gametype.integer)) {
+		return;
+	}
+
+	for (i = 0; i < level.numConnectedClients; i++) {
+		gclient_t	*cl;
+		cl = &level.clients[level.sortedClients[i]];
+
+		if (g_entities[cl - level.clients].r.svFlags & SVF_BOT) {
+			continue;
+		}
+
+		if (cl->sess.sessionTeam == TEAM_RED || cl->sess.sessionTeam == TEAM_BLUE) {
+			cl->sess.sessionTeam = nextTeam;
+			count++;
+			G_Printf("%i\n", nextTeam);
+			if (nextTeam == TEAM_RED) {
+				nextTeam = TEAM_BLUE;
+			} else if (nextTeam == TEAM_BLUE) {
+				nextTeam = TEAM_RED;
+			}
+
+			ClientUserinfoChanged(cl - level.clients);
+			ClientBegin(cl - level.clients);
+		}
+	}
+
+	trap_SendConsoleCommand(EXEC_APPEND, "map_restart 0\n");
+}

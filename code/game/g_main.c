@@ -652,6 +652,9 @@ void G_UpdateCvars( void )
 					if( allowedVote("clientkick") )
 						voteflags|=VF_clientkick;
 
+					if( allowedVote("shuffle") )
+						voteflags|=VF_shuffle;
+
 					if( allowedVote("nextmap") )
 						voteflags|=VF_nextmap;
 
