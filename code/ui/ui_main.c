@@ -7532,10 +7532,11 @@ static void UI_StartServerRefresh(qboolean full)
 UI_IsATeamGametype
 
 Checks if the gametype is a team-based game.
+(UI_IsATeamGame(check,qtrue))
 ===================
  */
-qboolean UI_IsATeamGametype(int gametype) {
-	return GAMETYPE_IS_A_TEAM_GAME(gametype);
+qboolean UI_IsATeamGametype(int check) {
+	return GAMETYPE_IS_A_TEAM_GAME(check);
 }
 /*
 ===================
@@ -7544,8 +7545,8 @@ UI_UsesTeamFlags
 Checks if the gametype makes use of the red and blue flags.
 ===================
  */
-qboolean UI_UsesTeamFlags(int gametype) {
-	return GAMETYPE_USES_RED_AND_BLUE_FLAG(gametype);
+qboolean UI_UsesTeamFlags(int check) {
+	return GAMETYPE_USES_RED_AND_BLUE_FLAG(check);
 }
 /*
 ===================
@@ -7554,8 +7555,8 @@ UI_UsesTheWhiteFlag
 Checks if the gametype makes use of the neutral flag.
 ===================
  */
-qboolean UI_UsesTheWhiteFlag(int gametype) {
-	return GAMETYPE_USES_WHITE_FLAG(gametype);
+qboolean UI_UsesTheWhiteFlag(int check) {
+	return GAMETYPE_USES_WHITE_FLAG(check);
 }
 /*
 ===================
@@ -7564,7 +7565,7 @@ UI_IsARoundBasedGametype
 Checks if the gametype has a round-based system.
 ===================
  */
-qboolean UI_IsARoundBasedGametype(int gametype) {
-	return GAMETYPE_IS_ROUND_BASED(gametype);
+qboolean UI_IsARoundBasedGametype(int check) {
+	return GAMETYPE_IS_ROUND_BASED(check);
 }
 /* /Neon_Knight */

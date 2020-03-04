@@ -109,7 +109,6 @@ extern vmCvar_t ui_gameType;
 extern vmCvar_t ui_netGameType;
 extern vmCvar_t ui_actualNetGameType;
 extern vmCvar_t ui_joinGameType;
-extern vmCvar_t ui_subGameType;
 extern vmCvar_t ui_netSource;
 extern vmCvar_t ui_serverFilterType;
 extern vmCvar_t ui_dedicated;
@@ -1317,8 +1316,8 @@ typedef struct postGameInfo_s {
 #endif
 
 /* Neon_Knight: Useful check in order to have code consistency. */
-qboolean UI_IsATeamGametype(int gametype);	/* Whether the gametype is team-based or not.*/
-qboolean UI_UsesTeamFlags(int gametype);	/* Whether the gametype uses the red and blue flags. */
-qboolean UI_UsesTheWhiteFlag(int gametype);	/* Whether the gametype uses the neutral flag. */
-qboolean UI_IsARoundBasedGametype(int gametype);	/* Whether the gametype is round-based. */
+qboolean UI_IsATeamGametype(int check);	/* Whether the gametype is team-based or not.*/
+qboolean UI_UsesTeamFlags(int check);	/* Whether the gametype uses the red and blue flags. */
+qboolean UI_UsesTheWhiteFlag(int check);	/* Whether the gametype uses the neutral flag. */
+qboolean UI_IsARoundBasedGametype(int check);	/* Whether the gametype uses the neutral flag. */
 /* /Neon_Knight */
