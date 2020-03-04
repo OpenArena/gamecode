@@ -188,7 +188,7 @@ int BotAI_GetEntityState( int entityNum, entityState_t *state ) {
 	memset( state, 0, sizeof(entityState_t) );
 	if (!ent->inuse) return qfalse;
 	if (!ent->r.linked) return qfalse;
-	if ( !(G_IsARoundBasedGametype(g_gametype.integer) ||g_instantgib.integer || g_rockets.integer || g_elimination_allgametypes.integer)
+	if ( !(G_IsARoundBasedGametype(gametype,subgametype) ||g_instantgib.integer || g_rockets.integer || g_elimination_allgametypes.integer)
 	       && (ent->r.svFlags & SVF_NOCLIENT) ) {
 		return qfalse;
 	}
@@ -292,19 +292,19 @@ void BotReportStatus(bot_state_t *bs) {
 	}
 
 	strcpy(flagstatus, "  ");
-	if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
+	if (G_UsesTeamFlags(gametype,subgametype) && !G_UsesTheWhiteFlag(gametype,subgametype)) {
 		if (BotCTFCarryingFlag(bs)) {
 			if (BotTeam(bs) == TEAM_RED) strcpy(flagstatus, S_COLOR_RED"F ");
 			else strcpy(flagstatus, S_COLOR_BLUE"F ");
 		}
 	}
-	else if (gametype == GT_1FCTF) {
+	else if (G_SingleGametypeCheck(gametype,subgametype,GT_1FCTF)) {
 		if (Bot1FCTFCarryingFlag(bs)) {
 			if (BotTeam(bs) == TEAM_RED) strcpy(flagstatus, S_COLOR_RED"F ");
 			else strcpy(flagstatus, S_COLOR_BLUE"F ");
 		}
 	}
-	else if (gametype == GT_HARVESTER) {
+	else if (G_SingleGametypeCheck(gametype,subgametype,GT_HARVESTER)) {
 		if (BotHarvesterCarryingCubes(bs)) {
 			if (BotTeam(bs) == TEAM_RED) Com_sprintf(flagstatus, sizeof(flagstatus), S_COLOR_RED"%2d", bs->inventory[INVENTORY_REDCUBE]);
 			else Com_sprintf(flagstatus, sizeof(flagstatus), S_COLOR_BLUE"%2d", bs->inventory[INVENTORY_BLUECUBE]);
@@ -454,17 +454,17 @@ void BotSetInfoConfigString(bot_state_t *bs) {
 	}
 
 	strcpy(carrying, "  ");
-	if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
+	if (G_UsesTeamFlags(gametype,subgametype) && !G_UsesTheWhiteFlag(gametype,subgametype)) {
 		if (BotCTFCarryingFlag(bs)) {
 			strcpy(carrying, "F ");
 		}
 	}
-	else if (G_UsesTheWhiteFlag(gametype)) {
+	else if (G_UsesTheWhiteFlag(gametype,subgametype)) {
 		if (Bot1FCTFCarryingFlag(bs)) {
 			strcpy(carrying, "F ");
 		}
 	}
-	else if (gametype == GT_HARVESTER) {
+	else if (G_SingleGametypeCheck(gametype,subgametype,GT_HARVESTER)) {
 		if (BotHarvesterCarryingCubes(bs)) {
 			if (BotTeam(bs) == TEAM_RED) Com_sprintf(carrying, sizeof(carrying), "%2d", bs->inventory[INVENTORY_REDCUBE]);
 			else Com_sprintf(carrying, sizeof(carrying), "%2d", bs->inventory[INVENTORY_BLUECUBE]);
@@ -682,7 +682,7 @@ void BotInterbreeding(void) {
 	trap_Cvar_Update(&bot_interbreedchar);
 	if (!strlen(bot_interbreedchar.string)) return;
 	//make sure we are in tournament mode
-	if (gametype != GT_TOURNAMENT) {
+	if (!G_SingleGametypeCheck(gametype,subgametype,GT_TOURNAMENT)) {
 		trap_Cvar_Set("g_gametype", va("%d", GT_TOURNAMENT));
 		ExitLevel();
 		return;
@@ -1526,7 +1526,7 @@ int BotAIStartFrame(int time) {
 				trap_BotLibUpdateEntity(i, NULL);
 				continue;
 			}
-			if ( !(G_IsARoundBasedGametype(g_gametype.integer) ||g_instantgib.integer || g_rockets.integer || g_elimination_allgametypes.integer)
+			if ( !(G_IsARoundBasedGametype(gametype,subgametype) ||g_instantgib.integer || g_rockets.integer || g_elimination_allgametypes.integer)
 				   && ent->r.svFlags & SVF_NOCLIENT) {
 				trap_BotLibUpdateEntity(i, NULL);
 				continue;
@@ -1647,6 +1647,10 @@ int BotInitLibrary(void) {
 	trap_Cvar_VariableStringBuffer("g_gametype", buf, sizeof(buf));
 	if (!strlen(buf)) strcpy(buf, "0");
 	trap_BotLibVarSet("g_gametype", buf);
+	//sub game type
+	trap_Cvar_VariableStringBuffer("g_subgametype", buf, sizeof(buf));
+	if (!strlen(buf)) strcpy(buf, "0");
+	trap_BotLibVarSet("g_subgametype", buf);
 	//bot developer mode and log file
 	trap_BotLibVarSet("bot_developer", bot_developer.string);
 	trap_Cvar_VariableStringBuffer("logfile", buf, sizeof(buf));

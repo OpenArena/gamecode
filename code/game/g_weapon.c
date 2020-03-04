@@ -969,7 +969,7 @@ void FireWeapon( gentity_t *ent )
 		weapon_supershotgun_fire( ent );
 		break;
 	case WP_MACHINEGUN:
-		if ( g_gametype.integer != GT_TEAM ) {
+		if (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_TEAM)) {
 			Bullet_Fire( ent, MACHINEGUN_SPREAD, MACHINEGUN_DAMAGE );
 		}
 		else {

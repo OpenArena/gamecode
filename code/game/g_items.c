@@ -88,7 +88,7 @@ int Pickup_Powerup( gentity_t *ent, gentity_t *other )
 
 		// if same team in team game, no sound
 		// cannot use OnSameTeam as it expects to g_entities, not clients
-		if (G_IsATeamGametype(g_gametype.integer) && other->client->sess.sessionTeam == client->sess.sessionTeam  ) {
+		if (G_IsATeamGametype(g_gametype.integer,g_subgametype.integer) && other->client->sess.sessionTeam == client->sess.sessionTeam  ) {
 			continue;
 		}
 
@@ -251,7 +251,7 @@ int Pickup_Weapon (gentity_t *ent, gentity_t *other)
 		}
 
 		// dropped items and teamplay weapons always have full ammo
-		if ( ! (ent->flags & FL_DROPPED_ITEM) && g_gametype.integer != GT_TEAM ) {
+		if (!(ent->flags & FL_DROPPED_ITEM) && G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_TEAM)) {
 			// respawning rules
 			// drop the quantity if the already have over the minimum
 			if ( other->client->ps.ammo[ ent->item->giTag ] < quantity ) {
@@ -272,7 +272,7 @@ int Pickup_Weapon (gentity_t *ent, gentity_t *other)
 		other->client->ps.ammo[ent->item->giTag] = -1; // unlimited ammo
 
 	// team deathmatch has slow weapon respawns
-	if ( g_gametype.integer == GT_TEAM ) {
+	if (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_TEAM)) {
 		return g_weaponTeamRespawn.integer;
 	}
 
@@ -430,22 +430,25 @@ void Touch_Item (gentity_t *ent, gentity_t *other, trace_t *trace)
 	qboolean	predict;
 
 	//instant gib
-	if ((g_instantgib.integer || g_rockets.integer || g_gametype.integer == GT_CTF_ELIMINATION || g_elimination_allgametypes.integer)
-	        && ent->item->giType != IT_TEAM)
+	if ((g_instantgib.integer || g_rockets.integer ||
+			G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_CTF_ELIMINATION) ||
+			g_elimination_allgametypes.integer) &&
+			ent->item->giType != IT_TEAM)
 		return;
 
 	//Cannot touch flag before round starts
-	if(g_gametype.integer == GT_CTF_ELIMINATION && level.roundNumber != level.roundNumberStarted)
+	if(G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_CTF_ELIMINATION) && level.roundNumber != level.roundNumberStarted)
 		return;
 
 	//Cannot take ctf elimination oneway
-	if(g_gametype.integer == GT_CTF_ELIMINATION && g_elimination_ctf_oneway.integer!=0 && (
-	            (other->client->sess.sessionTeam==TEAM_BLUE && (level.eliminationSides+level.roundNumber)%2 == 0 ) ||
-	            (other->client->sess.sessionTeam==TEAM_RED && (level.eliminationSides+level.roundNumber)%2 != 0 ) ))
+	if(G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_CTF_ELIMINATION) &&
+				g_elimination_ctf_oneway.integer!=0 &&
+				((other->client->sess.sessionTeam==TEAM_BLUE && (level.eliminationSides+level.roundNumber)%2 == 0 ) ||
+				(other->client->sess.sessionTeam==TEAM_RED && (level.eliminationSides+level.roundNumber)%2 != 0 ) ))
 		return;
 
-	if (g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_LMS)
-		return;		//nothing to pick up in elimination
+	if (G_IsARoundBasedGametype(g_gametype.integer,g_subgametype.integer) && !G_UsesTeamFlags(g_gametype.integer,g_subgametype.integer))
+		return;		//nothing to pick up in elimination or LMS
 
 	if (!other->client)
 		return;
@@ -458,7 +461,7 @@ void Touch_Item (gentity_t *ent, gentity_t *other, trace_t *trace)
 	}
 
 	//In double DD we cannot "pick up" a flag we already got
-	if(g_gametype.integer == GT_DOUBLE_D) {
+	if(G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_DOUBLE_D)) {
 		if( strequals(ent->classname, "team_CTF_redflag") ) {
 			if(other->client->sess.sessionTeam == level.pointStatusA) {
 				return;
@@ -631,8 +634,10 @@ gentity_t *LaunchItem( gitem_t *item, vec3_t origin, vec3_t velocity )
 	VectorCopy( velocity, dropped->s.pos.trDelta );
 
 	dropped->s.eFlags |= EF_BOUNCE_HALF;
-	if ((G_UsesTeamFlags(g_gametype.integer) || G_UsesTheWhiteFlag(g_gametype.integer) || g_gametype.integer == GT_DOUBLE_D)
-	        && item->giType == IT_TEAM) { // Special case for CTF flags
+	if ((G_UsesTeamFlags(g_gametype.integer,g_subgametype.integer) ||
+			G_UsesTheWhiteFlag(g_gametype.integer,g_subgametype.integer) ||
+			G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_DOUBLE_D)) &&
+			item->giType == IT_TEAM) { // Special case for CTF flags
 		dropped->think = Team_DroppedFlagThink;
 		dropped->nextthink = level.time + 30000;
 		Team_CheckDroppedItem( dropped );
@@ -741,7 +746,7 @@ void FinishSpawningItem( gentity_t *ent )
 
 
 	// powerups don't spawn in for a while (but not in elimination)
-	if(!G_IsARoundBasedGametype(g_gametype.integer) && !g_instantgib.integer && !g_elimination_allgametypes.integer && !g_rockets.integer )
+	if(!G_IsARoundBasedGametype(g_gametype.integer,g_subgametype.integer) && !g_instantgib.integer && !g_elimination_allgametypes.integer && !g_rockets.integer )
 		if ( ent->item->giType == IT_POWERUP ) {
 			float	respawn;
 
@@ -771,7 +776,9 @@ void G_CheckTeamItems( void )
 	// Set up team stuff
 	Team_InitGame();
 
-	if( (G_UsesTeamFlags(g_gametype.integer) && !G_UsesTheWhiteFlag(g_gametype.integer)) || g_gametype.integer == GT_DOUBLE_D) {
+	if( (G_UsesTeamFlags(g_gametype.integer,g_subgametype.integer) &&
+			!G_UsesTheWhiteFlag(g_gametype.integer,g_subgametype.integer)) ||
+			G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_DOUBLE_D)) {
 		gitem_t	*item;
 
 		// check for the two flags
@@ -784,7 +791,7 @@ void G_CheckTeamItems( void )
 			G_Printf( S_COLOR_YELLOW "WARNING: No team_CTF_blueflag in map\n" );
 		}
 	}
-	if( g_gametype.integer == GT_1FCTF ) {
+	if(G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_1FCTF)) {
 		gitem_t	*item;
 
 		// check for all three flags
@@ -865,7 +872,7 @@ void ClearRegisteredItems( void )
 		// players always start with the base weapon
 		RegisterItem( BG_FindItemForWeapon( WP_MACHINEGUN ) );
 		RegisterItem( BG_FindItemForWeapon( WP_GAUNTLET ) );
-		if(G_IsARoundBasedGametype(g_gametype.integer) || g_elimination_allgametypes.integer) {
+		if(G_IsARoundBasedGametype(g_gametype.integer,g_subgametype.integer) || g_elimination_allgametypes.integer) {
 			RegisterItem( BG_FindItemForWeapon( WP_SHOTGUN ) );
 			RegisterItem( BG_FindItemForWeapon( WP_GRENADE_LAUNCHER ) );
 			RegisterItem( BG_FindItemForWeapon( WP_ROCKET_LAUNCHER ) );
@@ -881,12 +888,12 @@ void ClearRegisteredItems( void )
 	if (g_grapple.integer) {
 		RegisterItem( BG_FindItemForWeapon( WP_GRAPPLING_HOOK ) );
 	}
-	if( g_gametype.integer == GT_HARVESTER ) {
+	if(G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_HARVESTER)) {
 		RegisterItem( BG_FindItem( "Red Cube" ) );
 		RegisterItem( BG_FindItem( "Blue Cube" ) );
 	}
 
-	if(g_gametype.integer == GT_DOUBLE_D ) {
+	if(G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_DOUBLE_D)) {
 		RegisterItem( BG_FindItem( "Point A (Blue)" ) );
 		RegisterItem( BG_FindItem( "Point A (Red)" ) );
 		RegisterItem( BG_FindItem( "Point A (White)" ) );
@@ -895,13 +902,13 @@ void ClearRegisteredItems( void )
 		RegisterItem( BG_FindItem( "Point B (White)" ) );
 	}
 
-	if(g_gametype.integer == GT_DOMINATION ) {
+	if(G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_DOMINATION)) {
 		RegisterItem( BG_FindItem( "Neutral domination point" ) );
 		RegisterItem( BG_FindItem( "Red domination point" ) );
 		RegisterItem( BG_FindItem( "Blue domination point" ) );
 	}
 
-	if (g_gametype.integer == GT_POSSESSION) {
+	if (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_POSSESSION)) {
 		RegisterItem(BG_FindItem("Neutral Flag") );
 	}
 
@@ -995,22 +1002,25 @@ void G_SpawnItem (gentity_t *ent, gitem_t *item)
 
 	ent->physicsBounce = 0.50;		// items are bouncy
 
-	if (g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_LMS ||
-	        ( item->giType != IT_TEAM && (g_instantgib.integer || g_rockets.integer || g_elimination_allgametypes.integer || g_gametype.integer==GT_CTF_ELIMINATION) ) ) {
+	if ((G_IsARoundBasedGametype(g_gametype.integer,g_subgametype.integer) && !G_UsesTeamFlags(g_gametype.integer,g_subgametype.integer)) ||
+	        (item->giType != IT_TEAM && (g_instantgib.integer || g_rockets.integer || g_elimination_allgametypes.integer ||
+			G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_CTF_ELIMINATION)))) {
 		ent->s.eFlags |= EF_NODRAW; //Invisible in elimination
 		ent->r.svFlags |= SVF_NOCLIENT;  //Don't broadcast
 	}
 
-	if(g_gametype.integer == GT_DOUBLE_D && (strequals(ent->classname, "team_CTF_redflag") || strequals(ent->classname, "team_CTF_blueflag")
-	        || strequals(ent->classname, "team_CTF_neutralflag") || item->giType == IT_PERSISTANT_POWERUP  )) {
+	if(G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_DOUBLE_D) &&
+			(strequals(ent->classname, "team_CTF_redflag") || strequals(ent->classname, "team_CTF_blueflag") ||
+			strequals(ent->classname, "team_CTF_neutralflag") || item->giType == IT_PERSISTANT_POWERUP)) {
 		ent->s.eFlags |= EF_NODRAW; //Don't draw the flag models/persistant powerups
 	}
 
-	if( !G_UsesTheWhiteFlag(g_gametype.integer) && strequals(ent->classname, "team_CTF_neutralflag")) {
+	if( !G_UsesTheWhiteFlag(g_gametype.integer,g_subgametype.integer) && strequals(ent->classname, "team_CTF_neutralflag")) {
 		ent->s.eFlags |= EF_NODRAW; // Don't draw the flag in CTF_elimination
 	}
 
-	if( g_gametype.integer == GT_POSSESSION && (strequals(ent->classname, "team_CTF_redflag") || strequals(ent->classname, "team_CTF_blueflag") ) ) {
+	if(G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_POSSESSION) &&
+			(strequals(ent->classname, "team_CTF_redflag") || strequals(ent->classname, "team_CTF_blueflag"))) {
 		ent->s.eFlags |= EF_NODRAW; // Don't draw the flag colored flags in possession
 	}
 

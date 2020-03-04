@@ -123,14 +123,14 @@ static void CG_DrawClientScore(int y, score_t *score, float *color, float fade, 
 			}
 		} else if (ci->handicap < 100) {
 			Com_sprintf(string, sizeof ( string), "%i", ci->handicap);
-			if (cgs.gametype == GT_TOURNAMENT)
+			if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_TOURNAMENT))
 				CG_DrawSmallStringColor(iconx, y - SMALLCHAR_HEIGHT / 2, string, color);
 			else
 				CG_DrawSmallStringColor(iconx, y, string, color);
 		}
 
 		// draw the wins / losses
-		if (cgs.gametype == GT_TOURNAMENT) {
+		if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_TOURNAMENT)) {
 			Com_sprintf(string, sizeof ( string), "%i/%i", ci->wins, ci->losses);
 			if (ci->handicap < 100 && !ci->botSkill) {
 				CG_DrawSmallStringColor(iconx, y + SMALLCHAR_HEIGHT / 2, string, color);
@@ -170,7 +170,7 @@ static void CG_DrawClientScore(int y, score_t *score, float *color, float fade, 
 		Com_sprintf(string, sizeof (string),
 				" SPECT %3i %4i %s", score->ping, score->time, ci->name);
 	} else {
-		/*if(cgs.gametype == GT_LMS)
+		/*if(CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_LMS))
 			Com_sprintf(string, sizeof(string),
 				"%5i %4i %4i %s *%i*", score->score, score->ping, score->time, ci->name, ci->isDead);
 		else*/
@@ -190,7 +190,7 @@ static void CG_DrawClientScore(int y, score_t *score, float *color, float fade, 
 		localClient = qtrue;
 
 		if ((cg.snap->ps.persistant[PERS_TEAM] == TEAM_SPECTATOR) ||
-				CG_IsATeamGametype(cgs.gametype)) {
+				CG_IsATeamGametype(cgs.gametype,cgs.subgametype)) {
 			// Sago: I think this means that it doesn't matter if two players are tied in team game - only team score counts
 			rank = -1;
 		} else {
@@ -225,7 +225,7 @@ static void CG_DrawClientScore(int y, score_t *score, float *color, float fade, 
 	if (cg.snap->ps.stats[ STAT_CLIENTS_READY ] & (1 << score->client)) {
 		CG_DrawBigStringColor(iconx, y, "READY", color);
 	} else
-		if (cgs.gametype == GT_LMS) {
+		if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_LMS)) {
 		CG_DrawBigStringColor(iconx - 50, y, va("*%i*", ci->isDead), color);
 	} else
 		if (ci->isDead) {
@@ -324,7 +324,7 @@ qboolean CG_DrawOldScoreboard(void) {
 	}
 
 	// current rank
-	if (!CG_IsATeamGametype(cgs.gametype)) {
+	if (!CG_IsATeamGametype(cgs.gametype,cgs.subgametype)) {
 		if (cg.snap->ps.persistant[PERS_TEAM] != TEAM_SPECTATOR) {
 			s = va("%s place with %i",
 					CG_PlaceString(cg.snap->ps.persistant[PERS_RANK] + 1),
@@ -374,7 +374,7 @@ qboolean CG_DrawOldScoreboard(void) {
 
 	localClient = qfalse;
 
-	if (CG_IsATeamGametype(cgs.gametype)) {
+	if (CG_IsATeamGametype(cgs.gametype,cgs.subgametype)) {
 		//
 		// teamplay scoreboard
 		//
@@ -505,7 +505,7 @@ void CG_DrawTourneyScoreboard(void) {
 	// print the two scores
 
 	y = 160;
-	if (CG_IsATeamGametype(cgs.gametype)) {
+	if (CG_IsATeamGametype(cgs.gametype,cgs.subgametype)) {
 		//
 		// teamplay scoreboard
 		//

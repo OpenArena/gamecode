@@ -1031,6 +1031,7 @@ extern	gentity_t		g_entities[MAX_GENTITIES];
 
 //CVARS 
 extern vmCvar_t g_gametype;
+extern vmCvar_t g_subgametype;
 extern vmCvar_t g_dedicated;
 extern vmCvar_t g_cheats;
 extern vmCvar_t g_maxclients;			// allow this many total, including spectators
@@ -1427,8 +1428,9 @@ void MapInfoPrint(mapinfo_result_t *info);
 void monster_die (gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int damage, int mod);
 
 /* Neon_Knight: Useful check in order to have code consistency. */
-qboolean G_IsATeamGametype(int check);	/* Whether the gametype is team-based or not.*/
-qboolean G_UsesTeamFlags(int check);	/* Whether the gametype uses the red and blue flags. */
-qboolean G_UsesTheWhiteFlag(int check);	/* Whether the gametype uses the neutral flag. */
-qboolean G_IsARoundBasedGametype(int check);	/* Whether the gametype uses the neutral flag. */
+qboolean G_IsATeamGametype(int gametype, int subgametype);	/* Whether the gametype is team-based or not.*/
+qboolean G_UsesTeamFlags(int gametype, int subgametype);	/* Whether the gametype uses the red and blue flags. */
+qboolean G_UsesTheWhiteFlag(int gametype, int subgametype);	/* Whether the gametype uses the neutral flag. */
+qboolean G_IsARoundBasedGametype(int gametype, int subgametype);	/* Whether the gametype is round-based. */
+qboolean G_SingleGametypeCheck(int gametype, int subgametype, int check);	/* Whether the game takes place in a particular gametype. */
 /* /Neon_Knight */

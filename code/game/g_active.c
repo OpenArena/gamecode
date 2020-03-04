@@ -320,7 +320,8 @@ void SpectatorThink( gentity_t *ent, usercmd_t *ucmd ) {
 
 	client = ent->client;
 
-	if ( G_IsARoundBasedGametype(g_gametype.integer) && G_IsATeamGametype(g_gametype.integer) &&
+	if ( G_IsARoundBasedGametype(g_gametype.integer,g_subgametype.integer) &&
+			G_IsATeamGametype(g_gametype.integer,g_subgametype.integer) &&
 			client->sess.spectatorState != SPECTATOR_FOLLOW &&
 			g_elimination_lockspectator.integer>1 &&
 			ent->client->sess.sessionTeam != TEAM_SPECTATOR ) {
@@ -367,9 +368,10 @@ void SpectatorThink( gentity_t *ent, usercmd_t *ucmd ) {
 	}
 
 	if ( ( client->buttons & BUTTON_USE_HOLDABLE ) && ! ( client->oldbuttons & BUTTON_USE_HOLDABLE ) ) {
-		if ( G_IsARoundBasedGametype(g_gametype.integer) && G_IsATeamGametype(g_gametype.integer) &&
-			g_elimination_lockspectator.integer>1 &&
-			ent->client->sess.sessionTeam != TEAM_SPECTATOR ) {
+		if ( G_IsARoundBasedGametype(g_gametype.integer,g_subgametype.integer) &&
+				G_IsATeamGametype(g_gametype.integer,g_subgametype.integer) &&
+				g_elimination_lockspectator.integer>1 &&
+				ent->client->sess.sessionTeam != TEAM_SPECTATOR ) {
 			return;
 		}
 		StopFollowing(ent);
@@ -461,13 +463,16 @@ static void ClientTimerActions( gentity_t *ent, int msec ) {
 			if ( ent->health > client->ps.stats[STAT_MAX_HEALTH] ) {
 				ent->health--;
 			}
-			if ( G_IsARoundBasedGametype(g_gametype.integer) && level.humansEliminated ) {
+			if ( G_IsARoundBasedGametype(g_gametype.integer,g_subgametype.integer) && level.humansEliminated ) {
 				ent->damage=5;
 				G_Damage (ent, NULL, NULL, NULL, NULL, ent->damage, DAMAGE_NO_KNOCKBACK, MOD_UNKNOWN);
 			}
 			//Start killing players in LMS, if we are in overtime
-			else if (g_elimination_roundtime.integer&&g_gametype.integer==GT_LMS && TeamHealthCount( -1, TEAM_FREE ) != ent->health &&
-			         (level.roundNumber==level.roundNumberStarted)&&(level.time>=level.roundStartTime+1000*g_elimination_roundtime.integer)) {
+			else if (g_elimination_roundtime.integer &&
+					G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_LMS) &&
+					TeamHealthCount( -1, TEAM_FREE ) != ent->health &&
+			        (level.roundNumber==level.roundNumberStarted) &&
+					(level.time>=level.roundStartTime+1000*g_elimination_roundtime.integer)) {
 				ent->damage=5;
 				G_Damage (ent, NULL, NULL, NULL, NULL, ent->damage, DAMAGE_NO_ARMOR, MOD_UNKNOWN);
 			}
@@ -484,7 +489,8 @@ static void ClientTimerActions( gentity_t *ent, int msec ) {
 			client->ps.stats[STAT_ARMOR]--;
 		}
 		
-		if (g_gametype.integer == GT_POSSESSION && ent->health > 0 && client->ps.powerups[PW_NEUTRALFLAG] ) {
+		if (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_POSSESSION) &&
+				ent->health > 0 && client->ps.powerups[PW_NEUTRALFLAG] ) {
 			AddScore(ent, ent->client->ps.origin, 1);
 			G_LogPrintf("POS: %i %i: %s^7 scored a point\n", ent->s.number, 1, client->pers.netname);
 		}
@@ -626,7 +632,7 @@ void ClientEvents( gentity_t *ent, int oldEventSequence ) {
 				ent->client->ps.powerups[ j ] = 0;
 			}
 
-			if ( g_gametype.integer == GT_HARVESTER ) {
+			if (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_HARVESTER)) {
 				if ( ent->client->ps.generic1 > 0 ) {
 					if ( ent->client->sess.sessionTeam == TEAM_RED ) {
 						item = BG_FindItem( "Blue Cube" );
@@ -1139,7 +1145,7 @@ void ClientThink_real( gentity_t *ent ) {
 		if ( ( level.time > client->respawnTime ) &&
 			( ( ( g_forcerespawn.integer > 0 ) && 
 			( level.time - client->respawnTime  > g_forcerespawn.integer * 1000 ) ) ||
-			( G_IsARoundBasedGametype(g_gametype.integer) &&
+			( G_IsARoundBasedGametype(g_gametype.integer,g_subgametype.integer) &&
 			( level.time - client->respawnTime > 0 ) ) ||	
 			( ucmd->buttons & ( BUTTON_ATTACK | BUTTON_USE_HOLDABLE ) ) ) ) {
 
