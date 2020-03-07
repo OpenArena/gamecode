@@ -32,39 +32,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 // global display context
 
-extern vmCvar_t ui_ffa_fraglimit;
-extern vmCvar_t ui_ffa_timelimit;
-extern vmCvar_t ui_tourney_fraglimit;
-extern vmCvar_t ui_tourney_timelimit;
-extern vmCvar_t ui_team_fraglimit;
-extern vmCvar_t ui_team_timelimit;
-extern vmCvar_t ui_team_friendly;
-extern vmCvar_t ui_ctf_capturelimit;
-extern vmCvar_t ui_ctf_timelimit;
-extern vmCvar_t ui_ctf_friendly;
-extern vmCvar_t ui_1fctf_capturelimit;
-extern vmCvar_t ui_1fctf_timelimit;
-extern vmCvar_t ui_1fctf_friendly;
-extern vmCvar_t ui_overload_capturelimit;
-extern vmCvar_t ui_overload_timelimit;
-extern vmCvar_t ui_overload_friendly;
-extern vmCvar_t ui_harvester_capturelimit;
-extern vmCvar_t ui_harvester_timelimit;
-extern vmCvar_t ui_harvester_friendly;
-extern vmCvar_t ui_elimination_capturelimit;
-extern vmCvar_t ui_elimination_timelimit;
-extern vmCvar_t ui_ctf_elimination_capturelimit;
-extern vmCvar_t ui_ctf_elimination_timelimit;
-extern vmCvar_t ui_lms_fraglimit;
-extern vmCvar_t ui_lms_timelimit;
-extern vmCvar_t ui_dd_capturelimit;
-extern vmCvar_t ui_dd_timelimit;
-extern vmCvar_t ui_dd_friendly;
-extern vmCvar_t ui_dom_capturelimit;
-extern vmCvar_t ui_dom_timelimit;
-extern vmCvar_t ui_dom_friendly;
-extern vmCvar_t ui_pos_scorelimit;
-extern vmCvar_t ui_pos_timelimit;
 extern vmCvar_t ui_arenasFile;
 extern vmCvar_t ui_botsFile;
 extern vmCvar_t ui_spScores1;

@@ -1422,36 +1422,85 @@ static void UI_DrawClanName(rectDef_t *rect, float scale, vec4_t color, int text
 
 static void UI_SetCapFragLimits(qboolean uiVars)
 {
-	int cap = 5;
-	int frag = 10;
-	if (uiVars) {
-		if (uiVars == qtrue) {
-			trap_Cvar_Set("ui_captureLimit", va("%d", cap));
-			trap_Cvar_Set("ui_fragLimit", va("%d", frag));
-		}
-		else if (uiVars == qfalse) {
-			trap_Cvar_Set("capturelimit", va("%d", cap));
-			trap_Cvar_Set("fraglimit", va("%d", frag));
-		}
+	char *capLimit;
+	char *fragLimit;
+	char *timeLimit;
+	switch (uiInfo.gameTypes[ui_gameType.integer].gtEnum) {
+		case GT_FFA:
+			fragLimit = GT_FFA_DEFAULT_SCORELIMIT;
+			capLimit = "0";
+			timeLimit = GT_FFA_DEFAULT_TIMELIMIT;
+			break;
+		case GT_TOURNAMENT:
+			fragLimit = GT_TOURNEY_DEFAULT_SCORELIMIT;
+			capLimit = "0";
+			timeLimit = GT_TOURNEY_DEFAULT_TIMELIMIT;
+			break;
+		case GT_TEAM:
+			fragLimit = GT_TEAM_DEFAULT_SCORELIMIT;
+			capLimit = "0";
+			timeLimit = GT_TEAM_DEFAULT_TIMELIMIT;
+			break;
+		case GT_CTF:
+			fragLimit = "0";
+			capLimit = GT_CTF_DEFAULT_SCORELIMIT;
+			timeLimit = GT_CTF_DEFAULT_TIMELIMIT;
+			break;
+		case GT_1FCTF:
+			fragLimit = "0";
+			capLimit = GT_1FCTF_DEFAULT_SCORELIMIT;
+			timeLimit = GT_1FCTF_DEFAULT_TIMELIMIT;
+			break;
+		case GT_OBELISK:
+			fragLimit = "0";
+			capLimit = GT_OBELISK_DEFAULT_SCORELIMIT;
+			timeLimit = GT_OBELISK_DEFAULT_TIMELIMIT;
+			break;
+		case GT_HARVESTER:
+			fragLimit = "0";
+			capLimit = GT_HARVESTER_DEFAULT_SCORELIMIT;
+			timeLimit = GT_HARVESTER_DEFAULT_TIMELIMIT;
+			break;
+		case GT_ELIMINATION:
+			fragLimit = "0";
+			capLimit = GT_ELIMINATION_DEFAULT_SCORELIMIT;
+			timeLimit = GT_ELIMINATION_DEFAULT_TIMELIMIT;
+			break;
+		case GT_CTF_ELIMINATION:
+			fragLimit = "0";
+			capLimit = GT_CTF_ELIMINATION_DEFAULT_SCORELIMIT;
+			timeLimit = GT_CTF_ELIMINATION_DEFAULT_TIMELIMIT;
+			break;
+		case GT_LMS:
+			fragLimit = GT_LMS_DEFAULT_SCORELIMIT;
+			capLimit = "0";
+			timeLimit = GT_LMS_DEFAULT_TIMELIMIT;
+			break;
+		case GT_DOUBLE_D:
+			fragLimit = "0";
+			capLimit = GT_DOUBLE_D_DEFAULT_SCORELIMIT;
+			timeLimit = GT_DOUBLE_D_DEFAULT_TIMELIMIT;
+			break;
+		case GT_DOMINATION:
+			fragLimit = "0";
+			capLimit = GT_DOMINATION_DEFAULT_SCORELIMIT;
+			timeLimit = GT_DOMINATION_DEFAULT_TIMELIMIT;
+			break;
+		case GT_POSSESSION:
+			fragLimit = GT_POSSESSION_DEFAULT_SCORELIMIT;
+			capLimit = "0";
+			timeLimit = GT_POSSESSION_DEFAULT_TIMELIMIT;
+			break;
 	}
-	else
-	{
-		if (uiInfo.gameTypes[ui_gameType.integer].gtEnum == GT_OBELISK) {
-			cap = 4;
-			frag = 0;
-		}
-		else if (uiInfo.gameTypes[ui_gameType.integer].gtEnum == GT_HARVESTER) {
-			cap = 15;
-			frag = 0;
-		}
-		else if (uiInfo.gameTypes[ui_gameType.integer].gtEnum == GT_DOMINATION) {
-			cap = 125;
-			frag = 0;
-		}
-		else if (uiInfo.gameTypes[ui_gameType.integer].gtEnum == GT_POSSESSION) {
-			frag = 125;
-			cap = 0;
-		}
+	if (uiVars == qtrue) {
+		trap_Cvar_Set("ui_captureLimit", capLimit);
+		trap_Cvar_Set("ui_fragLimit", fragLimit);
+		trap_Cvar_Set("ui_timeLimit", timeLimit);
+	}
+	else if (uiVars == qfalse) {
+		trap_Cvar_Set("capturelimit", capLimit);
+		trap_Cvar_Set("fraglimit", fragLimit);
+		trap_Cvar_Set("timelimit", timeLimit);
 	}
 }
 // ui_gameType assumes gametype 0 is -1 ALL and will not show
@@ -7005,39 +7054,6 @@ typedef struct {
 	int			cvarFlags;
 } cvarTable_t;
 
-vmCvar_t ui_ffa_fraglimit;
-vmCvar_t ui_ffa_timelimit;
-vmCvar_t ui_tourney_fraglimit;
-vmCvar_t ui_tourney_timelimit;
-vmCvar_t ui_team_fraglimit;
-vmCvar_t ui_team_timelimit;
-vmCvar_t ui_team_friendly;
-vmCvar_t ui_ctf_capturelimit;
-vmCvar_t ui_ctf_timelimit;
-vmCvar_t ui_ctf_friendly;
-vmCvar_t ui_1fctf_capturelimit;
-vmCvar_t ui_1fctf_timelimit;
-vmCvar_t ui_1fctf_friendly;
-vmCvar_t ui_overload_capturelimit;
-vmCvar_t ui_overload_timelimit;
-vmCvar_t ui_overload_friendly;
-vmCvar_t ui_harvester_capturelimit;
-vmCvar_t ui_harvester_timelimit;
-vmCvar_t ui_harvester_friendly;
-vmCvar_t ui_elimination_capturelimit;
-vmCvar_t ui_elimination_timelimit;
-vmCvar_t ui_ctf_elimination_capturelimit;
-vmCvar_t ui_ctf_elimination_timelimit;
-vmCvar_t ui_lms_fraglimit;
-vmCvar_t ui_lms_timelimit;
-vmCvar_t ui_dd_capturelimit;
-vmCvar_t ui_dd_timelimit;
-vmCvar_t ui_dd_friendly;
-vmCvar_t ui_dom_capturelimit;
-vmCvar_t ui_dom_timelimit;
-vmCvar_t ui_dom_friendly;
-vmCvar_t ui_pos_scorelimit;
-vmCvar_t ui_pos_timelimit;
 vmCvar_t ui_arenasFile;
 vmCvar_t ui_botsFile;
 vmCvar_t ui_spScores1;
@@ -7170,52 +7186,6 @@ vmCvar_t ui_developer;
 
 // bk001129 - made static to avoid aliasing
 static cvarTable_t		cvarTable[] = {
-	{ &ui_ffa_fraglimit, "ui_ffa_fraglimit", "20", CVAR_ARCHIVE },
-	{ &ui_ffa_timelimit, "ui_ffa_timelimit", "0", CVAR_ARCHIVE },
-
-	{ &ui_tourney_fraglimit, "ui_tourney_fraglimit", "0", CVAR_ARCHIVE },
-	{ &ui_tourney_timelimit, "ui_tourney_timelimit", "15", CVAR_ARCHIVE },
-
-	{ &ui_team_fraglimit, "ui_team_fraglimit", "0", CVAR_ARCHIVE },
-	{ &ui_team_timelimit, "ui_team_timelimit", "20", CVAR_ARCHIVE },
-	{ &ui_team_friendly, "ui_team_friendly",  "1", CVAR_ARCHIVE },
-
-	{ &ui_ctf_capturelimit, "ui_ctf_capturelimit", "8", CVAR_ARCHIVE },
-	{ &ui_ctf_timelimit, "ui_ctf_timelimit", "30", CVAR_ARCHIVE },
-	{ &ui_ctf_friendly, "ui_ctf_friendly",  "0", CVAR_ARCHIVE },
-
-	{ &ui_1fctf_capturelimit, "ui_1fctf_capturelimit", "8", CVAR_ARCHIVE },
-	{ &ui_1fctf_timelimit, "ui_1fctf_timelimit", "30", CVAR_ARCHIVE },
-	{ &ui_1fctf_friendly, "ui_1fctf_friendly",  "0", CVAR_ARCHIVE },
-
-	{ &ui_overload_capturelimit, "ui_overload_capturelimit", "8", CVAR_ARCHIVE },
-	{ &ui_overload_timelimit, "ui_overload_timelimit", "30", CVAR_ARCHIVE },
-	{ &ui_overload_friendly, "ui_overload_friendly",  "0", CVAR_ARCHIVE },
-
-	{ &ui_harvester_capturelimit, "ui_harvester_capturelimit", "20", CVAR_ARCHIVE },
-	{ &ui_harvester_timelimit, "ui_harvester_timelimit", "30", CVAR_ARCHIVE },
-	{ &ui_harvester_friendly, "ui_harvester_friendly",  "0", CVAR_ARCHIVE },
-
-	{ &ui_elimination_capturelimit, "ui_elimination_capturelimit", "8", CVAR_ARCHIVE },
-	{ &ui_elimination_timelimit, "ui_elimination_timelimit", "20", CVAR_ARCHIVE },
-
-	{ &ui_ctf_elimination_capturelimit, "ui_ctf_elimination_capturelimit", "8", CVAR_ARCHIVE },
-	{ &ui_ctf_elimination_timelimit, "ui_ctf_elimination_timelimit", "30", CVAR_ARCHIVE },
-
-	{ &ui_lms_fraglimit, "ui_lms_fraglimit", "20", CVAR_ARCHIVE },
-	{ &ui_lms_timelimit, "ui_lms_timelimit", "0", CVAR_ARCHIVE },
-
-	{ &ui_dd_capturelimit, "ui_dd_capturelimit", "8", CVAR_ARCHIVE },
-	{ &ui_dd_timelimit, "ui_dd_timelimit", "30", CVAR_ARCHIVE },
-	{ &ui_dd_friendly, "ui_dd_friendly",  "0", CVAR_ARCHIVE },
-
-	{ &ui_dom_capturelimit, "ui_dom_capturelimit", "500", CVAR_ARCHIVE },
-	{ &ui_dom_timelimit, "ui_dom_timelimit", "30", CVAR_ARCHIVE },
-	{ &ui_dom_friendly, "ui_dom_friendly",  "0", CVAR_ARCHIVE },
-
-	{ &ui_pos_scorelimit, "ui_pos_scorelimit", "120", CVAR_ARCHIVE },
-	{ &ui_pos_timelimit, "ui_pos_timelimit", "20", CVAR_ARCHIVE },
-
 	{ &ui_arenasFile, "g_arenasFile", "", CVAR_INIT|CVAR_ROM },
 	{ &ui_botsFile, "g_botsFile", "", CVAR_INIT|CVAR_ROM },
 	{ &ui_spScores1, "g_spScores1", "", CVAR_ARCHIVE | CVAR_ROM },
