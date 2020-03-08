@@ -1071,6 +1071,7 @@ typedef struct {
 	sfxHandle_t takenLeadSound;
 	sfxHandle_t tiedLeadSound;
 	sfxHandle_t lostLeadSound;
+	sfxHandle_t leadSwitchSound;
 
 	sfxHandle_t voteNow;
 	sfxHandle_t votePassed;

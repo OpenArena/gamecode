@@ -799,6 +799,7 @@ static void CG_RegisterSounds(void) {
 			cgs.media.takenLeadSound = trap_S_RegisterSound(ANNOUNCER_YOUHAVETAKENTHELEAD, qtrue);
 			cgs.media.tiedLeadSound = trap_S_RegisterSound(ANNOUNCER_YOURETIEDFORTHELEAD, qtrue);
 			cgs.media.lostLeadSound = trap_S_RegisterSound(ANNOUNCER_YOUHAVELOSTTHELEAD, qtrue);
+			cgs.media.leadSwitchSound = trap_S_RegisterSound(ANNOUNCER_LEADSWITCH, qtrue);
 		}
 		// Countdown
 		cgs.media.count10Sound = trap_S_RegisterSound(ANNOUNCER_TEN, qtrue);
@@ -918,6 +919,7 @@ static void CG_RegisterSounds(void) {
 			cgs.media.takenLeadSound = trap_S_RegisterSound("sound/feedback/takenlead.wav", qtrue);
 			cgs.media.tiedLeadSound = trap_S_RegisterSound("sound/feedback/tiedlead.wav", qtrue);
 			cgs.media.lostLeadSound = trap_S_RegisterSound("sound/feedback/lostlead.wav", qtrue);
+			cgs.media.leadSwitchSound = trap_S_RegisterSound("sound/feedback/leadswitch.wav", qtrue);
 		}
 		// Events
 		cgs.media.count10Sound = trap_S_RegisterSound("sound/feedback/ten.wav", qtrue);

@@ -47,6 +47,7 @@
 #define ANNOUNCER_FOUR			"sound/feedback/four.wav"
 #define ANNOUNCER_TWOMINUTESLEFT	"sound/feedback/2_minute.wav"
 #define ANNOUNCER_THREEMINUTESLEFT	"sound/feedback/3_minute.wav"
+#define ANNOUNCER_LEADSWITCH	"sound/feedback/leadswitch.wav"
 // Teamplay
 #define ANNOUNCER_REDSCORES		"sound/teamplay/voc_red_scores.wav"
 #define ANNOUNCER_BLUESCORES		"sound/teamplay/voc_blue_scores.wav"
