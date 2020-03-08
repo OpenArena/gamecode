@@ -904,26 +904,144 @@ void CG_EntityEvent(centity_t *cent, vec3_t position) {
 			}
 			item = &bg_itemlist[ index ];
 
-			// powerups and team items will have a separate global sound, this one
+			// powerups, holdables and team items will have a separate global sound, this one
 			// will be played at prediction time
-			if (item->giType == IT_POWERUP || item->giType == IT_TEAM) {
+			if (item->giType == IT_TEAM) {
 				trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.n_healthSound);
-			} else if (item->giType == IT_PERSISTANT_POWERUP) {
+			}
+			else if (item->giType == IT_POWERUP) {
 				switch (item->giTag) {
-					case PW_SCOUT:
-						trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.scoutSound);
+					case PW_QUAD:
+						if (cg_announcePowerups.integer & ANNOUNCE_POWERUPS) {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.quadAnnouncerSound);
+						}
+						else {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.quadSpawnSound);
+						}
 						break;
-					case PW_GUARD:
-						trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.guardSound);
+					case PW_BATTLESUIT:
+						if (cg_announcePowerups.integer & ANNOUNCE_POWERUPS) {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.enviroAnnouncerSound);
+						}
+						else {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.enviroSpawnSound);
+						}
 						break;
-					case PW_DOUBLER:
-						trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.doublerSound);
+					case PW_HASTE:
+						if (cg_announcePowerups.integer & ANNOUNCE_POWERUPS) {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.hasteAnnouncerSound);
+						}
+						else {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.hasteSpawnSound);
+						}
 						break;
-					case PW_AMMOREGEN:
-						trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.ammoregenSound);
+					case PW_INVIS:
+						if (cg_announcePowerups.integer & ANNOUNCE_POWERUPS) {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.invisAnnouncerSound);
+						}
+						else {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.invisSpawnSound);
+						}
+						break;
+					case PW_REGEN:
+						if (cg_announcePowerups.integer & ANNOUNCE_POWERUPS) {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.regenAnnouncerSound);
+						}
+						else {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.regenSpawnSound);
+						}
+						break;
+					case PW_FLIGHT:
+						if (cg_announcePowerups.integer & ANNOUNCE_POWERUPS) {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.flightAnnouncerSound);
+						}
+						else {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.flightSpawnSound);
+						}
 						break;
 				}
-			} else {
+			}
+			else if (item->giType == IT_HOLDABLE) {
+				switch (item->giTag) {
+					case HI_TELEPORTER:
+						if (cg_announcePowerups.integer & ANNOUNCE_HOLDABLES) {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.teleporterAnnouncerSound);
+						}
+						else {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.teleporterSpawnSound);
+						}
+						break;
+					case HI_MEDKIT:
+						if (cg_announcePowerups.integer & ANNOUNCE_HOLDABLES) {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.medkitAnnouncerSound);
+						}
+						else {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.medkitSpawnSound);
+						}
+						break;
+					case HI_KAMIKAZE:
+						if (cg_announcePowerups.integer & ANNOUNCE_HOLDABLES) {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.kamiAnnouncerSound);
+						}
+						else {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.kamiSpawnSound);
+						}
+						break;
+					case HI_INVULNERABILITY:
+						if (cg_announcePowerups.integer & ANNOUNCE_HOLDABLES) {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.invulAnnouncerSound);
+						}
+						else {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.invulSpawnSound);
+						}
+						break;
+					/*case HI_PORTAL:
+						if (cg_announcePowerups.integer & ANNOUNCE_HOLDABLES) {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.portalAnnouncerSound);
+						}
+						else {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.portalSpawnSound);
+						}
+						break;*/
+				}
+			}
+			else if (item->giType == IT_PERSISTANT_POWERUP) {
+				switch (item->giTag) {
+					case PW_SCOUT:
+						if (cg_announcePowerups.integer & ANNOUNCE_RUNES) {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.scoutAnnouncerSound);
+						}
+						else {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.scoutSpawnSound);
+						}
+						break;
+					case PW_GUARD:
+						if (cg_announcePowerups.integer & ANNOUNCE_RUNES) {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.guardAnnouncerSound);
+						}
+						else {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.guardSpawnSound);
+						}
+						break;
+					case PW_DOUBLER:
+						if (cg_announcePowerups.integer & ANNOUNCE_RUNES) {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.doublerAnnouncerSound);
+						}
+						else {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.doublerSpawnSound);
+						}
+						break;
+					case PW_AMMOREGEN:
+						if (cg_announcePowerups.integer & ANNOUNCE_RUNES) {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.ammoRegenAnnouncerSound);
+						}
+						else {
+							trap_S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.ammoRegenSpawnSound);
+						}
+						break;
+				}
+			}
+			else {
 				trap_S_StartSound(NULL, es->number, CHAN_AUTO, trap_S_RegisterSound(item->pickup_sound, qfalse));
 			}
 
@@ -1263,80 +1381,141 @@ void CG_EntityEvent(centity_t *cent, vec3_t position) {
 		{
 			DEBUGNAME("EV_GLOBAL_TEAM_SOUND");
 			switch (es->eventParm) {
-				case GTS_RED_CAPTURE: // CTF: red team captured the blue flag, 1FCTF: red team captured the neutral flag
-					if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_RED)
+				case GTS_RED_CAPTURE: { // CTF: red team captured the blue flag, 1FCTF: red team captured the neutral flag
+					if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_RED) {
 						CG_AddBufferedSound(cgs.media.captureYourTeamSound);
-					else
+					}
+					else if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_BLUE) {
 						CG_AddBufferedSound(cgs.media.captureOpponentSound);
+					}
 					break;
-				case GTS_BLUE_CAPTURE: // CTF: blue team captured the red flag, 1FCTF: blue team captured the neutral flag
-					if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_BLUE)
+				}
+				case GTS_BLUE_CAPTURE: { // CTF: blue team captured the red flag, 1FCTF: blue team captured the neutral flag
+					if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_BLUE) {
 						CG_AddBufferedSound(cgs.media.captureYourTeamSound);
-					else
+					}
+					else if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_RED) {
 						CG_AddBufferedSound(cgs.media.captureOpponentSound);
+					}
 					break;
-				case GTS_RED_RETURN: // CTF: blue flag returned, 1FCTF: never used
-					if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_RED)
+				}
+				case GTS_RED_RETURN: { // CTF: blue flag returned, 1FCTF: never used
+					if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_RED) {
 						CG_AddBufferedSound(cgs.media.returnYourTeamSound);
-					else
+					}
+					else if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_BLUE) {
 						CG_AddBufferedSound(cgs.media.returnOpponentSound);
-					//
+					}
 					CG_AddBufferedSound(cgs.media.blueFlagReturnedSound);
 					break;
-				case GTS_BLUE_RETURN: // CTF red flag returned, 1FCTF: neutral flag returned
-					if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_BLUE)
+				}
+				case GTS_BLUE_RETURN: { // CTF red flag returned, 1FCTF: neutral flag returned
+					if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_BLUE) {
 						CG_AddBufferedSound(cgs.media.returnYourTeamSound);
-					else
+					}
+					else if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_RED) {
 						CG_AddBufferedSound(cgs.media.returnOpponentSound);
-					//
+					}
 					CG_AddBufferedSound(cgs.media.redFlagReturnedSound);
 					break;
-
-				case GTS_RED_TAKEN: // CTF: red team took blue flag, 1FCTF: blue team took the neutral flag
+				}
+				case GTS_RED_TAKEN: { // CTF: red team took blue flag, 1FCTF: blue team took the neutral flag
 					// if this player picked up the flag then a sound is played in CG_CheckLocalSounds
 					if (cg.snap->ps.powerups[PW_BLUEFLAG] || cg.snap->ps.powerups[PW_NEUTRALFLAG]) {
-					} else {
+					}
+					else {
 						if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_BLUE) {
-							if (cgs.gametype == GT_1FCTF)
-								CG_AddBufferedSound(cgs.media.yourTeamTookTheFlagSound);
-							else
-								CG_AddBufferedSound(cgs.media.enemyTookYourFlagSound);
-						} else if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_RED) {
-							if (cgs.gametype == GT_1FCTF)
-								CG_AddBufferedSound(cgs.media.enemyTookTheFlagSound);
-							else
-								CG_AddBufferedSound(cgs.media.yourTeamTookEnemyFlagSound);
+							if (CG_UsesTeamFlags(cgs.gametype)) {
+								if (CG_UsesTheWhiteFlag(cgs.gametype)) {
+									CG_AddBufferedSound(cgs.media.yourTeamTookTheFlagSound);
+								}
+								else {
+									CG_AddBufferedSound(cgs.media.enemyTookYourFlagSound);
+								}
+							}
+						}
+						else if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_RED) {
+							if (CG_UsesTeamFlags(cgs.gametype)) {
+								if (CG_UsesTheWhiteFlag(cgs.gametype)) {
+									CG_AddBufferedSound(cgs.media.enemyTookTheFlagSound);
+								}
+								else {
+									CG_AddBufferedSound(cgs.media.yourTeamTookEnemyFlagSound);
+								}
+							}
+						}
+						else {
+							if (CG_UsesTeamFlags(cgs.gametype)) {
+								if (CG_UsesTheWhiteFlag(cgs.gametype)) {
+									CG_AddBufferedSound(cgs.media.blueTakesFlagAnnouncerSound);
+								}
+								else {
+									CG_AddBufferedSound(cgs.media.redTakesBlueFlagAnnouncerSound);
+								}
+							}
 						}
 					}
 					break;
-				case GTS_BLUE_TAKEN: // CTF: blue team took the red flag, 1FCTF red team took the neutral flag
+				}
+				case GTS_BLUE_TAKEN: { // CTF: blue team took the red flag, 1FCTF red team took the neutral flag
 					// if this player picked up the flag then a sound is played in CG_CheckLocalSounds
 					if (cg.snap->ps.powerups[PW_REDFLAG] || cg.snap->ps.powerups[PW_NEUTRALFLAG]) {
 					} else {
 						if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_RED) {
-							if (cgs.gametype == GT_1FCTF)
-								CG_AddBufferedSound(cgs.media.yourTeamTookTheFlagSound);
-							else
-								CG_AddBufferedSound(cgs.media.enemyTookYourFlagSound);
-						} else if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_BLUE) {
-							if (cgs.gametype == GT_1FCTF)
-								CG_AddBufferedSound(cgs.media.enemyTookTheFlagSound);
-							else
-								CG_AddBufferedSound(cgs.media.yourTeamTookEnemyFlagSound);
+							if (CG_UsesTeamFlags(cgs.gametype)) {
+								if (CG_UsesTheWhiteFlag(cgs.gametype)) {
+									CG_AddBufferedSound(cgs.media.yourTeamTookTheFlagSound);
+								}
+								else {
+									CG_AddBufferedSound(cgs.media.enemyTookYourFlagSound);
+								}
+							}
+						}
+						else if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_BLUE) {
+							if (CG_UsesTeamFlags(cgs.gametype)) {
+								if (CG_UsesTheWhiteFlag(cgs.gametype)) {
+									CG_AddBufferedSound(cgs.media.enemyTookTheFlagSound);
+								}
+								else {
+									CG_AddBufferedSound(cgs.media.yourTeamTookEnemyFlagSound);
+								}
+							}
+						}
+						else {
+							if (CG_UsesTeamFlags(cgs.gametype)) {
+								if (CG_UsesTheWhiteFlag(cgs.gametype)) {
+									CG_AddBufferedSound(cgs.media.redTakesFlagAnnouncerSound);
+								}
+								else {
+									CG_AddBufferedSound(cgs.media.blueTakesRedFlagAnnouncerSound);
+								}
+							}
 						}
 					}
 					break;
-				case GTS_REDOBELISK_ATTACKED: // Overload: red obelisk is being attacked
-					if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_RED) {
-						CG_AddBufferedSound(cgs.media.yourBaseIsUnderAttackSound);
+				}
+				case GTS_REDOBELISK_ATTACKED: { // Overload: red obelisk is being attacked
+					if (cgs.gametype == GT_OBELISK) {
+						if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_RED) {
+							CG_AddBufferedSound(cgs.media.yourBaseIsUnderAttackSound);
+						}
+						else {
+							CG_AddBufferedSound(cgs.media.redBaseUnderAttackAnnouncerSound);
+						}
 					}
 					break;
-				case GTS_BLUEOBELISK_ATTACKED: // Overload: blue obelisk is being attacked
-					if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_BLUE) {
-						CG_AddBufferedSound(cgs.media.yourBaseIsUnderAttackSound);
+				}
+				case GTS_BLUEOBELISK_ATTACKED: { // Overload: blue obelisk is being attacked
+					if (cgs.gametype == GT_OBELISK) {
+						if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_BLUE) {
+							CG_AddBufferedSound(cgs.media.yourBaseIsUnderAttackSound);
+						}
+						else {
+							CG_AddBufferedSound(cgs.media.blueBaseUnderAttackAnnouncerSound);
+						}
 					}
 					break;
-
+				}
 				case GTS_REDTEAM_SCORED:
 					CG_AddBufferedSound(cgs.media.redScoredSound);
 					break;

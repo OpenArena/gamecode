@@ -113,6 +113,7 @@ extern vmCvar_t ui_setupchecked;
 //new in beta 23:
 extern vmCvar_t ui_browserOnlyHumans;
 extern vmCvar_t ui_developer;
+extern vmCvar_t ui_customAnnouncer;
 
 //
 // ui_qmenu.c
@@ -337,7 +338,8 @@ extern vec4_t		text_color_highlight;
 
 extern char	*ui_medalNames[];
 extern char	*ui_medalPicNames[];
-extern char	*ui_medalSounds[];
+extern char	*ui_medalSoundsAnnouncer[];
+extern char	*ui_medalSoundsDefault[];
 
 extern t_mapinfo*	GetMapInfoUI( void );
 

@@ -1213,6 +1213,27 @@ static float CG_DrawEliminationTimer(float y) {
 					case 2:
 						trap_S_StartLocalSound(cgs.media.count3Sound, CHAN_ANNOUNCER);
 						break;
+					case 3:
+						trap_S_StartLocalSound(cgs.media.count4Sound, CHAN_ANNOUNCER);
+						break;
+					case 4:
+						trap_S_StartLocalSound(cgs.media.count5Sound, CHAN_ANNOUNCER);
+						break;
+					case 5:
+						trap_S_StartLocalSound(cgs.media.count6Sound, CHAN_ANNOUNCER);
+						break;
+					case 6:
+						trap_S_StartLocalSound(cgs.media.count7Sound, CHAN_ANNOUNCER);
+						break;
+					case 7:
+						trap_S_StartLocalSound(cgs.media.count8Sound, CHAN_ANNOUNCER);
+						break;
+					case 8:
+						trap_S_StartLocalSound(cgs.media.count9Sound, CHAN_ANNOUNCER);
+						break;
+					case 9:
+						trap_S_StartLocalSound(cgs.media.count10Sound, CHAN_ANNOUNCER);
+						break;
 					default:
 						break;
 				}
@@ -2651,9 +2672,30 @@ static void CG_DrawCenterDDString(void) {
 			case 3:
 				trap_S_StartLocalSound(cgs.media.count3Sound, CHAN_ANNOUNCER);
 				break;
+			case 4:
+				trap_S_StartLocalSound(cgs.media.count4Sound, CHAN_ANNOUNCER);
+				break;
+			case 5:
+				trap_S_StartLocalSound(cgs.media.count5Sound, CHAN_ANNOUNCER);
+				break;
+			case 6:
+				trap_S_StartLocalSound(cgs.media.count6Sound, CHAN_ANNOUNCER);
+				break;
+			case 7:
+				trap_S_StartLocalSound(cgs.media.count7Sound, CHAN_ANNOUNCER);
+				break;
+			case 8:
+				trap_S_StartLocalSound(cgs.media.count8Sound, CHAN_ANNOUNCER);
+				break;
+			case 9:
+				trap_S_StartLocalSound(cgs.media.count9Sound, CHAN_ANNOUNCER);
+				break;
+			case 10:
+				trap_S_StartLocalSound(cgs.media.count10Sound, CHAN_ANNOUNCER);
+				break;
 			default:
 				if (lastDDSec == -100) {
-					trap_S_StartLocalSound(cgs.media.doublerSound, CHAN_ANNOUNCER);
+					trap_S_StartLocalSound(cgs.media.useNothingSound, CHAN_ANNOUNCER);
 				}
 				break;
 		}
@@ -3411,6 +3453,27 @@ static void CG_DrawWarmup(void) {
 				break;
 			case 2:
 				trap_S_StartLocalSound(cgs.media.count3Sound, CHAN_ANNOUNCER);
+				break;
+			case 3:
+				trap_S_StartLocalSound(cgs.media.count4Sound, CHAN_ANNOUNCER);
+				break;
+			case 4:
+				trap_S_StartLocalSound(cgs.media.count5Sound, CHAN_ANNOUNCER);
+				break;
+			case 5:
+				trap_S_StartLocalSound(cgs.media.count6Sound, CHAN_ANNOUNCER);
+				break;
+			case 6:
+				trap_S_StartLocalSound(cgs.media.count7Sound, CHAN_ANNOUNCER);
+				break;
+			case 7:
+				trap_S_StartLocalSound(cgs.media.count8Sound, CHAN_ANNOUNCER);
+				break;
+			case 8:
+				trap_S_StartLocalSound(cgs.media.count9Sound, CHAN_ANNOUNCER);
+				break;
+			case 9:
+				trap_S_StartLocalSound(cgs.media.count10Sound, CHAN_ANNOUNCER);
 				break;
 			default:
 				break;

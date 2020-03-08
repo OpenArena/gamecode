@@ -98,6 +98,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define DEFAULT_REDTEAM_NAME		"Vim supporters"
 #define DEFAULT_BLUETEAM_NAME		"Emacs supporters"
 
+#define ANNOUNCE_POWERUPS	0x00000001
+#define ANNOUNCE_HOLDABLES	0x00000002
+#define ANNOUNCE_RUNES		0x00000004
+
 typedef enum {
 	FOOTSTEP_NORMAL,
 	FOOTSTEP_BOOT,
@@ -548,6 +552,7 @@ typedef struct {
 
 	int			timelimitWarnings;	// 5 min, 1 min, overtime
 	int			fraglimitWarnings;
+	int			capturelimitWarnings;
 
 	qboolean	mapRestart;			// set on a map restart to set back the weapon
 
@@ -1037,12 +1042,17 @@ typedef struct {
 // LEILEI END
 
 	sfxHandle_t oneMinuteSound;
+	sfxHandle_t twoMinuteSound;
+	sfxHandle_t threeMinuteSound;
 	sfxHandle_t fiveMinuteSound;
 	sfxHandle_t suddenDeathSound;
 
 	sfxHandle_t threeFragSound;
 	sfxHandle_t twoFragSound;
 	sfxHandle_t oneFragSound;
+	sfxHandle_t threeCaptureSound;
+	sfxHandle_t twoCaptureSound;
+	sfxHandle_t oneCaptureSound;
 
 	sfxHandle_t hitSound;
 	sfxHandle_t hitSoundHighArmor;
@@ -1061,6 +1071,7 @@ typedef struct {
 	sfxHandle_t takenLeadSound;
 	sfxHandle_t tiedLeadSound;
 	sfxHandle_t lostLeadSound;
+	sfxHandle_t leadSwitchSound;
 
 	sfxHandle_t voteNow;
 	sfxHandle_t votePassed;
@@ -1101,12 +1112,27 @@ typedef struct {
 	sfxHandle_t yourBaseIsUnderAttackSound;
 	sfxHandle_t holyShitSound;
 
+	sfxHandle_t redTakesBlueFlagAnnouncerSound;
+	sfxHandle_t blueTakesRedFlagAnnouncerSound;
+	sfxHandle_t redTakesFlagAnnouncerSound;
+	sfxHandle_t blueTakesFlagAnnouncerSound;
+	sfxHandle_t redBaseUnderAttackAnnouncerSound;
+	sfxHandle_t blueBaseUnderAttackAnnouncerSound;
+
 	// tournament sounds
+	sfxHandle_t	count10Sound;
+	sfxHandle_t	count9Sound;
+	sfxHandle_t	count8Sound;
+	sfxHandle_t	count7Sound;
+	sfxHandle_t	count6Sound;
+	sfxHandle_t	count5Sound;
+	sfxHandle_t	count4Sound;
 	sfxHandle_t	count3Sound;
 	sfxHandle_t	count2Sound;
 	sfxHandle_t	count1Sound;
 	sfxHandle_t	countFightSound;
 	sfxHandle_t	countPrepareSound;
+	sfxHandle_t	countPrepareTeamSound;
 
 #ifdef MISSIONPACK
 	// new stuff
@@ -1120,13 +1146,38 @@ typedef struct {
 	qhandle_t escortShader;
         qhandle_t deathShader;
 	qhandle_t flagShaders[3];
-	sfxHandle_t	countPrepareTeamSound;
 #endif
 
-	sfxHandle_t ammoregenSound;
-	sfxHandle_t doublerSound;
-	sfxHandle_t guardSound;
-	sfxHandle_t scoutSound;
+	sfxHandle_t ammoRegenAnnouncerSound;
+	sfxHandle_t doublerAnnouncerSound;
+	sfxHandle_t guardAnnouncerSound;
+	sfxHandle_t scoutAnnouncerSound;
+	sfxHandle_t quadAnnouncerSound;
+	sfxHandle_t enviroAnnouncerSound;
+	sfxHandle_t invisAnnouncerSound;
+	sfxHandle_t regenAnnouncerSound;
+	sfxHandle_t flightAnnouncerSound;
+	sfxHandle_t hasteAnnouncerSound;
+	sfxHandle_t teleporterAnnouncerSound;
+	sfxHandle_t medkitAnnouncerSound;
+	sfxHandle_t invulAnnouncerSound;
+	sfxHandle_t kamiAnnouncerSound;
+	//sfxHandle_t portalAnnouncerSound;
+	sfxHandle_t ammoRegenSpawnSound;
+	sfxHandle_t doublerSpawnSound;
+	sfxHandle_t guardSpawnSound;
+	sfxHandle_t scoutSpawnSound;
+	sfxHandle_t quadSpawnSound;
+	sfxHandle_t enviroSpawnSound;
+	sfxHandle_t invisSpawnSound;
+	sfxHandle_t regenSpawnSound;
+	sfxHandle_t flightSpawnSound;
+	sfxHandle_t hasteSpawnSound;
+	sfxHandle_t teleporterSpawnSound;
+	sfxHandle_t medkitSpawnSound;
+	sfxHandle_t invulSpawnSound;
+	sfxHandle_t kamiSpawnSound;
+	//sfxHandle_t portalSpawnSound;
 
 	qhandle_t cursor;
 	qhandle_t selectCursor;
@@ -1479,6 +1530,8 @@ extern vmCvar_t cg_leiChibi;
 /* Neon_Knight: Developer mode. */
 extern vmCvar_t cg_developer;
 /* /Neon_Knight */
+extern vmCvar_t cg_customAnnouncer;
+extern vmCvar_t cg_announcePowerups;
 
 //unlagged - cg_unlagged.c
 void CG_PredictWeaponEffects( centity_t *cent );

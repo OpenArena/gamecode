@@ -463,7 +463,7 @@ void CG_CheckLocalSounds( playerState_t *ps, playerState_t *ops ) {
 	}
 
 	// fraglimit warnings
-	if (!CG_IsATeamGametype(cgs.gametype)) {
+	if (!CG_IsATeamGametype(cgs.gametype) || cgs.gametype == GT_TEAM) {
 		highScore = cgs.scores1;
 
 		if (cgs.gametype == GT_TEAM && cgs.scores2 > highScore) {
@@ -481,6 +481,22 @@ void CG_CheckLocalSounds( playerState_t *ps, playerState_t *ops ) {
 		else if ( cgs.fraglimit > 3 && !( cg.fraglimitWarnings & 1 ) && highScore == (cgs.fraglimit - 3) ) {
 			cg.fraglimitWarnings |= 1;
 			CG_AddBufferedSound(cgs.media.threeFragSound);
+		}
+	}
+
+	// capturelimit warnings
+	if (CG_IsATeamGametype(cgs.gametype) && cgs.gametype != GT_TEAM) {
+		if ( !( cg.capturelimitWarnings & 4 ) && highScore == (cgs.capturelimit - 1) ) {
+			cg.capturelimitWarnings |= 1 | 2 | 4;
+			CG_AddBufferedSound(cgs.media.oneCaptureSound);
+		}
+		else if ( cgs.capturelimit > 2 && !( cg.capturelimitWarnings & 2 ) && highScore == (cgs.capturelimit - 2) ) {
+			cg.capturelimitWarnings |= 1 | 2;
+			CG_AddBufferedSound(cgs.media.twoCaptureSound);
+		}
+		else if ( cgs.capturelimit > 3 && !( cg.capturelimitWarnings & 1 ) && highScore == (cgs.capturelimit - 3) ) {
+			cg.capturelimitWarnings |= 1;
+			CG_AddBufferedSound(cgs.media.threeCaptureSound);
 		}
 	}
 }

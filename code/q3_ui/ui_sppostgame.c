@@ -29,6 +29,7 @@ SINGLE PLAYER POSTGAME MENU
 */
 
 #include "ui_local.h"
+#include "../../sound/announcer.h"
 
 #define MAX_SCOREBOARD_CLIENTS		8
 
@@ -86,10 +87,18 @@ char	*ui_medalPicNames[] = {
 	"menu/medals/medal_frags",
 	"menu/medals/medal_victory"
 };
-char	*ui_medalSounds[] = {
+char	*ui_medalSoundsAnnouncer[] = {
+	ANNOUNCER_ACCURACY,
+	ANNOUNCER_IMPRESSIVE,
+	ANNOUNCER_EXCELLENT,
+	ANNOUNCER_GAUNTLET,
+	ANNOUNCER_FRAGS,
+	ANNOUNCER_PERFECT
+};
+char	*ui_medalSoundsDefault[] = {
 	"sound/feedback/accuracy.wav",
-	"sound/feedback/impressive_a.wav",
-	"sound/feedback/excellent_a.wav",
+	"sound/feedback/impressive.wav",
+	"sound/feedback/excellent.wav",
 	"sound/feedback/gauntlet.wav",
 	"sound/feedback/frags.wav",
 	"sound/feedback/perfect.wav"
@@ -253,7 +262,12 @@ static void UI_SPPostgameMenu_DrawAwardsPresentation( int timer ) {
 
 	if( !postgameMenuInfo.playedSound[awardNum] ) {
 		postgameMenuInfo.playedSound[awardNum] = qtrue;
-		trap_S_StartLocalSound( trap_S_RegisterSound( ui_medalSounds[postgameMenuInfo.awardsEarned[awardNum]], qfalse ), CHAN_ANNOUNCER );
+		if (ui_customAnnouncer.integer) {
+			trap_S_StartLocalSound( trap_S_RegisterSound( ui_medalSoundsAnnouncer[postgameMenuInfo.awardsEarned[awardNum]], qfalse ), CHAN_ANNOUNCER );
+		}
+		else {
+			trap_S_StartLocalSound( trap_S_RegisterSound( ui_medalSoundsDefault[postgameMenuInfo.awardsEarned[awardNum]], qfalse ), CHAN_ANNOUNCER );
+		}
 	}
 }
 
@@ -414,7 +428,12 @@ void UI_SPPostgameMenu_Cache( void ) {
 	trap_R_RegisterShaderNoMip( ART_NEXT1 );
 	for( n = 0; n < 6; n++ ) {
 		trap_R_RegisterShaderNoMip( ui_medalPicNames[n] );
-		trap_S_RegisterSound( ui_medalSounds[n], qfalse );
+		if (ui_customAnnouncer.integer) {
+			trap_S_RegisterSound( ui_medalSoundsAnnouncer[n], qfalse );
+		}
+		else {
+			trap_S_RegisterSound( ui_medalSoundsDefault[n], qfalse );
+		}
 	}
 
 	if( buildscript ) {

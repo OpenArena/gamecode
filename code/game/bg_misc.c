@@ -758,7 +758,7 @@ gitem_t bg_itemlist[] ={
 	 */
 	{
 		"item_scout",
-		"sound/items/scout.wav",
+		"sound/items/cl_scout.wav",
 		{ "models/powerups/scout.md3",
 			NULL, NULL, NULL},
 		/* icon */ "icons/scout",
@@ -774,7 +774,7 @@ gitem_t bg_itemlist[] ={
 	 */
 	{
 		"item_guard",
-		"sound/items/guard.wav",
+		"sound/items/cl_guard.wav",
 		{ "models/powerups/guard.md3",
 			NULL, NULL, NULL},
 		/* icon */ "icons/guard",
@@ -790,7 +790,7 @@ gitem_t bg_itemlist[] ={
 	 */
 	{
 		"item_doubler",
-		"sound/items/doubler.wav",
+		"sound/items/cl_doubler.wav",
 		{ "models/powerups/doubler.md3",
 			NULL, NULL, NULL},
 		/* icon */ "icons/doubler",
@@ -806,7 +806,7 @@ gitem_t bg_itemlist[] ={
 	 */
 	{
 		"item_ammoregen",
-		"sound/items/ammoregen.wav",
+		"sound/items/cl_ammoregen.wav",
 		{ "models/powerups/ammo.md3",
 			NULL, NULL, NULL},
 		/* icon */ "icons/ammo_regen",
