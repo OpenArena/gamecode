@@ -782,59 +782,6 @@ void BotCTFOrders_EnemyFlagNotAtBase(bot_state_t *bs) {
 
 /*
 ==================
-BotDDorders
-==================
-*/
-
-void BotDDorders_Standard(bot_state_t *bs) {
-	int numteammates, i;
-	int teammates[MAX_CLIENTS];
-	char name[MAX_NETNAME];
-
-	if (bot_nochat.integer>2) {
-		return;
-	}
-
-	//sort team mates by travel time to base
-	numteammates = BotSortTeamMatesByRelativeTravelTime2ddA(bs, teammates, sizeof(teammates));
-
-	switch(numteammates) {
-		case 1: break;
-		/*case 2: 
-		{
-			//the one closest to point A will take that
-			ClientName(teammates[0], name, sizeof(name));
-			BotAI_BotInitialChat(bs, "cmd_takea", name, NULL);
-			BotSayTeamOrder(bs, teammates[0]);
-			//BotSayVoiceTeamOrder(bs, teammates[0], VOICECHAT_TAKEA);
-			//the other goes for point B
-			ClientName(teammates[1], name, sizeof(name));
-			BotAI_BotInitialChat(bs, "cmd_takeb", name, NULL);
-			BotSayTeamOrder(bs, teammates[1]);
-			//BotSayVoiceTeamOrder(bs, teammates[1], VOICECHAT_TAKEB);
-			break;
-		}*/
-		default:
-		{
-			for(i=0;i<numteammates/2;i++) { //Half take point A
-				ClientName(teammates[i], name, sizeof(name));
-				BotAI_BotInitialChat(bs, "cmd_takea", name, NULL);
-				BotSayTeamOrder(bs, teammates[i]);
-				//BotSayVoiceTeamOrder(bs, teammates[0], VOICECHAT_TAKEA);
-			}
-			for(i=numteammates/2+1;i<numteammates;i++) { //Rest takes point B
-				ClientName(teammates[i], name, sizeof(name));
-				BotAI_BotInitialChat(bs, "cmd_takeb", name, NULL);
-				BotSayTeamOrder(bs, teammates[i]);
-				//BotSayVoiceTeamOrder(bs, teammates[0], VOICECHAT_TAKEB);
-			}
-			break;
-		}
-	}
-}
-
-/*
-==================
 BotCTFOrders
 ==================
 */
@@ -1026,16 +973,6 @@ void BotCTFOrders(bot_state_t *bs) {
 		case 3: BotCTFOrders_BothFlagsNotAtBase(bs); break;
 	}
 }
-
-/*
-==================
-BotDDorders
-==================
-*/
-void BotDDorders(bot_state_t *bs) {
-	BotDDorders_Standard(bs);	
-}
-
 
 /*
 ==================
@@ -2101,6 +2038,441 @@ void BotHarvesterOrders(bot_state_t *bs) {
 				break;
 			}
 		}
+	}
+}
+
+/*
+==================
+BotDDorders
+
+BothPointsTaken: A and B are under our control, half defends A, half defends B
+BothPointsNotTaken: A and B aren't under our control, half takes point A, half takes point B
+PointATaken: we own only point A, half takes point B, half defends point A
+PointBTaken: we own only point B, half takes point A, half defends point B
+==================
+*/
+void BotDDorders_BothPointsTaken(bot_state_t *bs) {
+	int numteammates, i;
+	int teammates[MAX_CLIENTS];
+	char name[MAX_NETNAME];
+	int pointADefenders=0;
+	int pointBDefenders=0;
+
+	if (bot_nochat.integer>2) return;
+
+	//sort team mates by travel time to base
+	numteammates = BotSortTeamMatesByBaseTravelTime(bs, teammates, sizeof(teammates));
+	//sort team mates by CTF preference
+	BotSortTeamMatesByTaskPreference(bs, teammates, numteammates);
+
+	switch(numteammates) {
+		case 1: {
+			// They'll pick a random point and take it.
+			ClientName(teammates[0], name, sizeof(name));
+			if(rand() % 10 > 5) {
+				BotAI_BotInitialChat(bs, "cmd_holdpointa", name, NULL);
+				BotSayTeamOrder(bs, teammates[0]);
+				BotSayVoiceTeamOrder(bs, teammates[0], VOICECHAT_HOLDPOINTA);
+			}
+			else {
+				BotAI_BotInitialChat(bs, "cmd_holdpointb", name, NULL);
+				BotSayTeamOrder(bs, teammates[0]);
+				BotSayVoiceTeamOrder(bs, teammates[0], VOICECHAT_HOLDPOINTB);
+			}
+			break;
+		}
+		case 2: {
+			// Each will pick a point and take it.
+			ClientName(teammates[0], name, sizeof(name));
+			BotAI_BotInitialChat(bs, "cmd_holdpointa", name, NULL);
+			BotSayTeamOrder(bs, teammates[0]);
+			BotSayVoiceTeamOrder(bs, teammates[0], VOICECHAT_HOLDPOINTA);
+			ClientName(teammates[1], name, sizeof(name));
+			BotAI_BotInitialChat(bs, "cmd_holdpointb", name, NULL);
+			BotSayTeamOrder(bs, teammates[1]);
+			BotSayVoiceTeamOrder(bs, teammates[1], VOICECHAT_HOLDPOINTB);
+		}
+		case 3: {
+			// Two will pick a point and take it, the other will roam..
+			ClientName(teammates[0], name, sizeof(name));
+			BotAI_BotInitialChat(bs, "cmd_holdpointa", name, NULL);
+			BotSayTeamOrder(bs, teammates[0]);
+			BotSayVoiceTeamOrder(bs, teammates[0], VOICECHAT_HOLDPOINTA);
+			ClientName(teammates[1], name, sizeof(name));
+			BotAI_BotInitialChat(bs, "cmd_patrol", name, NULL);
+			BotSayTeamOrder(bs, teammates[1]);
+			BotSayVoiceTeamOrder(bs, teammates[1], VOICECHAT_PATROL);
+			ClientName(teammates[2], name, sizeof(name));
+			BotAI_BotInitialChat(bs, "cmd_holdpointb", name, NULL);
+			BotSayTeamOrder(bs, teammates[2]);
+			BotSayVoiceTeamOrder(bs, teammates[2], VOICECHAT_HOLDPOINTB);
+		}
+		default: {
+			//50% defend the base
+			pointADefenders = (int) (float) numteammates * 0.5 + 0.5;
+			if (pointADefenders > 5) pointADefenders = 5;
+			//40% get the flag
+			pointBDefenders = (int) (float) numteammates * 0.4 + 0.5;
+			if (pointBDefenders > 4) pointBDefenders = 4;
+			for (i = 0; i < pointADefenders; i++) {
+				ClientName(teammates[i], name, sizeof(name));
+				BotAI_BotInitialChat(bs, "cmd_holdpointa", name, NULL);
+				BotSayTeamOrder(bs, teammates[i]);
+				BotSayVoiceTeamOrder(bs, teammates[i], VOICECHAT_HOLDPOINTA);
+			}
+			for (i = 0; i < pointBDefenders; i++) {
+				ClientName(teammates[numteammates - i - 1], name, sizeof(name));
+				BotAI_BotInitialChat(bs, "cmd_holdpointb", name, NULL);
+				BotSayTeamOrder(bs, teammates[numteammates - i - 1]);
+				BotSayVoiceTeamOrder(bs, teammates[numteammates - i - 1], VOICECHAT_HOLDPOINTB);
+			}
+			break;
+		}
+	}
+}
+
+void BotDDorders_PointATaken(bot_state_t *bs) {
+	int numteammates, i;
+	int teammates[MAX_CLIENTS];
+	char name[MAX_NETNAME];
+	int pointADefenders=0;
+	int pointBTakers=0;
+	int roamers=0;
+
+	if (bot_nochat.integer>2) return;
+
+	//sort team mates by travel time to base
+	numteammates = BotSortTeamMatesByBaseTravelTime(bs, teammates, sizeof(teammates));
+ 	//sort team mates by CTF preference
+	BotSortTeamMatesByTaskPreference(bs, teammates, numteammates);
+
+	// Aggressive strategy: heavy focus on point B
+	if (bs->ctfstrategy & CTFS_AGRESSIVE) {
+		switch(numteammates) {
+			case 1: {
+				// They'll pick a random point and take it.
+				ClientName(teammates[0], name, sizeof(name));
+				if(rand() % 10 > 7) {
+					BotAI_BotInitialChat(bs, "cmd_holdpointb", name, NULL);
+					BotSayTeamOrder(bs, teammates[0]);
+					BotSayVoiceTeamOrder(bs, teammates[0], VOICECHAT_HOLDPOINTB);
+				}
+				else {
+					BotAI_BotInitialChat(bs, "cmd_holdpointa", name, NULL);
+					BotSayTeamOrder(bs, teammates[0]);
+					BotSayVoiceTeamOrder(bs, teammates[0], VOICECHAT_HOLDPOINTB);
+				}
+				break;
+			}
+			case 2: {
+				// Each will pick a point and take it.
+				ClientName(teammates[0], name, sizeof(name));
+				BotAI_BotInitialChat(bs, "cmd_holdpointa", name, NULL);
+				BotSayTeamOrder(bs, teammates[0]);
+				BotSayVoiceTeamOrder(bs, teammates[0], VOICECHAT_HOLDPOINTA);
+				ClientName(teammates[1], name, sizeof(name));
+				BotAI_BotInitialChat(bs, "cmd_holdpointb", name, NULL);
+				BotSayTeamOrder(bs, teammates[1]);
+				BotSayVoiceTeamOrder(bs, teammates[1], VOICECHAT_HOLDPOINTB);
+			}
+			case 3: {
+				// Two will pick a point and take it, the other will roam..
+				ClientName(teammates[0], name, sizeof(name));
+				BotAI_BotInitialChat(bs, "cmd_holdpointa", name, NULL);
+				BotSayTeamOrder(bs, teammates[0]);
+				BotSayVoiceTeamOrder(bs, teammates[0], VOICECHAT_HOLDPOINTA);
+				ClientName(teammates[1], name, sizeof(name));
+				BotAI_BotInitialChat(bs, "cmd_holdpointb", name, NULL);
+				BotSayTeamOrder(bs, teammates[1]);
+				BotSayVoiceTeamOrder(bs, teammates[1], VOICECHAT_HOLDPOINTB);
+				ClientName(teammates[2], name, sizeof(name));
+				BotAI_BotInitialChat(bs, "cmd_holdpointb", name, NULL);
+				BotSayTeamOrder(bs, teammates[2]);
+				BotSayVoiceTeamOrder(bs, teammates[2], VOICECHAT_HOLDPOINTB);
+			}
+			default: {
+				//30% defend point A
+				pointADefenders = (int) (float) numteammates * 0.3 + 0.5;
+				if (pointADefenders > 3) {
+					pointADefenders = 3;
+				}
+				//60% take point B
+				pointBTakers = (int) (float) numteammates * 0.6 + 0.5;
+				if (pointBTakers > 6) {
+					pointBTakers = 6;
+				}
+				for (i = 0; i < pointADefenders; i++) {
+					ClientName(teammates[i], name, sizeof(name));
+					BotAI_BotInitialChat(bs, "cmd_holdpointa", name, NULL);
+					BotSayTeamOrder(bs, teammates[i]);
+					BotSayVoiceTeamOrder(bs, teammates[i], VOICECHAT_HOLDPOINTA);
+				}
+				for (i = 0; i < pointBTakers; i++) {
+					ClientName(teammates[numteammates - i - 1], name, sizeof(name));
+					BotAI_BotInitialChat(bs, "cmd_holdpointb", name, NULL);
+					BotSayTeamOrder(bs, teammates[numteammates - i - 1]);
+					BotSayVoiceTeamOrder(bs, teammates[numteammates - i - 1], VOICECHAT_HOLDPOINTB);
+				}
+				break;
+			}
+		}
+	}
+	// Passive strategy: heavy focus on point A
+	else {
+		switch(numteammates) {
+			case 1: {
+				// They'll pick a random point and take it.
+				ClientName(teammates[0], name, sizeof(name));
+				if(rand() % 10 > 7) {
+					BotAI_BotInitialChat(bs, "cmd_holdpointa", name, NULL);
+					BotSayTeamOrder(bs, teammates[0]);
+					BotSayVoiceTeamOrder(bs, teammates[0], VOICECHAT_HOLDPOINTA);
+				}
+				else {
+					BotAI_BotInitialChat(bs, "cmd_holdpointb", name, NULL);
+					BotSayTeamOrder(bs, teammates[0]);
+					BotSayVoiceTeamOrder(bs, teammates[0], VOICECHAT_HOLDPOINTB);
+				}
+				break;
+			}
+			case 2: {
+				// Each will pick a point and take it.
+				ClientName(teammates[0], name, sizeof(name));
+				BotAI_BotInitialChat(bs, "cmd_holdpointa", name, NULL);
+				BotSayTeamOrder(bs, teammates[0]);
+				BotSayVoiceTeamOrder(bs, teammates[0], VOICECHAT_HOLDPOINTA);
+				ClientName(teammates[1], name, sizeof(name));
+				BotAI_BotInitialChat(bs, "cmd_holdpointb", name, NULL);
+				BotSayTeamOrder(bs, teammates[1]);
+				BotSayVoiceTeamOrder(bs, teammates[1], VOICECHAT_HOLDPOINTB);
+			}
+			case 3: {
+				// Two will pick a point and take it, the other will roam..
+				ClientName(teammates[0], name, sizeof(name));
+				BotAI_BotInitialChat(bs, "cmd_holdpointa", name, NULL);
+				BotSayTeamOrder(bs, teammates[0]);
+				BotSayVoiceTeamOrder(bs, teammates[0], VOICECHAT_HOLDPOINTA);
+				ClientName(teammates[1], name, sizeof(name));
+				BotAI_BotInitialChat(bs, "cmd_holdpointa", name, NULL);
+				BotSayTeamOrder(bs, teammates[1]);
+				BotSayVoiceTeamOrder(bs, teammates[1], VOICECHAT_HOLDPOINTA);
+				ClientName(teammates[2], name, sizeof(name));
+				BotAI_BotInitialChat(bs, "cmd_holdpointb", name, NULL);
+				BotSayTeamOrder(bs, teammates[2]);
+				BotSayVoiceTeamOrder(bs, teammates[2], VOICECHAT_HOLDPOINTB);
+			}
+			default: {
+				//60% defend point A
+				pointADefenders = (int) (float) numteammates * 0.6 + 0.5;
+				if (pointADefenders > 6) {
+					pointADefenders = 6;
+				}
+				//30% take point B
+				pointBTakers = (int) (float) numteammates * 0.3 + 0.5;
+				if (pointBTakers > 3) {
+					pointBTakers = 3;
+				}
+				for (i = 0; i < pointADefenders; i++) {
+					ClientName(teammates[i], name, sizeof(name));
+					BotAI_BotInitialChat(bs, "cmd_holdpointa", name, NULL);
+					BotSayTeamOrder(bs, teammates[i]);
+					BotSayVoiceTeamOrder(bs, teammates[i], VOICECHAT_HOLDPOINTA);
+				}
+				for (i = 0; i < pointBTakers; i++) {
+					ClientName(teammates[numteammates - i - 1], name, sizeof(name));
+					BotAI_BotInitialChat(bs, "cmd_holdpointb", name, NULL);
+					BotSayTeamOrder(bs, teammates[numteammates - i - 1]);
+					BotSayVoiceTeamOrder(bs, teammates[numteammates - i - 1], VOICECHAT_HOLDPOINTB);
+				}
+				break;
+			}
+		}
+	}
+}
+
+void BotDDorders_PointBTaken(bot_state_t *bs) {
+	int numteammates, i;
+	int teammates[MAX_CLIENTS];
+	char name[MAX_NETNAME];
+	int pointATakers=0;
+	int pointBDefenders=0;
+	int roamers=0;
+
+	if (bot_nochat.integer>2) return;
+
+	//sort team mates by travel time to base
+	numteammates = BotSortTeamMatesByBaseTravelTime(bs, teammates, sizeof(teammates));
+ 	//sort team mates by CTF preference
+	BotSortTeamMatesByTaskPreference(bs, teammates, numteammates);
+
+
+	// Aggressive strategy: heavy focus on point A
+	if (bs->ctfstrategy & CTFS_AGRESSIVE) {
+		switch(numteammates) {
+			case 1: {
+				// They'll pick a random point and take it.
+				ClientName(teammates[0], name, sizeof(name));
+				if(rand() % 10 > 7) {
+					BotAI_BotInitialChat(bs, "cmd_holdpointa", name, NULL);
+					BotSayTeamOrder(bs, teammates[0]);
+					BotSayVoiceTeamOrder(bs, teammates[0], VOICECHAT_HOLDPOINTA);
+				}
+				else {
+					BotAI_BotInitialChat(bs, "cmd_holdpointb", name, NULL);
+					BotSayTeamOrder(bs, teammates[0]);
+					BotSayVoiceTeamOrder(bs, teammates[0], VOICECHAT_HOLDPOINTB);
+				}
+				break;
+			}
+			case 2: {
+				// Each will pick a point and take it.
+				ClientName(teammates[0], name, sizeof(name));
+				BotAI_BotInitialChat(bs, "cmd_holdpointa", name, NULL);
+				BotSayTeamOrder(bs, teammates[0]);
+				BotSayVoiceTeamOrder(bs, teammates[0], VOICECHAT_HOLDPOINTA);
+				ClientName(teammates[1], name, sizeof(name));
+				BotAI_BotInitialChat(bs, "cmd_holdpointb", name, NULL);
+				BotSayTeamOrder(bs, teammates[1]);
+				BotSayVoiceTeamOrder(bs, teammates[1], VOICECHAT_HOLDPOINTB);
+			}
+			case 3: {
+				// Two will pick a point and take it, the other will roam..
+				ClientName(teammates[0], name, sizeof(name));
+				BotAI_BotInitialChat(bs, "cmd_holdpointa", name, NULL);
+				BotSayTeamOrder(bs, teammates[0]);
+				BotSayVoiceTeamOrder(bs, teammates[0], VOICECHAT_HOLDPOINTA);
+				ClientName(teammates[1], name, sizeof(name));
+				BotAI_BotInitialChat(bs, "cmd_holdpointa", name, NULL);
+				BotSayTeamOrder(bs, teammates[1]);
+				BotSayVoiceTeamOrder(bs, teammates[1], VOICECHAT_HOLDPOINTA);
+				ClientName(teammates[2], name, sizeof(name));
+				BotAI_BotInitialChat(bs, "cmd_holdpointb", name, NULL);
+				BotSayTeamOrder(bs, teammates[2]);
+				BotSayVoiceTeamOrder(bs, teammates[2], VOICECHAT_HOLDPOINTB);
+			}
+			default: {
+				//30% defend point B
+				pointBDefenders = (int) (float) numteammates * 0.3 + 0.5;
+				if (pointBDefenders > 3) {
+					pointBDefenders = 3;
+				}
+				//60% take point A
+				pointATakers = (int) (float) numteammates * 0.6 + 0.5;
+				if (pointATakers > 6) {
+					pointATakers = 6;
+				}
+				for (i = 0; i < pointBDefenders; i++) {
+					ClientName(teammates[i], name, sizeof(name));
+					BotAI_BotInitialChat(bs, "cmd_holdpointb", name, NULL);
+					BotSayTeamOrder(bs, teammates[i]);
+					BotSayVoiceTeamOrder(bs, teammates[i], VOICECHAT_HOLDPOINTB);
+				}
+				for (i = 0; i < pointATakers; i++) {
+					ClientName(teammates[numteammates - i - 1], name, sizeof(name));
+					BotAI_BotInitialChat(bs, "cmd_holdpointa", name, NULL);
+					BotSayTeamOrder(bs, teammates[numteammates - i - 1]);
+					BotSayVoiceTeamOrder(bs, teammates[numteammates - i - 1], VOICECHAT_HOLDPOINTA);
+				}
+				break;
+			}
+		}
+	}
+	// Passive strategy: heavy focus on point B
+	else {
+		switch(numteammates) {
+			case 1: {
+				// They'll pick a random point and take it.
+				ClientName(teammates[0], name, sizeof(name));
+				if(rand() % 10 > 7) {
+					BotAI_BotInitialChat(bs, "cmd_holdpointb", name, NULL);
+					BotSayTeamOrder(bs, teammates[0]);
+					BotSayVoiceTeamOrder(bs, teammates[0], VOICECHAT_HOLDPOINTB);
+				}
+				else {
+					BotAI_BotInitialChat(bs, "cmd_holdpointa", name, NULL);
+					BotSayTeamOrder(bs, teammates[0]);
+					BotSayVoiceTeamOrder(bs, teammates[0], VOICECHAT_HOLDPOINTA);
+				}
+				break;
+			}
+			case 2: {
+				// Each will pick a point and take it.
+				ClientName(teammates[0], name, sizeof(name));
+				BotAI_BotInitialChat(bs, "cmd_holdpointa", name, NULL);
+				BotSayTeamOrder(bs, teammates[0]);
+				BotSayVoiceTeamOrder(bs, teammates[0], VOICECHAT_HOLDPOINTA);
+				ClientName(teammates[1], name, sizeof(name));
+				BotAI_BotInitialChat(bs, "cmd_holdpointb", name, NULL);
+				BotSayTeamOrder(bs, teammates[1]);
+				BotSayVoiceTeamOrder(bs, teammates[1], VOICECHAT_HOLDPOINTB);
+			}
+			case 3: {
+				// Two will pick a point and take it, the other will roam..
+				ClientName(teammates[0], name, sizeof(name));
+				BotAI_BotInitialChat(bs, "cmd_holdpointa", name, NULL);
+				BotSayTeamOrder(bs, teammates[0]);
+				BotSayVoiceTeamOrder(bs, teammates[0], VOICECHAT_HOLDPOINTA);
+				ClientName(teammates[1], name, sizeof(name));
+				BotAI_BotInitialChat(bs, "cmd_holdpointb", name, NULL);
+				BotSayTeamOrder(bs, teammates[1]);
+				BotSayVoiceTeamOrder(bs, teammates[1], VOICECHAT_HOLDPOINTB);
+				ClientName(teammates[2], name, sizeof(name));
+				BotAI_BotInitialChat(bs, "cmd_holdpointb", name, NULL);
+				BotSayTeamOrder(bs, teammates[2]);
+				BotSayVoiceTeamOrder(bs, teammates[2], VOICECHAT_HOLDPOINTB);
+			}
+			default: {
+				//60% defend point B
+				pointBDefenders = (int) (float) numteammates * 0.6 + 0.5;
+				if (pointBDefenders > 6) {
+					pointBDefenders = 6;
+				}
+				//30% take point A
+				pointATakers = (int) (float) numteammates * 0.3 + 0.5;
+				if (pointATakers > 3) {
+					pointATakers = 3;
+				}
+				for (i = 0; i < pointBDefenders; i++) {
+					ClientName(teammates[i], name, sizeof(name));
+					BotAI_BotInitialChat(bs, "cmd_holdpointb", name, NULL);
+					BotSayTeamOrder(bs, teammates[i]);
+					BotSayVoiceTeamOrder(bs, teammates[i], VOICECHAT_HOLDPOINTB);
+				}
+				for (i = 0; i < pointATakers; i++) {
+					ClientName(teammates[numteammates - i - 1], name, sizeof(name));
+					BotAI_BotInitialChat(bs, "cmd_holdpointa", name, NULL);
+					BotSayTeamOrder(bs, teammates[numteammates - i - 1]);
+					BotSayVoiceTeamOrder(bs, teammates[numteammates - i - 1], VOICECHAT_HOLDPOINTA);
+				}
+				break;
+			}
+		}
+	}
+}
+
+/*
+==================
+BotDDorders
+==================
+*/
+void BotDDorders(bot_state_t *bs) {
+	if ((BotTeam(bs) == TEAM_RED && level.pointStatusA == TEAM_RED &&
+			level.pointStatusB != TEAM_RED) || (BotTeam(bs) == TEAM_BLUE &&
+			level.pointStatusA == TEAM_BLUE && level.pointStatusB != TEAM_BLUE)) {
+		BotDDorders_PointATaken(bs);
+	}
+	else if ((BotTeam(bs) == TEAM_RED && level.pointStatusA != TEAM_RED &&
+			level.pointStatusB == TEAM_RED) || (BotTeam(bs) == TEAM_BLUE &&
+			level.pointStatusA != TEAM_BLUE && level.pointStatusB == TEAM_BLUE)) {
+		BotDDorders_PointBTaken(bs);
+	}
+	else if ((BotTeam(bs) == TEAM_RED && level.pointStatusA != TEAM_RED &&
+			level.pointStatusB != TEAM_RED) || (BotTeam(bs) != TEAM_BLUE &&
+			level.pointStatusA != TEAM_BLUE && level.pointStatusB != TEAM_BLUE) ||
+			(BotTeam(bs) == TEAM_RED && level.pointStatusA == TEAM_RED &&
+			level.pointStatusB == TEAM_RED) || (BotTeam(bs) == TEAM_BLUE &&
+			level.pointStatusA == TEAM_BLUE && level.pointStatusB == TEAM_BLUE)) {
+		BotDDorders_BothPointsTaken(bs);
 	}
 }
 

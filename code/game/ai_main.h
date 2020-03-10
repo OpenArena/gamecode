@@ -59,8 +59,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define LTG_MAKELOVE_UNDER			14
 #define LTG_MAKELOVE_ONTOP			15
 //Long term DD goals
-#define LTG_POINTA				16	//Take/Defend point A
-#define LTG_POINTB				17	//Take/Defend point B
+#define LTG_HOLDPOINTA				16	//Take/Defend point A
+#define LTG_HOLDPOINTB				17	//Take/Defend point B
 //Long term DD goals
 #define LTG_DOMROAM                             18      //Go for a non taken point.
 #define LTG_DOMHOLD                             19      //Pick a point and hold it.
@@ -80,8 +80,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define CTF_RETURNFLAG_TIME			180	//3 minutes to return the flag
 #define CTF_ROAM_TIME				60	//1 minute ctf roam time
 //Time for Double Domination tasks
-#define DD_POINTA				600
-#define DD_POINTB				600
+#define TEAM_HOLDPOINTA_TIME		600
+#define TEAM_HOLDPOINTB_TIME		600
 //patrol flags
 #define PATROL_LOOP					1
 #define PATROL_REVERSE				2

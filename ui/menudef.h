@@ -379,3 +379,5 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define VOICECHAT_DEATHINSULT		"death_insult"			// you just killed me
 #define VOICECHAT_KILLGAUNTLET		"kill_gauntlet"			// I just killed you with the gauntlet
 #define VOICECHAT_PRAISE			"praise"				// you did something good
+#define VOICECHAT_HOLDPOINTA		"holdpointa"			// hold DD point A
+#define VOICECHAT_HOLDPOINTB		"holdpointb"			// hold DD point B
