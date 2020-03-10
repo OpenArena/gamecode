@@ -388,6 +388,11 @@ void BotReportStatus(bot_state_t *bs) {
 			BotAI_Print(PRT_MESSAGE, "%-20s%s%s: going for point B\n", netname, leader, flagstatus);
 			break;
 		}
+		case LTG_HOLDDOMPOINT:
+		{
+			BotAI_Print(PRT_MESSAGE, "%-20s%s%s: defending a DOM control point\n", netname, leader, flagstatus);
+			break;
+		}
 		default:
 		{
 			BotAI_Print(PRT_MESSAGE, "%-20s%s%s: roaming\n", netname, leader, flagstatus);
@@ -546,6 +551,11 @@ void BotSetInfoConfigString(bot_state_t *bs) {
 		case LTG_POINTB:
 		{
 			Com_sprintf(action, sizeof(action), "going for point B");
+			break;
+		}
+		case LTG_HOLDDOMPOINT:
+		{
+			Com_sprintf(action, sizeof(action), "defending a DOM point");
 			break;
 		}
 		default:
