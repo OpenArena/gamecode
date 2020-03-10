@@ -1156,10 +1156,10 @@ static float CG_DrawDomStatus(float y) {
 
 /*
 =================
-CG_DrawEliminationTimer
+CG_DrawCountdownTimer
 =================
  */
-static float CG_DrawEliminationTimer(float y) {
+static float CG_DrawCountdownTimer(float y) {
 	char *s;
 	int w;
 	int mins, seconds, tens, sec;
@@ -1200,7 +1200,7 @@ static float CG_DrawEliminationTimer(float y) {
 		Lots of stuff
 		 ****/
 		if (cg.warmup == 0) {
-			st = va("Round in: %i", sec + 1);
+			st = va("New round in: %i", sec + 1);
 			if (sec != cg.warmupCount) {
 				cg.warmupCount = sec;
 				switch (sec) {
@@ -1610,8 +1610,8 @@ static void CG_DrawUpperRight(stereoFrame_t stereoFrame) {
 	if (cg_drawFPS.integer && (stereoFrame == STEREO_CENTER || stereoFrame == STEREO_RIGHT)) {
 		y = CG_DrawFPS(y);
 	}
-	if (CG_IsARoundBasedGametype(cgs.gametype)) {
-		y = CG_DrawEliminationTimer(y);
+	if (CG_IsARoundBasedGametype(cgs.gametype) || cgs.gametype == GT_DOUBLE_D) {
+		y = CG_DrawCountdownTimer(y);
 		/*if (cgs.clientinfo[ cg.clientNum ].isDead)
 			y = CG_DrawEliminationDeathMessage( y);*/
 	}
