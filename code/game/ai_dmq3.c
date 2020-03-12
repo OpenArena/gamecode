@@ -5526,7 +5526,7 @@ int BotCanAndWantsToUseTheGrapple(bot_state_t *bs) {
 	}
 	// * if their own bot file settings allow for it
 	grappler = trap_Characteristic_BFloat(bs->character, CHARACTERISTIC_GRAPPLE_USER, 0, 1);
-	if (grappler < 0.5) {
+	if (random() < grappler) {
 		return qfalse;
 	}
 	// Else they'll be happy to use it
