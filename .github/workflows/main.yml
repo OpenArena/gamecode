@@ -5,14 +5,14 @@ on: [push]
 strategy:
   matrix:
     compiler: [gcc, clang]
+
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v1
-    - name: Build it
-      env:
-        CC: ${{ matrix.compiler }}
-      run: make
+      - name: Checkout repo
+        uses: actions/checkout@v1
+      - name: Build it
+        env:
+          CC: ${{ matrix.compiler }}
+        run: make
