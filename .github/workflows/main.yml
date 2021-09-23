@@ -2,17 +2,11 @@ name: Build
 
 on: [push]
 
-strategy:
-  matrix:
-    compiler: [gcc, clang]
-
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
       - name: Build it
-        env:
-          CC: ${{ matrix.compiler }}
         run: make
