@@ -2157,8 +2157,8 @@ void PmoveSingle (pmove_t *pmove)
 	PM_WaterEvents();
 
 	// snap some parts of playerstate to save network bandwidth
-	//But only if pmove_float is not enabled
-	if(!(pm->pmove_float))
+	//But only if pmove_float is not enabled. We always snap on slick surfaces to prevent acceleration.
+	if(!(pm->pmove_float) || pml.groundTrace.surfaceFlags & SURF_SLICK)
 		trap_SnapVector( pm->ps->velocity );
 }
 
