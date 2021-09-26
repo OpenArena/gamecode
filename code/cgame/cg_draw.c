@@ -1184,6 +1184,9 @@ static float CG_DrawCountdownTimer(float y) {
 	//msec = cg.time - cgs.levelStartTime;
 	if (cg.time > rst) //We are started
 	{
+		if (cgs.gametype == GT_DOUBLE_D) {
+			return y;
+		}
 		msec = cgs.roundtime * 1000 - (cg.time - rst);
 		if (msec <= 30 * 1000 - 1) //<= 30 seconds
 			memcpy(color, g_color_table[ColorIndex(COLOR_YELLOW)], sizeof (color));
