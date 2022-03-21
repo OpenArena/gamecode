@@ -1795,22 +1795,22 @@ qboolean MatchesGametype(int gametype, const char* gametypeName) {
 	qboolean mayRead = qfalse;
 	switch (gametype) {
 		case GT_FFA:
-			if (Q_strequal(gametypeName, "dm")) mayRead = qtrue;
+			if (Q_strequal(gametypeName, "dm") || Q_strequal(gametypeName, "deathmatch") || Q_strequal(gametypeName, "ffa")) mayRead = qtrue;
 			break;
 		case GT_TEAM:
-			if (Q_strequal(gametypeName, "team")) mayRead = qtrue;
+			if (Q_strequal(gametypeName, "team") || Q_strequal(gametypeName, "tdm")) mayRead = qtrue;
 			break;
 		case GT_TOURNAMENT:
-			if (Q_strequal(gametypeName, "tourney")) mayRead = qtrue;
+			if (Q_strequal(gametypeName, "tourney") || Q_strequal(gametypeName, "tournament")) mayRead = qtrue;
 			break;
 		case GT_CTF:
 			if (Q_strequal(gametypeName, "ctf")) mayRead = qtrue;
 			break;
 		case GT_1FCTF:
-			if (Q_strequal(gametypeName, "1fctf")) mayRead = qtrue;
+			if (Q_strequal(gametypeName, "1fctf") || Q_strequal(gametypeName, "oneflag")) mayRead = qtrue;
 			break;
 		case GT_OBELISK:
-			if (Q_strequal(gametypeName, "obelisk")) mayRead = qtrue;
+			if (Q_strequal(gametypeName, "obelisk") || Q_strequal(gametypeName, "overload")) mayRead = qtrue;
 			break;
 		case GT_HARVESTER:
 			if (Q_strequal(gametypeName, "harvester")) mayRead = qtrue;
@@ -1819,19 +1819,19 @@ qboolean MatchesGametype(int gametype, const char* gametypeName) {
 			if (Q_strequal(gametypeName, "elimination")) mayRead = qtrue;
 			break;
 		case GT_CTF_ELIMINATION:
-			if (Q_strequal(gametypeName, "ctfelim")) mayRead = qtrue;
+			if (Q_strequal(gametypeName, "ctfelim") || Q_strequal(gametypeName, "ctfelimination")) mayRead = qtrue;
 			break;
 		case GT_LMS:
 			if (Q_strequal(gametypeName, "lms")) mayRead = qtrue;
 			break;
 		case GT_DOUBLE_D:
-			if (Q_strequal(gametypeName, "dd")) mayRead = qtrue;
+			if (Q_strequal(gametypeName, "dd") || Q_strequal(gametypeName, "ddom")) mayRead = qtrue;
 			break;
 		case GT_DOMINATION:
 			if (Q_strequal(gametypeName, "dom")) mayRead = qtrue;
 			break;
 		case GT_POSSESSION:
-			if (Q_strequal(gametypeName, "pos")) mayRead = qtrue;
+			if (Q_strequal(gametypeName, "pos") || Q_strequal(gametypeName, "possession")) mayRead = qtrue;
 			break;
 	};
 	return mayRead;
