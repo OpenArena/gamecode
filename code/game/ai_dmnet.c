@@ -922,7 +922,7 @@ int BotGetLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal) 
 		}
 	}
 #endif //CTF
-	else if (G_SingleGametypeCheck(gametype,subgametype,GT_1FCTF)) {
+	else if (G_IsGametype(gametype,subgametype,GT_1FCTF)) {
 		if (bs->ltgtype == LTG_GETFLAG) {
 			//check for bot typing status message
 			if (bs->teammessage_time && bs->teammessage_time < FloatTime()) {
@@ -1006,7 +1006,7 @@ int BotGetLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal) 
 			return BotGetItemLongTermGoal(bs, tfl, goal);
 		}
 	}
-	else if (G_SingleGametypeCheck(gametype,subgametype,GT_OBELISK)) {
+	else if (G_IsGametype(gametype,subgametype,GT_OBELISK)) {
 		if (bs->ltgtype == LTG_ATTACKENEMYBASE &&
 				bs->attackaway_time < FloatTime()) {
 
@@ -1044,7 +1044,7 @@ int BotGetLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal) 
 			return qtrue;
 		}
 	}
-	else if (G_SingleGametypeCheck(gametype,subgametype,GT_HARVESTER)) {
+	else if (G_IsGametype(gametype,subgametype,GT_HARVESTER)) {
 		//if rushing to the base
 		if (bs->ltgtype == LTG_RUSHBASE) {
 			switch(BotTeam(bs)) {
@@ -1972,7 +1972,7 @@ int AINode_Seek_LTG(bot_state_t *bs)
 			if (Bot1FCTFCarryingFlag(bs))
 				range = 50;
 		}
-		else if (G_SingleGametypeCheck(gametype,subgametype,GT_HARVESTER)) {
+		else if (G_IsGametype(gametype,subgametype,GT_HARVESTER)) {
 			if (BotHarvesterCarryingCubes(bs))
 				range = 80;
 		}
@@ -2492,7 +2492,7 @@ int AINode_Battle_Retreat(bot_state_t *bs) {
 			if (Bot1FCTFCarryingFlag(bs))
 				range = 50;
 		}
-		else if (G_SingleGametypeCheck(gametype,subgametype,GT_HARVESTER)) {
+		else if (G_IsGametype(gametype,subgametype,GT_HARVESTER)) {
 			if (BotHarvesterCarryingCubes(bs))
 				range = 80;
 		}

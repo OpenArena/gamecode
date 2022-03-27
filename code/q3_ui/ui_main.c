@@ -383,13 +383,13 @@ qboolean UI_IsARoundBasedGametype(int gametype, int subgametype) {
 }
 /*
 ===================
-UI_SingleGametypeCheck
+UI_IsGametype
 
 Checks if the game takes place in a particular gametype.
 Replaces all direct gametype calls.
 ===================
  */
-qboolean UI_SingleGametypeCheck(int gametype, int subgametype, int check) {
+qboolean UI_IsGametype(int gametype, int subgametype, int check) {
 	if (gametype != GT_SINGLE_PLAYER && gametype == check) {
 		return qtrue;
 	}

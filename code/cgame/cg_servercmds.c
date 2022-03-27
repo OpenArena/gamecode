@@ -428,7 +428,7 @@ void CG_SetConfigValues( void ) {
 	cgs.scores2 = atoi( CG_ConfigString( CS_SCORES2 ) );
 	cgs.levelStartTime = atoi( CG_ConfigString( CS_LEVEL_START_TIME ) );
 	if((CG_UsesTeamFlags(cgs.gametype,cgs.subgametype) && !CG_UsesTheWhiteFlag(cgs.gametype,cgs.subgametype)) ||
-			CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_DOUBLE_D)) {
+			CG_IsGametype(cgs.gametype,cgs.subgametype,GT_DOUBLE_D)) {
 		s = CG_ConfigString( CS_FLAGSTATUS );
 		cgs.redflag = s[0] - '0';
 		cgs.blueflag = s[1] - '0';
@@ -552,7 +552,7 @@ static void CG_ConfigStringModified( void ) {
 		CG_BuildSpectatorString();
 	} else if ( num == CS_FLAGSTATUS ) {
 		if((CG_UsesTeamFlags(cgs.gametype,cgs.subgametype) && CG_UsesTheWhiteFlag(cgs.gametype,cgs.subgametype)) ||
-				CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_DOUBLE_D)) {
+				CG_IsGametype(cgs.gametype,cgs.subgametype,GT_DOUBLE_D)) {
 			// format is rb where its red/blue, 0 is at base, 1 is taken, 2 is dropped
 			cgs.redflag = str[0] - '0';
 			cgs.blueflag = str[1] - '0';
@@ -679,7 +679,7 @@ static void CG_MapRestart( void ) {
 	// we really should clear more parts of cg here and stop sounds
 
 	// play the "fight" sound if this is a restart without warmup
-	if ( cg.warmup == 0 /* && CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_TOURNAMENT) */) {
+	if ( cg.warmup == 0 /* && CG_IsGametype(cgs.gametype,cgs.subgametype,GT_TOURNAMENT) */) {
 		trap_S_StartLocalSound( cgs.media.countFightSound, CHAN_ANNOUNCER );
 		CG_CenterPrint( "FIGHT!", 120, GIANTCHAR_WIDTH*2 );
 	}

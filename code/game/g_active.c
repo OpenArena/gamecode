@@ -469,7 +469,7 @@ static void ClientTimerActions( gentity_t *ent, int msec ) {
 			}
 			//Start killing players in LMS, if we are in overtime
 			else if (g_elimination_roundtime.integer &&
-					G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_LMS) &&
+					G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_LMS) &&
 					TeamHealthCount( -1, TEAM_FREE ) != ent->health &&
 			        (level.roundNumber==level.roundNumberStarted) &&
 					(level.time>=level.roundStartTime+1000*g_elimination_roundtime.integer)) {
@@ -489,7 +489,7 @@ static void ClientTimerActions( gentity_t *ent, int msec ) {
 			client->ps.stats[STAT_ARMOR]--;
 		}
 		
-		if (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_POSSESSION) &&
+		if (G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_POSSESSION) &&
 				ent->health > 0 && client->ps.powerups[PW_NEUTRALFLAG] ) {
 			AddScore(ent, ent->client->ps.origin, 1);
 			G_LogPrintf("POS: %i %i: %s^7 scored a point\n", ent->s.number, 1, client->pers.netname);
@@ -632,7 +632,7 @@ void ClientEvents( gentity_t *ent, int oldEventSequence ) {
 				ent->client->ps.powerups[ j ] = 0;
 			}
 
-			if (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_HARVESTER)) {
+			if (G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_HARVESTER)) {
 				if ( ent->client->ps.generic1 > 0 ) {
 					if ( ent->client->sess.sessionTeam == TEAM_RED ) {
 						item = BG_FindItem( "Blue Cube" );

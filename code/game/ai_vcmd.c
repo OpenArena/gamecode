@@ -75,7 +75,7 @@ void BotVoiceChat_GetFlag(bot_state_t *bs, int client, int mode) {
 		if (!ctf_redflag.areanum || !ctf_blueflag.areanum)
 			return;
 	}
-	else if (G_SingleGametypeCheck(gametype,subgametype,GT_1FCTF)) {
+	else if (G_IsGametype(gametype,subgametype,GT_1FCTF)) {
 		if (!ctf_neutralflag.areanum || !ctf_redflag.areanum || !ctf_blueflag.areanum)
 			return;
 	}
@@ -116,7 +116,7 @@ void BotVoiceChat_Offense(bot_state_t *bs, int client, int mode) {
 		BotVoiceChat_GetFlag(bs, client, mode);
 		return;
 	}
-	if (G_SingleGametypeCheck(gametype,subgametype,GT_HARVESTER)) {
+	if (G_IsGametype(gametype,subgametype,GT_HARVESTER)) {
 		//
 		bs->decisionmaker = client;
 		bs->ordered = qtrue;
@@ -162,8 +162,8 @@ BotVoiceChat_Defend
 ==================
 */
 void BotVoiceChat_Defend(bot_state_t *bs, int client, int mode) {
-	if (G_SingleGametypeCheck(gametype,subgametype,GT_HARVESTER) ||
-			G_SingleGametypeCheck(gametype,subgametype,GT_OBELISK)) {
+	if (G_IsGametype(gametype,subgametype,GT_HARVESTER) ||
+			G_IsGametype(gametype,subgametype,GT_OBELISK)) {
 		//
 		switch(BotTeam(bs)) {
 			case TEAM_RED: memcpy(&bs->teamgoal, &redobelisk, sizeof(bot_goal_t)); break;

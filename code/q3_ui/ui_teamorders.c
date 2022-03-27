@@ -366,11 +366,11 @@ static void UI_TeamOrdersMenu_ListEvent( void *ptr, int event )
 				UI_UsesTheWhiteFlag(teamOrdersMenuInfo.gametype,teamOrdersMenuInfo.subgametype) ) {
 			UI_TeamOrdersMenu_SetList( ID_LIST_CTF1F_ORDERS );
 		}
-		if( UI_SingleGametypeCheck(teamOrdersMenuInfo.gametype,teamOrdersMenuInfo.subgametype,GT_HARVESTER) ||
-				UI_SingleGametypeCheck(teamOrdersMenuInfo.gametype,teamOrdersMenuInfo.subgametype,GT_OBELISK) ) {
+		if( UI_IsGametype(teamOrdersMenuInfo.gametype,teamOrdersMenuInfo.subgametype,GT_HARVESTER) ||
+				UI_IsGametype(teamOrdersMenuInfo.gametype,teamOrdersMenuInfo.subgametype,GT_OBELISK) ) {
 			UI_TeamOrdersMenu_SetList( ID_LIST_BASE_ORDERS );
 		}
-		if( UI_SingleGametypeCheck(teamOrdersMenuInfo.gametype,teamOrdersMenuInfo.subgametype,GT_DOUBLE_D) ) {
+		if( UI_IsGametype(teamOrdersMenuInfo.gametype,teamOrdersMenuInfo.subgametype,GT_DOUBLE_D) ) {
 			UI_TeamOrdersMenu_SetList( ID_LIST_DD_ORDERS );
 		}
 		else {

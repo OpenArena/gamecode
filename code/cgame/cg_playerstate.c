@@ -434,7 +434,7 @@ void CG_CheckLocalSounds( playerState_t *ps, playerState_t *ops ) {
 					if (  ps->persistant[PERS_RANK] == 0 ) {
 						CG_AddBufferedSound(cgs.media.takenLeadSound);
 					} else if ( ps->persistant[PERS_RANK] == RANK_TIED_FLAG &&
-							!CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_POSSESSION)) {
+							!CG_IsGametype(cgs.gametype,cgs.subgametype,GT_POSSESSION)) {
 						CG_AddBufferedSound(cgs.media.tiedLeadSound);
 					} else if ( ps->persistant[PERS_RANK] != RANK_TIED_FLAG &&( ops->persistant[PERS_RANK] & ~RANK_TIED_FLAG ) == 0 ) {
 						CG_AddBufferedSound(cgs.media.lostLeadSound);
@@ -467,7 +467,7 @@ void CG_CheckLocalSounds( playerState_t *ps, playerState_t *ops ) {
 	if (!CG_IsATeamGametype(cgs.gametype,cgs.subgametype)) {
 		highScore = cgs.scores1;
 
-		if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_TEAM) && cgs.scores2 > highScore) {
+		if (CG_IsGametype(cgs.gametype,cgs.subgametype,GT_TEAM) && cgs.scores2 > highScore) {
 			highScore = cgs.scores2;
 		}
 

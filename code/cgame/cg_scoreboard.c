@@ -123,14 +123,14 @@ static void CG_DrawClientScore(int y, score_t *score, float *color, float fade, 
 			}
 		} else if (ci->handicap < 100) {
 			Com_sprintf(string, sizeof ( string), "%i", ci->handicap);
-			if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_TOURNAMENT))
+			if (CG_IsGametype(cgs.gametype,cgs.subgametype,GT_TOURNAMENT))
 				CG_DrawSmallStringColor(iconx, y - SMALLCHAR_HEIGHT / 2, string, color);
 			else
 				CG_DrawSmallStringColor(iconx, y, string, color);
 		}
 
 		// draw the wins / losses
-		if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_TOURNAMENT)) {
+		if (CG_IsGametype(cgs.gametype,cgs.subgametype,GT_TOURNAMENT)) {
 			Com_sprintf(string, sizeof ( string), "%i/%i", ci->wins, ci->losses);
 			if (ci->handicap < 100 && !ci->botSkill) {
 				CG_DrawSmallStringColor(iconx, y + SMALLCHAR_HEIGHT / 2, string, color);
@@ -170,7 +170,7 @@ static void CG_DrawClientScore(int y, score_t *score, float *color, float fade, 
 		Com_sprintf(string, sizeof (string),
 				" SPECT %3i %4i %s", score->ping, score->time, ci->name);
 	} else {
-		/*if(CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_LMS))
+		/*if(CG_IsGametype(cgs.gametype,cgs.subgametype,GT_LMS))
 			Com_sprintf(string, sizeof(string),
 				"%5i %4i %4i %s *%i*", score->score, score->ping, score->time, ci->name, ci->isDead);
 		else*/
@@ -225,7 +225,7 @@ static void CG_DrawClientScore(int y, score_t *score, float *color, float fade, 
 	if (cg.snap->ps.stats[ STAT_CLIENTS_READY ] & (1 << score->client)) {
 		CG_DrawBigStringColor(iconx, y, "READY", color);
 	} else
-		if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_LMS)) {
+		if (CG_IsGametype(cgs.gametype,cgs.subgametype,GT_LMS)) {
 		CG_DrawBigStringColor(iconx - 50, y, va("*%i*", ci->isDead), color);
 	} else
 		if (ci->isDead) {

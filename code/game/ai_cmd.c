@@ -930,11 +930,11 @@ void BotMatch_GetFlag(bot_state_t *bs, bot_match_t *match) {
 		if (!ctf_redflag.areanum || !ctf_blueflag.areanum)
 			return;
 	}
-	else if (G_SingleGametypeCheck(gametype,subgametype,GT_1FCTF)) {
+	else if (G_IsGametype(gametype,subgametype,GT_1FCTF)) {
 		if (!ctf_neutralflag.areanum || !ctf_redflag.areanum || !ctf_blueflag.areanum)
 			return;
 	}
-	else if (G_SingleGametypeCheck(gametype,subgametype,GT_POSSESSION)) {
+	else if (G_IsGametype(gametype,subgametype,GT_POSSESSION)) {
 		if (!ctf_neutralflag.areanum)
 			return;
 	}
@@ -984,8 +984,8 @@ void BotMatch_AttackEnemyBase(bot_state_t *bs, bot_match_t *match) {
 		BotMatch_GetFlag(bs, match);
 	}
 	else if ((G_UsesTeamFlags(gametype,subgametype) && G_UsesTheWhiteFlag(gametype,subgametype)) ||
-			(G_SingleGametypeCheck(gametype,subgametype,GT_HARVESTER)) ||
-			(G_SingleGametypeCheck(gametype,subgametype,GT_OBELISK))) {
+			(G_IsGametype(gametype,subgametype,GT_HARVESTER)) ||
+			(G_IsGametype(gametype,subgametype,GT_OBELISK))) {
 		if (!redobelisk.areanum || !blueobelisk.areanum)
 			return;
 	}
@@ -1027,7 +1027,7 @@ void BotMatch_Harvest(bot_state_t *bs, bot_match_t *match) {
 	char netname[MAX_MESSAGE_SIZE];
 	int client;
 
-	if (!(G_SingleGametypeCheck(gametype,subgametype,GT_HARVESTER))) {
+	if (!(G_IsGametype(gametype,subgametype,GT_HARVESTER))) {
 		return;
 	}
 	if (!neutralobelisk.areanum || !redobelisk.areanum || !blueobelisk.areanum) {
@@ -1072,8 +1072,8 @@ void BotMatch_RushBase(bot_state_t *bs, bot_match_t *match) {
 		if (!ctf_redflag.areanum || !ctf_blueflag.areanum)
 			return;
 	}
-	else if ((G_SingleGametypeCheck(gametype,subgametype,GT_1FCTF)) ||
-			(G_SingleGametypeCheck(gametype,subgametype,GT_HARVESTER))) {
+	else if ((G_IsGametype(gametype,subgametype,GT_1FCTF)) ||
+			(G_IsGametype(gametype,subgametype,GT_HARVESTER))) {
 		if (!redobelisk.areanum || !blueobelisk.areanum)
 			return;
 	}
@@ -1681,8 +1681,8 @@ void BotMatch_WhereAreYou(bot_state_t *bs, bot_match_t *match) {
 				BotAI_BotInitialChat(bs, "location", nearbyitems[bestitem], NULL);
 			}
 		}
-		else if ((G_SingleGametypeCheck(gametype,subgametype,GT_HARVESTER)) ||
-				(G_SingleGametypeCheck(gametype,subgametype,GT_OBELISK))) {
+		else if ((G_IsGametype(gametype,subgametype,GT_HARVESTER)) ||
+				(G_IsGametype(gametype,subgametype,GT_OBELISK))) {
 			redtt = trap_AAS_AreaTravelTimeToGoalArea(bs->areanum, bs->origin, redobelisk.areanum, TFL_DEFAULT);
 			bluett = trap_AAS_AreaTravelTimeToGoalArea(bs->areanum, bs->origin, blueobelisk.areanum, TFL_DEFAULT);
 			if (redtt < (redtt + bluett) * 0.4) {

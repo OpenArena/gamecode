@@ -131,7 +131,7 @@ void G_InitSessionData( gclient_t *client, char *userinfo ) {
 			// a willing spectator, not a waiting-in-line
 			sess->sessionTeam = TEAM_SPECTATOR;
 		} else {
-			if (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_TOURNAMENT)) {
+			if (G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_TOURNAMENT)) {
 				// if the game is full, go into a waiting mode
 				if ( level.numNonSpectatorClients >= 2 ) {
 					sess->sessionTeam = TEAM_SPECTATOR;

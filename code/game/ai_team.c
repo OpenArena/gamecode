@@ -2197,7 +2197,7 @@ void BotTeamAI(bot_state_t *bs) {
 	//
 	numteammates = BotNumTeamMates(bs);
 	//give orders
-	if (G_SingleGametypeCheck(gametype,subgametype,GT_TEAM)) {
+	if (G_IsGametype(gametype,subgametype,GT_TEAM)) {
 		if (bs->numteammates != numteammates || bs->forceorders) {
 			bs->teamgiveorders_time = FloatTime();
 			bs->numteammates = numteammates;
@@ -2210,8 +2210,8 @@ void BotTeamAI(bot_state_t *bs) {
 			bs->teamgiveorders_time = FloatTime() + 120;
 		}
 	}
-	else if (G_SingleGametypeCheck(gametype,subgametype,GT_CTF) ||
-			G_SingleGametypeCheck(gametype,subgametype,GT_CTF_ELIMINATION)) {
+	else if (G_IsGametype(gametype,subgametype,GT_CTF) ||
+			G_IsGametype(gametype,subgametype,GT_CTF_ELIMINATION)) {
 		//if the number of team mates changed or the flag status changed
 		//or someone wants to know what to do
 		if (bs->numteammates != numteammates || bs->flagstatuschanged || bs->forceorders || lastRoundNumber != level.roundNumber) {
@@ -2237,7 +2237,7 @@ void BotTeamAI(bot_state_t *bs) {
 			bs->teamgiveorders_time = 0;
 		}
 	}
-	else if (G_SingleGametypeCheck(gametype,subgametype,GT_DOUBLE_D)) {
+	else if (G_IsGametype(gametype,subgametype,GT_DOUBLE_D)) {
 		//if the number of team mates changed or the domination point status changed
 		//or someone wants to know what to do
 		if (bs->numteammates != numteammates || bs->flagstatuschanged || bs->forceorders) {
@@ -2253,7 +2253,7 @@ void BotTeamAI(bot_state_t *bs) {
 			bs->teamgiveorders_time = 0;
 		}
 	}
-	else if (G_SingleGametypeCheck(gametype,subgametype,GT_1FCTF)) {
+	else if (G_IsGametype(gametype,subgametype,GT_1FCTF)) {
 		if (bs->numteammates != numteammates || bs->flagstatuschanged || bs->forceorders) {
 			bs->teamgiveorders_time = FloatTime();
 			bs->numteammates = numteammates;
@@ -2276,7 +2276,7 @@ void BotTeamAI(bot_state_t *bs) {
 			bs->teamgiveorders_time = 0;
 		}
 	}
-	else if (G_SingleGametypeCheck(gametype,subgametype,GT_OBELISK)) {
+	else if (G_IsGametype(gametype,subgametype,GT_OBELISK)) {
 		if (bs->numteammates != numteammates || bs->forceorders) {
 			bs->teamgiveorders_time = FloatTime();
 			bs->numteammates = numteammates;
@@ -2289,7 +2289,7 @@ void BotTeamAI(bot_state_t *bs) {
 			bs->teamgiveorders_time = FloatTime() + 30;
 		}
 	}
-	else if (G_SingleGametypeCheck(gametype,subgametype,GT_HARVESTER)) {
+	else if (G_IsGametype(gametype,subgametype,GT_HARVESTER)) {
 		if (bs->numteammates != numteammates || bs->forceorders) {
 			bs->teamgiveorders_time = FloatTime();
 			bs->numteammates = numteammates;

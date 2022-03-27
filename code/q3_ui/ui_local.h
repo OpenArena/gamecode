@@ -904,5 +904,5 @@ qboolean UI_IsATeamGametype(int gametype, int subgametype);	/* SP: Whether the g
 qboolean UI_UsesTeamFlags(int gametype, int subgametype);	/* SP: Whether the gametype uses the red and blue flags. */
 qboolean UI_UsesTheWhiteFlag(int gametype, int subgametype);	/* SP: Whether the gametype uses the neutral flag. */
 qboolean UI_IsARoundBasedGametype(int gametype, int subgametype);	/* SP: Whether the gametype is round-based. */
-qboolean UI_SingleGametypeCheck(int gametype, int subgametype, int check);	/* SP: Whether the game takes place in a particular gametype. */
+qboolean UI_IsGametype(int gametype, int subgametype, int check);	/* SP: Whether the game takes place in a particular gametype. */
 /* /Neon_Knight */

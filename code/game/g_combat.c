@@ -86,7 +86,7 @@ void AddScore( gentity_t *ent, vec3_t origin, int score )
 		ScorePlum(ent, origin, score);
 		//
 		ent->client->ps.persistant[PERS_SCORE] += score;
-		if (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_TEAM)) {
+		if (G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_TEAM)) {
 			int team = ent->client->ps.persistant[PERS_TEAM];
 			level.teamScores[ team ] += score;
 			G_LogPrintf("TeamScore: %i %i: Team %d now has %d points\n",
@@ -134,7 +134,7 @@ void TossClientItems( gentity_t *self )
 	}
 
 	if (g_instantgib.integer || g_rockets.integer ||
-			G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_CTF_ELIMINATION) ||
+			G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_CTF_ELIMINATION) ||
 			g_elimination_allgametypes.integer) {
 		//Nothing!
 	}
@@ -148,7 +148,7 @@ void TossClientItems( gentity_t *self )
 	}
 
 	// drop all the powerups if not in teamplay
-	if (!G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_TEAM)) {
+	if (!G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_TEAM)) {
 		angle = 45;
 		for ( i = 1 ; i < PW_NUM_POWERUPS ; i++ ) {
 			if ( self->client->ps.powerups[ i ] > level.time ) {
@@ -586,7 +586,7 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 		attacker->client->lastkilled_client = self->s.number;
 
 		if ( attacker == self || OnSameTeam (self, attacker ) ) {
-			if(!G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_POSSESSION) &&
+			if(!G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_POSSESSION) &&
 					!G_IsARoundBasedGametype(g_gametype.integer,g_subgametype.integer) &&
 					level.time < level.roundStartTime) {
 				if( (G_IsATeamGametype(g_gametype.integer,g_subgametype.integer) &&
@@ -597,8 +597,8 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 			}
 		}
 		else {
-			if(G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_LMS) &&
-					G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_POSSESSION)) {
+			if(G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_LMS) &&
+					G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_POSSESSION)) {
 				AddScore( attacker, self->r.currentOrigin, 1 );
 			}
 
@@ -770,7 +770,7 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 		}
 	}
 	else {
-		if(!G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_POSSESSION) &&
+		if(!G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_POSSESSION) &&
 				!G_IsARoundBasedGametype(g_gametype.integer,g_subgametype.integer) &&
 				level.time < level.roundStartTime) {
 			if(self->client->ps.persistant[PERS_SCORE]>0 || level.numNonSpectatorClients<3) { 
@@ -799,7 +799,7 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 		}
 	}
 	TossClientPersistantPowerups( self );
-	if(G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_HARVESTER)) {
+	if(G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_HARVESTER)) {
 		TossClientCubes( self );
 	}
 	// if client is in a nodrop area, don't drop anything (but return CTF flags!)
@@ -1129,7 +1129,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 		}
 		return;
 	}
-	if(G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_OBELISK) &&
+	if(G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_OBELISK) &&
 			CheckObeliskAttack( targ, attacker ) ) {
 		return;
 	}

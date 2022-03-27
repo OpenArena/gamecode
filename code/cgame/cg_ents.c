@@ -882,7 +882,7 @@ static void CG_TeamBase( centity_t *cent ) {
 		}
 		trap_R_AddRefEntityToScene( &model );
 	}
-	else if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_OBELISK)) {
+	else if (CG_IsGametype(cgs.gametype,cgs.subgametype,GT_OBELISK)) {
 		// show the obelisk
 		memset(&model, 0, sizeof(model));
 		model.reType = RT_MODEL;
@@ -976,7 +976,7 @@ static void CG_TeamBase( centity_t *cent ) {
 			trap_R_AddRefEntityToScene( &model );
 		}
 	}
-	else if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_HARVESTER)) {
+	else if (CG_IsGametype(cgs.gametype,cgs.subgametype,GT_HARVESTER)) {
 		// show harvester model
 		memset(&model, 0, sizeof(model));
 		model.reType = RT_MODEL;

@@ -455,7 +455,7 @@ void ClientRespawn( gentity_t *ent ) {
 	}
 	CopyToBodyQue (ent); //Unlinks ent
 
-	if(G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_LMS)) {
+	if(G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_LMS)) {
 		if(ent->client->pers.livesLeft>0)
 		{
 			ent->client->isEliminated = qfalse;
@@ -620,7 +620,7 @@ Returns number of living players on a team
 team_t TeamLivingCount( int ignoreClientNum, int team ) {
 	int		i;
 	int		count = 0;
-	qboolean	isLMS = (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_LMS));
+	qboolean	isLMS = (G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_LMS));
 
 	for ( i = 0 ; i < level.maxclients ; i++ ) {
 		if ( i == ignoreClientNum ) {
@@ -645,7 +645,7 @@ team_t TeamLivingCount( int ignoreClientNum, int team ) {
 int TeamLivingHumanCount(int ignoreClientNum) {
 	int i;
 	int count = 0;
-	qboolean	isLMS = (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_LMS));
+	qboolean	isLMS = (G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_LMS));
 
 	for ( i = 0 ; i < level.maxclients ; i++ ) {
 		if ( i == ignoreClientNum ) {
@@ -1485,7 +1485,7 @@ void ClientBegin( int clientNum ) {
 
 	//Elimination:
 	client->pers.roundReached = 0; //We will spawn in next round
-	if(G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_LMS)) {
+	if(G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_LMS)) {
 		client->isEliminated = qtrue; //So player does not give a point in gamemode 2 and 3
 		//trap_SendServerCommand( -1, va("print \"%s" S_COLOR_WHITE " will start dead\n\"", client->pers.netname) );
 	}
@@ -1544,7 +1544,7 @@ void ClientBegin( int clientNum ) {
 		tent = G_TempEntity( ent->client->ps.origin, EV_PLAYER_TELEPORT_IN );
 		tent->s.clientNum = ent->s.clientNum;
 
-		if (!G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_TOURNAMENT)) {
+		if (!G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_TOURNAMENT)) {
 			trap_SendServerCommand( -1, va("print \"%s" S_COLOR_WHITE " entered the game\n\"", client->pers.netname) );
 		}
 	}
@@ -1554,7 +1554,7 @@ void ClientBegin( int clientNum ) {
 	G_LogPrintf( "ClientBegin: %i\n", clientNum );
 
 	//Send domination point names:
-	if(G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_DOMINATION)) {
+	if(G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_DOMINATION)) {
 		DominationPointNamesMessage(ent);
 		DominationPointStatusMessage(ent);
 	}
@@ -1605,7 +1605,7 @@ void ClientSpawn(gentity_t *ent) {
 	//Sago: Yes, the !level.intermissiontime is currently redundant but it might still be the bast place to make the test, CheckElimination in g_main makes sure the next if will fail and the rest of the things this block does might not affect if in Intermission (I'll just test that)
 	if((((G_IsARoundBasedGametype(g_gametype.integer,g_subgametype.integer) &&
 			G_IsATeamGametype(g_gametype.integer,g_subgametype.integer)) ||
-			(G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_LMS) && client->isEliminated)) &&
+			(G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_LMS) && client->isEliminated)) &&
 			(!level.intermissiontime || level.warmupTime != 0)) &&
 			( client->sess.sessionTeam != TEAM_SPECTATOR)) {
 		// N_G: Another condition that makes no sense to me, see for
@@ -1618,7 +1618,7 @@ void ClientSpawn(gentity_t *ent) {
 		{	
 			client->sess.spectatorState = SPECTATOR_FREE;
 			client->isEliminated = qtrue;
-			if(G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_LMS)) {
+			if(G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_LMS)) {
 				G_LogPrintf( "LMS: %i %i %i: Player \"%s^7\" eliminated!\n", level.roundNumber, index, 1, client->pers.netname );
 			}
 			client->ps.pm_type = PM_SPECTATOR;
@@ -1641,7 +1641,7 @@ void ClientSpawn(gentity_t *ent) {
 		}
 	}
 
-	if(G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_LMS) &&
+	if(G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_LMS) &&
 		client->sess.sessionTeam != TEAM_SPECTATOR &&
 		(!level.intermissiontime || level.warmupTime != 0)) {
 		if(level.roundNumber==level.roundNumberStarted /*|| level.time<level.roundStartTime-g_elimination_activewarmup.integer*1000*/ && 1>client->pers.livesLeft)
@@ -1673,10 +1673,10 @@ void ClientSpawn(gentity_t *ent) {
 			(G_IsARoundBasedGametype(g_gametype.integer,g_subgametype.integer) &&
 			G_IsATeamGametype(g_gametype.integer,g_subgametype.integer)))) {
 		spawnPoint = SelectSpectatorSpawnPoint ( spawn_origin, spawn_angles);
-	} else if (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_DOUBLE_D)) {
+	} else if (G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_DOUBLE_D)) {
 		//Double Domination uses special spawn points:
 		spawnPoint = SelectDoubleDominationSpawnPoint (client->sess.sessionTeam, spawn_origin, spawn_angles);
-	} else if (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_DOMINATION)) {
+	} else if (G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_DOMINATION)) {
 		//Domination uses special spawn points:
 		spawnPoint = SelectDominationSpawnPoint (client->sess.sessionTeam, spawn_origin, spawn_angles);
 	} else if (G_IsATeamGametype(g_gametype.integer,g_subgametype.integer)) {
@@ -1789,7 +1789,7 @@ void ClientSpawn(gentity_t *ent) {
 	if(!G_IsARoundBasedGametype(g_gametype.integer,g_subgametype.integer) && !g_elimination_allgametypes.integer)
 	{
 		client->ps.stats[STAT_WEAPONS] = ( 1 << WP_MACHINEGUN );
-		if (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_TEAM)) {
+		if (G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_TEAM)) {
 			client->ps.ammo[WP_MACHINEGUN] = 50;
 		} else {
 			client->ps.ammo[WP_MACHINEGUN] = 100;
@@ -2003,14 +2003,14 @@ void ClientDisconnect( int clientNum ) {
 	&& ent->client->sess.sessionTeam != TEAM_SPECTATOR && i ) {
 		//Prevent a team from loosing point because of player leaving
 		int teamscore = 0;
-		if (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_TEAM)) {
+		if (G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_TEAM)) {
 			teamscore = level.teamScores[ ent->client->sess.sessionTeam ];
 		}
 		// Kill him (makes sure he loses flags, etc)
 		ent->flags &= ~FL_GODMODE;
 		ent->client->ps.stats[STAT_HEALTH] = ent->health = 0;
 		player_die (ent, ent, g_entities + ENTITYNUM_WORLD, 100000, MOD_SUICIDE);
-		if (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_TEAM)) {
+		if (G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_TEAM)) {
 			level.teamScores[ ent->client->sess.sessionTeam ] = teamscore;
 		}
 	}
@@ -2024,13 +2024,13 @@ void ClientDisconnect( int clientNum ) {
 	G_LogPrintf( "ClientDisconnect: %i\n", clientNum );
 
 	// if we are playing in tourney mode and losing, give a win to the other player
-	if (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_TOURNAMENT) &&
+	if (G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_TOURNAMENT) &&
 			!level.intermissiontime && !level.warmupTime && level.sortedClients[1] == clientNum ) {
 		level.clients[ level.sortedClients[0] ].sess.wins++;
 		ClientUserinfoChanged( level.sortedClients[0] );
 	}
 
-	if(G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_TOURNAMENT) &&
+	if(G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_TOURNAMENT) &&
 			ent->client->sess.sessionTeam == TEAM_FREE && level.intermissiontime ) {
 		trap_SendConsoleCommand( EXEC_APPEND, "map_restart 0\n" );
 		level.restarted = qtrue;

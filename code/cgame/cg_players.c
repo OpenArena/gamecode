@@ -2608,7 +2608,7 @@ void CG_Player(centity_t *cent) {
 		renderfx |= RF_SHADOW_PLANE;
 	}
 	renderfx |= RF_LIGHTING_ORIGIN; // use the same origin for all
-	if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_HARVESTER)) {
+	if (CG_IsGametype(cgs.gametype,cgs.subgametype,GT_HARVESTER)) {
 		CG_PlayerTokens(cent, renderfx);
 	}
 	//

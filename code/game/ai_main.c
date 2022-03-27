@@ -298,13 +298,13 @@ void BotReportStatus(bot_state_t *bs) {
 			else strcpy(flagstatus, S_COLOR_BLUE"F ");
 		}
 	}
-	else if (G_SingleGametypeCheck(gametype,subgametype,GT_1FCTF)) {
+	else if (G_IsGametype(gametype,subgametype,GT_1FCTF)) {
 		if (Bot1FCTFCarryingFlag(bs)) {
 			if (BotTeam(bs) == TEAM_RED) strcpy(flagstatus, S_COLOR_RED"F ");
 			else strcpy(flagstatus, S_COLOR_BLUE"F ");
 		}
 	}
-	else if (G_SingleGametypeCheck(gametype,subgametype,GT_HARVESTER)) {
+	else if (G_IsGametype(gametype,subgametype,GT_HARVESTER)) {
 		if (BotHarvesterCarryingCubes(bs)) {
 			if (BotTeam(bs) == TEAM_RED) Com_sprintf(flagstatus, sizeof(flagstatus), S_COLOR_RED"%2d", bs->inventory[INVENTORY_REDCUBE]);
 			else Com_sprintf(flagstatus, sizeof(flagstatus), S_COLOR_BLUE"%2d", bs->inventory[INVENTORY_BLUECUBE]);
@@ -464,7 +464,7 @@ void BotSetInfoConfigString(bot_state_t *bs) {
 			strcpy(carrying, "F ");
 		}
 	}
-	else if (G_SingleGametypeCheck(gametype,subgametype,GT_HARVESTER)) {
+	else if (G_IsGametype(gametype,subgametype,GT_HARVESTER)) {
 		if (BotHarvesterCarryingCubes(bs)) {
 			if (BotTeam(bs) == TEAM_RED) Com_sprintf(carrying, sizeof(carrying), "%2d", bs->inventory[INVENTORY_REDCUBE]);
 			else Com_sprintf(carrying, sizeof(carrying), "%2d", bs->inventory[INVENTORY_BLUECUBE]);
@@ -682,7 +682,7 @@ void BotInterbreeding(void) {
 	trap_Cvar_Update(&bot_interbreedchar);
 	if (!strlen(bot_interbreedchar.string)) return;
 	//make sure we are in tournament mode
-	if (!G_SingleGametypeCheck(gametype,subgametype,GT_TOURNAMENT)) {
+	if (!G_IsGametype(gametype,subgametype,GT_TOURNAMENT)) {
 		trap_Cvar_Set("g_gametype", va("%d", GT_TOURNAMENT));
 		ExitLevel();
 		return;

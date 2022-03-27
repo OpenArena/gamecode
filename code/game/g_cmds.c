@@ -72,7 +72,7 @@ void DeathmatchScoreboardMessage( gentity_t *ent ) {
 		}
 		perfect = ( cl->ps.persistant[PERS_RANK] == 0 && cl->ps.persistant[PERS_KILLED] == 0 ) ? 1 : 0;
 
-		if(G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_LMS)) {
+		if(G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_LMS)) {
 			Com_sprintf (entry, sizeof(entry),
 				" %i %i %i %i %i %i %i %i %i %i %i %i %i %i %i", level.sortedClients[i],
 				cl->ps.persistant[PERS_SCORE], ping, (level.time - cl->pers.enterTime)/60000,
@@ -826,7 +826,7 @@ void SetTeam( gentity_t *ent, const char *s ) {
 	}
 	if ( !force ) {
 		// override decision if limiting the players
-		if (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_TOURNAMENT)
+		if (G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_TOURNAMENT)
 			&& level.numNonSpectatorClients >= 2 ) {
 			team = TEAM_SPECTATOR;
 		} else if ( g_maxGameClients.integer > 0 && 
@@ -874,7 +874,7 @@ void SetTeam( gentity_t *ent, const char *s ) {
 	if ( oldTeam != TEAM_SPECTATOR ) {
 		int teamscore = -99;
 		//Prevent a team from loosing point because of player leaving team
-		if(G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_TEAM) &&
+		if(G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_TEAM) &&
 				ent->client->ps.stats[STAT_HEALTH]) {
 			teamscore = level.teamScores[ ent->client->sess.sessionTeam ];
 		}
@@ -992,7 +992,7 @@ void Cmd_Team_f( gentity_t *ent ) {
 	}
 
 	// if they are playing a tournement game, count as a loss
-	if (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_TOURNAMENT)
+	if (G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_TOURNAMENT)
 		&& ent->client->sess.sessionTeam == TEAM_FREE ) {
 		ent->client->sess.losses++;
 	}
@@ -1050,7 +1050,7 @@ void Cmd_Follow_f( gentity_t *ent ) {
 	}
 
 	// if they are playing a tournement game, count as a loss
-	if (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_TOURNAMENT)
+	if (G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_TOURNAMENT)
 		&& ent->client->sess.sessionTeam == TEAM_FREE ) {
 		ent->client->sess.losses++;
 	}
@@ -1094,7 +1094,7 @@ void Cmd_FollowCycle_f( gentity_t *ent ) {
 	}
 
 	// if they are playing a tournement game, count as a loss
-	if (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_TOURNAMENT)
+	if (G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_TOURNAMENT)
 		&& ent->client->sess.sessionTeam == TEAM_FREE ) {
 		ent->client->sess.losses++;
 	}
@@ -1189,7 +1189,7 @@ static void G_SayTo( gentity_t *ent, gentity_t *other, int mode, int color, cons
 	if ((ent->r.svFlags & SVF_BOT) && g_bot_noChat.integer > 1) return;
 
 	// no chatting to players in tournements
-	if (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_TOURNAMENT)
+	if (G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_TOURNAMENT)
 		&& other->client->sess.sessionTeam == TEAM_FREE
 		&& ent->client->sess.sessionTeam != TEAM_FREE ) {
 		return;
@@ -1366,7 +1366,7 @@ static void G_VoiceTo( gentity_t *ent, gentity_t *other, int mode, const char *i
 		return;
 	}
 	// no chatting to players in tournements
-	if (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_TOURNAMENT)) {
+	if (G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_TOURNAMENT)) {
 		return;
 	}
 

@@ -815,10 +815,10 @@ void G_InitGame( int levelTime, int randomSeed, int restart )
 			g_elimination_ctf_oneway.integer = 0;
 			g_elimination_lockspectator.integer = 0;
 		}
-		if (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_CTF) ||
-				G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_1FCTF) ||
-				G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_OBELISK) ||
-				G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_HARVESTER)) {
+		if (G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_CTF) ||
+				G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_1FCTF) ||
+				G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_OBELISK) ||
+				G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_HARVESTER)) {
 			g_runes.integer = 1;
 		}
 		else {
@@ -920,7 +920,7 @@ void G_InitGame( int levelTime, int randomSeed, int restart )
 	G_FindTeams();
 
 	// make sure we have flags for CTF, etc
-	if (G_IsATeamGametype(g_gametype.integer,g_subgametype.integer) && !G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_TEAM)) {
+	if (G_IsATeamGametype(g_gametype.integer,g_subgametype.integer) && !G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_TEAM)) {
 		G_CheckTeamItems();
 	}
 
@@ -957,10 +957,10 @@ void G_InitGame( int levelTime, int randomSeed, int restart )
 	level.teamSize = 0;
 	level.hadBots = qfalse;
 
-	if(G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_DOUBLE_D))
+	if(G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_DOUBLE_D))
 		Team_SpawnDoubleDominationPoints();
 
-	if(G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_DOMINATION)) {
+	if(G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_DOMINATION)) {
 		level.dom_scoreGiven = 0;
 		for(i=0; i<MAX_DOMINATION_POINTS; i++)
 			level.pointStatusDom[i] = TEAM_NONE;
@@ -1481,43 +1481,43 @@ static void SendVictoryChallenge( void )
 	if(level.max_humanplayers < 2 || level.hadBots)
 		return;
 
-	if (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_FFA)) {
+	if (G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_FFA)) {
 		award = GAMETYPES_FFA_WINS;
 	}
-	else if (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_TOURNAMENT)) {
+	else if (G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_TOURNAMENT)) {
 		award = GAMETYPES_TOURNEY_WINS;
 	}
-	else if (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_TEAM)) {
+	else if (G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_TEAM)) {
 		award = GAMETYPES_TDM_WINS;
 	}
-	else if (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_CTF)) {
+	else if (G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_CTF)) {
 		award = GAMETYPES_CTF_WINS;
 	}
-	else if (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_1FCTF)) {
+	else if (G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_1FCTF)) {
 		award = GAMETYPES_1FCTF_WINS;
 	}
-	else if (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_HARVESTER)) {
+	else if (G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_HARVESTER)) {
 		award = GAMETYPES_HARVESTER_WINS;
 	}
-	else if (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_OBELISK)) {
+	else if (G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_OBELISK)) {
 		award = GAMETYPES_OVERLOAD_WINS;
 	}
-	else if (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_ELIMINATION)) {
+	else if (G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_ELIMINATION)) {
 		award = GAMETYPES_ELIMINATION_WINS;
 	}
-	else if (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_CTF_ELIMINATION)) {
+	else if (G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_CTF_ELIMINATION)) {
 		award = GAMETYPES_CTF_ELIMINATION_WINS;
 	}
-	else if (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_LMS)) {
+	else if (G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_LMS)) {
 		award = GAMETYPES_LMS_WINS;
 	}
-	else if (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_DOUBLE_D)) {
+	else if (G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_DOUBLE_D)) {
 		award = GAMETYPES_DD_WINS;
 	}
-	else if (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_DOMINATION)) {
+	else if (G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_DOMINATION)) {
 		award = GAMETYPES_DOM_WINS;
 	}
-	else if (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_POSSESSION)) {
+	else if (G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_POSSESSION)) {
 		award = GAMETYPES_POS_WINS;
 	}
 	else {
@@ -2224,7 +2224,7 @@ void CheckExitRules( void )
 
 	if ( g_capturelimit.integer ) {
 		if ( G_IsATeamGametype(g_gametype.integer,g_subgametype.integer) &&
-				!G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_TEAM) ) {
+				!G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_TEAM) ) {
 			if ( level.teamScores[TEAM_RED] >= g_capturelimit.integer ) {
 				trap_SendServerCommand( -1, "print \"Red hit the capturelimit.\n\"" );
 				LogExit( "Capturelimit hit." );
@@ -2976,13 +2976,13 @@ qboolean G_IsARoundBasedGametype(int gametype, int subgametype) {
 }
 /*
 ===================
-G_SingleGametypeCheck
+G_IsGametype
 
 Checks if the game takes place in a particular gametype.
 Replaces all direct gametype calls.
 ===================
  */
-qboolean G_SingleGametypeCheck(int gametype, int subgametype, int check) {
+qboolean G_IsGametype(int gametype, int subgametype, int check) {
 	if (gametype != GT_SINGLE_PLAYER && gametype == check) {
 		return qtrue;
 	}

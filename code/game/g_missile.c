@@ -191,8 +191,8 @@ static void ProximityMine_Activate( gentity_t *ent )
 		}
 	}
 
-	if (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_HARVESTER) ||
-			G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_OBELISK)) {
+	if (G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_HARVESTER) ||
+			G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_OBELISK)) {
 		switch (ent->s.generic1) {
 		case TEAM_RED:
 			c = "team_redobelisk";

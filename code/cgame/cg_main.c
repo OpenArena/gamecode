@@ -837,7 +837,7 @@ static void CG_RegisterSounds(void) {
 			cgs.media.enemyTookTheFlagSound = trap_S_RegisterSound("sound/teamplay/voc_enemy_1flag.wav", qtrue);
 		}
 
-		if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_OBELISK) || cg_buildScript.integer) {
+		if (CG_IsGametype(cgs.gametype,cgs.subgametype,GT_OBELISK) || cg_buildScript.integer) {
 			cgs.media.yourBaseIsUnderAttackSound = trap_S_RegisterSound("sound/teamplay/voc_base_attack.wav", qtrue);
 			// loadingscreen
 #ifdef SCRIPTHUD
@@ -1166,7 +1166,7 @@ static void CG_RegisterGraphics(void) {
 	cgs.media.hastePuffShader = trap_R_RegisterShader("hasteSmokePuff");
 
 	if (CG_UsesTeamFlags(cgs.gametype,cgs.subgametype) ||
-			CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_HARVESTER) ||
+			CG_IsGametype(cgs.gametype,cgs.subgametype,GT_HARVESTER) ||
 			cg_buildScript.integer) {
 		cgs.media.redCubeModel = trap_R_RegisterModel("models/powerups/orb/r_orb.md3");
 		cgs.media.blueCubeModel = trap_R_RegisterModel("models/powerups/orb/b_orb.md3");
@@ -1182,7 +1182,7 @@ static void CG_RegisterGraphics(void) {
 	}
 
 	//For Double Domination:
-	if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_DOUBLE_D)) {
+	if (CG_IsGametype(cgs.gametype,cgs.subgametype,GT_DOUBLE_D)) {
 		cgs.media.ddPointSkinA[TEAM_RED] = trap_R_RegisterShaderNoMip("icons/icona_red");
 		cgs.media.ddPointSkinA[TEAM_BLUE] = trap_R_RegisterShaderNoMip("icons/icona_blue");
 		cgs.media.ddPointSkinA[TEAM_FREE] = trap_R_RegisterShaderNoMip("icons/icona_white");
@@ -1196,7 +1196,7 @@ static void CG_RegisterGraphics(void) {
 
 	if (CG_UsesTeamFlags(cgs.gametype,cgs.subgametype) ||
 			CG_UsesTheWhiteFlag(cgs.gametype,cgs.subgametype) ||
-			CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_HARVESTER) ||
+			CG_IsGametype(cgs.gametype,cgs.subgametype,GT_HARVESTER) ||
 			cg_buildScript.integer) {
 		cgs.media.redFlagModel = trap_R_RegisterModel("models/flags/r_flag.md3");
 		cgs.media.blueFlagModel = trap_R_RegisterModel("models/flags/b_flag.md3");
@@ -1227,7 +1227,7 @@ static void CG_RegisterGraphics(void) {
 		cgs.media.flagShader[3] = trap_R_RegisterShaderNoMip("icons/iconf_neutral3");
 	}
 
-	if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_OBELISK) || cg_buildScript.integer) {
+	if (CG_IsGametype(cgs.gametype,cgs.subgametype,GT_OBELISK) || cg_buildScript.integer) {
 		cgs.media.rocketExplosionShader = trap_R_RegisterShader("rocketExplosion");
 		cgs.media.overloadBaseModel = trap_R_RegisterModel("models/powerups/overload_base.md3");
 		cgs.media.overloadTargetModel = trap_R_RegisterModel("models/powerups/overload_target.md3");
@@ -1235,7 +1235,7 @@ static void CG_RegisterGraphics(void) {
 		cgs.media.overloadEnergyModel = trap_R_RegisterModel("models/powerups/overload_energy.md3");
 	}
 
-	if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_HARVESTER) || cg_buildScript.integer) {
+	if (CG_IsGametype(cgs.gametype,cgs.subgametype,GT_HARVESTER) || cg_buildScript.integer) {
 		cgs.media.harvesterModel = trap_R_RegisterModel("models/powerups/harvester/harvester.md3");
 		cgs.media.harvesterRedSkin = trap_R_RegisterSkin("models/powerups/harvester/red.skin");
 		cgs.media.harvesterBlueSkin = trap_R_RegisterSkin("models/powerups/harvester/blue.skin");
@@ -2137,7 +2137,7 @@ static const char *CG_FeederItemText(float feederID, int index, int column, qhan
 					return "Ready";
 				}
 				if (team == -1) {
-					if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_TOURNAMENT)) {
+					if (CG_IsGametype(cgs.gametype,cgs.subgametype,GT_TOURNAMENT)) {
 						return va("%i/%i", info->wins, info->losses);
 					} else if (info->infoValid && info->team == TEAM_SPECTATOR) {
 						return "Spectator";
@@ -2777,13 +2777,13 @@ qboolean CG_IsARoundBasedGametype(int gametype, int subgametype) {
 }
 /*
 ===================
-CG_SingleGametypeCheck
+CG_IsGametype
 
 Checks if the game takes place in a particular gametype.
 Replaces all direct gametype calls.
 ===================
  */
-qboolean CG_SingleGametypeCheck(int gametype, int subgametype, int check) {
+qboolean CG_IsGametype(int gametype, int subgametype, int check) {
 	if (gametype != GT_SINGLE_PLAYER && gametype == check) {
 		return qtrue;
 	}

@@ -99,13 +99,13 @@ void StartEliminationRound(void) {
 	level.roundNumberStarted = level.roundNumber; //Set numbers
 	level.roundRedPlayers = countsLiving[TEAM_RED];
 	level.roundBluePlayers = countsLiving[TEAM_BLUE];
-	if(G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_CTF_ELIMINATION)) {
+	if(G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_CTF_ELIMINATION)) {
 		Team_ReturnFlag( TEAM_RED );
 		Team_ReturnFlag( TEAM_BLUE );
 	}
-	if(G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_ELIMINATION)) {
+	if(G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_ELIMINATION)) {
 		G_LogPrintf( "ELIMINATION: %i %i %i: Round %i has started!\n", level.roundNumber, -1, 0, level.roundNumber );
-	} else if(G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_CTF_ELIMINATION)) {
+	} else if(G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_CTF_ELIMINATION)) {
 		G_LogPrintf( "CTF_ELIMINATION: %i %i %i %i: Round %i has started!\n", level.roundNumber, -1, -1, 4, level.roundNumber );
 	}
 	SendEliminationMessageToAllClients();
@@ -233,7 +233,7 @@ void CheckElimination(void) {
 			//Blue team has been eliminated!
 			trap_SendServerCommand( -1, "print \"Blue Team eliminated!\n\"");
 			AddTeamScore(level.intermission_origin,TEAM_RED,1);
-			if(G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_ELIMINATION)) {
+			if(G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_ELIMINATION)) {
 				G_LogPrintf( "ELIMINATION: %i %i %i: %s wins round %i by eleminating the enemy team!\n", level.roundNumber, TEAM_RED, 1, TeamName(TEAM_RED), level.roundNumber );
 			} else {
 				G_LogPrintf( "CTF_ELIMINATION: %i %i %i %i: %s wins round %i by eleminating the enemy team!\n", level.roundNumber, -1, TEAM_RED, 6, TeamName(TEAM_RED), level.roundNumber );
@@ -246,7 +246,7 @@ void CheckElimination(void) {
 			//Red team eliminated!
 			trap_SendServerCommand( -1, "print \"Red Team eliminated!\n\"");
 			AddTeamScore(level.intermission_origin,TEAM_BLUE,1);
-			if(G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_ELIMINATION)) {
+			if(G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_ELIMINATION)) {
 				G_LogPrintf( "ELIMINATION: %i %i %i: %s wins round %i by eleminating the enemy team!\n", level.roundNumber, TEAM_BLUE, 1, TeamName(TEAM_BLUE), level.roundNumber );
 			} else {
 				G_LogPrintf( "CTF_ELIMINATION: %i %i %i %i: %s wins round %i by eleminating the enemy team!\n", level.roundNumber, -1, TEAM_BLUE, 6, TeamName(TEAM_BLUE), level.roundNumber );
@@ -262,7 +262,7 @@ void CheckElimination(void) {
 		trap_SendServerCommand( -1, "print \"No teams eliminated.\n\"");
 
 		if(level.roundBluePlayers != 0 && level.roundRedPlayers != 0) {//We don't want to divide by zero. (should not be possible)
-			if(G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_CTF_ELIMINATION) &&
+			if(G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_CTF_ELIMINATION) &&
 					g_elimination_ctf_oneway.integer) {
 				//One way CTF, make defensice team the winner.
 				if ( (level.eliminationSides+level.roundNumber)%2 == 0 ) { //Red was attacking
@@ -281,7 +281,7 @@ void CheckElimination(void) {
 				//Red team has higher procentage survivors
 				trap_SendServerCommand( -1, "print \"Red team has most survivers!\n\"");
 				AddTeamScore(level.intermission_origin,TEAM_RED,1);
-				if(G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_ELIMINATION)) {
+				if(G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_ELIMINATION)) {
 					G_LogPrintf( "ELIMINATION: %i %i %i: %s wins round %i due to more survivors!\n", level.roundNumber, TEAM_RED, 2, TeamName(TEAM_RED), level.roundNumber );
 				} else {
 					G_LogPrintf( "CTF_ELIMINATION: %i %i %i %i: %s wins round %i due to more survivors!\n", level.roundNumber, -1, TEAM_RED, 7, TeamName(TEAM_RED), level.roundNumber );
@@ -292,7 +292,7 @@ void CheckElimination(void) {
 				//Blue team has higher procentage survivors
 				trap_SendServerCommand( -1, "print \"Blue team has most survivers!\n\"");
 				AddTeamScore(level.intermission_origin,TEAM_BLUE,1);	
-				if(G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_ELIMINATION)) {
+				if(G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_ELIMINATION)) {
 					G_LogPrintf( "ELIMINATION: %i %i %i: %s wins round %i due to more survivors!\n", level.roundNumber, TEAM_BLUE, 2, TeamName(TEAM_BLUE), level.roundNumber );
 				} else {
 					G_LogPrintf( "CTF_ELIMINATION: %i %i %i %i: %s wins round %i due to more survivors!\n", level.roundNumber, -1, TEAM_BLUE, 7, TeamName(TEAM_BLUE), level.roundNumber );
@@ -303,7 +303,7 @@ void CheckElimination(void) {
 				//Red team has more health
 				trap_SendServerCommand( -1, "print \"Red team has more health left!\n\"");
 				AddTeamScore(level.intermission_origin,TEAM_RED,1);
-				if(G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_ELIMINATION)) {
+				if(G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_ELIMINATION)) {
 					G_LogPrintf( "ELIMINATION: %i %i %i: %s wins round %i due to more health left!\n", level.roundNumber, TEAM_RED, 3, TeamName(TEAM_RED), level.roundNumber );
 				} else {
 					G_LogPrintf( "CTF_ELIMINATION: %i %i %i %i: %s wins round %i due to more health left!\n", level.roundNumber, -1, TEAM_RED, 8, TeamName(TEAM_RED), level.roundNumber );
@@ -314,7 +314,7 @@ void CheckElimination(void) {
 				//Blue team has more health
 				trap_SendServerCommand( -1, "print \"Blue team has more health left!\n\"");
 				AddTeamScore(level.intermission_origin,TEAM_BLUE,1);
-				if(G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_ELIMINATION)) {
+				if(G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_ELIMINATION)) {
 					G_LogPrintf( "ELIMINATION: %i %i %i: %s wins round %i due to more health left!\n", level.roundNumber, TEAM_BLUE, 3, TeamName(TEAM_BLUE), level.roundNumber );
 				} else {
 					G_LogPrintf( "CTF_ELIMINATION: %i %i %i %i: %s wins round %i due to more health left!\n", level.roundNumber, -1, TEAM_BLUE, 8, TeamName(TEAM_BLUE), level.roundNumber );
@@ -322,7 +322,7 @@ void CheckElimination(void) {
 			}
 		}
 		//Draw
-		if(G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_ELIMINATION)) {
+		if(G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_ELIMINATION)) {
 			G_LogPrintf( "ELIMINATION: %i %i %i: Round %i ended in a draw!\n", level.roundNumber, -1, 4, level.roundNumber );
 		} else {
 			G_LogPrintf( "CTF_ELIMINATION: %i %i %i %i: Round %i ended in a draw!\n", level.roundNumber, -1, -1, 9, level.roundNumber );
@@ -396,7 +396,7 @@ void CheckLMS(void) {
 		return;
 	}
 	
-	if (!G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_LMS)) {
+	if (!G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_LMS)) {
 		return;
 	}
 	

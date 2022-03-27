@@ -1432,5 +1432,5 @@ qboolean G_IsATeamGametype(int gametype, int subgametype);	/* Whether the gamety
 qboolean G_UsesTeamFlags(int gametype, int subgametype);	/* Whether the gametype uses the red and blue flags. */
 qboolean G_UsesTheWhiteFlag(int gametype, int subgametype);	/* Whether the gametype uses the neutral flag. */
 qboolean G_IsARoundBasedGametype(int gametype, int subgametype);	/* Whether the gametype is round-based. */
-qboolean G_SingleGametypeCheck(int gametype, int subgametype, int check);	/* Whether the game takes place in a particular gametype. */
+qboolean G_IsGametype(int gametype, int subgametype, int check);	/* Whether the game takes place in a particular gametype. */
 /* /Neon_Knight */

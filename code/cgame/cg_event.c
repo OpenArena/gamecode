@@ -254,7 +254,7 @@ static void CG_Obituary(entityState_t *ent) {
 	if (attacker == cg.snap->ps.clientNum) {
 		char *s;
 
-		if (!(CG_IsATeamGametype(cgs.gametype,cgs.subgametype) && !(CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_TEAM)))) {
+		if (!(CG_IsATeamGametype(cgs.gametype,cgs.subgametype) && !(CG_IsGametype(cgs.gametype,cgs.subgametype,GT_TEAM)))) {
 			s = va("You fragged %s\n%s place with %i", targetName,
 					CG_PlaceString(cg.snap->ps.persistant[PERS_RANK] + 1),
 					cg.snap->ps.persistant[PERS_SCORE]);
@@ -1295,12 +1295,12 @@ void CG_EntityEvent(centity_t *cent, vec3_t position) {
 					if (cg.snap->ps.powerups[PW_BLUEFLAG] || cg.snap->ps.powerups[PW_NEUTRALFLAG]) {
 					} else {
 						if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_BLUE) {
-							if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_1FCTF))
+							if (CG_IsGametype(cgs.gametype,cgs.subgametype,GT_1FCTF))
 								CG_AddBufferedSound(cgs.media.yourTeamTookTheFlagSound);
 							else
 								CG_AddBufferedSound(cgs.media.enemyTookYourFlagSound);
 						} else if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_RED) {
-							if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_1FCTF))
+							if (CG_IsGametype(cgs.gametype,cgs.subgametype,GT_1FCTF))
 								CG_AddBufferedSound(cgs.media.enemyTookTheFlagSound);
 							else
 								CG_AddBufferedSound(cgs.media.yourTeamTookEnemyFlagSound);
@@ -1312,12 +1312,12 @@ void CG_EntityEvent(centity_t *cent, vec3_t position) {
 					if (cg.snap->ps.powerups[PW_REDFLAG] || cg.snap->ps.powerups[PW_NEUTRALFLAG]) {
 					} else {
 						if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_RED) {
-							if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_1FCTF))
+							if (CG_IsGametype(cgs.gametype,cgs.subgametype,GT_1FCTF))
 								CG_AddBufferedSound(cgs.media.yourTeamTookTheFlagSound);
 							else
 								CG_AddBufferedSound(cgs.media.enemyTookYourFlagSound);
 						} else if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_BLUE) {
-							if (CG_SingleGametypeCheck(cgs.gametype,cgs.subgametype,GT_1FCTF))
+							if (CG_IsGametype(cgs.gametype,cgs.subgametype,GT_1FCTF))
 								CG_AddBufferedSound(cgs.media.enemyTookTheFlagSound);
 							else
 								CG_AddBufferedSound(cgs.media.yourTeamTookEnemyFlagSound);

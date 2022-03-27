@@ -340,7 +340,7 @@ EntityCarriesCubes
 qboolean EntityCarriesCubes(aas_entityinfo_t *entinfo) {
 	entityState_t state;
 
-	if (!G_SingleGametypeCheck(gametype,subgametype,GT_HARVESTER))
+	if (!G_IsGametype(gametype,subgametype,GT_HARVESTER))
 		return qfalse;
 	//FIXME: get this info from the aas_entityinfo_t ?
 	BotAI_GetEntityState(entinfo->number, &state);
@@ -367,7 +367,7 @@ BotHarvesterCarryingCubes
 ==================
  */
 int BotHarvesterCarryingCubes(bot_state_t *bs) {
-	if (!G_SingleGametypeCheck(gametype,subgametype,GT_HARVESTER)) return qfalse;
+	if (!G_IsGametype(gametype,subgametype,GT_HARVESTER)) return qfalse;
 
 	if (bs->inventory[INVENTORY_REDCUBE] > 0) return qtrue;
 	if (bs->inventory[INVENTORY_BLUECUBE] > 0) return qtrue;
@@ -407,7 +407,7 @@ void BotSetTeamStatus(bot_state_t *bs) {
 		case LTG_TEAMACCOMPANY:
 			BotEntityInfo(bs->teammate, &entinfo);
 			if ((G_UsesTeamFlags(gametype,subgametype) && EntityCarriesFlag(&entinfo)) ||
-				(G_SingleGametypeCheck(gametype,subgametype,GT_HARVESTER) && EntityCarriesCubes(&entinfo))) {
+				(G_IsGametype(gametype,subgametype,GT_HARVESTER) && EntityCarriesCubes(&entinfo))) {
 				teamtask = TEAMTASK_ESCORT;
 			} else {
 				teamtask = TEAMTASK_FOLLOW;
@@ -1434,9 +1434,9 @@ void BotTeamGoals(bot_state_t *bs, int retreat) {
 			BotCTFRetreatGoals(bs);
 		} else if (G_UsesTheWhiteFlag(gametype,subgametype)) {
 			Bot1FCTFRetreatGoals(bs);
-		} else if (G_SingleGametypeCheck(gametype,subgametype,GT_OBELISK)) {
+		} else if (G_IsGametype(gametype,subgametype,GT_OBELISK)) {
 			BotObeliskRetreatGoals(bs);
-		} else if (G_SingleGametypeCheck(gametype,subgametype,GT_HARVESTER)) {
+		} else if (G_IsGametype(gametype,subgametype,GT_HARVESTER)) {
 			BotHarvesterRetreatGoals(bs);
 		}
 	} else {
@@ -1445,17 +1445,17 @@ void BotTeamGoals(bot_state_t *bs, int retreat) {
 			BotCTFSeekGoals(bs);
 		} else if (G_UsesTheWhiteFlag(gametype,subgametype)) {
 			Bot1FCTFSeekGoals(bs);
-		} else if (G_SingleGametypeCheck(gametype,subgametype,GT_OBELISK)) {
+		} else if (G_IsGametype(gametype,subgametype,GT_OBELISK)) {
 			BotObeliskSeekGoals(bs);
-		} else if (G_SingleGametypeCheck(gametype,subgametype,GT_HARVESTER)) {
+		} else if (G_IsGametype(gametype,subgametype,GT_HARVESTER)) {
 			BotHarvesterSeekGoals(bs);
 		}
 	}
 
-	if (G_SingleGametypeCheck(gametype,subgametype,GT_DOUBLE_D)) //Don't care about retreat
+	if (G_IsGametype(gametype,subgametype,GT_DOUBLE_D)) //Don't care about retreat
 		BotDDSeekGoals(bs);
 
-	//if(G_SingleGametypeCheck(gametype,subgametype,GT_DOMINATION)) //Don't care about retreat
+	//if(G_IsGametype(gametype,subgametype,GT_DOMINATION)) //Don't care about retreat
 	//	BotDomSeekGoals(bs);
 
 	// reset the order time which is used to see if
@@ -1632,10 +1632,10 @@ int BotSynonymContext(bot_state_t *bs) {
 	if (G_UsesTeamFlags(gametype,subgametype)) {
 		if (BotTeam(bs) == TEAM_RED) context |= CONTEXT_CTFREDTEAM;
 		else context |= CONTEXT_CTFBLUETEAM;
-	} else if (G_SingleGametypeCheck(gametype,subgametype,GT_OBELISK)) {
+	} else if (G_IsGametype(gametype,subgametype,GT_OBELISK)) {
 		if (BotTeam(bs) == TEAM_RED) context |= CONTEXT_OBELISKREDTEAM;
 		else context |= CONTEXT_OBELISKBLUETEAM;
-	} else if (G_SingleGametypeCheck(gametype,subgametype,GT_HARVESTER)) {
+	} else if (G_IsGametype(gametype,subgametype,GT_HARVESTER)) {
 		if (BotTeam(bs) == TEAM_RED) context |= CONTEXT_HARVESTERREDTEAM;
 		else context |= CONTEXT_HARVESTERBLUETEAM;
 	}
@@ -1712,7 +1712,7 @@ BotCheckItemPickup
 void BotCheckItemPickup(bot_state_t *bs, int *oldinventory) {
 	int offence, leader;
 
-	if (!(G_IsATeamGametype(gametype,subgametype) && !(G_SingleGametypeCheck(gametype,subgametype,GT_TEAM))))
+	if (!(G_IsATeamGametype(gametype,subgametype) && !(G_IsGametype(gametype,subgametype,GT_TEAM))))
 		return;
 
 	offence = -1;
@@ -1756,7 +1756,7 @@ void BotCheckItemPickup(bot_state_t *bs, int *oldinventory) {
 							((!(G_UsesTeamFlags(gametype,subgametype) && !G_UsesTheWhiteFlag(gametype,subgametype))) ||
 							((bs->redflagstatus == 0) &&
 							(bs->blueflagstatus == 0))) &&
-							((!G_SingleGametypeCheck(gametype,subgametype,GT_1FCTF)) ||
+							((!G_IsGametype(gametype,subgametype,GT_1FCTF)) ||
 							(bs->neutralflagstatus == 0))) {
 						// tell the leader we want to be on offence
 						BotVoiceChat(bs, leader, VOICECHAT_WANTONOFFENSE);
@@ -1780,7 +1780,7 @@ void BotCheckItemPickup(bot_state_t *bs, int *oldinventory) {
 						((!(G_UsesTeamFlags(gametype,subgametype) && !G_UsesTheWhiteFlag(gametype,subgametype))) ||
 						((bs->redflagstatus == 0) &&
 						(bs->blueflagstatus == 0))) &&
-						((!G_SingleGametypeCheck(gametype,subgametype,GT_1FCTF)) ||
+						((!G_IsGametype(gametype,subgametype,GT_1FCTF)) ||
 						(bs->neutralflagstatus == 0))) {
 
 					// tell the leader we want to be on defense
@@ -1923,7 +1923,7 @@ void BotUseKamikaze(bot_state_t *bs) {
 				return;
 			}
 		}
-	} else if (G_SingleGametypeCheck(gametype,subgametype,GT_1FCTF)) {
+	} else if (G_IsGametype(gametype,subgametype,GT_1FCTF)) {
 		//never use kamikaze if the team flag carrier is visible
 		if (Bot1FCTFCarryingFlag(bs))
 			return;
@@ -1943,7 +1943,7 @@ void BotUseKamikaze(bot_state_t *bs) {
 				return;
 			}
 		}
-	} else if (G_SingleGametypeCheck(gametype,subgametype,GT_OBELISK)) {
+	} else if (G_IsGametype(gametype,subgametype,GT_OBELISK)) {
 		switch (BotTeam(bs)) {
 			case TEAM_RED: goal = &blueobelisk;
 				break;
@@ -1961,7 +1961,7 @@ void BotUseKamikaze(bot_state_t *bs) {
 				return;
 			}
 		}
-	} else if (G_SingleGametypeCheck(gametype,subgametype,GT_HARVESTER)) {
+	} else if (G_IsGametype(gametype,subgametype,GT_HARVESTER)) {
 		//
 		if (BotHarvesterCarryingCubes(bs))
 			return;
@@ -2034,7 +2034,7 @@ void BotUseInvulnerability(bot_state_t *bs) {
 				return;
 			}
 		}
-	} else if (G_SingleGametypeCheck(gametype,subgametype,GT_1FCTF)) {
+	} else if (G_IsGametype(gametype,subgametype,GT_1FCTF)) {
 		//never use kamikaze if the team flag carrier is visible
 		if (Bot1FCTFCarryingFlag(bs))
 			return;
@@ -2059,7 +2059,7 @@ void BotUseInvulnerability(bot_state_t *bs) {
 				return;
 			}
 		}
-	} else if (G_SingleGametypeCheck(gametype,subgametype,GT_OBELISK)) {
+	} else if (G_IsGametype(gametype,subgametype,GT_OBELISK)) {
 		switch (BotTeam(bs)) {
 			case TEAM_RED: goal = &blueobelisk;
 				break;
@@ -2077,7 +2077,7 @@ void BotUseInvulnerability(bot_state_t *bs) {
 				return;
 			}
 		}
-	} else if (G_SingleGametypeCheck(gametype,subgametype,GT_HARVESTER)) {
+	} else if (G_IsGametype(gametype,subgametype,GT_HARVESTER)) {
 		//
 		if (BotHarvesterCarryingCubes(bs))
 			return;
@@ -2343,7 +2343,7 @@ int BotWantsToRetreat(bot_state_t *bs) {
 		//if carrying the flag then always retreat
 		if (Bot1FCTFCarryingFlag(bs))
 			return qtrue;
-	} else if (G_SingleGametypeCheck(gametype,subgametype,GT_OBELISK)) {
+	} else if (G_IsGametype(gametype,subgametype,GT_OBELISK)) {
 		//the bots should be dedicated to attacking the enemy obelisk
 		if (bs->ltgtype == LTG_ATTACKENEMYBASE) {
 			if (bs->enemy != redobelisk.entitynum &&
@@ -2355,7 +2355,7 @@ int BotWantsToRetreat(bot_state_t *bs) {
 			return qtrue;
 		}
 		return qfalse;
-	} else if (G_SingleGametypeCheck(gametype,subgametype,GT_HARVESTER)) {
+	} else if (G_IsGametype(gametype,subgametype,GT_HARVESTER)) {
 		//if carrying cubes then always retreat
 		if (BotHarvesterCarryingCubes(bs)) return qtrue;
 	}
@@ -2395,7 +2395,7 @@ int BotWantsToChase(bot_state_t *bs) {
 		BotEntityInfo(bs->enemy, &entinfo);
 		if (EntityCarriesFlag(&entinfo))
 			return qtrue;
-	} else if (G_SingleGametypeCheck(gametype,subgametype,GT_1FCTF)) {
+	} else if (G_IsGametype(gametype,subgametype,GT_1FCTF)) {
 		//never chase if carrying the flag
 		if (Bot1FCTFCarryingFlag(bs))
 			return qfalse;
@@ -2403,7 +2403,7 @@ int BotWantsToChase(bot_state_t *bs) {
 		BotEntityInfo(bs->enemy, &entinfo);
 		if (EntityCarriesFlag(&entinfo))
 			return qtrue;
-	} else if (G_SingleGametypeCheck(gametype,subgametype,GT_OBELISK)) {
+	} else if (G_IsGametype(gametype,subgametype,GT_OBELISK)) {
 		//the bots should be dedicated to attacking the enemy obelisk
 		if (bs->ltgtype == LTG_ATTACKENEMYBASE) {
 			if (bs->enemy != redobelisk.entitynum &&
@@ -2411,14 +2411,14 @@ int BotWantsToChase(bot_state_t *bs) {
 				return qfalse;
 			}
 		}
-	} else if (G_SingleGametypeCheck(gametype,subgametype,GT_HARVESTER)) {
+	} else if (G_IsGametype(gametype,subgametype,GT_HARVESTER)) {
 		//never chase if carrying cubes
 		if (BotHarvesterCarryingCubes(bs)) return qfalse;
 
 		BotEntityInfo(bs->enemy, &entinfo);
 		// always chase if the enemy is carrying cubes
 		if (EntityCarriesCubes(&entinfo)) return qtrue;
-	} else if (G_SingleGametypeCheck(gametype,subgametype,GT_POSSESSION)) {
+	} else if (G_IsGametype(gametype,subgametype,GT_POSSESSION)) {
 		//always chase if the enemy is carrying a flag
 		BotEntityInfo(bs->enemy, &entinfo);
 		if (EntityCarriesFlag(&entinfo))
@@ -3012,7 +3012,7 @@ int BotFindEnemy(bot_state_t *bs, int curenemy) {
 	} else {
 		cursquaredist = 0;
 	}
-	if (G_SingleGametypeCheck(gametype,subgametype,GT_OBELISK)) {
+	if (G_IsGametype(gametype,subgametype,GT_OBELISK)) {
 		vec3_t target;
 		bot_goal_t *goal;
 		bsp_trace_t trace;
@@ -4916,7 +4916,7 @@ void BotCheckEvents(bot_state_t *bs, entityState_t *state) {
 						bs->flagstatuschanged = qtrue;
 						break; //see BotMatch_CTF
 				}
-			} else if (G_SingleGametypeCheck(gametype,subgametype,GT_1FCTF)) {
+			} else if (G_IsGametype(gametype,subgametype,GT_1FCTF)) {
 				switch (state->eventParm) {
 					case GTS_RED_CAPTURE:
 						bs->neutralflagstatus = 0;
@@ -5161,7 +5161,7 @@ void BotSetupAlternativeRouteGoals(void) {
 					ALTROUTEGOAL_CLUSTERPORTALS |
 					ALTROUTEGOAL_VIEWPORTALS);
 		}
-	} else if (G_SingleGametypeCheck(gametype,subgametype,GT_1FCTF)) {
+	} else if (G_IsGametype(gametype,subgametype,GT_1FCTF)) {
 		if (trap_BotGetLevelItemGoal(-1, "Neutral Obelisk", &neutralobelisk) < 0)
 			BotAI_Print(PRT_WARNING, "One Flag CTF without Neutral Obelisk\n");
 		red_numaltroutegoals = trap_AAS_AlternativeRouteGoals(
@@ -5176,7 +5176,7 @@ void BotSetupAlternativeRouteGoals(void) {
 				blue_altroutegoals, MAX_ALTROUTEGOALS,
 				ALTROUTEGOAL_CLUSTERPORTALS |
 				ALTROUTEGOAL_VIEWPORTALS);
-	} else if (G_SingleGametypeCheck(gametype,subgametype,GT_OBELISK)) {
+	} else if (G_IsGametype(gametype,subgametype,GT_OBELISK)) {
 		if (trap_BotGetLevelItemGoal(-1, "Neutral Obelisk", &neutralobelisk) < 0)
 			BotAI_Print(PRT_WARNING, "Obelisk without neutral obelisk\n");
 		//
@@ -5192,7 +5192,7 @@ void BotSetupAlternativeRouteGoals(void) {
 				blue_altroutegoals, MAX_ALTROUTEGOALS,
 				ALTROUTEGOAL_CLUSTERPORTALS |
 				ALTROUTEGOAL_VIEWPORTALS);
-	} else if (G_SingleGametypeCheck(gametype,subgametype,GT_HARVESTER)) {
+	} else if (G_IsGametype(gametype,subgametype,GT_HARVESTER)) {
 		if (untrap_BotGetLevelItemGoal(-1, "Neutral Obelisk", &neutralobelisk) < 0)
 			BotAI_Print(PRT_WARNING, "Harvester without neutral obelisk\n");
 		//
@@ -5443,12 +5443,12 @@ void BotSetupDeathmatchAI(void) {
 			BotAI_Print(PRT_WARNING, "CTF without Red Flag\n");
 		if (untrap_BotGetLevelItemGoal(-1, "Blue Flag", &ctf_blueflag) < 0)
 			BotAI_Print(PRT_WARNING, "CTF without Blue Flag\n");
-	} else if (G_SingleGametypeCheck(gametype,subgametype,GT_DOUBLE_D)) {
+	} else if (G_IsGametype(gametype,subgametype,GT_DOUBLE_D)) {
 		if (untrap_BotGetLevelItemGoal(-1, "Red Flag", &ctf_redflag) < 0)
 			BotAI_Print(PRT_WARNING, "DD without Point A\n");
 		if (untrap_BotGetLevelItemGoal(-1, "Blue Flag", &ctf_blueflag) < 0)
 			BotAI_Print(PRT_WARNING, "DD without Point B\n");
-	} else if (G_SingleGametypeCheck(gametype,subgametype,GT_DOMINATION)) {
+	} else if (G_IsGametype(gametype,subgametype,GT_DOMINATION)) {
 		ent = untrap_BotGetLevelItemGoal(-1, "Domination point", &dom_points_bot[0]);
 		if (ent < 0)
 			BotAI_Print(PRT_WARNING, "Domination without a single domination point\n");
@@ -5463,21 +5463,21 @@ void BotSetupDeathmatchAI(void) {
 				BotSetEntityNumForGoal(&dom_points_bot[0], va("domination_point%i", i));
 		}
 		//MAX_DOMINATION_POINTS
-	} else if (G_SingleGametypeCheck(gametype,subgametype,GT_1FCTF)) {
+	} else if (G_IsGametype(gametype,subgametype,GT_1FCTF)) {
 		if (untrap_BotGetLevelItemGoal(-1, "Neutral Flag", &ctf_neutralflag) < 0)
 			BotAI_Print(PRT_WARNING, "One Flag CTF without Neutral Flag\n");
 		if (untrap_BotGetLevelItemGoal(-1, "Red Flag", &ctf_redflag) < 0)
 			BotAI_Print(PRT_WARNING, "CTF without Red Flag\n");
 		if (untrap_BotGetLevelItemGoal(-1, "Blue Flag", &ctf_blueflag) < 0)
 			BotAI_Print(PRT_WARNING, "CTF without Blue Flag\n");
-	} else if (G_SingleGametypeCheck(gametype,subgametype,GT_OBELISK)) {
+	} else if (G_IsGametype(gametype,subgametype,GT_OBELISK)) {
 		if (untrap_BotGetLevelItemGoal(-1, "Red Obelisk", &redobelisk) < 0)
 			BotAI_Print(PRT_WARNING, "Overload without red obelisk\n");
 		BotSetEntityNumForGoalWithActivator(&redobelisk, "team_redobelisk");
 		if (untrap_BotGetLevelItemGoal(-1, "Blue Obelisk", &blueobelisk) < 0)
 			BotAI_Print(PRT_WARNING, "Overload without blue obelisk\n");
 		BotSetEntityNumForGoalWithActivator(&blueobelisk, "team_blueobelisk");
-	} else if (G_SingleGametypeCheck(gametype,subgametype,GT_HARVESTER)) {
+	} else if (G_IsGametype(gametype,subgametype,GT_HARVESTER)) {
 		if (untrap_BotGetLevelItemGoal(-1, "Red Obelisk", &redobelisk) < 0)
 			BotAI_Print(PRT_WARNING, "Harvester without red obelisk\n");
 		BotSetEntityNumForGoalWithActivator(&redobelisk, "team_redobelisk");
@@ -5487,7 +5487,7 @@ void BotSetupDeathmatchAI(void) {
 		if (untrap_BotGetLevelItemGoal(-1, "Neutral Obelisk", &neutralobelisk) < 0)
 			BotAI_Print(PRT_WARNING, "Harvester without neutral obelisk\n");
 		BotSetEntityNumForGoalWithActivator(&neutralobelisk, "team_neutralobelisk");
-	} else if (G_SingleGametypeCheck(gametype,subgametype,GT_POSSESSION)) {
+	} else if (G_IsGametype(gametype,subgametype,GT_POSSESSION)) {
 		if (untrap_BotGetLevelItemGoal(-1, "Neutral Flag", &ctf_neutralflag) < 0)
 			BotAI_Print(PRT_WARNING, "Possession without Neutral Flag\n");
 	}

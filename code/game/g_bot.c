@@ -459,7 +459,7 @@ void G_CheckMinimumPlayers( void ) {
 			G_RemoveRandomBot( TEAM_BLUE );
 		}
 	}
-	else if (G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_TOURNAMENT)) {
+	else if (G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_TOURNAMENT)) {
 		if (minplayers >= g_maxclients.integer) {
 			minplayers = g_maxclients.integer-1;
 		}
@@ -1070,7 +1070,7 @@ void G_InitBots( qboolean restart ) {
 
 		// We can put this safely as the SP check is already in place.
 		if (G_IsATeamGametype(g_gametype.integer,g_subgametype.integer) &&
-				!G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_TEAM)) {
+				!G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_TEAM)) {
 			strValue = Info_ValueForKey( arenainfo, "capturelimit" );
 			scoreLimit = atoi( strValue );
 			if ( scoreLimit ) {
@@ -1142,7 +1142,7 @@ void G_InitBots( qboolean restart ) {
 	} else {
 		if(bot_autominplayers.integer) {
 			//Set bot_minplayers
-			if(G_SingleGametypeCheck(g_gametype.integer,g_subgametype.integer,GT_TOURNAMENT)) {
+			if(G_IsGametype(g_gametype.integer,g_subgametype.integer,GT_TOURNAMENT)) {
 				trap_Cvar_Set("bot_minplayers","2"); //Always 2 for Tourney
 			} else {
 				basedelay = MinSpawnpointCount()/2;
