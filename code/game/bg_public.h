@@ -861,11 +861,18 @@ typedef struct mapinfo_result_s {
 	int recommendedPlayers;
 	int minTeamSize;
 	int maxTeamSize;
+	int recommendedTeamSize;
 	int timeLimit;
 	int fragLimit;
 	int captureLimit;
 	char mpBots[1024];
+	int mpBotCount;
+	char redBots[512];
+	int redBotCount;
+	char blueBots[512];
+	int blueBotCount;
 	char author[64];
+	char title[64];
 	char description[8192];
 	char gametypeSupported[GT_MAX_GAME_TYPE]; //y/n
 } mapinfo_result_t;

@@ -1889,11 +1889,29 @@ void MapInfoGet(const char* mapname, int gametype, mapinfo_result_t *result) {
 		if (Q_strequal(keyBuffer, "author")) {
 			if (mayRead) Q_strncpyz(result->author, token, sizeof (result->author));
 		}
+		if (Q_strequal(keyBuffer, "title")) {
+			if (mayRead) Q_strncpyz(result->title, token, sizeof (result->title));
+		}
 		if (Q_strequal(keyBuffer, "description")) {
 			if (mayRead) Q_strncpyz(result->description, token, sizeof (result->description));
 		}
 		if (Q_strequal(keyBuffer, "mpBots")) {
 			if (mayRead) Q_strncpyz(result->mpBots, token, sizeof (result->mpBots));
+		}
+		if (Q_strequal(keyBuffer, "mpBotCount")) {
+			if (mayRead) result->mpBotCount = atoi(token);
+		}
+		if (Q_strequal(keyBuffer, "redBots")) {
+			if (mayRead) Q_strncpyz(result->redBots, token, sizeof (result->redBots));
+		}
+		if (Q_strequal(keyBuffer, "redBotCount")) {
+			if (mayRead) result->redBotCount = atoi(token);
+		}
+		if (Q_strequal(keyBuffer, "blueBots")) {
+			if (mayRead) Q_strncpyz(result->blueBots, token, sizeof (result->blueBots));
+		}
+		if (Q_strequal(keyBuffer, "blueBotCount")) {
+			if (mayRead) result->blueBotCount = atoi(token);
 		}
 		if (Q_strequal(keyBuffer, "captureLimit")) {
 			if (mayRead) result->captureLimit = atoi(token);
@@ -1915,6 +1933,9 @@ void MapInfoGet(const char* mapname, int gametype, mapinfo_result_t *result) {
 		}
 		if (Q_strequal(keyBuffer, "recommendedPlayers")) {
 			if (mayRead) result->recommendedPlayers = atoi(token);
+		}
+		if (Q_strequal(keyBuffer, "recommendedTeamSize")) {
+			if (mayRead) result->recommendedTeamSize = atoi(token);
 		}
 		if (Q_strequal(keyBuffer, "timeLimit")) {
 			if (mayRead) result->timeLimit = atoi(token);
