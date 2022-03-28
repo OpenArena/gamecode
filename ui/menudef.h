@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ===========================================================================
 */
 
+
 #define ITEM_TYPE_TEXT 0                  // simple text
 #define ITEM_TYPE_BUTTON 1                // button, basically text with a border 
 #define ITEM_TYPE_RADIOBUTTON 2           // toggle button, may be grouped 
@@ -51,6 +52,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 // Changed RD
 #define ITEM_TEXTSTYLE_NEON 7
 // end changed RD
+
 
 #define WINDOW_BORDER_NONE 0              // no border
 #define WINDOW_BORDER_FULL 1              // full border based on border color ( single pixel )
@@ -127,6 +129,14 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define CG_SHOW_OTHERTEAMHASFLAG          0x00020000
 #define CG_SHOW_YOURTEAMHASENEMYFLAG      0x00040000
 #define CG_SHOW_ANYNONTEAMGAME            0x00080000
+#define CG_SHOW_FREEFORALL                0x00100000
+#define CG_SHOW_TEAMDEATHMATCH            0x00200000
+#define CG_SHOW_ELIMINATION               0x00400000
+#define CG_SHOW_CTFELIMINATION            0x00800000
+#define CG_SHOW_LASTMANSTANDING           0x01000000
+#define CG_SHOW_DOUBLEDOMINATION          0x02000000
+#define CG_SHOW_DOMINATION                0x04000000
+#define CG_SHOW_POSSESSION                0x08000000
 #define CG_SHOW_2DONLY										0x10000000
 
 
@@ -280,7 +290,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
 
-
 #define UI_OWNERDRAW_BASE 200
 #define UI_HANDICAP 200
 #define UI_EFFECTS 201
@@ -341,9 +350,25 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define UI_MAPS_SELECTION 256
 #define UI_PLAYERMODEL2 257
 #define UI_OPPONENTMODEL2 258
+#define UI_PLAYERMODELV 259
 #define UI_MENUMAPNAME 260		// leilei - sp ladder menus addition
-#define UI_PLAYERPORTRAIT 261
 #define UI_PLAYERMODEL_OC 262
+#define UI_PLAYERPORTRAIT 261
+
+#define  ALIGN_STRETCH 		 0
+#define  ALIGN_CENTER		 1
+#define  ALIGN_LETTERBOX	 2
+#define  ALIGN_TOP		 3
+#define  ALIGN_BOTTOM		 4
+#define  ALIGN_RIGHT		 5
+#define  ALIGN_LEFT		 6
+#define  ALIGN_TOPRIGHT		 7
+#define  ALIGN_TOPLEFT		 8
+#define  ALIGN_BOTTOMRIGHT 	 9
+#define  ALIGN_BOTTOMLEFT	 10
+#define  ALIGN_TOP_STRETCH	 11
+#define  ALIGN_BOTTOM_STRETCH	 12
+
 
 #define VOICECHAT_GETFLAG			"getflag"				// command someone to get the flag
 #define VOICECHAT_OFFENSE			"offense"				// command someone to go on offense
@@ -379,3 +404,32 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define VOICECHAT_DEATHINSULT		"death_insult"			// you just killed me
 #define VOICECHAT_KILLGAUNTLET		"kill_gauntlet"			// I just killed you with the gauntlet
 #define VOICECHAT_PRAISE			"praise"				// you did something good
+#define VOICECHAT_HOLDPOINTA		"holdpointa"			// hold DD point A
+#define VOICECHAT_HOLDPOINTB		"holdpointb"			// hold DD point B
+#define VOICECHAT_HOLDDOMPOINT		"holddompoint"			// hold a DOM point
+
+// if building with this in your ../ui/ file you MUST remove the ui/!!
+#include "ui/lang_english.h" // load english language
+// #include "lang_fr.h" // load french
+// #include "lang_de.h" // load german
+// #include "lang_sp.h" // load spanish
+// #include "lang_ja.h" // load japanese (won't be for a while unfortunately)
+#include "ui/version.h" 	
+
+
+// Text Scales and stuff
+// 
+// 48pt - 	1.0
+// 24pt - 	0.5
+// 9pt - 	0.1875
+
+#define SMALLFONTSIZE 	12
+#define MEDIUMFONTSIZE 	24
+#define LARGEFONTSIZE 	24
+
+#define KEYBINDBITTEXTSCALE .1875		// Controls menu columns
+
+
+#include "themesetting.txt" 	// User can change this
+
+// please remember to add a new line at the end of a file
