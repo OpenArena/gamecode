@@ -483,6 +483,16 @@ void BotMatch_HoldDOMPoint(bot_state_t *bs, bot_match_t *match);
 
 /*
 ==================
+BotGetDominationPoint
+Returns the actual Domination point the bot is acting on. Prevents currentPoint from being accessed directly.
+==================
+*/
+int BotGetDominationPoint(bot_state_t *bs) {
+	return bs->currentPoint;
+}
+
+/*
+==================
 BotSetDominationPoint
 Selects a point for Domination. It's saved in the field currentPoint.
 ==================

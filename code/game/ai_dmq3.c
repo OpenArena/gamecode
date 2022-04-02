@@ -446,16 +446,16 @@ void BotSetTeamStatus(bot_state_t *bs) {
 			break;
 		case LTG_HOLDDOMPOINT:
 			// If the bot has an invalid CP, reroll.
-			if (!(bs->currentPoint >= 0 &&
-					bs->currentPoint < MAX_DOMINATION_POINTS &&
-					bs->currentPoint < level.domination_points_count)) {
+			if (!(BotGetDominationPoint(bs) >= 0 &&
+					BotGetDominationPoint(bs) < MAX_DOMINATION_POINTS &&
+					BotGetDominationPoint(bs) < level.domination_points_count)) {
 				BotSetDominationPoint(bs,-1);
 			}
-			if ((BotTeam(bs) == TEAM_BLUE && level.pointStatusDom[bs->currentPoint] == TEAM_BLUE) ||
-					(BotTeam(bs) == TEAM_RED && level.pointStatusDom[bs->currentPoint] == TEAM_RED))
+			if ((BotTeam(bs) == TEAM_BLUE && level.pointStatusDom[BotGetDominationPoint(bs)] == TEAM_BLUE) ||
+					(BotTeam(bs) == TEAM_RED && level.pointStatusDom[BotGetDominationPoint(bs)] == TEAM_RED))
 				teamtask = TEAMTASK_DEFENSE;
-			else if ((BotTeam(bs) == TEAM_BLUE && level.pointStatusDom[bs->currentPoint] != TEAM_BLUE) ||
-					(BotTeam(bs) == TEAM_RED && level.pointStatusDom[bs->currentPoint] != TEAM_RED))
+			else if ((BotTeam(bs) == TEAM_BLUE && level.pointStatusDom[BotGetDominationPoint(bs)] != TEAM_BLUE) ||
+					(BotTeam(bs) == TEAM_RED && level.pointStatusDom[BotGetDominationPoint(bs)] != TEAM_RED))
 				teamtask = TEAMTASK_OFFENSE;
 			else {
 				teamtask = TEAMTASK_PATROL;
