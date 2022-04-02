@@ -409,12 +409,12 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define VOICECHAT_HOLDDOMPOINT		"holddompoint"			// hold a DOM point
 
 // if building with this in your ../ui/ file you MUST remove the ui/!!
-#include "ui/lang_english.h" // load english language
+// #include "ui/lang_english.h" // load english language
 // #include "lang_fr.h" // load french
 // #include "lang_de.h" // load german
 // #include "lang_sp.h" // load spanish
 // #include "lang_ja.h" // load japanese (won't be for a while unfortunately)
-#include "ui/version.h" 	
+// #include "ui/version.h" 	
 
 
 // Text Scales and stuff
@@ -430,6 +430,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define KEYBINDBITTEXTSCALE .1875		// Controls menu columns
 
 
-#include "themesetting.txt" 	// User can change this
+// #include "themesetting.txt" 	// User can change this
 
 // please remember to add a new line at the end of a file
