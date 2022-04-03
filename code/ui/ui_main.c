@@ -7583,4 +7583,14 @@ Returns the current gametype.
 int UI_GetGametype() {
 	return uiInfo.gameTypes[ui_gameType.integer].gtEnum;
 }
+/*
+===================
+UI_GetTimeToBeat
+
+Returns the current time to beat for the specified game.
+===================
+ */
+int UI_GetTimeToBeat(int game) {
+	return uiInfo.mapList[ui_currentMap.integer].timeToBeat[game];
+}
 /* /Neon_Knight */
