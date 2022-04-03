@@ -425,7 +425,29 @@ void CG_CheckLocalSounds( playerState_t *ps, playerState_t *ops ) {
 	}
 
 	// lead changes
-	CG_PlayLeadChanges(reward,ps,ops);
+	if (!reward) {
+		if (!cg.warmup) {
+			// Only play "Lead Switch" if spectator
+			if ( ps->persistant[PERS_TEAM] == TEAM_SPECTATOR ) {
+				if ((ps->persistant[PERS_RANK] == 0) || (ps->persistant[PERS_RANK] != RANK_TIED_FLAG && (ops->persistant[PERS_RANK] & ~RANK_TIED_FLAG) == 0 )) {
+					CG_AddBufferedSound(cgs.media.leadSwitchSound);
+				}
+			}
+			else {
+				if ( ps->persistant[PERS_RANK] != ops->persistant[PERS_RANK] ) {
+					if ((!CG_IsATeamGametype(cgs.gametype) && cgs.gametype != GT_POSSESSION) || cgs.gametype == GT_TEAM) {
+						if (  ps->persistant[PERS_RANK] == 0 ) {
+							CG_AddBufferedSound(cgs.media.takenLeadSound);
+						} else if ( ps->persistant[PERS_RANK] == RANK_TIED_FLAG && cgs.gametype != GT_POSSESSION ) {
+							CG_AddBufferedSound(cgs.media.tiedLeadSound);
+						} else if ( ps->persistant[PERS_RANK] != RANK_TIED_FLAG &&( ops->persistant[PERS_RANK] & ~RANK_TIED_FLAG ) == 0 ) {
+							CG_AddBufferedSound(cgs.media.lostLeadSound);
+						}
+					}
+				}
+			}
+		}
+	}
 
 	// timelimit warnings
 	if ( cgs.timelimit > 0 && cgs.timelimit <= 1000 ) {
@@ -529,36 +551,5 @@ void CG_TransitionPlayerState( playerState_t *ps, playerState_t *ops ) {
 	if ( ps->viewheight != ops->viewheight ) {
 		cg.duckChange = ps->viewheight - ops->viewheight;
 		cg.duckTime = cg.time;
-	}
-}
-
-void CG_PlayLeadChanges(int reward, playerState_t *ps, playerState_t *ops) {
-
-	// Never play during reward announcements
-	if (!reward) {
-		return;
-	}
-	// Never play during warmup
-	if (cg.warmup) {
-		return;
-	}
-	// Only play "Lead Switch" if spectator
-	if ( ps->persistant[PERS_TEAM] == TEAM_SPECTATOR ) {
-		if ((ps->persistant[PERS_RANK] == 0) || (ps->persistant[PERS_RANK] != RANK_TIED_FLAG && (ops->persistant[PERS_RANK] & ~RANK_TIED_FLAG) == 0 )) {
-			CG_AddBufferedSound(cgs.media.leadSwitchSound);
-		}
-	}
-	else {
-		if ( ps->persistant[PERS_RANK] != ops->persistant[PERS_RANK] ) {
-			if ((!G_IsATeamGametype(cgs.gametype) && cgs.gametype != GT_POSSESSION) || cgs.gametype == GT_TEAM) {
-				if (  ps->persistant[PERS_RANK] == 0 ) {
-					CG_AddBufferedSound(cgs.media.takenLeadSound);
-				} else if ( ps->persistant[PERS_RANK] == RANK_TIED_FLAG && cgs.gametype != GT_POSSESSION ) {
-					CG_AddBufferedSound(cgs.media.tiedLeadSound);
-				} else if ( ps->persistant[PERS_RANK] != RANK_TIED_FLAG &&( ops->persistant[PERS_RANK] & ~RANK_TIED_FLAG ) == 0 ) {
-					CG_AddBufferedSound(cgs.media.lostLeadSound);
-				}
-			}
-		}
 	}
 }
