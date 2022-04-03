@@ -1436,19 +1436,19 @@ static void UI_SetCapFragLimits(qboolean uiVars)
 	}
 	else
 	{
-		if (uiInfo.gameTypes[ui_gameType.integer].gtEnum == GT_OBELISK) {
+		if (UI_GetGametype() == GT_OBELISK) {
 			cap = 4;
 			frag = 0;
 		}
-		else if (uiInfo.gameTypes[ui_gameType.integer].gtEnum == GT_HARVESTER) {
+		else if (UI_GetGametype() == GT_HARVESTER) {
 			cap = 15;
 			frag = 0;
 		}
-		else if (uiInfo.gameTypes[ui_gameType.integer].gtEnum == GT_DOMINATION) {
+		else if (UI_GetGametype() == GT_DOMINATION) {
 			cap = 125;
 			frag = 0;
 		}
-		else if (uiInfo.gameTypes[ui_gameType.integer].gtEnum == GT_POSSESSION) {
+		else if (UI_GetGametype() == GT_POSSESSION) {
 			frag = 125;
 			cap = 0;
 		}
@@ -1654,7 +1654,7 @@ static void UI_DrawMapTimeToBeat(rectDef_t *rect, float scale, vec4_t color, int
 		trap_Cvar_Set("ui_currentMap", "0");
 	}
 
-	time = uiInfo.mapList[ui_currentMap.integer].timeToBeat[uiInfo.gameTypes[ui_gameType.integer].gtEnum];
+	time = uiInfo.mapList[ui_currentMap.integer].timeToBeat[UI_GetGametype()];
 
 	minutes = time / 60;
 	seconds = time % 60;
@@ -2913,13 +2913,13 @@ static qboolean UI_OwnerDrawVisible(int flags)
 			flags &= ~UI_SHOW_NOTFAVORITESERVERS;
 		}
 		if (flags & UI_SHOW_ANYTEAMGAME) {
-			if (!UI_IsATeamGametype(uiInfo.gameTypes[ui_gameType.integer].gtEnum)) {
+			if (!UI_IsATeamGametype(UI_GetGametype())) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_ANYTEAMGAME;
 		}
 		if (flags & UI_SHOW_ANYNONTEAMGAME) {
-			if (UI_IsATeamGametype(uiInfo.gameTypes[ui_gameType.integer].gtEnum)) {
+			if (UI_IsATeamGametype(UI_GetGametype())) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_ANYNONTEAMGAME;
@@ -2964,13 +2964,13 @@ static qboolean UI_OwnerDrawVisible(int flags)
 			flags &= ~UI_SHOW_DEMOAVAILABLE;
 		}
 		if (flags & UI_SHOW_ANYTEAMOBJECTIVEGAME) {
-			if (!UI_IsATeamGametype(uiInfo.gameTypes[ui_gameType.integer].gtEnum)) {
+			if (!UI_IsATeamGametype(UI_GetGametype())) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_ANYTEAMOBJECTIVEGAME;
 		}
 		if (flags & UI_SHOW_ANYNONTEAMOBJECTIVEGAME) {
-			if (UI_IsATeamGametype(uiInfo.gameTypes[ui_gameType.integer].gtEnum)) {
+			if (UI_IsATeamGametype(UI_GetGametype())) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_ANYNONTEAMOBJECTIVEGAME;
@@ -2988,13 +2988,13 @@ static qboolean UI_OwnerDrawVisible(int flags)
 			flags &= ~UI_SHOW_NETANYNONTEAMOBJECTIVEGAME;
 		}
 		if (flags & UI_SHOW_ANYROUNDGAME) {
-			if (!UI_IsARoundBasedGametype(uiInfo.gameTypes[ui_gameType.integer].gtEnum)) {
+			if (!UI_IsARoundBasedGametype(UI_GetGametype())) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_ANYROUNDGAME;
 		}
 		if (flags & UI_SHOW_ANYNONROUNDGAME) {
-			if (UI_IsARoundBasedGametype(uiInfo.gameTypes[ui_gameType.integer].gtEnum)) {
+			if (UI_IsARoundBasedGametype(UI_GetGametype())) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_ANYNONROUNDGAME;
@@ -3012,25 +3012,25 @@ static qboolean UI_OwnerDrawVisible(int flags)
 			flags &= ~UI_SHOW_NETANYNONROUNDGAME;
 		}
 		if (flags & UI_SHOW_ANYTEAMROUNDGAME) {
-			if (!(UI_IsARoundBasedGametype(uiInfo.gameTypes[ui_gameType.integer].gtEnum) && UI_IsATeamGametype(uiInfo.gameTypes[ui_gameType.integer].gtEnum))) {
+			if (!(UI_IsARoundBasedGametype(UI_GetGametype()) && UI_IsATeamGametype(UI_GetGametype()))) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_ANYTEAMROUNDGAME;
 		}
 		if (flags & UI_SHOW_ANYNONTEAMROUNDGAME) {
-			if (UI_IsARoundBasedGametype(uiInfo.gameTypes[ui_gameType.integer].gtEnum) && UI_IsATeamGametype(uiInfo.gameTypes[ui_gameType.integer].gtEnum)) {
+			if (UI_IsARoundBasedGametype(UI_GetGametype()) && UI_IsATeamGametype(UI_GetGametype())) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_ANYNONTEAMROUNDGAME;
 		}
 		if (flags & UI_SHOW_NETANYTEAMROUNDGAME) {
-			if (!(UI_IsARoundBasedGametype(uiInfo.gameTypes[ui_netGameType.integer].gtEnum) && UI_IsATeamGametype(uiInfo.gameTypes[ui_gameType.integer].gtEnum))) {
+			if (!(UI_IsARoundBasedGametype(uiInfo.gameTypes[ui_netGameType.integer].gtEnum) && UI_IsATeamGametype(UI_GetGametype()))) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_NETANYTEAMROUNDGAME;
 		}
 		if (flags & UI_SHOW_NETANYNONTEAMROUNDGAME) {
-			if (UI_IsARoundBasedGametype(uiInfo.gameTypes[ui_netGameType.integer].gtEnum) && UI_IsATeamGametype(uiInfo.gameTypes[ui_gameType.integer].gtEnum)) {
+			if (UI_IsARoundBasedGametype(uiInfo.gameTypes[ui_netGameType.integer].gtEnum) && UI_IsATeamGametype(UI_GetGametype())) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_NETANYNONTEAMROUNDGAME;
@@ -3127,7 +3127,7 @@ static qboolean UI_GameType_HandleKey(int flags, float *special, int key, qboole
 					ui_gameType.integer = uiInfo.numGameTypes - 1;
 				}
 			}
-			while (uiInfo.maskGameTypes[uiInfo.gameTypes[ui_gameType.integer].gtEnum]);
+			while (uiInfo.maskGameTypes[UI_GetGametype()]);
 		}
 		else {
 			do {
@@ -3136,11 +3136,11 @@ static qboolean UI_GameType_HandleKey(int flags, float *special, int key, qboole
 					ui_gameType.integer = 0;
 				}
 			}
-			while (uiInfo.maskGameTypes[uiInfo.gameTypes[ui_gameType.integer].gtEnum]);
+			while (uiInfo.maskGameTypes[UI_GetGametype()]);
 		}
 		// end changed RD
 
-		if (!UI_IsATeamGametype(uiInfo.gameTypes[ui_gameType.integer].gtEnum)) {
+		if (!UI_IsATeamGametype(UI_GetGametype())) {
 			trap_Cvar_SetValue( "ui_Q3Model", 1 );
 		}
 		else {
@@ -3149,7 +3149,7 @@ static qboolean UI_GameType_HandleKey(int flags, float *special, int key, qboole
 
 		trap_Cvar_SetValue("ui_gameType", ui_gameType.integer);
 		UI_SetCapFragLimits(qtrue);
-		UI_LoadBestScores(uiInfo.mapList[ui_currentMap.integer].mapLoadName, uiInfo.gameTypes[ui_gameType.integer].gtEnum);
+		UI_LoadBestScores(uiInfo.mapList[ui_currentMap.integer].mapLoadName, UI_GetGametype());
 		if (resetMap && oldCount != UI_MapCountByGameType(qtrue)) {
 			trap_Cvar_SetValue( "ui_currentMap", 0);
 			Menu_SetFeederSelection(NULL, FEEDER_MAPS, 0, NULL);
@@ -3757,7 +3757,7 @@ static void UI_StartSkirmish(qboolean next, char *name)
 		}
 	}
 
-	g = uiInfo.gameTypes[ui_gameType.integer].gtEnum;
+	g = UI_GetGametype();
 	trap_Cvar_SetValue( "g_gametype", g );
 	trap_Cmd_ExecuteText( EXEC_APPEND, va( "wait ; wait ; map %s\n", uiInfo.mapList[ui_currentMap.integer].mapLoadName) );
 	skill = trap_Cvar_VariableValue( "g_spSkill" );
@@ -4253,7 +4253,7 @@ static void UI_RunMenuScript(char **args)
 			// Changed RD
 			trap_Cvar_Set("ui_currentMap", "0");
 			// end changed RD
-			UI_LoadBestScores(uiInfo.mapList[ui_currentMap.integer].mapLoadName, uiInfo.gameTypes[ui_gameType.integer].gtEnum);
+			UI_LoadBestScores(uiInfo.mapList[ui_currentMap.integer].mapLoadName, UI_GetGametype());
 		}
 		else if (Q_strequal(name, "resetScores") ) {
 			UI_ClearScores();
@@ -4274,7 +4274,7 @@ static void UI_RunMenuScript(char **args)
 		}
 		else if (Q_strequal(name, "RunSPDemo") ) {
 			if (uiInfo.demoAvailable) {
-				trap_Cmd_ExecuteText( EXEC_APPEND, va("demo %s_%i\n", uiInfo.mapList[ui_currentMap.integer].mapLoadName, uiInfo.gameTypes[ui_gameType.integer].gtEnum));
+				trap_Cmd_ExecuteText( EXEC_APPEND, va("demo %s_%i\n", uiInfo.mapList[ui_currentMap.integer].mapLoadName, UI_GetGametype()));
 			}
 		}
 		else if (Q_strequal(name, "LoadDemos") ) {
@@ -4389,7 +4389,7 @@ static void UI_RunMenuScript(char **args)
 					uiInfo.maskGameTypes[mask] = 1;
 				}
 			}
-			while (uiInfo.maskGameTypes[uiInfo.gameTypes[ui_gameType.integer].gtEnum]) {
+			while (uiInfo.maskGameTypes[UI_GetGametype()]) {
 				ui_gameType.integer++;
 				if (ui_gameType.integer >= uiInfo.numGameTypes) {
 					ui_gameType.integer = 0;
@@ -4689,7 +4689,7 @@ static int UI_MapCountByGameType(qboolean singlePlayer)
 {
 	int i, c, game;
 	c = 0;
-	game = singlePlayer ? uiInfo.gameTypes[ui_gameType.integer].gtEnum : uiInfo.gameTypes[ui_netGameType.integer].gtEnum;
+	game = singlePlayer ? UI_GetGametype() : uiInfo.gameTypes[ui_netGameType.integer].gtEnum;
 	if (game == GT_SINGLE_PLAYER) {
 		game++;
 	}
@@ -5674,7 +5674,7 @@ static void UI_FeederSelection(float feederID, int index)
 			ui_currentMap.integer = actual;
 			trap_Cvar_Set("ui_currentMap", va("%d", actual));
 			uiInfo.mapList[ui_currentMap.integer].cinematic = trap_CIN_PlayCinematic(va("%s.roq", uiInfo.mapList[ui_currentMap.integer].mapLoadName), 0, 0, 0, 0, (CIN_loop | CIN_silent) );
-			UI_LoadBestScores(uiInfo.mapList[ui_currentMap.integer].mapLoadName, uiInfo.gameTypes[ui_gameType.integer].gtEnum);
+			UI_LoadBestScores(uiInfo.mapList[ui_currentMap.integer].mapLoadName, UI_GetGametype());
 			trap_Cvar_Set("ui_opponentModel", uiInfo.mapList[ui_currentMap.integer].opponentName);
 			updateOpponentModel = qtrue;
 		}
@@ -6499,7 +6499,7 @@ void _UI_Init( qboolean inGameLoad, int randomSeed )
 	Menus_CloseAll();
 
 	trap_LAN_LoadCachedServers();
-	UI_LoadBestScores(uiInfo.mapList[ui_currentMap.integer].mapLoadName, uiInfo.gameTypes[ui_gameType.integer].gtEnum);
+	UI_LoadBestScores(uiInfo.mapList[ui_currentMap.integer].mapLoadName, UI_GetGametype());
 
 	UI_BuildQ3Model_List();
 	UI_LoadBots();
@@ -7567,5 +7567,20 @@ Checks if the gametype has a round-based system.
  */
 qboolean UI_IsARoundBasedGametype(int check) {
 	return GAMETYPE_IS_ROUND_BASED(check);
+}
+/*
+=============================================
+Neon_Knight: Here begins the list of getters for certain data.
+=============================================
+*/
+/*
+===================
+UI_GetGametype
+
+Returns the current gametype.
+===================
+ */
+int UI_GetGametype() {
+	return uiInfo.gameTypes[ui_gameType.integer].gtEnum;
 }
 /* /Neon_Knight */
