@@ -257,7 +257,7 @@ static void UI_CalcPostGameStats( void ) {
 	newInfo.captures = atoi(UI_Argv(14));
 
 	newInfo.time = (time - trap_Cvar_VariableValue("ui_matchStartTime")) / 1000;
-	adjustedTime = uiInfo.mapList[ui_currentMap.integer].timeToBeat[game];
+	adjustedTime = UI_GetTimeToBeat(game);
 	if (newInfo.time < adjustedTime) { 
 		newInfo.timeBonus = (adjustedTime - newInfo.time) * 10;
 	} else {
