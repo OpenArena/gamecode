@@ -785,9 +785,8 @@ static void CG_RegisterSounds(void) {
 
 	if (cg_customAnnouncer.integer) {
 		// General announcements
-		// Prepare to fight/Prepare your team
-		cgs.media.countPrepareSound = trap_S_RegisterSound(ANNOUNCER_PREPARETOFIGHT, qtrue);
 		if (CG_IsATeamGametype(cgs.gametype)) {
+			// Prepare your team
 			cgs.media.countPrepareTeamSound = trap_S_RegisterSound(ANNOUNCER_PREPAREYOURTEAM, qtrue);
 			cgs.media.redLeadsSound = trap_S_RegisterSound(ANNOUNCER_REDLEADS, qtrue);
 			cgs.media.blueLeadsSound = trap_S_RegisterSound(ANNOUNCER_BLUELEADS, qtrue);
@@ -796,6 +795,8 @@ static void CG_RegisterSounds(void) {
 			cgs.media.blueScoredSound = trap_S_RegisterSound(ANNOUNCER_BLUESCORES, qtrue);
 		}
 		else {
+			// Prepare to fight
+			cgs.media.countPrepareSound = trap_S_RegisterSound(ANNOUNCER_PREPARETOFIGHT, qtrue);
 			cgs.media.takenLeadSound = trap_S_RegisterSound(ANNOUNCER_YOUHAVETAKENTHELEAD, qtrue);
 			cgs.media.tiedLeadSound = trap_S_RegisterSound(ANNOUNCER_YOURETIEDFORTHELEAD, qtrue);
 			cgs.media.lostLeadSound = trap_S_RegisterSound(ANNOUNCER_YOUHAVELOSTTHELEAD, qtrue);
