@@ -425,23 +425,7 @@ void CG_CheckLocalSounds( playerState_t *ps, playerState_t *ops ) {
 	}
 
 	// lead changes
-	if (!reward) {
-		//
-		if ( !cg.warmup ) {
-			// never play lead changes during warmup
-			if ( ps->persistant[PERS_RANK] != ops->persistant[PERS_RANK] ) {
-				if (!CG_IsATeamGametype(cgs.gametype)) {
-					if (  ps->persistant[PERS_RANK] == 0 ) {
-						CG_AddBufferedSound(cgs.media.takenLeadSound);
-					} else if ( ps->persistant[PERS_RANK] == RANK_TIED_FLAG && cgs.gametype != GT_POSSESSION ) {
-						CG_AddBufferedSound(cgs.media.tiedLeadSound);
-					} else if ( ps->persistant[PERS_RANK] != RANK_TIED_FLAG &&( ops->persistant[PERS_RANK] & ~RANK_TIED_FLAG ) == 0 ) {
-						CG_AddBufferedSound(cgs.media.lostLeadSound);
-					}
-				}
-			}
-		}
-	}
+	CG_PlayLeadChanges(reward,ps,ops);
 
 	// timelimit warnings
 	if ( cgs.timelimit > 0 && cgs.timelimit <= 1000 ) {
@@ -548,3 +532,33 @@ void CG_TransitionPlayerState( playerState_t *ps, playerState_t *ops ) {
 	}
 }
 
+void CG_PlayLeadChanges(int reward, playerState_t *ps, playerState_t *ops) {
+
+	// Never play during reward announcements
+	if (!reward) {
+		return;
+	}
+	// Never play during warmup
+	if (cg.warmup) {
+		return;
+	}
+	// Only play "Lead Switch" if spectator
+	if ( ps->persistant[PERS_TEAM] == TEAM_SPECTATOR ) {
+		if ((ps->persistant[PERS_RANK] == 0) || (ps->persistant[PERS_RANK] != RANK_TIED_FLAG && (ops->persistant[PERS_RANK] & ~RANK_TIED_FLAG) == 0 )) {
+			CG_AddBufferedSound(cgs.media.leadSwitch);
+		}
+	}
+	else {
+		if ( ps->persistant[PERS_RANK] != ops->persistant[PERS_RANK] ) {
+			if ((!G_IsATeamGametype(cgs.gametype) && cgs.gametype != GT_POSSESSION) || cgs.gametype == GT_TEAM) {
+				if (  ps->persistant[PERS_RANK] == 0 ) {
+					CG_AddBufferedSound(cgs.media.takenLeadSound);
+				} else if ( ps->persistant[PERS_RANK] == RANK_TIED_FLAG && cgs.gametype != GT_POSSESSION ) {
+					CG_AddBufferedSound(cgs.media.tiedLeadSound);
+				} else if ( ps->persistant[PERS_RANK] != RANK_TIED_FLAG &&( ops->persistant[PERS_RANK] & ~RANK_TIED_FLAG ) == 0 ) {
+					CG_AddBufferedSound(cgs.media.lostLeadSound);
+				}
+			}
+		}
+	}
+}
