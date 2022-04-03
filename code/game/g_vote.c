@@ -43,10 +43,7 @@ int allowedVote(const char *commandStr) {
 		return qfalse;
 	}
 	//Now constructing a string that starts and ends with '/' like: "/clientkick/"
-	tempStr[0] = '/';
-	strncpy(&tempStr[1],commandStr,length);
-	tempStr[length+1] = '/';
-	tempStr[length+2] = '\0';
+	Q_snprintf(tempStr, sizeof(tempStr), "/%s/", commandStr);
 	if(Q_stristr(voteNames,tempStr) != NULL)
 		return qtrue;
 	else
@@ -185,10 +182,7 @@ int allowedGametype(const char *gametypeStr) {
 		//Error: too long
 		return qfalse;
 	}
-	tempStr[0] = '/';
-	strncpy(&tempStr[1],gametypeStr,length);
-	tempStr[length+1] = '/';
-	tempStr[length+2] = '\0';
+	Q_snprintf(tempStr, sizeof(tempStr),"/%s/", gametypeStr);
 	if(Q_stristr(voteGametypes,tempStr) != NULL)
 		return qtrue;
 	else {

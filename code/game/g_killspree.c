@@ -227,10 +227,7 @@ static const char *fillPlaceHolder( const char *stringToSearch, const char *plac
 	if( !( p = strstr( stringToSearch, placeHolder ) ) )
 		return stringToSearch;
 
-	strncpy( output, stringToSearch, p - stringToSearch ); 
-	output[ p - stringToSearch ] = '\0';
-
-	Q_snprintf( output + ( p - stringToSearch ), output - stringToSearch,  "%s%s", replaceWith, p + strlen( placeHolder ) ); 
+	Q_snprintf( output, MAX_SAY_TEXT, "%.*s%s%s", (int)(p - stringToSearch), stringToSearch, replaceWith, p+strlen(placeHolder));
 
 	return output;
 }
@@ -252,7 +249,8 @@ static char *CreateMessage( gentity_t *ent, const char *message, const char *spr
 	//Get the player name.
 	Q_strncpyz( name, ent->client->pers.netname, sizeof( name ) );
 	//Do Our Replacements
-	Q_strncpyz( output, fillPlaceHolder( message, "[n]", name ), sizeof( output ) ); 
+	Q_strncpyz( output, fillPlaceHolder( message, "[n]", name ), sizeof( output ) );
+	//The following line has a risk of copying output into output. Q_strncpyz can handle the case.
 	Q_strncpyz( output, fillPlaceHolder( output, "[k]", spreeNumber ), sizeof( output ) );
 	return output; 
 }

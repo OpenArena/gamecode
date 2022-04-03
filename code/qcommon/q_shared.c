@@ -690,10 +690,30 @@ char* Q_strrchr(const char* string, int c) {
 }
 
 /*
+ Copied from code/game/bg_lib.c
+ It is here to avoid undifined behavior when source and destination overlap.
+ This is used quite a lot in the code.
+ */
+static char *qstrncpy(char *strDest, const char *strSource, size_t count) {
+	char *s;
+
+	s = strDest;
+	while (*strSource && count) {
+		*s++ = *strSource++;
+		count--;
+	}
+	while (count--) {
+		*s++ = 0;
+	}
+	return strDest;
+}
+
+/*
 =============
 Q_strncpyz
  
 Safe strncpy that ensures a trailing zero
+Does not result in undefiend behavior if source=destination
 =============
  */
 void Q_strncpyz(char *dest, const char *src, int destsize) {
@@ -707,7 +727,9 @@ void Q_strncpyz(char *dest, const char *src, int destsize) {
 		Com_Error(ERR_FATAL, "Q_strncpyz: destsize < 1");
 	}
 
-	strncpy(dest, src, destsize - 1);
+	if (dest != src) {
+		qstrncpy(dest, src, destsize - 1);
+	}
 	dest[destsize - 1] = 0;
 }
 

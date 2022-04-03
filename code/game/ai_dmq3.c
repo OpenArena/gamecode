@@ -1482,8 +1482,7 @@ char *ClientName(int client, char *name, int size) {
 		return "[client out of range]";
 	}
 	trap_GetConfigstring(CS_PLAYERS + client, buf, sizeof (buf));
-	strncpy(name, Info_ValueForKey(buf, "n"), size - 1);
-	name[size - 1] = '\0';
+	Q_strncpyz(name, Info_ValueForKey(buf, "n"), size);
 	Q_CleanStr(name);
 	return name;
 }
@@ -1501,8 +1500,7 @@ char *ClientSkin(int client, char *skin, int size) {
 		return "[client out of range]";
 	}
 	trap_GetConfigstring(CS_PLAYERS + client, buf, sizeof (buf));
-	strncpy(skin, Info_ValueForKey(buf, "model"), size - 1);
-	skin[size - 1] = '\0';
+	Q_strncpyz(skin, Info_ValueForKey(buf, "model"), size);
 	return skin;
 }
 
@@ -1605,8 +1603,7 @@ char *EasyClientName(int client, char *buf, int size) {
 			memmove(ptr, ptr + 1, strlen(ptr + 1) + 1);
 		}
 	}
-	strncpy(buf, name, size - 1);
-	buf[size - 1] = '\0';
+	Q_strncpyz(buf, name, size);
 	return buf;
 }
 
@@ -3725,8 +3722,7 @@ void BotMapScripts(bot_state_t *bs) {
 
 	trap_GetServerinfo(info, sizeof (info));
 
-	strncpy(mapname, Info_ValueForKey(info, "mapname"), sizeof (mapname) - 1);
-	mapname[sizeof (mapname) - 1] = '\0';
+	Q_strncpyz(mapname, Info_ValueForKey(info, "mapname"), sizeof (mapname));
 
 	if (Q_strequal(mapname, "q3tourney6") || Q_strequal(mapname, "q3tourney6_ctf") || Q_strequal(mapname, "mpq3tourney6")) {
 		vec3_t mins = {694, 200, 480}, maxs = {968, 472, 680};
