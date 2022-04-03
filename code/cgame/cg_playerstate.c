@@ -545,7 +545,7 @@ void CG_PlayLeadChanges(int reward, playerState_t *ps, playerState_t *ops) {
 	// Only play "Lead Switch" if spectator
 	if ( ps->persistant[PERS_TEAM] == TEAM_SPECTATOR ) {
 		if ((ps->persistant[PERS_RANK] == 0) || (ps->persistant[PERS_RANK] != RANK_TIED_FLAG && (ops->persistant[PERS_RANK] & ~RANK_TIED_FLAG) == 0 )) {
-			CG_AddBufferedSound(cgs.media.leadSwitch);
+			CG_AddBufferedSound(cgs.media.leadSwitchSound);
 		}
 	}
 	else {
