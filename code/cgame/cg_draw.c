@@ -576,7 +576,7 @@ void CG_DrawTeamBackground(int x, int y, int w, int h, float alpha, int team) {
 		return;
 	}
 	trap_R_SetColor(hcolor);
-	CG_DrawPic(x, y, w, h, cgs.media.teamStatusBar);
+	CG_DrawPic(x, y+8, w, h-8, cgs.media.teamStatusBar);
 	trap_R_SetColor(NULL);
 }
 
@@ -2039,7 +2039,7 @@ static void CG_DrawTeamInfo(void) {
 	vec4_t hcolor;
 	int chatHeight;
 
-#define CHATLOC_Y 420 // bottom end
+#define CHATLOC_Y 428 // bottom end
 #define CHATLOC_X 0
 
 	if (cg_teamChatHeight.integer < TEAMCHAT_HEIGHT)
