@@ -1315,7 +1315,7 @@ qboolean Load_Menu(int handle)
 	return qfalse;
 }
 
-void UI_LoadMenus(const char *menuFile, qboolean reset)
+void UI_LoadMenus(const char *menuFile)
 {
 	pc_token_t token;
 	int handle;
@@ -1333,10 +1333,6 @@ void UI_LoadMenus(const char *menuFile, qboolean reset)
 	}
 
 	ui_new.integer = 1;
-
-	if (reset) {
-		Menu_Reset();
-	}
 
 	while ( 1 ) {
 		if (!trap_PC_ReadToken(handle, &token))
@@ -1373,7 +1369,8 @@ void UI_Load(void)
 
 		String_Init();
 
-		UI_LoadMenus(menuSet, qtrue);
+		menuCount = 0;
+		UI_LoadMenus(menuSet);
 		Menus_CloseAll();
 		Menus_ActivateByName(lastName);
 
@@ -1393,7 +1390,8 @@ void UI_Load(void)
 		UI_ParseGameInfo("gameinfo.txt");
 		UI_LoadArenas();
 
-		UI_LoadMenus(menuSet, qtrue);
+		menuCount = 0;
+		UI_LoadMenus(menuSet);
 		Menus_CloseAll();
 		Menus_ActivateByName(lastName);
 	}
@@ -6529,13 +6527,15 @@ void _UI_Init( qboolean inGameLoad, int randomSeed )
 
 #if 0
 	if (uiInfo.inGameLoad) {
-		UI_LoadMenus("ui/ingame.txt", qtrue);
+		menuCount = 0;
+		UI_LoadMenus("ui/ingame.txt");
 	}
-	else {   // bk010222: left this: UI_LoadMenus(menuSet, qtrue);
+	else {   // bk010222: left this: menuCount = 0; UI_LoadMenus(menuSet);
 	}
 #else
-	UI_LoadMenus(menuSet, qtrue);
-	UI_LoadMenus("ui/ingame.txt", qfalse);
+	menuCount = 0;
+	UI_LoadMenus(menuSet);
+	UI_LoadMenus("ui/ingame.txt");
 #endif
 
 	Menus_CloseAll();
@@ -6657,7 +6657,7 @@ void UI_LoadNonIngame( void )
 	if (menuSet == NULL || menuSet[0] == '\0') {
 		menuSet = "ui/menus.txt";
 	}
-	UI_LoadMenus(menuSet, qfalse);
+	UI_LoadMenus(menuSet);
 	uiInfo.inGameLoad = qfalse;
 }
 

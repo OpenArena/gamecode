@@ -6909,10 +6909,6 @@ void Menu_PaintEnd(void) {
 }
 // end changed RD
 
-void Menu_Reset(void) {
-	menuCount = 0;
-}
-
 displayContextDef_t *Display_GetContext(void) {
 	return DC;
 }
