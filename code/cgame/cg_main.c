@@ -2425,39 +2425,6 @@ void CG_Init(int serverMessageNum, int serverCommandSequence, int clientNum) {
 	realVidWidth = cgs.glconfig.vidWidth;
 	realVidHeight = cgs.glconfig.vidHeight;
 
-	// leilei - widescreen correction
-
-	{
-		float resbias;
-		float rex, rey;
-		int newresx, newresy;
-
-		rex = 640.0f / realVidWidth;
-		rey = 480.0f / realVidHeight;
-
-		newresx = 640.0f * (rex);
-		newresy = 480.0f * (rey);
-
-		newresx = realVidWidth * rey;
-		newresy = realVidHeight * rey;
-
-		resbias = 0.5 * (newresx - (newresy * (640.0 / 480.0)));
-
-
-		wideAdjustX = resbias;
-
-	}
-	if (cgs.glconfig.vidWidth * 480 > cgs.glconfig.vidHeight * 640) {
-		// wide screen
-		cgs.screenXBias = 0.5 * (cgs.glconfig.vidWidth - (cgs.glconfig.vidHeight * (640.0 / 480.0)));
-		cgs.screenXScale = cgs.screenYScale;
-	} else {
-		// no wide screen
-		cgs.screenXBias = 0;
-	}
-
-
-
 	// get the gamestate from the client system
 	trap_GetGameState(&cgs.gameState);
 
