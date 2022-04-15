@@ -1667,18 +1667,33 @@ static void UI_DrawEffects(rectDef_t *rect, float scale, vec4_t color)
 	UI_DrawHandlePic( rect->x + uiInfo.effectsColor * 16 + 8, rect->y - 16, 16, 12, uiInfo.uiDC.Assets.fxPic[uiInfo.effectsColor] );
 }
 
-static void UI_DrawMapPreview(rectDef_t *rect, float scale, vec4_t color, qboolean net)
+static void UI_DrawMapPreview(rectDef_t *rect, float scale, vec4_t color)
 {
-	int map = (net) ? ui_currentNetMap.integer : ui_currentMap.integer;
+	int map = ui_currentMap.integer;
 	if (map < 0 || map > uiInfo.mapCount) {
-		if (net) {
-			ui_currentNetMap.integer = 0;
-			trap_Cvar_Set("ui_currentNetMap", "0");
-		}
-		else {
-			ui_currentMap.integer = 0;
-			trap_Cvar_Set("ui_currentMap", "0");
-		}
+		ui_currentMap.integer = 0;
+		trap_Cvar_Set("ui_currentMap", "0");
+		map = 0;
+	}
+
+	if (uiInfo.mapList[map].levelShot == -1) {
+		uiInfo.mapList[map].levelShot = trap_R_RegisterShaderNoMip(uiInfo.mapList[map].imageName);
+	}
+
+	if (uiInfo.mapList[map].levelShot > 0) {
+		UI_DrawHandlePic( rect->x, rect->y, rect->w, rect->h, uiInfo.mapList[map].levelShot);
+	}
+	else {
+		UI_DrawHandlePic( rect->x, rect->y, rect->w, rect->h, trap_R_RegisterShaderNoMip("menu/art/unknownmap"));
+	}
+}
+
+static void UI_DrawMapPreviewNet(rectDef_t *rect, float scale, vec4_t color)
+{
+	int map = ui_currentNetMap.integer;
+	if (map < 0 || map > uiInfo.mapCount) {
+		ui_currentNetMap.integer = 0;
+		trap_Cvar_Set("ui_currentNetMap", "0");
 		map = 0;
 	}
 
@@ -1742,7 +1757,12 @@ static void UI_DrawMapCinematic(rectDef_t *rect, float scale, vec4_t color, qboo
 		}
 	}
 	else {
-		UI_DrawMapPreview(rect, scale, color, net);
+		if(net == qtrue) {
+			UI_DrawMapPreviewNet(rect, scale, color);
+		}
+		else {
+			UI_DrawMapPreview(rect, scale, color);
+		}
 	}
 }
 
@@ -2763,7 +2783,7 @@ static void UI_OwnerDraw(float x, float y, float w, float h, float text_x, float
 		UI_DrawJoinGameType(&rect, scale, color, textStyle);
 		break;
 	case UI_MAPPREVIEW:
-		UI_DrawMapPreview(&rect, scale, color, qtrue);
+		UI_DrawMapPreviewNet(&rect, scale, color);
 		break;
 	case UI_MAP_TIMETOBEAT:
 		UI_DrawMapTimeToBeat(&rect, scale, color, textStyle);
