@@ -1728,19 +1728,13 @@ static void UI_DrawMapTimeToBeat(rectDef_t *rect, float scale, vec4_t color, int
 
 
 
-static void UI_DrawMapCinematic(rectDef_t *rect, float scale, vec4_t color, qboolean net)
+static void UI_DrawMapCinematic(rectDef_t *rect, float scale, vec4_t color)
 {
 
-	int map = (net) ? ui_currentNetMap.integer : ui_currentMap.integer;
+	int map = ui_currentMap.integer;
 	if (map < 0 || map > uiInfo.mapCount) {
-		if (net) {
-			ui_currentNetMap.integer = 0;
-			trap_Cvar_Set("ui_currentNetMap", "0");
-		}
-		else {
-			ui_currentMap.integer = 0;
-			trap_Cvar_Set("ui_currentMap", "0");
-		}
+		ui_currentMap.integer = 0;
+		trap_Cvar_Set("ui_currentMap", "0");
 		map = 0;
 	}
 
@@ -1757,15 +1751,36 @@ static void UI_DrawMapCinematic(rectDef_t *rect, float scale, vec4_t color, qboo
 		}
 	}
 	else {
-		if(net == qtrue) {
-			UI_DrawMapPreviewNet(rect, scale, color);
-		}
-		else {
-			UI_DrawMapPreview(rect, scale, color);
-		}
+		UI_DrawMapPreview(rect, scale, color);
 	}
 }
 
+
+static void UI_DrawMapCinematicNet(rectDef_t *rect, float scale, vec4_t color)
+{
+	int map = ui_currentNetMap.integer;
+	if (map < 0 || map > uiInfo.mapCount) {
+		ui_currentNetMap.integer = 0;
+		trap_Cvar_Set("ui_currentNetMap", "0");
+		map = 0;
+	}
+
+	if (uiInfo.mapList[map].cinematic >= -1) {
+		if (uiInfo.mapList[map].cinematic == -1) {
+			uiInfo.mapList[map].cinematic = trap_CIN_PlayCinematic(va("%s.roq", uiInfo.mapList[map].mapLoadName), 0, 0, 0, 0, (CIN_loop | CIN_silent) );
+		}
+		if (uiInfo.mapList[map].cinematic >= 0) {
+			trap_CIN_RunCinematic(uiInfo.mapList[map].cinematic);
+			UI_DrawCinematic(uiInfo.mapList[map].cinematic, rect->x, rect->y, rect->w, rect->h);
+		}
+		else {
+			uiInfo.mapList[map].cinematic = -2;
+		}
+	}
+	else {
+		UI_DrawMapPreviewNet(rect, scale, color);
+	}
+}
 
 
 static qboolean updateModel = qtrue;
@@ -2789,10 +2804,10 @@ static void UI_OwnerDraw(float x, float y, float w, float h, float text_x, float
 		UI_DrawMapTimeToBeat(&rect, scale, color, textStyle);
 		break;
 	case UI_MAPCINEMATIC:
-		UI_DrawMapCinematic(&rect, scale, color, qfalse);
+		UI_DrawMapCinematic(&rect, scale, color);
 		break;
 	case UI_STARTMAPCINEMATIC:
-		UI_DrawMapCinematic(&rect, scale, color, qtrue);
+		UI_DrawMapCinematicNet(&rect, scale, color);
 		break;
 	case UI_SKILL:
 		UI_DrawSkill(&rect, scale, color, textStyle);
