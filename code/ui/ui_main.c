@@ -6177,8 +6177,8 @@ static void UI_ParseTeamInfo(const char *teamFile)
 
 }
 
-
-static qboolean GameType_Parse(char **p, qboolean join)
+// join==True
+static qboolean JoinGameType_Parse(char **p)
 {
 	char *token;
 
@@ -6188,12 +6188,7 @@ static qboolean GameType_Parse(char **p, qboolean join)
 		return qfalse;
 	}
 
-	if (join) {
-		uiInfo.numJoinGameTypes = 0;
-	}
-	else {
-		uiInfo.numGameTypes = 0;
-	}
+	uiInfo.numJoinGameTypes = 0;
 
 	while ( 1 ) {
 		token = COM_ParseExt(p, qtrue);
@@ -6208,32 +6203,61 @@ static qboolean GameType_Parse(char **p, qboolean join)
 
 		if (token[0] == '{') {
 			// two tokens per line, character name and sex
-			if (join) {
-				if (!String_Parse(p, &uiInfo.joinGameTypes[uiInfo.numJoinGameTypes].gameType) || !Int_Parse(p, &uiInfo.joinGameTypes[uiInfo.numJoinGameTypes].gtEnum)) {
-					return qfalse;
-				}
-			}
-			else {
-				if (!String_Parse(p, &uiInfo.gameTypes[uiInfo.numGameTypes].gameType) || !Int_Parse(p, &uiInfo.gameTypes[uiInfo.numGameTypes].gtEnum)) {
-					return qfalse;
-				}
+			if (!String_Parse(p, &uiInfo.joinGameTypes[uiInfo.numJoinGameTypes].gameType) || !Int_Parse(p, &uiInfo.joinGameTypes[uiInfo.numJoinGameTypes].gtEnum)) {
+				return qfalse;
 			}
 
-			if (join) {
-				if (uiInfo.numJoinGameTypes < MAX_GAMETYPES) {
-					uiInfo.numJoinGameTypes++;
-				}
-				else {
-					Com_Printf("Too many net game types, last one replace!\n");
-				}
+			if (uiInfo.numJoinGameTypes < MAX_GAMETYPES) {
+				uiInfo.numJoinGameTypes++;
 			}
 			else {
-				if (uiInfo.numGameTypes < MAX_GAMETYPES) {
-					uiInfo.numGameTypes++;
-				}
-				else {
-					Com_Printf("Too many game types, last one replace!\n");
-				}
+				Com_Printf("Too many net game types, last one replace!\n");
+			}
+
+			token = COM_ParseExt(p, qtrue);
+			if (token[0] != '}') {
+				return qfalse;
+			}
+		}
+	}
+	return qfalse;
+}
+
+// join==False
+static qboolean GameType_Parse(char **p)
+{
+	char *token;
+
+	token = COM_ParseExt(p, qtrue);
+
+	if (token[0] != '{') {
+		return qfalse;
+	}
+
+	uiInfo.numGameTypes = 0;
+
+	while ( 1 ) {
+		token = COM_ParseExt(p, qtrue);
+
+		if (Q_strequal(token, "}") ) {
+			return qtrue;
+		}
+
+		if (!token[0]) {
+			return qfalse;
+		}
+
+		if (token[0] == '{') {
+			// two tokens per line, character name and sex
+			if (!String_Parse(p, &uiInfo.gameTypes[uiInfo.numGameTypes].gameType) || !Int_Parse(p, &uiInfo.gameTypes[uiInfo.numGameTypes].gtEnum)) {
+				return qfalse;
+			}
+
+			if (uiInfo.numGameTypes < MAX_GAMETYPES) {
+				uiInfo.numGameTypes++;
+			}
+			else {
+				Com_Printf("Too many game types, last one replace!\n");
 			}
 
 			token = COM_ParseExt(p, qtrue);
@@ -6341,7 +6365,7 @@ static void UI_ParseGameInfo(const char *teamFile)
 
 		if (Q_strequal(token, "gametypes") ) {
 
-			if (GameType_Parse(&p, qfalse)) {
+			if (GameType_Parse(&p)) {
 				continue;
 			}
 			else {
@@ -6351,7 +6375,7 @@ static void UI_ParseGameInfo(const char *teamFile)
 
 		if (Q_strequal(token, "joingametypes") ) {
 
-			if (GameType_Parse(&p, qtrue)) {
+			if (JoinGameType_Parse(&p)) {
 				continue;
 			}
 			else {
