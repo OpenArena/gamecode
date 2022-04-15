@@ -2346,9 +2346,17 @@ static void	UI_DrawOpponentLogoName(rectDef_t *rect, vec3_t color)
 	trap_R_SetColor( NULL );
 }
 
-static void UI_DrawAllMapsSelection(rectDef_t *rect, float scale, vec4_t color, int textStyle, qboolean net)
+static void UI_DrawAllMapsSelection(rectDef_t *rect, float scale, vec4_t color, int textStyle)
 {
-	int map = (net) ? ui_currentNetMap.integer : ui_currentMap.integer;
+	int map = ui_currentMap.integer;
+	if (map >= 0 && map < uiInfo.mapCount) {
+		Text_Paint(rect->x, rect->y, scale, color, uiInfo.mapList[map].mapName, 0, 0, textStyle);
+	}
+}
+
+static void UI_DrawAllMapsSelectionNet(rectDef_t *rect, float scale, vec4_t color, int textStyle)
+{
+	int map = ui_currentNetMap.integer;
 	if (map >= 0 && map < uiInfo.mapCount) {
 		Text_Paint(rect->x, rect->y, scale, color, uiInfo.mapList[map].mapName, 0, 0, textStyle);
 	}
@@ -2890,10 +2898,10 @@ static void UI_OwnerDraw(float x, float y, float w, float h, float text_x, float
 		UI_DrawTierGameType(&rect, scale, color, textStyle);
 		break;
 	case UI_ALLMAPS_SELECTION:
-		UI_DrawAllMapsSelection(&rect, scale, color, textStyle, qtrue);
+		UI_DrawAllMapsSelectionNet(&rect, scale, color, textStyle);
 		break;
 	case UI_MAPS_SELECTION:
-		UI_DrawAllMapsSelection(&rect, scale, color, textStyle, qfalse);
+		UI_DrawAllMapsSelection(&rect, scale, color, textStyle);
 		break;
 	case UI_OPPONENT_NAME:
 		UI_DrawOpponentName(&rect, scale, color, textStyle);
