@@ -3358,12 +3358,12 @@ static qboolean UI_Skill_HandleKey(int flags, float *special, int key)
 	return qfalse;
 }
 
-static qboolean UI_TeamName_HandleKey(int flags, float *special, int key, qboolean blue)
+static qboolean UI_TeamName_HandleKeyBlue(int flags, float *special, int key)
 {
 	int select = UI_SelectForKey(key);
 	if (select != 0) {
 		int i;
-		i = UI_TeamIndexFromName(UI_Cvar_VariableString((blue) ? "ui_blueTeam" : "ui_redTeam"));
+		i = UI_TeamIndexFromName(UI_Cvar_VariableString("ui_blueTeam"));
 		i += select;
 		if (i >= uiInfo.teamCount) {
 			i = 0;
@@ -3371,7 +3371,26 @@ static qboolean UI_TeamName_HandleKey(int flags, float *special, int key, qboole
 		else if (i < 0) {
 			i = uiInfo.teamCount - 1;
 		}
-		trap_Cvar_Set( (blue) ? "ui_blueTeam" : "ui_redTeam", uiInfo.teamList[i].teamName);
+		trap_Cvar_Set("ui_blueTeam", uiInfo.teamList[i].teamName);
+		return qtrue;
+	}
+	return qfalse;
+}
+
+static qboolean UI_TeamName_HandleKeyRed(int flags, float *special, int key)
+{
+	int select = UI_SelectForKey(key);
+	if (select != 0) {
+		int i;
+		i = UI_TeamIndexFromName(UI_Cvar_VariableString("ui_redTeam"));
+		i += select;
+		if (i >= uiInfo.teamCount) {
+			i = 0;
+		}
+		else if (i < 0) {
+			i = uiInfo.teamCount - 1;
+		}
+		trap_Cvar_Set("ui_redTeam", uiInfo.teamList[i].teamName);
 		return qtrue;
 	}
 	return qfalse;
@@ -3602,10 +3621,10 @@ static qboolean UI_OwnerDrawHandleKey(int ownerDraw, int flags, float *special, 
 		return UI_Skill_HandleKey(flags, special, key);
 		break;
 	case UI_BLUETEAMNAME:
-		return UI_TeamName_HandleKey(flags, special, key, qtrue);
+		return UI_TeamName_HandleKeyBlue(flags, special, key);
 		break;
 	case UI_REDTEAMNAME:
-		return UI_TeamName_HandleKey(flags, special, key, qfalse);
+		return UI_TeamName_HandleKeyRed(flags, special, key);
 		break;
 	case UI_BLUETEAM1:
 	case UI_BLUETEAM2:
