@@ -3396,14 +3396,49 @@ static qboolean UI_TeamName_HandleKeyRed(int flags, float *special, int key)
 	return qfalse;
 }
 
-static qboolean UI_TeamMember_HandleKey(int flags, float *special, int key, qboolean blue, int num)
+static qboolean UI_TeamMember_HandleKeyBlue(int flags, float *special, int key, int num)
 {
 	int select = UI_SelectForKey(key);
 	if (select != 0) {
 		// 0 - None
 		// 1 - Human
 		// 2..NumCharacters - Bot
-		char *cvar = va(blue ? "ui_blueteam%i" : "ui_redteam%i", num);
+		char *cvar = va("ui_blueteam%i", num);
+		int value = trap_Cvar_VariableValue(cvar);
+
+		value += select;
+
+		if (UI_IsATeamGametype(ui_actualNetGameType.integer)) {
+			if (value >= uiInfo.characterCount + 2) {
+				value = 0;
+			}
+			else if (value < 0) {
+				value = uiInfo.characterCount + 2 - 1;
+			}
+		}
+		else {
+			if (value >= UI_GetNumBots() + 2) {
+				value = 0;
+			}
+			else if (value < 0) {
+				value = UI_GetNumBots() + 2 - 1;
+			}
+		}
+
+		trap_Cvar_SetValue(cvar, value);
+		return qtrue;
+	}
+	return qfalse;
+}
+
+static qboolean UI_TeamMember_HandleKeyRed(int flags, float *special, int key, int num)
+{
+	int select = UI_SelectForKey(key);
+	if (select != 0) {
+		// 0 - None
+		// 1 - Human
+		// 2..NumCharacters - Bot
+		char *cvar = va("ui_redteam%i", num);
 		int value = trap_Cvar_VariableValue(cvar);
 
 		value += select;
@@ -3631,14 +3666,14 @@ static qboolean UI_OwnerDrawHandleKey(int ownerDraw, int flags, float *special, 
 	case UI_BLUETEAM3:
 	case UI_BLUETEAM4:
 	case UI_BLUETEAM5:
-		UI_TeamMember_HandleKey(flags, special, key, qtrue, ownerDraw - UI_BLUETEAM1 + 1);
+		UI_TeamMember_HandleKeyBlue(flags, special, key, ownerDraw - UI_BLUETEAM1 + 1);
 		break;
 	case UI_REDTEAM1:
 	case UI_REDTEAM2:
 	case UI_REDTEAM3:
 	case UI_REDTEAM4:
 	case UI_REDTEAM5:
-		UI_TeamMember_HandleKey(flags, special, key, qfalse, ownerDraw - UI_REDTEAM1 + 1);
+		UI_TeamMember_HandleKeyRed(flags, special, key, ownerDraw - UI_REDTEAM1 + 1);
 		break;
 	case UI_NETSOURCE:
 		UI_NetSource_HandleKey(flags, special, key);
