@@ -3728,15 +3728,19 @@ static int QDECL UI_ServersQsortCompare( const void *arg1, const void *arg2 )
 UI_ServersSort
 =================
 */
-void UI_ServersSort(int column, qboolean force)
+void UI_ServersSort(int column)
 {
-
-	if ( !force ) {
-		if ( uiInfo.serverStatus.sortKey == column ) {
-			return;
-		}
+	if ( uiInfo.serverStatus.sortKey == column ) {
+		return;
 	}
-
+	uiInfo.serverStatus.sortKey = column;
+	qsort( &uiInfo.serverStatus.displayServers[0], uiInfo.serverStatus.numDisplayServers, sizeof(int), UI_ServersQsortCompare);
+	
+	// update displayed levelshot
+	UI_FeederSelection( FEEDER_SERVERS, uiInfo.serverStatus.currentServer );
+}
+void UI_ServersSortForce(int column)
+{
 	uiInfo.serverStatus.sortKey = column;
 	qsort( &uiInfo.serverStatus.displayServers[0], uiInfo.serverStatus.numDisplayServers, sizeof(int), UI_ServersQsortCompare);
 	
@@ -4606,7 +4610,7 @@ static void UI_RunMenuScript(char **args)
 					uiInfo.serverStatus.sortDir = !uiInfo.serverStatus.sortDir;
 				}
 				// make sure we sort again
-				UI_ServersSort(sortColumn, qtrue);
+				UI_ServersSortForce(sortColumn);
 				Menu_SetFeederSelection(NULL, FEEDER_SERVERS, 0, NULL);
 			}
 		}
