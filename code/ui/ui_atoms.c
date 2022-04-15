@@ -305,8 +305,12 @@ static void UI_CalcPostGameStats( void ) {
 	trap_Cvar_Set("g_friendlyFire", UI_Cvar_VariableString("ui_friendlyFire"));
 
 	UI_SetBestScores(&newInfo, qtrue);
-	UI_ShowPostGame(newHigh);
-
+	if(newHigh == qtrue) {
+		UI_ShowPostGameNHS();
+	}
+	else {
+		UI_ShowPostGame();
+	}
 
 }
 
@@ -396,7 +400,7 @@ qboolean UI_ConsoleCommand( int realTime ) {
 	//Menu_Cache();
 
 	if ( Q_stricmp (cmd, "ui_test") == 0 ) {
-		UI_ShowPostGame(qtrue);
+		UI_ShowPostGameNHS();
 	}
 
 	if ( Q_strequal(cmd, "ui_report") ) {

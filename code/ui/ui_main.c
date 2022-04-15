@@ -664,11 +664,20 @@ static void Text_Paint_Limit(float *maxX, float x, float y, float scale, vec4_t 
 }
 
 
-void UI_ShowPostGame(qboolean newHigh)
+void UI_ShowPostGame(void)
 {
 	trap_Cvar_Set ("cg_cameraOrbit", "0");
 	trap_Cvar_Set("cg_thirdPerson", "0");
-	uiInfo.soundHighScore = newHigh;
+	uiInfo.soundHighScore = qfalse;
+	_UI_SetActiveMenu(UIMENU_POSTGAME);
+}
+
+
+void UI_ShowPostGameNHS(void)
+{
+	trap_Cvar_Set ("cg_cameraOrbit", "0");
+	trap_Cvar_Set("cg_thirdPerson", "0");
+	uiInfo.soundHighScore = qtrue;
 	_UI_SetActiveMenu(UIMENU_POSTGAME);
 }
 /*
@@ -720,7 +729,7 @@ void _UI_Refresh( int realtime )
 
 	UI_UpdateCvars();
 
-	if (Menu_Count() > 0) {
+	if (getMenuCount() > 0) {
 		// paint all the menus
 		Menu_PaintAll();
 // Changed RD
@@ -737,7 +746,7 @@ void _UI_Refresh( int realtime )
 	// draw cursor
 	UI_SetColor( NULL );
 	// Changed RD
-	if (Menu_Count() > 0 && !trap_Cvar_VariableValue( "ui_loading" )) {
+	if (getMenuCount() > 0 && !trap_Cvar_VariableValue( "ui_loading" )) {
 		// end changed RD
 		UI_DrawHandlePic( uiInfo.uiDC.cursorx-16, uiInfo.uiDC.cursory-16, 32, 32, uiInfo.uiDC.Assets.cursor);
 	}
@@ -1261,7 +1270,7 @@ void UI_ParseMenu(const char *menuFile)
 		//	break;
 		//}
 
-		//if ( menuCount == MAX_MENUS ) {
+		//if ( getMenuCount() == MAX_MENUS ) {
 		//	Com_Printf( "Too many menus!\n" );
 		//	break;
 		//}
@@ -1369,7 +1378,7 @@ void UI_Load(void)
 
 		String_Init();
 
-		menuCount = 0;
+		setMenuCount(0);
 		UI_LoadMenus(menuSet);
 		Menus_CloseAll();
 		Menus_ActivateByName(lastName);
@@ -1390,7 +1399,7 @@ void UI_Load(void)
 		UI_ParseGameInfo("gameinfo.txt");
 		UI_LoadArenas();
 
-		menuCount = 0;
+		setMenuCount(0);
 		UI_LoadMenus(menuSet);
 		Menus_CloseAll();
 		Menus_ActivateByName(lastName);
@@ -6527,13 +6536,13 @@ void _UI_Init( qboolean inGameLoad, int randomSeed )
 
 #if 0
 	if (uiInfo.inGameLoad) {
-		menuCount = 0;
+		setMenuCount(0);
 		UI_LoadMenus("ui/ingame.txt");
 	}
-	else {   // bk010222: left this: menuCount = 0; UI_LoadMenus(menuSet);
+	else {   // bk010222: left this: setMenuCount(0); UI_LoadMenus(menuSet);
 	}
 #else
-	menuCount = 0;
+	setMenuCount(0);
 	UI_LoadMenus(menuSet);
 	UI_LoadMenus("ui/ingame.txt");
 #endif
@@ -6593,7 +6602,7 @@ UI_KeyEvent
 void _UI_KeyEvent( int key, qboolean down )
 {
 
-	if (Menu_Count() > 0) {
+	if (getMenuCount() > 0) {
 		menuDef_t *menu = Menu_GetFocused();
 		if (menu) {
 			if ((key == K_ESCAPE || key == K_JOY3)  && down && !Menus_AnyFullScreenVisible()) {
@@ -6643,7 +6652,7 @@ void _UI_MouseEvent( int dx, int dy )
 		uiInfo.uiDC.cursory = SCREEN_HEIGHT;
 	}
 
-	if (Menu_Count() > 0) {
+	if (getMenuCount() > 0) {
 		//menuDef_t *menu = Menu_GetFocused();
 		//Menu_HandleMouseMove(menu, uiInfo.uiDC.cursorx, uiInfo.uiDC.cursory);
 		Display_MouseMove(NULL, uiInfo.uiDC.cursorx, uiInfo.uiDC.cursory);
@@ -6667,7 +6676,7 @@ void _UI_SetActiveMenu( uiMenuCommand_t menu )
 
 	// this should be the ONLY way the menu system is brought up
 	// enusure minumum menu data is cached
-	if (Menu_Count() > 0) {
+	if (getMenuCount() > 0) {
 		vec3_t v;
 		v[0] = v[1] = v[2] = 0;
 		switch ( menu ) {
