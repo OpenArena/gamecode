@@ -6905,17 +6905,6 @@ void Menu_PaintEnd(void) {
 }
 // end changed RD
 
-/*
-======================
-Menu_Reset
-======================
-Used by cgame, so we have to keep it (sigh)
-- Neon_Knight
-*/
-void Menu_Reset(void) {
-	setMenuCount(0);
-}
-
 displayContextDef_t *Display_GetContext(void) {
 	return DC;
 }
