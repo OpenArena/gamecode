@@ -119,7 +119,8 @@ static void UI_BuildServerDisplayList(qboolean force, qboolean doReset);
 static void UI_BuildServerStatus(qboolean force);
 static void UI_BuildFindPlayerList(qboolean force);
 static int QDECL UI_ServersQsortCompare( const void *arg1, const void *arg2 );
-static int UI_MapCountByGameType(qboolean singlePlayer);
+static int UI_MapCountByGameType(void);
+static int UI_MapCountByGameTypeSP(void);
 static int UI_HeadCountByTeam( void );
 static void UI_ParseGameInfo(const char *teamFile);
 static void UI_ParseTeamInfo(const char *teamFile);
@@ -3208,7 +3209,7 @@ static qboolean UI_GameType_HandleKey(int flags, float *special, int key)
 {
 	int select = UI_SelectForKey(key);
 	if (select != 0) {
-		int oldCount = UI_MapCountByGameType(qtrue);
+		int oldCount = UI_MapCountByGameTypeSP();
 
 		// hard coded mess here
 		// Changed RD
@@ -3251,7 +3252,7 @@ static qboolean UI_GameType_HandleKeyResetMap(int flags, float *special, int key
 {
 	int select = UI_SelectForKey(key);
 	if (select != 0) {
-		int oldCount = UI_MapCountByGameType(qtrue);
+		int oldCount = UI_MapCountByGameTypeSP();
 
 		// hard coded mess here
 		// Changed RD
@@ -3285,7 +3286,7 @@ static qboolean UI_GameType_HandleKeyResetMap(int flags, float *special, int key
 		trap_Cvar_SetValue("ui_gameType", ui_gameType.integer);
 		UI_SetCapFragLimits(qtrue);
 		UI_LoadBestScores(uiInfo.mapList[ui_currentMap.integer].mapLoadName, UI_GetGametype());
-		if (oldCount != UI_MapCountByGameType(qtrue)) {
+		if (oldCount != UI_MapCountByGameTypeSP()) {
 			trap_Cvar_SetValue( "ui_currentMap", 0);
 			Menu_SetFeederSelection(NULL, FEEDER_MAPS, 0, NULL);
 		}
@@ -3308,7 +3309,7 @@ static qboolean UI_NetGameType_HandleKey(int flags, float *special, int key) {
 		trap_Cvar_SetValue( "ui_netGameType", ui_netGameType.integer);
 		trap_Cvar_SetValue( "ui_actualnetGameType", uiInfo.gameTypes[ui_netGameType.integer].gtEnum);
 		trap_Cvar_SetValue( "ui_currentNetMap", 0);
-		UI_MapCountByGameType(qfalse);
+		UI_MapCountByGameType();
 		Menu_SetFeederSelection(NULL, FEEDER_ALLMAPS, 0, NULL);
 		return qtrue;
 	}
@@ -3933,13 +3934,13 @@ static void UI_NextMapSkirmish(char *name)
 {
 	int actual;
 	int index = trap_Cvar_VariableValue("ui_mapIndex");
-	UI_MapCountByGameType(qtrue);
+	UI_MapCountByGameTypeSP();
 	UI_SelectedMap(index, &actual);
 	if (UI_SetNextMap(actual, index, name)) {
 	}
 	else {
 		UI_GameType_HandleKey(0, NULL, K_MOUSE1);
-		UI_MapCountByGameType(qtrue);
+		UI_MapCountByGameTypeSP();
 		Menu_SetFeederSelection(NULL, FEEDER_MAPS, 0, name);
 // end changed RD
 	}
@@ -4255,7 +4256,7 @@ static void UI_Update(const char *name)
 	else if (Q_stricmp(name, "ui_netGametype") == 0) {
 		trap_Cvar_Set( "ui_actualnetGameType", va("%d", uiInfo.gameTypes[ui_netGameType.integer].gtEnum));
 		trap_Cvar_Set( "ui_currentNetMap", "0");
-		UI_MapCountByGameType(qfalse);
+		UI_MapCountByGameType();
 		Menu_SetFeederSelection(NULL, FEEDER_ALLMAPS, 0, NULL);
 	}
 	else if (Q_stricmp(name, "ui_netSource") == 0) {
@@ -4344,7 +4345,7 @@ static void UI_RunMenuScript(char **args)
 		}
 		else if (Q_strequal(name, "updateSPMenu") ) {
 			UI_SetCapFragLimits(qtrue);
-			UI_MapCountByGameType(qtrue);
+			UI_MapCountByGameTypeSP();
 			ui_mapIndex.integer = UI_GetIndexFromSelection(ui_currentMap.integer);
 			trap_Cvar_Set("ui_mapIndex", va("%d", ui_mapIndex.integer));
 			Menu_SetFeederSelection(NULL, FEEDER_MAPS, ui_mapIndex.integer, "skirmish");
@@ -4361,7 +4362,7 @@ static void UI_RunMenuScript(char **args)
 				Q_strncpyz(name, name2, MAX_NAME_LENGTH);
 			}
 			UI_SetCapFragLimits(qtrue);
-			UI_MapCountByGameType(qtrue);
+			UI_MapCountByGameTypeSP();
 			ui_mapIndex.integer = UI_GetIndexFromSelection(ui_currentMap.integer);
 			trap_Cvar_Set("ui_mapIndex", va("%d", ui_mapIndex.integer));
 			Menu_SetFeederSelection(NULL, FEEDER_MAPS, ui_mapIndex.integer, name);
@@ -4418,7 +4419,7 @@ static void UI_RunMenuScript(char **args)
 		}
 		else if (Q_strequal(name, "loadArenas") ) {
 			UI_LoadArenasIntoMapList();
-			UI_MapCountByGameType(qfalse);
+			UI_MapCountByGameType();
 			Menu_SetFeederSelection(NULL, FEEDER_ALLMAPS, 0, "createserver");
 		}
 		else if (Q_stricmp(name, "loadArenas") == 0) {
@@ -4427,7 +4428,7 @@ static void UI_RunMenuScript(char **args)
 			name[0] = '\0';
 			Q_strncpyz(name, "createserver", MAX_NAME_LENGTH);
 			UI_LoadArenas();
-			UI_MapCountByGameType(qfalse);
+			UI_MapCountByGameType();
 			if (String_Parse(args, &name2)) {
 				Q_strncpyz(name, name2, MAX_NAME_LENGTH);
 			}
@@ -4883,11 +4884,11 @@ static void UI_GetTeamColor(vec4_t *color)
 UI_MapCountByGameType
 ==================
 */
-static int UI_MapCountByGameType(qboolean singlePlayer)
+static int UI_MapCountByGameTypeSP(void)
 {
 	int i, c, game;
 	c = 0;
-	game = singlePlayer ? UI_GetGametype() : uiInfo.gameTypes[ui_netGameType.integer].gtEnum;
+	game = UI_GetGametype();
 	if (game == GT_SINGLE_PLAYER) {
 		game++;
 	}
@@ -4898,11 +4899,31 @@ static int UI_MapCountByGameType(qboolean singlePlayer)
 	for (i = 0; i < uiInfo.mapCount; i++) {
 		uiInfo.mapList[i].active = qfalse;
 		if ( uiInfo.mapList[i].typeBits & (1 << game)) {
-			if (singlePlayer) {
-				if (!(uiInfo.mapList[i].typeBits & (1 << GT_SINGLE_PLAYER))) {
-					continue;
-				}
+			if (!(uiInfo.mapList[i].typeBits & (1 << GT_SINGLE_PLAYER))) {
+				continue;
 			}
+			c++;
+			uiInfo.mapList[i].active = qtrue;
+		}
+	}
+	return c;
+}
+
+static int UI_MapCountByGameType(void)
+{
+	int i, c, game;
+	c = 0;
+	game = uiInfo.gameTypes[ui_netGameType.integer].gtEnum;
+	if (game == GT_SINGLE_PLAYER) {
+		game++;
+	}
+	if (game == GT_TEAM) {
+		game = GT_FFA;
+	}
+
+	for (i = 0; i < uiInfo.mapCount; i++) {
+		uiInfo.mapList[i].active = qfalse;
+		if ( uiInfo.mapList[i].typeBits & (1 << game)) {
 			c++;
 			uiInfo.mapList[i].active = qtrue;
 		}
@@ -5567,7 +5588,12 @@ static int UI_FeederCount(float feederID)
 		return uiInfo.movieCount;
 	}
 	else if (feederID == FEEDER_MAPS || feederID == FEEDER_ALLMAPS) {
-		return UI_MapCountByGameType(feederID == FEEDER_MAPS ? qtrue : qfalse);
+		if (feederID == FEEDER_MAPS) {
+			return UI_MapCountByGameTypeSP();
+		}
+		else {
+			return UI_MapCountByGameType();
+		}
 	}
 	else if (feederID == FEEDER_SERVERS) {
 		return uiInfo.serverStatus.numDisplayServers;
