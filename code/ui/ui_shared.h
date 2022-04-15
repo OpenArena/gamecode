@@ -516,7 +516,6 @@ void Menu_PaintEnd(void);
 qboolean Item_EnableShowViaCvar(itemDef_t *item, int flag);
 // end changed RD
 menuDef_t *Menus_ActivateByName(const char *p);
-void Menu_Reset(void);
 qboolean Menus_AnyFullScreenVisible(void);
 void Menus_Activate(menuDef_t *menu);
 
