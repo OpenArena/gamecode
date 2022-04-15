@@ -3929,26 +3929,28 @@ static qboolean UI_SetNextMap(int actual, int index, char *name)
 }
 
 
-static void UI_StartSkirmish(qboolean next, char *name)
+static void UI_NextMapSkirmish(char *name)
+{
+	int actual;
+	int index = trap_Cvar_VariableValue("ui_mapIndex");
+	UI_MapCountByGameType(qtrue);
+	UI_SelectedMap(index, &actual);
+	if (UI_SetNextMap(actual, index, name)) {
+	}
+	else {
+		UI_GameType_HandleKey(0, NULL, K_MOUSE1);
+		UI_MapCountByGameType(qtrue);
+		Menu_SetFeederSelection(NULL, FEEDER_MAPS, 0, name);
+// end changed RD
+	}
+}
+
+
+static void UI_StartSkirmish()
 {
 	int i, k, g, delay, temp;
 	float skill;
 	char buff[MAX_STRING_CHARS];
-
-	if (next) {
-		int actual;
-		int index = trap_Cvar_VariableValue("ui_mapIndex");
-		UI_MapCountByGameType(qtrue);
-		UI_SelectedMap(index, &actual);
-		if (UI_SetNextMap(actual, index, name)) {
-		}
-		else {
-			UI_GameType_HandleKey(0, NULL, K_MOUSE1);
-			UI_MapCountByGameType(qtrue);
-			Menu_SetFeederSelection(NULL, FEEDER_MAPS, 0, name);
-// end changed RD
-		}
-	}
 
 	g = UI_GetGametype();
 	trap_Cvar_SetValue( "g_gametype", g );
@@ -4615,7 +4617,8 @@ static void UI_RunMenuScript(char **args)
 			}
 		}
 		else if (Q_stricmp(name, "nextSkirmishOld") == 0) {
-			UI_StartSkirmish(qtrue, NULL);
+			UI_NextMapSkirmish(NULL);
+			UI_StartSkirmish();
 		}
 		else if (Q_stricmp(name, "nextSkirmish") == 0) {
 			// Changed RD
@@ -4623,17 +4626,19 @@ static void UI_RunMenuScript(char **args)
 			name[0] = '\0';
 			if (String_Parse(args, &name2)) {
 				Q_strncpyz(name, name2, MAX_NAME_LENGTH);
-				UI_StartSkirmish(qtrue, name);
+				UI_NextMapSkirmish(name);
+				UI_StartSkirmish();
 			}
 			else {
-				UI_StartSkirmish(qtrue, "skirmish");
+				UI_NextMapSkirmish("skirmish");
+				UI_StartSkirmish();
 			}
 		}
 		else if (Q_stricmp(name, "SkirmishStartOld") == 0) {
-			UI_StartSkirmish(qfalse, NULL);
+			UI_StartSkirmish();
 		}
 		else if (Q_stricmp(name, "SkirmishStart") == 0) {
-			UI_StartSkirmish(qfalse, NULL);
+			UI_StartSkirmish();
 			// end changed RD
 		}
 		else if (Q_stricmp(name, "closeingame") == 0) {
