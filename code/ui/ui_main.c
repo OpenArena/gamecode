@@ -3204,7 +3204,7 @@ static qboolean UI_ClanName_HandleKey(int flags, float *special, int key)
 	return qfalse;
 }
 
-static qboolean UI_GameType_HandleKey(int flags, float *special, int key, qboolean resetMap)
+static qboolean UI_GameType_HandleKey(int flags, float *special, int key)
 {
 	int select = UI_SelectForKey(key);
 	if (select != 0) {
@@ -3242,7 +3242,50 @@ static qboolean UI_GameType_HandleKey(int flags, float *special, int key, qboole
 		trap_Cvar_SetValue("ui_gameType", ui_gameType.integer);
 		UI_SetCapFragLimits(qtrue);
 		UI_LoadBestScores(uiInfo.mapList[ui_currentMap.integer].mapLoadName, UI_GetGametype());
-		if (resetMap && oldCount != UI_MapCountByGameType(qtrue)) {
+		return qtrue;
+	}
+	return qfalse;
+}
+
+static qboolean UI_GameType_HandleKeyResetMap(int flags, float *special, int key)
+{
+	int select = UI_SelectForKey(key);
+	if (select != 0) {
+		int oldCount = UI_MapCountByGameType(qtrue);
+
+		// hard coded mess here
+		// Changed RD
+		if (select < 0) {
+			do {
+				ui_gameType.integer--;
+				if (ui_gameType.integer < 0) {
+					ui_gameType.integer = uiInfo.numGameTypes - 1;
+				}
+			}
+			while (uiInfo.maskGameTypes[UI_GetGametype()]);
+		}
+		else {
+			do {
+				ui_gameType.integer++;
+				if (ui_gameType.integer >= uiInfo.numGameTypes) {
+					ui_gameType.integer = 0;
+				}
+			}
+			while (uiInfo.maskGameTypes[UI_GetGametype()]);
+		}
+		// end changed RD
+
+		if (!UI_IsATeamGametype(UI_GetGametype())) {
+			trap_Cvar_SetValue( "ui_Q3Model", 1 );
+		}
+		else {
+			trap_Cvar_SetValue( "ui_Q3Model", 0 );
+		}
+
+		trap_Cvar_SetValue("ui_gameType", ui_gameType.integer);
+		UI_SetCapFragLimits(qtrue);
+		UI_LoadBestScores(uiInfo.mapList[ui_currentMap.integer].mapLoadName, UI_GetGametype());
+		if (oldCount != UI_MapCountByGameType(qtrue)) {
 			trap_Cvar_SetValue( "ui_currentMap", 0);
 			Menu_SetFeederSelection(NULL, FEEDER_MAPS, 0, NULL);
 		}
@@ -3547,7 +3590,7 @@ static qboolean UI_OwnerDrawHandleKey(int ownerDraw, int flags, float *special, 
 		return UI_ClanName_HandleKey(flags, special, key);
 		break;
 	case UI_GAMETYPE:
-		return UI_GameType_HandleKey(flags, special, key, qtrue);
+		return UI_GameType_HandleKeyResetMap(flags, special, key);
 		break;
 	case UI_NETGAMETYPE:
 		return UI_NetGameType_HandleKey(flags, special, key);
@@ -3842,7 +3885,7 @@ static void UI_StartSkirmish(qboolean next, char *name)
 		if (UI_SetNextMap(actual, index, name)) {
 		}
 		else {
-			UI_GameType_HandleKey(0, NULL, K_MOUSE1, qfalse);
+			UI_GameType_HandleKey(0, NULL, K_MOUSE1);
 			UI_MapCountByGameType(qtrue);
 			Menu_SetFeederSelection(NULL, FEEDER_MAPS, 0, name);
 // end changed RD
@@ -4245,8 +4288,8 @@ static void UI_RunMenuScript(char **args)
 			ui_mapIndex.integer = UI_GetIndexFromSelection(ui_currentMap.integer);
 			trap_Cvar_Set("ui_mapIndex", va("%d", ui_mapIndex.integer));
 			Menu_SetFeederSelection(NULL, FEEDER_MAPS, ui_mapIndex.integer, "skirmish");
-			UI_GameType_HandleKey(0, NULL, K_MOUSE1, qfalse);
-			UI_GameType_HandleKey(0, NULL, K_MOUSE2, qfalse);
+			UI_GameType_HandleKey(0, NULL, K_MOUSE1);
+			UI_GameType_HandleKey(0, NULL, K_MOUSE2);
 			// Changed RD
 		}
 		else if (Q_stricmp(name, "updateSPMenu") == 0) {
@@ -4263,8 +4306,8 @@ static void UI_RunMenuScript(char **args)
 			trap_Cvar_Set("ui_mapIndex", va("%d", ui_mapIndex.integer));
 			Menu_SetFeederSelection(NULL, FEEDER_MAPS, ui_mapIndex.integer, name);
 			// end changed RD
-			UI_GameType_HandleKey(0, NULL, K_MOUSE1, qfalse);
-			UI_GameType_HandleKey(0, NULL, K_MOUSE2, qfalse);
+			UI_GameType_HandleKey(0, NULL, K_MOUSE1);
+			UI_GameType_HandleKey(0, NULL, K_MOUSE2);
 			// Changed RD
 		}
 		else if (Q_stricmp(name, "getTeamMembers") == 0) {
