@@ -337,7 +337,7 @@ void CG_CheckLocalSounds( playerState_t *ps, playerState_t *ops ) {
 	// reward sounds
 	reward = qfalse;
 	if (ps->persistant[PERS_CAPTURES] != ops->persistant[PERS_CAPTURES]) {
-		pushReward(cgs.media.captureAwardSound, cgs.media.medalCapture, ps->persistant[PERS_CAPTURES]);
+		pushReward(0, cgs.media.medalCapture, ps->persistant[PERS_CAPTURES]);
 		reward = qtrue;
 		//Com_Printf("capture\n");
 	}
