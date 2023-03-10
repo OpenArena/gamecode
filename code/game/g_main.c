@@ -1409,6 +1409,9 @@ static void SendVictoryChallenge( void )
 	case GT_FFA:
 		award = GAMETYPES_FFA_WINS;
 		break;
+	case GT_TEAM:
+		award = GAMETYPES_TDM_WINS;
+		break;
 	case GT_TOURNAMENT:
 		award = GAMETYPES_TOURNEY_WINS;
 		break;
