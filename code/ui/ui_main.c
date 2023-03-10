@@ -1579,22 +1579,18 @@ static void UI_DrawSkill(rectDef_t *rect, float scale, vec4_t color, int textSty
 }
 
 
-static void UI_DrawTeamNameRed(rectDef_t *rect, float scale, vec4_t color, int textStyle)
+static void UI_DrawTeamName(rectDef_t *rect, float scale, vec4_t color, int textStyle, int team)
 {
 	int i;
-	i = UI_TeamIndexFromName(UI_Cvar_VariableString("ui_redTeam"));
+	if (team == TEAM_BLUE)
+		i = UI_TeamIndexFromName(UI_Cvar_VariableString("ui_blueTeam"));
+	else /* team == TEAM_RED */
+		i = UI_TeamIndexFromName(UI_Cvar_VariableString("ui_redTeam"));
 	if (i >= 0 && i < uiInfo.teamCount) {
-		Text_Paint(rect->x, rect->y, scale, color, va("%s: %s", "Red", uiInfo.teamList[i].teamName),0, 0, textStyle);
-	}
-}
-
-
-static void UI_DrawTeamNameBlue(rectDef_t *rect, float scale, vec4_t color, int textStyle)
-{
-	int i;
-	i = UI_TeamIndexFromName(UI_Cvar_VariableString("ui_blueTeam"));
-	if (i >= 0 && i < uiInfo.teamCount) {
-		Text_Paint(rect->x, rect->y, scale, color, va("%s: %s", "Blue", uiInfo.teamList[i].teamName),0, 0, textStyle);
+		if (team == TEAM_BLUE)
+			Text_Paint(rect->x, rect->y, scale, color, va("%s: %s", "Blue", uiInfo.teamList[i].teamName),0, 0, textStyle);
+		else /* team == TEAM_RED */
+			Text_Paint(rect->x, rect->y, scale, color, va("%s: %s", "Red", uiInfo.teamList[i].teamName),0, 0, textStyle);
 	}
 }
 
@@ -2822,10 +2818,10 @@ static void UI_OwnerDraw(float x, float y, float w, float h, float text_x, float
 		UI_DrawSkill(&rect, scale, color, textStyle);
 		break;
 	case UI_BLUETEAMNAME:
-		UI_DrawTeamNameBlue(&rect, scale, color, textStyle);
+		UI_DrawTeamName(&rect, scale, color, textStyle,TEAM_BLUE);
 		break;
 	case UI_REDTEAMNAME:
-		UI_DrawTeamNameRed(&rect, scale, color, textStyle);
+		UI_DrawTeamName(&rect, scale, color, textStyle,TEAM_RED);
 		break;
 	case UI_BLUETEAM1:
 	case UI_BLUETEAM2:
