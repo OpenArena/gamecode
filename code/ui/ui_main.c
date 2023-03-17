@@ -4044,8 +4044,10 @@ static void UI_StartSkirmish(void)
 	trap_Cvar_Set("ui_ddRespawnDelay", va("%i", temp));
 	temp = trap_Cvar_VariableValue( "g_obeliskHealth" );
 	trap_Cvar_Set("ui_obeliskHealth", va("%i", temp));
-	temp = trap_Cvar_VariableValue( "g_rockets" );
-	trap_Cvar_Set("ui_rockets", va("%i", temp));
+	temp = trap_Cvar_VariableValue( "g_weaponArena" );
+	trap_Cvar_Set("ui_weaponArena", va("%i", temp));
+	temp = trap_Cvar_VariableValue( "g_weaponArenaWeapon" );
+	trap_Cvar_Set("ui_weaponArenaWeapon", va("%i", temp));
 	temp = trap_Cvar_VariableValue( "g_gravityModifier" );
 	trap_Cvar_Set("ui_gravityModifier", va("%i", temp));
 	temp = trap_Cvar_VariableValue( "elimination_ctf_oneway" );

@@ -362,7 +362,7 @@ void CG_ParseServerinfo( void ) {
 	cgs.timelimit = atoi( Info_ValueForKey( info, "timelimit" ) );
 	cgs.maxclients = atoi( Info_ValueForKey( info, "sv_maxclients" ) );
 	cgs.roundtime = atoi( Info_ValueForKey( info, "elimination_roundtime" ) );
-	cgs.nopickup = atoi( Info_ValueForKey( info, "g_rockets" ) ) + atoi( Info_ValueForKey( info, "g_instantgib" ) ) + atoi( Info_ValueForKey( info, "g_elimination" ) );
+	cgs.nopickup = atoi( Info_ValueForKey( info, "g_weaponArena" ) ) + atoi( Info_ValueForKey( info, "g_instantgib" ) ) + atoi( Info_ValueForKey( info, "g_elimination" ) );
 	cgs.lms_mode = atoi( Info_ValueForKey( info, "g_lms_mode" ) );
 	cgs.altExcellent = atoi( Info_ValueForKey( info, "g_altExcellent" ) );
 	mapname = Info_ValueForKey( info, "mapname" );

@@ -801,7 +801,7 @@ typedef struct {
 	menulist_s		pmove;
 	menuradiobutton_s	oneway;
 	menuradiobutton_s	instantgib;
-	menuradiobutton_s	rockets;
+	menuradiobutton_s	weaponArena;
 	menulist_s			lmsMode;
 	menulist_s			botSkill;
 
@@ -905,7 +905,7 @@ static void ServerOptions_Start( void ) {
 	int             pmove;
 	int             lan;
 	int             instantgib;
-	int             rockets;
+	int             weaponArena;
 	int             oneway;
 	int             lmsMode;
 	int		skill;
@@ -922,7 +922,7 @@ static void ServerOptions_Start( void ) {
 	lan              = s_serveroptions.lan.curvalue;
 	pmove            = s_serveroptions.pmove.curvalue;
 	instantgib       = s_serveroptions.instantgib.curvalue;
-	rockets          = s_serveroptions.rockets.curvalue;
+	weaponArena          = s_serveroptions.weaponArena.curvalue;
 	oneway		 = s_serveroptions.oneway.curvalue;
 	//Sago: For some reason you need to add 1 to curvalue to get the UI to show the right thing (fixed?)
 	lmsMode          = s_serveroptions.lmsMode.curvalue; //+1;
@@ -1025,7 +1025,7 @@ static void ServerOptions_Start( void ) {
 	trap_Cvar_SetValue( "sv_pure", pure );
 	trap_Cvar_SetValue( "sv_lanForceRate", lan );
 	trap_Cvar_SetValue( "g_instantgib", instantgib );
-	trap_Cvar_SetValue( "g_rockets", rockets );
+	trap_Cvar_SetValue( "g_weaponArena", weaponArena );
 	trap_Cvar_SetValue( "g_lms_mode", lmsMode);
 	trap_Cvar_SetValue( "elimination_ctf_oneway", oneway );
 	switch(pmove) {
@@ -1248,11 +1248,11 @@ static void ServerOptions_StatusBar_Instantgib( void* ptr ) {
 
 /*
 =================
-ServerOptions_StatusBar_Allrockets
+ServerOptions_StatusBar_WeaponArena
 =================
 */
-static void ServerOptions_StatusBar_Allrockets( void* ptr ) {
-	UI_DrawString( 320, 440, "Only Rocket launcher with Inf. ammo", UI_CENTER|UI_SMALLFONT, colorWhite );
+static void ServerOptions_StatusBar_WeaponArena( void* ptr ) {
+	UI_DrawString( 320, 440, "Only allows the selected weapon with all its ammo", UI_CENTER|UI_SMALLFONT, colorWhite );
 }
 
 /*
@@ -1536,7 +1536,7 @@ static void ServerOptions_SetMenuItems( void ) {
 	s_serveroptions.pure.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "sv_pure" ) );
 	s_serveroptions.lan.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "sv_lanforcerate" ) );
 	s_serveroptions.instantgib.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_instantgib" ) );
-	s_serveroptions.rockets.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_rockets" ) );
+	s_serveroptions.weaponArena.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_weaponArena" ) );
 	s_serveroptions.lmsMode.curvalue = Com_Clamp( 0, 3, trap_Cvar_VariableValue("g_lms_mode") );
 	s_serveroptions.oneway.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "elimination_ctf_oneway" ) );
 	s_serveroptions.pmove.curvalue = 0;
@@ -1738,14 +1738,14 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 	s_serveroptions.instantgib.generic.name			= "Instantgib:";
 	s_serveroptions.instantgib.generic.statusbar  = ServerOptions_StatusBar_Instantgib; 
 
-	//Rockets option
+	//Weapon Arena option
 	y += BIGCHAR_HEIGHT+2;
-	s_serveroptions.rockets.generic.type			= MTYPE_RADIOBUTTON;
-	s_serveroptions.rockets.generic.flags			= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-	s_serveroptions.rockets.generic.x				= OPTIONS_X;
-	s_serveroptions.rockets.generic.y				= y;
-	s_serveroptions.rockets.generic.name			= "All rockets:";
-	s_serveroptions.rockets.generic.statusbar  = ServerOptions_StatusBar_Allrockets;
+	s_serveroptions.weaponArena.generic.type			= MTYPE_RADIOBUTTON;
+	s_serveroptions.weaponArena.generic.flags			= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	s_serveroptions.weaponArena.generic.x				= OPTIONS_X;
+	s_serveroptions.weaponArena.generic.y				= y;
+	s_serveroptions.weaponArena.generic.name			= "Weapon Arena:";
+	s_serveroptions.weaponArena.generic.statusbar  = ServerOptions_StatusBar_WeaponArena;
 
 	if( s_serveroptions.gametype == GT_LMS ) {
 		y += BIGCHAR_HEIGHT+2;
@@ -1898,7 +1898,7 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 	}
 	Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.pure );
 	Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.instantgib );
-	Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.rockets );
+	Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.weaponArena );
 	if( s_serveroptions.gametype == GT_LMS) {
 		Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.lmsMode );
 	}
