@@ -1500,7 +1500,7 @@ static void ArenaServers_Event( void* ptr, int event ) {
 		break;
 
 	case ID_HIDE_PRIVATE:
-		//trap_Cvar_SetValue( "ui_browserHidePrivate", g_arenaservers.hideprivate.curvalue );
+		trap_Cvar_SetValue( "ui_browserHidePrivate", g_arenaservers.hideprivate.curvalue );
 		g_hideprivate = g_arenaservers.hideprivate.curvalue;
 		ArenaServers_UpdateMenu();
 		break;
@@ -1882,8 +1882,8 @@ static void ArenaServers_MenuInit( void ) {
 	g_arenaservers.onlyhumans.curvalue = Com_Clamp( 0, 1, ui_browserOnlyHumans.integer );
 	g_onlyhumans = ui_browserOnlyHumans.integer;
 
-	g_arenaservers.hideprivate.curvalue = 1; //Com_Clamp( 0, 1, ui_browserOnlyHumans.integer );
-	g_hideprivate = 1; //ui_browserOnlyHumans.integer;
+	g_arenaservers.hideprivate.curvalue = Com_Clamp( 0, 1, ui_browserHidePrivate.integer );
+	g_hideprivate = ui_browserHidePrivate.integer;
 
 	// force to initial state and refresh
 	g_arenaservers.master.curvalue = g_servertype = ArenaServers_SetType(g_servertype);
