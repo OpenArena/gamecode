@@ -144,7 +144,7 @@ void BotPrintTeamGoal(bot_state_t *bs) {
 		}
 		case LTG_HOLDDOMPOINT:
 		{
-			BotAI_Print(PRT_MESSAGE, "%s: I'm gonna defend a DOM point for %1.0f secs\n", netname, t);
+			BotAI_Print(PRT_MESSAGE, "%s: I'm gonna defend DOM point %i for %1.0f secs\n", netname, BotGetDominationPoint(bs), t);
 			break;
 		}
 		default:
