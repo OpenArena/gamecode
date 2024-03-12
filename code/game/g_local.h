@@ -1433,4 +1433,3 @@ qboolean G_UsesTeamFlags(int check);	/* Whether the gametype uses the red and bl
 qboolean G_UsesTheWhiteFlag(int check);	/* Whether the gametype uses the neutral flag. */
 qboolean G_IsARoundBasedGametype(int check);	/* Whether the gametype uses the neutral flag. */
 /* /Neon_Knight */
-
