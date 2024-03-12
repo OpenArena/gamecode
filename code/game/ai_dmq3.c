@@ -4704,7 +4704,7 @@ void BotCheckConsoleMessages(bot_state_t *bs) {
 								botname, netname)) {
 							//remove the console message
 							trap_BotRemoveConsoleMessage(bs->cs, handle);
-							bs->stand_time = FloatTime() + BotChatTime(bs);
+							bs->stand_time = FloatTime() + BOTCHATTIME;
 							AIEnter_Stand(bs, "BotCheckConsoleMessages: reply chat");
 							//EA_Say(bs->client, bs->cs.chatmessage);
 							break;
@@ -5262,7 +5262,7 @@ void BotDeathmatchAI(bot_state_t *bs, float thinktime) {
 	//if the bot entered the game less than 8 seconds ago
 	if (!bs->entergamechat && bs->entergame_time > FloatTime() - 8) {
 		if (BotChat_EnterGame(bs)) {
-			bs->stand_time = FloatTime() + BotChatTime(bs);
+			bs->stand_time = FloatTime() + BOTCHATTIME;
 			AIEnter_Stand(bs, "BotDeathmatchAI: chat enter game");
 		}
 		bs->entergamechat = qtrue;
