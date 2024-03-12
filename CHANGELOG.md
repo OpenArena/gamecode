@@ -4,6 +4,21 @@
 
 **Release date:** TBA
 
+* Unified score limits across all modules. The default limits are now as follows:
+  * Free For All: 20 frags, 0 minutes.
+  * Tournament: 0 frags, 15 minutes.
+  * Single-Player: 10 frags, 0 minutes.
+  * Team Deathmatch: 0 frags, 20 minutes.
+  * Capture the Flag: 8 flags, 30 minutes.
+  * One Flag CTF: 8 flags, 30 minutes.
+  * Overload: 8 obelisk destructions, 30 minutes.
+  * Harvester: 20 skulls, 30 minutes.
+  * Elimination: 8 rounds won, 20 minutes.
+  * CTF Elimination: 8 rounds won, 30 minutes.
+  * Last Man Standing: 20 rounds won, 0 minutes.
+  * Double Domination: 8 rounds won, 30 minutes.
+  * Domination: 500 points, 30 minutes.
+  * Possession: 120 flag-holding seconds (2 minutes), 20 minutes.
 * Fix: Sound bug in cg_playerstate.c where flag taken messages played in non-flag-based gametypes. Also modified a condition in the fraglimit warnings.
 * AI enhancement: Holdable item (Teleporter/Medkit/Kamikaze/Invulnerability) handling improvements.
 * AI enhancement: Double Domination bot logic improved (team formations, voice orders, voice speech support)
