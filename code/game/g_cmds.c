@@ -666,9 +666,12 @@ void Cmd_DropRune_f( gentity_t *ent ) {
 	if (!ent) {
 		return;
 	}
-	if (g_runes.integer >= G_RUNES_ENABLE_TOSS) {
-		TossClientPersistantPowerups(ent);
+	// If the command is disabled, the rune won't be tossed.
+	if (g_runes.integer < 2) {
+		return;
 	}
+	// Toss the rune.
+	TossClientPersistantPowerups(ent);
 }
 /*
 ==================
