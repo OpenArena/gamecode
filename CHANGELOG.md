@@ -4,6 +4,39 @@
 
 **Release date:** TBA
 
+### Laconic version
+
+**Note:** An ampersand ("&") preceding a value means that the cvar is a bitflag, and you must add said value to the total before using its effect (i.e. if dmflags is 1096 and you want to add the new underwater speed, then dmflags should be 5192 (1096+4096).
+
+* New cvars and values:
+** g_awardpushing 2: [Rewards the last attacker who pushed the fragged player into a hazard.](https://openarena.ws/board/index.php?topic=5289.msg54334#msg54334)
+** cg_bob: If set to 0, it will disable cg_bobUp/cg_bobRoll/cg_bobPitch. Default: 1.
+** cg_kickScale: Controls how much the screen shakes when receiving damage. Default: 1.0.
+** g_voteGametypes: Added Possession as a votable gametype ("13/").
+** cg_muzzleflashStyle: Alternative muzzleflash styles for player preference, or "aesthetic," or maybe just less flashing (flashes can also be disabled).
+** g_runes &2: Enables the "tossrune" command in the server.
+** dmflags &4096: Allows players to move significantly faster underwater. Mostly for demonstration. Could be fun in class based gametypes.
+** g_grapple: Enables Grappling Hook support.
+** g_harvesterFromBodies: In Harvester matches, skulls now spawn from dead bodies (a la UT3!Greed) rather than a skull receptacle in the middle of the arena. Allows Harvester matches to take place in maps that don't feature a skull receptacle.
+** g_ddCaptureTime and g_ddRespawnDelay: New cvars for Double Domination that control the amount of holding time to score and the waiting time before a new round starts.
+* Shuffle has been reworked by implementing the solution from Aftershock.
+* New commands:
+** weapbest. Selects the best weapon.
+** tossrune. Tosses the rune that's been carried on. (Akin to TWCTF/TWCTF II)
+* Now it's possible to compile OAX on Mac (thanks Bishop-333!)
+* AI enhancements (LOTS!) for holdable handling, grappling hook handling, Possession, Domination and Double Domination.
+* Elimination/eCTF/LMS: If all humans have been killed in a round, bots will be eliminated one by one.
+* Lots of fixes for Classic UI and backend of UI3.
+* Consistent default score limits across all modules.
+* Added frag message display with icons.
+* Keyboard/Joystick input in MPUI/UI3.
+* New tool for mappers: "state_targetname" key, allows the creation of doors for Elimination-based modes that open during the warmup time.
+* Tons of other bug fixes.
+
+### Extended version
+* New command: tossrune. Drops the currently held rune.
+* New cvar value: g_runes &2: Enables the "tossrune" command in the server. (By default, g_runes 1, the command is disabled).
+* Reimplementation of shuffle, ported from Aftershock.
 * Unified score limits across all modules. The default limits are now as follows:
   * Free For All: 20 frags, 0 minutes.
   * Tournament: 0 frags, 15 minutes.
@@ -66,11 +99,10 @@
 * Use early return instead of deep nesting in the CheckLMS and CheckElimination functions.
 * Fix failure to build from source on GNU/kFreeBSD
 * Add support for the GNU/Hurd architecture
-* - cg_muzzleflashStyle - alternative flash styles for player preference, or "aesthetic," or maybe just less flashing (flashes can also be disabled) - better pronouns - player torso pitches again - don't make impact explosions for weaposn if particles are enabled.  this stops potential hitches/artifacts/flashes
+* cg_muzzleflashStyle - alternative flash styles for player preference, or "aesthetic," or maybe just less flashing (flashes can also be disabled) - better pronouns - player torso pitches again - don't make impact explosions for weaposn if particles are enabled.  this stops potential hitches/artifacts/flashes
 * All custom Muzzles uses early return
 * Extracted the Q1 muzzle flash from CG_AddPlayerWeapon to make it shorter
 * Print what we are voting about in the console
-* Removed shuffle from vote string by default
 * Select best weapon when out of ammo
 * Introduced a CG_GetBestWeapon which returns the best weapon that the player has ammo for. Used after out-of-ammo
 * Keybind labels now have the same color as other labels. Elements where you can rebind the key still have a lighter color.
@@ -100,7 +132,6 @@
 * Backport from ioq3: 01bfb15 "UI_BuildFindPlayerList: avoid array underflow"
 * Backport from ioq3: f1a133a "UI_BuildFindPlayerList: make a sizeof() more obviously correct"
 * Big backport from ioq3: d875c1f "Improve keyboard/joystick input in Team Arena UI"
-* Remove shuffle command. It was broken for network play which was the only case where it made sense.
 * Fix incorrect check for possession in cg_newdraw.c
 * Small fix for function G_InitBots where the minimum for FFA and Team gametypes ended up being the same.
 * Four backports from ioq3. - f6f2710 "Make server browser default to Internet" - 2091a2e "Fix favorite servers player count message in Team Arena UI" - 0a19ae0 "Fix levelshot displayed in Team Arena server browser" - bd06754 "Fix hitch when opening Team Arena find friend menu"
@@ -173,7 +204,6 @@
 * Stop running prediction in round based games before the round start
 * Fix for item spawn in LMS (#95)
 * Fixed issues found with cppcheck (#93)
-* Removal of _UsesKeyObjectives, _UsesTeamObelisks and _UsesControlPoints. Adjusted logic wherever necessary. (#97)
 * Fix: format ‘%f’ expects argument of type ‘double’, but argument 2 has type ‘int’ (#109)
 * Fix: Flag check only for flag-based gametypes. (#110)
 * Fix: Capturelimit is no longer accounted for TDM wherever it's referenced.
