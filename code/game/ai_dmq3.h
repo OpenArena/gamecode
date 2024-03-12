@@ -149,6 +149,8 @@ void BotCTFSeekGoals(bot_state_t *bs);
 void BotCTFRetreatGoals(bot_state_t *bs);
 //set dd goals (take/defend point) during seek
 void BotDDSeekGoals(bot_state_t *bs);
+//set dom goals (take/defend point) during seek
+void BotDomSeekGoals(bot_state_t *bs);
 //
 int Bot1FCTFCarryingFlag(bot_state_t *bs);
 int BotHarvesterCarryingCubes(bot_state_t *bs);

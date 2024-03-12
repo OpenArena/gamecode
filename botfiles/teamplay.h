@@ -544,3 +544,20 @@ type "cmd_holdpointb"
 {
 	0, " dominate point B";
 }
+
+//Domination stuff:
+type "dom_point_hold_start"
+{
+	"I'll pick a control point and hold it!";
+}
+
+type "dom_point_holding"
+{
+	"Holding control of ", 1;
+}
+
+//Domination orders:
+type "cmd_holddompoint"
+{
+	0, " pick a control point and defend it!";
+}

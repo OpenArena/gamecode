@@ -381,3 +381,4 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define VOICECHAT_PRAISE			"praise"				// you did something good
 #define VOICECHAT_HOLDPOINTA		"holdpointa"			// hold DD point A
 #define VOICECHAT_HOLDPOINTB		"holdpointb"			// hold DD point B
+#define VOICECHAT_HOLDDOMPOINT		"holddompoint"			// hold a DOM point
