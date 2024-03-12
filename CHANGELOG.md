@@ -9,20 +9,20 @@
 **Note:** An ampersand ("&") preceding a value means that the cvar is a bitflag, and you must add said value to the total before using its effect (i.e. if dmflags is 1096 and you want to add the new underwater speed, then dmflags should be 5192 (1096+4096).
 
 * New cvars and values:
-** g_awardpushing 2: [Rewards the last attacker who pushed the fragged player into a hazard.](https://openarena.ws/board/index.php?topic=5289.msg54334#msg54334)
-** cg_bob: If set to 0, it will disable cg_bobUp/cg_bobRoll/cg_bobPitch. Default: 1.
-** cg_kickScale: Controls how much the screen shakes when receiving damage. Default: 1.0.
-** g_voteGametypes: Added Possession as a votable gametype ("13/").
-** cg_muzzleflashStyle: Alternative muzzleflash styles for player preference, or "aesthetic," or maybe just less flashing (flashes can also be disabled).
-** g_runes &2: Enables the "tossrune" command in the server.
-** dmflags &4096: Allows players to move significantly faster underwater. Mostly for demonstration. Could be fun in class based gametypes.
-** g_grapple: Enables Grappling Hook support.
-** g_harvesterFromBodies: In Harvester matches, skulls now spawn from dead bodies (a la UT3!Greed) rather than a skull receptacle in the middle of the arena. Allows Harvester matches to take place in maps that don't feature a skull receptacle.
-** g_ddCaptureTime and g_ddRespawnDelay: New cvars for Double Domination that control the amount of holding time to score and the waiting time before a new round starts.
+  * g_awardpushing 2: [Rewards the last attacker who pushed the fragged player into a hazard.](https://openarena.ws/board/index.php?topic=5289.msg54334#msg54334)
+  * cg_bob: If set to 0, it will disable cg_bobUp/cg_bobRoll/cg_bobPitch. Default: 1.
+  * cg_kickScale: Controls how much the screen shakes when receiving damage. Default: 1.0.
+  * g_voteGametypes: Added Possession as a votable gametype ("13/").
+  * cg_muzzleflashStyle: Alternative muzzleflash styles for player preference, or "aesthetic," or maybe just less flashing (flashes can also be disabled).
+  * g_runes &2: Enables the "tossrune" command in the server.
+  * dmflags &4096: Allows players to move significantly faster underwater. Mostly for demonstration. Could be fun in class based gametypes.
+  * g_grapple: Enables Grappling Hook support.
+  * g_harvesterFromBodies: In Harvester matches, skulls now spawn from dead bodies (a la UT3!Greed) rather than a skull receptacle in the middle of the arena. Allows Harvester matches to take place in maps that don't feature a skull receptacle.
+  * g_ddCaptureTime and g_ddRespawnDelay: New cvars for Double Domination that control the amount of holding time to score and the waiting time before a new round starts.
 * Shuffle has been reworked by implementing the solution from Aftershock.
 * New commands:
-** weapbest. Selects the best weapon.
-** tossrune. Tosses the rune that's been carried on. (Akin to TWCTF/TWCTF II)
+  * weapbest. Selects the best weapon.
+  * tossrune. Tosses the rune that's been carried on. (Akin to TWCTF/TWCTF II)
 * Now it's possible to compile OAX on Mac (thanks Bishop-333!)
 * AI enhancements (LOTS!) for holdable handling, grappling hook handling, Possession, Domination and Double Domination.
 * Elimination/eCTF/LMS: If all humans have been killed in a round, bots will be eliminated one by one.
@@ -30,6 +30,7 @@
 * Consistent default score limits across all modules.
 * Added frag message display with icons.
 * Keyboard/Joystick input in MPUI/UI3.
+* "Next round" Elimination countdown is also shown in Double Domination.
 * New tool for mappers: "state_targetname" key, allows the creation of doors for Elimination-based modes that open during the warmup time.
 * Tons of other bug fixes.
 
@@ -87,7 +88,8 @@
 * Added cg_kickScale variable.
 * Added the neccecary paramter to missionpack to use the UI3 gui
 * Added frag message display with icons.
-* Added a Train_Blocked callback function. Also removed support for TRAIN_BLOCK_STOPS. It appeared to be broken beyond repair and completly undocumented. Trains now always crush. This might seem aggressive but there are no way logical way to turn them around and the only logical spawnflag was already in use.
+* Added a Train_Blocked callback function.
+  * Removed support for TRAIN_BLOCK_STOPS. It appeared to be broken beyond repair and completly undocumented. Trains now always crush. This might seem aggressive but there are no way logical way to turn them around and the only logical spawnflag was already in use.
 * Changed func_train to work more like func_bob rather than a crusher.
 * The short prox fuse functionalite no longer Applies to Team Deathmatch, Harvester, Elimination, Domination and Double Domination.
 * Added UI3 font support for frag messages.
@@ -99,7 +101,8 @@
 * Use early return instead of deep nesting in the CheckLMS and CheckElimination functions.
 * Fix failure to build from source on GNU/kFreeBSD
 * Add support for the GNU/Hurd architecture
-* cg_muzzleflashStyle - alternative flash styles for player preference, or "aesthetic," or maybe just less flashing (flashes can also be disabled) - better pronouns - player torso pitches again - don't make impact explosions for weaposn if particles are enabled.  this stops potential hitches/artifacts/flashes
+* cg_muzzleflashStyle - alternative flash styles for player preference, or "aesthetic," or maybe just less flashing (flashes can also be disabled)
+* Don't make impact explosions for weapons if particles are enabled.
 * All custom Muzzles uses early return
 * Extracted the Q1 muzzle flash from CG_AddPlayerWeapon to make it shorter
 * Print what we are voting about in the console
@@ -134,7 +137,10 @@
 * Big backport from ioq3: d875c1f "Improve keyboard/joystick input in Team Arena UI"
 * Fix incorrect check for possession in cg_newdraw.c
 * Small fix for function G_InitBots where the minimum for FFA and Team gametypes ended up being the same.
-* Four backports from ioq3. - f6f2710 "Make server browser default to Internet" - 2091a2e "Fix favorite servers player count message in Team Arena UI" - 0a19ae0 "Fix levelshot displayed in Team Arena server browser" - bd06754 "Fix hitch when opening Team Arena find friend menu"
+* Backport from ioq3: f6f2710 "Make server browser default to Internet"
+* Backport from ioq3: 2091a2e "Fix favorite servers player count message in Team Arena UI"
+* Backport from ioq3: 0a19ae0 "Fix levelshot displayed in Team Arena server browser"
+* Backport from ioq3: bd06754 "Fix hitch when opening Team Arena find friend menu"
 * Backport from ioq3: db1198f "Add mouse wheel support to UI list boxes"
 * Extended backport from ioq3: d58234a "Fix 'missing token' in parsers for animations.cfg"
 * Backport from ioq3: 1048073 "Unify checks for missing COM_Parse() token"
@@ -152,58 +158,93 @@
 * Make bot_minplayers work for Possession and LMS too.
 * Backport of ioquake/ioq3#f7c3276
 * Add new Double Domination Cvars Add g_ddCaptureTime which states how many seconds to hold the points to score Add g_ddRespawnDelay which states how many seconds after a capture until we can capture again.
-* Complete application of ioq3@a3c2f77: "Fix Gauntlet barrel axis in UI"
-* Backport from ioq3@af79d2c: "Fix an invalid null deref check in the slider code."
-* Backport from ioq3@f9c202f: "Use correct type for thinktime"
-* Backport from ioq3@3273df1: "Add missing EV_USE_ITEM15 cases"
-* Backport from ioq3@424122c "Fix bot's teamleader name field being too short"
-* Three backports from ioq3: - ioq3@5cf45c5: "Don't use dead view angles after stop following a dead player" - ioq3@4463af8: "When player stops following a player, keep view angles" - ioq3@70e3d61: "Fix cg.intermissionStarted only being enabled at first intermission"
-* Backport from ioq3@d7f00e2: "Fix Team Arena tauntGauntlet command"
-* Backport from ioq3@daa604a: "Fix parsing bots in arena info with trailing spaces"
-* Three backports from ioq3: * 5fb49ac: "Clean up CG_DrawProxWarning design" * 1897afb: "Fix crosshair drawing not clearing color" * 7a39f4a: "Fix attacker icon being default image if attacker left"
-* Backport from ioq3@2292bf5: "Save bot accompany distance across map change or restart"
-* Two backports from ioq3. * 08ac364: "Fix CG_WaterLevel() checks for waterlevel 2 and 3" * 386a00f: "Fix CGame CG_WaterLevel() comparisons"
-* Backport from ioq3@604b63f: "Fix cgs.teamVoteString buffer overflow in CG_ConfigStringModified"
-* Backport from ioq3@f4aa39a: "Remove unused define CG_FONT_THRESHOLD"
-* Two backports from ioq3: * 274fa89: "Fix typo of empty in ai_main.c" * 4474297: "Fix bot team order to kill last player it killed"
-* Backport from ioq3@3c8da8c: "[game/ai_main.c] Use floating-point fabs() for floating-point values"
-* Backport from ioq3@7297661: "Don't start a vote after vote passed for map change"
-* Six backports from ioq3. * 4506ebd: "Fix joining team when starting local team play server" * 4227d97: "Make Team Arena win logic handle more game types/blue team" * 4006358: "Fix spawn/freed entity logic (specifically harvester skulls)" * 1066214: "Fix "brought in 1 skulls" Harvester message" * 082376e: "Enable tourney scoreboard in Team Arena" * c14cb70: "Draw disconnect icon over lagometer in Team Arena too"
-* Six backports from ioq3. * c96acec: "Fix (unused) check for map restart in CG_TransitionSnapshot" * b511b8f: "Fix Coverity warning that endVelocity is uninitialized" * 91acf8a: "Don't build score info for bots, they don't parse it" * eeb28dc: "Fix score info being dropped by server" * 71512bb: "Show client's name in callvote clientkick vote display message" * 5b9302a: "Don't start game entity loops at index 1"
-* Two backports from ioq3. * 74aa426: "Stop caching sv_maxclients in bot code." * 6e340f9: "Don't use uninitialized ps from BotAI_GetClientState."
-* Backports from ioq3. * a738cb9: "Fix overdraw in CG_DrawRect" * 730b917: "Fix comment in BotAIPredictObstacles" * 8a6c9d1: "Remove unneeded 'angles' variables/clearing in ai_dmq3.c"
-* Two backports from ioq3. * c99281a: "Make bots stop attacking player after disconnect" * 8956ab4: "Fix notarget cheat"
-* Five backports from ioq3. * f19efb7: "Fix Team Arena team base models not dropping to floor" * 520b100: "Make cg_teamChatsOnly only affect team gametypes" * c2ca5e7: "Check for unlimited time power up using INT_MAX" * 7b9ccd1: "Have spectator always be in first person" * 03336dd: "Allow spectators to use noclip cheat"
-* NINE bot-related backports from ioq3: * 007e250: "Split G_AddRandomBot into multiple functions" * 23a331c: "Make 'addbot random' command select a random bot info" * 5164969: "Fix random bot not looking for bots by funname" * d0d1fe1: "Fix bot_minplayers passing delay as team to addbot in non-team gametypes" * 7c601da: "Fix not adding random bot when all bot info are in use on team" * d8f2ff7: "Check delayed bot's team when counting bots for bot_minplayers" * 0999aff: "Fix duplicate (delayed) random bots being choosen" * cabc323: "Don't pick duplicate random bots until all bot types are added" * b984dd4: "Add range check for bot skill in addbot command"
-* Three scoring-based backports from ioq3: * c8db6c5: "Fix score bonus for defending the flag carrier in CTF" * 13831f9: "Restore not giving defense score bonus to flag carrier" * 5f2e4a0: "Add score bonus for defending the flag carrier in 1 Flag CTF"
-* Backport from ioq3@3971674: "Silence g_util.c warning about set but not read variable"
-* Four backports from ioq3: * 0bce546: "Add spawnflags to QUAKED for trigger_multiple" * f0b74a2: "Check for all command separators in callTeamVote" * 9736e7f: "Fix compiling Cmd_CallTeamVote_f" * e793c0c: "Fix crash when pmove_msec is 0"
-* Two backports from ioq3. * ad1d0e6: "Make bots use crusher on other q3tourney6 maps" * c3e64d3: "Make bots only use q3tourney6 crusher to kill their enemy"
-* Backport from ioq3@e152761: "Fix team chat box for spectators"
-* Backport from ioq3@51e9aa2: "Fix hit accuracy stats for lightning gun and shotgun kills"
-* Backport from ioq3@690c5a4: "Don't send team overlay info to bots"
-* Backport from ioq3@424e1ac: "Fix invalid model frame developer warnings in Team Arena"
-* Backport from ioq3@c904f6d: "fix a few potential buffer overwrite in Game VM"
-* Backport from ioq3@0822772: "Fix timelimit causing an infinite map ending loop"
-* Backport from ioq3@0b6d97f: "Fix negative frag/capturelimit causing an infinite map end loop"
-* Backport from ioq3@51743bb: "Improvements for dedicated camera followers (team follow1/2)"
-* Backport from ioq3@60a3112: "Fix console offset while Team Arena voiceMenu is open"
-* Backport from ioq3@809a776: "Make testgun command without argument disable test gun model"
-* Backport from ioq3@e4208cf: "Improve finding obelisk entitynum for bot AI"
-* Backport from ioq3@33a899d: "Fix predicting entity origin on rotating mover"
-* Backport from ioq3@09166ba: "Make Team Arena prevTeamMember command loop around player list"
+* Complete application of ioq3: a3c2f77: "Fix Gauntlet barrel axis in UI"
+* Backport from ioq3: af79d2c: "Fix an invalid null deref check in the slider code."
+* Backport from ioq3: f9c202f: "Use correct type for thinktime"
+* Backport from ioq3: 3273df1: "Add missing EV_USE_ITEM15 cases"
+* Backport from ioq3: 424122c "Fix bot's teamleader name field being too short"
+* Backport from ioq3: 5cf45c5: "Don't use dead view angles after stop following a dead player"
+* Backport from ioq3: 4463af8: "When player stops following a player, keep view angles"
+* Backport from ioq3: 70e3d61: "Fix cg.intermissionStarted only being enabled at first intermission"
+* Backport from ioq3: d7f00e2: "Fix Team Arena tauntGauntlet command"
+* Backport from ioq3: daa604a: "Fix parsing bots in arena info with trailing spaces"
+* Backport from ioq3: 5fb49ac: "Clean up CG_DrawProxWarning design"
+* Backport from ioq3: 1897afb: "Fix crosshair drawing not clearing color"
+* Backport from ioq3: 7a39f4a: "Fix attacker icon being default image if attacker left"
+* Backport from ioq3: 2292bf5: "Save bot accompany distance across map change or restart"
+* Backport from ioq3: 08ac364: "Fix CG_WaterLevel() checks for waterlevel 2 and 3"
+* Backport from ioq3: 386a00f: "Fix CGame CG_WaterLevel() comparisons"
+* Backport from ioq3: 604b63f: "Fix cgs.teamVoteString buffer overflow in CG_ConfigStringModified"
+* Backport from ioq3: f4aa39a: "Remove unused define CG_FONT_THRESHOLD"
+* Backport from ioq3: 274fa89: "Fix typo of empty in ai_main.c"
+* Backport from ioq3: 4474297: "Fix bot team order to kill last player it killed"
+* Backport from ioq3: 3c8da8c: "[game/ai_main.c] Use floating-point fabs() for floating-point values"
+* Backport from ioq3: 7297661: "Don't start a vote after vote passed for map change"
+* Backport from ioq3: 4506ebd: "Fix joining team when starting local team play server"
+* Backport from ioq3: 4227d97: "Make Team Arena win logic handle more game types/blue team"
+* Backport from ioq3: 4006358: "Fix spawn/freed entity logic (specifically harvester skulls)"
+* Backport from ioq3: 1066214: "Fix "brought in 1 skulls" Harvester message"
+* Backport from ioq3: 082376e: "Enable tourney scoreboard in Team Arena"
+* Backport from ioq3: c14cb70: "Draw disconnect icon over lagometer in Team Arena too"
+* Backport from ioq3: c96acec: "Fix (unused) check for map restart in CG_TransitionSnapshot"
+* Backport from ioq3: b511b8f: "Fix Coverity warning that endVelocity is uninitialized"
+* Backport from ioq3: 91acf8a: "Don't build score info for bots, they don't parse it"
+* Backport from ioq3: eeb28dc: "Fix score info being dropped by server"
+* Backport from ioq3: 71512bb: "Show client's name in callvote clientkick vote display message"
+* Backport from ioq3: 5b9302a: "Don't start game entity loops at index 1"
+* Backport from ioq3: 74aa426: "Stop caching sv_maxclients in bot code."
+* Backport from ioq3: 6e340f9: "Don't use uninitialized ps from BotAI_GetClientState."
+* Backport from ioq3: a738cb9: "Fix overdraw in CG_DrawRect"
+* Backport from ioq3: 730b917: "Fix comment in BotAIPredictObstacles"
+* Backport from ioq3: 8a6c9d1: "Remove unneeded 'angles' variables/clearing in ai_dmq3.c"
+* Backport from ioq3: c99281a: "Make bots stop attacking player after disconnect"
+* Backport from ioq3: 8956ab4: "Fix notarget cheat"
+* Backport from ioq3: f19efb7: "Fix Team Arena team base models not dropping to floor"
+* Backport from ioq3: 520b100: "Make cg_teamChatsOnly only affect team gametypes"
+* Backport from ioq3: c2ca5e7: "Check for unlimited time power up using INT_MAX"
+* Backport from ioq3: 7b9ccd1: "Have spectator always be in first person"
+* Backport from ioq3: 03336dd: "Allow spectators to use noclip cheat"
+* Backport from ioq3: 007e250: "Split G_AddRandomBot into multiple functions"
+* Backport from ioq3: 23a331c: "Make 'addbot random' command select a random bot info"
+* Backport from ioq3: 5164969: "Fix random bot not looking for bots by funname"
+* Backport from ioq3: d0d1fe1: "Fix bot_minplayers passing delay as team to addbot in non-team gametypes"
+* Backport from ioq3: 7c601da: "Fix not adding random bot when all bot info are in use on team"
+* Backport from ioq3: d8f2ff7: "Check delayed bot's team when counting bots for bot_minplayers"
+* Backport from ioq3: 0999aff: "Fix duplicate (delayed) random bots being choosen"
+* Backport from ioq3: cabc323: "Don't pick duplicate random bots until all bot types are added"
+* Backport from ioq3: b984dd4: "Add range check for bot skill in addbot command"
+* Backport from ioq3: c8db6c5: "Fix score bonus for defending the flag carrier in CTF"
+* Backport from ioq3: 13831f9: "Restore not giving defense score bonus to flag carrier"
+* Backport from ioq3: 5f2e4a0: "Add score bonus for defending the flag carrier in 1 Flag CTF"
+* Backport from ioq3: 3971674: "Silence g_util.c warning about set but not read variable"
+* Backport from ioq3: 0bce546: "Add spawnflags to QUAKED for trigger_multiple"
+* Backport from ioq3: f0b74a2: "Check for all command separators in callTeamVote"
+* Backport from ioq3: 9736e7f: "Fix compiling Cmd_CallTeamVote_f"
+* Backport from ioq3: e793c0c: "Fix crash when pmove_msec is 0"
+* Backport from ioq3: ad1d0e6: "Make bots use crusher on other q3tourney6 maps"
+* Backport from ioq3: "Make bots only use q3tourney6 crusher to kill their enemy"
+* Backport from ioq3: e152761: "Fix team chat box for spectators"
+* Backport from ioq3: 51e9aa2: "Fix hit accuracy stats for lightning gun and shotgun kills"
+* Backport from ioq3: 690c5a4: "Don't send team overlay info to bots"
+* Backport from ioq3: 424e1ac: "Fix invalid model frame developer warnings in Team Arena"
+* Backport from ioq3: c904f6d: "fix a few potential buffer overwrite in Game VM"
+* Backport from ioq3: 0822772: "Fix timelimit causing an infinite map ending loop"
+* Backport from ioq3: 0b6d97f: "Fix negative frag/capturelimit causing an infinite map end loop"
+* Backport from ioq3: 51743bb: "Improvements for dedicated camera followers (team follow1/2)"
+* Backport from ioq3: 60a3112: "Fix console offset while Team Arena voiceMenu is open"
+* Backport from ioq3: 809a776: "Make testgun command without argument disable test gun model"
+* Backport from ioq3: e4208cf: "Improve finding obelisk entitynum for bot AI"
+* Backport from ioq3: 33a899d: "Fix predicting entity origin on rotating mover"
+* Backport from ioq3: 09166ba: "Make Team Arena prevTeamMember command loop around player list"
 * Bonus backport: "Bad counting in parsers for animation.cfg" From this issue: https://github.com/ioquake/ioq3/issues/396
-* Unifying format criteria for cvars in every module. Tabs and extra spaces are replaced by a single space between words. Some cvars were moved to main. Also missing cvars added to ui/ui_local.h
-* Fixed some identation problems in ui_servers2.c. Only problems from the beginning of the line has been fixed.
 * Unification of cvars for "developer" mode.
 * Replacement of a "developer" call for the cleaner alternative.
 * Unification of the Missionpack Checks into a single cvar.
 * Fix for picking up flags in gametypes that don't make use of them.
-* Many fixes to the Windows compiling scripts. - Added windows/ to .gitignore - Commented unused and missing files - Fixed a typo in windows_compile_game regarding g_elimination.c - Added g_possession.c to windows_compile_game
+* Many fixes to the Windows compiling scripts.
 * Solution for only picking up cubes in harvester
 * Stop running prediction in round based games before the round start
 * Fix for item spawn in LMS (#95)
-* Fixed issues found with cppcheck (#93)
 * Fix: format ‘%f’ expects argument of type ‘double’, but argument 2 has type ‘int’ (#109)
 * Fix: Flag check only for flag-based gametypes. (#110)
 * Fix: Capturelimit is no longer accounted for TDM wherever it's referenced.
