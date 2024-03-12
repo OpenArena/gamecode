@@ -527,59 +527,6 @@ int BotGetLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal) 
 			bs->defendaway_time = 0;
 		}
 	}
-	//For double domination
-	if (bs->ltgtype == LTG_POINTA &&
-				bs->defendaway_time < FloatTime()) {
-		//check for bot typing status message
-		if (bs->teammessage_time && bs->teammessage_time < FloatTime()) {
-			trap_BotGoalName(bs->teamgoal.number, buf, sizeof(buf));
-			BotAI_BotInitialChat(bs, "dd_start_pointa", buf, NULL);
-			trap_BotEnterChat(bs->cs, 0, CHAT_TEAM);
-			//BotVoiceChatOnly(bs, -1, VOICECHAT_ONDEFENSE);
-			bs->teammessage_time = 0;
-		}
-		//set the bot goal
-		memcpy(goal, &ctf_redflag, sizeof(bot_goal_t));
-		//if very close... go away for some time
-		VectorSubtract(goal->origin, bs->origin, dir);
-		if (VectorLengthSquared(dir) < Square(70)) {
-			trap_BotResetAvoidReach(bs->ms);
-			bs->defendaway_time = FloatTime() + 3 + 3 * random();
-			if (BotHasPersistantPowerupAndWeapon(bs)) {
-				bs->defendaway_range = 100;
-			}
-			else {
-				bs->defendaway_range = 350;
-			}
-		}
-		return qtrue;
-	}
-	if (bs->ltgtype == LTG_POINTB &&
-				bs->defendaway_time < FloatTime()) {
-		//check for bot typing status message
-		if (bs->teammessage_time && bs->teammessage_time < FloatTime()) {
-			trap_BotGoalName(bs->teamgoal.number, buf, sizeof(buf));
-			BotAI_BotInitialChat(bs, "dd_start_pointb", buf, NULL);
-			trap_BotEnterChat(bs->cs, 0, CHAT_TEAM);
-			//BotVoiceChatOnly(bs, -1, VOICECHAT_ONDEFENSE);
-			bs->teammessage_time = 0;
-		}
-		//set the bot goal
-		memcpy(goal, &ctf_blueflag, sizeof(bot_goal_t));
-		//if very close... go away for some time
-		VectorSubtract(goal->origin, bs->origin, dir);
-		if (VectorLengthSquared(dir) < Square(70)) {
-			trap_BotResetAvoidReach(bs->ms);
-			bs->defendaway_time = FloatTime() + 3 + 3 * random();
-			if (BotHasPersistantPowerupAndWeapon(bs)) {
-				bs->defendaway_range = 100;
-			}
-			else {
-				bs->defendaway_range = 350;
-			}
-		}
-		return qtrue;
-	}
 	//if defending a key area
 	if (bs->ltgtype == LTG_DEFENDKEYAREA && !retreat &&
 				bs->defendaway_time < FloatTime()) {
