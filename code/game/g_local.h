@@ -1434,7 +1434,3 @@ qboolean G_UsesTheWhiteFlag(int check);	/* Whether the gametype uses the neutral
 qboolean G_IsARoundBasedGametype(int check);	/* Whether the gametype uses the neutral flag. */
 /* /Neon_Knight */
 
-/* Neon_Knight: Needed for g_runes */
-#define	G_RUNES_ENABLE		1
-#define	G_RUNES_ENABLE_TOSS	2
-/* /Neon_Knight */
