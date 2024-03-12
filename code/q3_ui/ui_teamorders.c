@@ -360,13 +360,13 @@ static void UI_TeamOrdersMenu_ListEvent( void *ptr, int event )
 		if( UI_UsesTeamFlags(teamOrdersMenuInfo.gametype) && !UI_UsesTheWhiteFlag(teamOrdersMenuInfo.gametype) ) {
 			UI_TeamOrdersMenu_SetList( ID_LIST_CTF_ORDERS );
 		}
-		if( UI_UsesTeamFlags(teamOrdersMenuInfo.gametype) && UI_UsesTheWhiteFlag(teamOrdersMenuInfo.gametype) ) {
+		else if( UI_UsesTeamFlags(teamOrdersMenuInfo.gametype) && UI_UsesTheWhiteFlag(teamOrdersMenuInfo.gametype) ) {
 			UI_TeamOrdersMenu_SetList( ID_LIST_CTF1F_ORDERS );
 		}
-		if( teamOrdersMenuInfo.gametype == GT_HARVESTER || teamOrdersMenuInfo.gametype == GT_OBELISK ) {
+		else if( teamOrdersMenuInfo.gametype == GT_HARVESTER || teamOrdersMenuInfo.gametype == GT_OBELISK ) {
 			UI_TeamOrdersMenu_SetList( ID_LIST_BASE_ORDERS );
 		}
-		if( teamOrdersMenuInfo.gametype == GT_DOUBLE_D ) {
+		else if( teamOrdersMenuInfo.gametype == GT_DOUBLE_D ) {
 			UI_TeamOrdersMenu_SetList( ID_LIST_DD_ORDERS );
 		}
 		else {
@@ -379,17 +379,17 @@ static void UI_TeamOrdersMenu_ListEvent( void *ptr, int event )
 	if( id == ID_LIST_CTF_ORDERS ) {
 		Com_sprintf( message, sizeof(message), ctfMessages[selection], teamOrdersMenuInfo.botNames[teamOrdersMenuInfo.selectedBot] );
 	}
-	if( id == ID_LIST_CTF1F_ORDERS ) {
+	else if( id == ID_LIST_CTF1F_ORDERS ) {
 		Com_sprintf( message, sizeof(message), ctf1fMessages[selection], teamOrdersMenuInfo.botNames[teamOrdersMenuInfo.selectedBot] );
 	}
-	if( id == ID_LIST_BASE_ORDERS ) {
+	else if( id == ID_LIST_BASE_ORDERS ) {
 		Com_sprintf( message, sizeof(message), baseMessages[selection], teamOrdersMenuInfo.botNames[teamOrdersMenuInfo.selectedBot] );
 	}
-	if( id == ID_LIST_TEAM_ORDERS ) {
-		Com_sprintf( message, sizeof(message), teamMessages[selection], teamOrdersMenuInfo.botNames[teamOrdersMenuInfo.selectedBot] );
-	}
-	if( id == ID_LIST_DD_ORDERS ) {
+	else if( id == ID_LIST_DD_ORDERS ) {
 		Com_sprintf( message, sizeof(message), ddMessages[selection], teamOrdersMenuInfo.botNames[teamOrdersMenuInfo.selectedBot] );
+	}
+	else {
+		Com_sprintf( message, sizeof(message), teamMessages[selection], teamOrdersMenuInfo.botNames[teamOrdersMenuInfo.selectedBot] );
 	}
 
 	trap_Cmd_ExecuteText( EXEC_APPEND, va( "say_team \"%s\"\n", message ) );
