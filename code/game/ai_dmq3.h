@@ -144,6 +144,8 @@ void BotRememberLastOrderedTask(bot_state_t *bs);
 void BotCTFSeekGoals(bot_state_t *bs);
 //set ctf goals (defend base, get enemy flag) during retreat
 void BotCTFRetreatGoals(bot_state_t *bs);
+//set dd goals (take/defend point) during seek
+void BotDDSeekGoals(bot_state_t *bs);
 //set dom goals (take/defend point) during seek
 void BotDomSeekGoals(bot_state_t *bs);
 //

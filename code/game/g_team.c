@@ -2297,7 +2297,7 @@ void SP_team_redobelisk( gentity_t *ent )
 {
 	gentity_t *obelisk;
 
-	if (g_gametype.integer != GT_HARVESTER && g_gametype.integer != GT_OBELISK) {
+	if (!G_UsesTeamFlags(g_gametype.integer) && g_gametype.integer != GT_HARVESTER && g_gametype.integer != GT_OBELISK) {
 		G_FreeEntity(ent);
 		return;
 	}
@@ -2323,7 +2323,7 @@ void SP_team_blueobelisk( gentity_t *ent )
 {
 	gentity_t *obelisk;
 
-	if (g_gametype.integer != GT_HARVESTER && g_gametype.integer != GT_OBELISK) {
+	if (!G_UsesTeamFlags(g_gametype.integer) && g_gametype.integer != GT_HARVESTER && g_gametype.integer != GT_OBELISK) {
 		G_FreeEntity(ent);
 		return;
 	}
@@ -2347,7 +2347,7 @@ void SP_team_blueobelisk( gentity_t *ent )
 */
 void SP_team_neutralobelisk( gentity_t *ent )
 {
-	if (g_gametype.integer != GT_HARVESTER) {
+	if (!G_UsesTheWhiteFlag(g_gametype.integer) && g_gametype.integer != GT_HARVESTER) {
 		G_FreeEntity(ent);
 		return;
 	}
