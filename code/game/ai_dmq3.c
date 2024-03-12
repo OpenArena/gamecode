@@ -2017,12 +2017,49 @@ void BotUpdateBattleInventory(bot_state_t *bs, int enemy) {
 
 /*
 ==================
-BotUseKamikaze
+BotCanAndWantsToUseTheTeleporter
+==================
+ */
+qboolean BotCanAndWantsToUseTheTeleporter(bot_state_t *bs) {
+	//if the bot has no teleporter
+	if (bs->inventory[INVENTORY_TELEPORTER] <= 0)
+		return qfalse;
+	//if the bot has enough health to survive
+	if (bs->inventory[INVENTORY_HEALTH] > 40)
+		return qfalse;
+	// if the bot is NOT carrying a key objective
+	if (G_UsesTeamFlags(gametype) && BotCTFCarryingFlag(bs))
+		return qfalse;
+	if (G_UsesTheWhiteFlag(gametype) && Bot1FCTFCarryingFlag(bs))
+		return qfalse;
+	if (gametype == GT_HARVESTER && BotHarvesterCarryingCubes(bs))
+		return qfalse;
+	return qtrue;
+}
+
+/*
+==================
+BotCanAndWantsToUseTheMedkit
+==================
+ */
+qboolean BotCanAndWantsToUseTheMedkit(bot_state_t *bs) {
+	//if the bot has no medkit
+	if (bs->inventory[INVENTORY_MEDKIT] <= 0)
+		return qfalse;
+	//if the bot has enough health to survive
+	if (bs->inventory[INVENTORY_HEALTH] > 60)
+		return qfalse;
+	return qtrue;
+}
+
+/*
+==================
+BotCanAndWantsToUseTheKamikaze
 ==================
  */
 #define KAMIKAZE_DIST  1024
 
-void BotUseKamikaze(bot_state_t *bs) {
+qboolean BotCanAndWantsToUseTheKamikaze(bot_state_t *bs) {
 	int c, teammates, enemies;
 	aas_entityinfo_t entinfo;
 	vec3_t dir, target;
@@ -2031,48 +2068,52 @@ void BotUseKamikaze(bot_state_t *bs) {
 
 	//if the bot has no kamikaze
 	if (bs->inventory[INVENTORY_KAMIKAZE] <= 0)
-		return;
+		return qfalse;
 	if (bs->kamikaze_time > FloatTime())
-		return;
+		return qfalse;
 	bs->kamikaze_time = FloatTime() + 0.2;
 	if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
-		//never use kamikaze if the team flag carrier is visible
+		// Never use kamikaze if carrying the flag
 		if (BotCTFCarryingFlag(bs))
-			return;
+			return qfalse;
+		// Never use kamikaze if the own flag carrier is visible
 		c = BotTeamFlagCarrierVisible(bs);
 		if (c >= 0) {
 			BotEntityInfo(c, &entinfo);
 			VectorSubtract(entinfo.origin, bs->origin, dir);
 			if (VectorLengthSquared(dir) < Square(KAMIKAZE_DIST))
-				return;
+				return qfalse;
 		}
+		// Always use kamikaze if the enemy flag carrier is visible
 		c = BotEnemyFlagCarrierVisible(bs);
 		if (c >= 0) {
 			BotEntityInfo(c, &entinfo);
 			VectorSubtract(entinfo.origin, bs->origin, dir);
 			if (VectorLengthSquared(dir) < Square(KAMIKAZE_DIST)) {
-				trap_EA_Use(bs->client);
-				return;
+				return qtrue;
 			}
 		}
-	} else if (gametype == GT_1FCTF) {
-		//never use kamikaze if the team flag carrier is visible
+	} else if (G_UsesTheWhiteFlag(gametype)) {
+		// Never use kamikaze if the bot carries the flag
 		if (Bot1FCTFCarryingFlag(bs))
-			return;
-		c = BotTeamFlagCarrierVisible(bs);
-		if (c >= 0) {
-			BotEntityInfo(c, &entinfo);
-			VectorSubtract(entinfo.origin, bs->origin, dir);
-			if (VectorLengthSquared(dir) < Square(KAMIKAZE_DIST))
-				return;
+			return qfalse;
+		// Never use kamikaze if the own team's flag carrier is visible
+		if (gametype == GT_1FCTF) {
+			c = BotTeamFlagCarrierVisible(bs);
+			if (c >= 0) {
+				BotEntityInfo(c, &entinfo);
+				VectorSubtract(entinfo.origin, bs->origin, dir);
+				if (VectorLengthSquared(dir) < Square(KAMIKAZE_DIST))
+					return qfalse;
+			}
 		}
+		// Always use kamikaze if the enemy flag carrier is visible
 		c = BotEnemyFlagCarrierVisible(bs);
 		if (c >= 0) {
 			BotEntityInfo(c, &entinfo);
 			VectorSubtract(entinfo.origin, bs->origin, dir);
 			if (VectorLengthSquared(dir) < Square(KAMIKAZE_DIST)) {
-				trap_EA_Use(bs->client);
-				return;
+				return qtrue;
 			}
 		}
 	} else if (gametype == GT_OBELISK) {
@@ -2082,54 +2123,52 @@ void BotUseKamikaze(bot_state_t *bs) {
 			default: goal = &redobelisk;
 				break;
 		}
-		//if the obelisk is visible
+		// Use it if the enemy obelisk is visible
 		VectorCopy(goal->origin, target);
 		target[2] += 1;
 		VectorSubtract(bs->origin, target, dir);
 		if (VectorLengthSquared(dir) < Square(KAMIKAZE_DIST * 0.9)) {
 			BotAI_Trace(&trace, bs->eye, NULL, NULL, target, bs->client, CONTENTS_SOLID);
 			if (trace.fraction >= 1 || trace.ent == goal->entitynum) {
-				trap_EA_Use(bs->client);
-				return;
+				return qtrue;
 			}
 		}
 	} else if (gametype == GT_HARVESTER) {
-		//
+		// Never use Kamikaze if the bot carries skulls
 		if (BotHarvesterCarryingCubes(bs))
-			return;
-		//never use kamikaze if a team mate carrying cubes is visible
+			return qfalse;
+		// Never use Kamikaze if a teammate carrying skulls is visible
 		c = BotTeamCubeCarrierVisible(bs);
 		if (c >= 0) {
 			BotEntityInfo(c, &entinfo);
 			VectorSubtract(entinfo.origin, bs->origin, dir);
 			if (VectorLengthSquared(dir) < Square(KAMIKAZE_DIST))
-				return;
+				return qfalse;
 		}
+		// Always use Kamikaze if an enemy is carrying skulls
 		c = BotEnemyCubeCarrierVisible(bs);
 		if (c >= 0) {
 			BotEntityInfo(c, &entinfo);
 			VectorSubtract(entinfo.origin, bs->origin, dir);
 			if (VectorLengthSquared(dir) < Square(KAMIKAZE_DIST)) {
-				trap_EA_Use(bs->client);
-				return;
+				return qtrue;
 			}
 		}
 	}
-	//
+	// If there are more enemies than teammates, use it.
 	BotVisibleTeamMatesAndEnemies(bs, &teammates, &enemies, KAMIKAZE_DIST);
-	//
 	if (enemies > 2 && enemies > teammates + 1) {
-		trap_EA_Use(bs->client);
-		return;
+		return qtrue;
 	}
+	return qfalse;
 }
 
 /*
 ==================
-BotUseInvulnerability
+BotCanAndWantsToUseTheInvulnerability
 ==================
  */
-void BotUseInvulnerability(bot_state_t *bs) {
+qboolean BotCanAndWantsToUseTheInvulnerability(bot_state_t *bs) {
 	int c;
 	vec3_t dir, target;
 	bot_goal_t *goal;
@@ -2137,17 +2176,18 @@ void BotUseInvulnerability(bot_state_t *bs) {
 
 	//if the bot has no invulnerability
 	if (bs->inventory[INVENTORY_INVULNERABILITY] <= 0)
-		return;
+		return qfalse;
 	if (bs->invulnerability_time > FloatTime())
-		return;
+		return qfalse;
 	bs->invulnerability_time = FloatTime() + 0.2;
 	if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
-		//never use kamikaze if the team flag carrier is visible
+		// Never use invulnerability if the bot carries the flag
 		if (BotCTFCarryingFlag(bs))
-			return;
+			return qfalse;
+		// Never use invulnerability if the own team's flag carrier is visible
 		c = BotEnemyFlagCarrierVisible(bs);
 		if (c >= 0)
-			return;
+			return qfalse;
 		//if near enemy flag and the flag is visible
 		switch (BotTeam(bs)) {
 			case TEAM_RED: goal = &ctf_blueflag;
@@ -2162,18 +2202,18 @@ void BotUseInvulnerability(bot_state_t *bs) {
 		if (VectorLengthSquared(dir) < Square(200)) {
 			BotAI_Trace(&trace, bs->eye, NULL, NULL, target, bs->client, CONTENTS_SOLID);
 			if (trace.fraction >= 1 || trace.ent == goal->entitynum) {
-				trap_EA_Use(bs->client);
-				return;
+				return qtrue;
 			}
 		}
-	} else if (gametype == GT_1FCTF) {
-		//never use kamikaze if the team flag carrier is visible
+	} else if (G_UsesTheWhiteFlag(gametype)) {
+		//never use invulnerability if the bot carries the flag
 		if (Bot1FCTFCarryingFlag(bs))
-			return;
+			return qfalse;
+		//never use invulnerability if the enemy carries the flag
 		c = BotEnemyFlagCarrierVisible(bs);
 		if (c >= 0)
-			return;
-		//if near enemy flag and the flag is visible
+			return qfalse;
+		//if near the flag and the flag is visible
 		switch (BotTeam(bs)) {
 			case TEAM_RED: goal = &ctf_blueflag;
 				break;
@@ -2187,8 +2227,7 @@ void BotUseInvulnerability(bot_state_t *bs) {
 		if (VectorLengthSquared(dir) < Square(200)) {
 			BotAI_Trace(&trace, bs->eye, NULL, NULL, target, bs->client, CONTENTS_SOLID);
 			if (trace.fraction >= 1 || trace.ent == goal->entitynum) {
-				trap_EA_Use(bs->client);
-				return;
+				return qtrue;
 			}
 		}
 	} else if (gametype == GT_OBELISK) {
@@ -2205,17 +2244,16 @@ void BotUseInvulnerability(bot_state_t *bs) {
 		if (VectorLengthSquared(dir) < Square(300)) {
 			BotAI_Trace(&trace, bs->eye, NULL, NULL, target, bs->client, CONTENTS_SOLID);
 			if (trace.fraction >= 1 || trace.ent == goal->entitynum) {
-				trap_EA_Use(bs->client);
-				return;
+				return qtrue;
 			}
 		}
 	} else if (gametype == GT_HARVESTER) {
 		//
 		if (BotHarvesterCarryingCubes(bs))
-			return;
+			return qfalse;
 		c = BotEnemyCubeCarrierVisible(bs);
 		if (c >= 0)
-			return;
+			return qfalse;
 		//if near enemy base and enemy base is visible
 		switch (BotTeam(bs)) {
 			case TEAM_RED: goal = &blueobelisk;
@@ -2230,36 +2268,11 @@ void BotUseInvulnerability(bot_state_t *bs) {
 		if (VectorLengthSquared(dir) < Square(200)) {
 			BotAI_Trace(&trace, bs->eye, NULL, NULL, target, bs->client, CONTENTS_SOLID);
 			if (trace.fraction >= 1 || trace.ent == goal->entitynum) {
-				trap_EA_Use(bs->client);
-				return;
+				return qtrue;
 			}
 		}
 	}
-}
-
-/*
-==================
-BotBattleUseItems
-==================
- */
-void BotBattleUseItems(bot_state_t *bs) {
-	if (bs->inventory[INVENTORY_HEALTH] < 40) {
-		if (bs->inventory[INVENTORY_TELEPORTER] > 0) {
-			if (!BotCTFCarryingFlag(bs)
-					&& !Bot1FCTFCarryingFlag(bs)
-					&& !BotHarvesterCarryingCubes(bs)
-					) {
-				trap_EA_Use(bs->client);
-			}
-		}
-	}
-	if (bs->inventory[INVENTORY_HEALTH] < 60) {
-		if (bs->inventory[INVENTORY_MEDKIT] > 0) {
-			trap_EA_Use(bs->client);
-		}
-	}
-	BotUseKamikaze(bs);
-	BotUseInvulnerability(bs);
+	return qfalse;
 }
 
 /*

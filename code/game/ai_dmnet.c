@@ -2236,8 +2236,13 @@ int AINode_Battle_Fight(bot_state_t *bs) {
 			return qfalse;
 		}
 	}
+
 	//use holdable items
-	BotBattleUseItems(bs);
+	if (BotCanAndWantsToUseTheTeleporter(bs) || BotCanAndWantsToUseTheMedkit(bs) ||
+			BotCanAndWantsToUseTheKamikaze(bs) || BotCanAndWantsToUseTheInvulnerability(bs)) {
+		trap_EA_Use(bs->client);
+	}
+
 	//
 	bs->tfl = TFL_DEFAULT;
 	// if they have the Grappling Hook
@@ -2521,8 +2526,13 @@ int AINode_Battle_Retreat(bot_state_t *bs) {
 	}
 	//
 	BotTeamGoals(bs, qtrue);
+
 	//use holdable items
-	BotBattleUseItems(bs);
+	if (BotCanAndWantsToUseTheTeleporter(bs) || BotCanAndWantsToUseTheMedkit(bs) ||
+			BotCanAndWantsToUseTheKamikaze(bs) || BotCanAndWantsToUseTheInvulnerability(bs)) {
+		trap_EA_Use(bs->client);
+	}
+
 	//get the current long term goal while retreating
 	if (!BotLongTermGoal(bs, bs->tfl, qtrue, &goal)) {
 		AIEnter_Battle_SuicidalFight(bs, "battle retreat: no way out");
