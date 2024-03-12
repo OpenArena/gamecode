@@ -1422,36 +1422,85 @@ static void UI_DrawClanName(rectDef_t *rect, float scale, vec4_t color, int text
 
 static void UI_SetCapFragLimits(qboolean uiVars)
 {
-	int cap = 5;
-	int frag = 10;
-	if (uiVars) {
-		if (uiVars == qtrue) {
-			trap_Cvar_Set("ui_captureLimit", va("%d", cap));
-			trap_Cvar_Set("ui_fragLimit", va("%d", frag));
-		}
-		else if (uiVars == qfalse) {
-			trap_Cvar_Set("capturelimit", va("%d", cap));
-			trap_Cvar_Set("fraglimit", va("%d", frag));
-		}
+	char *capLimit;
+	char *fragLimit;
+	char *timeLimit;
+	switch (uiInfo.gameTypes[ui_gameType.integer].gtEnum) {
+		case GT_FFA:
+			fragLimit = GT_FFA_DEFAULT_SCORELIMIT;
+			capLimit = "0";
+			timeLimit = GT_FFA_DEFAULT_TIMELIMIT;
+			break;
+		case GT_TOURNAMENT:
+			fragLimit = GT_TOURNEY_DEFAULT_SCORELIMIT;
+			capLimit = "0";
+			timeLimit = GT_TOURNEY_DEFAULT_TIMELIMIT;
+			break;
+		case GT_TEAM:
+			fragLimit = GT_TEAM_DEFAULT_SCORELIMIT;
+			capLimit = "0";
+			timeLimit = GT_TEAM_DEFAULT_TIMELIMIT;
+			break;
+		case GT_CTF:
+			fragLimit = "0";
+			capLimit = GT_CTF_DEFAULT_SCORELIMIT;
+			timeLimit = GT_CTF_DEFAULT_TIMELIMIT;
+			break;
+		case GT_1FCTF:
+			fragLimit = "0";
+			capLimit = GT_1FCTF_DEFAULT_SCORELIMIT;
+			timeLimit = GT_1FCTF_DEFAULT_TIMELIMIT;
+			break;
+		case GT_OBELISK:
+			fragLimit = "0";
+			capLimit = GT_OBELISK_DEFAULT_SCORELIMIT;
+			timeLimit = GT_OBELISK_DEFAULT_TIMELIMIT;
+			break;
+		case GT_HARVESTER:
+			fragLimit = "0";
+			capLimit = GT_HARVESTER_DEFAULT_SCORELIMIT;
+			timeLimit = GT_HARVESTER_DEFAULT_TIMELIMIT;
+			break;
+		case GT_ELIMINATION:
+			fragLimit = "0";
+			capLimit = GT_ELIMINATION_DEFAULT_SCORELIMIT;
+			timeLimit = GT_ELIMINATION_DEFAULT_TIMELIMIT;
+			break;
+		case GT_CTF_ELIMINATION:
+			fragLimit = "0";
+			capLimit = GT_CTF_ELIMINATION_DEFAULT_SCORELIMIT;
+			timeLimit = GT_CTF_ELIMINATION_DEFAULT_TIMELIMIT;
+			break;
+		case GT_LMS:
+			fragLimit = GT_LMS_DEFAULT_SCORELIMIT;
+			capLimit = "0";
+			timeLimit = GT_LMS_DEFAULT_TIMELIMIT;
+			break;
+		case GT_DOUBLE_D:
+			fragLimit = "0";
+			capLimit = GT_DOUBLE_D_DEFAULT_SCORELIMIT;
+			timeLimit = GT_DOUBLE_D_DEFAULT_TIMELIMIT;
+			break;
+		case GT_DOMINATION:
+			fragLimit = "0";
+			capLimit = GT_DOMINATION_DEFAULT_SCORELIMIT;
+			timeLimit = GT_DOMINATION_DEFAULT_TIMELIMIT;
+			break;
+		case GT_POSSESSION:
+			fragLimit = GT_POSSESSION_DEFAULT_SCORELIMIT;
+			capLimit = "0";
+			timeLimit = GT_POSSESSION_DEFAULT_TIMELIMIT;
+			break;
 	}
-	else
-	{
-		if (uiInfo.gameTypes[ui_gameType.integer].gtEnum == GT_OBELISK) {
-			cap = 4;
-			frag = 0;
-		}
-		else if (uiInfo.gameTypes[ui_gameType.integer].gtEnum == GT_HARVESTER) {
-			cap = 15;
-			frag = 0;
-		}
-		else if (uiInfo.gameTypes[ui_gameType.integer].gtEnum == GT_DOMINATION) {
-			cap = 125;
-			frag = 0;
-		}
-		else if (uiInfo.gameTypes[ui_gameType.integer].gtEnum == GT_POSSESSION) {
-			frag = 125;
-			cap = 0;
-		}
+	if (uiVars == qtrue) {
+		trap_Cvar_Set("ui_captureLimit", capLimit);
+		trap_Cvar_Set("ui_fragLimit", fragLimit);
+		trap_Cvar_Set("ui_timeLimit", timeLimit);
+	}
+	else if (uiVars == qfalse) {
+		trap_Cvar_Set("capturelimit", capLimit);
+		trap_Cvar_Set("fraglimit", fragLimit);
+		trap_Cvar_Set("timelimit", timeLimit);
 	}
 }
 // ui_gameType assumes gametype 0 is -1 ALL and will not show
