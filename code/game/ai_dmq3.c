@@ -432,17 +432,25 @@ void BotSetTeamStatus(bot_state_t *bs) {
 		case LTG_ATTACKENEMYBASE:
 			teamtask = TEAMTASK_OFFENSE;
 			break;
-		case LTG_POINTA:
-			if (BotTeam(bs) == TEAM_BLUE)
+		case LTG_HOLDPOINTA:
+			if ((BotTeam(bs) == TEAM_BLUE && level.pointStatusA != TEAM_BLUE) ||
+					(BotTeam(bs) == TEAM_RED && level.pointStatusA != TEAM_RED))
 				teamtask = TEAMTASK_OFFENSE;
-			else
+			else if ((BotTeam(bs) == TEAM_BLUE && level.pointStatusA == TEAM_BLUE) ||
+					(BotTeam(bs) == TEAM_RED && level.pointStatusA == TEAM_RED))
 				teamtask = TEAMTASK_DEFENSE;
+			else
+				teamtask = TEAMTASK_PATROL;
 			break;
-		case LTG_POINTB:
-			if (BotTeam(bs) == TEAM_RED)
+		case LTG_HOLDPOINTB:
+			if ((BotTeam(bs) == TEAM_BLUE && level.pointStatusB != TEAM_BLUE) ||
+					(BotTeam(bs) == TEAM_RED && level.pointStatusB != TEAM_RED))
 				teamtask = TEAMTASK_OFFENSE;
-			else
+			else if ((BotTeam(bs) == TEAM_BLUE && level.pointStatusB == TEAM_BLUE) ||
+					(BotTeam(bs) == TEAM_RED && level.pointStatusB == TEAM_RED))
 				teamtask = TEAMTASK_DEFENSE;
+			else
+				teamtask = TEAMTASK_PATROL;
 			break;
 		default:
 			teamtask = TEAMTASK_PATROL;
@@ -854,44 +862,95 @@ BotDDSeekGoals
  */
 
 void BotDDSeekGoals(bot_state_t *bs) {
+	float rnd, l1, l2;
 
-	/*if (bs->ltgtype == LTG_TEAMHELP ||
+	// DD only
+	if (gametype != GT_DOUBLE_D) return;
+	// don't just do something wait for the bot team leader to give orders
+	if (BotTeamLeader(bs)) {
+		return;
+	}
+	// if the bot is ordered to do something
+	if (bs->lastgoal_ltgtype) {
+		bs->teamgoal_time += 60;
+	}
+	// if the bot decided to do something on it's own and has a last ordered goal
+	if (!bs->ordered && bs->lastgoal_ltgtype) {
+		bs->ltgtype = 0;
+	}
+	//if already a CTF or team goal
+	if (bs->ltgtype == LTG_TEAMHELP ||
 			bs->ltgtype == LTG_TEAMACCOMPANY ||
 			bs->ltgtype == LTG_CAMPORDER ||
 			bs->ltgtype == LTG_PATROL ||
-			bs->ltgtype == LTG_GETITEM) {
+			bs->ltgtype == LTG_GETITEM ||
+			bs->ltgtype == LTG_MAKELOVE_UNDER ||
+			bs->ltgtype == LTG_MAKELOVE_ONTOP ||
+			bs->ltgtype == LTG_HOLDPOINTA ||
+			bs->ltgtype == LTG_HOLDPOINTB) {
 		return;
-	}*/
-
-	if (bs->ltgtype == LTG_POINTA)
-		memcpy(&bs->teamgoal, &ctf_redflag, sizeof (bot_goal_t));
-	if (bs->ltgtype == LTG_POINTB)
-		memcpy(&bs->teamgoal, &ctf_blueflag, sizeof (bot_goal_t));
-
-	if (bs->ltgtype == LTG_POINTA || bs->ltgtype == LTG_POINTB)
-		return;
-
-	if (rand() % 2 == 0)
-		bs->ltgtype = LTG_POINTA;
-	else
-		bs->ltgtype = LTG_POINTB;
-
-	if (bs->ltgtype == LTG_POINTA) {
-		memcpy(&bs->teamgoal, &ctf_redflag, sizeof (bot_goal_t));
-		if (BotTeam(bs) == TEAM_BLUE)
-			BotSetUserInfo(bs, "teamtask", va("%d", TEAMTASK_OFFENSE));
-		else
-			BotSetUserInfo(bs, "teamtask", va("%d", TEAMTASK_DEFENSE));
-	} else
-		if (bs->ltgtype == LTG_POINTB) {
-		memcpy(&bs->teamgoal, &ctf_blueflag, sizeof (bot_goal_t));
-		if (BotTeam(bs) == TEAM_RED)
-			BotSetUserInfo(bs, "teamtask", va("%d", TEAMTASK_OFFENSE));
-		else
-			BotSetUserInfo(bs, "teamtask", va("%d", TEAMTASK_DEFENSE));
 	}
-
-
+	//
+	if (BotSetLastOrderedTask(bs))
+		return;
+	//
+	if (bs->owndecision_time > FloatTime())
+		return;
+	;
+	//if the bot is roaming
+	if (bs->ctfroam_time > FloatTime())
+		return;
+	//if the bot has enough aggression to decide what to do
+	if (BotAggression(bs) < 50)
+		return;
+	//set the time to send a message to the team mates
+	bs->teammessage_time = FloatTime() + 2 * random();
+	//
+	if (bs->teamtaskpreference & (TEAMTP_ATTACKER | TEAMTP_DEFENDER)) {
+		if (bs->teamtaskpreference & TEAMTP_ATTACKER) {
+			l1 = 0.7f;
+		} else {
+			l1 = 0.2f;
+		}
+		l2 = 0.9f;
+	} else {
+		l1 = 0.4f;
+		l2 = 0.7f;
+	}
+	//pick a point
+	rnd = random();
+	if (rnd < l1) {
+		// This will make bots to focus on point B.
+		bs->decisionmaker = bs->client;
+		bs->ordered = qfalse;
+		//
+		memcpy(&bs->teamgoal, &ctf_redflag, sizeof (bot_goal_t));
+		//set the ltg type
+		bs->ltgtype = LTG_HOLDPOINTA;
+		//set the time the bot stops defending the base
+		bs->teamgoal_time = FloatTime() + TEAM_HOLDPOINTA_TIME;
+		bs->defendaway_time = 0;
+	} else if (rnd < l2) {
+		// This will make bots to focus on point B.
+		bs->decisionmaker = bs->client;
+		bs->ordered = qfalse;
+		//
+		memcpy(&bs->teamgoal, &ctf_blueflag, sizeof (bot_goal_t));
+		//set the ltg type
+		bs->ltgtype = LTG_HOLDPOINTB;
+		//set the time the bot stops defending the base
+		bs->teamgoal_time = FloatTime() + TEAM_HOLDPOINTB_TIME;
+		bs->defendaway_time = 0;
+	} else {
+		bs->ltgtype = LTG_PATROL;
+		//set the time the bot will stop roaming
+		bs->ctfroam_time = FloatTime() + CTF_ROAM_TIME;
+	}
+	BotSetTeamStatus(bs);
+	bs->owndecision_time = FloatTime() + 5;
+#ifdef DEBUG
+	BotPrintTeamGoal(bs);
+#endif //DEBUG
 }
 
 /*
@@ -1767,6 +1826,8 @@ void BotCheckItemPickup(bot_state_t *bs, int *oldinventory) {
 					//trap_BotEnterChat(bs->cs, leader, CHAT_TELL);
 				} else if ((bot_spSkill.integer <= 3) &&
 						(bs->ltgtype != LTG_DEFENDKEYAREA) &&
+						(bs->ltgtype != LTG_HOLDPOINTA) &&
+						(bs->ltgtype != LTG_HOLDPOINTB) &&
 						((!(G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype))) ||
 						((bs->redflagstatus == 0) &&
 						(bs->blueflagstatus == 0))) &&
