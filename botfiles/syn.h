@@ -19,22 +19,16 @@ along with Quake III Arena source code; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ===========================================================================
 */
-//
 
-/*****************************************************************************
- * name:		ai_cmd.h
- *
- * desc:		Quake3 bot AI
- *
- * $Archive: /source/code/botai/ai_chat.c $
- *
- *****************************************************************************/
+#define CONTEXT_ALL						0xFFFFFFFF
+#define CONTEXT_NORMAL					1
+#define CONTEXT_NEARBYITEM				2
+#define CONTEXT_CTFREDTEAM				4
+#define CONTEXT_CTFBLUETEAM				8
+#define CONTEXT_REPLY					16
+#define CONTEXT_OBELISKREDTEAM			32
+#define CONTEXT_OBELISKBLUETEAM			64
+#define CONTEXT_HARVESTERREDTEAM		128
+#define CONTEXT_HARVESTERBLUETEAM		256
 
-extern int notleader[MAX_CLIENTS];
-
-int BotMatchMessage(bot_state_t *bs, char *message);
-void BotPrintTeamGoal(bot_state_t *bs);
-
-// Neon_Knight: Used for DOM point assignment
-int BotGetDominationPoint(bot_state_t *bs);
-void BotSetDominationPoint(bot_state_t *bs, int controlPoint);
+#define CONTEXT_NAMES 1024
