@@ -66,6 +66,94 @@ typedef struct voiceCommand_s
 
 /*
 ==================
+BotVoiceChat_HoldPointA
+==================
+*/
+void BotVoiceChat_HoldPointA(bot_state_t *bs, int client, int mode) {
+	//Only valid for Double Domination
+	if (gametype != GT_DOUBLE_D) return;
+
+	bs->decisionmaker = client;
+	bs->ordered = qtrue;
+	bs->order_time = FloatTime();
+	//set the time to send a message to the team mates
+	bs->teammessage_time = FloatTime() + 2 * random();
+	//set the ltg type
+	bs->ltgtype = LTG_HOLDPOINTA;
+	//get the team goal time
+	bs->teamgoal_time = FloatTime() + TEAM_HOLDPOINTA_TIME;
+	//away from defending
+	bs->defendaway_time = 0;
+	//
+	BotSetTeamStatus(bs);
+	// remember last ordered task
+	BotRememberLastOrderedTask(bs);
+#ifdef DEBUG
+	BotPrintTeamGoal(bs);
+#endif //DEBUG
+}
+
+/*
+==================
+BotVoiceChat_HoldPointB
+==================
+*/
+void BotVoiceChat_HoldPointB(bot_state_t *bs, int client, int mode) {
+	//Only valid for Double Domination
+	if (gametype != GT_DOUBLE_D) return;
+
+	bs->decisionmaker = client;
+	bs->ordered = qtrue;
+	bs->order_time = FloatTime();
+	//set the time to send a message to the team mates
+	bs->teammessage_time = FloatTime() + 2 * random();
+	//set the ltg type
+	bs->ltgtype = LTG_HOLDPOINTB;
+	//get the team goal time
+	bs->teamgoal_time = FloatTime() + TEAM_HOLDPOINTB_TIME;
+	//away from defending
+	bs->defendaway_time = 0;
+	//
+	BotSetTeamStatus(bs);
+	// remember last ordered task
+	BotRememberLastOrderedTask(bs);
+#ifdef DEBUG
+	BotPrintTeamGoal(bs);
+#endif //DEBUG
+}
+
+/*
+==================
+BotVoiceChat_HoldDOMPoint
+==================
+*/
+void BotVoiceChat_HoldDOMPoint(bot_state_t *bs, int client, int mode) {
+	//Only valid for Double Domination
+	if (gametype != GT_DOMINATION) return;
+	if (level.domination_points_count < 1) return;
+
+	bs->decisionmaker = client;
+	bs->ordered = qtrue;
+	bs->order_time = FloatTime();
+	//set the time to send a message to the team mates
+	bs->teammessage_time = FloatTime() + 2 * random();
+	//set the ltg type
+	bs->ltgtype = LTG_HOLDDOMPOINT;
+	//get the team goal time
+	bs->teamgoal_time = FloatTime() + TEAM_HOLDDOMPOINT_TIME;
+	//away from defending
+	bs->defendaway_time = 0;
+	//
+	BotSetTeamStatus(bs);
+	// remember last ordered task
+	BotRememberLastOrderedTask(bs);
+#ifdef DEBUG
+	BotPrintTeamGoal(bs);
+#endif //DEBUG
+}
+
+/*
+==================
 BotVoiceChat_GetFlag
 ==================
 */
@@ -133,6 +221,27 @@ void BotVoiceChat_Offense(bot_state_t *bs, int client, int mode) {
 		// remember last ordered task
 		BotRememberLastOrderedTask(bs);
 	}
+	else if (gametype == GT_DOUBLE_D) {
+		if ((BotTeam(bs) == TEAM_RED && level.pointStatusA == TEAM_RED) ||
+				(BotTeam(bs) == TEAM_BLUE && level.pointStatusA == TEAM_BLUE))
+			BotVoiceChat_HoldPointA(bs,client,mode);
+		else if ((BotTeam(bs) == TEAM_RED && level.pointStatusB == TEAM_RED) ||
+				(BotTeam(bs) == TEAM_BLUE && level.pointStatusB == TEAM_BLUE))
+			BotVoiceChat_HoldPointB(bs,client,mode);
+		else if ((BotTeam(bs) == TEAM_RED && level.pointStatusA == TEAM_RED &&
+				level.pointStatusB == TEAM_RED) || (BotTeam(bs) == TEAM_BLUE &&
+				level.pointStatusA == TEAM_BLUE && level.pointStatusB == TEAM_BLUE))
+			if (rand() % 10 > 5)
+				BotVoiceChat_HoldPointA(bs,client,mode);
+			else
+				BotVoiceChat_HoldPointB(bs,client,mode);
+		return;
+	}
+	else if (gametype == GT_DOMINATION) {
+		BotSetDominationPoint(bs,-1);
+		BotVoiceChat_HoldDOMPoint(bs,client,mode);
+		return;
+	}
 	else
 	{
 		//
@@ -179,7 +288,28 @@ void BotVoiceChat_Defend(bot_state_t *bs, int client, int mode) {
 			default: return;
 		}
 	}
-	else {
+	else if (gametype == GT_DOUBLE_D) {
+		// If the point A is under control, defend it.
+		if ((BotTeam(bs) == TEAM_RED && level.pointStatusA == TEAM_RED) ||
+				(BotTeam(bs) == TEAM_BLUE && level.pointStatusA == TEAM_BLUE))
+			BotVoiceChat_HoldPointA(bs,client,mode);
+		// If the point B is under control, defend it.
+		else if ((BotTeam(bs) == TEAM_RED && level.pointStatusB == TEAM_RED) ||
+				(BotTeam(bs) == TEAM_BLUE && level.pointStatusB == TEAM_BLUE))
+			BotVoiceChat_HoldPointB(bs,client,mode);
+		// If both points are under control, pick one and defend it.
+		else if ((BotTeam(bs) == TEAM_RED && level.pointStatusA == TEAM_RED &&
+				level.pointStatusB == TEAM_RED) || (BotTeam(bs) == TEAM_BLUE &&
+				level.pointStatusA == TEAM_BLUE && level.pointStatusB == TEAM_BLUE))
+			if (rand() % 10 > 5)
+				BotVoiceChat_HoldPointA(bs,client,mode);
+			else
+				BotVoiceChat_HoldPointB(bs,client,mode);
+		return;
+	}
+	else if (gametype == GT_DOMINATION) {
+		BotSetDominationPoint(bs,-1);
+		BotVoiceChat_HoldDOMPoint(bs,client,mode);
 		return;
 	}
 	//
@@ -490,6 +620,9 @@ voiceCommand_t voiceCommands[] = {
 	{VOICECHAT_WHOISLEADER, BotVoiceChat_WhoIsLeader },
 	{VOICECHAT_WANTONDEFENSE, BotVoiceChat_WantOnDefense },
 	{VOICECHAT_WANTONOFFENSE, BotVoiceChat_WantOnOffense },
+	{VOICECHAT_HOLDPOINTA, BotVoiceChat_HoldPointA },
+	{VOICECHAT_HOLDPOINTB, BotVoiceChat_HoldPointB },
+	{VOICECHAT_HOLDDOMPOINT, BotVoiceChat_HoldDOMPoint },
 	{NULL, BotVoiceChat_Dummy}
 };
 

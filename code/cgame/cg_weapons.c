@@ -2334,7 +2334,7 @@ void CG_DrawWeaponSelect( void )
 /*
 ===============
 CG_DrawWeaponBar0
-Default weapon bar. Displays only if a weapon has ammo or not (marked with an X).
+Default weapon bar. Lower part of the screen, transparent background. Displays only if a weapon has ammo or not (marked with an X).
 ===============
 */
 
@@ -2381,7 +2381,7 @@ void CG_DrawWeaponBar0(int count, int bits)
 /*
 ===============
 CG_DrawWeaponBar1
-Displays ammo left for the weapon below it with a bar.
+Similar to 0, but also displays ammo left for the weapon below it with a bar, which changes from green to yellow to red to disappear.
 ===============
 */
 
@@ -2506,7 +2506,7 @@ void CG_DrawWeaponBar1(int count, int bits)
 ===============
 CG_DrawWeaponBar2
 Displays weapons in the left side of the screen with a number showing remaining ammo.
-Weapons with less than 10 ammo units have a red-ish background.
+Weapons with no ammo have a red-ish background instead of blue-ish.
 ===============
 */
 
@@ -2589,8 +2589,7 @@ void CG_DrawWeaponBar2(int count, int bits, float *color)
 /*
 ===============
 CG_DrawWeaponBar3
-Same as 2, but displays ammo left at the right of the number as a bar.
-Weapons with less than 10 ammo units have a red-ish background and don't display the bar.
+Same as 2, but also displays ammo left at the right of the number as a bar, which changes from green to yellow to red to disappear.
 ===============
 */
 
@@ -2737,7 +2736,7 @@ void CG_DrawWeaponBar3(int count, int bits, float *color)
 /*
 ===============
 CG_DrawWeaponBar4
-Apparently same as 2, even if the code is different. Weird.
+Similar to 2, but the background color for each weapon GRADUALLY shifts from blue to red as the ammo quantity decreases.
 ===============
 */
 
@@ -2851,8 +2850,7 @@ void CG_DrawWeaponBar4(int count, int bits, float *color)
 /*
 ===============
 CG_DrawWeaponBar5
-Weapons have a blue background and a number representing ammo.
-Less than 10 ammo units have a red-ish background.
+In the lower part of the screen. Weapons have a number representing ammo and a blue background, which becomes red with 0 ammo.
 ===============
 */
 
@@ -2932,7 +2930,7 @@ void CG_DrawWeaponBar5(int count, int bits, float *color)
 /*
 ===============
 CG_DrawWeaponBar6
-Same as 5, but also displays a bar, except when there's no ammo.
+Similar to 5, but also displays ammo left for the weapon below it with a bar, which changes from green to yellow to red to disappear.
 ===============
 */
 
@@ -3078,7 +3076,7 @@ void CG_DrawWeaponBar6(int count, int bits, float *color)
 /*
 ===============
 CG_DrawWeaponBar7
-Apparently same as 5, even if the code is different. Weird.
+Similar to 5, but the background color for each weapon GRADUALLY shifts from blue to red as the ammo quantity decreases.
 ===============
 */
 
