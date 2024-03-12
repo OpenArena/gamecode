@@ -98,6 +98,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define PRESENCE_CROUCH				4
 //
 #define MAX_PROXMINES				64
+// time the selected chat takes to type in
+#define BOTCHATTIME					2.0		//(float) trap_BotChatLength(bs->cs) * 30 / cpm;
 
 //check points
 typedef struct bot_waypoint_s
