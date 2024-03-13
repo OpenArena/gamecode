@@ -2043,4 +2043,6 @@ qboolean CG_IsATeamGametype(int check);	/* Whether the gametype is team-based or
 qboolean CG_UsesTeamFlags(int check);	/* Whether the gametype uses the red and blue flags. */
 qboolean CG_UsesTheWhiteFlag(int check);	/* Whether the gametype uses the neutral flag. */
 qboolean CG_IsARoundBasedGametype(int check);	/* Whether the gametype uses the neutral flag. */
+
+int CG_GetHealth(void);	/* Returns the current health amount. */
 /* /Neon_Knight */
