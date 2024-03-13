@@ -2047,4 +2047,5 @@ int CG_GetHealth(void);	/* Returns the current health amount. */
 int CG_GetArmor(void);	/* Returns the current armor amount. */
 int CG_GetCurrentHoldable(void);	/* Returns the current holdable. */
 int CG_GetCurrentRune(void);	/* Returns the current rune. */
+int CG_GetCurrentWeapons(void);	/* Returns the current weapons bitflag. */
 /* /Neon_Knight */

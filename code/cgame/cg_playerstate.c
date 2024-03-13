@@ -41,7 +41,7 @@ void CG_CheckAmmo( void ) {
 	int		weapons;
 
 	// see about how many seconds of ammo we have remaining
-	weapons = cg.snap->ps.stats[ STAT_WEAPONS ];
+	weapons = CG_GetCurrentWeapons();
 	total = 0;
 	for ( i = WP_MACHINEGUN ; i < WP_NUM_WEAPONS ; i++ ) {
 		if ( ! ( weapons & ( 1 << i ) ) || i == WP_GRAPPLING_HOOK ) {

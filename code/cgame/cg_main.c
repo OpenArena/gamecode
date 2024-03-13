@@ -2786,4 +2786,14 @@ Returns the current holdable.
 int CG_GetCurrentRune(void) {
 	return cg.snap->ps.stats[STAT_PERSISTANT_POWERUP];
 }
+/*
+===================
+CG_GetCurrentWeapons
+
+Returns the current weapon.
+===================
+ */
+int CG_GetCurrentWeapons(void) {
+	return cg.snap->ps.stats[STAT_WEAPONS];
+}
 /* /Neon_Knight */
