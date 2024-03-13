@@ -88,7 +88,7 @@
 * Removed SelectRandomFurthestSpawnPoint. It is no longer used. The spawn points became to predictive.
 * Added logging events and Win challangex
 * Added the option to move significantly faster under water using a dmflag. Mostly for demonstration. Could be fun in class based gametypes.
-* Added a more aggressive form of g_awardpushing. Set it to 2 and we no longer forget you. Also blowing yourself up with a rocket gives a point to the last attacker too.
+* Added a more aggressive form of g_awardpushing. Set it to 2 and the fragged player doesn't need to be airborne. Also blowing yourself up with a rocket gives a point to the last attacker too.
 * Added cg_bob variable. If set to 0 it will disable cg_bob[up|roll|pitch].
 * Added cg_kickScale variable.
 * Added the neccecary paramter to missionpack to use the UI3 gui
@@ -123,8 +123,8 @@
 * More aggressive AI for Possession. Now will actively try to track and combat the flag carrier.
 * Stopped setting com_hunkmegs in the UI. It was a workaround from before it was changed in the engine.
 * Announce changes to pmove_* values. Not that they should be changed during gameplay but still.
-* Full Grapple support via command g_grapple.
-* Added g_harvesterFromBodies.
+* Added `g_grapple`. Gives Grappling Hook to all players. Also replaces `elimination_grapple`, which has been removed. **Default: 0.**
+* Added `g_harvesterFromBodies`. Allows Harvester mode skulls to spawn where the frag happened instead of at the skull generator in the middle of the map. In case those skulls end up in a "nodrop" zone, they will respawn at the skull generator instead. **Default: 0.**
 * Remove more NO_RESTART from CVARs
 * Leilei changes for the MP UI.
 * Add ui_randomIntToCvar to the missionpack UI. Add randomFloatToCvar command. Add ui_randomStringToCvar.
