@@ -2746,24 +2746,4 @@ Checks if the gametype has a round-based system.
 qboolean CG_IsARoundBasedGametype(int check) {
 	return GAMETYPE_IS_ROUND_BASED(check);
 }
-/*
-===================
-CG_GetHealth
-
-Returns the current health amount.
-===================
- */
-int CG_GetHealth(void) {
-	return cg.snap->ps.stats[STAT_HEALTH];
-}
-/*
-===================
-CG_GetArmor
-
-Returns the current armor amount.
-===================
- */
-int CG_GetArmor(void) {
-	return cg.snap->ps.stats[STAT_ARMOR];
-}
 /* /Neon_Knight */

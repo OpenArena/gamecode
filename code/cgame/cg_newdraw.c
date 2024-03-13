@@ -1159,13 +1159,13 @@ qboolean CG_OwnerDrawVisible(int flags)
 	}
 
 	if (flags & CG_SHOW_HEALTHCRITICAL) {
-		if (CG_GetHealth() < 25) {
+		if (cg.snap->ps.stats[STAT_HEALTH] < 25) {
 			return qtrue;
 		}
 	}
 
 	if (flags & CG_SHOW_HEALTHOK) {
-		if (CG_GetHealth() >= 25) {
+		if (cg.snap->ps.stats[STAT_HEALTH] >= 25) {
 			return qtrue;
 		}
 	}

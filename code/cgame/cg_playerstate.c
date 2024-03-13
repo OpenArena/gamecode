@@ -98,7 +98,7 @@ void CG_DamageFeedback( int yawByte, int pitchByte, int damage ) {
 	cg.attackerTime = cg.time;
 
 	// the lower on health you are, the greater the view kick will be
-	health = CG_GetHealth();
+	health = cg.snap->ps.stats[STAT_HEALTH];
 	if ( health < 40 ) {
 		scale = 1;
 	} else {

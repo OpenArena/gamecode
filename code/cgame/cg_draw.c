@@ -715,7 +715,7 @@ static void CG_DrawStatusBar(void) {
 
 	// stretch the health up when taking damage
 	CG_DrawField(185, 432, 3, value);
-	CG_GetColorForHealth( CG_GetHealth(), CG_GetArmor(), hcolor );
+	CG_ColorForHealth(hcolor);
 	trap_R_SetColor(hcolor);
 
 
@@ -1979,7 +1979,7 @@ static int CG_DrawPickupItem(int y) {
 	int value;
 	float *fadeColor;
 
-	if (CG_GetHealth() <= 0) {
+	if (cg.snap->ps.stats[STAT_HEALTH] <= 0) {
 		return y;
 	}
 
@@ -2716,7 +2716,7 @@ static void CG_DrawCrosshair(void) {
 	if (cg_crosshairHealth.integer) {
 		vec4_t hcolor;
 
-		CG_GetColorForHealth( CG_GetHealth(), CG_GetArmor(), hcolor );
+		CG_ColorForHealth(hcolor);
 		trap_R_SetColor(hcolor);
 	} else {
 		vec4_t color;
@@ -3505,7 +3505,7 @@ static void CG_Draw2D(stereoFrame_t stereoFrame) {
 		CG_DrawCrosshairNames();
 	} else {
 		// don't draw any status if dead or the scoreboard is being explicitly shown
-		if (!cg.showScores && CG_GetHealth() > 0) {
+		if (!cg.showScores && cg.snap->ps.stats[STAT_HEALTH] > 0) {
 
 #ifdef MISSIONPACK
 			if (cg_drawStatus.integer) {
