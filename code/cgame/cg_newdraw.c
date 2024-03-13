@@ -516,16 +516,14 @@ static void CG_DrawPlayerScore( rectDef_t *rect, float scale, vec4_t color, qhan
 
 static void CG_DrawPlayerItem( rectDef_t *rect, float scale, qboolean draw2D)
 {
-	int		value;
 	vec3_t origin, angles;
 
-	value = CG_GetCurrentHoldable();
-	if ( value ) {
-		CG_RegisterItemVisuals( value );
+	if (CG_GetCurrentHoldable()) {
+		CG_RegisterItemVisuals(CG_GetCurrentHoldable());
 
 		if (qtrue) {
-			CG_RegisterItemVisuals( value );
-			CG_DrawPic( rect->x, rect->y, rect->w, rect->h, cg_items[ value ].icon );
+			CG_RegisterItemVisuals(CG_GetCurrentHoldable());
+			CG_DrawPic( rect->x, rect->y, rect->w, rect->h, cg_items[CG_GetCurrentHoldable()].icon );
 		}
 		else {
 			VectorClear( angles );
@@ -533,7 +531,7 @@ static void CG_DrawPlayerItem( rectDef_t *rect, float scale, qboolean draw2D)
 			origin[1] = 0;
 			origin[2] = -10;
 			angles[YAW] = ( cg.time & 2047 ) * 360 / 2048.0;
-			CG_Draw3DModel(rect->x, rect->y, rect->w, rect->h, cg_items[ value ].models[0], 0, origin, angles );
+			CG_Draw3DModel(rect->x, rect->y, rect->w, rect->h, cg_items[CG_GetCurrentHoldable()].models[0], 0, origin, angles );
 		}
 	}
 
@@ -870,15 +868,12 @@ static void CG_OneFlagStatus(rectDef_t *rect)
 
 static void CG_DrawCTFPowerUp(rectDef_t *rect)
 {
-	int		value;
-
 	if (!CG_IsATeamGametype(cgs.gametype)) {
 		return;
 	}
-	value = CG_GetCurrentRune();
-	if ( value ) {
-		CG_RegisterItemVisuals( value );
-		CG_DrawPic( rect->x, rect->y, rect->w, rect->h, cg_items[ value ].icon );
+	if (CG_GetCurrentRune()) {
+		CG_RegisterItemVisuals(CG_GetCurrentRune());
+		CG_DrawPic( rect->x, rect->y, rect->w, rect->h, cg_items[CG_GetCurrentRune()].icon );
 	}
 }
 

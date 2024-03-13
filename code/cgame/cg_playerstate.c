@@ -38,13 +38,11 @@ void CG_CheckAmmo( void ) {
 	int		i;
 	int		total;
 	int		previous;
-	int		weapons;
 
 	// see about how many seconds of ammo we have remaining
-	weapons = CG_GetCurrentWeapons();
 	total = 0;
 	for ( i = WP_MACHINEGUN ; i < WP_NUM_WEAPONS ; i++ ) {
-		if ( ! ( weapons & ( 1 << i ) ) || i == WP_GRAPPLING_HOOK ) {
+		if ( ! ( CG_GetCurrentWeapons() & ( 1 << i ) ) || i == WP_GRAPPLING_HOOK ) {
 			continue;
 		}
 		switch ( i ) {
