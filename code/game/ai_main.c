@@ -378,14 +378,19 @@ void BotReportStatus(bot_state_t *bs) {
 			BotAI_Print(PRT_MESSAGE, "%-20s%s%s: harvesting\n", netname, leader, flagstatus);
 			break;
 		}
-		case LTG_POINTA:
+		case LTG_HOLDPOINTA:
 		{
-			BotAI_Print(PRT_MESSAGE, "%-20s%s%s: going for point A\n", netname, leader, flagstatus);
+			BotAI_Print(PRT_MESSAGE, "%-20s%s%s: taking and holding point A\n", netname, leader, flagstatus);
 			break;
 		}
-		case LTG_POINTB:
+		case LTG_HOLDPOINTB:
 		{
-			BotAI_Print(PRT_MESSAGE, "%-20s%s%s: going for point B\n", netname, leader, flagstatus);
+			BotAI_Print(PRT_MESSAGE, "%-20s%s%s: taking and holding point B\n", netname, leader, flagstatus);
+			break;
+		}
+		case LTG_HOLDDOMPOINT:
+		{
+			BotAI_Print(PRT_MESSAGE, "%-20s%s%s: defending a DOM control point\n", netname, leader, flagstatus);
 			break;
 		}
 		default:
@@ -538,14 +543,19 @@ void BotSetInfoConfigString(bot_state_t *bs) {
 			Com_sprintf(action, sizeof(action), "harvesting");
 			break;
 		}
-		case LTG_POINTA:
+		case LTG_HOLDPOINTA:
 		{
-			Com_sprintf(action, sizeof(action), "going for point A");
+			Com_sprintf(action, sizeof(action), "taking and holding point A");
 			break;
 		}
-		case LTG_POINTB:
+		case LTG_HOLDPOINTB:
 		{
-			Com_sprintf(action, sizeof(action), "going for point B");
+			Com_sprintf(action, sizeof(action), "taking and holding point B");
+			break;
+		}
+		case LTG_HOLDDOMPOINT:
+		{
+			Com_sprintf(action, sizeof(action), "defending a DOM point");
 			break;
 		}
 		default:

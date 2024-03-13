@@ -1974,7 +1974,7 @@ void CG_LoadMenus(const char *menuFile) {
 
 	COM_Compress(buf);
 
-	Menu_Reset();
+	setMenuCount(0);
 
 	p = buf;
 
@@ -2302,7 +2302,7 @@ void CG_LoadHudMenu(void) {
 
 	Init_Display(&cgDC);
 
-	Menu_Reset();
+	setMenuCount(0);
 
 	trap_Cvar_VariableStringBuffer("cg_hudFiles", buff, sizeof (buff));
 	hudSet = buff;
