@@ -1957,14 +1957,14 @@ CG_DrawLowerRight
 static void CG_DrawLowerRight(void) {
 	float y;
 
-	y = 472 - ICON_SIZE;
+	y = 468 - ICON_SIZE;
 
 	if (CG_IsATeamGametype(cgs.gametype) && cg_drawTeamOverlay.integer == 2) {
 		y = CG_DrawTeamOverlay(y, qtrue, qfalse);
 	}
 
-	y = CG_DrawScores(y);
-	y = CG_DrawPowerups(y);
+	y = CG_DrawScores(y + 4);
+	y = CG_DrawPowerups(y + 4);
 }
 #endif // MISSIONPACK
 
@@ -2012,7 +2012,7 @@ CG_DrawLowerLeft
 static void CG_DrawLowerLeft(void) {
 	float y;
 
-	y = 480 - ICON_SIZE;
+	y = 468 - ICON_SIZE;
 
 	if (CG_IsATeamGametype(cgs.gametype) && cg_drawTeamOverlay.integer == 3) {
 		y = CG_DrawTeamOverlay(y, qfalse, qfalse);

@@ -219,9 +219,9 @@ static cvarTable_t gameCvarTable[] = {
 	{ &g_videoflags, "videoflags", "7", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qtrue  },
 	{ &g_elimflags, "elimflags", "0", CVAR_SERVERINFO, 0, qfalse  },
 	{ &g_voteflags, "voteflags", "0", CVAR_SERVERINFO, 0, qfalse  },
-	{ &g_fraglimit, "fraglimit", "20", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
-	{ &g_timelimit, "timelimit", "0", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
-	{ &g_capturelimit, "capturelimit", "8", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
+	{ &g_fraglimit, "fraglimit", GT_FFA_DEFAULT_SCORELIMIT, CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
+	{ &g_timelimit, "timelimit", GT_FFA_DEFAULT_TIMELIMIT, CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
+	{ &g_capturelimit, "capturelimit", GT_CTF_DEFAULT_SCORELIMIT, CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
 
 	{ &g_synchronousClients, "g_synchronousClients", "0", CVAR_SYSTEMINFO, 0, qfalse  },
 
@@ -651,6 +651,9 @@ void G_UpdateCvars( void )
 
 					if( allowedVote("clientkick") )
 						voteflags|=VF_clientkick;
+
+					if( allowedVote("shuffle") )
+						voteflags|=VF_shuffle;
 
 					if( allowedVote("nextmap") )
 						voteflags|=VF_nextmap;
