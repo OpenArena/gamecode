@@ -223,18 +223,21 @@ void BotVoiceChat_Offense(bot_state_t *bs, int client, int mode) {
 	}
 	else if (gametype == GT_DOUBLE_D) {
 		if ((BotTeam(bs) == TEAM_RED && level.pointStatusA == TEAM_RED) ||
-				(BotTeam(bs) == TEAM_BLUE && level.pointStatusA == TEAM_BLUE))
+				(BotTeam(bs) == TEAM_BLUE && level.pointStatusA == TEAM_BLUE)) {
 			BotVoiceChat_HoldPointA(bs,client,mode);
+		}
 		else if ((BotTeam(bs) == TEAM_RED && level.pointStatusB == TEAM_RED) ||
-				(BotTeam(bs) == TEAM_BLUE && level.pointStatusB == TEAM_BLUE))
+				(BotTeam(bs) == TEAM_BLUE && level.pointStatusB == TEAM_BLUE)) {
 			BotVoiceChat_HoldPointB(bs,client,mode);
+		}
 		else if ((BotTeam(bs) == TEAM_RED && level.pointStatusA == TEAM_RED &&
 				level.pointStatusB == TEAM_RED) || (BotTeam(bs) == TEAM_BLUE &&
-				level.pointStatusA == TEAM_BLUE && level.pointStatusB == TEAM_BLUE))
+				level.pointStatusA == TEAM_BLUE && level.pointStatusB == TEAM_BLUE)) {
 			if (rand() % 10 > 5)
 				BotVoiceChat_HoldPointA(bs,client,mode);
 			else
 				BotVoiceChat_HoldPointB(bs,client,mode);
+		}
 		return;
 	}
 	else if (gametype == GT_DOMINATION) {
