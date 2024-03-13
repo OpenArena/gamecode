@@ -9,20 +9,21 @@
 **Note:** An ampersand ("&") preceding a value means that the cvar is a bitflag, and you must add said value to the total before using its effect (i.e. if dmflags is 1096 and you want to add the new underwater speed, then dmflags should be 5192 (1096+4096).
 
 * New cvars and values:
-  * g_awardpushing 2: [Rewards the last attacker who pushed the fragged player into a hazard.](https://openarena.ws/board/index.php?topic=5289.msg54334#msg54334)
-  * cg_bob: If set to 0, it will disable cg_bobUp/cg_bobRoll/cg_bobPitch. Default: 1.
-  * cg_kickScale: Controls how much the screen shakes when receiving damage. Default: 1.0.
-  * g_voteGametypes: Added Possession as a votable gametype ("13/").
-  * cg_muzzleflashStyle: Alternative muzzleflash styles for player preference, or "aesthetic," or maybe just less flashing (flashes can also be disabled).
-  * g_runes 2: Enables the "tossrune" command in the server.
-  * dmflags &4096: Allows players to move significantly faster underwater. Mostly for demonstration. Could be fun in class based gametypes.
-  * g_grapple: Gives Grappling Hook to all players. Also replaces elimination_grapple, which has been removed.
-  * g_harvesterFromBodies: In Harvester matches, skulls now spawn from dead bodies (a la UT3!Greed) rather than a skull receptacle in the middle of the arena. Allows Harvester matches to take place in maps that don't feature a skull receptacle.
-  * g_ddCaptureTime and g_ddRespawnDelay: New cvars for Double Domination that control the amount of holding time to score and the waiting time before a new round starts.
+  * `g_awardpushing 2`: [Rewards the last attacker who pushed the fragged player into a hazard.](https://openarena.ws/board/index.php?topic=5289.msg54334#msg54334)
+  * `cg_bob`: If set to 0, it will disable cg_bobUp/cg_bobRoll/cg_bobPitch. **Default: 1.**
+  * `cg_kickScale`: Controls how much the screen shakes when receiving damage. **Default: 1.0.**
+  * `g_voteGametypes`: Added Possession as a votable gametype (`13/`).
+  * `cg_muzzleflashStyle`: Alternative muzzleflash styles for player preference, or "aesthetic," or maybe just less flashing (flashes can also be disabled). **Default: 1.**
+  * `g_runes 2`: Enables the `tossrune` command (see below) in the server.
+  * `dmflags &4096`: Allows players to move significantly faster underwater. Mostly for demonstration. Could be fun in class based gametypes.
+  * `g_grapple`: Gives Grappling Hook to all players. Also replaces `elimination_grapple`, which has been removed. **Default: 0.**
+  * `g_harvesterFromBodies`: In Harvester matches, skulls now spawn from dead bodies (a la [UT3!Greed](https://antifandom.com/unreal/wiki/Greed)) rather than a skull receptacle in the middle of the arena. Allows Harvester matches to take place in maps that don't feature a skull receptacle. **Default: 0.**
+  * `g_ddCaptureTime` and `g_ddRespawnDelay`: New cvars for Double Domination that control the amount of holding time to score and the waiting time before a new round starts. **Default for both: 10.**
+  * `bot_developer`: Bitflag that enables bot-based feedback such as action report (`&1`), regular chat disabling (`&2`) and obstacle feedback (`&4`). **Default: 0.**
 * Shuffle has been reworked by implementing the solution from Aftershock.
 * New commands:
-  * weapbest. Selects the best weapon.
-  * tossrune. Tosses the rune that's been carried on. (Akin to TWCTF/TWCTF II)
+  * `weapbest`: Selects the best weapon.
+  * `tossrune`: Tosses the rune that's been carried on. (Akin to TWCTF/TWCTF II) Needs `g_runes 2` in order to work.
 * Now it's possible to compile OAX on Mac (thanks Bishop-333!)
 * AI enhancements (LOTS!) for holdable handling, grappling hook handling, Possession, Domination and Double Domination.
 * Elimination/eCTF/LMS: If all humans have been killed in a round, bots will be eliminated one by one.
@@ -31,10 +32,11 @@
 * Added frag message display with icons.
 * Keyboard/Joystick input in MPUI/UI3.
 * "Next round" Elimination countdown is also shown in Double Domination.
-* New tool for mappers: "state_targetname" key, allows the creation of doors for Elimination-based modes that open during the warmup time.
+* New tool for mappers: `state_targetname` key, allows the creation of doors for Elimination-based modes that open during the warmup time.
 * Tons of other bug fixes.
 
 ### Extended version
+* New cvar: bot_developer, for bot-based debugging.
 * Missionpack/UI3 backend refactors.
 * "You Have Been Mined" message outright displays the counter instead of delaying it.
 * Team status bar fix and cg_drawTeamOverlay fix by EddieBrrrock.
