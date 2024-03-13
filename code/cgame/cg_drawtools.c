@@ -422,15 +422,6 @@ void CG_GetColorForHealth( int health, int armor, vec4_t hcolor ) {
 	}
 }
 
-/*
-=================
-CG_ColorForHealth
-=================
-*/
-void CG_ColorForHealth( vec4_t hcolor ) {
-	CG_GetColorForHealth( CG_GetHealth(), cg.snap->ps.stats[STAT_ARMOR], hcolor );
-}
-
 // bk001205 - code below duplicated in q3_ui/ui-atoms.c
 // bk001205 - FIXME: does this belong in ui_shared.c?
 /*
