@@ -7875,7 +7875,7 @@ UI_GetGametype
 Returns the current gametype.
 ===================
  */
-int UI_GetGametype() {
+int UI_GetGametype(void) {
 	return uiInfo.gameTypes[ui_gameType.integer].gtEnum;
 }
 /*
