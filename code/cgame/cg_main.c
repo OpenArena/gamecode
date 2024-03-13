@@ -969,9 +969,9 @@ static void CG_RegisterSounds(void) {
 	Q_strncpyz(items, CG_ConfigString(CS_ITEMS), sizeof (items));
 
 	for (i = 1; i < bg_numItems; i++) {
-		//		if ( items[ i ] == '1' || cg_buildScript.integer ) {
+		/* if ( items[ i ] == '1' || cg_buildScript.integer ) { */
 		CG_RegisterItemSounds(i);
-		//		}
+		/* } */
 	}
 
 	for (i = 1; i < MAX_SOUNDS; i++) {
@@ -1887,15 +1887,15 @@ void CG_ParseMenu(const char *menuFile) {
 			break;
 		}
 
-		//if ( !Q_strequal( token, "{" ) ) {
-		//	Com_Printf( "Missing { in menu file\n" );
-		//	break;
-		//}
+		/* if ( !Q_strequal( token, "{" ) ) {
+			Com_Printf( "Missing { in menu file\n" );
+			break;
+		} */
 
-		//if ( menuCount == MAX_MENUS ) {
-		//	Com_Printf( "Too many menus!\n" );
-		//	break;
-		//}
+		/* if ( menuCount == MAX_MENUS ) {
+			Com_Printf( "Too many menus!\n" );
+			break;
+		} */
 
 		if (token.string[0] == '}') {
 			break;
@@ -2314,12 +2314,12 @@ void CG_LoadHudMenu(void) {
 }
 
 void CG_AssetCache(void) {
-	//if (Assets.textFont == NULL) {
-	//  trap_R_RegisterFont("fonts/arial.ttf", 72, &Assets.textFont);
-	//}
-	//Assets.background = trap_R_RegisterShaderNoMip( ASSET_BACKGROUND );
-	//Com_Printf("Menu Size: %i bytes\n", sizeof(Menus));
-	/*
+	/* if (Assets.textFont == NULL) {
+		trap_R_RegisterFont("fonts/arial.ttf", 72, &Assets.textFont);
+	}
+	Assets.background = trap_R_RegisterShaderNoMip( ASSET_BACKGROUND );
+	Com_Printf("Menu Size: %i bytes\n", sizeof(Menus));
+	
 		cgDC.Assets.gradientBar = trap_R_RegisterShaderNoMip( ASSET_GRADIENTBAR );
 		cgDC.Assets.fxBasePic = trap_R_RegisterShaderNoMip( ART_FX_BASE );
 		cgDC.Assets.fxPic[0] = trap_R_RegisterShaderNoMip( ART_FX_RED );
