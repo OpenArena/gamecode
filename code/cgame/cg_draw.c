@@ -2130,7 +2130,7 @@ CG_DrawPersistantPowerup
 static void CG_DrawPersistantPowerup(void) {
 	int value;
 
-	value = cg.snap->ps.stats[STAT_PERSISTANT_POWERUP];
+	value = CG_GetCurrentRune();
 	if (value) {
 		CG_RegisterItemVisuals(value);
 		CG_DrawPic(640 - ICON_SIZE, (SCREEN_HEIGHT - ICON_SIZE) / 2 - ICON_SIZE, ICON_SIZE, ICON_SIZE, cg_items[ value ].icon);

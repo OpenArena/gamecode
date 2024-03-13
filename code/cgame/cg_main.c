@@ -2776,4 +2776,14 @@ Returns the current holdable.
 int CG_GetCurrentHoldable(void) {
 	return cg.snap->ps.stats[STAT_HOLDABLE_ITEM];
 }
+/*
+===================
+CG_GetCurrentRune
+
+Returns the current holdable.
+===================
+ */
+int CG_GetCurrentRune(void) {
+	return cg.snap->ps.stats[STAT_PERSISTANT_POWERUP];
+}
 /* /Neon_Knight */

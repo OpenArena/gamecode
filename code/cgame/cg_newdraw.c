@@ -875,7 +875,7 @@ static void CG_DrawCTFPowerUp(rectDef_t *rect)
 	if (!CG_IsATeamGametype(cgs.gametype)) {
 		return;
 	}
-	value = cg.snap->ps.stats[STAT_PERSISTANT_POWERUP];
+	value = CG_GetCurrentRune();
 	if ( value ) {
 		CG_RegisterItemVisuals( value );
 		CG_DrawPic( rect->x, rect->y, rect->w, rect->h, cg_items[ value ].icon );
