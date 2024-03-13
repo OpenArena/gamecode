@@ -1553,6 +1553,7 @@ int CG_DrawStrlen( const char *str );
 float	*CG_FadeColor( int startMsec, int totalMsec );
 float *CG_TeamColor( int team );
 void CG_TileClear( void );
+void CG_ColorForHealth( vec4_t hcolor );
 void CG_GetColorForHealth( int health, int armor, vec4_t hcolor );
 
 void UI_DrawProportionalString( int x, int y, const char* str, int style, vec4_t color );
@@ -2042,10 +2043,4 @@ qboolean CG_IsATeamGametype(int check);	/* Whether the gametype is team-based or
 qboolean CG_UsesTeamFlags(int check);	/* Whether the gametype uses the red and blue flags. */
 qboolean CG_UsesTheWhiteFlag(int check);	/* Whether the gametype uses the neutral flag. */
 qboolean CG_IsARoundBasedGametype(int check);	/* Whether the gametype uses the neutral flag. */
-
-int CG_GetHealth(void);	/* Returns the current health amount. */
-int CG_GetArmor(void);	/* Returns the current armor amount. */
-int CG_GetCurrentHoldable(void);	/* Returns the current holdable. */
-int CG_GetCurrentRune(void);	/* Returns the current rune. */
-int CG_GetCurrentWeapons(void);	/* Returns the current weapons bitflag. */
 /* /Neon_Knight */

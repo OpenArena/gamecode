@@ -38,11 +38,13 @@ void CG_CheckAmmo( void ) {
 	int		i;
 	int		total;
 	int		previous;
+	int		weapons;
 
 	// see about how many seconds of ammo we have remaining
+	weapons = cg.snap->ps.stats[ STAT_WEAPONS ];
 	total = 0;
 	for ( i = WP_MACHINEGUN ; i < WP_NUM_WEAPONS ; i++ ) {
-		if ( ! ( CG_GetCurrentWeapons() & ( 1 << i ) ) || i == WP_GRAPPLING_HOOK ) {
+		if ( ! ( weapons & ( 1 << i ) ) || i == WP_GRAPPLING_HOOK ) {
 			continue;
 		}
 		switch ( i ) {
@@ -85,6 +87,7 @@ CG_DamageFeedback
 void CG_DamageFeedback( int yawByte, int pitchByte, int damage ) {
 	float		left, front, up;
 	float		kick;
+	int			health;
 	float		scale;
 	vec3_t		dir;
 	vec3_t		angles;
@@ -95,10 +98,11 @@ void CG_DamageFeedback( int yawByte, int pitchByte, int damage ) {
 	cg.attackerTime = cg.time;
 
 	// the lower on health you are, the greater the view kick will be
-	if ( CG_GetHealth() < 40 ) {
+	health = cg.snap->ps.stats[STAT_HEALTH];
+	if ( health < 40 ) {
 		scale = 1;
 	} else {
-		scale = 40.0 / CG_GetHealth();
+		scale = 40.0 / health;
 	}
 	kick = damage * scale;
 
