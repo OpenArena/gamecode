@@ -715,7 +715,7 @@ static void CG_DrawStatusBar(void) {
 
 	// stretch the health up when taking damage
 	CG_DrawField(185, 432, 3, value);
-	CG_GetColorForHealth( CG_GetHealth(), cg.snap->ps.stats[STAT_ARMOR], hcolor );
+	CG_GetColorForHealth( CG_GetHealth(), CG_GetArmor(), hcolor );
 	trap_R_SetColor(hcolor);
 
 
@@ -2716,7 +2716,7 @@ static void CG_DrawCrosshair(void) {
 	if (cg_crosshairHealth.integer) {
 		vec4_t hcolor;
 
-		CG_GetColorForHealth( CG_GetHealth(), cg.snap->ps.stats[STAT_ARMOR], hcolor );
+		CG_GetColorForHealth( CG_GetHealth(), CG_GetArmor(), hcolor );
 		trap_R_SetColor(hcolor);
 	} else {
 		vec4_t color;

@@ -2756,4 +2756,14 @@ Returns the current health amount.
 int CG_GetHealth(void) {
 	return cg.snap->ps.stats[STAT_HEALTH];
 }
+/*
+===================
+CG_GetArmor
+
+Returns the current armor amount.
+===================
+ */
+int CG_GetArmor(void) {
+	return cg.snap->ps.stats[STAT_ARMOR];
+}
 /* /Neon_Knight */
