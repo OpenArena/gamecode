@@ -58,7 +58,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 int notleader[MAX_CLIENTS];
 
-#ifdef DEBUG
 /*
 ==================
 BotPrintTeamGoal
@@ -68,6 +67,10 @@ void BotPrintTeamGoal(bot_state_t *bs) {
 	char netname[MAX_NETNAME];
 	float t;
 
+	// Exit if not in the adequate devmode for bots.
+	if (!(bot_developer.integer & BOTDEV_REPORTACTIONS)) {
+		return;
+	}
 	ClientName(bs->client, netname, sizeof(netname));
 	t = bs->teamgoal_time - FloatTime();
 	switch(bs->ltgtype) {
@@ -159,7 +162,6 @@ void BotPrintTeamGoal(bot_state_t *bs) {
 		}
 	}
 }
-#endif //DEBUG
 
 /*
 ==================
@@ -655,9 +657,9 @@ void BotMatch_HelpAccompany(bot_state_t *bs, bot_match_t *match) {
 		// remember last ordered task
 		BotRememberLastOrderedTask(bs);
 	}
-#ifdef DEBUG
-	BotPrintTeamGoal(bs);
-#endif //DEBUG
+	if (bot_developer.integer & BOTDEV_REPORTACTIONS) {
+		BotPrintTeamGoal(bs);
+	}
 }
 
 /*
@@ -715,9 +717,9 @@ void BotMatch_DefendKeyArea(bot_state_t *bs, bot_match_t *match) {
 	BotSetTeamStatus(bs);
 	// remember last ordered task
 	BotRememberLastOrderedTask(bs);
-#ifdef DEBUG
-	BotPrintTeamGoal(bs);
-#endif //DEBUG
+	if (bot_developer.integer & BOTDEV_REPORTACTIONS) {
+		BotPrintTeamGoal(bs);
+	}
 }
 
 /*
@@ -764,9 +766,9 @@ void BotMatch_TakeA(bot_state_t *bs, bot_match_t *match) {
 	BotSetTeamStatus(bs);
 	// remember last ordered task
 	BotRememberLastOrderedTask(bs);
-#ifdef DEBUG
-	BotPrintTeamGoal(bs);
-#endif //DEBUG
+	if (bot_developer.integer & BOTDEV_REPORTACTIONS) {
+		BotPrintTeamGoal(bs);
+	}
 }
 
 /*
@@ -855,9 +857,9 @@ void BotMatch_HoldDOMPoint(bot_state_t *bs, bot_match_t *match) {
 	BotSetTeamStatus(bs);
 	// remember last ordered task
 	BotRememberLastOrderedTask(bs);
-#ifdef DEBUG
-	BotPrintTeamGoal(bs);
-#endif //DEBUG
+	if (bot_developer.integer & BOTDEV_REPORTACTIONS) {
+		BotPrintTeamGoal(bs);
+	}
 }
 
 /*
@@ -895,9 +897,9 @@ void BotMatch_GetItem(bot_state_t *bs, bot_match_t *match) {
 	bs->teamgoal_time = FloatTime() + TEAM_GETITEM_TIME;
 	//
 	BotSetTeamStatus(bs);
-#ifdef DEBUG
-	BotPrintTeamGoal(bs);
-#endif //DEBUG
+	if (bot_developer.integer & BOTDEV_REPORTACTIONS) {
+		BotPrintTeamGoal(bs);
+	}
 }
 
 /*
@@ -987,9 +989,9 @@ void BotMatch_Camp(bot_state_t *bs, bot_match_t *match) {
 	BotSetTeamStatus(bs);
 	// remember last ordered task
 	BotRememberLastOrderedTask(bs);
-#ifdef DEBUG
-	BotPrintTeamGoal(bs);
-#endif //DEBUG
+	if (bot_developer.integer & BOTDEV_REPORTACTIONS) {
+		BotPrintTeamGoal(bs);
+	}
 }
 
 /*
@@ -1026,9 +1028,9 @@ void BotMatch_Patrol(bot_state_t *bs, bot_match_t *match) {
 	BotSetTeamStatus(bs);
 	// remember last ordered task
 	BotRememberLastOrderedTask(bs);
-#ifdef DEBUG
-	BotPrintTeamGoal(bs);
-#endif //DEBUG
+	if (bot_developer.integer & BOTDEV_REPORTACTIONS) {
+		BotPrintTeamGoal(bs);
+	}
 }
 
 /*
@@ -1080,9 +1082,9 @@ void BotMatch_GetFlag(bot_state_t *bs, bot_match_t *match) {
 	BotSetTeamStatus(bs);
 	// remember last ordered task
 	BotRememberLastOrderedTask(bs);
-#ifdef DEBUG
-	BotPrintTeamGoal(bs);
-#endif //DEBUG
+	if (bot_developer.integer & BOTDEV_REPORTACTIONS) {
+		BotPrintTeamGoal(bs);
+	}
 }
 
 /*
@@ -1136,9 +1138,9 @@ void BotMatch_AttackEnemyBase(bot_state_t *bs, bot_match_t *match) {
 	BotSetTeamStatus(bs);
 	// remember last ordered task
 	BotRememberLastOrderedTask(bs);
-#ifdef DEBUG
-	BotPrintTeamGoal(bs);
-#endif //DEBUG
+	if (bot_developer.integer & BOTDEV_REPORTACTIONS) {
+		BotPrintTeamGoal(bs);
+	}
 }
 
 /*
@@ -1178,9 +1180,9 @@ void BotMatch_Harvest(bot_state_t *bs, bot_match_t *match) {
 	BotSetTeamStatus(bs);
 	// remember last ordered task
 	BotRememberLastOrderedTask(bs);
-#ifdef DEBUG
-	BotPrintTeamGoal(bs);
-#endif //DEBUG
+	if (bot_developer.integer & BOTDEV_REPORTACTIONS) {
+		BotPrintTeamGoal(bs);
+	}
 }
 
 /*
@@ -1222,9 +1224,9 @@ void BotMatch_RushBase(bot_state_t *bs, bot_match_t *match) {
 	bs->rushbaseaway_time = 0;
 	//
 	BotSetTeamStatus(bs);
-#ifdef DEBUG
-	BotPrintTeamGoal(bs);
-#endif //DEBUG
+	if (bot_developer.integer & BOTDEV_REPORTACTIONS) {
+		BotPrintTeamGoal(bs);
+	}
 }
 
 /*
@@ -1308,9 +1310,9 @@ void BotMatch_ReturnFlag(bot_state_t *bs, bot_match_t *match) {
 	bs->rushbaseaway_time = 0;
 	//
 	BotSetTeamStatus(bs);
-#ifdef DEBUG
-	BotPrintTeamGoal(bs);
-#endif //DEBUG
+	if (bot_developer.integer & BOTDEV_REPORTACTIONS) {
+		BotPrintTeamGoal(bs);
+	}
 }
 
 /*
@@ -1933,9 +1935,9 @@ void BotMatch_Kill(bot_state_t *bs, bot_match_t *match) {
 	bs->teamgoal_time = FloatTime() + TEAM_KILL_SOMEONE;
 	//
 	BotSetTeamStatus(bs);
-#ifdef DEBUG
-	BotPrintTeamGoal(bs);
-#endif //DEBUG
+	if (bot_developer.integer & BOTDEV_REPORTACTIONS) {
+		BotPrintTeamGoal(bs);
+	}
 }
 
 /*

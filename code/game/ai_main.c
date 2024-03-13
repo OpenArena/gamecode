@@ -79,7 +79,6 @@ vmCvar_t bot_pause;
 vmCvar_t bot_report;
 vmCvar_t bot_testsolid;
 vmCvar_t bot_testclusters;
-vmCvar_t bot_developer;
 vmCvar_t bot_interbreedchar;
 vmCvar_t bot_interbreedbots;
 vmCvar_t bot_interbreedcycle;
