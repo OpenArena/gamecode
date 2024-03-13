@@ -35,8 +35,9 @@
 * Tons of other bug fixes.
 
 ### Extended version
+* Missionpack/UI3 backend refactors.
 * "You Have Been Mined" message outright displays the counter instead of delaying it.
-* Team status bar fix and cg_drawTeamOverlay fix by EddieBrrrock
+* Team status bar fix and cg_drawTeamOverlay fix by EddieBrrrock.
 * New command: tossrune. Drops the currently held rune.
 * New cvar value: g_runes &2: Enables the "tossrune" command in the server. (By default, g_runes 1, the command is disabled).
 * Reimplementation of shuffle, ported from Aftershock.
@@ -59,7 +60,7 @@
 * AI enhancement: Holdable item (Teleporter/Medkit/Kamikaze/Invulnerability) handling improvements.
 * AI enhancement: Double Domination bot logic improved (team formations, voice orders, voice speech support)
 * Regression fix: Obelisk bases are now drawn outside Harvester/Overload.
-* Fix: Now it's possible to compile OAX on Mac (thanks Bishop-333!)
+* Fix: Now it's possible to compile OAX on Mac (thanks EddieBrrrock!)
 * Fix: Team Orders in Classic UI now shows proper team orders depending on the gametype.
 * AI enhancement: Domination support vastly improved with team formations, basic logic and team orders.
 * AI enhancement: Bots now properly decide if they should use the Grappling Hook or not.
