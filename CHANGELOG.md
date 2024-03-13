@@ -35,6 +35,8 @@
 * Tons of other bug fixes.
 
 ### Extended version
+* "You Have Been Mined" message outright displays the counter instead of delaying it.
+* Team status bar fix and cg_drawTeamOverlay fix by EddieBrrrock
 * New command: tossrune. Drops the currently held rune.
 * New cvar value: g_runes &2: Enables the "tossrune" command in the server. (By default, g_runes 1, the command is disabled).
 * Reimplementation of shuffle, ported from Aftershock.
