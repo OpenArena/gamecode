@@ -552,58 +552,78 @@ int BotChat_Death(bot_state_t *bs) {
 			return qtrue;
 		}
 		//
-		if (bs->botdeathtype == MOD_WATER) {
-			BotAI_BotInitialChat(bs, "death_drown", BotRandomOpponentName(bs), NULL);
-		} else if (bs->botdeathtype == MOD_SLIME) {
-			BotAI_BotInitialChat(bs, "death_slime", BotRandomOpponentName(bs), NULL);
-		} else if (bs->botdeathtype == MOD_LAVA) {
-			BotAI_BotInitialChat(bs, "death_lava", BotRandomOpponentName(bs), NULL);
-		} else if (bs->botdeathtype == MOD_FALLING) {
-			BotAI_BotInitialChat(bs, "death_cratered", BotRandomOpponentName(bs), NULL);
-		} else if (bs->botsuicide || //all other suicides by own weapon
-				bs->botdeathtype == MOD_CRUSH ||
-				bs->botdeathtype == MOD_SUICIDE ||
-				bs->botdeathtype == MOD_TARGET_LASER ||
-				bs->botdeathtype == MOD_TRIGGER_HURT ||
-				bs->botdeathtype == MOD_UNKNOWN) {
+		if (bs->botsuicide) {
 			BotAI_BotInitialChat(bs, "death_suicide", BotRandomOpponentName(bs), NULL);
-		} else if (bs->botdeathtype == MOD_TELEFRAG) {
-			BotAI_BotInitialChat(bs, "death_telefrag", name, NULL);
-		} else if (bs->botdeathtype == MOD_KAMIKAZE && trap_BotNumInitialChats(bs->cs, "death_kamikaze")) {
-			BotAI_BotInitialChat(bs, "death_kamikaze", name, NULL);
 		} else {
-			if ((bs->botdeathtype == MOD_GAUNTLET ||
-					bs->botdeathtype == MOD_RAILGUN ||
-					bs->botdeathtype == MOD_BFG ||
-					bs->botdeathtype == MOD_BFG_SPLASH) && random() < 0.5) {
-
-				if (bs->botdeathtype == MOD_GAUNTLET) {
-					BotAI_BotInitialChat(bs, "death_gauntlet",
-							name,												// 0
-							BotWeaponNameForMeansOfDeath(bs->botdeathtype),		// 1
-							NULL);
-				} else if (bs->botdeathtype == MOD_RAILGUN) {
-					BotAI_BotInitialChat(bs, "death_rail",
-							name,												// 0
-							BotWeaponNameForMeansOfDeath(bs->botdeathtype),		// 1
-							NULL);
-				} else {
-					BotAI_BotInitialChat(bs, "death_bfg",
-							name,												// 0
-							BotWeaponNameForMeansOfDeath(bs->botdeathtype),		// 1
-							NULL);
+			switch(bs->botdeathtype) {
+				case MOD_WATER: {
+					BotAI_BotInitialChat(bs, "death_drown", BotRandomOpponentName(bs), NULL);
+					break;
 				}
-			//choose between insult and praise
-			} else if (random() < trap_Characteristic_BFloat(bs->character, CHARACTERISTIC_CHAT_INSULT, 0, 1)) {
-				BotAI_BotInitialChat(bs, "death_insult",
-							name,												// 0
-							BotWeaponNameForMeansOfDeath(bs->botdeathtype),		// 1
-							NULL);
-			} else {
-				BotAI_BotInitialChat(bs, "death_praise",
-							name,												// 0
-							BotWeaponNameForMeansOfDeath(bs->botdeathtype),		// 1
-							NULL);
+				case MOD_SLIME: {
+					BotAI_BotInitialChat(bs, "death_slime", BotRandomOpponentName(bs), NULL);
+					break;
+				}
+				case MOD_LAVA: {
+					BotAI_BotInitialChat(bs, "death_lava", BotRandomOpponentName(bs), NULL);
+					break;
+				}
+				case MOD_FALLING: {
+					BotAI_BotInitialChat(bs, "death_cratered", BotRandomOpponentName(bs), NULL);
+					break;
+				}
+				case MOD_CRUSH:
+				case MOD_SUICIDE:
+				case MOD_TARGET_LASER:
+				case MOD_TRIGGER_HURT:
+				case MOD_UNKNOWN: {
+					BotAI_BotInitialChat(bs, "death_suicide", BotRandomOpponentName(bs), NULL);
+					break;
+				}
+				case MOD_TELEFRAG: {
+					BotAI_BotInitialChat(bs, "death_telefrag", name, NULL);
+					break;
+				}
+				case MOD_KAMIKAZE: {
+					if (trap_BotNumInitialChats(bs->cs, "death_kamikaze")) {
+						BotAI_BotInitialChat(bs, "death_kamikaze", name, NULL);
+					}
+					break;
+				}
+				case MOD_GAUNTLET: {
+					if (random() < 0.5) {
+						BotAI_BotInitialChat(bs, "death_gauntlet", name, BotWeaponNameForMeansOfDeath(bs->botdeathtype),NULL);
+					}
+					break;
+				}
+				case MOD_RAILGUN: {
+					if (random() < 0.5) {
+						BotAI_BotInitialChat(bs, "death_rail", name, BotWeaponNameForMeansOfDeath(bs->botdeathtype), NULL);
+					}
+					break;
+				}
+				case MOD_BFG:
+				case MOD_BFG_SPLASH: {
+					if (random() < 0.5) {
+						BotAI_BotInitialChat(bs, "death_bfg", name, BotWeaponNameForMeansOfDeath(bs->botdeathtype), NULL);
+					}
+					break;
+				}
+				default: {
+					//choose between insult and praise
+					if (random() < trap_Characteristic_BFloat(bs->character, CHARACTERISTIC_CHAT_INSULT, 0, 1)) {
+						BotAI_BotInitialChat(bs, "death_insult",
+									name,												// 0
+									BotWeaponNameForMeansOfDeath(bs->botdeathtype),		// 1
+									NULL);
+					} else {
+						BotAI_BotInitialChat(bs, "death_praise",
+									name,												// 0
+									BotWeaponNameForMeansOfDeath(bs->botdeathtype),		// 1
+									NULL);
+					}
+					break;
+				}
 			}
 		}
 		bs->chatto = CHAT_ALL;
