@@ -14,7 +14,7 @@
   * cg_kickScale: Controls how much the screen shakes when receiving damage. Default: 1.0.
   * g_voteGametypes: Added Possession as a votable gametype ("13/").
   * cg_muzzleflashStyle: Alternative muzzleflash styles for player preference, or "aesthetic," or maybe just less flashing (flashes can also be disabled).
-  * g_runes &2: Enables the "tossrune" command in the server.
+  * g_runes 2: Enables the "tossrune" command in the server.
   * dmflags &4096: Allows players to move significantly faster underwater. Mostly for demonstration. Could be fun in class based gametypes.
   * g_grapple: Enables Grappling Hook support.
   * g_harvesterFromBodies: In Harvester matches, skulls now spawn from dead bodies (a la UT3!Greed) rather than a skull receptacle in the middle of the arena. Allows Harvester matches to take place in maps that don't feature a skull receptacle.
