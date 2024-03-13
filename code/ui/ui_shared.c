@@ -7058,7 +7058,7 @@ setMenuCount(count int)
 ============================
 With these two functions we avoid referring to the menu count directly.
 */
-int getMenuCount() {
+int getMenuCount(void) {
 	return menuCount;
 }
 void setMenuCount(int count) {

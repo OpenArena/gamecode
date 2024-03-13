@@ -540,10 +540,10 @@ void *UI_Alloc(int size);
 void UI_InitMemory(void);
 qboolean UI_OutOfMemory(void);
 
-#ifndef BASEOA
-int getMenuCount();
+int getMenuCount(void);
 void setMenuCount(int count);
 
+#ifndef BASEOA
 void Controls_GetConfig(void);
 void Controls_SetConfig(qboolean restart);
 void Controls_SetDefaults(void);
