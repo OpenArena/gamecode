@@ -419,10 +419,11 @@ extern sfxHandle_t	MenuField_Key( menufield_s* m, int* key );
 //
 void UI_Report( void );
 void UI_Load( void );
-void UI_LoadMenus(const char *menuFile, qboolean reset);
+void UI_LoadMenus(const char *menuFile);
 void _UI_SetActiveMenu( uiMenuCommand_t menu );
 int UI_AdjustTimeByGame(int time);
-void UI_ShowPostGame(qboolean newHigh);
+void UI_ShowPostGame(void);
+void UI_ShowPostGameNHS(void);
 void UI_ClearScores( void );
 void UI_LoadArenas(void);
 void UI_LoadArenasIntoMapList(void);
@@ -1320,4 +1321,6 @@ qboolean UI_IsATeamGametype(int check);	/* Whether the gametype is team-based or
 qboolean UI_UsesTeamFlags(int check);	/* Whether the gametype uses the red and blue flags. */
 qboolean UI_UsesTheWhiteFlag(int check);	/* Whether the gametype uses the neutral flag. */
 qboolean UI_IsARoundBasedGametype(int check);	/* Whether the gametype uses the neutral flag. */
+int UI_GetGametype();	/* Returns the current gametype */
+int UI_GetTimeToBeat(int game); /* Returns the time to beat for the current game */
 /* /Neon_Knight */
