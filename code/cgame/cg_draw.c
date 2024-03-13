@@ -1957,14 +1957,14 @@ CG_DrawLowerRight
 static void CG_DrawLowerRight(void) {
 	float y;
 
-	y = 472 - ICON_SIZE;
+	y = 468 - ICON_SIZE;
 
 	if (CG_IsATeamGametype(cgs.gametype) && cg_drawTeamOverlay.integer == 2) {
 		y = CG_DrawTeamOverlay(y, qtrue, qfalse);
 	}
 
-	y = CG_DrawScores(y);
-	y = CG_DrawPowerups(y);
+	y = CG_DrawScores(y + 4);
+	y = CG_DrawPowerups(y + 4);
 }
 #endif // MISSIONPACK
 
@@ -2012,7 +2012,7 @@ CG_DrawLowerLeft
 static void CG_DrawLowerLeft(void) {
 	float y;
 
-	y = 480 - ICON_SIZE;
+	y = 468 - ICON_SIZE;
 
 	if (CG_IsATeamGametype(cgs.gametype) && cg_drawTeamOverlay.integer == 3) {
 		y = CG_DrawTeamOverlay(y, qfalse, qfalse);
@@ -3287,12 +3287,9 @@ static void CG_DrawProxWarning( void ) {
 
 	proxTick = 10 - ((cg.time - proxTime) / 1000);
 
-	if (proxTick > 0 && proxTick <= 5) {
-		Com_sprintf(s, sizeof(s), "INTERNAL COMBUSTION IN: %i", proxTick);
-	} else {
-		Com_sprintf(s, sizeof(s), "YOU HAVE BEEN MINED");
+	if (proxTick > 0) {
+		Com_sprintf(s, sizeof(s), "YOU HAVE BEEN MINED\rINTERNAL COMBUSTION IN: %i", proxTick);
 	}
-
 	w = CG_DrawStrlen( s ) * BIGCHAR_WIDTH;
 	CG_DrawBigStringColor( 320 - w / 2, 64 + BIGCHAR_HEIGHT, s, g_color_table[ColorIndex(COLOR_RED)] );
 }
