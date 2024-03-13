@@ -1427,18 +1427,12 @@ static void UI_DrawClanName(rectDef_t *rect, float scale, vec4_t color, int text
 	Text_Paint(rect->x, rect->y, scale, color, UI_Cvar_VariableString("ui_teamName"), 0, 0, textStyle);
 }
 
-
 static void UI_SetCapFragLimits(qboolean uiVars)
 {
 	char *capLimit;
 	char *fragLimit;
 	char *timeLimit;
 	switch (uiInfo.gameTypes[ui_gameType.integer].gtEnum) {
-		case GT_FFA:
-			fragLimit = GT_FFA_DEFAULT_SCORELIMIT;
-			capLimit = "0";
-			timeLimit = GT_FFA_DEFAULT_TIMELIMIT;
-			break;
 		case GT_TOURNAMENT:
 			fragLimit = GT_TOURNEY_DEFAULT_SCORELIMIT;
 			capLimit = "0";
@@ -1498,6 +1492,11 @@ static void UI_SetCapFragLimits(qboolean uiVars)
 			fragLimit = GT_POSSESSION_DEFAULT_SCORELIMIT;
 			capLimit = "0";
 			timeLimit = GT_POSSESSION_DEFAULT_TIMELIMIT;
+			break;
+		default:
+			fragLimit = GT_FFA_DEFAULT_SCORELIMIT;
+			capLimit = "0";
+			timeLimit = GT_FFA_DEFAULT_TIMELIMIT;
 			break;
 	}
 	if (uiVars == qtrue) {
@@ -3254,7 +3253,7 @@ static qboolean UI_GameType_HandleKey(int flags, float *special, int key)
 {
 	int select = UI_SelectForKey(key);
 	if (select != 0) {
-		int oldCount = UI_MapCountByGameTypeSP();
+		//int oldCount = UI_MapCountByGameTypeSP();
 
 		// hard coded mess here
 		// Changed RD
@@ -3992,7 +3991,7 @@ static void UI_NextMapSkirmish(char *name)
 }
 
 
-static void UI_StartSkirmish()
+static void UI_StartSkirmish(void)
 {
 	int i, k, g, delay, temp;
 	float skill;
