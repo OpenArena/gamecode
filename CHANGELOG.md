@@ -36,7 +36,7 @@
 * Tons of other bug fixes.
 
 ### Extended version
-* New functions CG_GetHealth() and CG_GetArmor in cgame return the current health and armor amounts.
+* New cgame functions: CG_GetHealth(), CG_GetArmor(), CG_GetCurrentWeapons(), CG_GetCurrentHoldable() and CG_GetCurrentRune(). All of these functions replace direct calls and allowed optimizations to take place.
 * New cvar: bot_developer, for bot-based debugging.
 * Missionpack/UI3 backend refactors.
 * "You Have Been Mined" message outright displays the counter instead of delaying it.
