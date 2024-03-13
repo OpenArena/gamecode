@@ -2137,7 +2137,7 @@ void BotDDorders_PointATaken(bot_state_t *bs) {
 	char name[MAX_NETNAME];
 	int pointADefenders=0;
 	int pointBTakers=0;
-	int roamers=0;
+	// int roamers=0;
 
 	if (bot_nochat.integer>2) return;
 
@@ -2176,7 +2176,7 @@ void BotDDorders_PointATaken(bot_state_t *bs) {
 				BotSayVoiceTeamOrder(bs, teammates[1], VOICECHAT_HOLDPOINTB);
 			}
 			case 3: {
-				// Two will pick a point and take it, the other will roam..
+				// Two will pick a point and take it, the other will roam.
 				ClientName(teammates[0], name, sizeof(name));
 				BotAI_BotInitialChat(bs, "cmd_holdpointa", name, NULL);
 				BotSayTeamOrder(bs, teammates[0]);
@@ -2296,7 +2296,7 @@ void BotDDorders_PointBTaken(bot_state_t *bs) {
 	char name[MAX_NETNAME];
 	int pointATakers=0;
 	int pointBDefenders=0;
-	int roamers=0;
+	// int roamers=0;
 
 	if (bot_nochat.integer>2) return;
 

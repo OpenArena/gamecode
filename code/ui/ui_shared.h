@@ -540,7 +540,7 @@ void *UI_Alloc(int size);
 void UI_InitMemory(void);
 qboolean UI_OutOfMemory(void);
 
-int getMenuCount();
+int getMenuCount(void);
 void setMenuCount(int count);
 
 #ifndef BASEOA
