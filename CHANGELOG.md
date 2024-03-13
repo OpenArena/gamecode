@@ -124,7 +124,7 @@
 * Stopped setting com_hunkmegs in the UI. It was a workaround from before it was changed in the engine.
 * Announce changes to pmove_* values. Not that they should be changed during gameplay but still.
 * Added `g_grapple`. Gives Grappling Hook to all players. Also replaces `elimination_grapple`, which has been removed. **Default: 0.**
-* Added g_harvesterFromBodies.
+* Added `g_harvesterFromBodies`. Allows Harvester mode skulls to spawn where the frag happened instead of at the skull generator in the middle of the map. In case those skulls end up in a "nodrop" zone, they will respawn at the skull generator instead. **Default: 0.**
 * Remove more NO_RESTART from CVARs
 * Leilei changes for the MP UI.
 * Add ui_randomIntToCvar to the missionpack UI. Add randomFloatToCvar command. Add ui_randomStringToCvar.
