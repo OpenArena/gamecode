@@ -87,7 +87,6 @@ CG_DamageFeedback
 void CG_DamageFeedback( int yawByte, int pitchByte, int damage ) {
 	float		left, front, up;
 	float		kick;
-	int			health;
 	float		scale;
 	vec3_t		dir;
 	vec3_t		angles;
@@ -98,11 +97,10 @@ void CG_DamageFeedback( int yawByte, int pitchByte, int damage ) {
 	cg.attackerTime = cg.time;
 
 	// the lower on health you are, the greater the view kick will be
-	health = CG_GetHealth();
-	if ( health < 40 ) {
+	if ( CG_GetHealth() < 40 ) {
 		scale = 1;
 	} else {
-		scale = 40.0 / health;
+		scale = 40.0 / CG_GetHealth();
 	}
 	kick = damage * scale;
 
