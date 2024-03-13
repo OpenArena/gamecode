@@ -2259,7 +2259,6 @@ CG_DrawWeaponSelect
 void CG_DrawWeaponSelect( void )
 {
 	int		i;
-	int		bits;
 	int		count;
 	float		*color;
 	vec4_t		realColor;
@@ -2291,10 +2290,9 @@ void CG_DrawWeaponSelect( void )
 	cg.itemPickupTime = 0;
 
 	// count the number of weapons owned
-	bits = cg.snap->ps.stats[ STAT_WEAPONS ];
 	count = 0;
 	for ( i = 1 ; i < MAX_WEAPONS ; i++ ) {
-		if ( bits & ( 1 << i ) ) {
+		if ( CG_GetCurrentWeapons() & ( 1 << i ) ) {
 			count++;
 		}
 	}
@@ -2303,28 +2301,28 @@ void CG_DrawWeaponSelect( void )
 	case -1: // Don't display the weapon bar.
 		break;
 	case 1:
-		CG_DrawWeaponBar1(count,bits);
+		CG_DrawWeaponBar1(count,CG_GetCurrentWeapons());
 		break;
 	case 2:
-		CG_DrawWeaponBar2(count,bits, color);
+		CG_DrawWeaponBar2(count,CG_GetCurrentWeapons(),color);
 		break;
 	case 3:
-		CG_DrawWeaponBar3(count,bits, color);
+		CG_DrawWeaponBar3(count,CG_GetCurrentWeapons(),color);
 		break;
 	case 4:
-		CG_DrawWeaponBar4(count,bits, color);
+		CG_DrawWeaponBar4(count,CG_GetCurrentWeapons(),color);
 		break;
 	case 5:
-		CG_DrawWeaponBar5(count,bits, color);
+		CG_DrawWeaponBar5(count,CG_GetCurrentWeapons(),color);
 		break;
 	case 6:
-		CG_DrawWeaponBar6(count,bits, color);
+		CG_DrawWeaponBar6(count,CG_GetCurrentWeapons(),color);
 		break;
 	case 7:
-		CG_DrawWeaponBar7(count,bits, color);
+		CG_DrawWeaponBar7(count,CG_GetCurrentWeapons(),color);
 		break;
 	default: // Default weapon bar (0)
-		CG_DrawWeaponBar0(count,bits);
+		CG_DrawWeaponBar0(count,CG_GetCurrentWeapons());
 		break;
 	}
 	trap_R_SetColor(NULL);
@@ -3196,7 +3194,7 @@ static qboolean CG_WeaponSelectable( int i )
 	if ( !cg.snap->ps.ammo[i] ) {
 		return qfalse;
 	}
-	if ( ! (cg.snap->ps.stats[ STAT_WEAPONS ] & ( 1 << i ) ) ) {
+	if ( ! (CG_GetCurrentWeapons() & ( 1 << i ) ) ) {
 		return qfalse;
 	}
 
@@ -3350,7 +3348,7 @@ void CG_Weapon_f( void )
 
 	cg.weaponSelectTime = cg.time;
 
-	if ( ! ( cg.snap->ps.stats[STAT_WEAPONS] & ( 1 << num ) ) ) {
+	if ( ! ( CG_GetCurrentWeapons() & ( 1 << num ) ) ) {
 		return;		// don't have the weapon
 	}
 

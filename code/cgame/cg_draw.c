@@ -2108,12 +2108,9 @@ CG_DrawHoldableItem
 #ifndef MISSIONPACK
 
 static void CG_DrawHoldableItem(void) {
-	int value;
-
-	value = cg.snap->ps.stats[STAT_HOLDABLE_ITEM];
-	if (value) {
-		CG_RegisterItemVisuals(value);
-		CG_DrawPic(640 - ICON_SIZE, (SCREEN_HEIGHT - ICON_SIZE) / 2, ICON_SIZE, ICON_SIZE, cg_items[ value ].icon);
+	if (CG_GetCurrentHoldable()) {
+		CG_RegisterItemVisuals(CG_GetCurrentHoldable());
+		CG_DrawPic(640 - ICON_SIZE, (SCREEN_HEIGHT - ICON_SIZE) / 2, ICON_SIZE, ICON_SIZE, cg_items[CG_GetCurrentHoldable()].icon);
 	}
 
 }
@@ -2128,12 +2125,9 @@ CG_DrawPersistantPowerup
 #if 1 // sos001208 - DEAD // sago - ALIVE
 
 static void CG_DrawPersistantPowerup(void) {
-	int value;
-
-	value = cg.snap->ps.stats[STAT_PERSISTANT_POWERUP];
-	if (value) {
-		CG_RegisterItemVisuals(value);
-		CG_DrawPic(640 - ICON_SIZE, (SCREEN_HEIGHT - ICON_SIZE) / 2 - ICON_SIZE, ICON_SIZE, ICON_SIZE, cg_items[ value ].icon);
+	if (CG_GetCurrentRune()) {
+		CG_RegisterItemVisuals(CG_GetCurrentRune());
+		CG_DrawPic(640 - ICON_SIZE, (SCREEN_HEIGHT - ICON_SIZE) / 2 - ICON_SIZE, ICON_SIZE, ICON_SIZE, cg_items[CG_GetCurrentRune()].icon);
 	}
 }
 #endif
