@@ -2044,5 +2044,6 @@ qboolean CG_UsesTheWhiteFlag(int check);	/* Whether the gametype uses the neutra
 qboolean CG_IsARoundBasedGametype(int check);	/* Whether the gametype uses the neutral flag. */
 
 int CG_GetHealth(void);	/* Returns the current health amount. */
-int CG_GetArmor(void);	/* Returns the current health amount. */
+int CG_GetArmor(void);	/* Returns the current armor amount. */
+int CG_GetCurrentHoldable(void);	/* Returns the current holdable. */
 /* /Neon_Knight */

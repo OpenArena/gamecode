@@ -519,7 +519,7 @@ static void CG_DrawPlayerItem( rectDef_t *rect, float scale, qboolean draw2D)
 	int		value;
 	vec3_t origin, angles;
 
-	value = cg.snap->ps.stats[STAT_HOLDABLE_ITEM];
+	value = CG_GetCurrentHoldable();
 	if ( value ) {
 		CG_RegisterItemVisuals( value );
 

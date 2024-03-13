@@ -2766,4 +2766,14 @@ Returns the current armor amount.
 int CG_GetArmor(void) {
 	return cg.snap->ps.stats[STAT_ARMOR];
 }
+/*
+===================
+CG_GetCurrentHoldable
+
+Returns the current holdable.
+===================
+ */
+int CG_GetCurrentHoldable(void) {
+	return cg.snap->ps.stats[STAT_HOLDABLE_ITEM];
+}
 /* /Neon_Knight */
