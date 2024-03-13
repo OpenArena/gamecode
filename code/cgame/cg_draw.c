@@ -543,19 +543,6 @@ static void CG_DrawStatusBarHead(float x) {
 
 /*
 ================
-CG_DrawStatusBarFlag
-
-================
- */
-#ifndef MISSIONPACK
-
-static void CG_DrawStatusBarFlag(float x, int team) {
-	CG_DrawFlagModel(x, 480 - ICON_SIZE, ICON_SIZE, ICON_SIZE, team, qfalse);
-}
-#endif // MISSIONPACK
-
-/*
-================
 CG_DrawTeamBackground
 
 ================
@@ -634,11 +621,11 @@ static void CG_DrawStatusBar(void) {
 	CG_DrawStatusBarHead(185 + CHAR_WIDTH * 3 + TEXT_ICON_SPACE);
 
 	if (cg.predictedPlayerState.powerups[PW_REDFLAG]) {
-		CG_DrawStatusBarFlag(185 + CHAR_WIDTH * 3 + TEXT_ICON_SPACE + ICON_SIZE, TEAM_RED);
+		CG_DrawFlagModel((185 + CHAR_WIDTH * 3 + TEXT_ICON_SPACE + ICON_SIZE), 480 - ICON_SIZE, ICON_SIZE, ICON_SIZE, TEAM_RED, qfalse);
 	} else if (cg.predictedPlayerState.powerups[PW_BLUEFLAG]) {
-		CG_DrawStatusBarFlag(185 + CHAR_WIDTH * 3 + TEXT_ICON_SPACE + ICON_SIZE, TEAM_BLUE);
+		CG_DrawFlagModel((185 + CHAR_WIDTH * 3 + TEXT_ICON_SPACE + ICON_SIZE), 480 - ICON_SIZE, ICON_SIZE, ICON_SIZE, TEAM_BLUE, qfalse);
 	} else if (cg.predictedPlayerState.powerups[PW_NEUTRALFLAG]) {
-		CG_DrawStatusBarFlag(185 + CHAR_WIDTH * 3 + TEXT_ICON_SPACE + ICON_SIZE, TEAM_FREE);
+		CG_DrawFlagModel((185 + CHAR_WIDTH * 3 + TEXT_ICON_SPACE + ICON_SIZE), 480 - ICON_SIZE, ICON_SIZE, ICON_SIZE, TEAM_FREE, qfalse);
 	}
 
 	if (ps->stats[ STAT_ARMOR ]) {
