@@ -9,7 +9,7 @@
 **Note:** An ampersand ("&") preceding a value means that the cvar is a bitflag, and you must add said value to the total before using its effect (i.e. if dmflags is 1096 and you want to add the new underwater speed, then dmflags should be 5192 (1096+4096).
 
 * New cvars and values:
-  * `g_awardpushing 2`: [Rewards the last attacker who pushed the fragged player into a hazard.](https://openarena.ws/board/index.php?topic=5289.msg54334#msg54334)
+  * `g_awardpushing 2`: [Rewards the last attacker who pushed the fragged player into a hazard within 5 seconds, even if the fragged player wasn't airborne.](https://openarena.ws/board/index.php?topic=5289.msg54334#msg54334)
   * `cg_bob`: If set to 0, it will disable cg_bobUp/cg_bobRoll/cg_bobPitch. **Default: 1.**
   * `cg_kickScale`: Controls how much the screen shakes when receiving damage. **Default: 1.0.**
   * `g_voteGametypes`: Added Possession as a votable gametype (`13/`).
