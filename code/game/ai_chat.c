@@ -916,15 +916,6 @@ int BotChat_Random(bot_state_t *bs) {
 
 /*
 ==================
-BotChatTime
-==================
-*/
-float BotChatTime(bot_state_t *bs) {
-	return 2.0;	//(float) trap_BotChatLength(bs->cs) * 30 / cpm;
-}
-
-/*
-==================
 BotChatTest
 ==================
 */

@@ -48,6 +48,7 @@ static char* votemenu_artlist[] =
 #define ID_TIME     108
 #define ID_GAMETYPE 109
 #define ID_CUSTOM   110
+#define ID_SHUFFLE  111
 #define ID_YES      112
 #define ID_NO       113
 
@@ -68,6 +69,7 @@ typedef struct
 	qboolean        fraglimit;
 	qboolean        timelimit;
 	qboolean        custom;
+	qboolean        shuffle;
 } votemenu_logic_t;
 
 static votemenu_logic_t	s_votemenu_logic;
@@ -85,6 +87,7 @@ typedef struct
 static ui_menuitem_t s_items[] = {
 	{ID_NEXTMAP, "Next map", &s_votemenu_logic.nextmap},
 	{ID_RESTART, "Restart match", &s_votemenu_logic.map_restart},
+	{ID_SHUFFLE,"Shuffle teams", &s_votemenu_logic.shuffle},
 	{ID_MAP,"Change map", &s_votemenu_logic.map},
 	{ID_GAMETYPE,"Change gametype", &s_votemenu_logic.gametype},
 	{ID_KICK,"Kick player", &s_votemenu_logic.clientkick},
@@ -130,6 +133,7 @@ static void VoteMenu_CheckVoteNames( void ) {
 	s_votemenu_logic.timelimit = voteflags&VF_timelimit;
 	s_votemenu_logic.fraglimit = voteflags&VF_fraglimit;
 	s_votemenu_logic.custom = voteflags&VF_custom;
+	s_votemenu_logic.shuffle = voteflags&VF_shuffle;
 }
 
 /*
@@ -163,6 +167,10 @@ static void VoteMenu_Event( void* ptr, int event )
 				trap_Cmd_ExecuteText( EXEC_APPEND, "callvote g_doWarmup 0" );
 			else
 				trap_Cmd_ExecuteText( EXEC_APPEND, "callvote g_doWarmup 1" );
+			UI_PopMenu();
+			break;
+		case ID_SHUFFLE:
+			trap_Cmd_ExecuteText( EXEC_APPEND, "callvote shuffle" );
 			UI_PopMenu();
 			break;
 		case ID_FRAG:

@@ -662,7 +662,17 @@ void Cmd_LevelShot_f( gentity_t *ent ) {
 	trap_SendServerCommand( ent-g_entities, "clientLevelShot" );
 }
 
-
+void Cmd_DropRune_f( gentity_t *ent ) {
+	if (!ent) {
+		return;
+	}
+	// If the command is disabled, the rune won't be tossed.
+	if (g_runes.integer < 2) {
+		return;
+	}
+	// Toss the rune.
+	TossClientPersistantPowerups(ent);
+}
 /*
 ==================
 Cmd_LevelShot_f
@@ -2310,8 +2320,11 @@ commands_t cmds[ ] =
 	//KK-OAX
 	{ "freespectator", CMD_NOTEAM, StopFollowing },
 	{ "getmappage", 0, Cmd_GetMappage_f },
-	{ "gc", 0, Cmd_GameCommand_f }
-
+	{ "gc", 0, Cmd_GameCommand_f },
+	
+	/* Neon_Knight: Toss current rune*/
+	{ "droprune", 0, Cmd_DropRune_f },
+	/* /Neon_Knight */
 };
 
 static int numCmds = sizeof( cmds ) / sizeof( cmds[ 0 ] );

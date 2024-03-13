@@ -47,7 +47,10 @@ void BotUpdateInventory(bot_state_t *bs);
 //update the inventory during battle
 void BotUpdateBattleInventory(bot_state_t *bs, int enemy);
 //use holdable items during battle
-void BotBattleUseItems(bot_state_t *bs);
+qboolean BotCanAndWantsToUseTheTeleporter(bot_state_t *bs);
+qboolean BotCanAndWantsToUseTheMedkit(bot_state_t *bs);
+qboolean BotCanAndWantsToUseTheKamikaze(bot_state_t *bs);
+qboolean BotCanAndWantsToUseTheInvulnerability(bot_state_t *bs);
 //return true if the bot is dead
 qboolean BotIsDead(bot_state_t *bs);
 //returns true if the bot is in observer mode
@@ -92,6 +95,8 @@ int BotWantsToChase(bot_state_t *bs);
 int BotWantsToHelp(bot_state_t *bs);
 //returns true if the bot can and wants to rocketjump
 int BotCanAndWantsToRocketJump(bot_state_t *bs);
+// returns true if the bot has the Grappling Hook and wants to use it
+int BotCanAndWantsToUseTheGrapple(bot_state_t *bs);
 // returns true if the bot has a persistant powerup and a weapon
 int BotHasPersistantPowerupAndWeapon(bot_state_t *bs);
 //returns true if the bot wants to and goes camping
@@ -142,6 +147,10 @@ void BotRememberLastOrderedTask(bot_state_t *bs);
 void BotCTFSeekGoals(bot_state_t *bs);
 //set ctf goals (defend base, get enemy flag) during retreat
 void BotCTFRetreatGoals(bot_state_t *bs);
+//set dd goals (take/defend point) during seek
+void BotDDSeekGoals(bot_state_t *bs);
+//set dom goals (take/defend point) during seek
+void BotDomSeekGoals(bot_state_t *bs);
 //
 int Bot1FCTFCarryingFlag(bot_state_t *bs);
 int BotHarvesterCarryingCubes(bot_state_t *bs);
