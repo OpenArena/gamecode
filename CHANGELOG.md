@@ -16,7 +16,7 @@
   * cg_muzzleflashStyle: Alternative muzzleflash styles for player preference, or "aesthetic," or maybe just less flashing (flashes can also be disabled).
   * g_runes 2: Enables the "tossrune" command in the server.
   * dmflags &4096: Allows players to move significantly faster underwater. Mostly for demonstration. Could be fun in class based gametypes.
-  * g_grapple: Enables Grappling Hook support.
+  * g_grapple: Gives Grappling Hook to all players. Also replaces elimination_grapple, which has been removed.
   * g_harvesterFromBodies: In Harvester matches, skulls now spawn from dead bodies (a la UT3!Greed) rather than a skull receptacle in the middle of the arena. Allows Harvester matches to take place in maps that don't feature a skull receptacle.
   * g_ddCaptureTime and g_ddRespawnDelay: New cvars for Double Domination that control the amount of holding time to score and the waiting time before a new round starts.
 * Shuffle has been reworked by implementing the solution from Aftershock.
