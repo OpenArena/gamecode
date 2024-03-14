@@ -1129,22 +1129,16 @@ qboolean CG_OwnerDrawVisible(int flags)
 		if( cgs.gametype == GT_HARVESTER ) {
 			return qtrue;
 		}
-		else {
-			return qfalse;
-		}
 	}
 
 	if (flags & CG_SHOW_ONEFLAG) {
 		if( cgs.gametype == GT_1FCTF ) {
 			return qtrue;
 		}
-		else {
-			return qfalse;
-		}
 	}
 
 	if (flags & CG_SHOW_CTF) {
-		if(CG_UsesTeamFlags(cgs.gametype) && !CG_UsesTheWhiteFlag(cgs.gametype)) {
+		if( cgs.gametype == GT_CTF ) {
 			return qtrue;
 		}
 	}
@@ -1152,9 +1146,6 @@ qboolean CG_OwnerDrawVisible(int flags)
 	if (flags & CG_SHOW_OBELISK) {
 		if( cgs.gametype == GT_OBELISK ) {
 			return qtrue;
-		}
-		else {
-			return qfalse;
 		}
 	}
 
@@ -1190,6 +1181,56 @@ qboolean CG_OwnerDrawVisible(int flags)
 			return qtrue;
 		}
 	}
+
+	if (flags & CG_SHOW_FREEFORALL) {
+		if( cgs.gametype == GT_FFA ) {
+			return qtrue;
+		}
+	}
+
+	if (flags & CG_SHOW_TEAMDEATHMATCH) {
+		if( cgs.gametype == GT_TEAM ) {
+			return qtrue;
+		}
+	}
+
+	if (flags & CG_SHOW_ELIMINATION) {
+		if( cgs.gametype == GT_ELIMINATION ) {
+			return qtrue;
+		}
+	}
+
+	if (flags & CG_SHOW_CTFELIMINATION) {
+		if( cgs.gametype == GT_CTF_ELIMINATION ) {
+			return qtrue;
+		}
+	}
+
+	if (flags & CG_SHOW_LASTMANSTANDING) {
+		if( cgs.gametype == GT_LMS ) {
+			return qtrue;
+		}
+	}
+
+	if (flags & CG_SHOW_DOUBLEDOMINATION) {
+		if( cgs.gametype == GT_DOUBLE_D ) {
+			return qtrue;
+		}
+	}
+
+	if (flags & CG_SHOW_DOMINATION) {
+		if( cgs.gametype == GT_DOMINATION ) {
+			return qtrue;
+		}
+	}
+
+	if (flags & CG_SHOW_POSSESSION) {
+		if( cgs.gametype == GT_POSSESSION ) {
+			return qtrue;
+		}
+	}
+
+	// End
 	return qfalse;
 }
 
