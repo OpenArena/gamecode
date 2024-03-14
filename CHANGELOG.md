@@ -20,6 +20,7 @@
   * `g_harvesterFromBodies`: In Harvester matches, skulls now spawn from dead bodies (a la [UT3!Greed](https://antifandom.com/unreal/wiki/Greed)) rather than a skull receptacle in the middle of the arena. Allows Harvester matches to take place in maps that don't feature a skull receptacle. **Default: 0.**
   * `g_ddCaptureTime` and `g_ddRespawnDelay`: New cvars for Double Domination that control the amount of holding time to score and the waiting time before a new round starts. **Default for both: 10.**
   * `bot_developer`: Bitflag that enables bot-based feedback such as action report (`&1`), regular chat disabling (`&2`) and obstacle feedback (`&4`). **Default: 0.**
+  * `g_weaponArena` and `g_weaponArenaWeapon`: two cvars that replace and extend `g_rockets` in order to be able to use `g_rockets` with every weapon other than rockets.
 * Shuffle has been reworked by implementing the solution from Aftershock.
 * New commands:
   * `weapbest`: Selects the best weapon.
@@ -36,6 +37,9 @@
 * Tons of other bug fixes.
 
 ### Extended version
+* New cvars that replace `g_rockets`: `g_weaponArena` and `g_weaponArenaWeapon`.
+  * `g_weaponArena` enables the "Weapon Arena" mode, which is the old g_rockets, but with any other weapon. `g_weaponArena 2` adds the Grappling Hook to the inventory.
+  * `g_weaponArenaWeapon` controls, via specific strings, which weapon it's spawned with its ammo boxes. The weapon cannot be picked up via menu, only (for now) via console. The full string list can be locate [here](https://github.com/OpenArena/gamecode/pull/171).
 * New cvar: bot_developer, for bot-based debugging.
 * Missionpack/UI3 backend refactors.
 * "You Have Been Mined" message outright displays the counter instead of delaying it.

@@ -1782,8 +1782,8 @@ void BotChooseWeapon(bot_state_t *bs) {
 	} else {
 		if (g_instantgib.integer)
 			newweaponnum = WP_RAILGUN;
-		else if (g_rockets.integer)
-			newweaponnum = WP_ROCKET_LAUNCHER;
+		else if (g_weaponArena.integer)
+			newweaponnum = G_GetWeaponArena(g_weaponArenaWeapon.string);
 		else
 			newweaponnum = trap_BotChooseBestFightWeapon(bs->ws, bs->inventory);
 		if (bs->weaponnum != newweaponnum) bs->weaponchange_time = FloatTime();

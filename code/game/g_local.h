@@ -1116,7 +1116,8 @@ extern vmCvar_t g_elimination_mine;
 extern vmCvar_t g_elimination_nail;
 //If lockspectator: 0=no limit, 1 = cannot follow enemy, 2 = must follow friend
 extern vmCvar_t g_elimination_lockspectator;
-extern vmCvar_t g_rockets;
+extern vmCvar_t g_weaponArena;
+extern vmCvar_t g_weaponArenaWeapon;
 //new in elimination Beta2
 extern vmCvar_t g_instantgib;
 extern vmCvar_t g_vampire;
@@ -1432,4 +1433,5 @@ qboolean G_IsATeamGametype(int check);	/* Whether the gametype is team-based or 
 qboolean G_UsesTeamFlags(int check);	/* Whether the gametype uses the red and blue flags. */
 qboolean G_UsesTheWhiteFlag(int check);	/* Whether the gametype uses the neutral flag. */
 qboolean G_IsARoundBasedGametype(int check);	/* Whether the gametype uses the neutral flag. */
+int G_GetWeaponArena(char* cvarWaString);	/* Takes a string and returns the value of a weapon. */
 /* /Neon_Knight */
