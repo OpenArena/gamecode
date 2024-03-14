@@ -37,6 +37,7 @@
 * Tons of other bug fixes.
 
 ### Extended version
+* New helper function: `G_IsANoPickupsMode()`, returns true if the mode doesn't allow pickups.
 * New cvars that replace `g_rockets`: `g_weaponArena` and `g_weaponArenaWeapon`.
   * `g_weaponArena` enables the "Weapon Arena" mode, which is the old g_rockets, but with any other weapon. `g_weaponArena 2` adds the Grappling Hook to the inventory.
   * `g_weaponArenaWeapon` controls, via specific strings, which weapon it's spawned with its ammo boxes. The weapon cannot be picked up via menu, only (for now) via console. The full string list can be locate [here](https://github.com/OpenArena/gamecode/pull/171).
