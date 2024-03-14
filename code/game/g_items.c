@@ -430,8 +430,8 @@ void Touch_Item (gentity_t *ent, gentity_t *other, trace_t *trace)
 	qboolean	predict;
 
 	//instant gib
-	if ((g_instantgib.integer || g_weaponArena.integer || g_gametype.integer == GT_CTF_ELIMINATION || g_elimination_allgametypes.integer)
-	        && ent->item->giType != IT_TEAM)
+	if ((g_gametype.integer == GT_CTF_ELIMINATION || G_IsANoPickupsMode())
+			&& ent->item->giType != IT_TEAM)
 		return;
 
 	//Cannot touch flag before round starts
@@ -741,7 +741,7 @@ void FinishSpawningItem( gentity_t *ent )
 
 
 	// powerups don't spawn in for a while (but not in elimination)
-	if(!G_IsARoundBasedGametype(g_gametype.integer) && !g_instantgib.integer && !g_elimination_allgametypes.integer && !g_weaponArena.integer )
+	if(!G_IsARoundBasedGametype(g_gametype.integer) && !G_IsANoPickupsMode() )
 		if ( ent->item->giType == IT_POWERUP ) {
 			float	respawn;
 
@@ -996,7 +996,7 @@ void G_SpawnItem (gentity_t *ent, gitem_t *item)
 	ent->physicsBounce = 0.50;		// items are bouncy
 
 	if (g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_LMS ||
-	        ( item->giType != IT_TEAM && (g_instantgib.integer || g_weaponArena.integer || g_elimination_allgametypes.integer || g_gametype.integer==GT_CTF_ELIMINATION) ) ) {
+	        ( item->giType != IT_TEAM && (G_IsANoPickupsMode() || g_gametype.integer==GT_CTF_ELIMINATION) ) ) {
 		ent->s.eFlags |= EF_NODRAW; //Invisible in elimination
 		ent->r.svFlags |= SVF_NOCLIENT;  //Don't broadcast
 	}

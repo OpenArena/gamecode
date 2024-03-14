@@ -187,7 +187,7 @@ int BotAI_GetEntityState( int entityNum, entityState_t *state ) {
 	memset( state, 0, sizeof(entityState_t) );
 	if (!ent->inuse) return qfalse;
 	if (!ent->r.linked) return qfalse;
-	if ( !(G_IsARoundBasedGametype(g_gametype.integer) ||g_instantgib.integer || g_weaponArena.integer || g_elimination_allgametypes.integer)
+	if ( !(G_IsARoundBasedGametype(g_gametype.integer) || G_IsANoPickupsMode())
 	       && (ent->r.svFlags & SVF_NOCLIENT) ) {
 		return qfalse;
 	}
@@ -1535,7 +1535,7 @@ int BotAIStartFrame(int time) {
 				trap_BotLibUpdateEntity(i, NULL);
 				continue;
 			}
-			if ( !(G_IsARoundBasedGametype(g_gametype.integer) ||g_instantgib.integer || g_weaponArena.integer || g_elimination_allgametypes.integer)
+			if ( !(G_IsARoundBasedGametype(g_gametype.integer) || G_IsANoPickupsMode())
 				   && ent->r.svFlags & SVF_NOCLIENT) {
 				trap_BotLibUpdateEntity(i, NULL);
 				continue;
