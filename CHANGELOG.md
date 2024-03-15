@@ -29,7 +29,7 @@
   * `weapbest`: Selects the best weapon.
   * `tossrune`: Tosses the rune that's been carried on. (Akin to TWCTF/TWCTF II) Needs `g_runes 2` in order to work.
   * `ui_writemappools`: If the arena files are loaded, this command dumps the gamelists so they can be used by g_autonextmap (should be used to generate new gamelists for new versions).
-* Now it's possible to compile OAX on Mac (thanks Bishop-333!)
+* Now it's possible to compile OAX on Mac (thanks EddieBrrrock!)
 * AI enhancements (LOTS!) for holdable handling, grappling hook handling, Domination and Double Domination.
 * Elimination/eCTF/LMS: If all humans have been killed in a round, bots will be eliminated one by one.
 * Lots of fixes for Classic UI and backend of UI3.
