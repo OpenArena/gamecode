@@ -407,7 +407,7 @@ void BotCTFOrders_BothFlagsNotAtBase(bot_state_t *bs) {
 			if (teammates[0] != bs->flagcarrier) other = teammates[0];
 			else other = teammates[1];
 			ClientName(other, name, sizeof(name));
-			if (bot_nochat.integer<3 && !bot_developer.integer && !bot.debugPaths.integer) {
+			if (bot_nochat.integer<3 && !bot_developer.integer && !bot_debugPaths.integer) {
 				BotAI_BotInitialChat(bs, "cmd_getflag", name, NULL);
 			}
 			BotSayTeamOrder(bs, other);
@@ -422,7 +422,7 @@ void BotCTFOrders_BothFlagsNotAtBase(bot_state_t *bs) {
 			ClientName(other, name, sizeof(name));
 			if ( bs->flagcarrier != -1 ) {
 				ClientName(bs->flagcarrier, carriername, sizeof(carriername));
-				if (bot_nochat.integer<3 && !bot_developer.integer && !bot.debugPaths.integer) {
+				if (bot_nochat.integer<3 && !bot_developer.integer && !bot_debugPaths.integer) {
 					if (bs->flagcarrier == bs->client) {
 						BotAI_BotInitialChat(bs, "cmd_accompanyme", name, NULL);
 						BotSayVoiceTeamOrder(bs, other, VOICECHAT_FOLLOWME);
@@ -435,19 +435,19 @@ void BotCTFOrders_BothFlagsNotAtBase(bot_state_t *bs) {
 			}
 			else {
 				//
-				if (bot_nochat.integer<3 && !bot_developer.integer && !bot.debugPaths.integer) {
+				if (bot_nochat.integer<3 && !bot_developer.integer && !bot_debugPaths.integer) {
 					BotAI_BotInitialChat(bs, "cmd_getflag", name, NULL);
 					BotSayVoiceTeamOrder(bs, other, VOICECHAT_GETFLAG);
 				}
 			}
-			if (bot_nochat.integer<3 && !bot_developer.integer && !bot.debugPaths.integer) {
+			if (bot_nochat.integer<3 && !bot_developer.integer && !bot_debugPaths.integer) {
 				BotSayTeamOrder(bs, other);
 			}
 			//tell the one furthest from the the base not carrying the flag to get the enemy flag
 			if (teammates[2] != bs->flagcarrier) other = teammates[2];
 			else other = teammates[1];
 			ClientName(other, name, sizeof(name));
-			if (bot_nochat.integer<3 && !bot_developer.integer && !bot.debugPaths.integer) {
+			if (bot_nochat.integer<3 && !bot_developer.integer && !bot_debugPaths.integer) {
 				BotAI_BotInitialChat(bs, "cmd_getflag", name, NULL);
 				BotSayTeamOrder(bs, other);
 				BotSayVoiceTeamOrder(bs, other, VOICECHAT_RETURNFLAG);
@@ -469,7 +469,7 @@ void BotCTFOrders_BothFlagsNotAtBase(bot_state_t *bs) {
 					}
 					//
 					ClientName(teammates[i], name, sizeof(name));
-					if (bot_nochat.integer<3 && !bot_developer.integer && !bot.debugPaths.integer) {
+					if (bot_nochat.integer<3 && !bot_developer.integer && !bot_debugPaths.integer) {
 						if (bs->flagcarrier == bs->client) {
 							BotAI_BotInitialChat(bs, "cmd_accompanyme", name, NULL);
 							BotSayVoiceTeamOrder(bs, teammates[i], VOICECHAT_FOLLOWME);
@@ -490,7 +490,7 @@ void BotCTFOrders_BothFlagsNotAtBase(bot_state_t *bs) {
 					}
 					//
 					ClientName(teammates[i], name, sizeof(name));
-					if (bot_nochat.integer<3 && !bot_developer.integer && !bot.debugPaths.integer) {
+					if (bot_nochat.integer<3 && !bot_developer.integer && !bot_debugPaths.integer) {
 						BotAI_BotInitialChat(bs, "cmd_getflag", name, NULL);
 						BotSayVoiceTeamOrder(bs, teammates[i], VOICECHAT_GETFLAG);
 						BotSayTeamOrder(bs, teammates[i]);
@@ -504,7 +504,7 @@ void BotCTFOrders_BothFlagsNotAtBase(bot_state_t *bs) {
 				}
 				//
 				ClientName(teammates[numteammates - i - 1], name, sizeof(name));
-				if (bot_nochat.integer<3 && !bot_developer.integer && !bot.debugPaths.integer) {
+				if (bot_nochat.integer<3 && !bot_developer.integer && !bot_debugPaths.integer) {
 					BotAI_BotInitialChat(bs, "cmd_getflag", name, NULL);
 					BotSayTeamOrder(bs, teammates[numteammates - i - 1]);
 					BotSayVoiceTeamOrder(bs, teammates[numteammates - i - 1], VOICECHAT_RETURNFLAG);
@@ -2611,7 +2611,7 @@ int FindHumanTeamLeader(bot_state_t *bs) {
 						// if not yet ordered to do anything
 						if ( !BotSetLastOrderedTask(bs) ) {
 							// go on defense by default
-							if (bot_nochat.integer<3 && !bot_developer.integer && !bot.debugPaths.integer) {
+							if (bot_nochat.integer<3 && !bot_developer.integer && !bot_debugPaths.integer) {
 								BotVoiceChat_Defend(bs, i, SAY_TELL);
 							}
 						}
