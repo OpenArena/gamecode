@@ -29,7 +29,7 @@
   * `weapbest`: Selects the best weapon.
   * `tossrune`: Tosses the rune that's been carried on. (Akin to TWCTF/TWCTF II) Needs `g_runes 2` in order to work.
   * `ui_writemappools`: If the arena files are loaded, this command dumps the gamelists so they can be used by g_autonextmap (should be used to generate new gamelists for new versions).
-* Now it's possible to compile OAX on Mac (thanks EddieBrrrock!)
+* Now it's possible to compile OAX on Mac (thanks Bishop-333!)
 * AI enhancements (LOTS!) for holdable handling, grappling hook handling, Domination and Double Domination.
 * Elimination/eCTF/LMS: If all humans have been killed in a round, bots will be eliminated one by one.
 * Lots of fixes for Classic UI and backend of UI3.
@@ -61,7 +61,7 @@
   * `g_weaponArenaWeapon` controls, via specific strings, which weapon it's spawned with its ammo boxes. The weapon cannot be picked up via menu, only (for now) via console. The full string list can be locate [here](https://github.com/OpenArena/gamecode/pull/171).
 * Missionpack/UI3 backend refactors.
 * "You Have Been Mined" message outright displays the counter instead of delaying it.
-* Team status bar fix and cg_drawTeamOverlay fix by EddieBrrrock.
+* Team status bar fix and cg_drawTeamOverlay fix by Bishop-333.
 * New command: tossrune. Drops the currently held rune.
 * New cvar value: g_runes &2: Enables the "tossrune" command in the server. (By default, g_runes 1, the command is disabled).
 * Reimplementation of shuffle, ported from Aftershock.
@@ -84,12 +84,12 @@
 * AI enhancement: Holdable item (Teleporter/Medkit/Kamikaze/Invulnerability) handling improvements.
 * AI enhancement: Double Domination bot logic improved (team formations, voice orders, voice speech support)
 * Regression fix: Obelisk bases are now drawn outside Harvester/Overload.
-* Fix: Now it's possible to compile OAX on Mac (thanks EddieBrrrock!)
+* Fix: Now it's possible to compile OAX on Mac (thanks Bishop-333!)
 * Fix: Team Orders in Classic UI now shows proper team orders depending on the gametype.
 * AI enhancement: Domination support vastly improved with team formations, basic logic and team orders.
 * AI enhancement: Bots now properly decide if they should use the Grappling Hook or not.
 * Fix: Classic menu now accounts for "Hide Private".
-* Fix: Yourteamcapture.wav is now only played once when it's a personal capture instead of two before (thanks EddieBrrrock!)
+* Fix: Yourteamcapture.wav is now only played once when it's a personal capture instead of two before (thanks Bishop-333!)
 * Fix: cg_weaponBarStyle with value outside of range now displays default weapon bar. Previously it would hide the weapon bar.
 * Removal of #ifdefs which blocked legit AI logic that the main game could benefit from.
 * Fix: Fragment of CG_DrawInformation in cg_info.c was not accounting for TDM.
