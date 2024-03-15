@@ -1,5 +1,5 @@
 /*
-===========================================================================
+===========================================================================weaponarena
 Copyright (C) 1999-2005 Id Software, Inc.
 
 This file is part of Quake III Arena source code.
@@ -1087,13 +1087,15 @@ void ClientUserinfoChanged( int clientNum ) {
 	client->pers.cmdTimeNudge = atoi( s );
 
 	// see if the player wants to debug the backward reconciliation
-	/*s = Info_ValueForKey( userinfo, "cg_debugDelag" );
-	if ( !atoi( s ) ) {
-		client->pers.debugDelag = qfalse;
+	if (g_developer.integer) {
+		s = Info_ValueForKey( userinfo, "cg_debugDelag" );
+		if ( !atoi( s ) ) {
+			client->pers.debugDelag = qfalse;
+		}
+		else {
+			client->pers.debugDelag = qtrue;
+		}
 	}
-	else {
-		client->pers.debugDelag = qtrue;
-	}*/
 
 	// see if the player is simulating incoming latency
 	//s = Info_ValueForKey( userinfo, "cg_latentSnaps" );
@@ -1860,12 +1862,16 @@ void ClientSpawn(gentity_t *ent) {
 		}
 	}
 
-	if (g_rockets.integer) {
-		client->ps.stats[STAT_WEAPONS] = ( 1 << WP_ROCKET_LAUNCHER );
-		client->ps.ammo[WP_ROCKET_LAUNCHER] = 999;
+	if (g_weaponArena.integer) {
+		client->ps.stats[STAT_WEAPONS] |= ( 1 << G_GetWeaponArena(g_weaponArenaWeapon.string) );
+		if (G_GetWeaponArena(g_weaponArenaWeapon.string) == WP_GAUNTLET) {
+			client->ps.ammo[G_GetWeaponArena(g_weaponArenaWeapon.string)] = -1;
+		} else {
+			client->ps.ammo[G_GetWeaponArena(g_weaponArenaWeapon.string)] = 999;
+		}
 	}
 
-	if (g_grapple.integer) {
+	if (g_grapple.integer || (g_weaponArena.integer > 1)) {
 		client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_GRAPPLING_HOOK );
 	}
 

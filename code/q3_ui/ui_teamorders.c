@@ -42,6 +42,7 @@ TEAM ORDERS MENU
 #define ID_LIST_BASE_ORDERS	13
 #define ID_LIST_TEAM_ORDERS	14
 #define ID_LIST_DD_ORDERS	15
+#define ID_LIST_DOM_ORDERS	16
 
 
 typedef struct {
@@ -173,6 +174,28 @@ static const char *ddMessages[] = {
 	NULL
 };
 
+#define NUM_DOM_ORDERS		7
+static const char *domOrders[] = {
+	"I Am the Leader",
+	"Follow Me",
+	"Roam",
+	"Control a point",
+	"Camp Here",
+	"Report",
+	"I Relinquish Command",
+	NULL
+};
+static const char *domMessages[] = {
+	"i am the leader",
+	"%s follow me",
+	"%s roam",
+	"%s take control of a point",
+	"%s camp here",
+	"%s report",
+	"i stop being the leader",
+	NULL
+};
+
 /*
 ===============
 UI_TeamOrdersMenu_BackEvent
@@ -230,6 +253,12 @@ static void UI_TeamOrdersMenu_SetList( int id )
 		teamOrdersMenuInfo.list.generic.id = id;
 		teamOrdersMenuInfo.list.numitems = NUM_DD_ORDERS;
 		teamOrdersMenuInfo.list.itemnames = ddOrders;
+		break;
+
+	case ID_LIST_DOM_ORDERS:
+		teamOrdersMenuInfo.list.generic.id = id;
+		teamOrdersMenuInfo.list.numitems = NUM_DOM_ORDERS;
+		teamOrdersMenuInfo.list.itemnames = domOrders;
 		break;
 	}
 
@@ -360,14 +389,17 @@ static void UI_TeamOrdersMenu_ListEvent( void *ptr, int event )
 		if( UI_UsesTeamFlags(teamOrdersMenuInfo.gametype) && !UI_UsesTheWhiteFlag(teamOrdersMenuInfo.gametype) ) {
 			UI_TeamOrdersMenu_SetList( ID_LIST_CTF_ORDERS );
 		}
-		if( UI_UsesTeamFlags(teamOrdersMenuInfo.gametype) && UI_UsesTheWhiteFlag(teamOrdersMenuInfo.gametype) ) {
+		else if( UI_UsesTeamFlags(teamOrdersMenuInfo.gametype) && UI_UsesTheWhiteFlag(teamOrdersMenuInfo.gametype) ) {
 			UI_TeamOrdersMenu_SetList( ID_LIST_CTF1F_ORDERS );
 		}
-		if( teamOrdersMenuInfo.gametype == GT_HARVESTER || teamOrdersMenuInfo.gametype == GT_OBELISK ) {
+		else if( teamOrdersMenuInfo.gametype == GT_HARVESTER || teamOrdersMenuInfo.gametype == GT_OBELISK ) {
 			UI_TeamOrdersMenu_SetList( ID_LIST_BASE_ORDERS );
 		}
-		if( teamOrdersMenuInfo.gametype == GT_DOUBLE_D ) {
+		else if( teamOrdersMenuInfo.gametype == GT_DOUBLE_D ) {
 			UI_TeamOrdersMenu_SetList( ID_LIST_DD_ORDERS );
+		}
+		else if( teamOrdersMenuInfo.gametype == GT_DOMINATION ) {
+			UI_TeamOrdersMenu_SetList( ID_LIST_DOM_ORDERS );
 		}
 		else {
 			UI_TeamOrdersMenu_SetList( ID_LIST_TEAM_ORDERS );
@@ -379,17 +411,20 @@ static void UI_TeamOrdersMenu_ListEvent( void *ptr, int event )
 	if( id == ID_LIST_CTF_ORDERS ) {
 		Com_sprintf( message, sizeof(message), ctfMessages[selection], teamOrdersMenuInfo.botNames[teamOrdersMenuInfo.selectedBot] );
 	}
-	if( id == ID_LIST_CTF1F_ORDERS ) {
+	else if( id == ID_LIST_CTF1F_ORDERS ) {
 		Com_sprintf( message, sizeof(message), ctf1fMessages[selection], teamOrdersMenuInfo.botNames[teamOrdersMenuInfo.selectedBot] );
 	}
-	if( id == ID_LIST_BASE_ORDERS ) {
+	else if( id == ID_LIST_BASE_ORDERS ) {
 		Com_sprintf( message, sizeof(message), baseMessages[selection], teamOrdersMenuInfo.botNames[teamOrdersMenuInfo.selectedBot] );
 	}
-	if( id == ID_LIST_TEAM_ORDERS ) {
-		Com_sprintf( message, sizeof(message), teamMessages[selection], teamOrdersMenuInfo.botNames[teamOrdersMenuInfo.selectedBot] );
-	}
-	if( id == ID_LIST_DD_ORDERS ) {
+	else if( id == ID_LIST_DD_ORDERS ) {
 		Com_sprintf( message, sizeof(message), ddMessages[selection], teamOrdersMenuInfo.botNames[teamOrdersMenuInfo.selectedBot] );
+	}
+	else if( id == ID_LIST_DOM_ORDERS ) {
+		Com_sprintf( message, sizeof(message), domMessages[selection], teamOrdersMenuInfo.botNames[teamOrdersMenuInfo.selectedBot] );
+  }
+	else {
+		Com_sprintf( message, sizeof(message), teamMessages[selection], teamOrdersMenuInfo.botNames[teamOrdersMenuInfo.selectedBot] );
 	}
 
 	trap_Cmd_ExecuteText( EXEC_APPEND, va( "say_team \"%s\"\n", message ) );

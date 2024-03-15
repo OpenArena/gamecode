@@ -74,11 +74,11 @@ void CG_PredictWeaponEffects( centity_t *cent ) {
 			// trace forward
 			VectorMA( muzzlePoint, 8192, forward, endPoint );
 
-			// THIS IS FOR DEBUGGING!
-			// you definitely *will* want something like this to test the backward reconciliation
-			// to make sure it's working *exactly* right
-			/*if ( cg_debugDelag.integer ) {
-				* Sago: There are some problems with some unlagged code. People will just have to trust it
+			/* THIS IS FOR DEBUGGING!
+			 you definitely *will* want something like this to test the backward reconciliation
+			// to make sure it's working *exactly* right */
+			if (cg_debugDelag.integer && cg_developer.integer) {
+				/* Sago: There are some problems with some unlagged code. People will just have to trust it*/
 				// trace forward
 				CG_Trace( &trace, muzzlePoint, vec3_origin, vec3_origin, endPoint, cent->currentState.number, CONTENTS_BODY|CONTENTS_SOLID );
 
@@ -127,7 +127,7 @@ void CG_PredictWeaponEffects( centity_t *cent ) {
 							cg.frameInterpolation, origin1[0], origin1[1], origin1[2], origin2[0], origin2[1], origin2[2]);
 					}
 				}
-			}*/
+			}
 
 			// find the rail's end point
 			CG_Trace( &trace, muzzlePoint, vec3_origin, vec3_origin, endPoint, cg.predictedPlayerState.clientNum, CONTENTS_SOLID );

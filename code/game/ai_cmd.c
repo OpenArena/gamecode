@@ -58,7 +58,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 int notleader[MAX_CLIENTS];
 
-#ifdef DEBUG
 /*
 ==================
 BotPrintTeamGoal
@@ -67,6 +66,11 @@ BotPrintTeamGoal
 void BotPrintTeamGoal(bot_state_t *bs) {
 	char netname[MAX_NETNAME];
 	float t;
+
+	// Exit if not in the adequate devmode for bots.
+	if (!bot_developer.integer && !bot_debugLTG.integer) {
+		return;
+	}
 
 	ClientName(bs->client, netname, sizeof(netname));
 	t = bs->teamgoal_time - FloatTime();
@@ -132,14 +136,19 @@ void BotPrintTeamGoal(bot_state_t *bs) {
 			BotAI_Print(PRT_MESSAGE, "%s: I'm gonna patrol for %1.0f secs\n", netname, t);
 			break;
 		}
-		case LTG_POINTA:
+		case LTG_HOLDPOINTA:
 		{
 			BotAI_Print(PRT_MESSAGE, "%s: I'm gonna take care of point A for %1.0f secs\n", netname, t);
 			break;
 		}
-		case LTG_POINTB:
+		case LTG_HOLDPOINTB:
 		{
 			BotAI_Print(PRT_MESSAGE, "%s: I'm gonna take care of point B for %1.0f secs\n", netname, t);
+			break;
+		}
+		case LTG_HOLDDOMPOINT:
+		{
+			BotAI_Print(PRT_MESSAGE, "%s: I'm gonna defend DOM point %i for %1.0f secs\n", netname, BotGetDominationPoint(bs), t);
 			break;
 		}
 		default:
@@ -154,7 +163,6 @@ void BotPrintTeamGoal(bot_state_t *bs) {
 		}
 	}
 }
-#endif //DEBUG
 
 /*
 ==================
@@ -474,6 +482,60 @@ int BotGPSToPosition(char *buf, vec3_t position) {
 	return qtrue;
 }
 
+void BotMatch_HoldDOMPoint(bot_state_t *bs, bot_match_t *match);
+
+/*
+==================
+BotGetDominationPoint
+Returns the actual Domination point the bot is acting on. Prevents currentPoint from being accessed directly.
+==================
+*/
+int BotGetDominationPoint(bot_state_t *bs) {
+	return bs->currentPoint;
+}
+
+/*
+==================
+BotSetDominationPoint
+Selects a point for Domination. It's saved in the field currentPoint.
+==================
+*/
+void BotSetDominationPoint(bot_state_t *bs, int controlPoint) {
+	int i;
+	qboolean allTaken = qtrue;
+
+	// Domination only
+	if (gametype != GT_DOMINATION) return;
+	// If there are no points, just assign the neutral one.
+	if (level.domination_points_count > 1) {
+		bs->currentPoint = 0;
+		return;
+	}
+	// If a control point point has been passed,
+	// and falls inside of both gametype AND map limits, assign it.
+	if (controlPoint >= 0 &&
+			controlPoint < level.domination_points_count &&
+			controlPoint < MAX_DOMINATION_POINTS) {
+		bs->currentPoint = controlPoint;
+		return;
+	}
+	// Search for points our team don't own.
+	for (i=1;i<level.domination_points_count;i++) {
+		if (!BotTeamControlsPoint(bs,level.pointStatusDom[i])) {
+			allTaken = qfalse;
+			bs->currentPoint = i;
+			break;
+		}
+	}
+	// If we own all of the points, operate in a random one.
+	if (allTaken == qfalse) {
+		bs->currentPoint = rand() % level.domination_points_count;
+	}
+}
+
+void BotMatch_TakeA(bot_state_t *bs, bot_match_t *match);
+void BotMatch_TakeB(bot_state_t *bs, bot_match_t *match);
+
 /*
 ==================
 BotMatch_HelpAccompany
@@ -595,9 +657,10 @@ void BotMatch_HelpAccompany(bot_state_t *bs, bot_match_t *match) {
 		// remember last ordered task
 		BotRememberLastOrderedTask(bs);
 	}
-#ifdef DEBUG
-	BotPrintTeamGoal(bs);
-#endif //DEBUG
+	// Actual outputting of the message requires developer mode.
+	if (bot_developer.integer && bot_debugLTG.integer) {
+		BotPrintTeamGoal(bs);
+	}
 }
 
 /*
@@ -611,6 +674,18 @@ void BotMatch_DefendKeyArea(bot_state_t *bs, bot_match_t *match) {
 	int client;
 
 	if (!G_IsATeamGametype(gametype)) return;
+	// Double Domination had other rules
+	if (gametype == GT_DOUBLE_D) {
+		// "Defend" will make bots to focus on point B.
+		BotMatch_TakeB(bs,match);
+		return;
+	}
+	// Domination has clear rules
+	if (gametype == GT_DOMINATION) {
+		// Reroll to get a different DOM point.
+		BotSetDominationPoint(bs,-1);
+		BotMatch_HoldDOMPoint(bs,match);
+  }
 	//if not addressed to this bot
 	if (!BotAddressedToBot(bs, match)) return;
 	//get the match variable
@@ -643,9 +718,10 @@ void BotMatch_DefendKeyArea(bot_state_t *bs, bot_match_t *match) {
 	BotSetTeamStatus(bs);
 	// remember last ordered task
 	BotRememberLastOrderedTask(bs);
-#ifdef DEBUG
-	BotPrintTeamGoal(bs);
-#endif //DEBUG
+	// Actual outputting of the message requires developer mode.
+	if (bot_developer.integer && bot_debugLTG.integer) {
+		BotPrintTeamGoal(bs);
+	}
 }
 
 /*
@@ -659,7 +735,7 @@ void BotMatch_TakeA(bot_state_t *bs, bot_match_t *match) {
 	char netname[MAX_MESSAGE_SIZE];
 	int client;
 
-	if (!G_IsATeamGametype(gametype)) return;
+	if (gametype != GT_DOUBLE_D) return;
 	//if not addressed to this bot
 	if (!BotAddressedToBot(bs, match)) return;
 	//get the match variable
@@ -681,20 +757,21 @@ void BotMatch_TakeA(bot_state_t *bs, bot_match_t *match) {
 	//set the time to send a message to the team mates
 	bs->teammessage_time = FloatTime() + 2 * random();
 	//set the ltg type
-	bs->ltgtype = LTG_POINTA;
+	bs->ltgtype = LTG_HOLDPOINTA;
 	//get the team goal time
 	bs->teamgoal_time = BotGetTime(match);
 	//set the team goal time
-	if (!bs->teamgoal_time) bs->teamgoal_time = FloatTime() + DD_POINTA;
+	if (!bs->teamgoal_time) bs->teamgoal_time = FloatTime() + TEAM_HOLDPOINTA_TIME;
 	//away from defending
 	bs->defendaway_time = 0;
 	//
 	BotSetTeamStatus(bs);
 	// remember last ordered task
 	BotRememberLastOrderedTask(bs);
-#ifdef DEBUG
-	BotPrintTeamGoal(bs);
-#endif //DEBUG
+	// Actual outputting of the message requires developer mode.
+	if (bot_developer.integer && bot_debugLTG.integer) {
+		BotPrintTeamGoal(bs);
+	}
 }
 
 /*
@@ -708,7 +785,7 @@ void BotMatch_TakeB(bot_state_t *bs, bot_match_t *match) {
 	char netname[MAX_MESSAGE_SIZE];
 	int client;
 
-	if (!G_IsATeamGametype(gametype)) return;
+	if (gametype != GT_DOUBLE_D) return;
 	//if not addressed to this bot
 	if (!BotAddressedToBot(bs, match)) return;
 	//get the match variable
@@ -730,20 +807,64 @@ void BotMatch_TakeB(bot_state_t *bs, bot_match_t *match) {
 	//set the time to send a message to the team mates
 	bs->teammessage_time = FloatTime() + 2 * random();
 	//set the ltg type
-	bs->ltgtype = LTG_POINTB;
+	bs->ltgtype = LTG_HOLDPOINTB;
 	//get the team goal time
 	bs->teamgoal_time = BotGetTime(match);
 	//set the team goal time
-	if (!bs->teamgoal_time) bs->teamgoal_time = FloatTime() + DD_POINTA;
+	if (!bs->teamgoal_time) bs->teamgoal_time = FloatTime() + TEAM_HOLDPOINTB_TIME;
 	//away from defending
 	bs->defendaway_time = 0;
 	//
 	BotSetTeamStatus(bs);
 	// remember last ordered task
 	BotRememberLastOrderedTask(bs);
-#ifdef DEBUG
-	BotPrintTeamGoal(bs);
-#endif //DEBUG
+	// Actual outputting of the message requires developer mode.
+	if (bot_developer.integer && bot_debugLTG.integer) {
+		BotPrintTeamGoal(bs);
+	}
+}
+
+/*
+==================
+BotMatch_HoldDOMPoint
+For Domination
+==================
+*/
+void BotMatch_HoldDOMPoint(bot_state_t *bs, bot_match_t *match) {
+	char netname[MAX_MESSAGE_SIZE];
+	int client;
+
+	if (gametype != GT_DOMINATION) return;
+	if (level.domination_points_count < 1) return;
+	//if not addressed to this bot
+	if (!BotAddressedToBot(bs, match)) return;
+	//get the match variable
+	//
+	trap_BotMatchVariable(match, NETNAME, netname, sizeof(netname));
+	//
+	client = ClientFromName(netname);
+	//the team mate who ordered
+	bs->decisionmaker = client;
+	bs->ordered = qtrue;
+	bs->order_time = FloatTime();
+	//set the time to send a message to the team mates
+	bs->teammessage_time = FloatTime() + 2 * random();
+	//set the ltg type
+	bs->ltgtype = LTG_HOLDDOMPOINT;
+	//get the team goal time
+	bs->teamgoal_time = BotGetTime(match);
+	//set the team goal time
+	if (!bs->teamgoal_time) bs->teamgoal_time = FloatTime() + TEAM_HOLDDOMPOINT_TIME;
+	//away from defending
+	bs->defendaway_time = 0;
+	//
+	BotSetTeamStatus(bs);
+	// remember last ordered task
+	BotRememberLastOrderedTask(bs);
+	// Actual outputting of the message requires developer mode.
+	if (bot_developer.integer && bot_debugLTG.integer) {
+		BotPrintTeamGoal(bs);
+	}
 }
 
 /*
@@ -781,9 +902,10 @@ void BotMatch_GetItem(bot_state_t *bs, bot_match_t *match) {
 	bs->teamgoal_time = FloatTime() + TEAM_GETITEM_TIME;
 	//
 	BotSetTeamStatus(bs);
-#ifdef DEBUG
-	BotPrintTeamGoal(bs);
-#endif //DEBUG
+	// Actual outputting of the message requires developer mode.
+	if (bot_developer.integer && bot_debugLTG.integer) {
+		BotPrintTeamGoal(bs);
+	}
 }
 
 /*
@@ -830,15 +952,15 @@ void BotMatch_Camp(bot_state_t *bs, bot_match_t *match) {
 		//if info is valid (in PVS)
 		if (entinfo.valid) {
 			areanum = BotPointAreaNum(entinfo.origin);
-			if (areanum) {// && trap_AAS_AreaReachability(areanum)) {
+			if (areanum) {/* && trap_AAS_AreaReachability(areanum)) { */
 				//NOTE: just assume the bot knows where the person is
-				//if (BotEntityVisible(bs->entitynum, bs->eye, bs->viewangles, 360, client)) {
+				/* if (BotEntityVisible(bs->entitynum, bs->eye, bs->viewangles, 360, client)) { */
 					bs->teamgoal.entitynum = client;
 					bs->teamgoal.areanum = areanum;
 					VectorCopy(entinfo.origin, bs->teamgoal.origin);
 					VectorSet(bs->teamgoal.mins, -8, -8, -8);
 					VectorSet(bs->teamgoal.maxs, 8, 8, 8);
-				//}
+				/* } */
 			}
 		}
 		//if the other is not visible
@@ -873,9 +995,10 @@ void BotMatch_Camp(bot_state_t *bs, bot_match_t *match) {
 	BotSetTeamStatus(bs);
 	// remember last ordered task
 	BotRememberLastOrderedTask(bs);
-#ifdef DEBUG
-	BotPrintTeamGoal(bs);
-#endif //DEBUG
+	// Actual outputting of the message requires developer mode.
+	if (bot_developer.integer && bot_debugLTG.integer) {
+		BotPrintTeamGoal(bs);
+	}
 }
 
 /*
@@ -912,9 +1035,10 @@ void BotMatch_Patrol(bot_state_t *bs, bot_match_t *match) {
 	BotSetTeamStatus(bs);
 	// remember last ordered task
 	BotRememberLastOrderedTask(bs);
-#ifdef DEBUG
-	BotPrintTeamGoal(bs);
-#endif //DEBUG
+	// Actual outputting of the message requires developer mode.
+	if (bot_developer.integer && bot_debugLTG.integer) {
+		BotPrintTeamGoal(bs);
+	}
 }
 
 /*
@@ -966,9 +1090,10 @@ void BotMatch_GetFlag(bot_state_t *bs, bot_match_t *match) {
 	BotSetTeamStatus(bs);
 	// remember last ordered task
 	BotRememberLastOrderedTask(bs);
-#ifdef DEBUG
-	BotPrintTeamGoal(bs);
-#endif //DEBUG
+	// Actual outputting of the message requires developer mode.
+	if (bot_developer.integer && bot_debugLTG.integer) {
+		BotPrintTeamGoal(bs);
+	}
 }
 
 /*
@@ -988,6 +1113,16 @@ void BotMatch_AttackEnemyBase(bot_state_t *bs, bot_match_t *match) {
 		if (!redobelisk.areanum || !blueobelisk.areanum)
 			return;
 	}
+	else if (gametype == GT_DOUBLE_D) {
+		// "Attack" will make a bot to focus on point A.
+		BotMatch_TakeA(bs,match);
+		return;
+	}
+	else if (gametype == GT_DOMINATION) {
+		// Reroll to get a different DOM point.
+		BotSetDominationPoint(bs,-1);
+		BotMatch_HoldDOMPoint(bs,match);
+  }
 	else {
 		return;
 	}
@@ -1012,9 +1147,10 @@ void BotMatch_AttackEnemyBase(bot_state_t *bs, bot_match_t *match) {
 	BotSetTeamStatus(bs);
 	// remember last ordered task
 	BotRememberLastOrderedTask(bs);
-#ifdef DEBUG
-	BotPrintTeamGoal(bs);
-#endif //DEBUG
+	// Actual outputting of the message requires developer mode.
+	if (bot_developer.integer && bot_debugLTG.integer) {
+		BotPrintTeamGoal(bs);
+	}
 }
 
 /*
@@ -1054,9 +1190,10 @@ void BotMatch_Harvest(bot_state_t *bs, bot_match_t *match) {
 	BotSetTeamStatus(bs);
 	// remember last ordered task
 	BotRememberLastOrderedTask(bs);
-#ifdef DEBUG
-	BotPrintTeamGoal(bs);
-#endif //DEBUG
+	// Actual outputting of the message requires developer mode.
+	if (bot_developer.integer && bot_debugLTG.integer) {
+		BotPrintTeamGoal(bs);
+	}
 }
 
 /*
@@ -1098,9 +1235,10 @@ void BotMatch_RushBase(bot_state_t *bs, bot_match_t *match) {
 	bs->rushbaseaway_time = 0;
 	//
 	BotSetTeamStatus(bs);
-#ifdef DEBUG
-	BotPrintTeamGoal(bs);
-#endif //DEBUG
+	// Actual outputting of the message requires developer mode.
+	if (bot_developer.integer && bot_debugLTG.integer) {
+		BotPrintTeamGoal(bs);
+	}
 }
 
 /*
@@ -1184,9 +1322,10 @@ void BotMatch_ReturnFlag(bot_state_t *bs, bot_match_t *match) {
 	bs->rushbaseaway_time = 0;
 	//
 	BotSetTeamStatus(bs);
-#ifdef DEBUG
-	BotPrintTeamGoal(bs);
-#endif //DEBUG
+	// Actual outputting of the message requires developer mode.
+	if (bot_developer.integer && bot_debugLTG.integer) {
+		BotPrintTeamGoal(bs);
+	}
 }
 
 /*
@@ -1238,7 +1377,7 @@ void BotMatch_LeaveSubteam(bot_state_t *bs, bot_match_t *match) {
 
 /*
 ==================
-BotMatch_LeaveSubteam
+BotMatch_WhichTeam
 ==================
 */
 void BotMatch_WhichTeam(bot_state_t *bs, bot_match_t *match) {
@@ -1536,14 +1675,19 @@ void BotMatch_WhatAreYouDoing(bot_state_t *bs, bot_match_t *match) {
 			break;
 		}
 //#endif
-		case LTG_POINTA:
+		case LTG_HOLDPOINTA:
 		{
-			BotAI_BotInitialChat(bs, "dd_pointa", NULL);
+			BotAI_BotInitialChat(bs, "dd_holdingpointa", NULL);
 			break;
 		}
-		case LTG_POINTB:
+		case LTG_HOLDPOINTB:
 		{
-			BotAI_BotInitialChat(bs, "dd_pointb", NULL);
+			BotAI_BotInitialChat(bs, "dd_holdingpointb", NULL);
+			break;
+		}
+		case LTG_HOLDDOMPOINT:
+		{
+			BotAI_BotInitialChat(bs, "dom_holdpoint", NULL);
 			break;
 		}
 		default:
@@ -1804,9 +1948,10 @@ void BotMatch_Kill(bot_state_t *bs, bot_match_t *match) {
 	bs->teamgoal_time = FloatTime() + TEAM_KILL_SOMEONE;
 	//
 	BotSetTeamStatus(bs);
-#ifdef DEBUG
-	BotPrintTeamGoal(bs);
-#endif //DEBUG
+	// Actual outputting of the message requires developer mode.
+	if (bot_developer.integer && bot_debugLTG.integer) {
+		BotPrintTeamGoal(bs);
+	}
 }
 
 /*
@@ -1866,6 +2011,10 @@ void BotMatch_EnterGame(bot_state_t *bs, bot_match_t *match) {
 	client = FindClientByName(netname);
 	if (client >= 0) {
 		notleader[client] = qfalse;
+	}
+	if (gametype == GT_DOMINATION) {
+		// Assign a control point at start.
+		BotSetDominationPoint(bs,-1);
 	}
 	//NOTE: eliza chats will catch this
 	//Com_sprintf(buf, sizeof(buf), "heya %s", netname);
@@ -2073,14 +2222,19 @@ int BotMatchMessage(bot_state_t *bs, char *message) {
 			BotMatch_Suicide(bs, &match);
 			break;
 		}
-		case MSG_TAKEA:
+		case MSG_HOLDPOINTA:
 		{
 			BotMatch_TakeA(bs, &match);
 			break;
 		}
-		case MSG_TAKEB:
+		case MSG_HOLDPOINTB:
 		{
 			BotMatch_TakeB(bs, &match);
+			break;
+		}
+		case MSG_HOLDDOMPOINT:
+		{
+			BotMatch_HoldDOMPoint(bs, &match);
 			break;
 		}
 		default:

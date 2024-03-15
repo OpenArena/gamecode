@@ -237,7 +237,7 @@ vmCvar_t cg_enableQ;
 
 //unlagged - client options
 vmCvar_t cg_delag;
-//vmCvar_t cg_debugDelag;
+vmCvar_t cg_debugDelag;
 //vmCvar_t cg_drawBBox;
 vmCvar_t cg_cmdTimeNudge;
 vmCvar_t sv_fps;
@@ -303,6 +303,9 @@ vmCvar_t cg_missionpackChecks;
 /* /Neon_Knight */
 /* Neon_Knight: Developer mode. */
 vmCvar_t cg_developer;
+// vmCvar_t cg_debugDD;
+vmCvar_t cg_debugOrbit;
+vmCvar_t cg_debugAccuracy;
 /* /Neon_Knight */
 
 typedef struct {
@@ -358,9 +361,9 @@ static cvarTable_t cvarTable[] = {// bk001129
 	{ &cg_kickScale, "cg_kickScale", "1.0", CVAR_ARCHIVE},
 	{ &cg_swingSpeed, "cg_swingSpeed", "0.3", CVAR_CHEAT},
 	{ &cg_animSpeed, "cg_animspeed", "1", CVAR_CHEAT},
-	{ &cg_debugAnim, "cg_debuganim", "0", CVAR_CHEAT},
-	{ &cg_debugPosition, "cg_debugposition", "0", CVAR_CHEAT},
-	{ &cg_debugEvents, "cg_debugevents", "0", CVAR_CHEAT},
+	{ &cg_debugAnim, "cg_debugAnim", "0", CVAR_CHEAT},
+	{ &cg_debugPosition, "cg_debugPosition", "0", CVAR_CHEAT},
+	{ &cg_debugEvents, "cg_debugEvents", "0", CVAR_CHEAT},
 	{ &cg_errorDecay, "cg_errordecay", "100", 0},
 	{ &cg_nopredict, "cg_nopredict", "0", 0},
 	{ &cg_noPlayerAnims, "cg_noplayeranims", "0", CVAR_CHEAT},
@@ -445,7 +448,7 @@ static cvarTable_t cvarTable[] = {// bk001129
 	{ &cg_leiGoreNoise, "cg_leiGoreNoise", "0", CVAR_ARCHIVE}, // LEILEI 
 	{ &cg_leiBrassNoise, "cg_leiBrassNoise", "0", CVAR_ARCHIVE}, // LEILEI 
 	{ &cg_leiSuperGoreyAwesome, "cg_leiSuperGoreyAwesome", "0", CVAR_ARCHIVE}, // LEILEI 
-	{ &cg_leiDebug, "cg_leiDebug", "0", CVAR_ARCHIVE}, // LEILEI 
+	{ &cg_leiDebug, "cg_leiDebug", "0", CVAR_CHEAT}, // LEILEI 
 	{ &cg_leiChibi, "cg_leiChibi", "0", CVAR_CHEAT}, // LEILEI 
 	{ &cg_leiWidescreen, "cg_leiWidescreen", "1", CVAR_ARCHIVE}, // LEILEI 
 	{ &cg_deathcam, "cg_deathcam", "1", CVAR_ARCHIVE}, // LEILEI 
@@ -461,7 +464,7 @@ static cvarTable_t cvarTable[] = {// bk001129
 	{ &cg_oldPlasma, "cg_oldPlasma", "1", CVAR_ARCHIVE},
 	//unlagged - client options
 	{ &cg_delag, "cg_delag", "1", CVAR_ARCHIVE | CVAR_USERINFO},
-	//	{ &cg_debugDelag, "cg_debugDelag", "0", CVAR_USERINFO | CVAR_CHEAT },
+	{ &cg_debugDelag, "cg_debugDelag", "0", CVAR_CHEAT },
 	//	{ &cg_drawBBox, "cg_drawBBox", "0", CVAR_CHEAT },
 	{ &cg_cmdTimeNudge, "cg_cmdTimeNudge", "0", CVAR_ARCHIVE | CVAR_USERINFO},
 	// this will be automagically copied from the server
@@ -521,7 +524,10 @@ static cvarTable_t cvarTable[] = {// bk001129
 	{ &cg_missionpackChecks, "missionpackChecks", "1", CVAR_ARCHIVE},
 /* /Neon_Knight */
 /* Neon_Knight: Enables MP checks. */
-	{ &cg_developer, "developer", "0", CVAR_CHEAT}
+	{ &cg_developer, "developer", "0", CVAR_CHEAT},
+//	{ &cg_debugDD, "debug_DD", "0", CVAR_CHEAT},
+	{ &cg_debugOrbit, "cg_debugOrbit", "0", CVAR_CHEAT},
+	{ &cg_debugAccuracy, "cg_debugAccuracy", "0", CVAR_CHEAT}
 /* /Neon_Knight */
 };
 
@@ -969,9 +975,9 @@ static void CG_RegisterSounds(void) {
 	Q_strncpyz(items, CG_ConfigString(CS_ITEMS), sizeof (items));
 
 	for (i = 1; i < bg_numItems; i++) {
-		//		if ( items[ i ] == '1' || cg_buildScript.integer ) {
+		/* if ( items[ i ] == '1' || cg_buildScript.integer ) { */
 		CG_RegisterItemSounds(i);
-		//		}
+		/* } */
 	}
 
 	for (i = 1; i < MAX_SOUNDS; i++) {
@@ -1887,15 +1893,15 @@ void CG_ParseMenu(const char *menuFile) {
 			break;
 		}
 
-		//if ( !Q_strequal( token, "{" ) ) {
-		//	Com_Printf( "Missing { in menu file\n" );
-		//	break;
-		//}
+		/* if ( !Q_strequal( token, "{" ) ) {
+			Com_Printf( "Missing { in menu file\n" );
+			break;
+		} */
 
-		//if ( menuCount == MAX_MENUS ) {
-		//	Com_Printf( "Too many menus!\n" );
-		//	break;
-		//}
+		/* if ( menuCount == MAX_MENUS ) {
+			Com_Printf( "Too many menus!\n" );
+			break;
+		} */
 
 		if (token.string[0] == '}') {
 			break;
@@ -1974,7 +1980,7 @@ void CG_LoadMenus(const char *menuFile) {
 
 	COM_Compress(buf);
 
-	Menu_Reset();
+	setMenuCount(0);
 
 	p = buf;
 
@@ -2302,7 +2308,7 @@ void CG_LoadHudMenu(void) {
 
 	Init_Display(&cgDC);
 
-	Menu_Reset();
+	setMenuCount(0);
 
 	trap_Cvar_VariableStringBuffer("cg_hudFiles", buff, sizeof (buff));
 	hudSet = buff;
@@ -2314,12 +2320,12 @@ void CG_LoadHudMenu(void) {
 }
 
 void CG_AssetCache(void) {
-	//if (Assets.textFont == NULL) {
-	//  trap_R_RegisterFont("fonts/arial.ttf", 72, &Assets.textFont);
-	//}
-	//Assets.background = trap_R_RegisterShaderNoMip( ASSET_BACKGROUND );
-	//Com_Printf("Menu Size: %i bytes\n", sizeof(Menus));
-	/*
+	/* if (Assets.textFont == NULL) {
+		trap_R_RegisterFont("fonts/arial.ttf", 72, &Assets.textFont);
+	}
+	Assets.background = trap_R_RegisterShaderNoMip( ASSET_BACKGROUND );
+	Com_Printf("Menu Size: %i bytes\n", sizeof(Menus));
+	
 		cgDC.Assets.gradientBar = trap_R_RegisterShaderNoMip( ASSET_GRADIENTBAR );
 		cgDC.Assets.fxBasePic = trap_R_RegisterShaderNoMip( ART_FX_BASE );
 		cgDC.Assets.fxPic[0] = trap_R_RegisterShaderNoMip( ART_FX_RED );

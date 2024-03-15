@@ -133,7 +133,7 @@ void TossClientItems( gentity_t *self )
 		}
 	}
 
-	if (g_instantgib.integer || g_rockets.integer || g_gametype.integer == GT_CTF_ELIMINATION || g_elimination_allgametypes.integer) {
+	if (g_gametype.integer == GT_CTF_ELIMINATION || G_IsANoPickupsMode()) {
 		//Nothing!
 	}
 	else if ( weapon > WP_MACHINEGUN && weapon != WP_GRAPPLING_HOOK &&
@@ -1292,7 +1292,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 	asave = CheckArmor (targ, take, dflags);
 	take -= asave;
 
-	if ( g_debugDamage.integer ) {
+	if (g_debugDamage.integer && g_developer.integer) {
 		G_Printf( "%i: client:%i health:%i damage:%i armor:%i\n", level.time, targ->s.number,
 		          targ->health, take, asave );
 	}

@@ -111,7 +111,7 @@ char *UI_Cvar_VariableString( const char *var_name ) {
 
 
 
-void UI_SetBestScores(postGameInfo_t *newInfo, qboolean postGame) {
+void UI_SetBestScores(postGameInfo_t *newInfo) {
 	trap_Cvar_Set("ui_scoreAccuracy",     va("%i%%", newInfo->accuracy));
 	trap_Cvar_Set("ui_scoreImpressives",	va("%i", newInfo->impressives));
 	trap_Cvar_Set("ui_scoreExcellents", 	va("%i", newInfo->excellents));
@@ -127,23 +127,24 @@ void UI_SetBestScores(postGameInfo_t *newInfo, qboolean postGame) {
 	trap_Cvar_Set("ui_scoreShutoutBonus",	va("%i", newInfo->shutoutBonus));
 	trap_Cvar_Set("ui_scoreTime",					va("%02i:%02i", newInfo->time / 60, newInfo->time % 60));
 	trap_Cvar_Set("ui_scoreCaptures",		va("%i", newInfo->captures));
-	if (postGame) {
-		trap_Cvar_Set("ui_scoreAccuracy2",     va("%i%%", newInfo->accuracy));
-		trap_Cvar_Set("ui_scoreImpressives2",	va("%i", newInfo->impressives));
-		trap_Cvar_Set("ui_scoreExcellents2", 	va("%i", newInfo->excellents));
-		trap_Cvar_Set("ui_scoreDefends2", 			va("%i", newInfo->defends));
-		trap_Cvar_Set("ui_scoreAssists2", 			va("%i", newInfo->assists));
-		trap_Cvar_Set("ui_scoreGauntlets2", 		va("%i", newInfo->gauntlets));
-		trap_Cvar_Set("ui_scoreScore2", 				va("%i", newInfo->score));
-		trap_Cvar_Set("ui_scorePerfect2",	 		va("%i", newInfo->perfects));
-		trap_Cvar_Set("ui_scoreTeam2",					va("%i to %i", newInfo->redScore, newInfo->blueScore));
-		trap_Cvar_Set("ui_scoreBase2",					va("%i", newInfo->baseScore));
-		trap_Cvar_Set("ui_scoreTimeBonus2",		va("%i", newInfo->timeBonus));
-		trap_Cvar_Set("ui_scoreSkillBonus2",		va("%i", newInfo->skillBonus));
-		trap_Cvar_Set("ui_scoreShutoutBonus2",	va("%i", newInfo->shutoutBonus));
-		trap_Cvar_Set("ui_scoreTime2",					va("%02i:%02i", newInfo->time / 60, newInfo->time % 60));
-		trap_Cvar_Set("ui_scoreCaptures2",		va("%i", newInfo->captures));
-	}
+}
+
+void UI_SetBestScoresPostGame(postGameInfo_t *newInfo) {
+	trap_Cvar_Set("ui_scoreAccuracy2",     va("%i%%", newInfo->accuracy));
+	trap_Cvar_Set("ui_scoreImpressives2",	va("%i", newInfo->impressives));
+	trap_Cvar_Set("ui_scoreExcellents2", 	va("%i", newInfo->excellents));
+	trap_Cvar_Set("ui_scoreDefends2", 			va("%i", newInfo->defends));
+	trap_Cvar_Set("ui_scoreAssists2", 			va("%i", newInfo->assists));
+	trap_Cvar_Set("ui_scoreGauntlets2", 		va("%i", newInfo->gauntlets));
+	trap_Cvar_Set("ui_scoreScore2", 				va("%i", newInfo->score));
+	trap_Cvar_Set("ui_scorePerfect2",	 		va("%i", newInfo->perfects));
+	trap_Cvar_Set("ui_scoreTeam2",					va("%i to %i", newInfo->redScore, newInfo->blueScore));
+	trap_Cvar_Set("ui_scoreBase2",					va("%i", newInfo->baseScore));
+	trap_Cvar_Set("ui_scoreTimeBonus2",		va("%i", newInfo->timeBonus));
+	trap_Cvar_Set("ui_scoreSkillBonus2",		va("%i", newInfo->skillBonus));
+	trap_Cvar_Set("ui_scoreShutoutBonus2",	va("%i", newInfo->shutoutBonus));
+	trap_Cvar_Set("ui_scoreTime2",					va("%02i:%02i", newInfo->time / 60, newInfo->time % 60));
+	trap_Cvar_Set("ui_scoreCaptures2",		va("%i", newInfo->captures));
 }
 
 void UI_LoadBestScores(const char *map, int game) {
@@ -160,7 +161,7 @@ void UI_LoadBestScores(const char *map, int game) {
 		}
 		trap_FS_FCloseFile(f);
 	}
-	UI_SetBestScores(&newInfo, qfalse);
+	UI_SetBestScores(&newInfo);
 
 	Com_sprintf(fileName, MAX_QPATH, "demos/%s_%d.dm_%d", map, game, (int)trap_Cvar_VariableValue("protocol"));
 	uiInfo.demoAvailable = qfalse;
@@ -200,7 +201,7 @@ void UI_ClearScores(void) {
 		}
 	}
 	
-	UI_SetBestScores(&newInfo, qfalse);
+	UI_SetBestScores(&newInfo);
 
 }
 
@@ -257,7 +258,7 @@ static void UI_CalcPostGameStats( void ) {
 	newInfo.captures = atoi(UI_Argv(14));
 
 	newInfo.time = (time - trap_Cvar_VariableValue("ui_matchStartTime")) / 1000;
-	adjustedTime = uiInfo.mapList[ui_currentMap.integer].timeToBeat[game];
+	adjustedTime = UI_GetTimeToBeat(game);
 	if (newInfo.time < adjustedTime) { 
 		newInfo.timeBonus = (adjustedTime - newInfo.time) * 10;
 	} else {
@@ -304,9 +305,14 @@ static void UI_CalcPostGameStats( void ) {
 	trap_Cvar_Set("sv_pure", UI_Cvar_VariableString("ui_pure"));
 	trap_Cvar_Set("g_friendlyFire", UI_Cvar_VariableString("ui_friendlyFire"));
 
-	UI_SetBestScores(&newInfo, qtrue);
-	UI_ShowPostGame(newHigh);
-
+	UI_SetBestScores(&newInfo);
+	UI_SetBestScoresPostGame(&newInfo);
+	if(newHigh == qtrue) {
+		UI_ShowPostGameNHS();
+	}
+	else {
+		UI_ShowPostGame();
+	}
 
 }
 
@@ -396,7 +402,7 @@ qboolean UI_ConsoleCommand( int realTime ) {
 	//Menu_Cache();
 
 	if ( Q_stricmp (cmd, "ui_test") == 0 ) {
-		UI_ShowPostGame(qtrue);
+		UI_ShowPostGameNHS();
 	}
 
 	if ( Q_strequal(cmd, "ui_report") ) {

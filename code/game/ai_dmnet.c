@@ -102,11 +102,10 @@ void BotRecordNodeSwitch(bot_state_t *bs, char *node, char *str, char *s) {
 
 	ClientName(bs->client, netname, sizeof(netname));
 	Com_sprintf(nodeswitch[numnodeswitches], 144, "%s at %2.1f entered %s: %s from %s\n", netname, FloatTime(), node, str, s);
-#ifdef DEBUG
-	if (0) {
+	// Developer mode outputs a message.
+	if (bot_developer.integer && bot_debugPaths.integer) {
 		BotAI_Print(PRT_MESSAGE, "%s", nodeswitch[numnodeswitches]);
 	}
-#endif //DEBUG
 	numnodeswitches++;
 }
 
@@ -160,10 +159,10 @@ int BotGoForAir(bot_state_t *bs, int tfl, bot_goal_t *ltg, float range) {
 
 	//if the bot needs air
 	if (bs->lastair_time < FloatTime() - 6) {
-		//
-#ifdef DEBUG
-		//BotAI_Print(PRT_MESSAGE, "going for air\n");
-#endif //DEBUG
+		// Developer mode outputs a message.
+		if (bot_developer.integer && bot_debugPaths.integer) {
+			BotAI_Print(PRT_MESSAGE, "going for air\n");
+		}
 		//if we can find an air goal
 		if (BotGetAirGoal(bs, &goal)) {
 			trap_BotPushGoal(bs->gs, &goal);
@@ -306,12 +305,11 @@ int BotGetItemLongTermGoal(bot_state_t *bs, int tfl, bot_goal_t *goal) {
 			bs->ltg_time = FloatTime() + 20;
 		}
 		else {//the bot gets sorta stuck with all the avoid timings, shouldn't happen though
-			//
-#ifdef DEBUG
-			char netname[128];
-
-			BotAI_Print(PRT_MESSAGE, "%s: no valid ltg (probably stuck)\n", ClientName(bs->client, netname, sizeof(netname)));
-#endif
+			// Developer mode outputs a message.
+			if (bot_developer.integer && bot_debugPaths.integer) {
+				char netname[128];
+				BotAI_Print(PRT_MESSAGE, "%s: no valid ltg (probably stuck)\n", ClientName(bs->client, netname, sizeof(netname)));
+			}
 			//trap_BotDumpAvoidGoals(bs->gs);
 			//reset the avoid goals and the avoid reach
 			trap_BotResetAvoidGoals(bs->gs);
@@ -527,90 +525,6 @@ int BotGetLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal) 
 			bs->defendaway_time = 0;
 		}
 	}
-	//For double domination
-	if (bs->ltgtype == LTG_POINTA &&
-				bs->defendaway_time < FloatTime()) {
-		//check for bot typing status message
-		if (bs->teammessage_time && bs->teammessage_time < FloatTime()) {
-			trap_BotGoalName(bs->teamgoal.number, buf, sizeof(buf));
-			BotAI_BotInitialChat(bs, "dd_start_pointa", buf, NULL);
-			trap_BotEnterChat(bs->cs, 0, CHAT_TEAM);
-			//BotVoiceChatOnly(bs, -1, VOICECHAT_ONDEFENSE);
-			bs->teammessage_time = 0;
-		}
-		//set the bot goal
-		memcpy(goal, &ctf_redflag, sizeof(bot_goal_t));
-		//if very close... go away for some time
-		VectorSubtract(goal->origin, bs->origin, dir);
-		if (VectorLengthSquared(dir) < Square(70)) {
-			trap_BotResetAvoidReach(bs->ms);
-			bs->defendaway_time = FloatTime() + 3 + 3 * random();
-			if (BotHasPersistantPowerupAndWeapon(bs)) {
-				bs->defendaway_range = 100;
-			}
-			else {
-				bs->defendaway_range = 350;
-			}
-		}
-		return qtrue;
-	}
-	if (bs->ltgtype == LTG_POINTB &&
-				bs->defendaway_time < FloatTime()) {
-		//check for bot typing status message
-		if (bs->teammessage_time && bs->teammessage_time < FloatTime()) {
-			trap_BotGoalName(bs->teamgoal.number, buf, sizeof(buf));
-			BotAI_BotInitialChat(bs, "dd_start_pointb", buf, NULL);
-			trap_BotEnterChat(bs->cs, 0, CHAT_TEAM);
-			//BotVoiceChatOnly(bs, -1, VOICECHAT_ONDEFENSE);
-			bs->teammessage_time = 0;
-		}
-		//set the bot goal
-		memcpy(goal, &ctf_blueflag, sizeof(bot_goal_t));
-		//if very close... go away for some time
-		VectorSubtract(goal->origin, bs->origin, dir);
-		if (VectorLengthSquared(dir) < Square(70)) {
-			trap_BotResetAvoidReach(bs->ms);
-			bs->defendaway_time = FloatTime() + 3 + 3 * random();
-			if (BotHasPersistantPowerupAndWeapon(bs)) {
-				bs->defendaway_range = 100;
-			}
-			else {
-				bs->defendaway_range = 350;
-			}
-		}
-		return qtrue;
-	}
-        //if (bs->ltgtype == LTG_DOMHOLD &&
-	//			bs->defendaway_time < FloatTime()) {
-            //check for bot typing status message
-		/*if (bs->teammessage_time && bs->teammessage_time < FloatTime()) {
-			trap_BotGoalName(bs->teamgoal.number, buf, sizeof(buf));
-			BotAI_BotInitialChat(bs, "dd_start_pointb", buf, NULL);
-			trap_BotEnterChat(bs->cs, 0, CHAT_TEAM);
-			//BotVoiceChatOnly(bs, -1, VOICECHAT_ONDEFENSE);
-			bs->teammessage_time = 0;
-		}*/
-		//set the bot goal
-	//	memcpy(goal, &bs->teamgoal, sizeof(bot_goal_t));
-		//if very close... go away for some time
-	//	VectorSubtract(goal->origin, bs->origin, dir);
-	//	if (VectorLengthSquared(dir) < Square(30)) {
-			/*trap_BotResetAvoidReach(bs->ms);
-			bs->defendaway_time = FloatTime() + 3 + 3 * random();
-			if (BotHasPersistantPowerupAndWeapon(bs)) {
-				bs->defendaway_range = 100;
-			}
-			else {
-				bs->defendaway_range = 350;
-			}*/
-          //              memcpy(&bs->teamgoal, &dom_points_bot[((rand()) % (level.domination_points_count))], sizeof(bot_goal_t));
-            //            BotAlternateRoute(bs, &bs->teamgoal);
-              //          BotSetTeamStatus(bs);
-
-		//}
-		//return qtrue;
-
-       // }
 	//if defending a key area
 	if (bs->ltgtype == LTG_DEFENDKEYAREA && !retreat &&
 				bs->defendaway_time < FloatTime()) {
@@ -1111,7 +1025,94 @@ int BotGetLongTermGoal(bot_state_t *bs, int tfl, int retreat, bot_goal_t *goal) 
 			return qtrue;
 		}
 	}
-//#endif
+	else if (gametype == GT_DOUBLE_D) {
+		if (bs->ltgtype == LTG_HOLDPOINTA || bs->ltgtype == LTG_ATTACKENEMYBASE) {
+			//check for bot typing status message
+			if (bs->teammessage_time && bs->teammessage_time < FloatTime()) {
+				trap_BotGoalName(bs->teamgoal.number, buf, sizeof(buf));
+				BotAI_BotInitialChat(bs, "dd_pointa_hold_start", buf, NULL);
+				trap_BotEnterChat(bs->cs, 0, CHAT_TEAM);
+				//BotVoiceChatOnly(bs, -1, VOICECHAT_ONDEFENSE);
+				bs->teammessage_time = 0;
+			}
+			memcpy(goal, &ctf_redflag, sizeof(bot_goal_t));
+			//if very close... go away for some time
+			VectorSubtract(goal->origin, bs->origin, dir);
+			if (VectorLengthSquared(dir) < Square(70)) {
+				trap_BotResetAvoidReach(bs->ms);
+				bs->defendaway_time = FloatTime() + 3 + 3 * random();
+				if (BotHasPersistantPowerupAndWeapon(bs)) {
+					bs->defendaway_range = 100;
+				}
+				else {
+					bs->defendaway_range = 350;
+				}
+			}
+			return qtrue;
+		}
+		else if (bs->ltgtype == LTG_HOLDPOINTB || bs->ltgtype == LTG_DEFENDKEYAREA) {
+			//check for bot typing status message
+			if (bs->teammessage_time && bs->teammessage_time < FloatTime()) {
+				trap_BotGoalName(bs->teamgoal.number, buf, sizeof(buf));
+				BotAI_BotInitialChat(bs, "dd_pointb_hold_start", buf, NULL);
+				trap_BotEnterChat(bs->cs, 0, CHAT_TEAM);
+				//BotVoiceChatOnly(bs, -1, VOICECHAT_ONDEFENSE);
+				bs->teammessage_time = 0;
+			}
+			//set the bot goal
+			memcpy(goal, &ctf_blueflag, sizeof(bot_goal_t));
+			//if very close... go away for some time
+			VectorSubtract(goal->origin, bs->origin, dir);
+			if (VectorLengthSquared(dir) < Square(70)) {
+				trap_BotResetAvoidReach(bs->ms);
+				bs->defendaway_time = FloatTime() + 3 + 3 * random();
+				if (BotHasPersistantPowerupAndWeapon(bs)) {
+					bs->defendaway_range = 100;
+				}
+				else {
+					bs->defendaway_range = 350;
+				}
+			}
+			return qtrue;
+		}
+	}
+	else if (gametype == GT_DOMINATION) {
+		// If the bot has an assigned control point that falls outside of the limits,
+		// assign a new one before proceeding.
+		if (!(BotGetDominationPoint(bs) >= 0 &&
+				BotGetDominationPoint(bs) < MAX_DOMINATION_POINTS &&
+				BotGetDominationPoint(bs) < level.domination_points_count)) {
+			BotSetDominationPoint(bs,-1);
+		}
+		if ((bs->ltgtype == LTG_DEFENDKEYAREA) ||
+				(bs->ltgtype == LTG_ATTACKENEMYBASE) ||
+				(bs->ltgtype == LTG_HOLDDOMPOINT)) {
+			//check for bot typing status message
+			if (bs->teammessage_time && bs->teammessage_time < FloatTime()) {
+				trap_BotGoalName(bs->teamgoal.number, buf, sizeof(buf));
+				BotAI_BotInitialChat(bs, "dom_point_hold_start", buf, level.domination_points_names[BotGetDominationPoint(bs)]);
+				trap_BotEnterChat(bs->cs, 0, CHAT_TEAM);
+				//BotVoiceChatOnly(bs, -1, VOICECHAT_ONDEFENSE);
+				bs->teammessage_time = 0;
+			}
+			//set the bot goal
+			memcpy(goal, &dom_points_bot[BotGetDominationPoint(bs)], sizeof(bot_goal_t));
+			//if very close... go away for some time
+			VectorSubtract(goal->origin, bs->origin, dir);
+			if (VectorLengthSquared(dir) < Square(70)) {
+				trap_BotResetAvoidReach(bs->ms);
+				bs->defendaway_time = FloatTime() + 3 + 3 * random();
+				if (BotHasPersistantPowerupAndWeapon(bs)) {
+					bs->defendaway_range = 100;
+				}
+				else {
+					bs->defendaway_range = 350;
+				}
+			}
+			return qtrue;
+		}
+	}
+
 	//normal goal stuff
 	return BotGetItemLongTermGoal(bs, tfl, goal);
 }
@@ -1229,7 +1230,7 @@ int AINode_Intermission(bot_state_t *bs) {
 	//if the intermission ended
 	if (!BotIntermission(bs)) {
 		if (BotChat_StartLevel(bs)) {
-			bs->stand_time = FloatTime() + BotChatTime(bs);
+			bs->stand_time = FloatTime() + BOTCHATTIME;
 		}
 		else {
 			bs->stand_time = FloatTime() + 2;
@@ -1285,8 +1286,8 @@ int AINode_Stand(bot_state_t *bs) {
 	//if the bot's health decreased
 	if (bs->lastframe_health > bs->inventory[INVENTORY_HEALTH]) {
 		if (BotChat_HitTalking(bs)) {
-			bs->standfindenemy_time = FloatTime() + BotChatTime(bs) + 0.1;
-			bs->stand_time = FloatTime() + BotChatTime(bs) + 0.1;
+			bs->standfindenemy_time = FloatTime() + BOTCHATTIME + 0.1;
+			bs->stand_time = FloatTime() + BOTCHATTIME + 0.1;
 		}
 	}
 	if (bs->standfindenemy_time < FloatTime()) {
@@ -1322,7 +1323,7 @@ void AIEnter_Respawn(bot_state_t *bs, char *s) {
 	trap_BotResetAvoidReach(bs->ms);
 	//if the bot wants to chat
 	if (BotChat_Death(bs)) {
-		bs->respawn_time = FloatTime() + BotChatTime(bs);
+		bs->respawn_time = FloatTime() + BOTCHATTIME;
 		bs->respawnchat_time = FloatTime();
 	}
 	else {
@@ -1551,7 +1552,8 @@ int AINode_Seek_ActivateEntity(bot_state_t *bs) {
 	}
 	//
 	bs->tfl = TFL_DEFAULT;
-	if (bot_grapple.integer) bs->tfl |= TFL_GRAPPLEHOOK;
+	// if they have the Grappling Hook
+	if (BotCanAndWantsToUseTheGrapple(bs)) bs->tfl |= TFL_GRAPPLEHOOK;
 	// if in lava or slime the bot should be able to get out
 	if (BotInLavaOrSlime(bs)) bs->tfl |= TFL_LAVA|TFL_SLIME;
 	// map specific code
@@ -1592,9 +1594,10 @@ int AINode_Seek_ActivateEntity(bot_state_t *bs) {
 		BotEntityInfo(goal->entitynum, &entinfo);
 		// if the entity the bot shoots at moved
 		if (!VectorCompare(bs->activatestack->origin, entinfo.origin)) {
-#ifdef DEBUG
-			BotAI_Print(PRT_MESSAGE, "hit shootable button or trigger\n");
-#endif //DEBUG
+			// Developer mode outputs a message.
+			if (bot_developer.integer && bot_debugPaths.integer) {
+				BotAI_Print(PRT_MESSAGE, "hit shootable button or trigger\n");
+			}
 			bs->activatestack->time = 0;
 		}
 		// if the activate goal has been activated or the bot takes too long
@@ -1619,9 +1622,10 @@ int AINode_Seek_ActivateEntity(bot_state_t *bs) {
 		else if (!bs->activatestack->shoot) {
 			//if the bot touches the current goal
 			if (trap_BotTouchingGoal(bs->origin, goal)) {
-#ifdef DEBUG
-				BotAI_Print(PRT_MESSAGE, "touched button or trigger\n");
-#endif //DEBUG
+				// Developer mode outputs a message.
+				if (bot_developer.integer && bot_debugPaths.integer) {
+					BotAI_Print(PRT_MESSAGE, "touched button or trigger\n");
+				}
 				bs->activatestack->time = 0;
 			}
 		}
@@ -1764,7 +1768,8 @@ int AINode_Seek_NBG(bot_state_t *bs) {
 	}
 	//
 	bs->tfl = TFL_DEFAULT;
-	if (bot_grapple.integer) bs->tfl |= TFL_GRAPPLEHOOK;
+	// if they have the Grappling Hook
+	if (BotCanAndWantsToUseTheGrapple(bs)) bs->tfl |= TFL_GRAPPLEHOOK;
 	//if in lava or slime the bot should be able to get out
 	if (BotInLavaOrSlime(bs)) bs->tfl |= TFL_LAVA|TFL_SLIME;
 	//
@@ -1901,13 +1906,14 @@ int AINode_Seek_LTG(bot_state_t *bs)
 	}
 	//
 	if (BotChat_Random(bs)) {
-		bs->stand_time = FloatTime() + BotChatTime(bs);
+		bs->stand_time = FloatTime() + BOTCHATTIME;
 		AIEnter_Stand(bs, "seek ltg: random chat");
 		return qfalse;
 	}
 	//
 	bs->tfl = TFL_DEFAULT;
-	if (bot_grapple.integer) bs->tfl |= TFL_GRAPPLEHOOK;
+	// if they have the Grappling Hook
+	if (BotCanAndWantsToUseTheGrapple(bs)) bs->tfl |= TFL_GRAPPLEHOOK;
 	//if in lava or slime the bot should be able to get out
 	if (BotInLavaOrSlime(bs)) bs->tfl |= TFL_LAVA|TFL_SLIME;
 	//
@@ -2085,11 +2091,11 @@ int AINode_Battle_Fight(bot_state_t *bs) {
 		AIEnter_Respawn(bs, "battle fight: bot dead");
 		return qfalse;
 	}
-	//if there is another better enemy
+	//if there is another better enemy (only available in Developer mode)
 	if (BotFindEnemy(bs, bs->enemy)) {
-#ifdef DEBUG
-		BotAI_Print(PRT_MESSAGE, "found new better enemy\n");
-#endif
+		if (bot_developer.integer && bot_debugPaths.integer) {
+			BotAI_Print(PRT_MESSAGE, "found new better enemy\n");
+		}
 	}
 	//if no enemy
 	if (bs->enemy < 0) {
@@ -2106,7 +2112,7 @@ int AINode_Battle_Fight(bot_state_t *bs) {
 				BotChat_EnemySuicide(bs);
 			}
 			if (bs->lastkilledplayer == bs->enemy && BotChat_Kill(bs)) {
-				bs->stand_time = FloatTime() + BotChatTime(bs);
+				bs->stand_time = FloatTime() + BOTCHATTIME;
 				AIEnter_Stand(bs, "battle fight: enemy dead");
 			}
 			else {
@@ -2149,7 +2155,7 @@ int AINode_Battle_Fight(bot_state_t *bs) {
 	//if the bot's health decreased
 	if (bs->lastframe_health > bs->inventory[INVENTORY_HEALTH]) {
 		if (BotChat_HitNoDeath(bs)) {
-			bs->stand_time = FloatTime() + BotChatTime(bs);
+			bs->stand_time = FloatTime() + BOTCHATTIME;
 			AIEnter_Stand(bs, "battle fight: chat health decreased");
 			return qfalse;
 		}
@@ -2157,7 +2163,7 @@ int AINode_Battle_Fight(bot_state_t *bs) {
 	//if the bot hit someone
 	if (bs->cur_ps.persistant[PERS_HITS] > bs->lasthitcount) {
 		if (BotChat_HitNoKill(bs)) {
-			bs->stand_time = FloatTime() + BotChatTime(bs);
+			bs->stand_time = FloatTime() + BOTCHATTIME;
 			AIEnter_Stand(bs, "battle fight: chat hit someone");
 			return qfalse;
 		}
@@ -2177,11 +2183,17 @@ int AINode_Battle_Fight(bot_state_t *bs) {
 			return qfalse;
 		}
 	}
+
 	//use holdable items
-	BotBattleUseItems(bs);
+	if (BotCanAndWantsToUseTheTeleporter(bs) || BotCanAndWantsToUseTheMedkit(bs) ||
+			BotCanAndWantsToUseTheKamikaze(bs) || BotCanAndWantsToUseTheInvulnerability(bs)) {
+		trap_EA_Use(bs->client);
+	}
+
 	//
 	bs->tfl = TFL_DEFAULT;
-	if (bot_grapple.integer) bs->tfl |= TFL_GRAPPLEHOOK;
+	// if they have the Grappling Hook
+	if (BotCanAndWantsToUseTheGrapple(bs)) bs->tfl |= TFL_GRAPPLEHOOK;
 	//if in lava or slime the bot should be able to get out
 	if (BotInLavaOrSlime(bs)) bs->tfl |= TFL_LAVA|TFL_SLIME;
 	//
@@ -2274,7 +2286,8 @@ int AINode_Battle_Chase(bot_state_t *bs)
 	}
 	//
 	bs->tfl = TFL_DEFAULT;
-	if (bot_grapple.integer) bs->tfl |= TFL_GRAPPLEHOOK;
+	// if they have the Grappling Hook
+	if (BotCanAndWantsToUseTheGrapple(bs)) bs->tfl |= TFL_GRAPPLEHOOK;
 	//if in lava or slime the bot should be able to get out
 	if (BotInLavaOrSlime(bs)) bs->tfl |= TFL_LAVA|TFL_SLIME;
 	//
@@ -2405,13 +2418,13 @@ int AINode_Battle_Retreat(bot_state_t *bs) {
 	}
 	//if there is another better enemy
 	if (BotFindEnemy(bs, bs->enemy)) {
-#ifdef DEBUG
-		BotAI_Print(PRT_MESSAGE, "found new better enemy\n");
-#endif
+		if (bot_developer.integer && bot_debugPaths.integer) {
+			BotAI_Print(PRT_MESSAGE, "found new better enemy\n");
+		}
 	}
 	//
 	bs->tfl = TFL_DEFAULT;
-	if (bot_grapple.integer) bs->tfl |= TFL_GRAPPLEHOOK;
+	if (BotCanAndWantsToUseTheGrapple(bs)) bs->tfl |= TFL_GRAPPLEHOOK;
 	//if in lava or slime the bot should be able to get out
 	if (BotInLavaOrSlime(bs)) bs->tfl |= TFL_LAVA|TFL_SLIME;
 	//map specific code
@@ -2460,8 +2473,13 @@ int AINode_Battle_Retreat(bot_state_t *bs) {
 	}
 	//
 	BotTeamGoals(bs, qtrue);
+
 	//use holdable items
-	BotBattleUseItems(bs);
+	if (BotCanAndWantsToUseTheTeleporter(bs) || BotCanAndWantsToUseTheMedkit(bs) ||
+			BotCanAndWantsToUseTheKamikaze(bs) || BotCanAndWantsToUseTheInvulnerability(bs)) {
+		trap_EA_Use(bs->client);
+	}
+
 	//get the current long term goal while retreating
 	if (!BotLongTermGoal(bs, bs->tfl, qtrue, &goal)) {
 		AIEnter_Battle_SuicidalFight(bs, "battle retreat: no way out");
@@ -2588,7 +2606,8 @@ int AINode_Battle_NBG(bot_state_t *bs) {
 	}
 	//
 	bs->tfl = TFL_DEFAULT;
-	if (bot_grapple.integer) bs->tfl |= TFL_GRAPPLEHOOK;
+	// if they have the Grappling Hook
+	if (BotCanAndWantsToUseTheGrapple(bs)) bs->tfl |= TFL_GRAPPLEHOOK;
 	//if in lava or slime the bot should be able to get out
 	if (BotInLavaOrSlime(bs)) bs->tfl |= TFL_LAVA|TFL_SLIME;
 	//
@@ -2682,4 +2701,3 @@ int AINode_Battle_NBG(bot_state_t *bs) {
 	//
 	return qtrue;
 }
-

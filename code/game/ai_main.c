@@ -79,7 +79,6 @@ vmCvar_t bot_pause;
 vmCvar_t bot_report;
 vmCvar_t bot_testsolid;
 vmCvar_t bot_testclusters;
-vmCvar_t bot_developer;
 vmCvar_t bot_interbreedchar;
 vmCvar_t bot_interbreedbots;
 vmCvar_t bot_interbreedcycle;
@@ -188,7 +187,7 @@ int BotAI_GetEntityState( int entityNum, entityState_t *state ) {
 	memset( state, 0, sizeof(entityState_t) );
 	if (!ent->inuse) return qfalse;
 	if (!ent->r.linked) return qfalse;
-	if ( !(G_IsARoundBasedGametype(g_gametype.integer) ||g_instantgib.integer || g_rockets.integer || g_elimination_allgametypes.integer)
+	if ( !(G_IsARoundBasedGametype(g_gametype.integer) || G_IsANoPickupsMode())
 	       && (ent->r.svFlags & SVF_NOCLIENT) ) {
 		return qfalse;
 	}
@@ -378,14 +377,19 @@ void BotReportStatus(bot_state_t *bs) {
 			BotAI_Print(PRT_MESSAGE, "%-20s%s%s: harvesting\n", netname, leader, flagstatus);
 			break;
 		}
-		case LTG_POINTA:
+		case LTG_HOLDPOINTA:
 		{
-			BotAI_Print(PRT_MESSAGE, "%-20s%s%s: going for point A\n", netname, leader, flagstatus);
+			BotAI_Print(PRT_MESSAGE, "%-20s%s%s: taking and holding point A\n", netname, leader, flagstatus);
 			break;
 		}
-		case LTG_POINTB:
+		case LTG_HOLDPOINTB:
 		{
-			BotAI_Print(PRT_MESSAGE, "%-20s%s%s: going for point B\n", netname, leader, flagstatus);
+			BotAI_Print(PRT_MESSAGE, "%-20s%s%s: taking and holding point B\n", netname, leader, flagstatus);
+			break;
+		}
+		case LTG_HOLDDOMPOINT:
+		{
+			BotAI_Print(PRT_MESSAGE, "%-20s%s%s: defending a DOM control point\n", netname, leader, flagstatus);
 			break;
 		}
 		default:
@@ -538,14 +542,19 @@ void BotSetInfoConfigString(bot_state_t *bs) {
 			Com_sprintf(action, sizeof(action), "harvesting");
 			break;
 		}
-		case LTG_POINTA:
+		case LTG_HOLDPOINTA:
 		{
-			Com_sprintf(action, sizeof(action), "going for point A");
+			Com_sprintf(action, sizeof(action), "taking and holding point A");
 			break;
 		}
-		case LTG_POINTB:
+		case LTG_HOLDPOINTB:
 		{
-			Com_sprintf(action, sizeof(action), "going for point B");
+			Com_sprintf(action, sizeof(action), "taking and holding point B");
+			break;
+		}
+		case LTG_HOLDDOMPOINT:
+		{
+			Com_sprintf(action, sizeof(action), "defending a DOM point");
 			break;
 		}
 		default:
@@ -1526,7 +1535,7 @@ int BotAIStartFrame(int time) {
 				trap_BotLibUpdateEntity(i, NULL);
 				continue;
 			}
-			if ( !(G_IsARoundBasedGametype(g_gametype.integer) ||g_instantgib.integer || g_rockets.integer || g_elimination_allgametypes.integer)
+			if ( !(G_IsARoundBasedGametype(g_gametype.integer) || G_IsANoPickupsMode())
 				   && ent->r.svFlags & SVF_NOCLIENT) {
 				trap_BotLibUpdateEntity(i, NULL);
 				continue;
@@ -1669,6 +1678,15 @@ int BotInitLibrary(void) {
 	//no AAS optimization
 	trap_Cvar_VariableStringBuffer("bot_aasoptimize", buf, sizeof(buf));
 	if (strlen(buf)) trap_BotLibVarSet("aasoptimize", buf);
+	//botchat debug
+	trap_Cvar_VariableStringBuffer("bot_debugChat", buf, sizeof(buf));
+	if (strlen(buf)) trap_BotLibVarSet("debugChat", buf);
+	//long-term goal debug
+	trap_Cvar_VariableStringBuffer("bot_debugLTG", buf, sizeof(buf));
+	if (strlen(buf)) trap_BotLibVarSet("debugLTG", buf);
+	//bot paths debug
+	trap_Cvar_VariableStringBuffer("bot_debugPaths", buf, sizeof(buf));
+	if (strlen(buf)) trap_BotLibVarSet("debugPaths", buf);
 	//
 	trap_Cvar_VariableStringBuffer("bot_saveroutingcache", buf, sizeof(buf));
 	if (strlen(buf)) trap_BotLibVarSet("saveroutingcache", buf);
@@ -1709,6 +1727,9 @@ int BotAISetup( int restart ) {
 	trap_Cvar_Register(&bot_testsolid, "bot_testsolid", "0", CVAR_CHEAT);
 	trap_Cvar_Register(&bot_testclusters, "bot_testclusters", "0", CVAR_CHEAT);
 	trap_Cvar_Register(&bot_developer, "bot_developer", "0", CVAR_CHEAT);
+	trap_Cvar_Register(&bot_debugChat, "bot_debugChat", "0", CVAR_CHEAT);
+	trap_Cvar_Register(&bot_debugLTG, "bot_debugLTG", "0", CVAR_CHEAT);
+	trap_Cvar_Register(&bot_debugPaths, "bot_debugPaths", "0", CVAR_CHEAT);
 	trap_Cvar_Register(&bot_interbreedchar, "bot_interbreedchar", "", 0);
 	trap_Cvar_Register(&bot_interbreedbots, "bot_interbreedbots", "10", 0);
 	trap_Cvar_Register(&bot_interbreedcycle, "bot_interbreedcycle", "20", 0);

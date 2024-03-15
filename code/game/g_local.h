@@ -272,7 +272,7 @@ typedef struct {
 //unlagged - client options
 	// these correspond with variables in the userinfo string
 	int			delag;
-//	int			debugDelag;
+	int			debugDelag;
 	int			cmdTimeNudge;
 //unlagged - client options
 //unlagged - lag simulation #2
@@ -898,6 +898,7 @@ void G_RunClient( gentity_t *ent );
 qboolean OnSameTeam( const gentity_t *ent1, const gentity_t *ent2 );
 void Team_CheckDroppedItem( const gentity_t *dropped );
 qboolean CheckObeliskAttack( const gentity_t *obelisk, const gentity_t *attacker );
+void ShuffleTeams(void);
 //KK-OAX Added for Command Handling Changes (r24)
 team_t G_TeamFromString( char *str );
 /**
@@ -1115,7 +1116,8 @@ extern vmCvar_t g_elimination_mine;
 extern vmCvar_t g_elimination_nail;
 //If lockspectator: 0=no limit, 1 = cannot follow enemy, 2 = must follow friend
 extern vmCvar_t g_elimination_lockspectator;
-extern vmCvar_t g_rockets;
+extern vmCvar_t g_weaponArena;
+extern vmCvar_t g_weaponArenaWeapon;
 //new in elimination Beta2
 extern vmCvar_t g_instantgib;
 extern vmCvar_t g_vampire;
@@ -1431,4 +1433,6 @@ qboolean G_IsATeamGametype(int check);	/* Whether the gametype is team-based or 
 qboolean G_UsesTeamFlags(int check);	/* Whether the gametype uses the red and blue flags. */
 qboolean G_UsesTheWhiteFlag(int check);	/* Whether the gametype uses the neutral flag. */
 qboolean G_IsARoundBasedGametype(int check);	/* Whether the gametype uses the neutral flag. */
+int G_GetWeaponArena(char* cvarWaString);	/* Takes a string and returns the value of a weapon. */
+qboolean G_IsANoPickupsMode(void);	/* Returns true if the match has a "no pickups" rule. */
 /* /Neon_Knight */

@@ -89,10 +89,10 @@ g_admin_cmd_t g_admin_cmds[ ] = {
 		"disorient a player by flipping player's view and controls",
 		"[^3name|slot#^7] (^hreason^7)"
 	},
-	//{"fling", G_admin_fling, "d",
-	//  "throws the player specified",
-	//  "[^3name|slot#^7]"
-	//},
+	/* {"fling", G_admin_fling, "d",
+		"throws the player specified",
+		"[^3name|slot#^7]"
+	}, */
 
 	{
 		"help", G_admin_help, "h",
@@ -193,6 +193,12 @@ g_admin_cmd_t g_admin_cmds[ ] = {
 		"showbans", G_admin_showbans, "B",
 		"display a (partial) list of active bans",
 		"(^5start at ban#^7) (^5name|IP^7)"
+	},
+	//KK-OAX
+	{
+		"shuffle", G_admin_shuffle, "f",
+		"Shuffles the teams"
+		""
 	},
 	{
 		"slap", G_admin_slap, "S",
@@ -3110,6 +3116,13 @@ qboolean G_admin_warn( gentity_t *ent, int skiparg )
 		return qtrue;
 	}
 
+}
+qboolean G_admin_shuffle( gentity_t *ent, int skipargs )
+{
+	trap_SendConsoleCommand( EXEC_APPEND, "shuffle" );
+	AP( va( "print \"^3!shuffle: ^7teams shuffled by %s \n\"",
+	        ( ent ) ? ent->client->pers.netname : "console" ) );
+	return qtrue;
 }
 
 //KK-OAX End Additions

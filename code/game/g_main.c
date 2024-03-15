@@ -130,7 +130,8 @@ vmCvar_t g_elimination_chain;
 vmCvar_t g_elimination_mine;
 vmCvar_t g_elimination_nail;
 vmCvar_t g_elimination_lockspectator;
-vmCvar_t g_rockets;
+vmCvar_t g_weaponArena;
+vmCvar_t g_weaponArenaWeapon;
 //dmn_clowns suggestions (with my idea of implementing):
 vmCvar_t g_instantgib;
 vmCvar_t g_vampire;
@@ -219,9 +220,9 @@ static cvarTable_t gameCvarTable[] = {
 	{ &g_videoflags, "videoflags", "7", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qtrue  },
 	{ &g_elimflags, "elimflags", "0", CVAR_SERVERINFO, 0, qfalse  },
 	{ &g_voteflags, "voteflags", "0", CVAR_SERVERINFO, 0, qfalse  },
-	{ &g_fraglimit, "fraglimit", "20", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
-	{ &g_timelimit, "timelimit", "0", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
-	{ &g_capturelimit, "capturelimit", "8", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
+	{ &g_fraglimit, "fraglimit", GT_FFA_DEFAULT_SCORELIMIT, CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
+	{ &g_timelimit, "timelimit", GT_FFA_DEFAULT_TIMELIMIT, CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
+	{ &g_capturelimit, "capturelimit", GT_CTF_DEFAULT_SCORELIMIT, CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
 
 	{ &g_synchronousClients, "g_synchronousClients", "0", CVAR_SYSTEMINFO, 0, qfalse  },
 
@@ -255,9 +256,9 @@ static cvarTable_t gameCvarTable[] = {
 	{ &g_forcerespawn, "g_forcerespawn", "20", 0, 0, qtrue },
 	{ &g_respawntime, "g_respawntime", "0", CVAR_ARCHIVE, 0, qtrue },
 	{ &g_inactivity, "g_inactivity", "0", 0, 0, qtrue },
-	{ &g_debugMove, "g_debugMove", "0", 0, 0, qfalse },
-	{ &g_debugDamage, "g_debugDamage", "0", 0, 0, qfalse },
-	{ &g_debugAlloc, "g_debugAlloc", "0", 0, 0, qfalse },
+	{ &g_debugMove, "g_debugMove", "0", CVAR_CHEAT, 0, qfalse },
+	{ &g_debugDamage, "g_debugDamage", "0", CVAR_CHEAT, 0, qfalse },
+	{ &g_debugAlloc, "g_debugAlloc", "0", CVAR_CHEAT, 0, qfalse },
 	{ &g_motd, "g_motd", "", 0, 0, qfalse },
 	{ &g_motdfile, "g_motdfile", "motd.cfg", 0, 0, qfalse },
 	{ &g_blood, "com_blood", "1", 0, 0, qfalse },
@@ -351,7 +352,8 @@ static cvarTable_t gameCvarTable[] = {
 
 
 	//nexuiz style rocket arena
-	{ &g_rockets, "g_rockets", "0", CVAR_SERVERINFO | CVAR_LATCH, 0, qfalse },
+	{ &g_weaponArena, "g_weaponArena", "0", CVAR_SERVERINFO | CVAR_LATCH, 0, qfalse },
+	{ &g_weaponArenaWeapon, "g_weaponArenaWeapon", "0", CVAR_SERVERINFO | CVAR_LATCH, 0, qfalse },
 
 	//Instantgib and Vampire thingies
 	{ &g_instantgib, "g_instantgib", "0", CVAR_SERVERINFO | CVAR_LATCH, 0, qfalse },
@@ -636,7 +638,7 @@ void G_UpdateCvars( void )
 					VoteParseCustomVotes();
 
 				//Here comes the cvars that must trigger a map_restart
-				if (cv->vmCvar == &g_instantgib || cv->vmCvar == &g_rockets  ||  cv->vmCvar == &g_elimination_allgametypes) {
+				if (cv->vmCvar == &g_instantgib || cv->vmCvar == &g_weaponArena  ||  cv->vmCvar == &g_elimination_allgametypes) {
 					trap_Cvar_Set("sv_dorestart","1");
 				}
 
@@ -651,6 +653,9 @@ void G_UpdateCvars( void )
 
 					if( allowedVote("clientkick") )
 						voteflags|=VF_clientkick;
+
+					if( allowedVote("shuffle") )
+						voteflags|=VF_shuffle;
 
 					if( allowedVote("nextmap") )
 						voteflags|=VF_nextmap;
@@ -756,7 +761,7 @@ void G_InitGame( int levelTime, int randomSeed, int restart )
 	//disable unwanted cvars
 	if( g_gametype.integer == GT_SINGLE_PLAYER ) {
 		g_instantgib.integer = 0;
-		g_rockets.integer = 0;
+		g_weaponArena.integer = 0;
 		g_vampire.value = 0.0f;
 	}
 
@@ -2873,5 +2878,75 @@ Checks if the gametype has a round-based system.
  */
 qboolean G_IsARoundBasedGametype(int check) {
 	return GAMETYPE_IS_ROUND_BASED(check);
+}
+/*
+===================
+G_GetWeaponArena
+
+Returns the value of a weapon for g_weaponArena.
+===================
+ */
+int G_GetWeaponArena(char* cvarWaString) {
+	if (strcmp(cvarWaString,"mg") || strcmp(cvarWaString,"machinegun") ||
+			strcmp(cvarWaString,"machine gun") || strcmp(cvarWaString,"2"))
+		return WP_MACHINEGUN;
+	if (strcmp(cvarWaString,"sg") || strcmp(cvarWaString,"shotgun") ||
+			strcmp(cvarWaString,"shot gun") || strcmp(cvarWaString,"3"))
+		return WP_SHOTGUN;
+	if (strcmp(cvarWaString,"gl") || strcmp(cvarWaString,"grenade") ||
+			strcmp(cvarWaString,"grenade launcher") || strcmp(cvarWaString,"grenadelauncher") ||
+			strcmp(cvarWaString,"4"))
+		return WP_GRENADE_LAUNCHER;
+	if (strcmp(cvarWaString,"rl") || strcmp(cvarWaString,"rocket") ||
+			strcmp(cvarWaString,"rocket launcher") || strcmp(cvarWaString,"rocketlauncher") ||
+			strcmp(cvarWaString,"5"))
+		return WP_ROCKET_LAUNCHER;
+	if (strcmp(cvarWaString,"lg") || strcmp(cvarWaString,"lightning") ||
+			strcmp(cvarWaString,"lightning gun") || strcmp(cvarWaString,"lightninggun") ||
+			strcmp(cvarWaString,"6"))
+		return WP_LIGHTNING;
+	if (strcmp(cvarWaString,"rg") || strcmp(cvarWaString,"railgun") ||
+			strcmp(cvarWaString,"rail gun") || strcmp(cvarWaString,"7"))
+		return WP_RAILGUN;
+	if (strcmp(cvarWaString,"pg") || strcmp(cvarWaString,"plasma") ||
+			strcmp(cvarWaString,"plasma gun") || strcmp(cvarWaString,"plasmagun") ||
+			strcmp(cvarWaString,"8"))
+		return WP_PLASMAGUN;
+	if (strcmp(cvarWaString,"bfg") || strcmp(cvarWaString,"big fairie gun") ||
+			strcmp(cvarWaString,"big freakin gun") || strcmp(cvarWaString,"9"))
+		return WP_BFG;
+	if (strcmp(cvarWaString,"ng") || strcmp(cvarWaString,"nailgun") ||
+			strcmp(cvarWaString,"nail gun") || strcmp(cvarWaString,"11"))
+		return WP_NAILGUN;
+	if (strcmp(cvarWaString,"pl") || strcmp(cvarWaString,"prox") ||
+			strcmp(cvarWaString,"mines") || strcmp(cvarWaString,"prox launcher") ||
+			strcmp(cvarWaString,"proxlauncher") || strcmp(cvarWaString,"12"))
+		return WP_PROX_LAUNCHER;
+	if (strcmp(cvarWaString,"cg") || strcmp(cvarWaString,"chaingun") ||
+			strcmp(cvarWaString,"chain gun") || strcmp(cvarWaString,"13"))
+		return WP_CHAINGUN;
+	return WP_GAUNTLET;
+}
+/*
+===================
+G_IsANoPickupsMode
+
+Returns true if the match has a "no pickups" rule.
+===================
+ */
+qboolean G_IsANoPickupsMode(void) {
+	// In Instagib mode, no pickups
+	if (g_instantgib.integer) {
+		return qtrue;
+	}
+	// In Weapon Arena mode, no pickups
+	if (g_weaponArena.integer) {
+		return qtrue;
+	}
+	// In Elimination mode for non-round-based modes, no pickups
+	if (g_elimination_allgametypes.integer) {
+		return qtrue;
+	}
+	return qfalse;
 }
 /* /Neon_Knight */

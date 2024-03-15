@@ -543,19 +543,6 @@ static void CG_DrawStatusBarHead(float x) {
 
 /*
 ================
-CG_DrawStatusBarFlag
-
-================
- */
-#ifndef MISSIONPACK
-
-static void CG_DrawStatusBarFlag(float x, int team) {
-	CG_DrawFlagModel(x, 480 - ICON_SIZE, ICON_SIZE, ICON_SIZE, team, qfalse);
-}
-#endif // MISSIONPACK
-
-/*
-================
 CG_DrawTeamBackground
 
 ================
@@ -634,11 +621,11 @@ static void CG_DrawStatusBar(void) {
 	CG_DrawStatusBarHead(185 + CHAR_WIDTH * 3 + TEXT_ICON_SPACE);
 
 	if (cg.predictedPlayerState.powerups[PW_REDFLAG]) {
-		CG_DrawStatusBarFlag(185 + CHAR_WIDTH * 3 + TEXT_ICON_SPACE + ICON_SIZE, TEAM_RED);
+		CG_DrawFlagModel((185 + CHAR_WIDTH * 3 + TEXT_ICON_SPACE + ICON_SIZE), 480 - ICON_SIZE, ICON_SIZE, ICON_SIZE, TEAM_RED, qfalse);
 	} else if (cg.predictedPlayerState.powerups[PW_BLUEFLAG]) {
-		CG_DrawStatusBarFlag(185 + CHAR_WIDTH * 3 + TEXT_ICON_SPACE + ICON_SIZE, TEAM_BLUE);
+		CG_DrawFlagModel((185 + CHAR_WIDTH * 3 + TEXT_ICON_SPACE + ICON_SIZE), 480 - ICON_SIZE, ICON_SIZE, ICON_SIZE, TEAM_BLUE, qfalse);
 	} else if (cg.predictedPlayerState.powerups[PW_NEUTRALFLAG]) {
-		CG_DrawStatusBarFlag(185 + CHAR_WIDTH * 3 + TEXT_ICON_SPACE + ICON_SIZE, TEAM_FREE);
+		CG_DrawFlagModel((185 + CHAR_WIDTH * 3 + TEXT_ICON_SPACE + ICON_SIZE), 480 - ICON_SIZE, ICON_SIZE, ICON_SIZE, TEAM_FREE, qfalse);
 	}
 
 	if (ps->stats[ STAT_ARMOR ]) {
@@ -1001,8 +988,8 @@ static float CG_DrawDoubleDominationThings( float y ) {
 	statusA = cgs.redflag;
 	statusB = cgs.blueflag;
 
-	// This is only useful in Developer mode.
-	if(!cg_developer.integer) {
+	// This is only useful in code development mode.
+	if (!cg_developer.integer && !cg_debugDD.integer) {
 		return;
 	}
 	
@@ -1591,10 +1578,10 @@ static void CG_DrawUpperRight(stereoFrame_t stereoFrame) {
 	if (CG_IsATeamGametype(cgs.gametype) && cg_drawTeamOverlay.integer == 1) {
 		y = CG_DrawTeamOverlay(y, qtrue, qtrue);
 	}
-	/*if ( cgs.gametype == GT_DOUBLE_D ) {
+	/* if ( cgs.gametype == GT_DOUBLE_D ) {
 		y = CG_DrawDoubleDominationThings(y);
-	} 
-	else*/
+	}  */
+	else
 	if (cgs.gametype == GT_LMS && cg.showScores) {
 		y = CG_DrawLMSmode(y);
 	} else
@@ -1957,14 +1944,14 @@ CG_DrawLowerRight
 static void CG_DrawLowerRight(void) {
 	float y;
 
-	y = 472 - ICON_SIZE;
+	y = 468 - ICON_SIZE;
 
 	if (CG_IsATeamGametype(cgs.gametype) && cg_drawTeamOverlay.integer == 2) {
 		y = CG_DrawTeamOverlay(y, qtrue, qfalse);
 	}
 
-	y = CG_DrawScores(y);
-	y = CG_DrawPowerups(y);
+	y = CG_DrawScores(y + 4);
+	y = CG_DrawPowerups(y + 4);
 }
 #endif // MISSIONPACK
 
@@ -2012,7 +1999,7 @@ CG_DrawLowerLeft
 static void CG_DrawLowerLeft(void) {
 	float y;
 
-	y = 480 - ICON_SIZE;
+	y = 468 - ICON_SIZE;
 
 	if (CG_IsATeamGametype(cgs.gametype) && cg_drawTeamOverlay.integer == 3) {
 		y = CG_DrawTeamOverlay(y, qfalse, qfalse);
@@ -3287,12 +3274,9 @@ static void CG_DrawProxWarning( void ) {
 
 	proxTick = 10 - ((cg.time - proxTime) / 1000);
 
-	if (proxTick > 0 && proxTick <= 5) {
-		Com_sprintf(s, sizeof(s), "INTERNAL COMBUSTION IN: %i", proxTick);
-	} else {
-		Com_sprintf(s, sizeof(s), "YOU HAVE BEEN MINED");
+	if (proxTick > 0) {
+		Com_sprintf(s, sizeof(s), "YOU HAVE BEEN MINED\rINTERNAL COMBUSTION IN: %i", proxTick);
 	}
-
 	w = CG_DrawStrlen( s ) * BIGCHAR_WIDTH;
 	CG_DrawBigStringColor( 320 - w / 2, 64 + BIGCHAR_HEIGHT, s, g_color_table[ColorIndex(COLOR_RED)] );
 }
