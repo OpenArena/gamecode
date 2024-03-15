@@ -1,18 +1,21 @@
 # OpenArena eXpanded Changelog resume
 
-## oaxB53
-
-**Release date:** TBA
+## Important changes since OA 0.8.8
 
 ### Laconic version
 
 **Note:** An ampersand ("&") preceding a value means that the cvar is a bitflag, and you must add said value to the total before using its effect (i.e. if dmflags is 1096 and you want to add the new underwater speed, then dmflags should be 5192 (1096+4096).
 
+* New gametype: Possession:
+  * Can be played on all maps (for now, for testing purposes).
+  * Free-For-All based gametype.
+  * Hold a flag for the longest amount of time in order to win, or reach the holding limit. (Default 120, 2 minutes).
+  * The flag is the white flag from One Flag CTF. It spawns at either the designated spawnpoint (`team_CTF_neutralflag`), a Domination control point (`domination_point`) or a regular spawnpoint (`info_player_deathmatch` or `info_player_start`).
+  * `g_voteGametypes`: Possession is a votable gametype (`13/`).
 * New cvars and values:
   * `g_awardpushing 2`: [Rewards the last attacker who pushed the fragged player into a hazard within 5 seconds, even if the fragged player wasn't airborne.](https://openarena.ws/board/index.php?topic=5289.msg54334#msg54334)
   * `cg_bob`: If set to 0, it will disable cg_bobUp/cg_bobRoll/cg_bobPitch. **Default: 1.**
   * `cg_kickScale`: Controls how much the screen shakes when receiving damage. **Default: 1.0.**
-  * `g_voteGametypes`: Added Possession as a votable gametype (`13/`).
   * `cg_muzzleflashStyle`: Alternative muzzleflash styles for player preference, or "aesthetic," or maybe just less flashing (flashes can also be disabled). **Default: 1.**
   * `g_runes 2`: Enables the `tossrune` command (see below) in the server.
   * `dmflags &4096`: Allows players to move significantly faster underwater. Mostly for demonstration. Could be fun in class based gametypes.
@@ -25,18 +28,29 @@
 * New commands:
   * `weapbest`: Selects the best weapon.
   * `tossrune`: Tosses the rune that's been carried on. (Akin to TWCTF/TWCTF II) Needs `g_runes 2` in order to work.
+  * `ui_writemappools`: If the arena files are loaded, this command dumps the gamelists so they can be used by g_autonextmap (should be used to generate new gamelists for new versions).
 * Now it's possible to compile OAX on Mac (thanks Bishop-333!)
-* AI enhancements (LOTS!) for holdable handling, grappling hook handling, Possession, Domination and Double Domination.
+* AI enhancements (LOTS!) for holdable handling, grappling hook handling, Domination and Double Domination.
 * Elimination/eCTF/LMS: If all humans have been killed in a round, bots will be eliminated one by one.
 * Lots of fixes for Classic UI and backend of UI3.
 * Consistent default score limits across all modules.
 * Added frag message display with icons.
 * Keyboard/Joystick input in MPUI/UI3.
 * "Next round" Elimination countdown is also shown in Double Domination.
-* New tool for mappers: `state_targetname` key, allows the creation of doors for Elimination-based modes that open during the warmup time.
+* The game no longer shuts down with _"Couldn't find a spawn point"_ when a spawnpoint is missing.
+* New tool for mappers: `state_targetname` key for `func_door`, allows the creation of doors for Elimination-based modes that open during the active time of the game.
+* New tool for mappers: Support for `.info` files. Some configuration examples can be found [here](https://github.com/NeonKnightOA/nk-oa-assets/blob/master/maps/DM/galmevish/am_galmevish3.info) and [here](https://github.com/NeonKnightOA/nk-oa-assets/blob/master/maps/DM/blitzkrieg/blitzkrieg3.info).
+* New tool for mappers: `info_player_dom_red` and `info_player_dom_blue`, separate spawn points for Domination. These new entities are supported in [the gamepack](https://github.com/NeonKnightOA/oagamepack).
+* Added ability to execute a script when the server is empty.
+* Server now executes the file `gametype_GAMETYPENUMBER.cfg` (i.e. `gametype_0.cfg` for FFA or `gametype_3.cfg` for TDM) on gametype change.
+* Server now executes `mapscripts/g_MAPNAME.cfg` and `mapscripts/g_MAPNAME_GAMETYPENUMBER.cfg` when changing map. It falls back to `mapscripts/g_default.cfg` and/or `mapscripts/g_default_GAMETYPENUMBER.cfg` (i.e. `g_default_0.cfg` for FFA and `g_default_3.cfg` for TDM) if any or both or the scripts are missing.
 * Tons of other bug fixes.
+* The background is now streched on widescreen displays.
 
-### Extended version
+## oaxB53
+
+**Release date:** TBA
+
 * Development mode:
   * New cheat-protected development cvars enabled with developer 1: `cg_debugOrbit`, `cg_debugAccuracy`, `bot_debugChat`, `bot_debugLTG` and `bot_debugPaths`.
   * Restored `cg_debugDelag`, enabled by `developer 1`.
@@ -148,7 +162,7 @@
 * Backport from ioq3: 01bfb15 "UI_BuildFindPlayerList: avoid array underflow"
 * Backport from ioq3: f1a133a "UI_BuildFindPlayerList: make a sizeof() more obviously correct"
 * Big backport from ioq3: d875c1f "Improve keyboard/joystick input in Team Arena UI"
-* Fix incorrect check for possession in cg_newdraw.c
+* Fix incorrect check for possession in cg_newdraw.c.
 * Small fix for function G_InitBots where the minimum for FFA and Team gametypes ended up being the same.
 * Backport from ioq3: f6f2710 "Make server browser default to Internet"
 * Backport from ioq3: 2091a2e "Fix favorite servers player count message in Team Arena UI"
