@@ -41,6 +41,7 @@
   * New cheat-protected development cvars enabled with developer 1: `cg_debugOrbit`, `cg_debugAccuracy`, `bot_debugChat`, `bot_debugLTG` and `bot_debugPaths`.
   * Restored `cg_debugDelag`, enabled by `developer 1`.
   * Other cvars that are enabled by `developer 1` include `cg_debugAnim`, `cg_debugPosition`, `cg_debugEvents`, `cg_leiDebug`, `g_debugMove`, `g_debugDamage`, `g_debugAlloc`, `ui_debug` (MPUI/UI3) and `ui_leiDebug` (MPUI/UI3).
+* New helper function: `G_IsANoPickupsMode()`, returns true if the mode doesn't allow pickups.
 * New cvars that replace `g_rockets`: `g_weaponArena` and `g_weaponArenaWeapon`.
   * `g_weaponArena` enables the "Weapon Arena" mode, which is the old g_rockets, but with any other weapon. `g_weaponArena 2` adds the Grappling Hook to the inventory.
   * `g_weaponArenaWeapon` controls, via specific strings, which weapon it's spawned with its ammo boxes. The weapon cannot be picked up via menu, only (for now) via console. The full string list can be locate [here](https://github.com/OpenArena/gamecode/pull/171).

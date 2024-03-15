@@ -2927,4 +2927,26 @@ int G_GetWeaponArena(char* cvarWaString) {
 		return WP_CHAINGUN;
 	return WP_GAUNTLET;
 }
+/*
+===================
+G_IsANoPickupsMode
+
+Returns true if the match has a "no pickups" rule.
+===================
+ */
+qboolean G_IsANoPickupsMode(void) {
+	// In Instagib mode, no pickups
+	if (g_instantgib.integer) {
+		return qtrue;
+	}
+	// In Weapon Arena mode, no pickups
+	if (g_weaponArena.integer) {
+		return qtrue;
+	}
+	// In Elimination mode for non-round-based modes, no pickups
+	if (g_elimination_allgametypes.integer) {
+		return qtrue;
+	}
+	return qfalse;
+}
 /* /Neon_Knight */
