@@ -146,6 +146,8 @@ static void UI_SoundOptionsMenu_Event( void* ptr, int event ) {
 			trap_Cmd_ExecuteText( EXEC_NOW, "s_useopenal 0\n" );
 		}
 		soundOptionsInfo.openal.curvalue = (int)trap_Cvar_VariableValue( "s_useopenal" );
+		UI_ForceMenuOff();
+		trap_Cmd_ExecuteText( EXEC_APPEND, "snd_restart\n" );
 		break;
 
 	case ID_BACK:
