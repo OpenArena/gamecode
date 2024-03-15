@@ -1678,6 +1678,15 @@ int BotInitLibrary(void) {
 	//no AAS optimization
 	trap_Cvar_VariableStringBuffer("bot_aasoptimize", buf, sizeof(buf));
 	if (strlen(buf)) trap_BotLibVarSet("aasoptimize", buf);
+	//botchat debug
+	trap_Cvar_VariableStringBuffer("bot_debugChat", buf, sizeof(buf));
+	if (strlen(buf)) trap_BotLibVarSet("debugChat", buf);
+	//long-term goal debug
+	trap_Cvar_VariableStringBuffer("bot_debugLTG", buf, sizeof(buf));
+	if (strlen(buf)) trap_BotLibVarSet("debugLTG", buf);
+	//bot paths debug
+	trap_Cvar_VariableStringBuffer("bot_debugPaths", buf, sizeof(buf));
+	if (strlen(buf)) trap_BotLibVarSet("debugPaths", buf);
 	//
 	trap_Cvar_VariableStringBuffer("bot_saveroutingcache", buf, sizeof(buf));
 	if (strlen(buf)) trap_BotLibVarSet("saveroutingcache", buf);
@@ -1718,6 +1727,9 @@ int BotAISetup( int restart ) {
 	trap_Cvar_Register(&bot_testsolid, "bot_testsolid", "0", CVAR_CHEAT);
 	trap_Cvar_Register(&bot_testclusters, "bot_testclusters", "0", CVAR_CHEAT);
 	trap_Cvar_Register(&bot_developer, "bot_developer", "0", CVAR_CHEAT);
+	trap_Cvar_Register(&bot_debugChat, "bot_debugChat", "0", CVAR_CHEAT);
+	trap_Cvar_Register(&bot_debugLTG, "bot_debugLTG", "0", CVAR_CHEAT);
+	trap_Cvar_Register(&bot_debugPaths, "bot_debugPaths", "0", CVAR_CHEAT);
 	trap_Cvar_Register(&bot_interbreedchar, "bot_interbreedchar", "", 0);
 	trap_Cvar_Register(&bot_interbreedbots, "bot_interbreedbots", "10", 0);
 	trap_Cvar_Register(&bot_interbreedcycle, "bot_interbreedcycle", "20", 0);

@@ -102,7 +102,8 @@ void BotRecordNodeSwitch(bot_state_t *bs, char *node, char *str, char *s) {
 
 	ClientName(bs->client, netname, sizeof(netname));
 	Com_sprintf(nodeswitch[numnodeswitches], 144, "%s at %2.1f entered %s: %s from %s\n", netname, FloatTime(), node, str, s);
-	if (bot_developer.integer & BOTDEV_REPORTACTIONS) {
+	// Developer mode outputs a message.
+	if (bot_developer.integer && bot_debugPaths.integer) {
 		BotAI_Print(PRT_MESSAGE, "%s", nodeswitch[numnodeswitches]);
 	}
 	numnodeswitches++;
@@ -158,8 +159,8 @@ int BotGoForAir(bot_state_t *bs, int tfl, bot_goal_t *ltg, float range) {
 
 	//if the bot needs air
 	if (bs->lastair_time < FloatTime() - 6) {
-		//
-		if (bot_developer.integer & BOTDEV_REPORTACTIONS) {
+		// Developer mode outputs a message.
+		if (bot_developer.integer && bot_debugPaths.integer) {
 			BotAI_Print(PRT_MESSAGE, "going for air\n");
 		}
 		//if we can find an air goal
@@ -304,10 +305,9 @@ int BotGetItemLongTermGoal(bot_state_t *bs, int tfl, bot_goal_t *goal) {
 			bs->ltg_time = FloatTime() + 20;
 		}
 		else {//the bot gets sorta stuck with all the avoid timings, shouldn't happen though
-			//
-			if (bot_developer.integer & BOTDEV_REPORTACTIONS) {
+			// Developer mode outputs a message.
+			if (bot_developer.integer && bot_debugPaths.integer) {
 				char netname[128];
-
 				BotAI_Print(PRT_MESSAGE, "%s: no valid ltg (probably stuck)\n", ClientName(bs->client, netname, sizeof(netname)));
 			}
 			//trap_BotDumpAvoidGoals(bs->gs);
@@ -1594,7 +1594,8 @@ int AINode_Seek_ActivateEntity(bot_state_t *bs) {
 		BotEntityInfo(goal->entitynum, &entinfo);
 		// if the entity the bot shoots at moved
 		if (!VectorCompare(bs->activatestack->origin, entinfo.origin)) {
-			if (bot_developer.integer & BOTDEV_REPORTACTIONS) {
+			// Developer mode outputs a message.
+			if (bot_developer.integer && bot_debugPaths.integer) {
 				BotAI_Print(PRT_MESSAGE, "hit shootable button or trigger\n");
 			}
 			bs->activatestack->time = 0;
@@ -1621,7 +1622,8 @@ int AINode_Seek_ActivateEntity(bot_state_t *bs) {
 		else if (!bs->activatestack->shoot) {
 			//if the bot touches the current goal
 			if (trap_BotTouchingGoal(bs->origin, goal)) {
-				if (bot_developer.integer & BOTDEV_REPORTACTIONS) {
+				// Developer mode outputs a message.
+				if (bot_developer.integer && bot_debugPaths.integer) {
 					BotAI_Print(PRT_MESSAGE, "touched button or trigger\n");
 				}
 				bs->activatestack->time = 0;
@@ -2089,9 +2091,9 @@ int AINode_Battle_Fight(bot_state_t *bs) {
 		AIEnter_Respawn(bs, "battle fight: bot dead");
 		return qfalse;
 	}
-	//if there is another better enemy
+	//if there is another better enemy (only available in Developer mode)
 	if (BotFindEnemy(bs, bs->enemy)) {
-		if (bot_developer.integer & BOTDEV_REPORTACTIONS) {
+		if (bot_developer.integer && bot_debugPaths.integer) {
 			BotAI_Print(PRT_MESSAGE, "found new better enemy\n");
 		}
 	}
@@ -2416,7 +2418,7 @@ int AINode_Battle_Retreat(bot_state_t *bs) {
 	}
 	//if there is another better enemy
 	if (BotFindEnemy(bs, bs->enemy)) {
-		if (bot_developer.integer & BOTDEV_REPORTACTIONS) {
+		if (bot_developer.integer && bot_debugPaths.integer) {
 			BotAI_Print(PRT_MESSAGE, "found new better enemy\n");
 		}
 	}

@@ -1416,7 +1416,7 @@ extern vmCvar_t cg_enableQ;		// leilei
 extern vmCvar_t cg_enableFS;		// leilei
 //unlagged - client options
 extern vmCvar_t cg_delag;
-//extern vmCvar_t cg_debugDelag;
+extern vmCvar_t cg_debugDelag;
 //extern vmCvar_t cg_drawBBox;
 extern vmCvar_t cg_cmdTimeNudge;
 extern vmCvar_t sv_fps;
@@ -1478,6 +1478,9 @@ extern vmCvar_t cg_missionpackChecks;
 extern vmCvar_t cg_leiChibi;
 /* Neon_Knight: Developer mode. */
 extern vmCvar_t cg_developer;
+// extern vmCvar_t cg_debugDD;
+extern vmCvar_t cg_debugOrbit;
+extern vmCvar_t cg_debugAccuracy;
 /* /Neon_Knight */
 
 //unlagged - cg_unlagged.c

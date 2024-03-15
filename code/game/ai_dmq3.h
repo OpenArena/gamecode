@@ -199,6 +199,9 @@ extern vmCvar_t bot_nochat;
 extern vmCvar_t bot_testrchat;
 extern vmCvar_t bot_challenge;
 extern vmCvar_t bot_developer;
+extern vmCvar_t bot_debugChat;
+extern vmCvar_t bot_debugLTG;
+extern vmCvar_t bot_debugPaths;
 
 extern bot_goal_t ctf_redflag;
 extern bot_goal_t ctf_blueflag;

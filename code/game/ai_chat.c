@@ -923,7 +923,7 @@ void BotChatTest(bot_state_t *bs) {
 	char *weap;
 	int num, i;
 
-	if (bot_nochat.integer || (bot_developer.integer & BOTDEV_DISABLECHAT)) return;
+	if (bot_nochat.integer || (bot_developer.integer && bot_debugChat.integer)) return;
 
 	num = trap_BotNumInitialChats(bs->cs, "game_enter");
 	for (i = 0; i < num; i++)
@@ -1182,7 +1182,7 @@ Has all the conditions shared by all the chat states.
 */
 qboolean BotCanChat(bot_state_t *bs,float seed) {
 	// They won't via specific cvars
-	if (bot_nochat.integer || (bot_developer.integer & BOTDEV_DISABLECHAT)) {
+	if (bot_nochat.integer || (bot_developer.integer && bot_debugChat.integer)) {
 		return qfalse;
 	}
 	// They won't chat in Tournament mode
