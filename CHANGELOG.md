@@ -35,6 +35,7 @@
   * `elimination_damage` can now be set in the UI for Elimination and eCTF matches.
   * `g_grapple` can now be set for all match types.
   * `g_harvesterFromBodies` can now be set for Harvester matches.
+  * `g_ddCaptureTime` and `g_ddRespawnDelay` can now be set for Double Domination matches.
 * Now it's possible to compile OAX on Mac (thanks EddieBrrrock!)
 * AI enhancements (LOTS!) for holdable handling, grappling hook handling, Domination and Double Domination.
 * Elimination/eCTF/LMS: If all humans have been killed in a round, bots will be eliminated one by one.
@@ -57,6 +58,7 @@
 
 **Release date:** TBA
 
+* `g_ddCaptureTime` and `g_ddRespawnDelay` can now be set for Double Domination matches in the Classic UI.
 * `g_grapple` can now be selected in the Classic Menu.
 * `elimination_selfdamage` is now `elimination_damage`, can be set in the Classic UI, and is now a bitflag with the following values:
   * `elimination_damage 0` = Only Enemies.
