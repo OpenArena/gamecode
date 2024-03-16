@@ -1576,6 +1576,8 @@ static void ServerOptions_SetMenuItems( void ) {
 		Com_sprintf( s_serveroptions.capturelimit.field.buffer, 4, "%i", (int)Com_Clamp( 0, 100, trap_Cvar_VariableValue( "ui_dd_capturelimit" ) ) );
 		Com_sprintf( s_serveroptions.timelimit.field.buffer, 4, "%i", (int)Com_Clamp( 0, 999, trap_Cvar_VariableValue( "ui_dd_timelimit" ) ) );
 		s_serveroptions.friendlyfire.curvalue = (int)Com_Clamp( 0, 1, trap_Cvar_VariableValue( "ui_dd_friendly" ) );
+		s_serveroptions.ddCaptureTime.curvalue = (int)Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_ddCaptureTime" ) );
+		s_serveroptions.ddRespawnDelay.curvalue = (int)Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_ddRespawnDelay" ) );
 		break;
                 
 	case GT_DOMINATION:
@@ -1597,8 +1599,6 @@ static void ServerOptions_SetMenuItems( void ) {
 	s_serveroptions.instantgib.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_instantgib" ) );
 	s_serveroptions.weaponArena.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_weaponArena" ) );
 	s_serveroptions.lmsMode.curvalue = Com_Clamp( 0, 3, trap_Cvar_VariableValue("g_lms_mode") );
-	s_serveroptions.ddCaptureTime.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_ddCaptureTime" ) );
-	s_serveroptions.ddRespawnDelay.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_ddRespawnDelay" ) );
 	s_serveroptions.oneway.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "elimination_ctf_oneway" ) );
 	s_serveroptions.grapple.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_grapple" ) );
 	s_serveroptions.eliminationDamage.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "elimination_damage" ) );
