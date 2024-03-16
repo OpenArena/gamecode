@@ -7865,6 +7865,26 @@ qboolean UI_IsARoundBasedGametype(int check) {
 	return GAMETYPE_IS_ROUND_BASED(check);
 }
 /*
+===================
+UI_GametypeUsesFragLimit
+
+Checks if the gametype has a frag-based scoring system.
+===================
+ */
+qboolean UI_GametypeUsesFragLimit(int check) {
+	return GAMETYPE_USES_FRAG_LIMIT(check);
+}
+/*
+===================
+UI_GametypeUsesCaptureLimit
+
+Checks if the gametype has a capture-based scoring system.
+===================
+ */
+qboolean UI_GametypeUsesCaptureLimit(int check) {
+	return GAMETYPE_USES_CAPTURE_LIMIT(check);
+}
+/*
 =============================================
 Neon_Knight: Here begins the list of getters for certain data.
 =============================================

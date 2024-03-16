@@ -1435,4 +1435,6 @@ qboolean G_UsesTheWhiteFlag(int check);	/* Whether the gametype uses the neutral
 qboolean G_IsARoundBasedGametype(int check);	/* Whether the gametype uses the neutral flag. */
 int G_GetWeaponArena(char* cvarWaString);	/* Takes a string and returns the value of a weapon. */
 qboolean G_IsANoPickupsMode(void);	/* Returns true if the match has a "no pickups" rule. */
+qboolean G_GametypeUsesFragLimit(int check);	/* Whether the gametype uses a frag-based scoring system. */
+qboolean G_GametypeUsesCaptureLimit(int check);	/* Whether the gametype uses a capture-based scoring system. */
 /* /Neon_Knight */

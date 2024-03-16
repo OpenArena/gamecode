@@ -905,4 +905,6 @@ qboolean UI_IsATeamGametype(int check);	/* Whether the gametype is team-based or
 qboolean UI_UsesTeamFlags(int check);	/* Whether the gametype uses the red and blue flags. */
 qboolean UI_UsesTheWhiteFlag(int check);	/* Whether the gametype uses the neutral flag. */
 qboolean UI_IsARoundBasedGametype(int check);	/* Whether the gametype uses the neutral flag. */
+qboolean UI_GametypeUsesFragLimit(int check);	/* Whether the gametype uses a frag-based scoring system. */
+qboolean UI_GametypeUsesCaptureLimit(int check);	/* Whether the gametype uses a capture-based scoring system. */
 /* /Neon_Knight */
