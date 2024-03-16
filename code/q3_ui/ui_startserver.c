@@ -799,6 +799,7 @@ typedef struct {
 	menuradiobutton_s	pure;
 	menuradiobutton_s	lan;
 	menulist_s		pmove;
+	menuradiobutton_s	grapple;
 	menuradiobutton_s	oneway;
 	menuradiobutton_s	instantgib;
 	menuradiobutton_s	weaponArena;
@@ -916,6 +917,7 @@ static void ServerOptions_Start( void ) {
 	int             lan;
 	int             instantgib;
 	int             weaponArena;
+	int             grapple;
 	int             oneway;
 	int             lmsMode;
 	int             eliminationDamage;
@@ -934,6 +936,7 @@ static void ServerOptions_Start( void ) {
 	pmove            = s_serveroptions.pmove.curvalue;
 	instantgib       = s_serveroptions.instantgib.curvalue;
 	weaponArena          = s_serveroptions.weaponArena.curvalue;
+	grapple		 = s_serveroptions.grapple.curvalue;
 	oneway		 = s_serveroptions.oneway.curvalue;
 	//Sago: For some reason you need to add 1 to curvalue to get the UI to show the right thing (fixed?)
 	lmsMode          = s_serveroptions.lmsMode.curvalue; //+1;
@@ -1037,6 +1040,7 @@ static void ServerOptions_Start( void ) {
 	trap_Cvar_SetValue( "g_instantgib", instantgib );
 	trap_Cvar_SetValue( "g_weaponArena", weaponArena );
 	trap_Cvar_SetValue( "g_lms_mode", lmsMode);
+	trap_Cvar_SetValue( "g_grapple", grapple );
 	trap_Cvar_SetValue( "elimination_ctf_oneway", oneway );
 	trap_Cvar_SetValue( "elimination_damage", eliminationDamage );
 	switch(pmove) {
@@ -1273,6 +1277,15 @@ ServerOptions_StatusBar_Pure
 */
 static void ServerOptions_StatusBar_Pure( void* ptr ) {
 	UI_DrawString( 320, 440, "Require identical pk3 files", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
+/*
+=================
+ServerOptions_StatusBar_Grapple
+=================
+*/
+static void ServerOptions_StatusBar_Grapple( void* ptr ) {
+	UI_DrawString( 320, 440, "Adds the Grappling Hook to all players' starter equipment.", UI_CENTER|UI_SMALLFONT, colorWhite );
 }
 
 /*
@@ -1559,6 +1572,7 @@ static void ServerOptions_SetMenuItems( void ) {
 	s_serveroptions.weaponArena.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_weaponArena" ) );
 	s_serveroptions.lmsMode.curvalue = Com_Clamp( 0, 3, trap_Cvar_VariableValue("g_lms_mode") );
 	s_serveroptions.oneway.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "elimination_ctf_oneway" ) );
+	s_serveroptions.grapple.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_grapple" ) );
 	s_serveroptions.eliminationDamage.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "elimination_damage" ) );
 	s_serveroptions.pmove.curvalue = 0;
 	if(trap_Cvar_VariableValue( "pmove_fixed" ))
@@ -1732,6 +1746,14 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 		s_serveroptions.friendlyfire.generic.name	  = "Friendly Fire:";
 	}
 
+	y += BIGCHAR_HEIGHT+2;
+	s_serveroptions.grapple.generic.type			= MTYPE_RADIOBUTTON;
+	s_serveroptions.grapple.generic.flags			= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	s_serveroptions.grapple.generic.x				= OPTIONS_X;
+	s_serveroptions.grapple.generic.y				= y;
+	s_serveroptions.grapple.generic.name			= "Grappling Hook:";
+	s_serveroptions.grapple.generic.statusbar  = ServerOptions_StatusBar_Grapple;
+
 	if( s_serveroptions.gametype == GT_CTF_ELIMINATION) {
 		y += BIGCHAR_HEIGHT+2;
 		s_serveroptions.oneway.generic.type			= MTYPE_RADIOBUTTON;
@@ -1751,6 +1773,7 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 		s_serveroptions.eliminationDamage.generic.x				=  OPTIONS_X;
 		s_serveroptions.eliminationDamage.generic.y				= y;
 		s_serveroptions.eliminationDamage.itemnames				= eliminationDamage_list;
+		s_serveroptions.eliminationDamage.generic.statusbar  = ServerOptions_StatusBar_eliminationDamage;
 	}
 
 	y += BIGCHAR_HEIGHT+2;
@@ -1930,6 +1953,7 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 	}
 	Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.pure );
 	Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.instantgib );
+	Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.grapple );
 	Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.weaponArena );
 	if( s_serveroptions.gametype == GT_LMS) {
 		Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.lmsMode );
