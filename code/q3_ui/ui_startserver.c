@@ -803,6 +803,7 @@ typedef struct {
 	menuradiobutton_s	instantgib;
 	menuradiobutton_s	weaponArena;
 	menulist_s			lmsMode;
+	menulist_s			eliminationDamage;
 	menulist_s			botSkill;
 
 	menutext_s			player0;
@@ -857,6 +858,15 @@ static const char *lmsMode_list[] = {
 	NULL
 };
 
+//Elimiantion - LMS mode
+static const char *eliminationDamage_list[] = {
+	"Only Enemies",
+	"Enemies and Self",
+	"Enemies and Team",
+	"Enemies+Self+Team",
+	NULL
+};
+
 static const char *pmove_list[] = {
 	"Framerate dependent",
 	"Fixed framerate 125Hz",
@@ -908,6 +918,7 @@ static void ServerOptions_Start( void ) {
 	int             weaponArena;
 	int             oneway;
 	int             lmsMode;
+	int             eliminationDamage;
 	int		skill;
 	int		n;
 	const char		*info;
@@ -926,6 +937,7 @@ static void ServerOptions_Start( void ) {
 	oneway		 = s_serveroptions.oneway.curvalue;
 	//Sago: For some reason you need to add 1 to curvalue to get the UI to show the right thing (fixed?)
 	lmsMode          = s_serveroptions.lmsMode.curvalue; //+1;
+	eliminationDamage		 = s_serveroptions.eliminationDamage.curvalue;
 	skill		 = s_serveroptions.botSkill.curvalue + 1;
 
 	//set maxclients
@@ -1026,6 +1038,7 @@ static void ServerOptions_Start( void ) {
 	trap_Cvar_SetValue( "g_weaponArena", weaponArena );
 	trap_Cvar_SetValue( "g_lms_mode", lmsMode);
 	trap_Cvar_SetValue( "elimination_ctf_oneway", oneway );
+	trap_Cvar_SetValue( "elimination_damage", eliminationDamage );
 	switch(pmove) {
 		case 1:
 			//Fixed framerate 125 Hz
@@ -1269,6 +1282,15 @@ ServerOptions_StatusBar_Oneway
 */
 static void ServerOptions_StatusBar_Oneway( void* ptr ) {
 	UI_DrawString( 320, 440, "Only one team can capture in a round", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
+/*
+=================
+ServerOptions_StatusBar_eliminationDamage
+=================
+*/
+static void ServerOptions_StatusBar_eliminationDamage( void* ptr ) {
+	UI_DrawString( 320, 440, "Who suffers damage from a teammate's weapons.", UI_CENTER|UI_SMALLFONT, colorWhite );
 }
 
 /*
@@ -1537,6 +1559,7 @@ static void ServerOptions_SetMenuItems( void ) {
 	s_serveroptions.weaponArena.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_weaponArena" ) );
 	s_serveroptions.lmsMode.curvalue = Com_Clamp( 0, 3, trap_Cvar_VariableValue("g_lms_mode") );
 	s_serveroptions.oneway.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "elimination_ctf_oneway" ) );
+	s_serveroptions.eliminationDamage.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "elimination_damage" ) );
 	s_serveroptions.pmove.curvalue = 0;
 	if(trap_Cvar_VariableValue( "pmove_fixed" ))
 		s_serveroptions.pmove.curvalue = 1;
@@ -1717,6 +1740,17 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 		s_serveroptions.oneway.generic.y				= y;
 		s_serveroptions.oneway.generic.name			= "Oneway attack:";
 		s_serveroptions.oneway.generic.statusbar  = ServerOptions_StatusBar_Oneway;
+	}
+
+	if(UI_IsARoundBasedGametype(s_serveroptions.gametype) &&
+			UI_IsATeamGametype(s_serveroptions.gametype)) {
+		y += BIGCHAR_HEIGHT+2;
+		s_serveroptions.eliminationDamage.generic.type			= MTYPE_SPINCONTROL;
+		s_serveroptions.eliminationDamage.generic.flags			= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+		s_serveroptions.eliminationDamage.generic.name			= "Damage to...";
+		s_serveroptions.eliminationDamage.generic.x				=  OPTIONS_X;
+		s_serveroptions.eliminationDamage.generic.y				= y;
+		s_serveroptions.eliminationDamage.itemnames				= eliminationDamage_list;
 	}
 
 	y += BIGCHAR_HEIGHT+2;
@@ -1902,6 +1936,9 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 	}
 	if( s_serveroptions.gametype == GT_CTF_ELIMINATION) {
 		Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.oneway );
+	}
+	if(UI_IsATeamGametype(s_serveroptions.gametype) && UI_IsARoundBasedGametype(s_serveroptions.gametype)) {
+		Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.eliminationDamage );
 	}
 	Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.pmove );
 	if( s_serveroptions.multiplayer ) {

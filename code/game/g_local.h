@@ -1096,7 +1096,7 @@ extern vmCvar_t g_localTeamPref;
 extern vmCvar_t g_music;
 extern vmCvar_t g_spawnprotect;
 //elimination:
-extern vmCvar_t g_elimination_selfdamage;
+extern vmCvar_t g_elimination_damage;
 extern vmCvar_t g_elimination_startHealth;
 extern vmCvar_t g_elimination_startArmor;
 extern vmCvar_t g_elimination_bfg;
