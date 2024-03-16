@@ -115,22 +115,22 @@ vmCvar_t ui_1fctf_friendly;
 vmCvar_t ui_overload_capturelimit;
 vmCvar_t ui_overload_timelimit;
 vmCvar_t ui_overload_friendly;
-vmCvar_t ui_harvester_capturelimit;
+vmCvar_t ui_harvester_fraglimit;
 vmCvar_t ui_harvester_timelimit;
 vmCvar_t ui_harvester_friendly;
 vmCvar_t ui_elimination_capturelimit;
 vmCvar_t ui_elimination_timelimit;
 vmCvar_t ui_ctf_elimination_capturelimit;
 vmCvar_t ui_ctf_elimination_timelimit;
-vmCvar_t ui_lms_fraglimit;
+vmCvar_t ui_lms_capturelimit;
 vmCvar_t ui_lms_timelimit;
 vmCvar_t ui_dd_capturelimit;
 vmCvar_t ui_dd_timelimit;
 vmCvar_t ui_dd_friendly;
-vmCvar_t ui_dom_capturelimit;
+vmCvar_t ui_dom_fraglimit;
 vmCvar_t ui_dom_timelimit;
 vmCvar_t ui_dom_friendly;
-vmCvar_t ui_pos_scorelimit;
+vmCvar_t ui_pos_fraglimit;
 vmCvar_t ui_pos_timelimit;
 vmCvar_t ui_arenasFile;
 vmCvar_t ui_botsFile;
@@ -200,7 +200,7 @@ static cvarTable_t cvarTable[] = {
 	{ &ui_overload_timelimit, "ui_overload_timelimit", GT_OBELISK_DEFAULT_TIMELIMIT, CVAR_ARCHIVE },
 	{ &ui_overload_friendly, "ui_overload_friendly",  "0", CVAR_ARCHIVE },
 
-	{ &ui_harvester_capturelimit, "ui_harvester_capturelimit", GT_HARVESTER_DEFAULT_SCORELIMIT, CVAR_ARCHIVE },
+	{ &ui_harvester_fraglimit, "ui_harvester_fraglimit", GT_HARVESTER_DEFAULT_SCORELIMIT, CVAR_ARCHIVE },
 	{ &ui_harvester_timelimit, "ui_harvester_timelimit", GT_HARVESTER_DEFAULT_TIMELIMIT, CVAR_ARCHIVE },
 	{ &ui_harvester_friendly, "ui_harvester_friendly",  "0", CVAR_ARCHIVE },
 
@@ -210,18 +210,18 @@ static cvarTable_t cvarTable[] = {
 	{ &ui_ctf_elimination_capturelimit, "ui_ctf_elimination_capturelimit", GT_CTF_ELIMINATION_DEFAULT_SCORELIMIT, CVAR_ARCHIVE },
 	{ &ui_ctf_elimination_timelimit, "ui_ctf_elimination_timelimit", GT_CTF_ELIMINATION_DEFAULT_TIMELIMIT, CVAR_ARCHIVE },
 
-	{ &ui_lms_fraglimit, "ui_lms_fraglimit", GT_LMS_DEFAULT_SCORELIMIT, CVAR_ARCHIVE },
+	{ &ui_lms_capturelimit, "ui_lms_capturelimit", GT_LMS_DEFAULT_SCORELIMIT, CVAR_ARCHIVE },
 	{ &ui_lms_timelimit, "ui_lms_timelimit", GT_LMS_DEFAULT_TIMELIMIT, CVAR_ARCHIVE },
 
 	{ &ui_dd_capturelimit, "ui_dd_capturelimit", GT_DOUBLE_D_DEFAULT_SCORELIMIT, CVAR_ARCHIVE },
 	{ &ui_dd_timelimit, "ui_dd_timelimit", GT_DOUBLE_D_DEFAULT_TIMELIMIT, CVAR_ARCHIVE },
 	{ &ui_dd_friendly, "ui_dd_friendly",  "0", CVAR_ARCHIVE },
 
-	{ &ui_dom_capturelimit, "ui_dom_capturelimit", GT_DOMINATION_DEFAULT_SCORELIMIT, CVAR_ARCHIVE },
+	{ &ui_dom_fraglimit, "ui_dom_fraglimit", GT_DOMINATION_DEFAULT_SCORELIMIT, CVAR_ARCHIVE },
 	{ &ui_dom_timelimit, "ui_dom_timelimit", GT_DOMINATION_DEFAULT_TIMELIMIT, CVAR_ARCHIVE },
 	{ &ui_dom_friendly, "ui_dom_friendly",  "0", CVAR_ARCHIVE },
 
-	{ &ui_pos_scorelimit, "ui_pos_scorelimit", GT_POSSESSION_DEFAULT_SCORELIMIT, CVAR_ARCHIVE },
+	{ &ui_pos_fraglimit, "ui_pos_fraglimit", GT_POSSESSION_DEFAULT_SCORELIMIT, CVAR_ARCHIVE },
 	{ &ui_pos_timelimit, "ui_pos_timelimit", GT_POSSESSION_DEFAULT_TIMELIMIT, CVAR_ARCHIVE },
 
 	{ &ui_arenasFile, "g_arenasFile", "", CVAR_INIT|CVAR_ROM },
