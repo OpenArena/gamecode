@@ -1743,7 +1743,7 @@ static float CG_DrawScores(float y) {
 			CG_DrawSmallString(x, y - 28, s, 1.0F);
 		}
 
-		if (CG_IsATeamGametype(cgs.gametype) && cgs.gametype != GT_TEAM) {
+		if (CG_GametypeUsesCaptureLimit(cgs.gametype)) {
 			v = cgs.capturelimit;
 		} else {
 			v = cgs.fraglimit;

@@ -2752,4 +2752,24 @@ Checks if the gametype has a round-based system.
 qboolean CG_IsARoundBasedGametype(int check) {
 	return GAMETYPE_IS_ROUND_BASED(check);
 }
+/*
+===================
+CG_GametypeUsesFragLimit
+
+Checks if the gametype has a frag-based scoring system.
+===================
+ */
+qboolean CG_GametypeUsesFragLimit(int check) {
+	return GAMETYPE_USES_FRAG_LIMIT(check);
+}
+/*
+===================
+CG_GametypeUsesCaptureLimit
+
+Checks if the gametype has a capture-based scoring system.
+===================
+ */
+qboolean CG_GametypeUsesCaptureLimit(int check) {
+	return GAMETYPE_USES_CAPTURE_LIMIT(check);
+}
 /* /Neon_Knight */

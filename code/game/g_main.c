@@ -2153,7 +2153,7 @@ void CheckExitRules( void )
 	}
 
 	if ( g_capturelimit.integer ) {
-		if (G_IsATeamGametype(g_gametype.integer) && g_gametype.integer != GT_TEAM) {
+		if (G_GametypeUsesCaptureLimit(g_gametype.integer)) {
 			if ( level.teamScores[TEAM_RED] >= g_capturelimit.integer ) {
 				trap_SendServerCommand( -1, "print \"Red hit the capturelimit.\n\"" );
 				LogExit( "Capturelimit hit." );
@@ -2878,6 +2878,26 @@ Checks if the gametype has a round-based system.
  */
 qboolean G_IsARoundBasedGametype(int check) {
 	return GAMETYPE_IS_ROUND_BASED(check);
+}
+/*
+===================
+G_GametypeUsesFragLimit
+
+Checks if the gametype has a frag-based scoring system.
+===================
+ */
+qboolean G_GametypeUsesFragLimit(int check) {
+	return GAMETYPE_USES_FRAG_LIMIT(check);
+}
+/*
+===================
+G_GametypeUsesCaptureLimit
+
+Checks if the gametype has a capture-based scoring system.
+===================
+ */
+qboolean G_GametypeUsesCaptureLimit(int check) {
+	return GAMETYPE_USES_CAPTURE_LIMIT(check);
 }
 /*
 ===================

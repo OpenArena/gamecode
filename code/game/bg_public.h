@@ -143,6 +143,11 @@ typedef enum {
  */
 #define GAMETYPE_IS_ROUND_BASED(gametype) (gametype == GT_ELIMINATION || gametype == GT_CTF_ELIMINATION || gametype == GT_LMS)
 #define GAMETYPE_USES_OBELISKS(gametype) (gametype == GT_HARVESTER || gametype == GT_OBELISK)
+/*
+ Score limits
+ */
+#define GAMETYPE_USES_FRAG_LIMIT(gametype) (gametype == GT_FFA || gametype == GT_TOURNAMENT || gametype == GT_SINGLE_PLAYER || gametype == GT_TEAM || gametype == GT_HARVESTER || gametype == GT_DOMINATION || gametype == GT_POSSESSION)
+#define GAMETYPE_USES_CAPTURE_LIMIT(gametype) (gametype == GT_CTF || gametype == GT_1FCTF || gametype == GT_OBELISK || gametype == GT_ELIMINATION || gametype == GT_CTF_ELIMINATION || gametype == GT_LMS || gametype == GT_DOUBLE_D)
 
 #define GT_FFA_DEFAULT_SCORELIMIT	"20"
 #define GT_FFA_DEFAULT_TIMELIMIT	"0"
