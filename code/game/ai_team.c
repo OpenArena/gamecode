@@ -2510,20 +2510,20 @@ BotDDorders
 */
 void BotDDorders(bot_state_t *bs) {
 	// If only the control point A is taken...
-	if (BotTeamControlsPoint(bs,level.pointStatusA) &&
-			!BotTeamControlsPoint(bs,level.pointStatusB)) {
+	if (BotTeamOwnsControlPoint(bs,level.pointStatusA) &&
+			!BotTeamOwnsControlPoint(bs,level.pointStatusB)) {
 		BotDDorders_PointATaken(bs);
 	}
 	// If only the control point B is taken...
-	else if (!BotTeamControlsPoint(bs,level.pointStatusA) &&
-			BotTeamControlsPoint(bs,level.pointStatusB)) {
+	else if (!BotTeamOwnsControlPoint(bs,level.pointStatusA) &&
+			BotTeamOwnsControlPoint(bs,level.pointStatusB)) {
 		BotDDorders_PointBTaken(bs);
 	}
 	// If both control points (or none) are taken...
-	else if ((BotTeamControlsPoint(bs,level.pointStatusA) &&
-			BotTeamControlsPoint(bs,level.pointStatusB)) ||
-			(!BotTeamControlsPoint(bs,level.pointStatusA) &&
-			!BotTeamControlsPoint(bs,level.pointStatusB))) {
+	else if ((BotTeamOwnsControlPoint(bs,level.pointStatusA) &&
+			BotTeamOwnsControlPoint(bs,level.pointStatusB)) ||
+			(!BotTeamOwnsControlPoint(bs,level.pointStatusA) &&
+			!BotTeamOwnsControlPoint(bs,level.pointStatusB))) {
 		BotDDorders_BothPointsTaken(bs);
 	}
 }

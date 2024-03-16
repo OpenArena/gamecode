@@ -521,7 +521,7 @@ void BotSetDominationPoint(bot_state_t *bs, int controlPoint) {
 	}
 	// Search for points our team don't own.
 	for (i=1;i<level.domination_points_count;i++) {
-		if (!BotTeamControlsPoint(bs,level.pointStatusDom[i])) {
+		if (!BotTeamOwnsControlPoint(bs,level.pointStatusDom[i])) {
 			allTaken = qfalse;
 			bs->currentPoint = i;
 			break;

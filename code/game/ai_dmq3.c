@@ -435,13 +435,13 @@ void BotSetTeamStatus(bot_state_t *bs) {
 			teamtask = TEAMTASK_OFFENSE;
 			break;
 		case LTG_HOLDPOINTA:
-			if (BotTeamControlsPoint(bs,level.pointStatusA))
+			if (BotTeamOwnsControlPoint(bs,level.pointStatusA))
 				teamtask = TEAMTASK_DEFENSE;
 			else 
 				teamtask = TEAMTASK_OFFENSE;
 			break;
 		case LTG_HOLDPOINTB:
-			if (BotTeamControlsPoint(bs,level.pointStatusB))
+			if (BotTeamOwnsControlPoint(bs,level.pointStatusB))
 				teamtask = TEAMTASK_DEFENSE;
 			else 
 				teamtask = TEAMTASK_OFFENSE;
@@ -453,7 +453,7 @@ void BotSetTeamStatus(bot_state_t *bs) {
 					BotGetDominationPoint(bs) < level.domination_points_count)) {
 				BotSetDominationPoint(bs,-1);
 			}
-			if (BotTeamControlsPoint(bs,level.pointStatusDom[BotGetDominationPoint(bs)]))
+			if (BotTeamOwnsControlPoint(bs,level.pointStatusDom[BotGetDominationPoint(bs)]))
 				teamtask = TEAMTASK_DEFENSE;
 			else
 				teamtask = TEAMTASK_OFFENSE;
@@ -5673,11 +5673,11 @@ int BotCanAndWantsToUseTheGrapple(bot_state_t *bs) {
 
 /*
 ==================
-BotTeamControlsPoint
+BotTeamOwnsControlPoint
 Returns true if the bot's team controls the Domination/DD point.
 ==================
 */
-qboolean BotTeamControlsPoint(bot_state_t *bs,int point) {
+qboolean BotTeamOwnsControlPoint(bot_state_t *bs,int point) {
 	// It's true if the bot is in the blue team and the point belongs to the blue team.
 	if(BotTeam(bs) == TEAM_BLUE && point == TEAM_BLUE) {
 		return qtrue;

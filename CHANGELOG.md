@@ -51,7 +51,7 @@
 
 **Release date:** TBA
 
-* New helper function `BotTeamControlsPoint()`, used for Double Domination and Domination, returns true if the bot's team owns a control point.
+* New helper function `BotTeamOwnsControlPoint()`, used for Double Domination and Domination, returns true if the bot's team owns a control point.
 * Development mode: All debugging cvars now require `developer 1` before they can be used.
   * New cheat-protected development cvars: `cg_debugOrbit`, `cg_debugAccuracy`, `bot_debugChat`, `bot_debugLTG` and `bot_debugPaths`.
   * Restored `cg_debugDelag`.
