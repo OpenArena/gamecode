@@ -31,12 +31,18 @@
   * `tossrune`: Tosses the rune that's been carried on. (Akin to TWCTF/TWCTF II) Needs `g_runes 2` in order to work.
   * `ui_writemappools`: If the arena files are loaded, this command dumps the gamelists so they can be used by g_autonextmap (should be used to generate new gamelists for new versions).
 * Classic UI:
+  * Slightly reorganized the Skirmish/Create Server menus in order to accomodate the newer gametype options.
   * Updated to reflect the latest scoring changes.
   * `elimination_damage` can now be set in the UI for Elimination and eCTF matches.
   * `g_grapple` can now be set for all match types.
   * `g_harvesterFromBodies` can now be set for Harvester matches.
+  * Status bar texts are clearer.
 * Now it's possible to compile OAX on Mac (thanks EddieBrrrock!)
-* AI enhancements (LOTS!) for holdable handling, grappling hook handling, Domination and Double Domination.
+* AI enhancements:
+  * Holdable (Personal Teleporter/Medkit/Kamikaze/Invulnerability) handling.
+  * Double Domination logic improvements (team formations, voice orders, chat orders...)
+  * Domination logic vast improvements (team formations, voice orders, chat orders...)
+  * CTF Elimination (One-Way mode a.k.a "Attack vs. Defense") proper team formations.
 * Elimination/eCTF/LMS: If all humans have been killed in a round, bots will be eliminated one by one.
 * Lots of fixes for Classic UI and backend of UI3.
 * Consistent default score limits across all modules.
@@ -57,6 +63,9 @@
 
 **Release date:** TBA
 
+* CTF Elimination (One-Way Mode) now has special bot logic improvements.
+* Classic UI: Status bar texts for Skirmish/Create Server have been improved.
+* `g_harvesterFromBodies` can now be selected in the Classic Menu.
 * `g_grapple` can now be selected in the Classic Menu.
 * `elimination_selfdamage` is now `elimination_damage`, can be set in the Classic UI, and is now a bitflag with the following values:
   * `elimination_damage 0` = Only Enemies.
