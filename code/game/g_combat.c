@@ -1197,7 +1197,8 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 		// if TF_NO_FRIENDLY_FIRE is set, don't do damage to the target
 		// if the attacker was on the same team
 		if ( mod != MOD_JUICED && mod != MOD_CRUSH && targ != attacker && !(dflags & DAMAGE_NO_TEAM_PROTECTION) && OnSameTeam (targ, attacker)  ) {
-			if ( ( !g_friendlyFire.integer && !(G_IsARoundBasedGametype(g_gametype.integer) && G_IsATeamGametype(g_gametype.integer)) ) || ( g_elimination_selfdamage.integer<2 && G_IsARoundBasedGametype(g_gametype.integer) ) ) {
+			if ( ( !g_friendlyFire.integer && !(G_IsARoundBasedGametype(g_gametype.integer) && G_IsATeamGametype(g_gametype.integer)) ) ||
+					(!(g_elimination_damage.integer & ELIMINATION_DAMAGE_TEAM) && G_IsARoundBasedGametype(g_gametype.integer) ) ) {
 				return;
 			}
 		}
@@ -1274,7 +1275,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 	}
 
 	if ((G_IsARoundBasedGametype(g_gametype.integer) || g_elimination_allgametypes.integer) &&
-		g_elimination_selfdamage.integer<1 && ( targ == attacker ||  mod == MOD_FALLING )) {
+		(g_elimination_damage.integer & ELIMINATION_DAMAGE_SELF) && ( targ == attacker ||  mod == MOD_FALLING )) {
 		damage = 0;
 	}
 

@@ -23,6 +23,7 @@
   * `g_harvesterFromBodies`: In Harvester matches, skulls now spawn from dead bodies (a la [UT3!Greed](https://antifandom.com/unreal/wiki/Greed)) rather than a skull receptacle in the middle of the arena. Allows Harvester matches to take place in maps that don't feature a skull receptacle. **Default: 0.**
   * `g_ddCaptureTime` and `g_ddRespawnDelay`: New cvars for Double Domination that control the amount of holding time to score and the waiting time before a new round starts. **Default for both: 10.**
   * `g_weaponArena` and `g_weaponArenaWeapon`: two cvars that replace and extend `g_rockets` in order to be able to use `g_rockets` with every weapon other than rockets.
+  * `elimination_selfdamage` is now `elimination_damage`, can be set in the Classic UI, and accepts four options: (Only Enemies), (Enemies and Self), (Enemies and Teammates) and (Enemies, Self and Teammates).
 * Development mode with new cheat-protected cvars and debugging tools.
 * Shuffle has been reworked by implementing the solution from Aftershock.
 * New commands:
@@ -51,6 +52,11 @@
 
 **Release date:** TBA
 
+* `elimination_selfdamage` is now `elimination_damage`, can be set in the Classic UI, and is now a bitflag with the following values:
+  * `elimination_damage 0` = Only Enemies.
+  * `elimination_damage 1` = Enemies and self.
+  * `elimination_damage 2` = Enemies and team.
+  * `elimination_damage 3` = Enemies, self and team.
 * Updated Classic UI in order to reflect the scoring changes. The Skirmish and Create Server menus will now display the following in the score field:
   * FFA, 1on1 and TDM: _"Frag Limit"_.
   * CTF, 1FCTF, Overload and DD: _"Capture Limit"_.
