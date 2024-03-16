@@ -1262,7 +1262,8 @@ ServerOptions_StatusBar_Instantgib
 =================
 */
 static void ServerOptions_StatusBar_Instantgib( void* ptr ) {
-	UI_DrawString( 320, 440, "Only railgun and instant kill", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 440, "Items are removed. Players spawn", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "with a one-hit-kill Railgun.", UI_CENTER|UI_SMALLFONT, colorWhite );
 }
 
 /*
@@ -1271,7 +1272,8 @@ ServerOptions_StatusBar_WeaponArena
 =================
 */
 static void ServerOptions_StatusBar_WeaponArena( void* ptr ) {
-	UI_DrawString( 320, 440, "Only allows the selected weapon with all its ammo", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 440, "Items are removed. Players spawn with", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "the specified weapon with infinte ammo.", UI_CENTER|UI_SMALLFONT, colorWhite );
 }
 
 /*
@@ -1280,7 +1282,8 @@ ServerOptions_StatusBar_Pure
 =================
 */
 static void ServerOptions_StatusBar_Pure( void* ptr ) {
-	UI_DrawString( 320, 440, "Require identical pk3 files", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 440, "If set, clients are required to", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "have the same .pk3 files as server.", UI_CENTER|UI_SMALLFONT, colorWhite );
 }
 
 /*
@@ -1289,7 +1292,8 @@ ServerOptions_StatusBar_Grapple
 =================
 */
 static void ServerOptions_StatusBar_Grapple( void* ptr ) {
-	UI_DrawString( 320, 440, "Adds the Grappling Hook to all players' starter equipment.", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 440, "Adds the Grappling Hook to", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "all players' starter equipment.", UI_CENTER|UI_SMALLFONT, colorWhite );
 }
 
 /*
@@ -1298,7 +1302,8 @@ ServerOptions_StatusBar_Oneway
 =================
 */
 static void ServerOptions_StatusBar_Oneway( void* ptr ) {
-	UI_DrawString( 320, 440, "Only one team can capture in a round", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 440, "Teams play attacker and defender role in every", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "round. Only attackers can score captures.", UI_CENTER|UI_SMALLFONT, colorWhite );
 }
 
 /*
@@ -1307,7 +1312,8 @@ ServerOptions_StatusBar_harvesterFromBodies
 =================
 */
 static void ServerOptions_StatusBar_harvesterFromBodies( void* ptr ) {
-	UI_DrawString( 320, 440, "Makes skulls spawn from fragged players than a central generator.", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 440, "Makes skulls spawn from fragged players", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "rather than a central skull generator.", UI_CENTER|UI_SMALLFONT, colorWhite );
 }
 
 /*
@@ -1316,7 +1322,8 @@ ServerOptions_StatusBar_eliminationDamage
 =================
 */
 static void ServerOptions_StatusBar_eliminationDamage( void* ptr ) {
-	UI_DrawString( 320, 440, "Who suffers damage from a teammate's weapons.", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 440, "Specifies who suffers damage", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "from a team player's own weapons.", UI_CENTER|UI_SMALLFONT, colorWhite );
 }
 
 /*
@@ -1327,7 +1334,7 @@ ServerOptions_StatusBar_Pmove
 static void ServerOptions_StatusBar_Pmove( void* ptr ) {
     switch( ((menulist_s*)ptr)->curvalue ) {
 		case 0:
-			UI_DrawString( 320, 440, "Physics depends on players framerates", UI_CENTER|UI_SMALLFONT, colorWhite );
+			UI_DrawString( 320, 440, "Physics depends on players' framerates", UI_CENTER|UI_SMALLFONT, colorWhite );
 			UI_DrawString( 320, 460, "Not all players are equal", UI_CENTER|UI_SMALLFONT, colorWhite );
 			break;
 		case 1:
