@@ -812,7 +812,6 @@ void BotCTFOrders_EnemyFlagNotAtBase(bot_state_t *bs) {
 BotDDorders
 ==================
 */
-
 void BotDDorders_Standard(bot_state_t *bs) {
 	int numteammates, i;
 	int teammates[MAX_CLIENTS];
@@ -1027,26 +1026,6 @@ void BotCTFOrders_BothFlagsAtBase(bot_state_t *bs) {
 				}
 			}
 		}
-	}
-}
-
-/*
-==================
-BotCTFOrders
-==================
-*/
-void BotCTFOrders(bot_state_t *bs) {
-	int flagstatus;
-
-	//
-	if (BotTeam(bs) == TEAM_RED) flagstatus = bs->redflagstatus * 2 + bs->blueflagstatus;
-	else flagstatus = bs->blueflagstatus * 2 + bs->redflagstatus;
-	//
-	switch(flagstatus) {
-		case 0: BotCTFOrders_BothFlagsAtBase(bs); break;
-		case 1: BotCTFOrders_EnemyFlagNotAtBase(bs); break;
-		case 2: BotCTFOrders_FlagNotAtBase(bs); break;
-		case 3: BotCTFOrders_BothFlagsNotAtBase(bs); break;
 	}
 }
 
@@ -2528,31 +2507,6 @@ void BotDDorders_PointBTaken(bot_state_t *bs) {
 
 /*
 ==================
-BotDDorders
-==================
-*/
-void BotDDorders(bot_state_t *bs) {
-	// If only the control point A is taken...
-	if (BotTeamOwnsControlPoint(bs,level.pointStatusA) &&
-			!BotTeamOwnsControlPoint(bs,level.pointStatusB)) {
-		BotDDorders_PointATaken(bs);
-	}
-	// If only the control point B is taken...
-	else if (!BotTeamOwnsControlPoint(bs,level.pointStatusA) &&
-			BotTeamOwnsControlPoint(bs,level.pointStatusB)) {
-		BotDDorders_PointBTaken(bs);
-	}
-	// If both control points (or none) are taken...
-	else if ((BotTeamOwnsControlPoint(bs,level.pointStatusA) &&
-			BotTeamOwnsControlPoint(bs,level.pointStatusB)) ||
-			(!BotTeamOwnsControlPoint(bs,level.pointStatusA) &&
-			!BotTeamOwnsControlPoint(bs,level.pointStatusB))) {
-		BotDDorders_BothPointsTaken(bs);
-	}
-}
-
-/*
-==================
 BotDomOrders
 
 All will roam.
@@ -2584,84 +2538,6 @@ void BotDomOrders_Standard(bot_state_t *bs) {
 		BotAI_BotInitialChat(bs, "cmd_holddompoint", name, NULL);
 		BotSayTeamOrder(bs, teammates[i]);
 		BotSayVoiceTeamOrder(bs, teammates[i], VOICECHAT_DEFEND);
-	}
-}
-
-/*
-==================
-BotDomOrders
-==================
-*/
-void BotDomOrders(bot_state_t *bs) {
-	/*int i,pointsTaken=0;*/
-
-	/*for(i=0;i<=level.domination_points_count;i++) {
-		if(level.pointStatusDom[i] == BotTeam(bs)) {
-			pointsTaken++;
-		}
-	}
-
-	if (pointsTaken == level.domination_points_count) {
-		BotDomOrders_AllPointsTaken(bs);
-	}
-	else if (pointsTaken == 0) {
-		BotDomOrders_NoPointsTaken(bs);
-	}
-	else if (pointsTaken > (level.domination_points_count/2)) {
-		BotDomOrders_SomePointsTaken(bs);
-	}*/
-	BotDomOrders_Standard(bs);
-}
-
-/*
-==================
-BotECTFOneWayOrders
-==================
-*/
-void BotECTFOneWayOrders(bot_state_t *bs) {
-	int flagstatus;
-
-	if (BotIsOnAttackingTeam(bs)) {
-		// If Red attacks, the focus on what happens with the Blue flag.
-		if (BotTeam(bs) == TEAM_RED) {
-			flagstatus = bs->blueflagstatus;
-		}
-		// If Blue attacks, the focus on what happens with the Red flag.
-		else {
-			flagstatus = bs->redflagstatus;
-		}
-		// In the attack phase, everything depends if there's a flag at the enemy base.
-		switch(flagstatus) {
-			case 1: {
-				BotCTFOrders_EnemyFlagNotAtBase(bs);
-				break;
-			}
-			default: {
-				BotCTFOrders_BothFlagsAtBase(bs);
-				break;
-			}
-		}
-	}
-	else {
-		// If Red defends, the focus on what happens with the Red flag.
-		if (BotTeam(bs) == TEAM_RED) {
-			flagstatus = bs->redflagstatus;
-		}
-		// If Blue defends, the focus on what happens with the Blued flag.
-		else {
-			flagstatus = bs->blueflagstatus;
-		}
-		// In the defense phase, everything depends if there's a flag at the own base.
-		switch(flagstatus) {
-			case 1: {
-				BotCTFOrders_FlagNotAtBase(bs);
-				break;
-			}
-			default: {
-				BotCTFOrders_BothFlagsAtBase(bs);
-				break;
-			}
-		}
 	}
 }
 
@@ -2790,7 +2666,50 @@ void BotTeamAI(bot_state_t *bs) {
 			if (gametype == GT_CTF_ELIMINATION && g_elimination_ctf_oneway.integer) {
 				//if it's time to give orders
 				if (bs->teamgiveorders_time && bs->teamgiveorders_time < FloatTime() - 3) {
-					BotECTFOneWayOrders(bs);
+					int flagstatus;
+
+					if (BotIsOnAttackingTeam(bs)) {
+						// If Red attacks, the focus on what happens with the Blue flag.
+						if (BotTeam(bs) == TEAM_RED) {
+							flagstatus = bs->blueflagstatus;
+						}
+						// If Blue attacks, the focus on what happens with the Red flag.
+						else {
+							flagstatus = bs->redflagstatus;
+						}
+						// In the attack phase, everything depends if there's a flag at the enemy base.
+						switch(flagstatus) {
+							case 1: {
+								BotCTFOrders_EnemyFlagNotAtBase(bs);
+								break;
+							}
+							default: {
+								BotCTFOrders_BothFlagsAtBase(bs);
+								break;
+							}
+						}
+					}
+					else {
+						// If Red defends, the focus on what happens with the Red flag.
+						if (BotTeam(bs) == TEAM_RED) {
+							flagstatus = bs->redflagstatus;
+						}
+						// If Blue defends, the focus on what happens with the Blued flag.
+						else {
+							flagstatus = bs->blueflagstatus;
+						}
+						// In the defense phase, everything depends if there's a flag at the own base.
+						switch(flagstatus) {
+							case 1: {
+								BotCTFOrders_FlagNotAtBase(bs);
+								break;
+							}
+							default: {
+								BotCTFOrders_BothFlagsAtBase(bs);
+								break;
+							}
+						}
+					}
 					bs->teamgiveorders_time = 0;
 				}
 			}
@@ -2806,7 +2725,18 @@ void BotTeamAI(bot_state_t *bs) {
 				}
 				//if it's time to give orders
 				if (bs->teamgiveorders_time && bs->teamgiveorders_time < FloatTime() - 3) {
-					BotCTFOrders(bs);
+					int flagstatus;
+
+					//
+					if (BotTeam(bs) == TEAM_RED) flagstatus = bs->redflagstatus * 2 + bs->blueflagstatus;
+					else flagstatus = bs->blueflagstatus * 2 + bs->redflagstatus;
+					//
+					switch(flagstatus) {
+						case 0: BotCTFOrders_BothFlagsAtBase(bs); break;
+						case 1: BotCTFOrders_EnemyFlagNotAtBase(bs); break;
+						case 2: BotCTFOrders_FlagNotAtBase(bs); break;
+						case 3: BotCTFOrders_BothFlagsNotAtBase(bs); break;
+					}
 					//
 					bs->teamgiveorders_time = 0;
 				}
@@ -2825,9 +2755,25 @@ void BotTeamAI(bot_state_t *bs) {
 			}
 			//if it's time to give orders
 			if (bs->teamgiveorders_time && bs->teamgiveorders_time < FloatTime() - 3) {
-				BotDDorders(bs);
-				//
-				bs->teamgiveorders_time = 0;
+				// If only the control point A is taken...
+				if (BotTeamOwnsControlPoint(bs,level.pointStatusA) &&
+						!BotTeamOwnsControlPoint(bs,level.pointStatusB)) {
+					BotDDorders_PointATaken(bs);
+				}
+				// If only the control point B is taken...
+				else if (!BotTeamOwnsControlPoint(bs,level.pointStatusA) &&
+						BotTeamOwnsControlPoint(bs,level.pointStatusB)) {
+					BotDDorders_PointBTaken(bs);
+				}
+				// If both control points (or none) are taken...
+				else if ((BotTeamOwnsControlPoint(bs,level.pointStatusA) &&
+						BotTeamOwnsControlPoint(bs,level.pointStatusB)) ||
+						(!BotTeamOwnsControlPoint(bs,level.pointStatusA) &&
+						!BotTeamOwnsControlPoint(bs,level.pointStatusB))) {
+					BotDDorders_BothPointsTaken(bs);
+					//
+					bs->teamgiveorders_time = 0;
+				}
 			}
 			break;
 		}
@@ -2898,7 +2844,24 @@ void BotTeamAI(bot_state_t *bs) {
 			}
 			//if it's time to give orders
 			if (bs->teamgiveorders_time && bs->teamgiveorders_time < FloatTime() - 3) {
-				BotDomOrders(bs);
+				/*int i,pointsTaken=0;*/
+
+				/*for(i=0;i<=level.domination_points_count;i++) {
+					if(level.pointStatusDom[i] == BotTeam(bs)) {
+						pointsTaken++;
+					}
+				}
+
+				if (pointsTaken == level.domination_points_count) {
+					BotDomOrders_AllPointsTaken(bs);
+				}
+				else if (pointsTaken == 0) {
+					BotDomOrders_NoPointsTaken(bs);
+				}
+				else if (pointsTaken > (level.domination_points_count/2)) {
+					BotDomOrders_SomePointsTaken(bs);
+				}*/
+				BotDomOrders_Standard(bs);
 				//
 				bs->teamgiveorders_time = 0;
 			}
