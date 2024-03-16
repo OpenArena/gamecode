@@ -51,8 +51,6 @@
 
 **Release date:** TBA
 
-* Leilei's widescreen fix is now cvar-dependant (`cg_leiWidescreen`, default 0) to avoid code deletion and fix HUD position. Without this fix, some HUD elements were drawn over others like `cg_drawteamhud` drawing over the scores. (thanks Bishop-333!)
-* Classic UI: Changing OpenAL setting now restarts the menu automatically. (thanks Bishop-333!)
 * New helper function `BotTeamControlsPoint()`, used for Double Domination and Domination, returns true if the bot's team owns a control point.
 * Development mode: All debugging cvars now require `developer 1` before they can be used.
   * New cheat-protected development cvars: `cg_debugOrbit`, `cg_debugAccuracy`, `bot_debugChat`, `bot_debugLTG` and `bot_debugPaths`.
