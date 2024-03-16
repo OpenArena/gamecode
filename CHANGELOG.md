@@ -44,8 +44,8 @@
 * Added ability to execute a script when the server is empty.
 * Server now executes the file `gametype_GAMETYPENUMBER.cfg` (i.e. `gametype_0.cfg` for FFA or `gametype_3.cfg` for TDM) on gametype change.
 * Server now executes `mapscripts/g_MAPNAME.cfg` and `mapscripts/g_MAPNAME_GAMETYPENUMBER.cfg` when changing map. It falls back to `mapscripts/g_default.cfg` and/or `mapscripts/g_default_GAMETYPENUMBER.cfg` (i.e. `g_default_0.cfg` for FFA and `g_default_3.cfg` for TDM) if any or both or the scripts are missing.
+* The background is now stretched on widescreen displays.
 * Tons of other bug fixes.
-* The background is now streched on widescreen displays.
 
 ## oaxB53
 
