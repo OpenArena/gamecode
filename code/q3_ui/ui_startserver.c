@@ -794,8 +794,6 @@ typedef struct {
 	menufield_s			timelimit;
 	menufield_s			fraglimit;
 	menufield_s			capturelimit;
-	menufield_s			ddCaptureTime;
-	menufield_s			ddRespawnDelay;
 	menuradiobutton_s	friendlyfire;
 	menufield_s			hostname;
 	menuradiobutton_s	pure;
@@ -912,8 +910,6 @@ static void ServerOptions_Start( void ) {
 	int		timelimit;
 	int		fraglimit;
 	int		maxclients;
-	int		ddCaptureTime;
-	int		ddRespawnDelay;
 	int		friendlyfire;
 	int		capturelimit;
 	int		pure;
@@ -933,8 +929,6 @@ static void ServerOptions_Start( void ) {
 
 	timelimit	 = atoi( s_serveroptions.timelimit.field.buffer );
 	fraglimit	 = atoi( s_serveroptions.fraglimit.field.buffer );
-	ddCaptureTime	 = atoi( s_serveroptions.ddCaptureTime.field.buffer );
-	ddRespawnDelay	 = atoi( s_serveroptions.ddRespawnDelay.field.buffer );
 	capturelimit	 = atoi( s_serveroptions.capturelimit.field.buffer );
 	friendlyfire = s_serveroptions.friendlyfire.curvalue;
 	pure		 = s_serveroptions.pure.curvalue;
@@ -1040,8 +1034,6 @@ static void ServerOptions_Start( void ) {
 	trap_Cvar_SetValue ("timelimit", Com_Clamp( 0, timelimit, timelimit ) );
 	trap_Cvar_SetValue ("fraglimit", Com_Clamp( 0, fraglimit, fraglimit ) );
 	trap_Cvar_SetValue ("capturelimit", Com_Clamp( 0, capturelimit, capturelimit ) );
-	trap_Cvar_SetValue ("g_ddCaptureTime", ddCaptureTime );
-	trap_Cvar_SetValue ("g_ddRespawnDelay", ddRespawnDelay );
 	trap_Cvar_SetValue( "g_friendlyfire", friendlyfire );
 	trap_Cvar_SetValue( "sv_pure", pure );
 	trap_Cvar_SetValue( "sv_lanForceRate", lan );
@@ -1294,24 +1286,6 @@ ServerOptions_StatusBar_Grapple
 */
 static void ServerOptions_StatusBar_Grapple( void* ptr ) {
 	UI_DrawString( 320, 440, "Adds the Grappling Hook to all players' starter equipment.", UI_CENTER|UI_SMALLFONT, colorWhite );
-}
-
-/*
-=================
-ServerOptions_StatusBar_ddCaptureTime
-=================
-*/
-static void ServerOptions_StatusBar_ddCaptureTime( void* ptr ) {
-	UI_DrawString( 320, 440, "Amount of seconds both points need to be held in order to score.", UI_CENTER|UI_SMALLFONT, colorWhite );
-}
-
-/*
-=================
-ServerOptions_StatusBar_ddRespawnDelay
-=================
-*/
-static void ServerOptions_StatusBar_ddRespawnDelay( void* ptr ) {
-	UI_DrawString( 320, 440, "Amount of seconds of delay between scoring and start of next round.", UI_CENTER|UI_SMALLFONT, colorWhite );
 }
 
 /*
@@ -1576,8 +1550,6 @@ static void ServerOptions_SetMenuItems( void ) {
 		Com_sprintf( s_serveroptions.capturelimit.field.buffer, 4, "%i", (int)Com_Clamp( 0, 100, trap_Cvar_VariableValue( "ui_dd_capturelimit" ) ) );
 		Com_sprintf( s_serveroptions.timelimit.field.buffer, 4, "%i", (int)Com_Clamp( 0, 999, trap_Cvar_VariableValue( "ui_dd_timelimit" ) ) );
 		s_serveroptions.friendlyfire.curvalue = (int)Com_Clamp( 0, 1, trap_Cvar_VariableValue( "ui_dd_friendly" ) );
-		s_serveroptions.ddCaptureTime.curvalue = (int)Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_ddCaptureTime" ) );
-		s_serveroptions.ddRespawnDelay.curvalue = (int)Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_ddRespawnDelay" ) );
 		break;
                 
 	case GT_DOMINATION:
@@ -1782,28 +1754,6 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 	s_serveroptions.grapple.generic.name			= "Grappling Hook:";
 	s_serveroptions.grapple.generic.statusbar  = ServerOptions_StatusBar_Grapple;
 
-	if( s_serveroptions.gametype == GT_DOUBLE_D) {
-		y += BIGCHAR_HEIGHT+2;
-		s_serveroptions.ddCaptureTime.generic.type       = MTYPE_FIELD;
-		s_serveroptions.ddCaptureTime.generic.name       = "Holding Time:";
-		s_serveroptions.ddCaptureTime.generic.flags      = QMF_NUMBERSONLY|QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-		s_serveroptions.ddCaptureTime.generic.x	         = OPTIONS_X;
-		s_serveroptions.ddCaptureTime.generic.y	         = y;
-		s_serveroptions.ddCaptureTime.generic.statusbar  = ServerOptions_StatusBar_ddCaptureTime;
-		s_serveroptions.ddCaptureTime.field.widthInChars = 3;
-		s_serveroptions.ddCaptureTime.field.maxchars     = 3;
-
-		y += BIGCHAR_HEIGHT+2;
-		s_serveroptions.ddRespawnDelay.generic.type       = MTYPE_FIELD;
-		s_serveroptions.ddRespawnDelay.generic.name       = "New Round Delay:";
-		s_serveroptions.ddRespawnDelay.generic.flags      = QMF_NUMBERSONLY|QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-		s_serveroptions.ddRespawnDelay.generic.x	         = OPTIONS_X;
-		s_serveroptions.ddRespawnDelay.generic.y	         = y;
-		s_serveroptions.ddRespawnDelay.generic.statusbar  = ServerOptions_StatusBar_ddRespawnDelay;
-		s_serveroptions.ddRespawnDelay.field.widthInChars = 3;
-		s_serveroptions.ddRespawnDelay.field.maxchars     = 3;
-	}
-
 	if( s_serveroptions.gametype == GT_CTF_ELIMINATION) {
 		y += BIGCHAR_HEIGHT+2;
 		s_serveroptions.oneway.generic.type			= MTYPE_RADIOBUTTON;
@@ -2005,10 +1955,6 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 	Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.instantgib );
 	Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.grapple );
 	Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.weaponArena );
-	if( s_serveroptions.gametype == GT_DOUBLE_D) {
-		Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.ddCaptureTime );
-		Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.ddRespawnDelay );
-	}
 	if( s_serveroptions.gametype == GT_LMS) {
 		Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.lmsMode );
 	}
