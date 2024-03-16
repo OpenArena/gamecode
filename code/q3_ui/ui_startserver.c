@@ -1738,7 +1738,7 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 		s_serveroptions.oneway.generic.flags			= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 		s_serveroptions.oneway.generic.x				= OPTIONS_X;
 		s_serveroptions.oneway.generic.y				= y;
-		s_serveroptions.oneway.generic.name			= "Oneway attack:";
+		s_serveroptions.oneway.generic.name			= "Attack vs. Defense mode:";
 		s_serveroptions.oneway.generic.statusbar  = ServerOptions_StatusBar_Oneway;
 	}
 
@@ -1747,7 +1747,7 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 		y += BIGCHAR_HEIGHT+2;
 		s_serveroptions.eliminationDamage.generic.type			= MTYPE_SPINCONTROL;
 		s_serveroptions.eliminationDamage.generic.flags			= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-		s_serveroptions.eliminationDamage.generic.name			= "Damage to...";
+		s_serveroptions.eliminationDamage.generic.name			= "Damage to:";
 		s_serveroptions.eliminationDamage.generic.x				=  OPTIONS_X;
 		s_serveroptions.eliminationDamage.generic.y				= y;
 		s_serveroptions.eliminationDamage.itemnames				= eliminationDamage_list;
