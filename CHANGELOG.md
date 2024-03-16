@@ -44,15 +44,13 @@
 * Added ability to execute a script when the server is empty.
 * Server now executes the file `gametype_GAMETYPENUMBER.cfg` (i.e. `gametype_0.cfg` for FFA or `gametype_3.cfg` for TDM) on gametype change.
 * Server now executes `mapscripts/g_MAPNAME.cfg` and `mapscripts/g_MAPNAME_GAMETYPENUMBER.cfg` when changing map. It falls back to `mapscripts/g_default.cfg` and/or `mapscripts/g_default_GAMETYPENUMBER.cfg` (i.e. `g_default_0.cfg` for FFA and `g_default_3.cfg` for TDM) if any or both or the scripts are missing.
+* The background is now stretched on widescreen displays.
 * Tons of other bug fixes.
-* The background is now streched on widescreen displays.
 
 ## oaxB53
 
 **Release date:** TBA
 
-* Leilei's widescreen fix is now cvar-dependant (`cg_leiWidescreen`, default 0) to avoid code deletion and fix HUD position. Without this fix, some HUD elements were drawn over others like `cg_drawteamhud` drawing over the scores. (thanks Bishop-333!)
-* Classic UI: Changing OpenAL setting now restarts the menu automatically. (thanks Bishop-333!)
 * New helper function `BotTeamOwnsControlPoint()`, used for Double Domination and Domination, returns true if the bot's team owns a control point.
 * Development mode: All debugging cvars now require `developer 1` before they can be used.
   * New cheat-protected development cvars: `cg_debugOrbit`, `cg_debugAccuracy`, `bot_debugChat`, `bot_debugLTG` and `bot_debugPaths`.
