@@ -51,6 +51,11 @@
 
 **Release date:** TBA
 
+* Updated Classic UI in order to reflect the scoring changes. The Skirmish and Create Server menus will now display the following in the score field:
+  * FFA, 1on1 and TDM: _"Frag Limit"_.
+  * CTF, 1FCTF, Overload and DD: _"Capture Limit"_.
+  * Harvester, Domination and Possession: _"Score Limit"_.
+  * Elimination, eCTF and LMS: _"Round Limit"_.
 * New helper functions `GametypeUsesFragLimit()` and `GametypeUsesCaptureLimit()`, return true if a gametype uses that scoring system.
 * New helper function `BotTeamOwnsControlPoint()`, used for Double Domination and Domination, returns true if the bot's team owns a control point.
 * Development mode: All debugging cvars now require `developer 1` before they can be used.
