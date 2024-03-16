@@ -450,7 +450,7 @@ static cvarTable_t cvarTable[] = {// bk001129
 	{ &cg_leiSuperGoreyAwesome, "cg_leiSuperGoreyAwesome", "0", CVAR_ARCHIVE}, // LEILEI 
 	{ &cg_leiDebug, "cg_leiDebug", "0", CVAR_CHEAT}, // LEILEI 
 	{ &cg_leiChibi, "cg_leiChibi", "0", CVAR_CHEAT}, // LEILEI 
-	{ &cg_leiWidescreen, "cg_leiWidescreen", "0", CVAR_ARCHIVE}, // LEILEI 
+	{ &cg_leiWidescreen, "cg_leiWidescreen", "1", CVAR_ARCHIVE}, // LEILEI 
 	{ &cg_deathcam, "cg_deathcam", "1", CVAR_ARCHIVE}, // LEILEI 
 	{ &cg_cameramode, "cg_cameramode", "0", CVAR_ARCHIVE}, // LEILEI 
 	{ &cg_cameraEyes, "cg_cameraEyes", "0", CVAR_ARCHIVE}, // LEILEI 
@@ -2432,7 +2432,7 @@ void CG_Init(int serverMessageNum, int serverCommandSequence, int clientNum) {
 	realVidHeight = cgs.glconfig.vidHeight;
 
 	// leilei - widescreen correction
-	if ( cg_leiWidescreen.integer ) {
+
 	{
 		float resbias;
 		float rex, rey;
@@ -2460,7 +2460,6 @@ void CG_Init(int serverMessageNum, int serverCommandSequence, int clientNum) {
 	} else {
 		// no wide screen
 		cgs.screenXBias = 0;
-	}
 	}
 
 
