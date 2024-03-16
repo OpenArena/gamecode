@@ -98,7 +98,7 @@ int BotCanAndWantsToRocketJump(bot_state_t *bs);
 // returns true if the bot has the Grappling Hook and wants to use it
 int BotCanAndWantsToUseTheGrapple(bot_state_t *bs);
 // returns true if the bot's team owns a control point (DD/DOM)
-qboolean BotTeamControlsPoint(bot_state_t *bs,int point);
+qboolean BotTeamOwnsControlPoint(bot_state_t *bs,int point);
 // returns true if the bot has a persistant powerup and a weapon
 int BotHasPersistantPowerupAndWeapon(bot_state_t *bs);
 //returns true if the bot wants to and goes camping

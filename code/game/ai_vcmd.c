@@ -298,16 +298,16 @@ void BotVoiceChat_Defend(bot_state_t *bs, int client, int mode) {
 	}
 	else if (gametype == GT_DOUBLE_D) {
 		// If the point A is under control, defend it.
-		if (BotTeamControlsPoint(bs,level.pointStatusA)) {
+		if (BotTeamOwnsControlPoint(bs,level.pointStatusA)) {
 			BotVoiceChat_HoldPointA(bs,client,mode);
 		}
 		// If the point B is under control, defend it.
-		else if (BotTeamControlsPoint(bs,level.pointStatusB)) {
+		else if (BotTeamOwnsControlPoint(bs,level.pointStatusB)) {
 			BotVoiceChat_HoldPointB(bs,client,mode);
 		}
 		// If both points are under control, pick one and defend it.
-		else if (BotTeamControlsPoint(bs,level.pointStatusA) &&
-				BotTeamControlsPoint(bs,level.pointStatusB)) {
+		else if (BotTeamOwnsControlPoint(bs,level.pointStatusA) &&
+				BotTeamOwnsControlPoint(bs,level.pointStatusB)) {
 			if (rand() % 10 > 5)
 				BotVoiceChat_HoldPointA(bs,client,mode);
 			else
