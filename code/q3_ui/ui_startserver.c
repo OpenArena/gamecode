@@ -801,6 +801,7 @@ typedef struct {
 	menulist_s		pmove;
 	menuradiobutton_s	grapple;
 	menuradiobutton_s	oneway;
+	menuradiobutton_s	harvesterFromBodies;
 	menuradiobutton_s	instantgib;
 	menuradiobutton_s	weaponArena;
 	menulist_s			lmsMode;
@@ -919,6 +920,7 @@ static void ServerOptions_Start( void ) {
 	int             weaponArena;
 	int             grapple;
 	int             oneway;
+	int             harvesterFromBodies;
 	int             lmsMode;
 	int             eliminationDamage;
 	int		skill;
@@ -938,6 +940,7 @@ static void ServerOptions_Start( void ) {
 	weaponArena          = s_serveroptions.weaponArena.curvalue;
 	grapple		 = s_serveroptions.grapple.curvalue;
 	oneway		 = s_serveroptions.oneway.curvalue;
+	harvesterFromBodies		 = s_serveroptions.harvesterFromBodies.curvalue;
 	//Sago: For some reason you need to add 1 to curvalue to get the UI to show the right thing (fixed?)
 	lmsMode          = s_serveroptions.lmsMode.curvalue; //+1;
 	eliminationDamage		 = s_serveroptions.eliminationDamage.curvalue;
@@ -1042,6 +1045,7 @@ static void ServerOptions_Start( void ) {
 	trap_Cvar_SetValue( "g_lms_mode", lmsMode);
 	trap_Cvar_SetValue( "g_grapple", grapple );
 	trap_Cvar_SetValue( "elimination_ctf_oneway", oneway );
+	trap_Cvar_SetValue( "g_harvesterFromBodies", harvesterFromBodies );
 	trap_Cvar_SetValue( "elimination_damage", eliminationDamage );
 	switch(pmove) {
 		case 1:
@@ -1295,6 +1299,15 @@ ServerOptions_StatusBar_Oneway
 */
 static void ServerOptions_StatusBar_Oneway( void* ptr ) {
 	UI_DrawString( 320, 440, "Only one team can capture in a round", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
+/*
+=================
+ServerOptions_StatusBar_harvesterFromBodies
+=================
+*/
+static void ServerOptions_StatusBar_harvesterFromBodies( void* ptr ) {
+	UI_DrawString( 320, 440, "Makes skulls spawn from fragged players than a central generator.", UI_CENTER|UI_SMALLFONT, colorWhite );
 }
 
 /*
@@ -1572,6 +1585,7 @@ static void ServerOptions_SetMenuItems( void ) {
 	s_serveroptions.weaponArena.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_weaponArena" ) );
 	s_serveroptions.lmsMode.curvalue = Com_Clamp( 0, 3, trap_Cvar_VariableValue("g_lms_mode") );
 	s_serveroptions.oneway.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "elimination_ctf_oneway" ) );
+	s_serveroptions.harvesterFromBodies.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_harvesterFromBodies" ) );
 	s_serveroptions.grapple.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_grapple" ) );
 	s_serveroptions.eliminationDamage.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "elimination_damage" ) );
 	s_serveroptions.pmove.curvalue = 0;
@@ -1754,6 +1768,15 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 	s_serveroptions.grapple.generic.name			= "Grappling Hook:";
 	s_serveroptions.grapple.generic.statusbar  = ServerOptions_StatusBar_Grapple;
 
+	if( s_serveroptions.gametype == GT_HARVESTER) {
+		y += BIGCHAR_HEIGHT+2;
+		s_serveroptions.harvesterFromBodies.generic.type			= MTYPE_RADIOBUTTON;
+		s_serveroptions.harvesterFromBodies.generic.flags			= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+		s_serveroptions.harvesterFromBodies.generic.x				= OPTIONS_X;
+		s_serveroptions.harvesterFromBodies.generic.y				= y;
+		s_serveroptions.harvesterFromBodies.generic.name			= "Skulls From Bodies:";
+		s_serveroptions.harvesterFromBodies.generic.statusbar  = ServerOptions_StatusBar_harvesterFromBodies;
+	}
 	if( s_serveroptions.gametype == GT_CTF_ELIMINATION) {
 		y += BIGCHAR_HEIGHT+2;
 		s_serveroptions.oneway.generic.type			= MTYPE_RADIOBUTTON;
@@ -1957,6 +1980,9 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 	Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.weaponArena );
 	if( s_serveroptions.gametype == GT_LMS) {
 		Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.lmsMode );
+	}
+	if( s_serveroptions.gametype == GT_HARVESTER) {
+		Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.harvesterFromBodies );
 	}
 	if( s_serveroptions.gametype == GT_CTF_ELIMINATION) {
 		Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.oneway );
