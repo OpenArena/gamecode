@@ -34,6 +34,7 @@
   * Updated to reflect the latest scoring changes.
   * `elimination_damage` can now be set in the UI for Elimination and eCTF matches.
   * `g_grapple` can now be set for all match types.
+  * `g_harvesterFromBodies` can now be set for Harvester matches.
 * Now it's possible to compile OAX on Mac (thanks EddieBrrrock!)
 * AI enhancements (LOTS!) for holdable handling, grappling hook handling, Domination and Double Domination.
 * Elimination/eCTF/LMS: If all humans have been killed in a round, bots will be eliminated one by one.
