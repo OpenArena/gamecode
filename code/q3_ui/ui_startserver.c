@@ -1699,10 +1699,10 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 	else /* if(UI_GametypeUsesCaptureLimit(s_serveroptions.gametype)) */ {
 		s_serveroptions.capturelimit.generic.type       = MTYPE_FIELD;
 		if (UI_IsARoundBasedGametype(s_serveroptions.gametype)) {
-			s_serveroptions.fraglimit.generic.name       = "Round Limit:";
+			s_serveroptions.capturelimit.generic.name       = "Round Limit:";
 		}
 		else {
-			s_serveroptions.fraglimit.generic.name       = "Capture Limit:";
+			s_serveroptions.capturelimit.generic.name       = "Capture Limit:";
 		}
 		s_serveroptions.capturelimit.generic.flags      = QMF_NUMBERSONLY|QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 		s_serveroptions.capturelimit.generic.x	         = OPTIONS_X;
