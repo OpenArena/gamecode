@@ -19,17 +19,21 @@
   * `cg_muzzleflashStyle`: Alternative muzzleflash styles for player preference, or "aesthetic," or maybe just less flashing (flashes can also be disabled). **Default: 1.**
   * `g_runes 2`: Enables the `tossrune` command (see below) in the server.
   * `dmflags &4096`: Allows players to move significantly faster underwater. Mostly for demonstration. Could be fun in class based gametypes.
-  * `g_grapple`: Gives Grappling Hook to all players. Also replaces `elimination_grapple`, which has been removed. **Default: 0.**
+  * `g_grapple`: Gives Grappling Hook to all players. Replaces `elimination_grapple`. **Default: 0.**
   * `g_harvesterFromBodies`: In Harvester matches, skulls now spawn from dead bodies (a la [UT3!Greed](https://antifandom.com/unreal/wiki/Greed)) rather than a skull receptacle in the middle of the arena. Allows Harvester matches to take place in maps that don't feature a skull receptacle. **Default: 0.**
   * `g_ddCaptureTime` and `g_ddRespawnDelay`: New cvars for Double Domination that control the amount of holding time to score and the waiting time before a new round starts. **Default for both: 10.**
   * `g_weaponArena` and `g_weaponArenaWeapon`: two cvars that replace and extend `g_rockets` in order to be able to use `g_rockets` with every weapon other than rockets.
-  * `elimination_selfdamage` is now `elimination_damage`, can be set in the Classic UI, and accepts four options: (Only Enemies), (Enemies and Self), (Enemies and Teammates) and (Enemies, Self and Teammates).
+  * `elimination_selfdamage` is now `elimination_damage` and accepts four options: (Only Enemies), (Enemies and Self), (Enemies and Teammates) and (Enemies, Self and Teammates).
 * Development mode with new cheat-protected cvars and debugging tools.
 * Shuffle has been reworked by implementing the solution from Aftershock.
 * New commands:
   * `weapbest`: Selects the best weapon.
   * `tossrune`: Tosses the rune that's been carried on. (Akin to TWCTF/TWCTF II) Needs `g_runes 2` in order to work.
   * `ui_writemappools`: If the arena files are loaded, this command dumps the gamelists so they can be used by g_autonextmap (should be used to generate new gamelists for new versions).
+* Classic UI:
+  * Updated to reflect the latest scoring changes.
+  * `elimination_damage` can now be set in the UI for Elimination and eCTF matches.
+  * `g_grapple` can now be set for all match types.
 * Now it's possible to compile OAX on Mac (thanks EddieBrrrock!)
 * AI enhancements (LOTS!) for holdable handling, grappling hook handling, Domination and Double Domination.
 * Elimination/eCTF/LMS: If all humans have been killed in a round, bots will be eliminated one by one.
@@ -52,6 +56,7 @@
 
 **Release date:** TBA
 
+* `g_grapple` can now be selected in the Classic Menu.
 * `elimination_selfdamage` is now `elimination_damage`, can be set in the Classic UI, and is now a bitflag with the following values:
   * `elimination_damage 0` = Only Enemies.
   * `elimination_damage 1` = Enemies and self.
