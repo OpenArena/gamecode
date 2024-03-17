@@ -796,6 +796,8 @@ typedef struct {
 	menufield_s			capturelimit;
 	menuradiobutton_s	friendlyfire;
 	menufield_s			hostname;
+	menufield_s			ddCaptureTime;
+	menufield_s			ddRespawnDelay;
 	menuradiobutton_s	pure;
 	menuradiobutton_s	lan;
 	menuradiobutton_s	allowServerDownload;
@@ -1141,6 +1143,8 @@ static void ServerOptions_Start( void ) {
 			break;
 	}
 	trap_Cvar_Set("sv_hostname", s_serveroptions.hostname.field.buffer );
+	trap_Cvar_Set("g_ddCaptureTime", s_serveroptions.ddCaptureTime.field.buffer );
+	trap_Cvar_Set("g_ddRespawnDelay", s_serveroptions.ddRespawnDelay.field.buffer );
 
 	// the wait commands will allow the dedicated to take effect
 	info = UI_GetArenaInfoByNumber( s_startserver.maplist[ s_startserver.currentmap ]);
@@ -1558,6 +1562,26 @@ static void ServerOptions_StatusBar_eliminationDamage( void* ptr ) {
 
 /*
 =================
+ServerOptions_StatusBar_ddCaptureTime
+=================
+*/
+static void ServerOptions_StatusBar_ddCaptureTime( void* ptr ) {
+	UI_DrawString( 320, 440, "Specifies the amount of time both points need", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "to be held in order for a team to score a point.", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
+/*
+=================
+ServerOptions_StatusBar_ddRespawnDelay
+=================
+*/
+static void ServerOptions_StatusBar_ddRespawnDelay( void* ptr ) {
+	UI_DrawString( 320, 440, "Specifies the amount of time between", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "scoring and the start of the next round.", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
+/*
+=================
 ServerOptions_StatusBar_Pmove
 
 Descriptions should have 48 characters or less per line, and there can't be more than two lines.
@@ -1840,6 +1864,8 @@ static void ServerOptions_SetMenuItems( void ) {
 	}
 
 	Q_strncpyz( s_serveroptions.hostname.field.buffer, UI_Cvar_VariableString( "sv_hostname" ), sizeof( s_serveroptions.hostname.field.buffer ) );
+	Q_strncpyz( s_serveroptions.ddCaptureTime.field.buffer, UI_Cvar_VariableString( "g_ddCaptureTime" ), sizeof( s_serveroptions.ddCaptureTime.field.buffer ) );
+	Q_strncpyz( s_serveroptions.ddRespawnDelay.field.buffer, UI_Cvar_VariableString( "g_ddRespawnDelay" ), sizeof( s_serveroptions.ddRespawnDelay.field.buffer ) );
 	s_serveroptions.pure.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "sv_pure" ) );
 	s_serveroptions.allowServerDownload.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "sv_allowDownload" ) );
 	s_serveroptions.lan.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "sv_lanforcerate" ) );
@@ -2122,7 +2148,28 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 		s_serveroptions.lmsMode.generic.y				= y;
 		s_serveroptions.lmsMode.itemnames				= lmsMode_list;
 	}
-	
+	if( s_serveroptions.gametype == GT_DOUBLE_D ) {
+		y += BIGCHAR_HEIGHT+2;
+		s_serveroptions.ddCaptureTime.generic.type       = MTYPE_FIELD;
+		s_serveroptions.ddCaptureTime.generic.name       = "Holding Time:";
+		s_serveroptions.ddCaptureTime.generic.flags      = QMF_SMALLFONT;
+		s_serveroptions.ddCaptureTime.generic.x          = OPTIONS_X;
+		s_serveroptions.ddCaptureTime.generic.y	        = y;
+		s_serveroptions.ddCaptureTime.field.widthInChars = 3;
+		s_serveroptions.ddCaptureTime.field.maxchars     = 3;
+		s_serveroptions.ddCaptureTime.generic.statusbar  = ServerOptions_StatusBar_ddCaptureTime;
+
+		y += BIGCHAR_HEIGHT+2;
+		s_serveroptions.ddRespawnDelay.generic.type       = MTYPE_FIELD;
+		s_serveroptions.ddRespawnDelay.generic.name       = "Time Between Rounds:";
+		s_serveroptions.ddRespawnDelay.generic.flags      = QMF_SMALLFONT;
+		s_serveroptions.ddRespawnDelay.generic.x          = OPTIONS_X;
+		s_serveroptions.ddRespawnDelay.generic.y	        = y;
+		s_serveroptions.ddRespawnDelay.field.widthInChars = 3;
+		s_serveroptions.ddRespawnDelay.field.maxchars     = 3;
+		s_serveroptions.ddRespawnDelay.generic.statusbar  = ServerOptions_StatusBar_ddRespawnDelay;
+	}
+
 	y = 80;
 	s_serveroptions.botSkill.generic.type			= MTYPE_SPINCONTROL;
 	s_serveroptions.botSkill.generic.flags			= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
