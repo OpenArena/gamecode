@@ -803,6 +803,7 @@ typedef struct {
 	menuradiobutton_s	oneway;
 	menuradiobutton_s	harvesterFromBodies;
 	menuradiobutton_s	instantgib;
+	menuradiobutton_s	eliminationMode;
 	menulist_s			weaponArena;
 	menulist_s			weaponArenaWeapon;
 	menulist_s			lmsMode;
@@ -941,6 +942,7 @@ static void ServerOptions_Start( void ) {
 	int             pmove;
 	int             lan;
 	int             instantgib;
+	int             eliminationMode;
 	int             weaponArena;
 	int             weaponArenaWeapon;
 	int             grapple;
@@ -962,6 +964,7 @@ static void ServerOptions_Start( void ) {
 	lan              = s_serveroptions.lan.curvalue;
 	pmove            = s_serveroptions.pmove.curvalue;
 	instantgib       = s_serveroptions.instantgib.curvalue;
+	eliminationMode       = s_serveroptions.eliminationMode.curvalue;
 	weaponArena          = s_serveroptions.weaponArena.curvalue;
 	weaponArenaWeapon          = s_serveroptions.weaponArenaWeapon.curvalue;
 	grapple		 = s_serveroptions.grapple.curvalue;
@@ -1067,6 +1070,7 @@ static void ServerOptions_Start( void ) {
 	trap_Cvar_SetValue( "sv_pure", pure );
 	trap_Cvar_SetValue( "sv_lanForceRate", lan );
 	trap_Cvar_SetValue( "g_instantgib", instantgib );
+	trap_Cvar_SetValue( "g_elimination", eliminationMode );
 	trap_Cvar_SetValue( "g_weaponArena", weaponArena );
 	trap_Cvar_SetValue( "g_weaponArenaWeapon", weaponArenaWeapon );
 	trap_Cvar_SetValue( "g_lms_mode", lmsMode);
@@ -1289,8 +1293,18 @@ ServerOptions_StatusBar_Instantgib
 =================
 */
 static void ServerOptions_StatusBar_Instantgib( void* ptr ) {
-	UI_DrawString( 320, 440, "Items are removed. Players spawn", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 440, "Pickups are removed. Players spawn", UI_CENTER|UI_SMALLFONT, colorWhite );
 	UI_DrawString( 320, 460, "with a one-hit-kill Railgun.", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
+/*
+=================
+ServerOptions_StatusBar_EliminationMode
+=================
+*/
+static void ServerOptions_StatusBar_EliminationMode( void* ptr ) {
+	UI_DrawString( 320, 440, "Players spawn with all weapons.", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "Pickups are removed from the maps.", UI_CENTER|UI_SMALLFONT, colorWhite );
 }
 
 /*
@@ -1299,7 +1313,7 @@ ServerOptions_StatusBar_WeaponArena
 =================
 */
 static void ServerOptions_StatusBar_WeaponArena( void* ptr ) {
-	UI_DrawString( 320, 440, "Items are removed. Players spawn with", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 440, "Pickups are removed. Players spawn with", UI_CENTER|UI_SMALLFONT, colorWhite );
 	UI_DrawString( 320, 460, "the specified weapon with infinte ammo.", UI_CENTER|UI_SMALLFONT, colorWhite );
 }
 
@@ -1625,6 +1639,7 @@ static void ServerOptions_SetMenuItems( void ) {
 	s_serveroptions.pure.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "sv_pure" ) );
 	s_serveroptions.lan.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "sv_lanforcerate" ) );
 	s_serveroptions.instantgib.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_instantgib" ) );
+	s_serveroptions.eliminationMode.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_elimination" ) );
 	s_serveroptions.weaponArena.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_weaponArena" ) );
 	s_serveroptions.weaponArenaWeapon.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_weaponArenaWeapon" ) );
 	s_serveroptions.lmsMode.curvalue = Com_Clamp( 0, 3, trap_Cvar_VariableValue("g_lms_mode") );
@@ -1850,6 +1865,17 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 	s_serveroptions.grapple.generic.name			= "Grappling Hook:";
 	s_serveroptions.grapple.generic.statusbar  = ServerOptions_StatusBar_Grapple;
 
+	if (!UI_IsARoundBasedGametype(s_serveroptions.gametype)) {
+		//Elimination Mode option
+		y += BIGCHAR_HEIGHT+2;
+		s_serveroptions.eliminationMode.generic.type			= MTYPE_RADIOBUTTON;
+		s_serveroptions.eliminationMode.generic.flags			= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+		s_serveroptions.eliminationMode.generic.x				= OPTIONS_X;
+		s_serveroptions.eliminationMode.generic.y				= y;
+		s_serveroptions.eliminationMode.generic.name			= "Elimination Mode:";
+		s_serveroptions.eliminationMode.generic.statusbar  = ServerOptions_StatusBar_EliminationMode;
+	}
+
 	if(UI_IsATeamGametype(s_serveroptions.gametype) &&
 			!UI_IsARoundBasedGametype(s_serveroptions.gametype)) {
 		y += BIGCHAR_HEIGHT+2;
@@ -2034,6 +2060,9 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 	Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.grapple );
 	Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.weaponArena );
 	Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.weaponArenaWeapon );
+	if (!UI_IsARoundBasedGametype(s_serveroptions.gametype)) {
+		Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.eliminationMode );
+	}
 	if( s_serveroptions.gametype == GT_LMS) {
 		Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.lmsMode );
 	}
