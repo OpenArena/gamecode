@@ -33,14 +33,14 @@
 * Classic UI:
   * Slightly reorganized the Skirmish/Create Server menus in order to accomodate the newer gametype options.
   * Updated to reflect the latest scoring changes.
-  * `elimination_damage` can now be set in the UI for Elimination and eCTF matches.
+  * `elimination_selfdamage` can now be set in the UI for Elimination and eCTF matches.
   * `g_grapple` can now be set for all match types.
   * `g_harvesterFromBodies` can now be set for Harvester matches.
   * Status bar texts are clearer.
-  * `g_weaponArena` and `g_weaponArenaWeapon` can be selectable in Classic UI. (Though weaponArenaWeapon won't be grayed if "Weapon Arena = Disabled")
-  * `g_elimination` can now be selected for all non-round-based gamemodes.
+  * `g_weaponArenaWeapon` can be selectable in Classic UI, but it needs "Single Weapon Arena" to be set before.
   * `cg_muzzleFlashStyle` can now be chosen in Classic UI under "Game Options", replaces "Allow Download" which is already present in "Network", anyway.
   * Separated "Allow Downloads From Servers" and "Allow Downloads To Clients". The former is a player option (`cl_allowDownload 0/1`) and can be set in "Options -> Network", while the latter a server option (`sv_allowDownload 0/1`) and can be set from "Create Server". The option names were changed to reflect these changes.
+  * New "Weapon Rules" option in Skirmish/Create Server, cycles between four rulesets for weapons: **All Weapons (Classic)** (unavailable for Elimination/eCTF/LMS, default for all other modes), **Instantgib**, **Single Weapon Arena** and **All Weapons (Elimination)** (default for Elimination/eCTF/LMS).
 * Now it's possible to compile OAX on Mac (thanks EddieBrrrock!)
 * AI enhancements:
   * Holdable (Personal Teleporter/Medkit/Kamikaze/Invulnerability) handling.
@@ -67,6 +67,7 @@
 
 **Release date:** TBA
 
+* Classic UI: New "Weapon Rules" option in Skirmish/Create Server, cycles between four rulesets for weapons: **All Weapons (Classic)** (unavailable for Elimination/eCTF/LMS, default for all other modes), **Instantgib**, **Single Weapon Arena** and **All Weapons (Elimination)** (default for Elimination/eCTF/LMS).
 * Classic UI: Separated "Allow Downloads From Servers" and "Allow Downloads To Clients". The former is a player option (`cl_allowDownload 0/1`) and can be set in "Options -> Network", while the latter a server option (`sv_allowDownload 0/1`) and can be set from "Create Server". The option names were changed to reflect these changes.
 * `cg_muzzleFlashStyle` can now be chosen in Classic UI under "Game Options", replaces "Allow Download" which is already present in "Network", anyway.
 * Classic UI: `g_elimination` can now be selected for all non-round-based gamemodes.
