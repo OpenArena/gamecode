@@ -42,6 +42,7 @@
   * "Delag Hitscan" was moved from "Game Options" to "Network".
   * "Dynamic Lights" was moved from "Game Options" to "Video".
   * `cg_weaponBarStyle` added to "Game Options" as, well, "Weapon Bar Style".
+  * `g_ddCaptureTime` and `g_ddRespawnDelay` were added for Double Domination matches.
 * Now it's possible to compile OAX on Mac (thanks EddieBrrrock!)
 * AI enhancements:
   * Holdable (Personal Teleporter/Medkit/Kamikaze/Invulnerability) handling.
@@ -68,6 +69,7 @@
 
 **Release date:** TBA
 
+* Classic UI: * `g_ddCaptureTime` and `g_ddRespawnDelay` were added for Double Domination matches.
 * Classic UI: `cg_weaponBarStyle` added to "Game Options" as, well, "Weapon Bar Style".
 * Classic UI: Minor overall fixes.
 * Classic UI: Skirmish/Create Server: Friendly Fire, Optimize for LAN and Host Name gained descriptions.
