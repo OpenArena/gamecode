@@ -39,6 +39,7 @@
   * Status bar texts are clearer.
   * `g_weaponArena` and `g_weaponArenaWeapon` can be selectable in Classic UI. (Though weaponArenaWeapon won't be grayed if "Weapon Arena = Disabled")
   * `g_elimination` can now be selected for all non-round-based gamemodes.
+  * `cg_muzzleFlashStyle` can now be chosen in Classic UI under "Game Options", replaces "Allow Download" which is already present in "Network", anyway.
 * Now it's possible to compile OAX on Mac (thanks EddieBrrrock!)
 * AI enhancements:
   * Holdable (Personal Teleporter/Medkit/Kamikaze/Invulnerability) handling.
@@ -65,6 +66,7 @@
 
 **Release date:** TBA
 
+* `cg_muzzleFlashStyle` can now be chosen in Classic UI under "Game Options", replaces "Allow Download" which is already present in "Network", anyway.
 * Classic UI: `g_elimination` can now be selected for all non-round-based gamemodes.
 * Classic UI: `g_weaponArena` and `g_weaponArenaWeapon` can be selectable in Classic UI. (Though weaponArenaWeapon won't be grayed if "Weapon Arena = Disabled")
 * CTF Elimination (One-Way Mode) now has special bot logic improvements.
