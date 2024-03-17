@@ -803,9 +803,7 @@ typedef struct {
 	menuradiobutton_s	grapple;
 	menuradiobutton_s	oneway;
 	menuradiobutton_s	harvesterFromBodies;
-	menuradiobutton_s	instantgib;
-	menuradiobutton_s	eliminationMode;
-	menulist_s			weaponArena;
+	menulist_s			weaponMode;
 	menulist_s			weaponArenaWeapon;
 	menulist_s			lmsMode;
 	menulist_s			eliminationDamage;
@@ -872,13 +870,6 @@ static const char *eliminationDamage_list[] = {
 	NULL
 };
 
-static const char *weaponArena_list[] = {
-	"Disabled",
-	"Enabled",
-	"Enabled+Grapple",
-	NULL
-};
-
 static const char *weaponArenaWeapon_list[] = {
 	"Gauntlet",
 	"Machinegun",
@@ -892,6 +883,22 @@ static const char *weaponArenaWeapon_list[] = {
 	"Nailgun",
 	"Chaingun",
 	"Prox Mine",
+	NULL
+};
+
+static const char *weaponMode_list[] = {
+	"All Weapons (Classic)",
+	"Instantgib",
+	"Single Weapon Arena",
+	"All Weapons (Elimination)",
+	NULL
+};
+
+static const char *weaponModeElimination_list[] = {
+	"All Weapons (Elimination)",
+	"Instantgib",
+	"Single Weapon Arena",
+	"All Weapons (Elimination)",
 	NULL
 };
 
@@ -943,9 +950,7 @@ static void ServerOptions_Start( void ) {
 	int		allowServerDownload;
 	int             pmove;
 	int             lan;
-	int             instantgib;
-	int             eliminationMode;
-	int             weaponArena;
+	int             weaponMode;
 	int             weaponArenaWeapon;
 	int             grapple;
 	int             oneway;
@@ -966,9 +971,7 @@ static void ServerOptions_Start( void ) {
 	allowServerDownload		 = s_serveroptions.allowServerDownload.curvalue;
 	lan              = s_serveroptions.lan.curvalue;
 	pmove            = s_serveroptions.pmove.curvalue;
-	instantgib       = s_serveroptions.instantgib.curvalue;
-	eliminationMode       = s_serveroptions.eliminationMode.curvalue;
-	weaponArena          = s_serveroptions.weaponArena.curvalue;
+	weaponMode       = s_serveroptions.weaponMode.curvalue;
 	weaponArenaWeapon          = s_serveroptions.weaponArenaWeapon.curvalue;
 	grapple		 = s_serveroptions.grapple.curvalue;
 	oneway		 = s_serveroptions.oneway.curvalue;
@@ -1073,9 +1076,6 @@ static void ServerOptions_Start( void ) {
 	trap_Cvar_SetValue( "sv_pure", pure );
 	trap_Cvar_SetValue( "sv_allowDownload", allowServerDownload );
 	trap_Cvar_SetValue( "sv_lanForceRate", lan );
-	trap_Cvar_SetValue( "g_instantgib", instantgib );
-	trap_Cvar_SetValue( "g_elimination", eliminationMode );
-	trap_Cvar_SetValue( "g_weaponArena", weaponArena );
 	trap_Cvar_SetValue( "g_weaponArenaWeapon", weaponArenaWeapon );
 	trap_Cvar_SetValue( "g_lms_mode", lmsMode);
 	trap_Cvar_SetValue( "g_grapple", grapple );
@@ -1106,6 +1106,32 @@ static void ServerOptions_Start( void ) {
 			trap_Cvar_SetValue( "pmove_float", 0);
 			break;
 	};
+	switch(weaponMode) {
+		case 1:
+			//Instantgib
+			trap_Cvar_SetValue( "g_instantgib", 1);
+			trap_Cvar_SetValue( "g_weaponArena", 0);
+			trap_Cvar_SetValue( "g_elimination", 0);
+			break;
+		case 2:
+			//Weapon Arena
+			trap_Cvar_SetValue( "g_instantgib", 0);
+			trap_Cvar_SetValue( "g_weaponArena", 1);
+			trap_Cvar_SetValue( "g_elimination", 0);
+			break;
+		case 3:
+			//Elimination mode.
+			trap_Cvar_SetValue( "g_instantgib", 0);
+			trap_Cvar_SetValue( "g_weaponArena", 0);
+			trap_Cvar_SetValue( "g_elimination", 1);
+			break;
+		default:
+			//All Weapons Classic.
+			trap_Cvar_SetValue( "g_instantgib", 0);
+			trap_Cvar_SetValue( "g_weaponArena", 0);
+			trap_Cvar_SetValue( "g_elimination", 0);
+			break;
+	}
 	trap_Cvar_Set("sv_hostname", s_serveroptions.hostname.field.buffer );
 
 	// the wait commands will allow the dedicated to take effect
@@ -1293,32 +1319,35 @@ static void ServerOptions_StatusBar( void* ptr ) {
 
 /*
 =================
-ServerOptions_StatusBar_Instantgib
+ServerOptions_StatusBar_WeaponMode
 =================
 */
-static void ServerOptions_StatusBar_Instantgib( void* ptr ) {
-	UI_DrawString( 320, 440, "Pickups are removed. Players spawn", UI_CENTER|UI_SMALLFONT, colorWhite );
-	UI_DrawString( 320, 460, "with a one-hit-kill Railgun.", UI_CENTER|UI_SMALLFONT, colorWhite );
-}
-
-/*
-=================
-ServerOptions_StatusBar_EliminationMode
-=================
-*/
-static void ServerOptions_StatusBar_EliminationMode( void* ptr ) {
-	UI_DrawString( 320, 440, "Players spawn with all weapons.", UI_CENTER|UI_SMALLFONT, colorWhite );
-	UI_DrawString( 320, 460, "Pickups are removed from the maps.", UI_CENTER|UI_SMALLFONT, colorWhite );
-}
-
-/*
-=================
-ServerOptions_StatusBar_WeaponArena
-=================
-*/
-static void ServerOptions_StatusBar_WeaponArena( void* ptr ) {
-	UI_DrawString( 320, 440, "Pickups are removed. Players spawn with", UI_CENTER|UI_SMALLFONT, colorWhite );
-	UI_DrawString( 320, 460, "the specified weapon with infinte ammo.", UI_CENTER|UI_SMALLFONT, colorWhite );
+static void ServerOptions_StatusBar_WeaponMode( void* ptr ) {
+    switch( ((menulist_s*)ptr)->curvalue ) {
+		case 1:
+			UI_DrawString( 320, 440, "Instantgib: All pickups removed.", UI_CENTER|UI_SMALLFONT, colorWhite );
+			UI_DrawString( 320, 460, "Players spawn with a one-hit-kill Railgun.", UI_CENTER|UI_SMALLFONT, colorWhite );
+			break;
+		case 2:
+			UI_DrawString( 320, 440, "Single Weapon Arena: All pickups removed.", UI_CENTER|UI_SMALLFONT, colorWhite );
+			UI_DrawString( 320, 460, "Players will spawn with a specific weapon.", UI_CENTER|UI_SMALLFONT, colorWhite );
+			break;
+		case 3:
+			UI_DrawString( 320, 440, "All Weapons (Elim.): All pickups removed.", UI_CENTER|UI_SMALLFONT, colorWhite );
+			UI_DrawString( 320, 460, "Players will spawn with all weapons.", UI_CENTER|UI_SMALLFONT, colorWhite );
+			break;
+		default:
+			if (UI_IsARoundBasedGametype(s_serveroptions.gametype)) {
+				UI_DrawString( 320, 440, "All Weapons (Elim.): All pickups removed.", UI_CENTER|UI_SMALLFONT, colorWhite );
+				UI_DrawString( 320, 460, "Players will spawn with all weapons.", UI_CENTER|UI_SMALLFONT, colorWhite );
+			}
+			else {
+				UI_DrawString( 320, 440, "All Weapons (Classic): No pickups removed.", UI_CENTER|UI_SMALLFONT, colorWhite );
+				UI_DrawString( 320, 460, "Players spawn with Gauntlet and Machinegun.", UI_CENTER|UI_SMALLFONT, colorWhite );
+			}
+			break;
+    }
+            
 }
 
 /*
@@ -1327,7 +1356,8 @@ ServerOptions_StatusBar_WeaponArenaWeapon
 =================
 */
 static void ServerOptions_StatusBar_WeaponArenaWeapon( void* ptr ) {
-	UI_DrawString( 320, 440, "The weapon the players will spawn with.", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 440, "In Single Weapon Arena mode, this will", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "be the weapon players will spawn with.", UI_CENTER|UI_SMALLFONT, colorWhite );
 }
 
 /*
@@ -1414,7 +1444,6 @@ static void ServerOptions_StatusBar_Pmove( void* ptr ) {
 			UI_DrawString( 320, 440, "Framerate dependent or not", UI_CENTER|UI_SMALLFONT, colorWhite );
 			break;
     }
-            
 }
 
 
@@ -1653,9 +1682,6 @@ static void ServerOptions_SetMenuItems( void ) {
 	s_serveroptions.pure.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "sv_pure" ) );
 	s_serveroptions.allowServerDownload.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "sv_allowDownload" ) );
 	s_serveroptions.lan.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "sv_lanforcerate" ) );
-	s_serveroptions.instantgib.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_instantgib" ) );
-	s_serveroptions.eliminationMode.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_elimination" ) );
-	s_serveroptions.weaponArena.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_weaponArena" ) );
 	s_serveroptions.weaponArenaWeapon.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_weaponArenaWeapon" ) );
 	s_serveroptions.lmsMode.curvalue = Com_Clamp( 0, 3, trap_Cvar_VariableValue("g_lms_mode") );
 	s_serveroptions.oneway.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "elimination_ctf_oneway" ) );
@@ -1669,6 +1695,16 @@ static void ServerOptions_SetMenuItems( void ) {
 		s_serveroptions.pmove.curvalue = 2;
 	if(trap_Cvar_VariableValue( "pmove_float" ))
 		s_serveroptions.pmove.curvalue = 3;
+	// Weapon Rules modes. Only one option can be active at a time.
+	s_serveroptions.weaponMode.curvalue = 0;
+	if(trap_Cvar_VariableValue("g_instantgib") != 0 && trap_Cvar_VariableValue("g_weaponArena") == 0 && trap_Cvar_VariableValue("g_elimination") == 0)
+		s_serveroptions.weaponMode.curvalue = 1;
+	else if(trap_Cvar_VariableValue("g_instantgib") == 0 && trap_Cvar_VariableValue("g_weaponArena") != 0 && trap_Cvar_VariableValue("g_elimination") == 0)
+		s_serveroptions.weaponMode.curvalue = 2;
+	else if(trap_Cvar_VariableValue("g_instantgib") == 0 && trap_Cvar_VariableValue("g_weaponArena") == 0 && trap_Cvar_VariableValue("g_elimination") != 0)
+		s_serveroptions.weaponMode.curvalue = 3;
+	else
+		s_serveroptions.weaponMode.curvalue = 0;
 
 	// set the map pic
 	info = UI_GetArenaInfoByNumber(s_startserver.maplist[s_startserver.currentmap]);
@@ -1843,24 +1879,20 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 	s_serveroptions.pmove.itemnames				= pmove_list;
 	s_serveroptions.pmove.generic.statusbar  = ServerOptions_StatusBar_Pmove;
 
-	//Insantgib option
+	//Weapon Mode option
 	y += BIGCHAR_HEIGHT+2;
-	s_serveroptions.instantgib.generic.type			= MTYPE_RADIOBUTTON;
-	s_serveroptions.instantgib.generic.flags			= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-	s_serveroptions.instantgib.generic.x				= OPTIONS_X;
-	s_serveroptions.instantgib.generic.y				= y;
-	s_serveroptions.instantgib.generic.name			= "Instantgib:";
-	s_serveroptions.instantgib.generic.statusbar  = ServerOptions_StatusBar_Instantgib; 
-
-	//Weapon Arena option
-	y += BIGCHAR_HEIGHT+2;
-	s_serveroptions.weaponArena.generic.type			= MTYPE_SPINCONTROL;
-	s_serveroptions.weaponArena.generic.flags			= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-	s_serveroptions.weaponArena.generic.x				= OPTIONS_X;
-	s_serveroptions.weaponArena.generic.y				= y;
-	s_serveroptions.weaponArena.itemnames				= weaponArena_list;
-	s_serveroptions.weaponArena.generic.name			= "Weapon Arena:";
-	s_serveroptions.weaponArena.generic.statusbar  = ServerOptions_StatusBar_WeaponArena;
+	s_serveroptions.weaponMode.generic.type			= MTYPE_SPINCONTROL;
+	s_serveroptions.weaponMode.generic.flags			= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	s_serveroptions.weaponMode.generic.x				= OPTIONS_X;
+	s_serveroptions.weaponMode.generic.y				= y;
+	if (UI_IsARoundBasedGametype(s_serveroptions.gametype)) {
+		s_serveroptions.weaponMode.itemnames				= weaponModeElimination_list;
+	}
+	else {
+		s_serveroptions.weaponMode.itemnames				= weaponMode_list;
+	}
+	s_serveroptions.weaponMode.generic.name			= "Weapon Rules:";
+	s_serveroptions.weaponMode.generic.statusbar  = ServerOptions_StatusBar_WeaponMode;
 	
 	//Weapon Arena Weapon list
 	y += BIGCHAR_HEIGHT+2;
@@ -1879,17 +1911,6 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 	s_serveroptions.grapple.generic.y				= y;
 	s_serveroptions.grapple.generic.name			= "Grappling Hook:";
 	s_serveroptions.grapple.generic.statusbar  = ServerOptions_StatusBar_Grapple;
-
-	if (!UI_IsARoundBasedGametype(s_serveroptions.gametype)) {
-		//Elimination Mode option
-		y += BIGCHAR_HEIGHT+2;
-		s_serveroptions.eliminationMode.generic.type			= MTYPE_RADIOBUTTON;
-		s_serveroptions.eliminationMode.generic.flags			= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-		s_serveroptions.eliminationMode.generic.x				= OPTIONS_X;
-		s_serveroptions.eliminationMode.generic.y				= y;
-		s_serveroptions.eliminationMode.generic.name			= "Elimination Mode:";
-		s_serveroptions.eliminationMode.generic.statusbar  = ServerOptions_StatusBar_EliminationMode;
-	}
 
 	if(UI_IsATeamGametype(s_serveroptions.gametype) &&
 			!UI_IsARoundBasedGametype(s_serveroptions.gametype)) {
@@ -2079,13 +2100,9 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 		Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.friendlyfire );
 	}
 	Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.pure );
-	Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.instantgib );
+	Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.weaponMode );
 	Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.grapple );
-	Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.weaponArena );
 	Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.weaponArenaWeapon );
-	if (!UI_IsARoundBasedGametype(s_serveroptions.gametype)) {
-		Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.eliminationMode );
-	}
 	if( s_serveroptions.gametype == GT_LMS) {
 		Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.lmsMode );
 	}
