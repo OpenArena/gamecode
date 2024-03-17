@@ -142,7 +142,6 @@ vmCvar_t g_lms_lives;
 vmCvar_t g_lms_mode;
 vmCvar_t g_elimination_ctf_oneway;
 vmCvar_t g_awardpushing; //The server can decide if players are awarded for pushing people in lave etc.
-vmCvar_t g_runes; //Allow missionpack style persistant powerups?
 vmCvar_t g_catchup; //Favors the week players
 vmCvar_t g_autonextmap; //Autochange map
 vmCvar_t g_mappools; //mappools to be used for autochange
@@ -196,6 +195,7 @@ vmCvar_t g_ddRespawnDelay;
 vmCvar_t g_developer;
 vmCvar_t g_spSkill;
 vmCvar_t g_bot_noChat;
+vmCvar_t g_classicMode;
 
 mapinfo_result_t mapinfo;
 
@@ -343,14 +343,6 @@ static cvarTable_t gameCvarTable[] = {
 
 	{ &g_awardpushing, "g_awardpushing", "1", CVAR_ARCHIVE, 0, qtrue },
 
-	//g_persistantpowerups
-#ifdef MISSIONPACK
-	{ &g_runes, "g_runes", "1", CVAR_LATCH, 0, qfalse },
-#else
-	{ &g_runes, "g_runes", "0", CVAR_LATCH|CVAR_ARCHIVE, 0, qfalse },
-#endif
-
-
 	//nexuiz style rocket arena
 	{ &g_weaponArena, "g_weaponArena", "0", CVAR_SERVERINFO | CVAR_LATCH, 0, qfalse },
 	{ &g_weaponArenaWeapon, "g_weaponArenaWeapon", "0", CVAR_SERVERINFO | CVAR_LATCH, 0, qfalse },
@@ -414,7 +406,8 @@ static cvarTable_t gameCvarTable[] = {
 	/* Neon_Knight: Developer mode*/
 	{ &g_developer, "developer", "0", CVAR_CHEAT, 0, qtrue},
 	{ &g_spSkill, "g_spSkill", "2", 0, 0, qtrue},
-	{ &g_bot_noChat, "bot_nochat", "0", 0, 0, qtrue}
+	{ &g_bot_noChat, "bot_nochat", "0", 0, 0, qtrue},
+	{ &g_classicMode, "g_classicMode", "0", 0, 0, qtrue}
 
 };
 
@@ -2955,6 +2948,20 @@ qboolean G_IsANoPickupsMode(void) {
 	}
 	// In Elimination mode for non-round-based modes, no pickups
 	if (g_elimination_allgametypes.integer) {
+		return qtrue;
+	}
+	return qfalse;
+}
+/*
+===================
+G_GametypeUsesRunes
+
+Returns true if the match has a "no pickups" rule.
+===================
+ */
+qboolean G_GametypeUsesRunes(int check) {
+	// If it's one of these gamemodes, it's true.
+	if (check == GT_CTF || check == GT_1FCTF || check == GT_HARVESTER ||  check == GT_OBELISK) {
 		return qtrue;
 	}
 	return qfalse;

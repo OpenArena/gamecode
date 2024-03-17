@@ -1128,7 +1128,6 @@ extern vmCvar_t g_lms_lives;
 extern vmCvar_t g_lms_mode; //How do we score: 0 = One Survivor get a point, 1 = same but without overtime, 2 = one point for each player killed (+overtime), 3 = same without overtime
 extern vmCvar_t g_elimination_ctf_oneway;	//Only attack in one direction (level.eliminationSides+level.roundNumber)%2 == 0 red attacks
 extern vmCvar_t g_awardpushing; //The server can decide if players are awarded for pushing people in lave etc.
-extern vmCvar_t g_runes;
 extern vmCvar_t g_catchup; //Favors the week players
 extern vmCvar_t g_autonextmap; //Autochange map
 extern vmCvar_t g_mappools; //mappools to be used for autochange
@@ -1180,6 +1179,7 @@ extern vmCvar_t g_ddRespawnDelay;
 extern vmCvar_t g_developer;
 extern vmCvar_t g_spSkill;
 extern vmCvar_t g_bot_noChat;
+extern vmCvar_t g_classicMode;
 
 void	trap_Printf( const char *fmt );
 void	trap_Error( const char *fmt ) __attribute__((noreturn));
@@ -1437,4 +1437,5 @@ int G_GetWeaponArenaWeapon(int weapon);	/* Takes a string and returns the value 
 qboolean G_IsANoPickupsMode(void);	/* Returns true if the match has a "no pickups" rule. */
 qboolean G_GametypeUsesFragLimit(int check);	/* Whether the gametype uses a frag-based scoring system. */
 qboolean G_GametypeUsesCaptureLimit(int check);	/* Whether the gametype uses a capture-based scoring system. */
+qboolean G_GametypeUsesRunes(int check);	/* Whether the gametype uses the Runes. */
 /* /Neon_Knight */
