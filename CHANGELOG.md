@@ -31,16 +31,16 @@
   * `droprune`: Tosses the rune that's been carried on. (Akin to TWCTF/TWCTF II) Needs `g_runes 2` in order to work.
   * `ui_writemappools`: If the arena files are loaded, this command dumps the gamelists so they can be used by g_autonextmap (should be used to generate new gamelists for new versions).
 * Classic UI:
-  * Slightly reorganized the Skirmish/Create Server menus in order to accomodate the newer gametype options.
-  * Updated to reflect the latest scoring changes.
+  * Slight reorganization of the Skirmish/Create Server menus in order to accomodate the newer gametype options.
+  * Status bar texts are clearer and there are more explanations for more items.
   * `elimination_selfdamage` can now be set in the UI for Elimination and eCTF matches.
   * `g_grapple` can now be set for all match types.
   * `g_harvesterFromBodies` can now be set for Harvester matches.
-  * Status bar texts are clearer.
   * `g_weaponArenaWeapon` can be selectable in Classic UI, but it needs "Single Weapon Arena" to be set before.
-  * `cg_muzzleFlashStyle` can now be chosen in Classic UI under "Game Options", replaces "Allow Download" which is already present in "Network", anyway.
-  * Separated "Allow Downloads From Servers" and "Allow Downloads To Clients". The former is a player option (`cl_allowDownload 0/1`) and can be set in "Options -> Network", while the latter a server option (`sv_allowDownload 0/1`) and can be set from "Create Server". The option names were changed to reflect these changes.
-  * New "Weapon Rules" option in Skirmish/Create Server, cycles between four rulesets for weapons: **All Weapons (Classic)** (unavailable for Elimination/eCTF/LMS, default for all other modes), **Instantgib**, **Single Weapon Arena** and **All Weapons (Elimination)** (default for Elimination/eCTF/LMS).
+  * `cg_muzzleFlashStyle` can now be chosen in Classic UI under "Game Options".
+  * Separated "Allow Downloads From Servers" and "Allow Downloads To Clients". The former is a player option (`cl_allowDownload 0/1`) and can be set in "Options -> Network" (formerly in "Game Options"), while the latter a server option (`sv_allowDownload 0/1`) and can be set from "Create Server". The option names were changed to reflect these changes.
+  * "Delag Hitscan" was moved from "Game Options" to "Network".
+  * "Dynamic Lights" was moved from "Game Options" to "Video".
 * Now it's possible to compile OAX on Mac (thanks EddieBrrrock!)
 * AI enhancements:
   * Holdable (Personal Teleporter/Medkit/Kamikaze/Invulnerability) handling.
@@ -67,6 +67,12 @@
 
 **Release date:** TBA
 
+* Classic UI: Minor overall fixes.
+* Classic UI: Skirmish/Create Server: Friendly Fire, Optimize for LAN and Host Name gained descriptions.
+* Classic UI: Skirmish/Create Server: Better descriptions for all options.
+* Classic UI: "Unlag Hitscan" was moved from "Game Options" to "Network" and renamed "Delag Hitscan Latency".
+* Classic UI: "Dynamic Lights" was moved from "Game Options" to "Video".
+* Classic UI: "droprune" can be bound in "Controls -> Misc".
 * Classic UI: New "Weapon Rules" option in Skirmish/Create Server, cycles between four rulesets for weapons: **All Weapons (Classic)** (unavailable for Elimination/eCTF/LMS, default for all other modes), **Instantgib**, **Single Weapon Arena** and **All Weapons (Elimination)** (default for Elimination/eCTF/LMS).
 * Classic UI: Separated "Allow Downloads From Servers" and "Allow Downloads To Clients". The former is a player option (`cl_allowDownload 0/1`) and can be set in "Options -> Network", while the latter a server option (`sv_allowDownload 0/1`) and can be set from "Create Server". The option names were changed to reflect these changes.
 * `cg_muzzleFlashStyle` can now be chosen in Classic UI under "Game Options", replaces "Allow Download" which is already present in "Network", anyway.
