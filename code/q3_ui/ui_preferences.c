@@ -49,7 +49,7 @@ GAME OPTIONS MENU
 #define ID_SYNCEVERYFRAME		134
 #define ID_FORCEMODEL			135
 #define ID_DRAWTEAMOVERLAY		136
-#define ID_ALLOWDOWNLOAD			137
+#define ID_MUZZLEFLASHSTYLE		137
 #define ID_BACK					138
 //Elimination
 #define ID_WEAPONBAR                    139
@@ -91,7 +91,7 @@ typedef struct {
 	menuradiobutton_s	forcemodel;
 	menulist_s			drawteamoverlay;
 	menuradiobutton_s	delaghitscan;
-	menuradiobutton_s	allowdownload;
+	menulist_s			muzzleFlashStyle;
 	menuradiobutton_s       chatbeep;
 	menuradiobutton_s       teamchatbeep;
 	menubitmap_s		back;
@@ -107,6 +107,18 @@ static const char *teamoverlay_names[] =
 	"upper right",
 	"lower right",
 	"lower left",
+	NULL
+};
+
+static const char *muzzleFlashStyle_names[] =
+{
+	"Off",
+	"Default",
+	"Q1-like",
+	"99-like",
+	"64-like",
+	"Animesque",
+	"03-like",
 	NULL
 };
 
@@ -126,7 +138,7 @@ static void Preferences_SetMenuItems( void ) {
 	s_preferences.synceveryframe.curvalue	= trap_Cvar_VariableValue( "r_finish" ) != 0;
 	s_preferences.forcemodel.curvalue		= trap_Cvar_VariableValue( "cg_forcemodel" ) != 0;
 	s_preferences.drawteamoverlay.curvalue	= Com_Clamp( 0, 3, trap_Cvar_VariableValue( "cg_drawTeamOverlay" ) );
-	s_preferences.allowdownload.curvalue	= trap_Cvar_VariableValue( "cl_allowDownload" ) != 0;
+	s_preferences.muzzleFlashStyle.curvalue	= trap_Cvar_VariableValue( "cg_muzzleFlashStyle" ) != 0;
 	s_preferences.delaghitscan.curvalue	= trap_Cvar_VariableValue( "cg_delag" ) != 0;
 	s_preferences.chatbeep.curvalue         = trap_Cvar_VariableValue( "cg_chatBeep" ) != 0;
 	s_preferences.teamchatbeep.curvalue     = trap_Cvar_VariableValue( "cg_teamChatBeep" ) != 0;
@@ -216,9 +228,8 @@ static void Preferences_Event( void* ptr, int notification ) {
 		trap_Cvar_SetValue( "cg_drawTeamOverlay", s_preferences.drawteamoverlay.curvalue );
 		break;
 
-	case ID_ALLOWDOWNLOAD:
-		trap_Cvar_SetValue( "cl_allowDownload", s_preferences.allowdownload.curvalue );
-		trap_Cvar_SetValue( "sv_allowDownload", s_preferences.allowdownload.curvalue );
+	case ID_MUZZLEFLASHSTYLE:
+		trap_Cvar_SetValue( "cg_muzzleFlashStyle", s_preferences.muzzleFlashStyle.curvalue );
 		break;
                
 	case ID_DELAGHITSCAN:
@@ -431,7 +442,17 @@ static void Preferences_MenuInit( void ) {
 	y += BIGCHAR_HEIGHT+2;
 	
 	Preferences_Menu_AddBoolean(&s_preferences.delaghitscan, &y, ID_DELAGHITSCAN, "Unlag hitscan:");
-	Preferences_Menu_AddBoolean(&s_preferences.allowdownload, &y, ID_ALLOWDOWNLOAD, "Automatic Downloading:");
+	
+	s_preferences.muzzleFlashStyle.generic.type     = MTYPE_SPINCONTROL;
+	s_preferences.muzzleFlashStyle.generic.name	   = "Muzzle Flash Style:";
+	s_preferences.muzzleFlashStyle.generic.flags	   = QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	s_preferences.muzzleFlashStyle.generic.callback = Preferences_Event;
+	s_preferences.muzzleFlashStyle.generic.id       = ID_MUZZLEFLASHSTYLE;
+	s_preferences.muzzleFlashStyle.generic.x	       = PREFERENCES_X_POS;
+	s_preferences.muzzleFlashStyle.generic.y	       = y;
+	s_preferences.muzzleFlashStyle.itemnames			= muzzleFlashStyle_names;
+	y += BIGCHAR_HEIGHT+2;
+
 	Preferences_Menu_AddBoolean(&s_preferences.chatbeep, &y, ID_CHATBEEP, "Beep on chat:");
 	Preferences_Menu_AddBoolean(&s_preferences.teamchatbeep, &y, ID_TEAMCHATBEEP, "Beep on team chat:");
 	
@@ -466,7 +487,7 @@ static void Preferences_MenuInit( void ) {
 	Menu_AddItem( &s_preferences.menu, &s_preferences.forcemodel );
 	Menu_AddItem( &s_preferences.menu, &s_preferences.drawteamoverlay );
 	Menu_AddItem( &s_preferences.menu, &s_preferences.delaghitscan );
-	Menu_AddItem( &s_preferences.menu, &s_preferences.allowdownload );
+	Menu_AddItem( &s_preferences.menu, &s_preferences.muzzleFlashStyle );
 	Menu_AddItem( &s_preferences.menu, &s_preferences.chatbeep );
 	Menu_AddItem( &s_preferences.menu, &s_preferences.teamchatbeep );
 

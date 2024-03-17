@@ -152,6 +152,7 @@ vmCvar_t ui_brassTime;
 vmCvar_t ui_drawCrosshair;
 vmCvar_t ui_drawCrosshairNames;
 vmCvar_t ui_marks;
+vmCvar_t ui_muzzleFlashStyle;
 vmCvar_t ui_server1;
 vmCvar_t ui_server2;
 vmCvar_t ui_server3;
@@ -247,6 +248,7 @@ static cvarTable_t cvarTable[] = {
 	{ &ui_drawCrosshair, "cg_drawCrosshair", "4", CVAR_ARCHIVE },
 	{ &ui_drawCrosshairNames, "cg_drawCrosshairNames", "1", CVAR_ARCHIVE },
 	{ &ui_marks, "cg_marks", "1", CVAR_ARCHIVE },
+	{ &ui_muzzleFlashStyle, "cg_muzzleFlashStyle", "1", CVAR_ARCHIVE },
 
 	{ &ui_server1, "server1", "", CVAR_ARCHIVE },
 	{ &ui_server2, "server2", "", CVAR_ARCHIVE },
