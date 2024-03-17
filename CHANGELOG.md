@@ -41,6 +41,7 @@
   * Separated "Allow Downloads From Servers" and "Allow Downloads To Clients". The former is a player option (`cl_allowDownload 0/1`) and can be set in "Options -> Network" (formerly in "Game Options"), while the latter a server option (`sv_allowDownload 0/1`) and can be set from "Create Server". The option names were changed to reflect these changes.
   * "Delag Hitscan" was moved from "Game Options" to "Network".
   * "Dynamic Lights" was moved from "Game Options" to "Video".
+  * `cg_weaponBarStyle` added to "Game Options" as, well, "Weapon Bar Style".
 * Now it's possible to compile OAX on Mac (thanks EddieBrrrock!)
 * AI enhancements:
   * Holdable (Personal Teleporter/Medkit/Kamikaze/Invulnerability) handling.
@@ -67,6 +68,7 @@
 
 **Release date:** TBA
 
+* Classic UI: `cg_weaponBarStyle` added to "Game Options" as, well, "Weapon Bar Style".
 * Classic UI: Minor overall fixes.
 * Classic UI: Skirmish/Create Server: Friendly Fire, Optimize for LAN and Host Name gained descriptions.
 * Classic UI: Skirmish/Create Server: Better descriptions for all options.
