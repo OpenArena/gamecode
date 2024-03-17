@@ -126,7 +126,6 @@ static void UI_NetworkOptionsMenu_Event( void* ptr, int event ) {
 
 	case ID_ALLOWDOWNLOAD:
 		trap_Cvar_SetValue( "cl_allowDownload", networkOptionsInfo.allowdownload.curvalue );
-		trap_Cvar_SetValue( "sv_allowDownload", networkOptionsInfo.allowdownload.curvalue );
 		break;
 
 	case ID_LAGOMETER:
@@ -231,7 +230,7 @@ static void UI_NetworkOptionsMenu_Init( void ) {
 
 	y += BIGCHAR_HEIGHT+2;
 	networkOptionsInfo.allowdownload.generic.type     = MTYPE_RADIOBUTTON;
-	networkOptionsInfo.allowdownload.generic.name	   = "Auto Downloading:";
+	networkOptionsInfo.allowdownload.generic.name	   = "Allow Downloads From Servers:";
 	networkOptionsInfo.allowdownload.generic.flags	   = QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	networkOptionsInfo.allowdownload.generic.callback = UI_NetworkOptionsMenu_Event;
 	networkOptionsInfo.allowdownload.generic.id       = ID_ALLOWDOWNLOAD;

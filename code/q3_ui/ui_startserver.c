@@ -798,6 +798,7 @@ typedef struct {
 	menufield_s			hostname;
 	menuradiobutton_s	pure;
 	menuradiobutton_s	lan;
+	menuradiobutton_s	allowServerDownload;
 	menulist_s		pmove;
 	menuradiobutton_s	grapple;
 	menuradiobutton_s	oneway;
@@ -939,6 +940,7 @@ static void ServerOptions_Start( void ) {
 	int		friendlyfire;
 	int		capturelimit;
 	int		pure;
+	int		allowServerDownload;
 	int             pmove;
 	int             lan;
 	int             instantgib;
@@ -961,6 +963,7 @@ static void ServerOptions_Start( void ) {
 	capturelimit	 = atoi( s_serveroptions.capturelimit.field.buffer );
 	friendlyfire = s_serveroptions.friendlyfire.curvalue;
 	pure		 = s_serveroptions.pure.curvalue;
+	allowServerDownload		 = s_serveroptions.allowServerDownload.curvalue;
 	lan              = s_serveroptions.lan.curvalue;
 	pmove            = s_serveroptions.pmove.curvalue;
 	instantgib       = s_serveroptions.instantgib.curvalue;
@@ -1068,6 +1071,7 @@ static void ServerOptions_Start( void ) {
 	trap_Cvar_SetValue ("capturelimit", Com_Clamp( 0, capturelimit, capturelimit ) );
 	trap_Cvar_SetValue( "g_friendlyfire", friendlyfire );
 	trap_Cvar_SetValue( "sv_pure", pure );
+	trap_Cvar_SetValue( "sv_allowDownload", allowServerDownload );
 	trap_Cvar_SetValue( "sv_lanForceRate", lan );
 	trap_Cvar_SetValue( "g_instantgib", instantgib );
 	trap_Cvar_SetValue( "g_elimination", eliminationMode );
@@ -1334,6 +1338,16 @@ ServerOptions_StatusBar_Pure
 static void ServerOptions_StatusBar_Pure( void* ptr ) {
 	UI_DrawString( 320, 440, "If set, clients are required to", UI_CENTER|UI_SMALLFONT, colorWhite );
 	UI_DrawString( 320, 460, "have the same .pk3 files as server.", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
+/*
+=================
+ServerOptions_StatusBar_AllowServerDownload
+=================
+*/
+static void ServerOptions_StatusBar_AllowServerDownload( void* ptr ) {
+	UI_DrawString( 320, 440, "If set, clients connected to this server will", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "download custom .pk3 if they activated this option.", UI_CENTER|UI_SMALLFONT, colorWhite );
 }
 
 /*
@@ -1637,6 +1651,7 @@ static void ServerOptions_SetMenuItems( void ) {
 
 	Q_strncpyz( s_serveroptions.hostname.field.buffer, UI_Cvar_VariableString( "sv_hostname" ), sizeof( s_serveroptions.hostname.field.buffer ) );
 	s_serveroptions.pure.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "sv_pure" ) );
+	s_serveroptions.allowServerDownload.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "sv_allowDownload" ) );
 	s_serveroptions.lan.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "sv_lanforcerate" ) );
 	s_serveroptions.instantgib.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_instantgib" ) );
 	s_serveroptions.eliminationMode.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_elimination" ) );
@@ -1991,6 +2006,14 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 		s_serveroptions.hostname.generic.y	        = y;
 		s_serveroptions.hostname.field.widthInChars = 18;
 		s_serveroptions.hostname.field.maxchars     = 64;
+
+		y += BIGCHAR_HEIGHT+2;
+		s_serveroptions.allowServerDownload.generic.type			= MTYPE_RADIOBUTTON;
+		s_serveroptions.allowServerDownload.generic.flags			= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+		s_serveroptions.allowServerDownload.generic.x				= 32 + (strlen(s_serveroptions.botSkill.generic.name) + 2 ) * SMALLCHAR_WIDTH;;
+		s_serveroptions.allowServerDownload.generic.y				= y;
+		s_serveroptions.allowServerDownload.generic.name			= "Allow Downloads To Clients:";
+		s_serveroptions.allowServerDownload.generic.statusbar  = ServerOptions_StatusBar_AllowServerDownload;
 	}
 
 	s_serveroptions.back.generic.type	  = MTYPE_BITMAP;
@@ -2079,6 +2102,7 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 	if( s_serveroptions.multiplayer ) {
 		Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.lan );
 		Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.hostname );
+		Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.allowServerDownload );
 	}
 
 	Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.back );
