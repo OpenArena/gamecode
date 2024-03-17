@@ -252,7 +252,6 @@ static void FirstConnect_Event( void* ptr, int event )
 
                 case ID_ALLOWDOWNLOAD:
                         trap_Cvar_SetValue( "cl_allowDownload", s_firstconnect.allowdownload.curvalue );
-                        trap_Cvar_SetValue( "sv_allowDownload", s_firstconnect.allowdownload.curvalue );
                         break;
 
                 case ID_DELAGHITSCAN:
@@ -391,7 +390,7 @@ void FirstConnect_MenuInit( void )
 
 	y += BIGCHAR_HEIGHT+2;
 	s_firstconnect.allowdownload.generic.type     = MTYPE_RADIOBUTTON;
-	s_firstconnect.allowdownload.generic.name	   = "Automatic Downloading:";
+	s_firstconnect.allowdownload.generic.name	   = "Allow Downloads From Servers:";
 	s_firstconnect.allowdownload.generic.flags	   = QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	s_firstconnect.allowdownload.generic.callback = FirstConnect_Event;
 	s_firstconnect.allowdownload.generic.id       = ID_ALLOWDOWNLOAD;

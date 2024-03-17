@@ -40,6 +40,7 @@
   * `g_weaponArena` and `g_weaponArenaWeapon` can be selectable in Classic UI. (Though weaponArenaWeapon won't be grayed if "Weapon Arena = Disabled")
   * `g_elimination` can now be selected for all non-round-based gamemodes.
   * `cg_muzzleFlashStyle` can now be chosen in Classic UI under "Game Options", replaces "Allow Download" which is already present in "Network", anyway.
+  * Separated "Allow Downloads From Servers" and "Allow Downloads To Clients". The former is a player option (`cl_allowDownload 0/1`) and can be set in "Options -> Network", while the latter a server option (`sv_allowDownload 0/1`) and can be set from "Create Server". The option names were changed to reflect these changes.
 * Now it's possible to compile OAX on Mac (thanks EddieBrrrock!)
 * AI enhancements:
   * Holdable (Personal Teleporter/Medkit/Kamikaze/Invulnerability) handling.
@@ -66,6 +67,7 @@
 
 **Release date:** TBA
 
+* Classic UI: Separated "Allow Downloads From Servers" and "Allow Downloads To Clients". The former is a player option (`cl_allowDownload 0/1`) and can be set in "Options -> Network", while the latter a server option (`sv_allowDownload 0/1`) and can be set from "Create Server". The option names were changed to reflect these changes.
 * `cg_muzzleFlashStyle` can now be chosen in Classic UI under "Game Options", replaces "Allow Download" which is already present in "Network", anyway.
 * Classic UI: `g_elimination` can now be selected for all non-round-based gamemodes.
 * Classic UI: `g_weaponArena` and `g_weaponArenaWeapon` can be selectable in Classic UI. (Though weaponArenaWeapon won't be grayed if "Weapon Arena = Disabled")
