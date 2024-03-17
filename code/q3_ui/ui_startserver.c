@@ -1046,7 +1046,7 @@ static void ServerOptions_Start( void ) {
 	trap_Cvar_SetValue( "g_grapple", grapple );
 	trap_Cvar_SetValue( "elimination_ctf_oneway", oneway );
 	trap_Cvar_SetValue( "g_harvesterFromBodies", harvesterFromBodies );
-	trap_Cvar_SetValue( "elimination_damage", eliminationDamage );
+	trap_Cvar_SetValue( "elimination_selfdamage", eliminationDamage );
 	switch(pmove) {
 		case 1:
 			//Fixed framerate 125 Hz
@@ -1594,7 +1594,7 @@ static void ServerOptions_SetMenuItems( void ) {
 	s_serveroptions.oneway.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "elimination_ctf_oneway" ) );
 	s_serveroptions.harvesterFromBodies.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_harvesterFromBodies" ) );
 	s_serveroptions.grapple.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_grapple" ) );
-	s_serveroptions.eliminationDamage.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "elimination_damage" ) );
+	s_serveroptions.eliminationDamage.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "elimination_selfdamage" ) );
 	s_serveroptions.pmove.curvalue = 0;
 	if(trap_Cvar_VariableValue( "pmove_fixed" ))
 		s_serveroptions.pmove.curvalue = 1;
