@@ -17,7 +17,7 @@
   * `cg_bob`: If set to 0, it will disable cg_bobUp/cg_bobRoll/cg_bobPitch. **Default: 1.**
   * `cg_kickScale`: Controls how much the screen shakes when receiving damage. **Default: 1.0.**
   * `cg_muzzleflashStyle`: Alternative muzzleflash styles for player preference, or "aesthetic," or maybe just less flashing (flashes can also be disabled). **Default: 1.**
-  * `g_runes 2`: Enables the `tossrune` command (see below) in the server.
+  * `g_runes 2`: Enables the `droprune` command (see below) in the server.
   * `dmflags &4096`: Allows players to move significantly faster underwater. Mostly for demonstration. Could be fun in class based gametypes.
   * `g_grapple`: Gives Grappling Hook to all players. Replaces `elimination_grapple`. **Default: 0.**
   * `g_harvesterFromBodies`: In Harvester matches, skulls now spawn from dead bodies (a la [UT3!Greed](https://antifandom.com/unreal/wiki/Greed)) rather than a skull receptacle in the middle of the arena. Allows Harvester matches to take place in maps that don't feature a skull receptacle. **Default: 0.**
@@ -28,7 +28,7 @@
 * Shuffle has been reworked by implementing the solution from Aftershock.
 * New commands:
   * `weapbest`: Selects the best weapon.
-  * `tossrune`: Tosses the rune that's been carried on. (Akin to TWCTF/TWCTF II) Needs `g_runes 2` in order to work.
+  * `droprune`: Tosses the rune that's been carried on. (Akin to TWCTF/TWCTF II) Needs `g_runes 2` in order to work.
   * `ui_writemappools`: If the arena files are loaded, this command dumps the gamelists so they can be used by g_autonextmap (should be used to generate new gamelists for new versions).
 * Classic UI:
   * Slightly reorganized the Skirmish/Create Server menus in order to accomodate the newer gametype options.
@@ -94,8 +94,8 @@
 * Missionpack/UI3 backend refactors.
 * "You Have Been Mined" message outright displays the counter instead of delaying it.
 * Team status bar fix and cg_drawTeamOverlay fix by EddieBrrrock.
-* New command: tossrune. Drops the currently held rune.
-* New cvar value: g_runes &2: Enables the "tossrune" command in the server. (By default, g_runes 1, the command is disabled).
+* New command: droprune. Drops the currently held rune.
+* New cvar value: g_runes &2: Enables the "droprune" command in the server. (By default, g_runes 1, the command is disabled).
 * Reimplementation of shuffle, ported from Aftershock.
 * Unified score limits across all modules. The default limits are now as follows:
   * Free For All: 20 frags, 0 minutes.
