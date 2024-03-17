@@ -2901,51 +2901,41 @@ qboolean G_GametypeUsesCaptureLimit(int check) {
 }
 /*
 ===================
-G_GetWeaponArena
+G_GetWeaponArenaWeapon
 
 Returns the value of a weapon for g_weaponArena.
+Weapons are sorted like this instead of actual weapon order because Weapon 1 (Gauntlet)
+is the default option and Weapon 10 (Grappling Hook) is an additional weapon.
+And for menu reasons. (*cough*classicui*cough*)
 ===================
  */
-int G_GetWeaponArena(char* cvarWaString) {
-	if (strcmp(cvarWaString,"mg") || strcmp(cvarWaString,"machinegun") ||
-			strcmp(cvarWaString,"machine gun") || strcmp(cvarWaString,"2"))
-		return WP_MACHINEGUN;
-	if (strcmp(cvarWaString,"sg") || strcmp(cvarWaString,"shotgun") ||
-			strcmp(cvarWaString,"shot gun") || strcmp(cvarWaString,"3"))
-		return WP_SHOTGUN;
-	if (strcmp(cvarWaString,"gl") || strcmp(cvarWaString,"grenade") ||
-			strcmp(cvarWaString,"grenade launcher") || strcmp(cvarWaString,"grenadelauncher") ||
-			strcmp(cvarWaString,"4"))
-		return WP_GRENADE_LAUNCHER;
-	if (strcmp(cvarWaString,"rl") || strcmp(cvarWaString,"rocket") ||
-			strcmp(cvarWaString,"rocket launcher") || strcmp(cvarWaString,"rocketlauncher") ||
-			strcmp(cvarWaString,"5"))
-		return WP_ROCKET_LAUNCHER;
-	if (strcmp(cvarWaString,"lg") || strcmp(cvarWaString,"lightning") ||
-			strcmp(cvarWaString,"lightning gun") || strcmp(cvarWaString,"lightninggun") ||
-			strcmp(cvarWaString,"6"))
-		return WP_LIGHTNING;
-	if (strcmp(cvarWaString,"rg") || strcmp(cvarWaString,"railgun") ||
-			strcmp(cvarWaString,"rail gun") || strcmp(cvarWaString,"7"))
-		return WP_RAILGUN;
-	if (strcmp(cvarWaString,"pg") || strcmp(cvarWaString,"plasma") ||
-			strcmp(cvarWaString,"plasma gun") || strcmp(cvarWaString,"plasmagun") ||
-			strcmp(cvarWaString,"8"))
-		return WP_PLASMAGUN;
-	if (strcmp(cvarWaString,"bfg") || strcmp(cvarWaString,"big fairie gun") ||
-			strcmp(cvarWaString,"big freakin gun") || strcmp(cvarWaString,"9"))
-		return WP_BFG;
-	if (strcmp(cvarWaString,"ng") || strcmp(cvarWaString,"nailgun") ||
-			strcmp(cvarWaString,"nail gun") || strcmp(cvarWaString,"11"))
-		return WP_NAILGUN;
-	if (strcmp(cvarWaString,"pl") || strcmp(cvarWaString,"prox") ||
-			strcmp(cvarWaString,"mines") || strcmp(cvarWaString,"prox launcher") ||
-			strcmp(cvarWaString,"proxlauncher") || strcmp(cvarWaString,"12"))
-		return WP_PROX_LAUNCHER;
-	if (strcmp(cvarWaString,"cg") || strcmp(cvarWaString,"chaingun") ||
-			strcmp(cvarWaString,"chain gun") || strcmp(cvarWaString,"13"))
-		return WP_CHAINGUN;
-	return WP_GAUNTLET;
+int G_GetWeaponArenaWeapon(int weapon) {
+	switch (weapon) {
+		case 1: return WP_MACHINEGUN;
+			break;
+		case 2: return WP_SHOTGUN;
+			break;
+		case 3: return WP_GRENADE_LAUNCHER;
+			break;
+		case 4: return WP_ROCKET_LAUNCHER;
+			break;
+		case 5: return WP_LIGHTNING;
+			break;
+		case 6: return WP_RAILGUN;
+			break;
+		case 7: return WP_PLASMAGUN;
+			break;
+		case 8: return WP_BFG;
+			break;
+		case 9: return WP_NAILGUN;
+			break;
+		case 10: return WP_CHAINGUN;
+			break;
+		case 11: return WP_PROX_LAUNCHER;
+			break;
+		default: return WP_GAUNTLET;
+			break;
+	}
 }
 /*
 ===================

@@ -859,7 +859,7 @@ void ClearRegisteredItems( void )
 		RegisterItem( BG_FindItemForWeapon( WP_RAILGUN ) );
 	}
 	else if(g_weaponArena.integer) {
-		RegisterItem( BG_FindItemForWeapon(G_GetWeaponArena(g_weaponArenaWeapon.string)));
+		RegisterItem( BG_FindItemForWeapon(G_GetWeaponArenaWeapon(g_weaponArenaWeapon.integer)));
 	}
 	else {
 		// players always start with the base weapon

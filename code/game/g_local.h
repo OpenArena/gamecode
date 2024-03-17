@@ -1433,7 +1433,7 @@ qboolean G_IsATeamGametype(int check);	/* Whether the gametype is team-based or 
 qboolean G_UsesTeamFlags(int check);	/* Whether the gametype uses the red and blue flags. */
 qboolean G_UsesTheWhiteFlag(int check);	/* Whether the gametype uses the neutral flag. */
 qboolean G_IsARoundBasedGametype(int check);	/* Whether the gametype uses the neutral flag. */
-int G_GetWeaponArena(char* cvarWaString);	/* Takes a string and returns the value of a weapon. */
+int G_GetWeaponArenaWeapon(int weapon);	/* Takes a string and returns the value of a weapon. */
 qboolean G_IsANoPickupsMode(void);	/* Returns true if the match has a "no pickups" rule. */
 qboolean G_GametypeUsesFragLimit(int check);	/* Whether the gametype uses a frag-based scoring system. */
 qboolean G_GametypeUsesCaptureLimit(int check);	/* Whether the gametype uses a capture-based scoring system. */
