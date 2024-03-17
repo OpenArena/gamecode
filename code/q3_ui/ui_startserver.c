@@ -2325,6 +2325,10 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 	if(UI_IsATeamGametype(s_serveroptions.gametype) && UI_IsARoundBasedGametype(s_serveroptions.gametype)) {
 		Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.eliminationDamage );
 	}
+	if( s_serveroptions.gametype == GT_DOUBLE_D) {
+		Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.ddCaptureTime );
+		Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.ddRespawnDelay );
+	}
 	Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.pmove );
 	if( s_serveroptions.multiplayer ) {
 		Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.lan );
