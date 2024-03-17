@@ -50,14 +50,14 @@ GAME OPTIONS MENU
 #define ID_DRAWTEAMOVERLAY		135
 #define ID_MUZZLEFLASHSTYLE		136
 #define ID_BACK					137
-//Elimination
-#define ID_WEAPONBAR            138
-#define ID_COLORRED             139
-#define ID_COLORGREEN           140
-#define ID_COLORBLUE            141
-#define ID_CROSSHAIRHEALTH      142
-#define ID_CHATBEEP             143
-#define ID_TEAMCHATBEEP         144
+#define ID_ALWAYSWEAPONBAR		138
+#define ID_WEAPONBARSTYLE		139
+#define ID_COLORRED				140
+#define ID_COLORGREEN			141
+#define ID_COLORBLUE			142
+#define ID_CROSSHAIRHEALTH		143
+#define ID_CHATBEEP				144
+#define ID_TEAMCHATBEEP			145
 
 #undef NUM_CROSSHAIRS
 #define	NUM_CROSSHAIRS			99
@@ -80,6 +80,7 @@ typedef struct {
 
 	menuradiobutton_s	simpleitems;
 	menuradiobutton_s	alwaysweaponbar;
+	menulist_s	weaponBarStyle;
 	menuradiobutton_s	brass;
 	menuradiobutton_s	wallmarks;
 	menuradiobutton_s	identifytarget;
@@ -118,6 +119,19 @@ static const char *muzzleFlashStyle_names[] =
 	NULL
 };
 
+static const char *weaponBarStyle_names[] =
+{
+	"Bottom Side (Default)",
+	"Bottom Side + Ammo Bar",
+	"Left Side + Ammo Count",
+	"Left Side + Ammo Bar",
+	"Left + Ammo Background",
+	"Bottom + Ammo Count + BGD",
+	"Bottom + Ammo Count + Bar",
+	"Bottom + Ammo Background",
+	NULL
+};
+
 static void Preferences_SetMenuItems( void ) {
 	s_preferences.crosshair.curvalue		= (int)trap_Cvar_VariableValue( "cg_drawCrosshair" ) % NUM_CROSSHAIRS;
 	s_preferences.crosshairHealth.curvalue          = trap_Cvar_VariableValue( "cg_crosshairHealth") != 0;
@@ -126,6 +140,7 @@ static void Preferences_SetMenuItems( void ) {
 	s_preferences.crosshairColorBlue.curvalue       = trap_Cvar_VariableValue( "cg_crosshairColorBlue")*255.0f;
 	s_preferences.simpleitems.curvalue		= trap_Cvar_VariableValue( "cg_simpleItems" ) != 0;
 	s_preferences.alwaysweaponbar.curvalue		= trap_Cvar_VariableValue( "cg_alwaysWeaponBar" ) != 0;
+	s_preferences.weaponBarStyle.curvalue		= trap_Cvar_VariableValue( "cg_weaponBarStyle" ) != 0;
 	s_preferences.brass.curvalue			= trap_Cvar_VariableValue( "cg_brassTime" ) != 0;
 	s_preferences.wallmarks.curvalue		= trap_Cvar_VariableValue( "cg_marks" ) != 0;
 	s_preferences.identifytarget.curvalue	= trap_Cvar_VariableValue( "cg_drawCrosshairNames" ) != 0;
@@ -183,8 +198,12 @@ static void Preferences_Event( void* ptr, int notification ) {
 		trap_Cvar_SetValue( "cg_simpleItems", s_preferences.simpleitems.curvalue );
 		break;
                 
-        case ID_WEAPONBAR:
+        case ID_ALWAYSWEAPONBAR:
 		trap_Cvar_SetValue( "cg_alwaysWeaponBar", s_preferences.alwaysweaponbar.curvalue );
+		break;
+                
+        case ID_WEAPONBARSTYLE:
+		trap_Cvar_SetValue( "cg_weaponBarStyle", s_preferences.weaponBarStyle.curvalue );
 		break;
 
 	case ID_HIGHQUALITYSKY:
@@ -406,7 +425,18 @@ static void Preferences_MenuInit( void ) {
 
 	y += BIGCHAR_HEIGHT+2;
 	Preferences_Menu_AddBoolean(&s_preferences.simpleitems, &y, ID_SIMPLEITEMS, "2D (Simple) Items:");
-	Preferences_Menu_AddBoolean(&s_preferences.alwaysweaponbar, &y, ID_WEAPONBAR, "Always Show Weapon Bar:");
+	Preferences_Menu_AddBoolean(&s_preferences.alwaysweaponbar, &y, ID_ALWAYSWEAPONBAR, "Always Show Weapon Bar:");
+	
+	y += BIGCHAR_HEIGHT+2;
+	s_preferences.weaponBarStyle.generic.type     = MTYPE_SPINCONTROL;
+	s_preferences.weaponBarStyle.generic.name	   = "Weapon Bar Style:";
+	s_preferences.weaponBarStyle.generic.flags	   = QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	s_preferences.weaponBarStyle.generic.callback = Preferences_Event;
+	s_preferences.weaponBarStyle.generic.id       = ID_WEAPONBARSTYLE;
+	s_preferences.weaponBarStyle.generic.x	       = PREFERENCES_X_POS;
+	s_preferences.weaponBarStyle.generic.y	       = y;
+	s_preferences.weaponBarStyle.itemnames			= weaponBarStyle_names;
+	
 	Preferences_Menu_AddBoolean(&s_preferences.wallmarks, &y, ID_WALLMARKS, "Marks on Walls:");
 	Preferences_Menu_AddBoolean(&s_preferences.brass, &y, ID_EJECTINGBRASS, "Ejecting Brass:");
 	Preferences_Menu_AddBoolean(&s_preferences.identifytarget, &y, ID_IDENTIFYTARGET, "Identify Target:");
@@ -459,6 +489,7 @@ static void Preferences_MenuInit( void ) {
 	Menu_AddItem( &s_preferences.menu, &s_preferences.crosshairColorBlue );
 	Menu_AddItem( &s_preferences.menu, &s_preferences.simpleitems );
 	Menu_AddItem( &s_preferences.menu, &s_preferences.alwaysweaponbar );
+	Menu_AddItem( &s_preferences.menu, &s_preferences.weaponBarStyle );
 	Menu_AddItem( &s_preferences.menu, &s_preferences.wallmarks );
 	Menu_AddItem( &s_preferences.menu, &s_preferences.brass );
 	Menu_AddItem( &s_preferences.menu, &s_preferences.identifytarget );
