@@ -236,6 +236,11 @@ void TossClientPersistantPowerups( gentity_t *ent )
 {
 	gentity_t	*powerup;
 
+	// Only in gamemodes where Runes are allowed.
+	if (!G_GametypeUsesRunes(g_gametype.integer)) {
+		return;
+	}
+
 	if( !ent->client ) {
 		return;
 	}

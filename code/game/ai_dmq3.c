@@ -2616,14 +2616,17 @@ BotHasPersistantPowerupAndWeapon
 ==================
  */
 int BotHasPersistantPowerupAndWeapon(bot_state_t *bs) {
+	// If the gamemode doesn't allow Runes
+	if (!G_GametypeUsesRunes(gametype)) {
+		return qfalse;
+	}
 	// if the bot does not have a persistant powerup
-	//Sago - FIXME - This causes problems if there are no persistant powerups
-	/*	if (!bs->inventory[INVENTORY_SCOUT] &&
-			!bs->inventory[INVENTORY_GUARD] &&
-			!bs->inventory[INVENTORY_DOUBLER] &&
-			!bs->inventory[INVENTORY_AMMOREGEN] ) {
-			return qfalse;
-		}*/
+	if ((bs->inventory[INVENTORY_SCOUT] <= 0) &&
+			(bs->inventory[INVENTORY_GUARD] <= 0) &&
+			(bs->inventory[INVENTORY_DOUBLER] <= 0) &&
+			(bs->inventory[INVENTORY_AMMOREGEN] <= 0) ) {
+		return qfalse;
+	}
 	//if the bot is very low on health
 	if (bs->inventory[INVENTORY_HEALTH] < 60) return qfalse;
 	//if the bot is low on health

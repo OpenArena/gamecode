@@ -960,7 +960,9 @@ G_ItemDisabled
 int G_ItemDisabled( gitem_t *item )
 {
 	char name[128];
-	if (!g_runes.integer && item->giType == IT_PERSISTANT_POWERUP) {
+	// In modes where the Runes are locked out, disable them.
+	if ((!G_GametypeUsesRunes(g_gametype.integer) || (g_classicMode.integer > 0))
+			&& item->giType == IT_PERSISTANT_POWERUP) {
 		return qtrue;
 	}
 
@@ -1002,7 +1004,7 @@ void G_SpawnItem (gentity_t *ent, gitem_t *item)
 	}
 
 	if(g_gametype.integer == GT_DOUBLE_D && (strequals(ent->classname, "team_CTF_redflag") || strequals(ent->classname, "team_CTF_blueflag")
-	        || strequals(ent->classname, "team_CTF_neutralflag") || item->giType == IT_PERSISTANT_POWERUP  )) {
+	        || strequals(ent->classname, "team_CTF_neutralflag"))) {
 		ent->s.eFlags |= EF_NODRAW; //Don't draw the flag models/persistant powerups
 	}
 

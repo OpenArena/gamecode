@@ -666,8 +666,8 @@ void Cmd_DropRune_f( gentity_t *ent ) {
 	if (!ent) {
 		return;
 	}
-	// If the command is disabled, the rune won't be tossed.
-	if (g_runes.integer < 2) {
+	// If not in an allowed gametype, nothing happens.
+	if (!G_GametypeUsesRunes(g_gametype.integer)) {
 		return;
 	}
 	// Toss the rune.
