@@ -42,8 +42,9 @@ NETWORK OPTIONS MENU
 #define ID_NETWORK			13
 #define ID_RATE				14
 #define ID_ALLOWDOWNLOAD	15
-#define ID_LAGOMETER		16
-#define ID_BACK				17
+#define ID_DELAG			16
+#define ID_LAGOMETER		17
+#define ID_BACK				18
 
 
 const char *rate_items[] = {
@@ -69,6 +70,7 @@ typedef struct {
 
 	menulist_s		rate;
 	menuradiobutton_s	allowdownload;
+	menuradiobutton_s	delag;
 	menuradiobutton_s	lagometer;
 
 	menubitmap_s	back;
@@ -128,6 +130,10 @@ static void UI_NetworkOptionsMenu_Event( void* ptr, int event ) {
 		trap_Cvar_SetValue( "cl_allowDownload", networkOptionsInfo.allowdownload.curvalue );
 		break;
 
+	case ID_DELAG:
+		trap_Cvar_SetValue( "cl_delag", networkOptionsInfo.delag.curvalue );
+		break;
+
 	case ID_LAGOMETER:
 		trap_Cvar_SetValue( "cg_lagometer", networkOptionsInfo.lagometer.curvalue );
 		break;
@@ -142,6 +148,8 @@ static void UI_NetworkOptionsMenu_Event( void* ptr, int event ) {
 /*
 ===============
 UI_NetworkOptionsMenu_Init
+
+Every option name must have 22 characters or less.
 ===============
 */
 static void UI_NetworkOptionsMenu_Init( void ) {
@@ -220,7 +228,7 @@ static void UI_NetworkOptionsMenu_Init( void ) {
 
 	y = 240 - 1 * (BIGCHAR_HEIGHT+2);
 	networkOptionsInfo.rate.generic.type		= MTYPE_SPINCONTROL;
-	networkOptionsInfo.rate.generic.name		= "Data Rate:";
+	networkOptionsInfo.rate.generic.name		= "Network Speed:";
 	networkOptionsInfo.rate.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	networkOptionsInfo.rate.generic.callback	= UI_NetworkOptionsMenu_Event;
 	networkOptionsInfo.rate.generic.id			= ID_RATE;
@@ -230,12 +238,21 @@ static void UI_NetworkOptionsMenu_Init( void ) {
 
 	y += BIGCHAR_HEIGHT+2;
 	networkOptionsInfo.allowdownload.generic.type     = MTYPE_RADIOBUTTON;
-	networkOptionsInfo.allowdownload.generic.name	   = "Allow Downloads From Servers:";
+	networkOptionsInfo.allowdownload.generic.name	   = "Download From Servers:";
 	networkOptionsInfo.allowdownload.generic.flags	   = QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	networkOptionsInfo.allowdownload.generic.callback = UI_NetworkOptionsMenu_Event;
 	networkOptionsInfo.allowdownload.generic.id       = ID_ALLOWDOWNLOAD;
 	networkOptionsInfo.allowdownload.generic.x	       = 400;
 	networkOptionsInfo.allowdownload.generic.y	       = y;
+
+	y += BIGCHAR_HEIGHT+2;
+	networkOptionsInfo.delag.generic.type     = MTYPE_RADIOBUTTON;
+	networkOptionsInfo.delag.generic.name	   = "Delag Hitscan Latency:";
+	networkOptionsInfo.delag.generic.flags	   = QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	networkOptionsInfo.delag.generic.callback = UI_NetworkOptionsMenu_Event;
+	networkOptionsInfo.delag.generic.id       = ID_DELAG;
+	networkOptionsInfo.delag.generic.x	       = 400;
+	networkOptionsInfo.delag.generic.y	       = y;
 
 	y += BIGCHAR_HEIGHT+2;
 	networkOptionsInfo.lagometer.generic.type     = MTYPE_RADIOBUTTON;
@@ -266,6 +283,7 @@ static void UI_NetworkOptionsMenu_Init( void ) {
 	Menu_AddItem( &networkOptionsInfo.menu, ( void * ) &networkOptionsInfo.network );
 	Menu_AddItem( &networkOptionsInfo.menu, ( void * ) &networkOptionsInfo.rate );
 	Menu_AddItem( &networkOptionsInfo.menu, ( void * ) &networkOptionsInfo.allowdownload );
+	Menu_AddItem( &networkOptionsInfo.menu, ( void * ) &networkOptionsInfo.delag );
 	Menu_AddItem( &networkOptionsInfo.menu, ( void * ) &networkOptionsInfo.lagometer );
 	Menu_AddItem( &networkOptionsInfo.menu, ( void * ) &networkOptionsInfo.back );
 
@@ -287,6 +305,7 @@ static void UI_NetworkOptionsMenu_Init( void ) {
 	}
 
 	networkOptionsInfo.allowdownload.curvalue = trap_Cvar_VariableValue( "cl_allowDownload" ) != 0;
+	networkOptionsInfo.delag.curvalue = trap_Cvar_VariableValue( "cl_delag" ) != 0;
 	networkOptionsInfo.lagometer.curvalue = trap_Cvar_VariableValue( "cg_lagometer" ) != 0;
 }
 
