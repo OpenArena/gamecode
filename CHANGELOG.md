@@ -56,7 +56,7 @@
 * Keyboard/Joystick input in MPUI/UI3.
 * "Next round" Elimination countdown is also shown in Double Domination.
 * The game no longer shuts down with _"Couldn't find a spawn point"_ when a spawnpoint is missing.
-* New tool for mappers: `state_targetname` key for `func_door`, allows the creation of doors for Elimination-based modes that open during the active time of the game.
+* New tool for mappers: `state_targetname` key for `func_door`, [allows the creation of doors for Elimination-based modes that open during the active time of the game](https://openarena.ws/board/index.php?topic=5437.0). In-game demonstration video [here](https://www.youtube.com/watch?v=lHq56Gx058w).
 * New tool for mappers: Support for `.info` files. Some configuration examples can be found [here](https://github.com/NeonKnightOA/nk-oa-assets/blob/master/maps/DM/galmevish/am_galmevish3.info) and [here](https://github.com/NeonKnightOA/nk-oa-assets/blob/master/maps/DM/blitzkrieg/blitzkrieg3.info).
 * New tool for mappers: `info_player_dom_red` and `info_player_dom_blue`, separate spawn points for Domination. These new entities are supported in [the gamepack](https://github.com/NeonKnightOA/oagamepack).
 * Added ability to execute a script when the server is empty.
