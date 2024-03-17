@@ -91,6 +91,7 @@ extern vmCvar_t ui_brassTime;
 extern vmCvar_t ui_drawCrosshair;
 extern vmCvar_t ui_drawCrosshairNames;
 extern vmCvar_t ui_marks;
+extern vmCvar_t ui_muzzleFlashStyle;
 extern vmCvar_t ui_server1;
 extern vmCvar_t ui_server2;
 extern vmCvar_t ui_server3;
