@@ -37,6 +37,7 @@
   * `g_grapple` can now be set for all match types.
   * `g_harvesterFromBodies` can now be set for Harvester matches.
   * Status bar texts are clearer.
+  * `g_weaponArena` and `g_weaponArenaWeapon` can be selectable in Classic UI. (Though weaponArenaWeapon won't be grayed if "Weapon Arena = Disabled")
 * Now it's possible to compile OAX on Mac (thanks EddieBrrrock!)
 * AI enhancements:
   * Holdable (Personal Teleporter/Medkit/Kamikaze/Invulnerability) handling.
@@ -63,6 +64,7 @@
 
 **Release date:** TBA
 
+* `g_weaponArena` and `g_weaponArenaWeapon` can be selectable in Classic UI. (Though weaponArenaWeapon won't be grayed if "Weapon Arena = Disabled")
 * CTF Elimination (One-Way Mode) now has special bot logic improvements.
 * Classic UI: Status bar texts for Skirmish/Create Server have been improved.
 * `g_harvesterFromBodies` can now be selected in the Classic Menu.

@@ -803,7 +803,8 @@ typedef struct {
 	menuradiobutton_s	oneway;
 	menuradiobutton_s	harvesterFromBodies;
 	menuradiobutton_s	instantgib;
-	menuradiobutton_s	weaponArena;
+	menulist_s			weaponArena;
+	menulist_s			weaponArenaWeapon;
 	menulist_s			lmsMode;
 	menulist_s			eliminationDamage;
 	menulist_s			botSkill;
@@ -869,6 +870,29 @@ static const char *eliminationDamage_list[] = {
 	NULL
 };
 
+static const char *weaponArena_list[] = {
+	"Disabled",
+	"Enabled",
+	"Enabled+Grapple",
+	NULL
+};
+
+static const char *weaponArenaWeapon_list[] = {
+	"Gauntlet",
+	"Machinegun",
+	"Shotgun",
+	"Grenade L.",
+	"Rocket L.",
+	"Lightning",
+	"Railgun",
+	"Plasma Gun",
+	"BFG",
+	"Nailgun",
+	"Chaingun",
+	"Prox Mine",
+	NULL
+};
+
 static const char *pmove_list[] = {
 	"Framerate dependent",
 	"Fixed framerate 125Hz",
@@ -918,6 +942,7 @@ static void ServerOptions_Start( void ) {
 	int             lan;
 	int             instantgib;
 	int             weaponArena;
+	int             weaponArenaWeapon;
 	int             grapple;
 	int             oneway;
 	int             harvesterFromBodies;
@@ -938,6 +963,7 @@ static void ServerOptions_Start( void ) {
 	pmove            = s_serveroptions.pmove.curvalue;
 	instantgib       = s_serveroptions.instantgib.curvalue;
 	weaponArena          = s_serveroptions.weaponArena.curvalue;
+	weaponArenaWeapon          = s_serveroptions.weaponArenaWeapon.curvalue;
 	grapple		 = s_serveroptions.grapple.curvalue;
 	oneway		 = s_serveroptions.oneway.curvalue;
 	harvesterFromBodies		 = s_serveroptions.harvesterFromBodies.curvalue;
@@ -1042,6 +1068,7 @@ static void ServerOptions_Start( void ) {
 	trap_Cvar_SetValue( "sv_lanForceRate", lan );
 	trap_Cvar_SetValue( "g_instantgib", instantgib );
 	trap_Cvar_SetValue( "g_weaponArena", weaponArena );
+	trap_Cvar_SetValue( "g_weaponArenaWeapon", weaponArenaWeapon );
 	trap_Cvar_SetValue( "g_lms_mode", lmsMode);
 	trap_Cvar_SetValue( "g_grapple", grapple );
 	trap_Cvar_SetValue( "elimination_ctf_oneway", oneway );
@@ -1274,6 +1301,15 @@ ServerOptions_StatusBar_WeaponArena
 static void ServerOptions_StatusBar_WeaponArena( void* ptr ) {
 	UI_DrawString( 320, 440, "Items are removed. Players spawn with", UI_CENTER|UI_SMALLFONT, colorWhite );
 	UI_DrawString( 320, 460, "the specified weapon with infinte ammo.", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
+/*
+=================
+ServerOptions_StatusBar_WeaponArenaWeapon
+=================
+*/
+static void ServerOptions_StatusBar_WeaponArenaWeapon( void* ptr ) {
+	UI_DrawString( 320, 440, "The weapon the players will spawn with.", UI_CENTER|UI_SMALLFONT, colorWhite );
 }
 
 /*
@@ -1590,6 +1626,7 @@ static void ServerOptions_SetMenuItems( void ) {
 	s_serveroptions.lan.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "sv_lanforcerate" ) );
 	s_serveroptions.instantgib.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_instantgib" ) );
 	s_serveroptions.weaponArena.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_weaponArena" ) );
+	s_serveroptions.weaponArenaWeapon.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_weaponArenaWeapon" ) );
 	s_serveroptions.lmsMode.curvalue = Com_Clamp( 0, 3, trap_Cvar_VariableValue("g_lms_mode") );
 	s_serveroptions.oneway.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "elimination_ctf_oneway" ) );
 	s_serveroptions.harvesterFromBodies.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_harvesterFromBodies" ) );
@@ -1680,11 +1717,13 @@ ServerOptions_MenuInit
 static void ServerOptions_MenuInit( qboolean multiplayer ) {
 	int		y;
 	int		n;
+	qboolean isWeaponArena;
 
 	memset( &s_serveroptions, 0 ,sizeof(serveroptions_t) );
 	s_serveroptions.multiplayer = multiplayer;
 	// so the new gametypes work
 	s_serveroptions.gametype = (int)Com_Clamp( 0, GT_MAX_GAME_TYPE - 1, trap_Cvar_VariableValue( "g_gameType" ) );
+	isWeaponArena = (int)Com_Clamp( 0, GT_MAX_GAME_TYPE - 1, trap_Cvar_VariableValue( "g_weaponArena" ) );
 
 	ServerOptions_Cache();
 
@@ -1785,12 +1824,23 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 
 	//Weapon Arena option
 	y += BIGCHAR_HEIGHT+2;
-	s_serveroptions.weaponArena.generic.type			= MTYPE_RADIOBUTTON;
+	s_serveroptions.weaponArena.generic.type			= MTYPE_SPINCONTROL;
 	s_serveroptions.weaponArena.generic.flags			= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	s_serveroptions.weaponArena.generic.x				= OPTIONS_X;
 	s_serveroptions.weaponArena.generic.y				= y;
+	s_serveroptions.weaponArena.itemnames				= weaponArena_list;
 	s_serveroptions.weaponArena.generic.name			= "Weapon Arena:";
 	s_serveroptions.weaponArena.generic.statusbar  = ServerOptions_StatusBar_WeaponArena;
+	
+	//Weapon Arena Weapon list
+	y += BIGCHAR_HEIGHT+2;
+	s_serveroptions.weaponArenaWeapon.generic.type			= MTYPE_SPINCONTROL;
+	s_serveroptions.weaponArenaWeapon.generic.flags			= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	s_serveroptions.weaponArenaWeapon.generic.name			= "Arena Weapon:";
+	s_serveroptions.weaponArenaWeapon.generic.x				= OPTIONS_X;
+	s_serveroptions.weaponArenaWeapon.generic.y				= y;
+	s_serveroptions.weaponArenaWeapon.itemnames				= weaponArenaWeapon_list;
+	s_serveroptions.weaponArenaWeapon.generic.statusbar  = ServerOptions_StatusBar_WeaponArenaWeapon;
 
 	y += BIGCHAR_HEIGHT+2;
 	s_serveroptions.grapple.generic.type			= MTYPE_RADIOBUTTON;
@@ -1983,6 +2033,7 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 	Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.instantgib );
 	Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.grapple );
 	Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.weaponArena );
+	Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.weaponArenaWeapon );
 	if( s_serveroptions.gametype == GT_LMS) {
 		Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.lmsMode );
 	}
@@ -2004,7 +2055,7 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 	Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.back );
 	Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.next );
 	Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.go );
-	
+
 	ServerOptions_SetMenuItems();
 }
 

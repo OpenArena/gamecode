@@ -1863,11 +1863,11 @@ void ClientSpawn(gentity_t *ent) {
 	}
 
 	if (g_weaponArena.integer) {
-		client->ps.stats[STAT_WEAPONS] |= ( 1 << G_GetWeaponArena(g_weaponArenaWeapon.string) );
-		if (G_GetWeaponArena(g_weaponArenaWeapon.string) == WP_GAUNTLET) {
-			client->ps.ammo[G_GetWeaponArena(g_weaponArenaWeapon.string)] = -1;
+		client->ps.stats[STAT_WEAPONS] |= ( 1 << G_GetWeaponArenaWeapon(g_weaponArenaWeapon.integer) );
+		if (G_GetWeaponArenaWeapon(g_weaponArenaWeapon.integer) == WP_GAUNTLET) {
+			client->ps.ammo[G_GetWeaponArenaWeapon(g_weaponArenaWeapon.integer)] = -1;
 		} else {
-			client->ps.ammo[G_GetWeaponArena(g_weaponArenaWeapon.string)] = 999;
+			client->ps.ammo[G_GetWeaponArenaWeapon(g_weaponArenaWeapon.integer)] = 999;
 		}
 	}
 
