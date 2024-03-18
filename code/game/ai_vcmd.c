@@ -344,15 +344,6 @@ void BotVoiceChat_Defend(bot_state_t *bs, int client, int mode) {
 
 /*
 ==================
-BotVoiceChat_DefendFlag
-==================
-*/
-void BotVoiceChat_DefendFlag(bot_state_t *bs, int client, int mode) {
-	BotVoiceChat_Defend(bs, client, mode);
-}
-
-/*
-==================
 BotVoiceChat_Patrol
 ==================
 */
@@ -623,7 +614,7 @@ voiceCommand_t voiceCommands[] = {
 	{VOICECHAT_GETFLAG, BotVoiceChat_GetFlag},
 	{VOICECHAT_OFFENSE, BotVoiceChat_Offense },
 	{VOICECHAT_DEFEND, BotVoiceChat_Defend },
-	{VOICECHAT_DEFENDFLAG, BotVoiceChat_DefendFlag },
+	{VOICECHAT_DEFENDFLAG, BotVoiceChat_Defend },
 	{VOICECHAT_PATROL, BotVoiceChat_Patrol },
 	{VOICECHAT_CAMP, BotVoiceChat_Camp },
 	{VOICECHAT_FOLLOWME, BotVoiceChat_FollowMe },
