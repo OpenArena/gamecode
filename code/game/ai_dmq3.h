@@ -99,6 +99,12 @@ int BotCanAndWantsToRocketJump(bot_state_t *bs);
 int BotCanAndWantsToUseTheGrapple(bot_state_t *bs);
 // returns true if the bot's team owns a control point (DD/DOM)
 qboolean BotTeamOwnsControlPoint(bot_state_t *bs,int point);
+// returns true if there is at least one control point in the map (DOM)
+qboolean BotAreThereDOMPoints(void);
+// returns true if there is an A control point in the map (DD)
+qboolean BotIsThereDDPointA(void);
+// returns true if there is a B control point in the map (DD)
+qboolean BotIsThereDDPointB(void);
 // returns true if the bot has a persistant powerup and a weapon
 int BotHasPersistantPowerupAndWeapon(bot_state_t *bs);
 //returns true if the bot wants to and goes camping

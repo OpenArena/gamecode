@@ -72,6 +72,8 @@ BotVoiceChat_HoldPointA
 void BotVoiceChat_HoldPointA(bot_state_t *bs, int client, int mode) {
 	//Only valid for Double Domination
 	if (gametype != GT_DOUBLE_D) return;
+	// If the A point isn't present, don't do anything.
+	if (!BotIsThereDDPointA()) return;
 
 	bs->decisionmaker = client;
 	bs->ordered = qtrue;
@@ -102,6 +104,8 @@ BotVoiceChat_HoldPointB
 void BotVoiceChat_HoldPointB(bot_state_t *bs, int client, int mode) {
 	//Only valid for Double Domination
 	if (gametype != GT_DOUBLE_D) return;
+	// If the B point isn't present, don't do anything.
+	if (!BotIsThereDDPointB()) return;
 
 	bs->decisionmaker = client;
 	bs->ordered = qtrue;
@@ -132,7 +136,7 @@ BotVoiceChat_HoldDOMPoint
 void BotVoiceChat_HoldDOMPoint(bot_state_t *bs, int client, int mode) {
 	//Only valid for Double Domination
 	if (gametype != GT_DOMINATION) return;
-	if (level.domination_points_count < 1) return;
+	if (!BotAreThereDOMPoints()) return;
 
 	bs->decisionmaker = client;
 	bs->ordered = qtrue;

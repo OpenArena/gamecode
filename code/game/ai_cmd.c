@@ -507,7 +507,7 @@ void BotSetDominationPoint(bot_state_t *bs, int controlPoint) {
 	// Domination only
 	if (gametype != GT_DOMINATION) return;
 	// If there are no points, just assign the neutral one.
-	if (level.domination_points_count > 1) {
+	if (!BotAreThereDOMPoints()) {
 		bs->currentPoint = 0;
 		return;
 	}
@@ -736,6 +736,8 @@ void BotMatch_TakeA(bot_state_t *bs, bot_match_t *match) {
 	int client;
 
 	if (gametype != GT_DOUBLE_D) return;
+	// If the A point isn't present, don't do anything.
+	if (!BotIsThereDDPointA()) return;
 	//if not addressed to this bot
 	if (!BotAddressedToBot(bs, match)) return;
 	//get the match variable
@@ -786,6 +788,8 @@ void BotMatch_TakeB(bot_state_t *bs, bot_match_t *match) {
 	int client;
 
 	if (gametype != GT_DOUBLE_D) return;
+	// If the B point isn't present, don't do anything.
+	if (!BotIsThereDDPointB()) return;
 	//if not addressed to this bot
 	if (!BotAddressedToBot(bs, match)) return;
 	//get the match variable
@@ -835,7 +839,7 @@ void BotMatch_HoldDOMPoint(bot_state_t *bs, bot_match_t *match) {
 	int client;
 
 	if (gametype != GT_DOMINATION) return;
-	if (level.domination_points_count < 1) return;
+	if (!BotAreThereDOMPoints()) return;
 	//if not addressed to this bot
 	if (!BotAddressedToBot(bs, match)) return;
 	//get the match variable
