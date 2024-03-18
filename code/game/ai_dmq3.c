@@ -778,7 +778,7 @@ void BotCTFSeekGoals(bot_state_t *bs) {
 	}
 	//get the flag or defend the base
 	rnd = random();
-	if (rnd < l1 && ctf_redflag.areanum && ctf_blueflag.areanum) {
+	if (rnd < l1 && BotIsThereARedFlag() && BotIsThereABlueFlag()) {
 		bs->decisionmaker = bs->client;
 		bs->ordered = qfalse;
 		bs->ltgtype = LTG_GETFLAG;
@@ -787,7 +787,7 @@ void BotCTFSeekGoals(bot_state_t *bs) {
 		//get an alternative route goal towards the enemy base
 		BotGetAlternateRouteGoal(bs, BotOppositeTeam(bs));
 		BotSetTeamStatus(bs);
-	} else if (rnd < l2 && ctf_redflag.areanum && ctf_blueflag.areanum) {
+	} else if (rnd < l2 && BotIsThereARedFlag() && BotIsThereABlueFlag()) {
 		bs->decisionmaker = bs->client;
 		bs->ordered = qfalse;
 		//
@@ -1220,7 +1220,7 @@ void Bot1FCTFSeekGoals(bot_state_t *bs) {
 		//set the time the bot will stop getting the flag
 		bs->teamgoal_time = FloatTime() + CTF_GETFLAG_TIME;
 		BotSetTeamStatus(bs);
-	} else if (rnd < l2 && ctf_redflag.areanum && ctf_blueflag.areanum) {
+	} else if (rnd < l2 && BotIsThereARedFlag() && BotIsThereABlueFlag()) {
 		bs->decisionmaker = bs->client;
 		bs->ordered = qfalse;
 		//
@@ -1324,7 +1324,7 @@ void BotObeliskSeekGoals(bot_state_t *bs) {
 	}
 	//get the flag or defend the base
 	rnd = random();
-	if (rnd < l1 && redobelisk.areanum && blueobelisk.areanum) {
+	if (rnd < l1 && BotIsThereARedObelisk() && BotIsThereABlueObelisk()) {
 		bs->decisionmaker = bs->client;
 		bs->ordered = qfalse;
 		//
@@ -1337,7 +1337,7 @@ void BotObeliskSeekGoals(bot_state_t *bs) {
 		//get an alternate route goal towards the enemy base
 		BotGetAlternateRouteGoal(bs, BotOppositeTeam(bs));
 		BotSetTeamStatus(bs);
-	} else if (rnd < l2 && redobelisk.areanum && blueobelisk.areanum) {
+	} else if (rnd < l2 && BotIsThereARedObelisk() && BotIsThereABlueObelisk()) {
 		bs->decisionmaker = bs->client;
 		bs->ordered = qfalse;
 		//
@@ -1495,11 +1495,11 @@ void BotHarvesterSeekGoals(bot_state_t *bs) {
 	}
 	//
 	rnd = random();
-	if (rnd < l1 && redobelisk.areanum && blueobelisk.areanum) {
+	if (rnd < l1 && BotIsThereARedObelisk() && BotIsThereABlueObelisk()) {
 		bs->decisionmaker = bs->client;
 		bs->ordered = qfalse;
 		BotGoHarvest(bs);
-	} else if (rnd < l2 && redobelisk.areanum && blueobelisk.areanum) {
+	} else if (rnd < l2 && BotIsThereARedObelisk() && BotIsThereABlueObelisk()) {
 		bs->decisionmaker = bs->client;
 		bs->ordered = qfalse;
 		//
@@ -5699,11 +5699,11 @@ Returns true if the match has at least one control point present for Domination.
 */
 qboolean BotAreThereDOMPoints(void) {
 	if (gametype == GT_DOMINATION) {
-		if (level.domination_points_count < 1) {
-			return qfalse;
+		if (level.domination_points_count >= 1) {
+			return qtrue;
 		}
 	}
-	return qtrue;
+	return qfalse;
 }
 
 /*
@@ -5713,10 +5713,10 @@ Returns true if the match has the A point present for Double Domination.
 ==================
 */
 qboolean BotIsThereDDPointA(void) {
-	if (gametype == GT_DOUBLE_D && untrap_BotGetLevelItemGoal(-1, "Red Flag", &ctf_redflag) < 0) {
-			return qfalse;
+	if (gametype == GT_DOUBLE_D && untrap_BotGetLevelItemGoal(-1, "Red Flag", &ctf_redflag) >= 1) {
+			return qtrue;
 	}
-	return qtrue;
+	return qfalse;
 }
 
 /*
@@ -5726,9 +5726,90 @@ Returns true if the match has the B point present for Double Domination.
 ==================
 */
 qboolean BotIsThereDDPointB(void) {
-	if (gametype == GT_DOUBLE_D && untrap_BotGetLevelItemGoal(-1, "Blue Flag", &ctf_blueflag) < 0) {
-			return qfalse;
+	if (gametype == GT_DOUBLE_D && untrap_BotGetLevelItemGoal(-1, "Red Flag", &ctf_blueflag) >= 1) {
+			return qtrue;
 	}
-	return qtrue;
+	return qfalse;
+}
+
+/*
+==================
+BotIsThereABlueFlag
+Returns true if the match has a blue CTF flag present for flag-based matches.
+==================
+*/
+qboolean BotIsThereABlueFlag(void) {
+	if (G_UsesTeamFlags(gametype) && ctf_blueflag.areanum) {
+		return qtrue;
+	}
+	return qfalse;
+}
+
+/*
+==================
+BotIsThereARedFlag
+Returns true if the match has a red CTF flag present for flag-based matches.
+==================
+*/
+qboolean BotIsThereARedFlag(void) {
+	if (G_UsesTeamFlags(gametype) && ctf_redflag.areanum) {
+		return qtrue;
+	}
+	return qfalse;
+}
+
+/*
+==================
+BotIsThereANeutralFlag
+Returns true if the match has a white CTF flag present for flag-based matches.
+==================
+*/
+qboolean BotIsThereANeutralFlag(void) {
+	if (G_UsesTheWhiteFlag(gametype) && ctf_neutralflag.areanum) {
+		return qtrue;
+	}
+	return qfalse;
+}
+
+/*
+==================
+BotIsThereARedObelisk
+Returns true if the match has a red obelisk present for 1FCTF/Harvester/Overload matches.
+==================
+*/
+qboolean BotIsThereARedObelisk(void) {
+	if ((gametype == GT_1FCTF || gametype == GT_HARVESTER ||
+			gametype == GT_OBELISK) && redobelisk.areanum) {
+		return qtrue;
+	}
+	return qfalse;
+}
+
+/*
+==================
+BotIsThereABlueObelisk
+Returns true if the match has a blue obelisk present for 1FCTF/Harvester/Overload matches.
+==================
+*/
+qboolean BotIsThereABlueObelisk(void) {
+	if ((gametype == GT_1FCTF || gametype == GT_HARVESTER ||
+			gametype == GT_OBELISK) && blueobelisk.areanum) {
+		return qtrue;
+	}
+	return qfalse;
+}
+
+/*
+==================
+BotIsThereANeutralObelisk
+Returns true if the match has a neutral obelisk present for 1FCTF/Harvester/Possession matches.
+==================
+*/
+qboolean BotIsThereANeutralObelisk(void) {
+	if ((gametype == GT_1FCTF || gametype == GT_HARVESTER ||
+			gametype == GT_OBELISK) && neutralobelisk.areanum) {
+		return qtrue;
+	}
+	return qfalse;
 }
 

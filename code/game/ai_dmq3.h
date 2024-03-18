@@ -105,6 +105,18 @@ qboolean BotAreThereDOMPoints(void);
 qboolean BotIsThereDDPointA(void);
 // returns true if there is a B control point in the map (DD)
 qboolean BotIsThereDDPointB(void);
+// returns true if there is a blue CTF flag in the map (CTF/eCTF/1FCTF)
+qboolean BotIsThereABlueFlag(void);
+// returns true if there is a red CTF flag in the map (CTF/eCTF/1FCTF)
+qboolean BotIsThereARedFlag(void);
+// returns true if there is a neutral CTF flag in the map (1FCTF/Possession)
+qboolean BotIsThereANeutralFlag(void);
+// returns true if there is a blue obelisk in the map (1FCTF/Harvester/Overload)
+qboolean BotIsThereABlueObelisk(void);
+// returns true if there is a red obelisk in the map (1FCTF/Harvester/Overload)
+qboolean BotIsThereARedObelisk(void);
+// returns true if there is a neutral obelisk in the map (1FCTF/Harvester)
+qboolean BotIsThereANeutralObelisk(void);
 // returns true if the bot has a persistant powerup and a weapon
 int BotHasPersistantPowerupAndWeapon(bot_state_t *bs);
 //returns true if the bot wants to and goes camping

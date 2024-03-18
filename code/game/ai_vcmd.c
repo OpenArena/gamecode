@@ -166,15 +166,18 @@ BotVoiceChat_GetFlag
 */
 void BotVoiceChat_GetFlag(bot_state_t *bs, int client, int mode) {
 	//
-	if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
-		if (!ctf_redflag.areanum || !ctf_blueflag.areanum)
+	if (!G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
+		return;
+	}
+	if (G_UsesTeamFlags(gametype)) {
+		if (!BotIsThereABlueFlag() || !BotIsThereARedFlag())
 			return;
 	}
-	else if (gametype == GT_1FCTF) {
-		if (!ctf_neutralflag.areanum || !ctf_redflag.areanum || !ctf_blueflag.areanum)
+	if (G_UsesTheWhiteFlag(gametype)) {
+		if (!BotIsThereANeutralFlag())
 			return;
 	}
-	else {
+	if (gametype == GT_CTF_ELIMINATION && g_elimination_ctf_oneway.integer && !BotIsOnAttackingTeam(bs)) {
 		return;
 	}
 	//
@@ -322,6 +325,10 @@ void BotVoiceChat_Defend(bot_state_t *bs, int client, int mode) {
 	else if (gametype == GT_DOMINATION) {
 		BotSetDominationPoint(bs,-1);
 		BotVoiceChat_HoldDOMPoint(bs,client,mode);
+		return;
+	}
+	// eCTF in AvD mode only allows defenders to defend.
+	else if (gametype == GT_CTF_ELIMINATION && g_elimination_ctf_oneway.integer && BotIsOnAttackingTeam(bs)) {
 		return;
 	}
 	//

@@ -675,17 +675,21 @@ void BotMatch_DefendKeyArea(bot_state_t *bs, bot_match_t *match) {
 
 	if (!G_IsATeamGametype(gametype)) return;
 	// Double Domination had other rules
-	if (gametype == GT_DOUBLE_D) {
+	else if (gametype == GT_DOUBLE_D) {
 		// "Defend" will make bots to focus on point B.
 		BotMatch_TakeB(bs,match);
 		return;
 	}
 	// Domination has clear rules
-	if (gametype == GT_DOMINATION) {
+	else if (gametype == GT_DOMINATION) {
 		// Reroll to get a different DOM point.
 		BotSetDominationPoint(bs,-1);
 		BotMatch_HoldDOMPoint(bs,match);
-  }
+	}
+	// eCTF in AvD mode only allows defenders to defend.
+	else if (gametype == GT_CTF_ELIMINATION && g_elimination_ctf_oneway.integer && BotIsOnAttackingTeam(bs)) {
+		return;
+	}
 	//if not addressed to this bot
 	if (!BotAddressedToBot(bs, match)) return;
 	//get the match variable
@@ -1054,19 +1058,18 @@ void BotMatch_GetFlag(bot_state_t *bs, bot_match_t *match) {
 	char netname[MAX_MESSAGE_SIZE];
 	int client;
 
-	if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
-		if (!ctf_redflag.areanum || !ctf_blueflag.areanum)
+	if (!G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
+		return;
+	}
+	if (G_UsesTeamFlags(gametype)) {
+		if (!BotIsThereABlueFlag() || !BotIsThereARedFlag())
 			return;
 	}
-	else if (gametype == GT_1FCTF) {
-		if (!ctf_neutralflag.areanum || !ctf_redflag.areanum || !ctf_blueflag.areanum)
+	if (G_UsesTheWhiteFlag(gametype)) {
+		if (!BotIsThereANeutralFlag())
 			return;
 	}
-	else if (gametype == GT_POSSESSION) {
-		if (!ctf_neutralflag.areanum)
-			return;
-	}
-	else {
+	if (gametype == GT_CTF_ELIMINATION && g_elimination_ctf_oneway.integer && !BotIsOnAttackingTeam(bs)) {
 		return;
 	}
 	//if not addressed to this bot
@@ -1114,7 +1117,7 @@ void BotMatch_AttackEnemyBase(bot_state_t *bs, bot_match_t *match) {
 	}
 	else if ((G_UsesTeamFlags(gametype) && G_UsesTheWhiteFlag(gametype)) ||
 			gametype == GT_HARVESTER || gametype == GT_OBELISK) {
-		if (!redobelisk.areanum || !blueobelisk.areanum)
+		if (!BotIsThereARedObelisk() || !BotIsThereABlueObelisk())
 			return;
 	}
 	else if (gametype == GT_DOUBLE_D) {
@@ -1166,12 +1169,11 @@ void BotMatch_Harvest(bot_state_t *bs, bot_match_t *match) {
 	char netname[MAX_MESSAGE_SIZE];
 	int client;
 
-	if (gametype == GT_HARVESTER) {
-		if (!neutralobelisk.areanum || !redobelisk.areanum || !blueobelisk.areanum)
-			return;
-	}
-	else {
+	if (gametype != GT_HARVESTER) {
 		return;
+	}
+	if (!BotIsThereANeutralObelisk() || !BotIsThereARedObelisk() || !BotIsThereABlueObelisk()) {
+			return;
 	}
 	//if not addressed to this bot
 	if (!BotAddressedToBot(bs, match)) return;
@@ -1210,11 +1212,11 @@ void BotMatch_RushBase(bot_state_t *bs, bot_match_t *match) {
 	int client;
 
 	if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
-		if (!ctf_redflag.areanum || !ctf_blueflag.areanum)
+		if (!BotIsThereARedFlag() || !BotIsThereABlueFlag())
 			return;
 	}
 	else if (gametype == GT_1FCTF || gametype == GT_HARVESTER) {
-		if (!redobelisk.areanum || !blueobelisk.areanum)
+		if (!BotIsThereARedObelisk() || !BotIsThereABlueObelisk())
 			return;
 	}
 	else {
