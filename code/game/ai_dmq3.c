@@ -844,7 +844,7 @@ void BotDomSeekGoals(bot_state_t *bs) {
 	// DD only
 	if (gametype != GT_DOMINATION) return;
 	// if the map has no points, just roam
-	if (level.domination_points_count < 1) {
+	if (!BotAreThereDOMPoints()) {
 		bs->ltgtype = LTG_PATROL;
 		BotSetUserInfo(bs, "teamtask", va("%d", TEAMTASK_PATROL));
 		BotSetTeamStatus(bs);
@@ -5578,13 +5578,12 @@ void BotSetupDeathmatchAI(void) {
 		if (untrap_BotGetLevelItemGoal(-1, "Blue Flag", &ctf_blueflag) < 0)
 			BotAI_Print(PRT_WARNING, "CTF without Blue Flag\n");
 	} else if (gametype == GT_DOUBLE_D) {
-		if (untrap_BotGetLevelItemGoal(-1, "Red Flag", &ctf_redflag) < 0)
+		if (!BotIsThereDDPointA())
 			BotAI_Print(PRT_WARNING, "DD without Point A\n");
-		if (untrap_BotGetLevelItemGoal(-1, "Blue Flag", &ctf_blueflag) < 0)
+		if (!BotIsThereDDPointB())
 			BotAI_Print(PRT_WARNING, "DD without Point B\n");
 	} else if (gametype == GT_DOMINATION) {
-		ent = untrap_BotGetLevelItemGoal(-1, "Domination point", &dom_points_bot[0]);
-		if (ent < 0)
+		if (!BotAreThereDOMPoints())
 			BotAI_Print(PRT_WARNING, "Domination without a single domination point\n");
 		else
 			BotSetEntityNumForGoal(&dom_points_bot[0], va("domination_point%i", 0));
@@ -5691,3 +5690,45 @@ qboolean BotTeamOwnsControlPoint(bot_state_t *bs,int point) {
 	}
 	return qfalse;
 }
+
+/*
+==================
+BotAreThereDOMPoints
+Returns true if the match has at least one control point present for Domination.
+==================
+*/
+qboolean BotAreThereDOMPoints(void) {
+	if (gametype == GT_DOMINATION) {
+		if (level.domination_points_count < 1) {
+			return qfalse;
+		}
+	}
+	return qtrue;
+}
+
+/*
+==================
+BotIsThereDDPointA
+Returns true if the match has the A point present for Double Domination.
+==================
+*/
+qboolean BotIsThereDDPointA(void) {
+	if (gametype == GT_DOUBLE_D && untrap_BotGetLevelItemGoal(-1, "Red Flag", &ctf_redflag) < 0) {
+			return qfalse;
+	}
+	return qtrue;
+}
+
+/*
+==================
+BotIsThereDDPointB
+Returns true if the match has the B point present for Double Domination.
+==================
+*/
+qboolean BotIsThereDDPointB(void) {
+	if (gametype == GT_DOUBLE_D && untrap_BotGetLevelItemGoal(-1, "Blue Flag", &ctf_blueflag) < 0) {
+			return qfalse;
+	}
+	return qtrue;
+}
+
