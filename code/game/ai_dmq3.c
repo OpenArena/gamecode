@@ -534,7 +534,7 @@ BotCTFSeekGoals
  */
 void BotCTFSeekGoals(bot_state_t *bs) {
 	float rnd, l1, l2;
-	int flagstatus, c;
+	int c;
 	vec3_t dir;
 	aas_entityinfo_t entinfo;
 
