@@ -50,6 +50,7 @@
   * Double Domination logic improvements (team formations, voice orders, chat orders...)
   * Domination logic vast improvements (team formations, voice orders, chat orders...)
   * CTF Elimination (One-Way mode a.k.a "Attack vs. Defense") proper team formations.
+  * TONS of new helper functions designed to make AI handling easier.
 * Elimination/eCTF/LMS: If all humans have been killed in a round, bots will be eliminated one by one.
 * Lots of fixes for Classic UI and backend of UI3.
 * Consistent default score limits across all modules.
