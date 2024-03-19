@@ -49,15 +49,16 @@ GAME OPTIONS MENU
 #define ID_FORCEMODEL			134
 #define ID_DRAWTEAMOVERLAY		135
 #define ID_MUZZLEFLASHSTYLE		136
-#define ID_BACK					137
-#define ID_ALWAYSWEAPONBAR		138
-#define ID_WEAPONBARSTYLE		139
-#define ID_COLORRED				140
-#define ID_COLORGREEN			141
-#define ID_COLORBLUE			142
-#define ID_CROSSHAIRHEALTH		143
-#define ID_CHATBEEP				144
-#define ID_TEAMCHATBEEP			145
+#define ID_OBITUARYOUTPUT		137
+#define ID_BACK					138
+#define ID_ALWAYSWEAPONBAR		139
+#define ID_WEAPONBARSTYLE		140
+#define ID_COLORRED				141
+#define ID_COLORGREEN			142
+#define ID_COLORBLUE			143
+#define ID_CROSSHAIRHEALTH		144
+#define ID_CHATBEEP				145
+#define ID_TEAMCHATBEEP			146
 
 #undef NUM_CROSSHAIRS
 #define	NUM_CROSSHAIRS			99
@@ -89,6 +90,7 @@ typedef struct {
 	menuradiobutton_s	forcemodel;
 	menulist_s			drawteamoverlay;
 	menulist_s			muzzleFlashStyle;
+	menulist_s			obituaryOutput;
 	menuradiobutton_s       chatbeep;
 	menuradiobutton_s       teamchatbeep;
 	menubitmap_s		back;
@@ -116,6 +118,16 @@ static const char *muzzleFlashStyle_names[] =
 	"64-like",
 	"Animesque",
 	"03-like",
+	NULL
+};
+
+static const char *obituaryOutput_names[] =
+{
+	"Disabled",
+	"Only Console Text",
+	"Only HUD Text",
+	"Only HUD Icon",
+	"HUD Icon + Console",
 	NULL
 };
 
@@ -149,6 +161,7 @@ static void Preferences_SetMenuItems( void ) {
 	s_preferences.forcemodel.curvalue		= trap_Cvar_VariableValue( "cg_forcemodel" ) != 0;
 	s_preferences.drawteamoverlay.curvalue	= Com_Clamp( 0, 3, trap_Cvar_VariableValue( "cg_drawTeamOverlay" ) );
 	s_preferences.muzzleFlashStyle.curvalue	= trap_Cvar_VariableValue( "cg_muzzleFlashStyle" ) != 0;
+	s_preferences.obituaryOutput.curvalue	= trap_Cvar_VariableValue( "cg_obituaryOutput" ) != 0;
 	s_preferences.chatbeep.curvalue         = trap_Cvar_VariableValue( "cg_chatBeep" ) != 0;
 	s_preferences.teamchatbeep.curvalue     = trap_Cvar_VariableValue( "cg_teamChatBeep" ) != 0;
 }
@@ -239,6 +252,10 @@ static void Preferences_Event( void* ptr, int notification ) {
 
 	case ID_MUZZLEFLASHSTYLE:
 		trap_Cvar_SetValue( "cg_muzzleFlashStyle", s_preferences.muzzleFlashStyle.curvalue );
+		break;
+
+	case ID_OBITUARYOUTPUT:
+		trap_Cvar_SetValue( "cg_obituaryOutput", s_preferences.obituaryOutput.curvalue );
 		break;
 
 	case ID_CHATBEEP:
@@ -464,6 +481,16 @@ static void Preferences_MenuInit( void ) {
 	s_preferences.muzzleFlashStyle.generic.y	       = y;
 	s_preferences.muzzleFlashStyle.itemnames			= muzzleFlashStyle_names;
 
+	y += BIGCHAR_HEIGHT+2;
+	s_preferences.obituaryOutput.generic.type     = MTYPE_SPINCONTROL;
+	s_preferences.obituaryOutput.generic.name	   = "Death Messages:";
+	s_preferences.obituaryOutput.generic.flags	   = QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	s_preferences.obituaryOutput.generic.callback = Preferences_Event;
+	s_preferences.obituaryOutput.generic.id       = ID_OBITUARYOUTPUT;
+	s_preferences.obituaryOutput.generic.x	       = PREFERENCES_X_POS;
+	s_preferences.obituaryOutput.generic.y	       = y;
+	s_preferences.obituaryOutput.itemnames			= obituaryOutput_names;
+
 	Preferences_Menu_AddBoolean(&s_preferences.chatbeep, &y, ID_CHATBEEP, "Beep on Chat:");
 	Preferences_Menu_AddBoolean(&s_preferences.teamchatbeep, &y, ID_TEAMCHATBEEP, "Beep on Team Chat:");
 	
@@ -498,6 +525,7 @@ static void Preferences_MenuInit( void ) {
 	Menu_AddItem( &s_preferences.menu, &s_preferences.forcemodel );
 	Menu_AddItem( &s_preferences.menu, &s_preferences.drawteamoverlay );
 	Menu_AddItem( &s_preferences.menu, &s_preferences.muzzleFlashStyle );
+	Menu_AddItem( &s_preferences.menu, &s_preferences.obituaryOutput );
 	Menu_AddItem( &s_preferences.menu, &s_preferences.chatbeep );
 	Menu_AddItem( &s_preferences.menu, &s_preferences.teamchatbeep );
 

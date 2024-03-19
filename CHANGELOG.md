@@ -43,6 +43,7 @@
   * "Dynamic Lights" was moved from "Game Options" to "Video".
   * `cg_weaponBarStyle` added to "Game Options" as, well, "Weapon Bar Style".
   * `g_ddCaptureTime` and `g_ddRespawnDelay` were added for Double Domination matches.
+  * `cg_obituaryOutput` can now be configured in "Game Options" as "Death Messages".
 * Now it's possible to compile OAX on Mac (thanks EddieBrrrock!)
 * AI enhancements:
   * Holdable (Personal Teleporter/Medkit/Kamikaze/Invulnerability) handling.
@@ -69,6 +70,7 @@
 
 **Release date:** TBA
 
+* Classic UI: `cg_obituaryOutput` can now be configured in "Game Options" as "Death Messages".
 * Deletion of `g_runes`. In its place there's a new cvar, `g_classicMode`. Enabling it (via cvar or the Weapon Ruleset "Classic Arena" in Skirmish/Create Server) makes the following replacements:
   * Nailgun and ammo with Shotgun and Shells.
   * Chaingun and ammo with Machinegun ammo.
