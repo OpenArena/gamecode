@@ -889,7 +889,7 @@ static const char *weaponArenaWeapon_list[] = {
 };
 
 static const char *weaponMode_list[] = {
-	"All Weapons (Classic)",
+	"All Weapons (Standard)",
 	"Instantgib",
 	"Single Weapon Arena",
 	"Classic Arena",
@@ -1474,7 +1474,7 @@ static void ServerOptions_StatusBar_WeaponMode( void* ptr ) {
 				UI_DrawString( 320, 460, "Players will spawn with all weapons.", UI_CENTER|UI_SMALLFONT, colorWhite );
 			}
 			else {
-				UI_DrawString( 320, 440, "All Weapons (Classic): No pickups removed.", UI_CENTER|UI_SMALLFONT, colorWhite );
+				UI_DrawString( 320, 440, "All Weapons (Standard): No pickups removed.", UI_CENTER|UI_SMALLFONT, colorWhite );
 				UI_DrawString( 320, 460, "Players spawn with Gauntlet and Machinegun.", UI_CENTER|UI_SMALLFONT, colorWhite );
 			}
 			break;

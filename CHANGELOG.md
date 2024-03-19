@@ -44,6 +44,7 @@
   * `cg_weaponBarStyle` added to "Game Options" as, well, "Weapon Bar Style".
   * `g_ddCaptureTime` and `g_ddRespawnDelay` were added for Double Domination matches.
   * `cg_obituaryOutput` can now be configured in "Game Options" as "Death Messages".
+  * New option in Skirmish/Create Server, "Weapon Ruleset", allows picking up one of five weapon rulesets: All Weapons (Standard) -default-, Instantgib, Single Weapon Arena, Classic Mode -replaces NG, CG, PL, Kami, Invul and Runes with equivalents- and All Weapons (Elimination).
 * Now it's possible to compile OAX on Mac (thanks EddieBrrrock!)
 * AI enhancements:
   * Holdable (Personal Teleporter/Medkit/Kamikaze/Invulnerability) handling.
