@@ -5578,15 +5578,17 @@ void BotSetupDeathmatchAI(void) {
 	} else if (gametype == GT_DOMINATION) {
 		if (!BotAreThereDOMPoints())
 			BotAI_Print(PRT_WARNING, "Domination without a single domination point\n");
-		else
+		else {
 			BotSetEntityNumForGoal(&dom_points_bot[0], va("domination_point%i", 0));
-		for (i = 1; i < level.domination_points_count; i++) {
-			//Find next from the privius found entity
-			ent = untrap_BotGetLevelItemGoal(ent, "Domination point", &dom_points_bot[i]);
-			if (ent < 0)
-				BotAI_Print(PRT_WARNING, "Domination point %i not found!\n", i);
-			else
-				BotSetEntityNumForGoal(&dom_points_bot[0], va("domination_point%i", i));
+			ent = untrap_BotGetLevelItemGoal(-1, "Domination point", &dom_points_bot[0]);;
+			for (i = 1; i < level.domination_points_count; i++) {
+				//Find next from the privius found entity
+				ent = untrap_BotGetLevelItemGoal(ent, "Domination point", &dom_points_bot[i]);
+				if (ent < 0)
+					BotAI_Print(PRT_WARNING, "Domination point %i not found!\n", i);
+				else
+					BotSetEntityNumForGoal(&dom_points_bot[0], va("domination_point%i", i));
+			}
 		}
 		//MAX_DOMINATION_POINTS
 	} else if (gametype == GT_1FCTF) {
