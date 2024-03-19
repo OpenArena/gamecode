@@ -475,18 +475,12 @@ int BotSetLastOrderedTask(bot_state_t *bs) {
 	if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
 		// don't go back to returning the flag if it's at the base
 		if (bs->lastgoal_ltgtype == LTG_RETURNFLAG) {
-			if (BotTeam(bs) == TEAM_RED) {
-				if (bs->redflagstatus == 0) {
-					bs->lastgoal_ltgtype = 0;
-				}
-			} else {
-				if (bs->blueflagstatus == 0) {
-					bs->lastgoal_ltgtype = 0;
-				}
+			if (BotIsFlagOnOurBase(bs)) {
+				bs->lastgoal_ltgtype = 0;
 			}
 		}
 	}
-
+	
 	if (bs->lastgoal_ltgtype) {
 		bs->decisionmaker = bs->lastgoal_decisionmaker;
 		bs->ordered = qtrue;
@@ -573,11 +567,10 @@ void BotCTFSeekGoals(bot_state_t *bs) {
 			}
 			BotSetUserInfo(bs, "teamtask", va("%d", TEAMTASK_OFFENSE));
 			BotVoiceChat(bs, -1, VOICECHAT_IHAVEFLAG);
-		} else if (bs->rushbaseaway_time > FloatTime()) {
-			if (BotTeam(bs) == TEAM_RED) flagstatus = bs->redflagstatus;
-			else flagstatus = bs->blueflagstatus;
-			//if the flag is back
-			if (flagstatus == 0) {
+		}
+		else if (bs->rushbaseaway_time > FloatTime()) {
+			// if the flag is back
+			if (BotIsFlagOnOurBase(bs)) {
 				bs->rushbaseaway_time = 0;
 			}
 		}
@@ -592,10 +585,8 @@ void BotCTFSeekGoals(bot_state_t *bs) {
 		}
 	}
 	//
-	if (BotTeam(bs) == TEAM_RED) flagstatus = bs->redflagstatus * 2 + bs->blueflagstatus;
-	else flagstatus = bs->blueflagstatus * 2 + bs->redflagstatus;
 	//if our team has the enemy flag and our flag is at the base
-	if (flagstatus == 1) {
+	if (!BotIsEnemyFlagOnEnemyBase(bs) && BotIsFlagOnOurBase(bs)) {
 		//
 		if (bs->owndecision_time < FloatTime()) {
 			//if Not defending the base already
@@ -632,8 +623,9 @@ void BotCTFSeekGoals(bot_state_t *bs) {
 			}
 		}
 		return;
-	}		//if the enemy has our flag
-	else if (flagstatus == 2) {
+	}
+	//if the enemy has our flag
+	else if (!BotIsFlagOnOurBase(bs)) {
 		//
 		if (bs->owndecision_time < FloatTime()) {
 			//if enemy flag carrier is visible
@@ -672,8 +664,9 @@ void BotCTFSeekGoals(bot_state_t *bs) {
 			}
 		}
 		return;
-	}		//if both flags Not at their bases
-	else if (flagstatus == 3) {
+	}
+	//if both flags Not at their bases
+	else if (!BotIsEnemyFlagOnEnemyBase(bs) && !BotIsFlagOnOurBase(bs)) {
 		//
 		if (bs->owndecision_time < FloatTime()) {
 			// if not trying to return the flag and not following the team flag carrier

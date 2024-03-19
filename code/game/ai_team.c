@@ -2666,49 +2666,17 @@ void BotTeamAI(bot_state_t *bs) {
 			if (gametype == GT_CTF_ELIMINATION && g_elimination_ctf_oneway.integer) {
 				//if it's time to give orders
 				if (bs->teamgiveorders_time && bs->teamgiveorders_time < FloatTime() - 3) {
-					int flagstatus;
-
-					if (BotIsOnAttackingTeam(bs)) {
-						// If Red attacks, the focus on what happens with the Blue flag.
-						if (BotTeam(bs) == TEAM_RED) {
-							flagstatus = bs->blueflagstatus;
-						}
-						// If Blue attacks, the focus on what happens with the Red flag.
-						else {
-							flagstatus = bs->redflagstatus;
-						}
-						// In the attack phase, everything depends if there's a flag at the enemy base.
-						switch(flagstatus) {
-							case 1: {
-								BotCTFOrders_EnemyFlagNotAtBase(bs);
-								break;
-							}
-							default: {
-								BotCTFOrders_BothFlagsAtBase(bs);
-								break;
-							}
-						}
+					if (BotIsOnAttackingTeam(bs) && BotIsEnemyFlagOnEnemyBase(bs)) {
+						BotCTFOrders_BothFlagsAtBase(bs);
 					}
-					else {
-						// If Red defends, the focus on what happens with the Red flag.
-						if (BotTeam(bs) == TEAM_RED) {
-							flagstatus = bs->redflagstatus;
-						}
-						// If Blue defends, the focus on what happens with the Blued flag.
-						else {
-							flagstatus = bs->blueflagstatus;
-						}
-						// In the defense phase, everything depends if there's a flag at the own base.
-						switch(flagstatus) {
-							case 1: {
-								BotCTFOrders_FlagNotAtBase(bs);
-								break;
-							}
-							default: {
-								BotCTFOrders_BothFlagsAtBase(bs);
-								break;
-							}
-						}
+					else if (BotIsOnAttackingTeam(bs) && !BotIsEnemyFlagOnEnemyBase(bs)) {
+						BotCTFOrders_EnemyFlagNotAtBase(bs);
+					}
+					else if (!BotIsOnAttackingTeam(bs) && BotIsFlagOnOurBase(bs)) {
+						BotCTFOrders_BothFlagsAtBase(bs);
+					}
+					else if (!BotIsOnAttackingTeam(bs) && !BotIsFlagOnOurBase(bs)) {
+						BotCTFOrders_FlagNotAtBase(bs);
 					}
 					bs->teamgiveorders_time = 0;
 				}
@@ -2725,17 +2693,18 @@ void BotTeamAI(bot_state_t *bs) {
 				}
 				//if it's time to give orders
 				if (bs->teamgiveorders_time && bs->teamgiveorders_time < FloatTime() - 3) {
-					int flagstatus;
-
 					//
-					if (BotTeam(bs) == TEAM_RED) flagstatus = bs->redflagstatus * 2 + bs->blueflagstatus;
-					else flagstatus = bs->blueflagstatus * 2 + bs->redflagstatus;
-					//
-					switch(flagstatus) {
-						case 0: BotCTFOrders_BothFlagsAtBase(bs); break;
-						case 1: BotCTFOrders_EnemyFlagNotAtBase(bs); break;
-						case 2: BotCTFOrders_FlagNotAtBase(bs); break;
-						case 3: BotCTFOrders_BothFlagsNotAtBase(bs); break;
+					if (BotIsFlagOnOurBase(bs) && BotIsEnemyFlagOnEnemyBase(bs)) {
+						BotCTFOrders_BothFlagsAtBase(bs);
+					}
+					else if (BotIsFlagOnOurBase(bs) && !BotIsEnemyFlagOnEnemyBase(bs)) {
+						BotCTFOrders_EnemyFlagNotAtBase(bs);
+					}
+					else if (!BotIsFlagOnOurBase(bs) && BotIsEnemyFlagOnEnemyBase(bs)) {
+						BotCTFOrders_FlagNotAtBase(bs);
+					}
+					else if (BotIsFlagOnOurBase(bs) && BotIsEnemyFlagOnEnemyBase(bs)) {
+						BotCTFOrders_BothFlagsNotAtBase(bs);
 					}
 					//
 					bs->teamgiveorders_time = 0;
@@ -2883,4 +2852,38 @@ qboolean BotIsOnAttackingTeam(bot_state_t *bs) {
 	else {
 		return qfalse;
 	}
+}
+
+/*
+==================
+BotIsFlagOnOurBase
+
+Returns true if the bot's team's flag is on the bot's team's base.
+==================
+*/
+qboolean BotIsFlagOnOurBase(bot_state_t *bs) {
+	if ((BotTeam(bs) == TEAM_RED) && bs->redflagstatus == 0) {
+		return qtrue;
+	}
+	else if ((BotTeam(bs) == TEAM_BLUE) && bs->blueflagstatus == 0) {
+		return qtrue;
+	}
+	return qfalse;
+}
+
+/*
+==================
+BotIsEnemyFlagOnEnemyBase
+
+Returns true if the bot's enemy team's flag is on the bot's enemy team's base.
+==================
+*/
+qboolean BotIsEnemyFlagOnEnemyBase(bot_state_t *bs) {
+	if ((BotTeam(bs) == TEAM_RED) && bs->blueflagstatus == 0) {
+		return qtrue;
+	}
+	else if ((BotTeam(bs) == TEAM_BLUE) && bs->redflagstatus == 0) {
+		return qtrue;
+	}
+	return qfalse;
 }
