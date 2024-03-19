@@ -489,7 +489,7 @@ void CG_CheckLocalSounds( playerState_t *ps, playerState_t *ops ) {
 		}
 	}
 	/* // capturelimit warnings
-	else /* if (CG_GametypeUsesCaptureLimit(cgs.gametype)) * / {
+	else if (CG_GametypeUsesCaptureLimit(cgs.gametype)) {
 		highScore = cgs.scores1;
 
 		if ( !( cg.capturelimitWarnings & 4 ) && highScore == (cgs.capturelimit - 1) ) {

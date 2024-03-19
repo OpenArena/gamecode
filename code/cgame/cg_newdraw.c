@@ -78,11 +78,6 @@ void CG_CheckOrderPending(void)
 			p2 = VOICECHAT_DEFEND;
 			b = "+button8; wait; -button8";
 			break;
-		case TEAMTASK_PATROL:
-			p1 = VOICECHAT_ONPATROL;
-			p2 = VOICECHAT_PATROL;
-			b = "+button9; wait; -button9";
-			break;
 		case TEAMTASK_FOLLOW:
 			p1 = VOICECHAT_ONFOLLOW;
 			p2 = VOICECHAT_FOLLOWME;
@@ -99,6 +94,11 @@ void CG_CheckOrderPending(void)
 		case TEAMTASK_ESCORT:
 			p1 = VOICECHAT_ONFOLLOWCARRIER;
 			p2 = VOICECHAT_FOLLOWFLAGCARRIER;
+			break;
+		default: //TEAMTASK_PATROL
+			p1 = VOICECHAT_ONPATROL;
+			p2 = VOICECHAT_PATROL;
+			b = "+button9; wait; -button9";
 			break;
 		}
 
