@@ -73,7 +73,7 @@ void BotVoiceChat_HoldPointA(bot_state_t *bs, int client, int mode) {
 	//Only valid for Double Domination
 	if (gametype != GT_DOUBLE_D) return;
 	// If the A point isn't present, don't do anything.
-	if (!BotIsThereDDPointA()) return;
+	if (!BotIsThereDDPointAInTheMap()) return;
 
 	bs->decisionmaker = client;
 	bs->ordered = qtrue;
@@ -105,7 +105,7 @@ void BotVoiceChat_HoldPointB(bot_state_t *bs, int client, int mode) {
 	//Only valid for Double Domination
 	if (gametype != GT_DOUBLE_D) return;
 	// If the B point isn't present, don't do anything.
-	if (!BotIsThereDDPointB()) return;
+	if (!BotIsThereDDPointBInTheMap()) return;
 
 	bs->decisionmaker = client;
 	bs->ordered = qtrue;
@@ -136,7 +136,7 @@ BotVoiceChat_HoldDOMPoint
 void BotVoiceChat_HoldDOMPoint(bot_state_t *bs, int client, int mode) {
 	//Only valid for Double Domination
 	if (gametype != GT_DOMINATION) return;
-	if (!BotAreThereDOMPoints()) return;
+	if (!BotAreThereDOMPointsInTheMap()) return;
 
 	bs->decisionmaker = client;
 	bs->ordered = qtrue;
@@ -170,11 +170,11 @@ void BotVoiceChat_GetFlag(bot_state_t *bs, int client, int mode) {
 		return;
 	}
 	if (G_UsesTeamFlags(gametype)) {
-		if (!BotIsThereABlueFlag() || !BotIsThereARedFlag())
+		if (!BotIsThereABlueFlagInTheMap() || !BotIsThereARedFlagInTheMap())
 			return;
 	}
 	if (G_UsesTheWhiteFlag(gametype)) {
-		if (!BotIsThereANeutralFlag())
+		if (!BotIsThereANeutralFlagInTheMap())
 			return;
 	}
 	if (gametype == GT_CTF_ELIMINATION && g_elimination_ctf_oneway.integer && !BotIsOnAttackingTeam(bs)) {

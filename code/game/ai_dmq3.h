@@ -100,23 +100,31 @@ int BotCanAndWantsToUseTheGrapple(bot_state_t *bs);
 // returns true if the bot's team owns a control point (DD/DOM)
 qboolean BotTeamOwnsControlPoint(bot_state_t *bs,int point);
 // returns true if there is at least one control point in the map (DOM)
-qboolean BotAreThereDOMPoints(void);
+qboolean BotAreThereDOMPointsInTheMap(void);
 // returns true if there is an A control point in the map (DD)
-qboolean BotIsThereDDPointA(void);
+qboolean BotIsThereDDPointAInTheMap(void);
 // returns true if there is a B control point in the map (DD)
-qboolean BotIsThereDDPointB(void);
+qboolean BotIsThereDDPointBInTheMap(void);
 // returns true if there is a blue CTF flag in the map (CTF/eCTF/1FCTF)
-qboolean BotIsThereABlueFlag(void);
+qboolean BotIsThereABlueFlagInTheMap(void);
 // returns true if there is a red CTF flag in the map (CTF/eCTF/1FCTF)
-qboolean BotIsThereARedFlag(void);
+qboolean BotIsThereARedFlagInTheMap(void);
 // returns true if there is a neutral CTF flag in the map (1FCTF/Possession)
-qboolean BotIsThereANeutralFlag(void);
+qboolean BotIsThereANeutralFlagInTheMap(void);
 // returns true if there is a blue obelisk in the map (1FCTF/Harvester/Overload)
-qboolean BotIsThereABlueObelisk(void);
+qboolean BotIsThereABlueObeliskInTheMap(void);
 // returns true if there is a red obelisk in the map (1FCTF/Harvester/Overload)
-qboolean BotIsThereARedObelisk(void);
+qboolean BotIsThereARedObeliskInTheMap(void);
 // returns true if there is a neutral obelisk in the map (1FCTF/Harvester)
-qboolean BotIsThereANeutralObelisk(void);
+qboolean BotIsThereANeutralObeliskInTheMap(void);
+// returns true if there is a CTF flag in the bot's team's base in the map (CTF/eCTF/1FCTF)
+qboolean BotIsThereOurFlagInTheMap(bot_state_t *bs);
+// returns true if there is a CTF flag in the enemy base in the map (CTF/eCTF/1FCTF)
+qboolean BotIsThereAnEnemyFlagInTheMap(bot_state_t *bs);
+// returns true if there is an obelisk in the bot's team's base in the map (Harvester/Obelisk)
+qboolean BotIsThereOurObeliskInTheMap(bot_state_t *bs);
+// returns true if there is an obelisk in the enemy base in the map (Harvester/Obelisk)
+qboolean BotIsThereAnEnemyObeliskInTheMap(bot_state_t *bs);
 // returns true if the bot has a persistant powerup and a weapon
 int BotHasPersistantPowerupAndWeapon(bot_state_t *bs);
 //returns true if the bot wants to and goes camping

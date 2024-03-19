@@ -2839,6 +2839,13 @@ void BotTeamAI(bot_state_t *bs) {
 	}
 }
 
+/*
+==================
+BotIsOnAttackingTeam
+
+Returns true if the bot is on the attacking team for eCTF AvD matches.
+==================
+*/
 qboolean BotIsOnAttackingTeam(bot_state_t *bs) {
 	// In even rounds, Red attacks.
 	if (((level.eliminationSides+level.roundNumber)%2 == 0) && (BotTeam(bs) == TEAM_RED)) {
