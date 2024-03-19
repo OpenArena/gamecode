@@ -294,7 +294,7 @@ qboolean G_CallSpawn( gentity_t *ent ) {
 	char cvarname[128];
 	char itemname[128];
 
-	// Neon_Knight: In CTF, outside of Arena mode, these items replace the TA items and weapons.
+	// Neon_Knight: In Classic mode, these items replace the TA items and weapons.
 	if (g_classicMode.integer > 0) {
 		if (strequals(ent->classname, "weapon_nailgun")) {
 			Com_sprintf(itemname, sizeof(itemname), "weapon_shotgun");

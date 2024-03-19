@@ -1819,17 +1819,20 @@ void ClientSpawn(gentity_t *ent) {
 			client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_BFG );
 			client->ps.ammo[WP_BFG] = g_elimination_bfg.integer;
 		}
-		if (g_elimination_nail.integer > 0) {
-			client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_NAILGUN );
-			client->ps.ammo[WP_NAILGUN] = g_elimination_nail.integer;
-		}
-		if (g_elimination_mine.integer > 0) {
-			client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_PROX_LAUNCHER );
-			client->ps.ammo[WP_PROX_LAUNCHER] = g_elimination_mine.integer;
-		}
-		if (g_elimination_chain.integer > 0) {
-			client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_CHAINGUN );
-			client->ps.ammo[WP_CHAINGUN] = g_elimination_chain.integer;
+		// Classic Mode On prevents the TA weapons from being added to the inventory.
+		if (g_classicMode.integer <= 0) {
+			if (g_elimination_nail.integer > 0) {
+				client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_NAILGUN );
+				client->ps.ammo[WP_NAILGUN] = g_elimination_nail.integer;
+			}
+			if (g_elimination_mine.integer > 0) {
+				client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_PROX_LAUNCHER );
+				client->ps.ammo[WP_PROX_LAUNCHER] = g_elimination_mine.integer;
+			}
+			if (g_elimination_chain.integer > 0) {
+				client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_CHAINGUN );
+				client->ps.ammo[WP_CHAINGUN] = g_elimination_chain.integer;
+			}
 		}
 
 		ent->health = client->ps.stats[STAT_ARMOR] = g_elimination_startArmor.integer; //client->ps.stats[STAT_MAX_HEALTH]*2;
