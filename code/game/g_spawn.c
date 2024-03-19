@@ -297,61 +297,44 @@ qboolean G_CallSpawn( gentity_t *ent ) {
 	// Neon_Knight: In CTF, outside of Arena mode, these items replace the TA items and weapons.
 	if (g_classicMode.integer > 0) {
 		if (strequals(ent->classname, "weapon_nailgun")) {
-			Com_sprintf(cvarname, sizeof(cvarname), "weapon_nailgun", ent->classname);
-			Com_sprintf(itemname, sizeof(itemname), "weapon_shotgun", ent->classname);
-			G_Printf ("%s replaced by %s\n", ent->classname, itemname);
+			Com_sprintf(itemname, sizeof(itemname), "weapon_shotgun");
 		}
 		else if (strequals(ent->classname, "weapon_chaingun")) {
-			Com_sprintf(cvarname, sizeof(cvarname), "weapon_chaingun", ent->classname);
-			Com_sprintf(itemname, sizeof(itemname), "ammo_bullets", ent->classname);
-			G_Printf ("%s replaced by %s\n", ent->classname, itemname);
+			Com_sprintf(itemname, sizeof(itemname), "ammo_bullets");
 		}
 		else if (strequals(ent->classname, "weapon_prox_launcher")) {
-			Com_sprintf(cvarname, sizeof(cvarname), "weapon_prox_launcher", ent->classname);
-			Com_sprintf(itemname, sizeof(itemname), "weapon_grenade_launcher", ent->classname);
-			G_Printf ("%s replaced by %s\n", ent->classname, itemname);
+			Com_sprintf(itemname, sizeof(itemname), "weapon_grenade_launcher");
 		}
 		else if (strequals(ent->classname, "ammo_nails")) {
-			Com_sprintf(cvarname, sizeof(cvarname), "ammo_nails", ent->classname);
-			Com_sprintf(itemname, sizeof(itemname), "ammo_shells", ent->classname);
-			G_Printf ("%s replaced by %s\n", ent->classname, itemname);
+			Com_sprintf(itemname, sizeof(itemname), "ammo_shells");
 		}
 		else if (strequals(ent->classname, "ammo_belt")) {
-			Com_sprintf(cvarname, sizeof(cvarname), "ammo_belt", ent->classname);
-			Com_sprintf(itemname, sizeof(itemname), "ammo_bullets", ent->classname);
-			G_Printf ("%s replaced by %s\n", ent->classname, itemname);
+			Com_sprintf(itemname, sizeof(itemname), "ammo_bullets");
 		}
 		else if (strequals(ent->classname, "ammo_prox")) {
-			Com_sprintf(cvarname, sizeof(cvarname), "ammo_prox", ent->classname);
-			Com_sprintf(itemname, sizeof(itemname), "ammo_grenades", ent->classname);
-			G_Printf ("%s replaced by %s\n", ent->classname, itemname);
+			Com_sprintf(itemname, sizeof(itemname), "ammo_grenades");
 		}
 		else if (strequals(ent->classname, "holdable_kamikaze")) {
-			Com_sprintf(cvarname, sizeof(cvarname), "holdable_kamikaze", ent->classname);
-			Com_sprintf(itemname, sizeof(itemname), "holdable_teleporter", ent->classname);
-			G_Printf ("%s replaced by %s\n", ent->classname, itemname);
+			Com_sprintf(itemname, sizeof(itemname), "holdable_teleporter");
 		}
 		else if (strequals(ent->classname, "holdable_invulnerability")) {
-			Com_sprintf(cvarname, sizeof(cvarname), "holdable_kamikaze", ent->classname);
-			Com_sprintf(itemname, sizeof(itemname), "holdable_medkit", ent->classname);
-			G_Printf ("%s replaced by %s\n", ent->classname, itemname);
+			Com_sprintf(itemname, sizeof(itemname), "holdable_medkit");
 		}
 		else if (strequals(ent->classname, "holdable_portal")) {
-			Com_sprintf(cvarname, sizeof(cvarname), "holdable_portal", ent->classname);
-			Com_sprintf(itemname, sizeof(itemname), "holdable_medkit", ent->classname);
-			G_Printf ("%s replaced by %s\n", ent->classname, itemname);
+			Com_sprintf(itemname, sizeof(itemname), "holdable_medkit");
 		}
+		Com_sprintf(cvarname, sizeof(cvarname), "%s", ent->classname);
 	}
 	else {
 		//Construct a replace cvar:
 		Com_sprintf(cvarname, sizeof(cvarname), "replace_%s", ent->classname);
-		//Look an alternative item up:
-		trap_Cvar_VariableStringBuffer(cvarname,itemname,sizeof(itemname));
-		if(itemname[0]==0) //If nothing found use original
-			Com_sprintf(itemname, sizeof(itemname), "%s", ent->classname);
-		else
-			G_Printf ("%s replaced by %s\n", ent->classname, itemname);
 	}
+	//Look an alternative item up:
+	trap_Cvar_VariableStringBuffer(cvarname,itemname,sizeof(itemname));
+	if(itemname[0]==0) //If nothing found use original
+		Com_sprintf(itemname, sizeof(itemname), "%s", ent->classname);
+	else
+		G_Printf ("%s replaced by %s\n", ent->classname, itemname);
 
 	if ( itemname[0]==0) {
 		G_Printf ("G_CallSpawn: NULL classname\n");
