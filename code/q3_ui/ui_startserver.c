@@ -2049,7 +2049,7 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 	else /* if(UI_GametypeUsesCaptureLimit(s_serveroptions.gametype)) */ {
 		s_serveroptions.capturelimit.generic.type       = MTYPE_FIELD;
 		if (UI_IsARoundBasedGametype(s_serveroptions.gametype)) {
-			s_serveroptions.capturelimit.generic.name       = "Round Limit:";
+			s_serveroptions.capturelimit.generic.name       = "Score Limit:";
 		}
 		else {
 			s_serveroptions.capturelimit.generic.name       = "Capture Limit:";
@@ -2103,16 +2103,20 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 	}
 	s_serveroptions.weaponMode.generic.name			= "Weapons Ruleset:";
 	s_serveroptions.weaponMode.generic.statusbar  = ServerOptions_StatusBar_WeaponMode;
-	
+
 	//Weapon Arena Weapon list
 	y += BIGCHAR_HEIGHT+2;
 	s_serveroptions.weaponArenaWeapon.generic.type			= MTYPE_SPINCONTROL;
 	s_serveroptions.weaponArenaWeapon.generic.flags			= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-	s_serveroptions.weaponArenaWeapon.generic.name			= "SWA Mode Weapon:";
+	s_serveroptions.weaponArenaWeapon.generic.name			= "Weapon Arena Weapon:";
 	s_serveroptions.weaponArenaWeapon.generic.x				= OPTIONS_X;
 	s_serveroptions.weaponArenaWeapon.generic.y				= y;
 	s_serveroptions.weaponArenaWeapon.itemnames				= weaponArenaWeapon_list;
 	s_serveroptions.weaponArenaWeapon.generic.statusbar  = ServerOptions_StatusBar_WeaponArenaWeapon;
+
+	if(s_serveroptions.weaponMode.curvalue != 2) {
+		s_serveroptions.weaponArenaWeapon.generic.flags       |= QMF_INACTIVE;
+	}
 
 	y += BIGCHAR_HEIGHT+2;
 	s_serveroptions.grapple.generic.type			= MTYPE_RADIOBUTTON;
