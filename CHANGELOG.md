@@ -36,7 +36,7 @@
   * `elimination_selfdamage` can now be set in the UI for Elimination and eCTF matches.
   * `g_grapple` can now be set for all match types.
   * `g_harvesterFromBodies` can now be set for Harvester matches.
-  * `g_weaponArenaWeapon` can be selectable in Classic UI, but it needs "Single Weapon Arena" to be set before.
+  * `g_weaponArenaWeapon` can be selectable in Classic UI, but it needs "Single Weapon Arena" to be set before (it's grayed out if this isn't the case).
   * `cg_muzzleFlashStyle` can now be chosen in Classic UI under "Game Options".
   * Separated "Allow Downloads From Servers" and "Allow Downloads To Clients". The former is a player option (`cl_allowDownload 0/1`) and can be set in "Options -> Network" (formerly in "Game Options"), while the latter a server option (`sv_allowDownload 0/1`) and can be set from "Create Server". The option names were changed to reflect these changes.
   * "Delag Hitscan" was moved from "Game Options" to "Network".
