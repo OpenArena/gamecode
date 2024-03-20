@@ -45,6 +45,7 @@
   * `g_ddCaptureTime` and `g_ddRespawnDelay` were added for Double Domination matches.
   * `cg_obituaryOutput` can now be configured in "Game Options" as "Death Messages".
   * New option in Skirmish/Create Server, "Weapon Ruleset", allows picking up one of five weapon rulesets: All Weapons (Standard) -default-, Instantgib, Single Weapon Arena, Classic Mode -replaces NG, CG, PL, Kami, Invul and Runes with equivalents- and All Weapons (Elimination).
+  * `cg_crosshairColorRed`, `cg_crosshairColorGreen` and `cg_crosshairColorBlue` are grayed out in "Game Options" if `cg_crosshairHealth` is set.
 * Now it's possible to compile OAX on Mac (thanks EddieBrrrock!)
 * AI enhancements:
   * Holdable (Personal Teleporter/Medkit/Kamikaze/Invulnerability) handling.
@@ -72,6 +73,8 @@
 
 **Release date:** TBA
 
+* `cg_crosshairColorRed`, `cg_crosshairColorGreen` and `cg_crosshairColorBlue` are grayed out in "Game Options" if `cg_crosshairHealth` is set.
+* `g_weaponArenaWeapon` is grayed out in Classic UI if the selected Weapon Ruleset isn't "Single Weapon Arena".
 * Classic UI: `cg_obituaryOutput` can now be configured in "Game Options" as "Death Messages".
 * Deletion of `g_runes`. In its place there's a new cvar, `g_classicMode`. Enabling it (via cvar or the Weapon Ruleset "Classic Arena" in Skirmish/Create Server) makes the following replacements:
   * Nailgun and ammo with Shotgun and Shells.
