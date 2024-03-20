@@ -2115,7 +2115,7 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 	s_serveroptions.weaponArenaWeapon.generic.statusbar  = ServerOptions_StatusBar_WeaponArenaWeapon;
 
 	if(s_serveroptions.weaponMode.curvalue != 2) {
-		s_serveroptions.weaponArenaWeapon.generic.flags       |= QMF_INACTIVE;
+		s_serveroptions.weaponArenaWeapon.generic.flags       |= QMF_INACTIVE|QMF_GRAYED;
 	}
 
 	y += BIGCHAR_HEIGHT+2;

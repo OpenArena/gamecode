@@ -184,14 +184,14 @@ static void Preferences_Event( void* ptr, int notification ) {
 		trap_Cvar_SetValue( "cg_crosshairHealth", s_preferences.crosshairHealth.curvalue );
 		if(s_preferences.crosshairHealth.curvalue) {
 			//If crosshairHealth is on: Don't allow color selection
-			s_preferences.crosshairColorRed.generic.flags       |= QMF_INACTIVE;
-			s_preferences.crosshairColorGreen.generic.flags     |= QMF_INACTIVE;
-			s_preferences.crosshairColorBlue.generic.flags      |= QMF_INACTIVE;
+			s_preferences.crosshairColorRed.generic.flags       |= QMF_INACTIVE|QMF_GRAYED;
+			s_preferences.crosshairColorGreen.generic.flags     |= QMF_INACTIVE|QMF_GRAYED;
+			s_preferences.crosshairColorBlue.generic.flags      |= QMF_INACTIVE|QMF_GRAYED;
 		} else {
 			//If crosshairHealth is off: Allow color selection
-			s_preferences.crosshairColorRed.generic.flags       &= ~QMF_INACTIVE;
-			s_preferences.crosshairColorGreen.generic.flags     &= ~QMF_INACTIVE;
-			s_preferences.crosshairColorBlue.generic.flags      &= ~QMF_INACTIVE;
+			s_preferences.crosshairColorRed.generic.flags       &= ~QMF_INACTIVE|QMF_GRAYED;
+			s_preferences.crosshairColorGreen.generic.flags     &= ~QMF_INACTIVE|QMF_GRAYED;
+			s_preferences.crosshairColorBlue.generic.flags      &= ~QMF_INACTIVE|QMF_GRAYED;
 		}
 		break;
 
@@ -435,9 +435,9 @@ static void Preferences_MenuInit( void ) {
 
 
 	if(s_preferences.crosshairHealth.curvalue) {
-		s_preferences.crosshairColorRed.generic.flags       |= QMF_INACTIVE;
-		s_preferences.crosshairColorGreen.generic.flags       |= QMF_INACTIVE;
-		s_preferences.crosshairColorBlue.generic.flags       |= QMF_INACTIVE;
+		s_preferences.crosshairColorRed.generic.flags       |= QMF_INACTIVE|QMF_GRAYED;
+		s_preferences.crosshairColorGreen.generic.flags       |= QMF_INACTIVE|QMF_GRAYED;
+		s_preferences.crosshairColorBlue.generic.flags       |= QMF_INACTIVE|QMF_GRAYED;
 	}
 
 	y += BIGCHAR_HEIGHT+2;
