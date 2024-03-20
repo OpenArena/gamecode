@@ -2130,7 +2130,7 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 		s_serveroptions.friendlyfire.generic.x	      = OPTIONS_X;
 		s_serveroptions.friendlyfire.generic.y	      = y;
 		s_serveroptions.friendlyfire.generic.name	  = "Friendly Fire:";
-	s_serveroptions.grapple.generic.statusbar  = ServerOptions_StatusBar_FriendlyFire;
+		s_serveroptions.friendlyfire.generic.statusbar  = ServerOptions_StatusBar_FriendlyFire;
 	}
 	if(UI_IsARoundBasedGametype(s_serveroptions.gametype) &&
 			UI_IsATeamGametype(s_serveroptions.gametype)) {
