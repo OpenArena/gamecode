@@ -63,6 +63,9 @@ typedef struct {
 	menuslider_s		crosshairColorGreen;
 	menuslider_s		crosshairColorBlue;
 
+	menuradiobutton_s	alwaysWeaponBar;
+	menulist_s			weaponBarStyle;
+
 	menuradiobutton_s	drawFPS;
 
 	menubitmap_s		back;
@@ -72,12 +75,27 @@ typedef struct {
 
 static hudOptions_t hudOptions_s;
 
+static const char *weaponBarStyle_names[] =
+{
+	"Bottom Side (Default)",
+	"Bottom Side + Ammo Bar",
+	"Left Side + Ammo Count",
+	"Left Side + Ammo Bar",
+	"Left + Ammo Background",
+	"Bottom + Ammo Count + BGD",
+	"Bottom + Ammo Count + Bar",
+	"Bottom + Ammo Background",
+	NULL
+};
+
 static void HUDOptions_SetMenuItems( void ) {
 	hudOptions_s.crosshair.curvalue				= (int)trap_Cvar_VariableValue( "cg_drawCrosshair" ) % NUM_CROSSHAIRS;
 	hudOptions_s.crosshairHealth.curvalue		= trap_Cvar_VariableValue( "cg_crosshairHealth") != 0;
 	hudOptions_s.crosshairColorRed.curvalue		= trap_Cvar_VariableValue( "cg_crosshairColorRed")*255.0f;
 	hudOptions_s.crosshairColorGreen.curvalue	= trap_Cvar_VariableValue( "cg_crosshairColorGreen")*255.0f;
 	hudOptions_s.crosshairColorBlue.curvalue	= trap_Cvar_VariableValue( "cg_crosshairColorBlue")*255.0f;
+	hudOptions_s.alwaysWeaponBar.curvalue		= trap_Cvar_VariableValue( "cg_alwaysWeaponBar" ) != 0;
+	hudOptions_s.weaponBarStyle.curvalue		= trap_Cvar_VariableValue( "cg_weaponBarStyle" ) != 0;
 	hudOptions_s.drawFPS.curvalue				= trap_Cvar_VariableValue( "cg_drawfps") != 0;
 }
 
@@ -120,6 +138,14 @@ static void HUDOptions_Event( void* ptr, int notification ) {
 
 	case ID_COLORBLUE:
 		trap_Cvar_SetValue( "cg_crosshairColorBlue", ((float)hudOptions_s.crosshairColorBlue.curvalue)/255.f );
+		break;
+
+	case ID_ALWAYSWEAPONBAR:
+		trap_Cvar_SetValue( "cg_alwaysWeaponBar", hudOptions_s.alwaysWeaponBar.curvalue );
+		break;
+
+	case ID_WEAPONBARSTYLE:
+		trap_Cvar_SetValue( "cg_weaponBarStyle", hudOptions_s.weaponBarStyle.curvalue );
 		break;
 
 	case ID_DRAWFPS:
@@ -289,6 +315,25 @@ static void HUDOptions_MenuInit( void ) {
 	}
 
 	y += BIGCHAR_HEIGHT+2;
+	hudOptions_s.alwaysWeaponBar.generic.type		= MTYPE_RADIOBUTTON;
+	hudOptions_s.alwaysWeaponBar.generic.name		= "Always Show Weapon Bar:";
+	hudOptions_s.alwaysWeaponBar.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	hudOptions_s.alwaysWeaponBar.generic.callback	= HUDOptions_Event;
+	hudOptions_s.alwaysWeaponBar.generic.id			= ID_ALWAYSWEAPONBAR;
+	hudOptions_s.alwaysWeaponBar.generic.x			= HUDOPTIONS_X_POS;
+	hudOptions_s.alwaysWeaponBar.generic.y			= y;
+	
+	y += BIGCHAR_HEIGHT+2;
+	hudOptions_s.weaponBarStyle.generic.type		= MTYPE_SPINCONTROL;
+	hudOptions_s.weaponBarStyle.generic.name		= "Weapon Bar Style:";
+	hudOptions_s.weaponBarStyle.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	hudOptions_s.weaponBarStyle.generic.callback	= HUDOptions_Event;
+	hudOptions_s.weaponBarStyle.generic.id			= ID_WEAPONBARSTYLE;
+	hudOptions_s.weaponBarStyle.generic.x			= HUDOPTIONS_X_POS;
+	hudOptions_s.weaponBarStyle.generic.y			= y;
+	hudOptions_s.weaponBarStyle.itemnames			= weaponBarStyle_names;
+
+	y += BIGCHAR_HEIGHT+2;
 	hudOptions_s.drawFPS.generic.type		= MTYPE_RADIOBUTTON;
 	hudOptions_s.drawFPS.generic.name		= "Draw FPS:";
 	hudOptions_s.drawFPS.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
@@ -317,6 +362,8 @@ static void HUDOptions_MenuInit( void ) {
 	Menu_AddItem( &hudOptions_s.menu, &hudOptions_s.crosshairColorRed );
 	Menu_AddItem( &hudOptions_s.menu, &hudOptions_s.crosshairColorGreen );
 	Menu_AddItem( &hudOptions_s.menu, &hudOptions_s.crosshairColorBlue );
+	Menu_AddItem( &hudOptions_s.menu, &hudOptions_s.alwaysWeaponBar );
+	Menu_AddItem( &hudOptions_s.menu, &hudOptions_s.weaponBarStyle );
 	Menu_AddItem( &hudOptions_s.menu, &hudOptions_s.drawFPS );
 
 	Menu_AddItem( &hudOptions_s.menu, &hudOptions_s.back );
