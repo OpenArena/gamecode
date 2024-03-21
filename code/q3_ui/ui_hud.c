@@ -51,6 +51,12 @@ GAME OPTIONS MENU
 #define ID_DRAWTEAMOVERLAY		136
 #define ID_OBITUARYOUTPUT		137
 #define ID_DRAWFPS				138
+#define ID_DRAWTIMER			139
+#define ID_DRAWSTATUS			140
+#define ID_DRAWAMMOWARNING		141
+#define ID_DRAWATTACKER			142
+#define ID_DRAWSPEED			143
+#define ID_DRAWREWARDS			144
 
 typedef struct {
 	menuframework_s		menu;
@@ -74,6 +80,12 @@ typedef struct {
 	menulist_s			obituaryOutput;
 
 	menuradiobutton_s	drawFPS;
+	menuradiobutton_s	drawTimer;
+	menuradiobutton_s	drawStatus;
+	menuradiobutton_s	drawAmmoWarning;
+	menuradiobutton_s	drawAttacker;
+	menuradiobutton_s	drawSpeed;
+	menuradiobutton_s	drawRewards;
 
 	menubitmap_s		back;
 
@@ -123,9 +135,15 @@ static void HUDOptions_SetMenuItems( void ) {
 	hudOptions_s.alwaysWeaponBar.curvalue		= trap_Cvar_VariableValue( "cg_alwaysWeaponBar" ) != 0;
 	hudOptions_s.weaponBarStyle.curvalue		= trap_Cvar_VariableValue( "cg_weaponBarStyle" ) != 0;
 	hudOptions_s.identifyTarget.curvalue		= trap_Cvar_VariableValue( "cg_drawCrosshairNames" ) != 0;
-	hudOptions_s.drawFPS.curvalue				= trap_Cvar_VariableValue( "cg_drawfps") != 0;
 	hudOptions_s.drawTeamOverlay.curvalue		= Com_Clamp( 0, 3, trap_Cvar_VariableValue( "cg_drawTeamOverlay" ) );
 	hudOptions_s.obituaryOutput.curvalue		= trap_Cvar_VariableValue( "cg_obituaryOutput" ) != 0;
+	hudOptions_s.drawFPS.curvalue				= trap_Cvar_VariableValue( "cg_drawfps") != 0;
+	hudOptions_s.drawTimer.curvalue				= trap_Cvar_VariableValue( "cg_drawTimer") != 0;
+	hudOptions_s.drawStatus.curvalue			= trap_Cvar_VariableValue( "cg_drawStatus") != 0;
+	hudOptions_s.drawAmmoWarning.curvalue		= trap_Cvar_VariableValue( "cg_drawAmmoWarning") != 0;
+	hudOptions_s.drawAttacker.curvalue			= trap_Cvar_VariableValue( "cg_drawAttacker") != 0;
+	hudOptions_s.drawSpeed.curvalue				= trap_Cvar_VariableValue( "cg_drawSpeed") != 0;
+	hudOptions_s.drawRewards.curvalue			= trap_Cvar_VariableValue( "cg_drawRewards") != 0;
 }
 
 static void HUDOptions_Event( void* ptr, int notification ) {
@@ -191,6 +209,30 @@ static void HUDOptions_Event( void* ptr, int notification ) {
 
 	case ID_DRAWFPS:
 		trap_Cvar_SetValue( "cg_drawFPS", hudOptions_s.drawFPS.curvalue );
+		break;
+
+	case ID_DRAWTIMER:
+		trap_Cvar_SetValue( "cg_drawTimer", hudOptions_s.drawTimer.curvalue );
+		break;
+
+	case ID_DRAWSTATUS:
+		trap_Cvar_SetValue( "cg_drawStatus", hudOptions_s.drawStatus.curvalue );
+		break;
+
+	case ID_DRAWAMMOWARNING:
+		trap_Cvar_SetValue( "cg_drawAmmoWarning", hudOptions_s.drawAmmoWarning.curvalue );
+		break;
+
+	case ID_DRAWATTACKER:
+		trap_Cvar_SetValue( "cg_drawAttacker", hudOptions_s.drawAttacker.curvalue );
+		break;
+
+	case ID_DRAWSPEED:
+		trap_Cvar_SetValue( "cg_drawSpeed", hudOptions_s.drawSpeed.curvalue );
+		break;
+
+	case ID_DRAWREWARDS:
+		trap_Cvar_SetValue( "cg_drawRewards", hudOptions_s.drawRewards.curvalue );
 		break;
 
 	case ID_BACK:
@@ -262,6 +304,12 @@ static void HUDOptions_MenuInit( void ) {
 	UI_SetDefaultCvar("cg_crosshairColorBlue","1");
 	UI_SetDefaultCvar("cg_crosshairColorGreen","1");
 	UI_SetDefaultCvar("cg_drawFPS","0");
+	UI_SetDefaultCvar("cg_drawTimer","0");
+	UI_SetDefaultCvar("cg_drawStatus","1");
+	UI_SetDefaultCvar("cg_drawAmmoWarning","1");
+	UI_SetDefaultCvar("cg_drawAttacker","1");
+	UI_SetDefaultCvar("cg_drawSpeed","0");
+	UI_SetDefaultCvar("cg_drawRewards","0");
 
 	memset( &hudOptions_s, 0 ,sizeof(hudOptions_t) );
 
@@ -376,7 +424,7 @@ static void HUDOptions_MenuInit( void ) {
 
 	y += BIGCHAR_HEIGHT+2;
 	hudOptions_s.identifyTarget.generic.type		= MTYPE_RADIOBUTTON;
-	hudOptions_s.identifyTarget.generic.name		= "Identify Target:";
+	hudOptions_s.identifyTarget.generic.name		= "Show CH Target Name:";
 	hudOptions_s.identifyTarget.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	hudOptions_s.identifyTarget.generic.callback	= HUDOptions_Event;
 	hudOptions_s.identifyTarget.generic.id			= ID_IDENTIFYTARGET;
@@ -385,7 +433,7 @@ static void HUDOptions_MenuInit( void ) {
 
 	y += BIGCHAR_HEIGHT+2;
 	hudOptions_s.drawTeamOverlay.generic.type		= MTYPE_SPINCONTROL;
-	hudOptions_s.drawTeamOverlay.generic.name		= "Draw Team Overlay:";
+	hudOptions_s.drawTeamOverlay.generic.name		= "Show Team Overlay:";
 	hudOptions_s.drawTeamOverlay.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	hudOptions_s.drawTeamOverlay.generic.callback	= HUDOptions_Event;
 	hudOptions_s.drawTeamOverlay.generic.id			= ID_DRAWTEAMOVERLAY;
@@ -395,7 +443,7 @@ static void HUDOptions_MenuInit( void ) {
 
 	y += BIGCHAR_HEIGHT+2;
 	hudOptions_s.obituaryOutput.generic.type		= MTYPE_SPINCONTROL;
-	hudOptions_s.obituaryOutput.generic.name		= "Death Messages:";
+	hudOptions_s.obituaryOutput.generic.name		= "Death Message Output:";
 	hudOptions_s.obituaryOutput.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	hudOptions_s.obituaryOutput.generic.callback	= HUDOptions_Event;
 	hudOptions_s.obituaryOutput.generic.id			= ID_OBITUARYOUTPUT;
@@ -405,12 +453,66 @@ static void HUDOptions_MenuInit( void ) {
 
 	y += BIGCHAR_HEIGHT+2;
 	hudOptions_s.drawFPS.generic.type		= MTYPE_RADIOBUTTON;
-	hudOptions_s.drawFPS.generic.name		= "Draw FPS:";
+	hudOptions_s.drawFPS.generic.name		= "Show FPS:";
 	hudOptions_s.drawFPS.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	hudOptions_s.drawFPS.generic.callback	= HUDOptions_Event;
 	hudOptions_s.drawFPS.generic.id			= ID_DRAWFPS;
 	hudOptions_s.drawFPS.generic.x			= HUDOPTIONS_X_POS;
 	hudOptions_s.drawFPS.generic.y			= y;
+
+	y += BIGCHAR_HEIGHT+2;
+	hudOptions_s.drawTimer.generic.type		= MTYPE_RADIOBUTTON;
+	hudOptions_s.drawTimer.generic.name		= "Show Timer:";
+	hudOptions_s.drawTimer.generic.flags	= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	hudOptions_s.drawTimer.generic.callback	= HUDOptions_Event;
+	hudOptions_s.drawTimer.generic.id		= ID_DRAWTIMER;
+	hudOptions_s.drawTimer.generic.x		= HUDOPTIONS_X_POS;
+	hudOptions_s.drawTimer.generic.y		= y;
+
+	y += BIGCHAR_HEIGHT+2;
+	hudOptions_s.drawStatus.generic.type		= MTYPE_RADIOBUTTON;
+	hudOptions_s.drawStatus.generic.name		= "Show Match Status:";
+	hudOptions_s.drawStatus.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	hudOptions_s.drawStatus.generic.callback	= HUDOptions_Event;
+	hudOptions_s.drawStatus.generic.id			= ID_DRAWSTATUS;
+	hudOptions_s.drawStatus.generic.x			= HUDOPTIONS_X_POS;
+	hudOptions_s.drawStatus.generic.y			= y;
+
+	y += BIGCHAR_HEIGHT+2;
+	hudOptions_s.drawAmmoWarning.generic.type		= MTYPE_RADIOBUTTON;
+	hudOptions_s.drawAmmoWarning.generic.name		= "Show Low Ammo Warning:";
+	hudOptions_s.drawAmmoWarning.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	hudOptions_s.drawAmmoWarning.generic.callback	= HUDOptions_Event;
+	hudOptions_s.drawAmmoWarning.generic.id			= ID_DRAWAMMOWARNING;
+	hudOptions_s.drawAmmoWarning.generic.x			= HUDOPTIONS_X_POS;
+	hudOptions_s.drawAmmoWarning.generic.y			= y;
+
+	y += BIGCHAR_HEIGHT+2;
+	hudOptions_s.drawAttacker.generic.type		= MTYPE_RADIOBUTTON;
+	hudOptions_s.drawAttacker.generic.name		= "Show Your Assassin:";
+	hudOptions_s.drawAttacker.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	hudOptions_s.drawAttacker.generic.callback	= HUDOptions_Event;
+	hudOptions_s.drawAttacker.generic.id		= ID_DRAWATTACKER;
+	hudOptions_s.drawAttacker.generic.x			= HUDOPTIONS_X_POS;
+	hudOptions_s.drawAttacker.generic.y			= y;
+
+	y += BIGCHAR_HEIGHT+2;
+	hudOptions_s.drawSpeed.generic.type		= MTYPE_RADIOBUTTON;
+	hudOptions_s.drawSpeed.generic.name		= "Show Movement Speed:";
+	hudOptions_s.drawSpeed.generic.flags	= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	hudOptions_s.drawSpeed.generic.callback	= HUDOptions_Event;
+	hudOptions_s.drawSpeed.generic.id		= ID_DRAWSPEED;
+	hudOptions_s.drawSpeed.generic.x		= HUDOPTIONS_X_POS;
+	hudOptions_s.drawSpeed.generic.y		= y;
+
+	y += BIGCHAR_HEIGHT+2;
+	hudOptions_s.drawRewards.generic.type		= MTYPE_RADIOBUTTON;
+	hudOptions_s.drawRewards.generic.name		= "Show Medal Earned:";
+	hudOptions_s.drawRewards.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	hudOptions_s.drawRewards.generic.callback	= HUDOptions_Event;
+	hudOptions_s.drawRewards.generic.id			= ID_DRAWREWARDS;
+	hudOptions_s.drawRewards.generic.x			= HUDOPTIONS_X_POS;
+	hudOptions_s.drawRewards.generic.y			= y;
 
 	hudOptions_s.back.generic.type		= MTYPE_BITMAP;
 	hudOptions_s.back.generic.name		= ART_BACK0;
@@ -438,6 +540,12 @@ static void HUDOptions_MenuInit( void ) {
 	Menu_AddItem( &hudOptions_s.menu, &hudOptions_s.drawTeamOverlay );
 	Menu_AddItem( &hudOptions_s.menu, &hudOptions_s.obituaryOutput );
 	Menu_AddItem( &hudOptions_s.menu, &hudOptions_s.drawFPS );
+	Menu_AddItem( &hudOptions_s.menu, &hudOptions_s.drawTimer );
+	Menu_AddItem( &hudOptions_s.menu, &hudOptions_s.drawStatus );
+	Menu_AddItem( &hudOptions_s.menu, &hudOptions_s.drawAmmoWarning );
+	Menu_AddItem( &hudOptions_s.menu, &hudOptions_s.drawAttacker );
+	Menu_AddItem( &hudOptions_s.menu, &hudOptions_s.drawSpeed );
+	Menu_AddItem( &hudOptions_s.menu, &hudOptions_s.drawRewards );
 
 	Menu_AddItem( &hudOptions_s.menu, &hudOptions_s.back );
 
