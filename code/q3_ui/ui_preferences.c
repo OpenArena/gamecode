@@ -39,6 +39,7 @@ GAME OPTIONS MENU
 
 #define PREFERENCES_X_POS		360
 
+#define ID_BACK					127
 #define ID_SIMPLEITEMS			128
 #define ID_HIGHQUALITYSKY		129
 #define ID_EJECTINGBRASS		130
@@ -46,7 +47,6 @@ GAME OPTIONS MENU
 #define ID_SYNCEVERYFRAME		132
 #define ID_FORCEMODEL			133
 #define ID_MUZZLEFLASHSTYLE		134
-#define ID_BACK					135
 
 #undef NUM_CROSSHAIRS
 #define	NUM_CROSSHAIRS			99
@@ -59,7 +59,7 @@ typedef struct {
 	menubitmap_s		framel;
 	menubitmap_s		framer;
 
-	menuradiobutton_s	simpleitems;
+	menulist_s			simpleitems;
 	menuradiobutton_s	brass;
 	menuradiobutton_s	wallmarks;
 	menuradiobutton_s	highqualitysky;
@@ -70,6 +70,13 @@ typedef struct {
 } preferences_t;
 
 static preferences_t s_preferences;
+
+static const char *simpleItems_names[] =
+{
+	"3D",
+	"2D",
+	NULL
+};
 
 static const char *muzzleFlashStyle_names[] =
 {
@@ -137,18 +144,6 @@ static void Preferences_Event( void* ptr, int notification ) {
 	}
 }
 
-
-static void Preferences_Menu_AddBoolean (menuradiobutton_s* menutext, int* y, int id, char* text ) { 
-	*y += BIGCHAR_HEIGHT;
-	menutext->generic.type        = MTYPE_RADIOBUTTON;
-	menutext->generic.name	      = text;
-	menutext->generic.flags	      = QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-	menutext->generic.callback    = Preferences_Event;
-	menutext->generic.id          = id;
-	menutext->generic.x	          = PREFERENCES_X_POS;
-	menutext->generic.y	          = *y;
-}
-
 static void Preferences_MenuInit( void ) {
 	int				y;
 
@@ -183,34 +178,80 @@ static void Preferences_MenuInit( void ) {
 	s_preferences.framer.height  	   = 334;
 
 	y = 96;
-	Preferences_Menu_AddBoolean(&s_preferences.simpleitems, &y, ID_SIMPLEITEMS, "2D (Simple) Items:");
+	s_preferences.simpleitems.generic.type		= MTYPE_SPINCONTROL;
+	s_preferences.simpleitems.generic.name		= "In-game Pickup Rendering:";
+	s_preferences.simpleitems.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	s_preferences.simpleitems.generic.callback	= Preferences_Event;
+	s_preferences.simpleitems.generic.id		= ID_SIMPLEITEMS;
+	s_preferences.simpleitems.generic.x			= PREFERENCES_X_POS;
+	s_preferences.simpleitems.generic.y			= y;
+	s_preferences.simpleitems.itemnames			= simpleItems_names;
 	
-	Preferences_Menu_AddBoolean(&s_preferences.wallmarks, &y, ID_WALLMARKS, "Marks on Walls:");
-	Preferences_Menu_AddBoolean(&s_preferences.brass, &y, ID_EJECTINGBRASS, "Ejecting Brass:");
-	Preferences_Menu_AddBoolean(&s_preferences.highqualitysky, &y, ID_HIGHQUALITYSKY, "High Quality Sky:");
-	Preferences_Menu_AddBoolean(&s_preferences.synceveryframe, &y, ID_SYNCEVERYFRAME, "Sync Every Frame:");
-	Preferences_Menu_AddBoolean(&s_preferences.forcemodel, &y, ID_FORCEMODEL, "Force Player Models:");
+	y += BIGCHAR_HEIGHT;
+	s_preferences.wallmarks.generic.type		= MTYPE_RADIOBUTTON;
+	s_preferences.wallmarks.generic.name		= "Show Marks on Walls:";
+	s_preferences.wallmarks.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	s_preferences.wallmarks.generic.callback	= Preferences_Event;
+	s_preferences.wallmarks.generic.id			= ID_WALLMARKS;
+	s_preferences.wallmarks.generic.x			= PREFERENCES_X_POS;
+	s_preferences.wallmarks.generic.y			= y;
+
+	y += BIGCHAR_HEIGHT;
+	s_preferences.brass.generic.type		= MTYPE_RADIOBUTTON;
+	s_preferences.brass.generic.name		= "Show Ejecting Brass:";
+	s_preferences.brass.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	s_preferences.brass.generic.callback	= Preferences_Event;
+	s_preferences.brass.generic.id			= ID_EJECTINGBRASS;
+	s_preferences.brass.generic.x			= PREFERENCES_X_POS;
+	s_preferences.brass.generic.y			= y;
+
+	y += BIGCHAR_HEIGHT;
+	s_preferences.highqualitysky.generic.type		= MTYPE_RADIOBUTTON;
+	s_preferences.highqualitysky.generic.name		= "Show High Quality Sky:";
+	s_preferences.highqualitysky.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	s_preferences.highqualitysky.generic.callback	= Preferences_Event;
+	s_preferences.highqualitysky.generic.id			= ID_HIGHQUALITYSKY;
+	s_preferences.highqualitysky.generic.x			= PREFERENCES_X_POS;
+	s_preferences.highqualitysky.generic.y			= y;
+
+	y += BIGCHAR_HEIGHT;
+	s_preferences.synceveryframe.generic.type		= MTYPE_RADIOBUTTON;
+	s_preferences.synceveryframe.generic.name		= "Sync Every Frame:";
+	s_preferences.synceveryframe.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	s_preferences.synceveryframe.generic.callback	= Preferences_Event;
+	s_preferences.synceveryframe.generic.id			= ID_SYNCEVERYFRAME;
+	s_preferences.synceveryframe.generic.x			= PREFERENCES_X_POS;
+	s_preferences.synceveryframe.generic.y			= y;
+
+	y += BIGCHAR_HEIGHT;
+	s_preferences.forcemodel.generic.type		= MTYPE_RADIOBUTTON;
+	s_preferences.forcemodel.generic.name		= "Force Player Models:";
+	s_preferences.forcemodel.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	s_preferences.forcemodel.generic.callback	= Preferences_Event;
+	s_preferences.forcemodel.generic.id			= ID_FORCEMODEL;
+	s_preferences.forcemodel.generic.x			= PREFERENCES_X_POS;
+	s_preferences.forcemodel.generic.y			= y;
 
 	y += BIGCHAR_HEIGHT+2;
-	s_preferences.muzzleFlashStyle.generic.type     = MTYPE_SPINCONTROL;
-	s_preferences.muzzleFlashStyle.generic.name	   = "Muzzle Flash Style:";
-	s_preferences.muzzleFlashStyle.generic.flags	   = QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-	s_preferences.muzzleFlashStyle.generic.callback = Preferences_Event;
-	s_preferences.muzzleFlashStyle.generic.id       = ID_MUZZLEFLASHSTYLE;
-	s_preferences.muzzleFlashStyle.generic.x	       = PREFERENCES_X_POS;
-	s_preferences.muzzleFlashStyle.generic.y	       = y;
-	s_preferences.muzzleFlashStyle.itemnames			= muzzleFlashStyle_names;
+	s_preferences.muzzleFlashStyle.generic.type		= MTYPE_SPINCONTROL;
+	s_preferences.muzzleFlashStyle.generic.name		= "Muzzle Flash Style:";
+	s_preferences.muzzleFlashStyle.generic.flags	= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	s_preferences.muzzleFlashStyle.generic.callback	= Preferences_Event;
+	s_preferences.muzzleFlashStyle.generic.id		= ID_MUZZLEFLASHSTYLE;
+	s_preferences.muzzleFlashStyle.generic.x		= PREFERENCES_X_POS;
+	s_preferences.muzzleFlashStyle.generic.y		= y;
+	s_preferences.muzzleFlashStyle.itemnames		= muzzleFlashStyle_names;
 
-	s_preferences.back.generic.type	    = MTYPE_BITMAP;
-	s_preferences.back.generic.name     = ART_BACK0;
-	s_preferences.back.generic.flags    = QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS;
-	s_preferences.back.generic.callback = Preferences_Event;
-	s_preferences.back.generic.id	    = ID_BACK;
+	s_preferences.back.generic.type		= MTYPE_BITMAP;
+	s_preferences.back.generic.name		= ART_BACK0;
+	s_preferences.back.generic.flags	= QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS;
+	s_preferences.back.generic.callback	= Preferences_Event;
+	s_preferences.back.generic.id		= ID_BACK;
 	s_preferences.back.generic.x		= 0;
 	s_preferences.back.generic.y		= 480-64;
-	s_preferences.back.width  		    = 128;
-	s_preferences.back.height  		    = 64;
-	s_preferences.back.focuspic         = ART_BACK1;
+	s_preferences.back.width			= 128;
+	s_preferences.back.height			= 64;
+	s_preferences.back.focuspic			= ART_BACK1;
 
 	Menu_AddItem( &s_preferences.menu, &s_preferences.banner );
 	Menu_AddItem( &s_preferences.menu, &s_preferences.framel );
