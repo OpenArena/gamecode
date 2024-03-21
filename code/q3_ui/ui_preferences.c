@@ -67,8 +67,6 @@ typedef struct {
 	menubitmap_s		framer;
 
 	menuradiobutton_s	simpleitems;
-	menuradiobutton_s	alwaysweaponbar;
-	menulist_s	weaponBarStyle;
 	menuradiobutton_s	brass;
 	menuradiobutton_s	wallmarks;
 	menuradiobutton_s	identifytarget;
@@ -116,23 +114,8 @@ static const char *obituaryOutput_names[] =
 	NULL
 };
 
-static const char *weaponBarStyle_names[] =
-{
-	"Bottom Side (Default)",
-	"Bottom Side + Ammo Bar",
-	"Left Side + Ammo Count",
-	"Left Side + Ammo Bar",
-	"Left + Ammo Background",
-	"Bottom + Ammo Count + BGD",
-	"Bottom + Ammo Count + Bar",
-	"Bottom + Ammo Background",
-	NULL
-};
-
 static void Preferences_SetMenuItems( void ) {
 	s_preferences.simpleitems.curvalue		= trap_Cvar_VariableValue( "cg_simpleItems" ) != 0;
-	s_preferences.alwaysweaponbar.curvalue		= trap_Cvar_VariableValue( "cg_alwaysWeaponBar" ) != 0;
-	s_preferences.weaponBarStyle.curvalue		= trap_Cvar_VariableValue( "cg_weaponBarStyle" ) != 0;
 	s_preferences.brass.curvalue			= trap_Cvar_VariableValue( "cg_brassTime" ) != 0;
 	s_preferences.wallmarks.curvalue		= trap_Cvar_VariableValue( "cg_marks" ) != 0;
 	s_preferences.identifytarget.curvalue	= trap_Cvar_VariableValue( "cg_drawCrosshairNames" ) != 0;
@@ -155,14 +138,6 @@ static void Preferences_Event( void* ptr, int notification ) {
 
 	case ID_SIMPLEITEMS:
 		trap_Cvar_SetValue( "cg_simpleItems", s_preferences.simpleitems.curvalue );
-		break;
-                
-        case ID_ALWAYSWEAPONBAR:
-		trap_Cvar_SetValue( "cg_alwaysWeaponBar", s_preferences.alwaysweaponbar.curvalue );
-		break;
-                
-        case ID_WEAPONBARSTYLE:
-		trap_Cvar_SetValue( "cg_weaponBarStyle", s_preferences.weaponBarStyle.curvalue );
 		break;
 
 	case ID_HIGHQUALITYSKY:
@@ -265,17 +240,6 @@ static void Preferences_MenuInit( void ) {
 
 	y = 96;
 	Preferences_Menu_AddBoolean(&s_preferences.simpleitems, &y, ID_SIMPLEITEMS, "2D (Simple) Items:");
-	Preferences_Menu_AddBoolean(&s_preferences.alwaysweaponbar, &y, ID_ALWAYSWEAPONBAR, "Always Show Weapon Bar:");
-	
-	y += BIGCHAR_HEIGHT+2;
-	s_preferences.weaponBarStyle.generic.type     = MTYPE_SPINCONTROL;
-	s_preferences.weaponBarStyle.generic.name	   = "Weapon Bar Style:";
-	s_preferences.weaponBarStyle.generic.flags	   = QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-	s_preferences.weaponBarStyle.generic.callback = Preferences_Event;
-	s_preferences.weaponBarStyle.generic.id       = ID_WEAPONBARSTYLE;
-	s_preferences.weaponBarStyle.generic.x	       = PREFERENCES_X_POS;
-	s_preferences.weaponBarStyle.generic.y	       = y;
-	s_preferences.weaponBarStyle.itemnames			= weaponBarStyle_names;
 	
 	Preferences_Menu_AddBoolean(&s_preferences.wallmarks, &y, ID_WALLMARKS, "Marks on Walls:");
 	Preferences_Menu_AddBoolean(&s_preferences.brass, &y, ID_EJECTINGBRASS, "Ejecting Brass:");
@@ -333,8 +297,6 @@ static void Preferences_MenuInit( void ) {
 	Menu_AddItem( &s_preferences.menu, &s_preferences.framer );
 
 	Menu_AddItem( &s_preferences.menu, &s_preferences.simpleitems );
-	Menu_AddItem( &s_preferences.menu, &s_preferences.alwaysweaponbar );
-	Menu_AddItem( &s_preferences.menu, &s_preferences.weaponBarStyle );
 	Menu_AddItem( &s_preferences.menu, &s_preferences.wallmarks );
 	Menu_AddItem( &s_preferences.menu, &s_preferences.brass );
 	Menu_AddItem( &s_preferences.menu, &s_preferences.identifytarget );
