@@ -791,25 +791,42 @@ typedef struct {
 	menubitmap_s		mappic;
 	menubitmap_s		picframe;
 
+	// General options for all gametypes
+	menulist_s			botSkill;
 	menufield_s			timelimit;
 	menufield_s			fraglimit;
 	menufield_s			capturelimit;
+	menulist_s			pmove;
+	menuradiobutton_s	grapple;
+	menulist_s			weaponMode;
+	menulist_s			weaponArenaWeapon;
+
+	// Team-based options
 	menuradiobutton_s	friendlyfire;
-	menufield_s			hostname;
+
+	// Team-based, Round-based options
+	menufield_s			eliminationRoundTime;
+	menulist_s			eliminationDamage;
+
+	// Specific for Harvester
+	menuradiobutton_s	harvesterFromBodies;
+
+	// Specific for CTF Elimination (eCTF)
+	menuradiobutton_s	oneway;
+
+	// Specific for Last Man Standing
+	menulist_s			lmsMode;
+	menufield_s			lmsLives;
+
+	// Specific for Double Domination
 	menufield_s			ddCaptureTime;
 	menufield_s			ddRespawnDelay;
+
+	// Multiplayer-only options
+	menufield_s			hostname;
 	menuradiobutton_s	pure;
 	menuradiobutton_s	lan;
 	menuradiobutton_s	allowServerDownload;
-	menulist_s		pmove;
-	menuradiobutton_s	grapple;
-	menuradiobutton_s	oneway;
-	menuradiobutton_s	harvesterFromBodies;
-	menulist_s			weaponMode;
-	menulist_s			weaponArenaWeapon;
-	menulist_s			lmsMode;
-	menulist_s			eliminationDamage;
-	menulist_s			botSkill;
 
 	menutext_s			player0;
 	menulist_s			playerType[PLAYER_SLOTS];
@@ -856,10 +873,10 @@ static const char *botSkill_list[] = {
 
 //Elimiantion - LMS mode
 static const char *lmsMode_list[] = {
-	"Round+OT",
-	"Round-OT",
-	"Kill+OT",
-	"Kill-OT",
+	"Round Win + Overtime",
+	"Round Win Only",
+	"Kill + Overtime",
+	"Kill Only",
 	NULL
 };
 
@@ -945,45 +962,46 @@ ServerOptions_Start
 =================
 */
 static void ServerOptions_Start( void ) {
-	int		timelimit;
-	int		fraglimit;
+
+	// General options for all gametypes
+	int		skill = s_serveroptions.botSkill.curvalue + 1;
+	int		timelimit = atoi( s_serveroptions.timelimit.field.buffer );
+	int		fraglimit = atoi( s_serveroptions.fraglimit.field.buffer );
+	int		capturelimit = atoi( s_serveroptions.capturelimit.field.buffer );
+	int		pmove = s_serveroptions.pmove.curvalue;
+	int		grapple = s_serveroptions.grapple.curvalue;
+	int		weaponMode = s_serveroptions.weaponMode.curvalue;
+	int		weaponArenaWeapon = s_serveroptions.weaponArenaWeapon.curvalue;
+
+	// Team-based options
+	int		friendlyfire = s_serveroptions.friendlyfire.curvalue;
+
+	// Team-based, Round-based options
+	int		eliminationRoundTime = atoi( s_serveroptions.eliminationRoundTime.field.buffer );
+	int		eliminationDamage = s_serveroptions.eliminationDamage.curvalue;
+
+	// Specific for Harvester
+	int		harvesterFromBodies = s_serveroptions.harvesterFromBodies.curvalue;
+
+	// Specific for CTF Elimination (eCTF)
+	int		oneway = s_serveroptions.oneway.curvalue;
+
+	// Specific for Last Man Standing
+	int		lmsMode = s_serveroptions.lmsMode.curvalue;
+	//int		lmsLives = atoi( s_serveroptions.lmsLives.field.buffer );
+
+	// Specific for Double Domination
+	//int		ddCaptureTime = atoi( s_serveroptions.ddCaptureTime.field.buffer );
+	//int		ddRespawnDelay = atoi( s_serveroptions.ddRespawnDelay.field.buffer );
+
+	// Multiplayer-only options
 	int		maxclients;
-	int		friendlyfire;
-	int		capturelimit;
-	int		pure;
-	int		allowServerDownload;
-	int             pmove;
-	int             lan;
-	int             weaponMode;
-	int             weaponArenaWeapon;
-	int             grapple;
-	int             oneway;
-	int             harvesterFromBodies;
-	int             lmsMode;
-	int             eliminationDamage;
-	int		skill;
+	int		lan = s_serveroptions.lan.curvalue;
+	int		pure = s_serveroptions.pure.curvalue;
+	int		allowServerDownload = s_serveroptions.allowServerDownload.curvalue;
 	int		n;
 	const char		*info;
 	char	buf[64];
-
-
-	timelimit	 = atoi( s_serveroptions.timelimit.field.buffer );
-	fraglimit	 = atoi( s_serveroptions.fraglimit.field.buffer );
-	capturelimit	 = atoi( s_serveroptions.capturelimit.field.buffer );
-	friendlyfire = s_serveroptions.friendlyfire.curvalue;
-	pure		 = s_serveroptions.pure.curvalue;
-	allowServerDownload		 = s_serveroptions.allowServerDownload.curvalue;
-	lan              = s_serveroptions.lan.curvalue;
-	pmove            = s_serveroptions.pmove.curvalue;
-	weaponMode       = s_serveroptions.weaponMode.curvalue;
-	weaponArenaWeapon          = s_serveroptions.weaponArenaWeapon.curvalue;
-	grapple		 = s_serveroptions.grapple.curvalue;
-	oneway		 = s_serveroptions.oneway.curvalue;
-	harvesterFromBodies		 = s_serveroptions.harvesterFromBodies.curvalue;
-	//Sago: For some reason you need to add 1 to curvalue to get the UI to show the right thing (fixed?)
-	lmsMode          = s_serveroptions.lmsMode.curvalue; //+1;
-	eliminationDamage		 = s_serveroptions.eliminationDamage.curvalue;
-	skill		 = s_serveroptions.botSkill.curvalue + 1;
 
 	//set maxclients
 	for( n = 0, maxclients = 0; n < PLAYER_SLOTS; n++ ) {
@@ -1071,21 +1089,10 @@ static void ServerOptions_Start( void ) {
 		break;
 	}
 
-	trap_Cvar_SetValue( "sv_maxclients", Com_Clamp( 0, 12, maxclients ) );
-//	trap_Cvar_SetValue( "dedicated", Com_Clamp( 0, 2, dedicated ) );
-	trap_Cvar_SetValue ("timelimit", Com_Clamp( 0, timelimit, timelimit ) );
 	trap_Cvar_SetValue ("fraglimit", Com_Clamp( 0, fraglimit, fraglimit ) );
 	trap_Cvar_SetValue ("capturelimit", Com_Clamp( 0, capturelimit, capturelimit ) );
-	trap_Cvar_SetValue( "g_friendlyfire", friendlyfire );
-	trap_Cvar_SetValue( "sv_pure", pure );
-	trap_Cvar_SetValue( "sv_allowDownload", allowServerDownload );
-	trap_Cvar_SetValue( "sv_lanForceRate", lan );
-	trap_Cvar_SetValue( "g_weaponArenaWeapon", weaponArenaWeapon );
-	trap_Cvar_SetValue( "g_lms_mode", lmsMode);
-	trap_Cvar_SetValue( "g_grapple", grapple );
-	trap_Cvar_SetValue( "elimination_ctf_oneway", oneway );
-	trap_Cvar_SetValue( "g_harvesterFromBodies", harvesterFromBodies );
-	trap_Cvar_SetValue( "elimination_selfdamage", eliminationDamage );
+	trap_Cvar_SetValue ("timelimit", Com_Clamp( 0, timelimit, timelimit ) );
+	trap_Cvar_SetValue( "elimination_roundtime", eliminationRoundTime );
 	switch(pmove) {
 		case 1:
 			//Fixed framerate 125 Hz
@@ -1110,6 +1117,7 @@ static void ServerOptions_Start( void ) {
 			trap_Cvar_SetValue( "pmove_float", 0);
 			break;
 	};
+	trap_Cvar_SetValue( "g_grapple", grapple );
 	switch(weaponMode) {
 		case 1:
 			//Instantgib
@@ -1156,9 +1164,20 @@ static void ServerOptions_Start( void ) {
 			trap_Cvar_SetValue( "g_classicMode", 0);
 			break;
 	}
-	trap_Cvar_Set("sv_hostname", s_serveroptions.hostname.field.buffer );
+	trap_Cvar_SetValue( "g_weaponArenaWeapon", weaponArenaWeapon );
+	trap_Cvar_SetValue( "g_friendlyfire", friendlyfire );
+	trap_Cvar_SetValue( "elimination_selfdamage", eliminationDamage );
+	trap_Cvar_SetValue( "g_harvesterFromBodies", harvesterFromBodies );
+	trap_Cvar_SetValue( "elimination_ctf_oneway", oneway );
+	trap_Cvar_SetValue( "g_lms_mode", lmsMode);
+	trap_Cvar_Set("g_lms_lives", s_serveroptions.lmsLives.field.buffer );
 	trap_Cvar_Set("g_ddCaptureTime", s_serveroptions.ddCaptureTime.field.buffer );
 	trap_Cvar_Set("g_ddRespawnDelay", s_serveroptions.ddRespawnDelay.field.buffer );
+	trap_Cvar_Set("sv_hostname", s_serveroptions.hostname.field.buffer );
+	trap_Cvar_SetValue( "sv_maxclients", Com_Clamp( 0, 12, maxclients ) );
+	trap_Cvar_SetValue( "sv_lanForceRate", lan );
+	trap_Cvar_SetValue( "sv_pure", pure );
+	trap_Cvar_SetValue( "sv_allowDownload", allowServerDownload );
 
 	// the wait commands will allow the dedicated to take effect
 	info = UI_GetArenaInfoByNumber( s_startserver.maplist[ s_startserver.currentmap ]);
@@ -1343,63 +1362,6 @@ static void ServerOptions_StatusBar( void* ptr ) {
 	UI_DrawString( 320, 460, " ", UI_CENTER|UI_SMALLFONT, colorWhite );
 }
 
-
-/*
-=================
-ServerOptions_StatusBar_ScoreLimit
-
-Descriptions should have 48 characters or less per line, and there can't be more than two lines.
-=================
-*/
-static void ServerOptions_StatusBar_ScoreLimit( void* ptr ) {
-	switch (s_serveroptions.gametype) {
-		case GT_FFA:
-		case GT_TOURNAMENT:
-		case GT_TEAM:
-			UI_DrawString( 320, 440, "The match ends after these frags have been dealt", UI_CENTER|UI_SMALLFONT, colorWhite );
-			UI_DrawString( 320, 460, "if the timelimit didn't end first. 0 = no limit.", UI_CENTER|UI_SMALLFONT, colorWhite );
-			break;
-		case GT_CTF:
-		case GT_1FCTF:
-			UI_DrawString( 320, 440, "The match ends after these captures were done,", UI_CENTER|UI_SMALLFONT, colorWhite );
-			UI_DrawString( 320, 460, "if the timelimit didn't end first. 0 = no limit.", UI_CENTER|UI_SMALLFONT, colorWhite );
-			break;
-		case GT_OBELISK:
-			UI_DrawString( 320, 440, "Match ends after obelisk was ruined these times,", UI_CENTER|UI_SMALLFONT, colorWhite );
-			UI_DrawString( 320, 460, "if the timelimit didn't end first. 0 = no limit.", UI_CENTER|UI_SMALLFONT, colorWhite );
-			break;
-		case GT_HARVESTER:
-			UI_DrawString( 320, 440, "Match ends after these skulls were delivered,", UI_CENTER|UI_SMALLFONT, colorWhite );
-			UI_DrawString( 320, 460, "if the timelimit didn't end first. 0 = no limit.", UI_CENTER|UI_SMALLFONT, colorWhite );
-			break;
-		case GT_ELIMINATION:
-		case GT_DOUBLE_D:
-			UI_DrawString( 320, 440, "Match ends after a team won half these rounds.", UI_CENTER|UI_SMALLFONT, colorWhite );
-			UI_DrawString( 320, 460, "0 = no limit.", UI_CENTER|UI_SMALLFONT, colorWhite );
-			break;
-		case GT_CTF_ELIMINATION:
-			UI_DrawString( 320, 440, "Match ends after a team won half these rounds", UI_CENTER|UI_SMALLFONT, colorWhite );
-			UI_DrawString( 320, 460, "by flag capture or elimination. 0 = no limit.", UI_CENTER|UI_SMALLFONT, colorWhite );
-			break;
-		case GT_LMS:
-			UI_DrawString( 320, 440, "The match ends after a player won", UI_CENTER|UI_SMALLFONT, colorWhite );
-			UI_DrawString( 320, 460, "half these rounds. 0 = no limit.", UI_CENTER|UI_SMALLFONT, colorWhite );
-			break;
-		case GT_DOMINATION:
-			UI_DrawString( 320, 440, "The match ends after a team racked up", UI_CENTER|UI_SMALLFONT, colorWhite );
-			UI_DrawString( 320, 460, "this amount of points. 0 = no limit.", UI_CENTER|UI_SMALLFONT, colorWhite );
-			break;
-		case GT_POSSESSION:
-			UI_DrawString( 320, 440, "Match ends after the flag was held these seconds", UI_CENTER|UI_SMALLFONT, colorWhite );
-			UI_DrawString( 320, 460, "if the timelimit didn't end first. 0 = no limit.", UI_CENTER|UI_SMALLFONT, colorWhite );
-			break;
-		default:
-			UI_DrawString( 320, 440, "Match ends after a player racked up these points", UI_CENTER|UI_SMALLFONT, colorWhite );
-			UI_DrawString( 320, 460, "if the timelimit didn't end first. 0 = no limit.", UI_CENTER|UI_SMALLFONT, colorWhite );
-			break;
-	}
-}
-
 /*
 =================
 ServerOptions_StatusBar_TimeLimit
@@ -1430,10 +1392,13 @@ static void ServerOptions_StatusBar_TimeLimit( void* ptr ) {
 			break;
 		case GT_ELIMINATION:
 		case GT_CTF_ELIMINATION:
-		case GT_LMS:
 		case GT_DOUBLE_D:
-			UI_DrawString( 320, 440, "Amount of time duration per round. 0 = no limit.", UI_CENTER|UI_SMALLFONT, colorWhite );
+			UI_DrawString( 320, 440, "The match ends after these minutes passed, if a", UI_CENTER|UI_SMALLFONT, colorWhite );
+			UI_DrawString( 320, 460, "team didn't hit roundlimit first. 0 = no limit.", UI_CENTER|UI_SMALLFONT, colorWhite );
 			break;
+		case GT_LMS:
+			UI_DrawString( 320, 440, "The match ends after these minutes passed, if a", UI_CENTER|UI_SMALLFONT, colorWhite );
+			UI_DrawString( 320, 460, "player didn't hit roundlimit first.0 = no limit.", UI_CENTER|UI_SMALLFONT, colorWhite );
 		case GT_DOMINATION:
 		case GT_POSSESSION:
 		default:
@@ -1443,159 +1408,82 @@ static void ServerOptions_StatusBar_TimeLimit( void* ptr ) {
 	}
 }
 
+
 /*
 =================
-ServerOptions_StatusBar_WeaponMode
+ServerOptions_StatusBar_ScoreLimit
 
 Descriptions should have 48 characters or less per line, and there can't be more than two lines.
 =================
 */
-static void ServerOptions_StatusBar_WeaponMode( void* ptr ) {
-    switch( ((menulist_s*)ptr)->curvalue ) {
-		case 1:
-			UI_DrawString( 320, 440, "Instantgib: All pickups removed.", UI_CENTER|UI_SMALLFONT, colorWhite );
-			UI_DrawString( 320, 460, "Players spawn with a one-hit-kill Railgun.", UI_CENTER|UI_SMALLFONT, colorWhite );
+static void ServerOptions_StatusBar_ScoreLimit( void* ptr ) {
+	switch (s_serveroptions.gametype) {
+		case GT_FFA:
+		case GT_TOURNAMENT:
+		case GT_TEAM:
+			UI_DrawString( 320, 440, "The match ends after these frags have been dealt", UI_CENTER|UI_SMALLFONT, colorWhite );
+			UI_DrawString( 320, 460, "if the timelimit didn't end first. 0 = no limit.", UI_CENTER|UI_SMALLFONT, colorWhite );
 			break;
-		case 2:
-			UI_DrawString( 320, 440, "Single Weapon Arena: All pickups removed.", UI_CENTER|UI_SMALLFONT, colorWhite );
-			UI_DrawString( 320, 460, "Players will spawn with a specific weapon.", UI_CENTER|UI_SMALLFONT, colorWhite );
+		case GT_CTF:
+		case GT_1FCTF:
+			UI_DrawString( 320, 440, "The match ends after these captures were done,", UI_CENTER|UI_SMALLFONT, colorWhite );
+			UI_DrawString( 320, 460, "if the timelimit didn't end first. 0 = no limit.", UI_CENTER|UI_SMALLFONT, colorWhite );
 			break;
-		case 3:
-			UI_DrawString( 320, 440, "Classic Arena: No pickups removed. Replaces some", UI_CENTER|UI_SMALLFONT, colorWhite );
-			UI_DrawString( 320, 460, "weapons and items to match the OG experience.", UI_CENTER|UI_SMALLFONT, colorWhite );
+		case GT_OBELISK:
+			UI_DrawString( 320, 440, "Match ends after obelisk was ruined these times,", UI_CENTER|UI_SMALLFONT, colorWhite );
+			UI_DrawString( 320, 460, "if the timelimit didn't end first. 0 = no limit.", UI_CENTER|UI_SMALLFONT, colorWhite );
 			break;
-		case 4:
-			UI_DrawString( 320, 440, "All Weapons (Elimination): All pickups removed.", UI_CENTER|UI_SMALLFONT, colorWhite );
-			UI_DrawString( 320, 460, "Players will spawn with all weapons.", UI_CENTER|UI_SMALLFONT, colorWhite );
+		case GT_HARVESTER:
+			UI_DrawString( 320, 440, "Match ends after these skulls were delivered,", UI_CENTER|UI_SMALLFONT, colorWhite );
+			UI_DrawString( 320, 460, "if the timelimit didn't end first. 0 = no limit.", UI_CENTER|UI_SMALLFONT, colorWhite );
+			break;
+		case GT_ELIMINATION:
+			UI_DrawString( 320, 440, "Match ends after a team won these rounds via", UI_CENTER|UI_SMALLFONT, colorWhite );
+			UI_DrawString( 320, 460, "fragging the whole enemy team. 0 = no limit.", UI_CENTER|UI_SMALLFONT, colorWhite );
+			break;
+		case GT_CTF_ELIMINATION:
+			UI_DrawString( 320, 440, "Match ends after a team won these rounds via", UI_CENTER|UI_SMALLFONT, colorWhite );
+			UI_DrawString( 320, 460, "flag capture or elimination. 0 = no limit.", UI_CENTER|UI_SMALLFONT, colorWhite );
+			break;
+		case GT_LMS:
+			UI_DrawString( 320, 440, "The match ends after a player won these rounds", UI_CENTER|UI_SMALLFONT, colorWhite );
+			UI_DrawString( 320, 460, "through fragging their enemies. 0 - no limit.", UI_CENTER|UI_SMALLFONT, colorWhite );
+			break;
+		case GT_DOUBLE_D:
+			UI_DrawString( 320, 440, "Match ends after a team controlled both points", UI_CENTER|UI_SMALLFONT, colorWhite );
+			UI_DrawString( 320, 460, "successfully this amount of times. 0 = no limit.", UI_CENTER|UI_SMALLFONT, colorWhite );
+			break;
+		case GT_DOMINATION:
+			UI_DrawString( 320, 440, "The match ends after a team racked up", UI_CENTER|UI_SMALLFONT, colorWhite );
+			UI_DrawString( 320, 460, "this amount of points. 0 = no limit.", UI_CENTER|UI_SMALLFONT, colorWhite );
+			break;
+		case GT_POSSESSION:
+			UI_DrawString( 320, 440, "Match ends after the flag was held these seconds", UI_CENTER|UI_SMALLFONT, colorWhite );
+			UI_DrawString( 320, 460, "if the timelimit didn't end first. 0 = no limit.", UI_CENTER|UI_SMALLFONT, colorWhite );
 			break;
 		default:
-			if (UI_IsARoundBasedGametype(s_serveroptions.gametype)) {
-				UI_DrawString( 320, 440, "All Weapons (Elimination): All pickups removed.", UI_CENTER|UI_SMALLFONT, colorWhite );
-				UI_DrawString( 320, 460, "Players will spawn with all weapons.", UI_CENTER|UI_SMALLFONT, colorWhite );
-			}
-			else {
-				UI_DrawString( 320, 440, "All Weapons (Standard): No pickups removed.", UI_CENTER|UI_SMALLFONT, colorWhite );
-				UI_DrawString( 320, 460, "Players spawn with Gauntlet and Machinegun.", UI_CENTER|UI_SMALLFONT, colorWhite );
-			}
+			UI_DrawString( 320, 440, "Match ends after a player racked up these points", UI_CENTER|UI_SMALLFONT, colorWhite );
+			UI_DrawString( 320, 460, "if the timelimit didn't end first. 0 = no limit.", UI_CENTER|UI_SMALLFONT, colorWhite );
 			break;
-    }
-            
+	}
 }
 
 /*
 =================
-ServerOptions_StatusBar_WeaponArenaWeapon
+ServerOptions_StatusBar_eliminationRoundTime
 
 Descriptions should have 48 characters or less per line, and there can't be more than two lines.
 =================
 */
-static void ServerOptions_StatusBar_WeaponArenaWeapon( void* ptr ) {
-	UI_DrawString( 320, 440, "In Single Weapon Arena mode, this will", UI_CENTER|UI_SMALLFONT, colorWhite );
-	UI_DrawString( 320, 460, "be the weapon players will spawn with.", UI_CENTER|UI_SMALLFONT, colorWhite );
-}
-
-/*
-=================
-ServerOptions_StatusBar_Pure
-
-Descriptions should have 48 characters or less per line, and there can't be more than two lines.
-=================
-*/
-static void ServerOptions_StatusBar_Pure( void* ptr ) {
-	UI_DrawString( 320, 440, "If set, clients are required to", UI_CENTER|UI_SMALLFONT, colorWhite );
-	UI_DrawString( 320, 460, "have the same .pk3 files as server.", UI_CENTER|UI_SMALLFONT, colorWhite );
-}
-
-/*
-=================
-ServerOptions_StatusBar_AllowServerDownload
-
-Descriptions should have 48 characters or less per line, and there can't be more than two lines.
-=================
-*/
-static void ServerOptions_StatusBar_AllowServerDownload( void* ptr ) {
-	UI_DrawString( 320, 440, "If set, clients connected to the server will D/L", UI_CENTER|UI_SMALLFONT, colorWhite );
-	UI_DrawString( 320, 460, "custom .pk3, if they activated their D/L option.", UI_CENTER|UI_SMALLFONT, colorWhite );
-}
-
-/*
-=================
-ServerOptions_StatusBar_FriendlyFire
-
-Descriptions should have 48 characters or less per line, and there can't be more than two lines.
-=================
-*/
-static void ServerOptions_StatusBar_FriendlyFire( void* ptr ) {
-	UI_DrawString( 320, 440, "If set, players can inflict damage", UI_CENTER|UI_SMALLFONT, colorWhite );
-	UI_DrawString( 320, 460, "onto their teammates.", UI_CENTER|UI_SMALLFONT, colorWhite );
-}
-
-/*
-=================
-ServerOptions_StatusBar_Grapple
-
-Descriptions should have 48 characters or less per line, and there can't be more than two lines.
-=================
-*/
-static void ServerOptions_StatusBar_Grapple( void* ptr ) {
-	UI_DrawString( 320, 440, "Adds the Grappling Hook to", UI_CENTER|UI_SMALLFONT, colorWhite );
-	UI_DrawString( 320, 460, "the players' spawning inventory.", UI_CENTER|UI_SMALLFONT, colorWhite );
-}
-
-/*
-=================
-ServerOptions_StatusBar_Oneway
-
-Descriptions should have 48 characters or less per line, and there can't be more than two lines.
-=================
-*/
-static void ServerOptions_StatusBar_Oneway( void* ptr ) {
-	UI_DrawString( 320, 440, "Every round, teams switch between attacker and", UI_CENTER|UI_SMALLFONT, colorWhite );
-	UI_DrawString( 320, 460, "defender roles. Only attackers can capture.", UI_CENTER|UI_SMALLFONT, colorWhite );
-}
-
-/*
-=================
-ServerOptions_StatusBar_harvesterFromBodies
-
-Descriptions should have 48 characters or less per line, and there can't be more than two lines.
-=================
-*/
-static void ServerOptions_StatusBar_harvesterFromBodies( void* ptr ) {
-	UI_DrawString( 320, 440, "Makes skulls spawn from fragged players", UI_CENTER|UI_SMALLFONT, colorWhite );
-	UI_DrawString( 320, 460, "rather than a central skull generator.", UI_CENTER|UI_SMALLFONT, colorWhite );
-}
-
-/*
-=================
-ServerOptions_StatusBar_eliminationDamage
-
-Descriptions should have 48 characters or less per line, and there can't be more than two lines.
-=================
-*/
-static void ServerOptions_StatusBar_eliminationDamage( void* ptr ) {
-	UI_DrawString( 320, 440, "Specifies who suffers damage", UI_CENTER|UI_SMALLFONT, colorWhite );
-	UI_DrawString( 320, 460, "from a team player's own weapons.", UI_CENTER|UI_SMALLFONT, colorWhite );
-}
-
-/*
-=================
-ServerOptions_StatusBar_ddCaptureTime
-=================
-*/
-static void ServerOptions_StatusBar_ddCaptureTime( void* ptr ) {
-	UI_DrawString( 320, 440, "Specifies the amount of time both points need", UI_CENTER|UI_SMALLFONT, colorWhite );
-	UI_DrawString( 320, 460, "to be held in order for a team to score a point.", UI_CENTER|UI_SMALLFONT, colorWhite );
-}
-
-/*
-=================
-ServerOptions_StatusBar_ddRespawnDelay
-=================
-*/
-static void ServerOptions_StatusBar_ddRespawnDelay( void* ptr ) {
-	UI_DrawString( 320, 440, "Specifies the amount of time between", UI_CENTER|UI_SMALLFONT, colorWhite );
-	UI_DrawString( 320, 460, "scoring and the start of the next round.", UI_CENTER|UI_SMALLFONT, colorWhite );
+static void ServerOptions_StatusBar_eliminationRoundTime( void* ptr ) {
+	if (UI_IsATeamGametype(s_serveroptions.gametype)) {
+		UI_DrawString( 320, 440, "Amount of seconds a round lasts before", UI_CENTER|UI_SMALLFONT, colorWhite );
+		UI_DrawString( 320, 460, "a team can be declared its winner.", UI_CENTER|UI_SMALLFONT, colorWhite );
+	}
+	else {
+		UI_DrawString( 320, 440, "Amount of seconds a round lasts before", UI_CENTER|UI_SMALLFONT, colorWhite );
+		UI_DrawString( 320, 460, "a player can be declared its winner.", UI_CENTER|UI_SMALLFONT, colorWhite );
+	}
 }
 
 /*
@@ -1628,6 +1516,187 @@ static void ServerOptions_StatusBar_Pmove( void* ptr ) {
 
 /*
 =================
+ServerOptions_StatusBar_Grapple
+
+Descriptions should have 48 characters or less per line, and there can't be more than two lines.
+=================
+*/
+static void ServerOptions_StatusBar_Grapple( void* ptr ) {
+	UI_DrawString( 320, 440, "Adds the Grappling Hook to", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "the players' spawning inventory.", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
+/*
+=================
+ServerOptions_StatusBar_WeaponMode
+
+Descriptions should have 48 characters or less per line, and there can't be more than two lines.
+=================
+*/
+static void ServerOptions_StatusBar_WeaponMode( void* ptr ) {
+    switch( ((menulist_s*)ptr)->curvalue ) {
+		case 1:
+			UI_DrawString( 320, 440, "Instantgib: All pickups removed.", UI_CENTER|UI_SMALLFONT, colorWhite );
+			UI_DrawString( 320, 460, "Players spawn with a one-hit-frag Railgun.", UI_CENTER|UI_SMALLFONT, colorWhite );
+			break;
+		case 2:
+			UI_DrawString( 320, 440, "Single Weapon Arena: All pickups removed.", UI_CENTER|UI_SMALLFONT, colorWhite );
+			UI_DrawString( 320, 460, "Players will spawn with a specific weapon.", UI_CENTER|UI_SMALLFONT, colorWhite );
+			break;
+		case 3:
+			UI_DrawString( 320, 440, "Classic Arena: No pickups removed. Replaces some", UI_CENTER|UI_SMALLFONT, colorWhite );
+			UI_DrawString( 320, 460, "weapons and items to match the OG experience.", UI_CENTER|UI_SMALLFONT, colorWhite );
+			break;
+		case 4:
+			UI_DrawString( 320, 440, "All Weapons (Elimination): All pickups removed.", UI_CENTER|UI_SMALLFONT, colorWhite );
+			UI_DrawString( 320, 460, "Players spawn with all weapons and full HP/AP.", UI_CENTER|UI_SMALLFONT, colorWhite );
+			break;
+		default:
+			if (UI_IsARoundBasedGametype(s_serveroptions.gametype)) {
+				UI_DrawString( 320, 440, "All Weapons (Elimination): All pickups removed.", UI_CENTER|UI_SMALLFONT, colorWhite );
+				UI_DrawString( 320, 460, "Players spawn with all weapons and full HP/AP.", UI_CENTER|UI_SMALLFONT, colorWhite );
+			}
+			else {
+				UI_DrawString( 320, 440, "All Weapons (Standard): No pickups removed.", UI_CENTER|UI_SMALLFONT, colorWhite );
+				UI_DrawString( 320, 460, "Players spawn with Gauntlet and Machinegun.", UI_CENTER|UI_SMALLFONT, colorWhite );
+			}
+			break;
+    }
+}
+
+/*
+=================
+ServerOptions_StatusBar_WeaponArenaWeapon
+
+Descriptions should have 48 characters or less per line, and there can't be more than two lines.
+=================
+*/
+static void ServerOptions_StatusBar_WeaponArenaWeapon( void* ptr ) {
+	UI_DrawString( 320, 440, "In Single Weapon Arena mode, this will", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "be the weapon players will spawn with.", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
+/*
+=================
+ServerOptions_StatusBar_FriendlyFire
+
+Descriptions should have 48 characters or less per line, and there can't be more than two lines.
+=================
+*/
+static void ServerOptions_StatusBar_FriendlyFire( void* ptr ) {
+	UI_DrawString( 320, 440, "If set, players can inflict damage", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "onto their teammates.", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
+/*
+=================
+ServerOptions_StatusBar_eliminationDamage
+
+Descriptions should have 48 characters or less per line, and there can't be more than two lines.
+=================
+*/
+static void ServerOptions_StatusBar_eliminationDamage( void* ptr ) {
+	UI_DrawString( 320, 440, "Specifies who suffers damage", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "from a team player's own weapons.", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
+/*
+=================
+ServerOptions_StatusBar_harvesterFromBodies
+
+Descriptions should have 48 characters or less per line, and there can't be more than two lines.
+=================
+*/
+static void ServerOptions_StatusBar_harvesterFromBodies( void* ptr ) {
+	UI_DrawString( 320, 440, "Makes skulls spawn from fragged players", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "rather than a central skull generator.", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
+/*
+=================
+ServerOptions_StatusBar_Oneway
+
+Descriptions should have 48 characters or less per line, and there can't be more than two lines.
+=================
+*/
+static void ServerOptions_StatusBar_Oneway( void* ptr ) {
+	UI_DrawString( 320, 440, "Every round, teams switch between attacker and", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "defender roles. Only attackers can capture.", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
+/*
+=================
+ServerOptions_StatusBar_lmsMode
+
+Descriptions should have 48 characters or less per line, and there can't be more than two lines.
+=================
+*/
+static void ServerOptions_StatusBar_lmsMode( void* ptr ) {
+    switch( ((menulist_s*)ptr)->curvalue ) {
+		case 1:
+			UI_DrawString( 320, 440, "Round Win Only Scoring: All surviving players", UI_CENTER|UI_SMALLFONT, colorWhite );
+			UI_DrawString( 320, 460, "at the end of a round score a point.", UI_CENTER|UI_SMALLFONT, colorWhite );
+			break;
+		case 2:
+			UI_DrawString( 320, 440, "Frag+Overtime Scoring: Every frag earns a point.", UI_CENTER|UI_SMALLFONT, colorWhite );
+			UI_DrawString( 320, 460, "In Overtime, players keep racking up frags.", UI_CENTER|UI_SMALLFONT, colorWhite );
+			break;
+		case 3:
+			UI_DrawString( 320, 440, "Frag-Only Scoring: Only frags earn points.", UI_CENTER|UI_SMALLFONT, colorWhite );
+			UI_DrawString( 320, 460, "It doesn't matter if they survive a round.", UI_CENTER|UI_SMALLFONT, colorWhite );
+			break;
+		default:
+			UI_DrawString( 320, 440, "Round+Overtime: Only the last one alive at round", UI_CENTER|UI_SMALLFONT, colorWhite );
+			UI_DrawString( 320, 460, "end scores. Players are slowly eliminated in OT.", UI_CENTER|UI_SMALLFONT, colorWhite );
+			break;
+    }
+}
+
+/*
+=================
+ServerOptions_StatusBar_lmsLives
+
+Descriptions should have 48 characters or less per line, and there can't be more than two lines.
+=================
+*/
+static void ServerOptions_StatusBar_lmsLives( void* ptr ) {
+	UI_DrawString( 320, 440, "Specifies the amount of lives each player must", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "spend before being eliminated from the round.", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
+/*
+=================
+ServerOptions_StatusBar_ddCaptureTime
+=================
+*/
+static void ServerOptions_StatusBar_ddCaptureTime( void* ptr ) {
+	UI_DrawString( 320, 440, "Specifies the amount of time both points need", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "to be held in order for a team to score a point.", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
+/*
+=================
+ServerOptions_StatusBar_ddRespawnDelay
+=================
+*/
+static void ServerOptions_StatusBar_ddRespawnDelay( void* ptr ) {
+	UI_DrawString( 320, 440, "Specifies the amount of time between", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "scoring and the start of the next round.", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
+/*
+=================
+ServerOptions_StatusBar_HostName
+
+Descriptions should have 48 characters or less per line, and there can't be more than two lines.
+=================
+*/
+static void ServerOptions_StatusBar_HostName( void* ptr ) {
+	UI_DrawString( 320, 440, "The name of your server for server listings.", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
+/*
+=================
 ServerOptions_StatusBar_OptimizeForLAN
 
 Descriptions should have 48 characters or less per line, and there can't be more than two lines.
@@ -1640,13 +1709,26 @@ static void ServerOptions_StatusBar_OptimizeForLAN( void* ptr ) {
 
 /*
 =================
-ServerOptions_StatusBar_HostName
+ServerOptions_StatusBar_Pure
 
 Descriptions should have 48 characters or less per line, and there can't be more than two lines.
 =================
 */
-static void ServerOptions_StatusBar_HostName( void* ptr ) {
-	UI_DrawString( 320, 440, "The name of your server for server listings.", UI_CENTER|UI_SMALLFONT, colorWhite );
+static void ServerOptions_StatusBar_Pure( void* ptr ) {
+	UI_DrawString( 320, 440, "If set, clients are required to", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "have the same .pk3 files as server.", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
+/*
+=================
+ServerOptions_StatusBar_AllowServerDownload
+
+Descriptions should have 48 characters or less per line, and there can't be more than two lines.
+=================
+*/
+static void ServerOptions_StatusBar_AllowServerDownload( void* ptr ) {
+	UI_DrawString( 320, 440, "If set, clients connected to the server will D/L", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "custom .pk3, if they activated their D/L option.", UI_CENTER|UI_SMALLFONT, colorWhite );
 }
 
 
@@ -1880,19 +1962,6 @@ static void ServerOptions_SetMenuItems( void ) {
 		break;
 		
 	}
-
-	Q_strncpyz( s_serveroptions.hostname.field.buffer, UI_Cvar_VariableString( "sv_hostname" ), sizeof( s_serveroptions.hostname.field.buffer ) );
-	Q_strncpyz( s_serveroptions.ddCaptureTime.field.buffer, UI_Cvar_VariableString( "g_ddCaptureTime" ), sizeof( s_serveroptions.ddCaptureTime.field.buffer ) );
-	Q_strncpyz( s_serveroptions.ddRespawnDelay.field.buffer, UI_Cvar_VariableString( "g_ddRespawnDelay" ), sizeof( s_serveroptions.ddRespawnDelay.field.buffer ) );
-	s_serveroptions.pure.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "sv_pure" ) );
-	s_serveroptions.allowServerDownload.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "sv_allowDownload" ) );
-	s_serveroptions.lan.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "sv_lanforcerate" ) );
-	s_serveroptions.weaponArenaWeapon.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_weaponArenaWeapon" ) );
-	s_serveroptions.lmsMode.curvalue = Com_Clamp( 0, 3, trap_Cvar_VariableValue("g_lms_mode") );
-	s_serveroptions.oneway.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "elimination_ctf_oneway" ) );
-	s_serveroptions.harvesterFromBodies.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_harvesterFromBodies" ) );
-	s_serveroptions.grapple.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_grapple" ) );
-	s_serveroptions.eliminationDamage.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "elimination_selfdamage" ) );
 	s_serveroptions.pmove.curvalue = 0;
 	if(trap_Cvar_VariableValue( "pmove_fixed" ))
 		s_serveroptions.pmove.curvalue = 1;
@@ -1900,6 +1969,7 @@ static void ServerOptions_SetMenuItems( void ) {
 		s_serveroptions.pmove.curvalue = 2;
 	if(trap_Cvar_VariableValue( "pmove_float" ))
 		s_serveroptions.pmove.curvalue = 3;
+	s_serveroptions.grapple.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_grapple" ) );
 	// Weapon Rules modes. Only one option can be active at a time.
 	s_serveroptions.weaponMode.curvalue = 0;
 	// Instantgib mode
@@ -1917,6 +1987,20 @@ static void ServerOptions_SetMenuItems( void ) {
 	// All Weapons mode
 	else
 		s_serveroptions.weaponMode.curvalue = 0;
+	s_serveroptions.weaponArenaWeapon.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_weaponArenaWeapon" ) );
+	Q_strncpyz( s_serveroptions.eliminationRoundTime.field.buffer, UI_Cvar_VariableString( "elimination_roundtime" ), sizeof( s_serveroptions.eliminationRoundTime.field.buffer ) );
+	s_serveroptions.eliminationDamage.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "elimination_selfdamage" ) );
+	s_serveroptions.harvesterFromBodies.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_harvesterFromBodies" ) );
+	s_serveroptions.oneway.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "elimination_ctf_oneway" ) );
+	s_serveroptions.lmsMode.curvalue = Com_Clamp( 0, 3, trap_Cvar_VariableValue("g_lms_mode") );
+	Q_strncpyz( s_serveroptions.lmsLives.field.buffer, UI_Cvar_VariableString( "g_lms_lives" ), sizeof( s_serveroptions.lmsLives.field.buffer ) );
+	Q_strncpyz( s_serveroptions.ddCaptureTime.field.buffer, UI_Cvar_VariableString( "g_ddCaptureTime" ), sizeof( s_serveroptions.ddCaptureTime.field.buffer ) );
+	Q_strncpyz( s_serveroptions.ddRespawnDelay.field.buffer, UI_Cvar_VariableString( "g_ddRespawnDelay" ), sizeof( s_serveroptions.ddRespawnDelay.field.buffer ) );
+
+	Q_strncpyz( s_serveroptions.hostname.field.buffer, UI_Cvar_VariableString( "sv_hostname" ), sizeof( s_serveroptions.hostname.field.buffer ) );
+	s_serveroptions.lan.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "sv_lanforcerate" ) );
+	s_serveroptions.pure.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "sv_pure" ) );
+	s_serveroptions.allowServerDownload.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "sv_allowDownload" ) );
 
 	// set the map pic
 	info = UI_GetArenaInfoByNumber(s_startserver.maplist[s_startserver.currentmap]);
@@ -2030,7 +2114,7 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 	s_serveroptions.picframe.height  			= 320;
 	s_serveroptions.picframe.focuspic			= GAMESERVER_SELECT;
 
-	y = 256;
+	y = 268;
 	if(UI_GametypeUsesFragLimit(s_serveroptions.gametype)) {
 		s_serveroptions.fraglimit.generic.type       = MTYPE_FIELD;
 		if (s_serveroptions.gametype == GT_HARVESTER || s_serveroptions.gametype == GT_DOMINATION || s_serveroptions.gametype == GT_POSSESSION) {
@@ -2049,7 +2133,7 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 	else /* if(UI_GametypeUsesCaptureLimit(s_serveroptions.gametype)) */ {
 		s_serveroptions.capturelimit.generic.type       = MTYPE_FIELD;
 		if (UI_IsARoundBasedGametype(s_serveroptions.gametype)) {
-			s_serveroptions.capturelimit.generic.name       = "Round Limit:";
+			s_serveroptions.capturelimit.generic.name       = "Score Limit:";
 		}
 		else {
 			s_serveroptions.capturelimit.generic.name       = "Capture Limit:";
@@ -2064,7 +2148,12 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 
 	y += BIGCHAR_HEIGHT+2;
 	s_serveroptions.timelimit.generic.type       = MTYPE_FIELD;
-	s_serveroptions.timelimit.generic.name       = "Time Limit:";
+	if(UI_IsARoundBasedGametype(s_serveroptions.gametype)) {
+		s_serveroptions.timelimit.generic.name       = "Time Limit (m):";
+	}
+	else {
+		s_serveroptions.timelimit.generic.name       = "Time Limit:";
+	}
 	s_serveroptions.timelimit.generic.flags      = QMF_NUMBERSONLY|QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	s_serveroptions.timelimit.generic.x	         = OPTIONS_X;
 	s_serveroptions.timelimit.generic.y	         = y;
@@ -2072,13 +2161,17 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 	s_serveroptions.timelimit.field.widthInChars = 3;
 	s_serveroptions.timelimit.field.maxchars     = 3;
 
-	y += BIGCHAR_HEIGHT+2;
-	s_serveroptions.pure.generic.type			= MTYPE_RADIOBUTTON;
-	s_serveroptions.pure.generic.flags			= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-	s_serveroptions.pure.generic.x				= OPTIONS_X;
-	s_serveroptions.pure.generic.y				= y;
-	s_serveroptions.pure.generic.name			= "Pure Server:";
-	s_serveroptions.pure.generic.statusbar  = ServerOptions_StatusBar_Pure;
+	if(UI_IsARoundBasedGametype(s_serveroptions.gametype)) {
+		y += BIGCHAR_HEIGHT+2;
+		s_serveroptions.eliminationRoundTime.generic.type       = MTYPE_FIELD;
+		s_serveroptions.eliminationRoundTime.generic.name       = "Round Time (s):";
+		s_serveroptions.eliminationRoundTime.generic.flags      = QMF_SMALLFONT;
+		s_serveroptions.eliminationRoundTime.generic.x          = OPTIONS_X;
+		s_serveroptions.eliminationRoundTime.generic.y	        = y;
+		s_serveroptions.eliminationRoundTime.field.widthInChars = 3;
+		s_serveroptions.eliminationRoundTime.field.maxchars     = 3;
+		s_serveroptions.eliminationRoundTime.generic.statusbar  = ServerOptions_StatusBar_eliminationRoundTime;
+	}
 
 	y += BIGCHAR_HEIGHT+2;
 	s_serveroptions.pmove.generic.type			= MTYPE_SPINCONTROL;
@@ -2088,6 +2181,14 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 	s_serveroptions.pmove.generic.y				= y;
 	s_serveroptions.pmove.itemnames				= pmove_list;
 	s_serveroptions.pmove.generic.statusbar  = ServerOptions_StatusBar_Pmove;
+
+	y += BIGCHAR_HEIGHT+2;
+	s_serveroptions.grapple.generic.type			= MTYPE_RADIOBUTTON;
+	s_serveroptions.grapple.generic.flags			= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	s_serveroptions.grapple.generic.x				= OPTIONS_X;
+	s_serveroptions.grapple.generic.y				= y;
+	s_serveroptions.grapple.generic.name			= "Grappling Hook:";
+	s_serveroptions.grapple.generic.statusbar  = ServerOptions_StatusBar_Grapple;
 
 	//Weapon Mode option
 	y += BIGCHAR_HEIGHT+2;
@@ -2114,43 +2215,25 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 	s_serveroptions.weaponArenaWeapon.itemnames				= weaponArenaWeapon_list;
 	s_serveroptions.weaponArenaWeapon.generic.statusbar  = ServerOptions_StatusBar_WeaponArenaWeapon;
 
-	y += BIGCHAR_HEIGHT+2;
-	s_serveroptions.grapple.generic.type			= MTYPE_RADIOBUTTON;
-	s_serveroptions.grapple.generic.flags			= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-	s_serveroptions.grapple.generic.x				= OPTIONS_X;
-	s_serveroptions.grapple.generic.y				= y;
-	s_serveroptions.grapple.generic.name			= "Grappling Hook:";
-	s_serveroptions.grapple.generic.statusbar  = ServerOptions_StatusBar_Grapple;
-
-	if(UI_IsATeamGametype(s_serveroptions.gametype) &&
-			!UI_IsARoundBasedGametype(s_serveroptions.gametype)) {
-		y += BIGCHAR_HEIGHT+2;
-		s_serveroptions.friendlyfire.generic.type     = MTYPE_RADIOBUTTON;
-		s_serveroptions.friendlyfire.generic.flags    = QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-		s_serveroptions.friendlyfire.generic.x	      = OPTIONS_X;
-		s_serveroptions.friendlyfire.generic.y	      = y;
-		s_serveroptions.friendlyfire.generic.name	  = "Friendly Fire:";
-		s_serveroptions.friendlyfire.generic.statusbar  = ServerOptions_StatusBar_FriendlyFire;
-	}
-	if(UI_IsARoundBasedGametype(s_serveroptions.gametype) &&
-			UI_IsATeamGametype(s_serveroptions.gametype)) {
-		y += BIGCHAR_HEIGHT+2;
-		s_serveroptions.eliminationDamage.generic.type			= MTYPE_SPINCONTROL;
-		s_serveroptions.eliminationDamage.generic.flags			= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-		s_serveroptions.eliminationDamage.generic.name			= "Damage To:";
-		s_serveroptions.eliminationDamage.generic.x				=  OPTIONS_X;
-		s_serveroptions.eliminationDamage.generic.y				= y;
-		s_serveroptions.eliminationDamage.itemnames				= eliminationDamage_list;
-		s_serveroptions.eliminationDamage.generic.statusbar  = ServerOptions_StatusBar_eliminationDamage;
-
-		if( s_serveroptions.gametype == GT_CTF_ELIMINATION) {
+	if(UI_IsATeamGametype(s_serveroptions.gametype)) {
+		if(UI_IsARoundBasedGametype(s_serveroptions.gametype)) {
 			y += BIGCHAR_HEIGHT+2;
-			s_serveroptions.oneway.generic.type			= MTYPE_RADIOBUTTON;
-			s_serveroptions.oneway.generic.flags			= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-			s_serveroptions.oneway.generic.x				= OPTIONS_X;
-			s_serveroptions.oneway.generic.y				= y;
-			s_serveroptions.oneway.generic.name			= "Attack vs. Defense Mode:";
-			s_serveroptions.oneway.generic.statusbar  = ServerOptions_StatusBar_Oneway;
+			s_serveroptions.eliminationDamage.generic.type			= MTYPE_SPINCONTROL;
+			s_serveroptions.eliminationDamage.generic.flags			= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+			s_serveroptions.eliminationDamage.generic.name			= "Damage To:";
+			s_serveroptions.eliminationDamage.generic.x				=  OPTIONS_X;
+			s_serveroptions.eliminationDamage.generic.y				= y;
+			s_serveroptions.eliminationDamage.itemnames				= eliminationDamage_list;
+			s_serveroptions.eliminationDamage.generic.statusbar  = ServerOptions_StatusBar_eliminationDamage;
+		}
+		else {
+			y += BIGCHAR_HEIGHT+2;
+			s_serveroptions.friendlyfire.generic.type     = MTYPE_RADIOBUTTON;
+			s_serveroptions.friendlyfire.generic.flags    = QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+			s_serveroptions.friendlyfire.generic.x	      = OPTIONS_X;
+			s_serveroptions.friendlyfire.generic.y	      = y;
+			s_serveroptions.friendlyfire.generic.name	  = "Friendly Fire:";
+			s_serveroptions.friendlyfire.generic.statusbar  = ServerOptions_StatusBar_FriendlyFire;
 		}
 	}
 	if( s_serveroptions.gametype == GT_HARVESTER) {
@@ -2162,14 +2245,34 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 		s_serveroptions.harvesterFromBodies.generic.name			= "Skulls From Bodies:";
 		s_serveroptions.harvesterFromBodies.generic.statusbar  = ServerOptions_StatusBar_harvesterFromBodies;
 	}
+	if( s_serveroptions.gametype == GT_CTF_ELIMINATION) {
+		y += BIGCHAR_HEIGHT+2;
+		s_serveroptions.oneway.generic.type			= MTYPE_RADIOBUTTON;
+		s_serveroptions.oneway.generic.flags			= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+		s_serveroptions.oneway.generic.x				= OPTIONS_X;
+		s_serveroptions.oneway.generic.y				= y;
+		s_serveroptions.oneway.generic.name			= "Attack vs. Defense:";
+		s_serveroptions.oneway.generic.statusbar  = ServerOptions_StatusBar_Oneway;
+	}
 	if( s_serveroptions.gametype == GT_LMS ) {
 		y += BIGCHAR_HEIGHT+2;
 		s_serveroptions.lmsMode.generic.type			= MTYPE_SPINCONTROL;
 		s_serveroptions.lmsMode.generic.flags			= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 		s_serveroptions.lmsMode.generic.name			= "Scoring Mode:";
-		s_serveroptions.lmsMode.generic.x				=  OPTIONS_X; //32 + (strlen(s_serveroptions.botSkill.generic.name) + 2 ) * SMALLCHAR_WIDTH;
+		s_serveroptions.lmsMode.generic.x				=  OPTIONS_X;
 		s_serveroptions.lmsMode.generic.y				= y;
 		s_serveroptions.lmsMode.itemnames				= lmsMode_list;
+		s_serveroptions.lmsMode.generic.statusbar		= ServerOptions_StatusBar_lmsMode;
+
+		y += BIGCHAR_HEIGHT+2;
+		s_serveroptions.lmsLives.generic.type       = MTYPE_FIELD;
+		s_serveroptions.lmsLives.generic.name       = "Lives Per Player:";
+		s_serveroptions.lmsLives.generic.flags      = QMF_SMALLFONT;
+		s_serveroptions.lmsLives.generic.x          = OPTIONS_X;
+		s_serveroptions.lmsLives.generic.y	        = y;
+		s_serveroptions.lmsLives.field.widthInChars = 3;
+		s_serveroptions.lmsLives.field.maxchars     = 3;
+		s_serveroptions.lmsLives.generic.statusbar  = ServerOptions_StatusBar_lmsLives;
 	}
 	if( s_serveroptions.gametype == GT_DOUBLE_D ) {
 		y += BIGCHAR_HEIGHT+2;
@@ -2243,31 +2346,39 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 		y += ( SMALLCHAR_HEIGHT + 4 );
 	}
 
+	s_serveroptions.pure.generic.type			= MTYPE_RADIOBUTTON;
+	s_serveroptions.pure.generic.name			= "Pure Server:";
+	s_serveroptions.pure.generic.flags			= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	s_serveroptions.pure.generic.x				= 192;
+	s_serveroptions.pure.generic.y				= y;
+	s_serveroptions.pure.generic.statusbar  = ServerOptions_StatusBar_Pure;
+
 	if( s_serveroptions.multiplayer ) {
+		y += BIGCHAR_HEIGHT+2;
 		s_serveroptions.lan.generic.type			= MTYPE_RADIOBUTTON;
-		s_serveroptions.lan.generic.flags			= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-		s_serveroptions.lan.generic.x				= 32 + (strlen(s_serveroptions.botSkill.generic.name) + 2 ) * SMALLCHAR_WIDTH;;
-		s_serveroptions.lan.generic.y				= y;
 		s_serveroptions.lan.generic.name			= "Optimize For LAN:";
+		s_serveroptions.lan.generic.flags			= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+		s_serveroptions.lan.generic.x				= 192;
+		s_serveroptions.lan.generic.y				= y;
 		s_serveroptions.lan.generic.statusbar  = ServerOptions_StatusBar_OptimizeForLAN;
 		
 		y += BIGCHAR_HEIGHT+2;
 		s_serveroptions.hostname.generic.type       = MTYPE_FIELD;
 		s_serveroptions.hostname.generic.name       = "Host Name:";
 		s_serveroptions.hostname.generic.flags      = QMF_SMALLFONT;
-		s_serveroptions.hostname.generic.x          = 32 + (strlen(s_serveroptions.botSkill.generic.name) + 2 ) * SMALLCHAR_WIDTH;;
+		s_serveroptions.hostname.generic.x          = 192;
 		s_serveroptions.hostname.generic.y	        = y;
-		s_serveroptions.hostname.field.widthInChars = 18;
+		s_serveroptions.hostname.field.widthInChars = 12;
 		s_serveroptions.hostname.field.maxchars     = 64;
 		s_serveroptions.hostname.generic.statusbar  = ServerOptions_StatusBar_HostName;
 
 		y += BIGCHAR_HEIGHT+2;
-		s_serveroptions.allowServerDownload.generic.type			= MTYPE_RADIOBUTTON;
-		s_serveroptions.allowServerDownload.generic.flags			= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-		s_serveroptions.allowServerDownload.generic.x				= 32 + (strlen(s_serveroptions.botSkill.generic.name) + 2 ) * SMALLCHAR_WIDTH;;
-		s_serveroptions.allowServerDownload.generic.y				= y;
-		s_serveroptions.allowServerDownload.generic.name			= "Clients Can Download:";
-		s_serveroptions.allowServerDownload.generic.statusbar  = ServerOptions_StatusBar_AllowServerDownload;
+		s_serveroptions.allowServerDownload.generic.type		= MTYPE_RADIOBUTTON;
+		s_serveroptions.allowServerDownload.generic.name		= "Clients Can D/L:";
+		s_serveroptions.allowServerDownload.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+		s_serveroptions.allowServerDownload.generic.x			= 192;
+		s_serveroptions.allowServerDownload.generic.y			= y;
+		s_serveroptions.allowServerDownload.generic.statusbar	= ServerOptions_StatusBar_AllowServerDownload;
 	}
 
 	s_serveroptions.back.generic.type	  = MTYPE_BITMAP;
@@ -2328,16 +2439,20 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 		Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.capturelimit );
 	}
 	Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.timelimit );
-	if(UI_IsATeamGametype(s_serveroptions.gametype) &&
-			!UI_IsARoundBasedGametype(s_serveroptions.gametype)) {
-		Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.friendlyfire );
+	if(UI_IsARoundBasedGametype(s_serveroptions.gametype)) {
+		Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.eliminationRoundTime );
 	}
-	Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.pure );
-	Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.weaponMode );
+	Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.pmove );
 	Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.grapple );
+	Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.weaponMode );
 	Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.weaponArenaWeapon );
-	if( s_serveroptions.gametype == GT_LMS) {
-		Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.lmsMode );
+	if(UI_IsATeamGametype(s_serveroptions.gametype)) {
+		if (UI_IsARoundBasedGametype(s_serveroptions.gametype)) {
+			Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.eliminationDamage );
+		}
+		else {
+			Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.friendlyfire );
+		}
 	}
 	if( s_serveroptions.gametype == GT_HARVESTER) {
 		Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.harvesterFromBodies );
@@ -2345,14 +2460,16 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 	if( s_serveroptions.gametype == GT_CTF_ELIMINATION) {
 		Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.oneway );
 	}
-	if(UI_IsATeamGametype(s_serveroptions.gametype) && UI_IsARoundBasedGametype(s_serveroptions.gametype)) {
-		Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.eliminationDamage );
+	if( s_serveroptions.gametype == GT_LMS) {
+		Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.lmsMode );
+		Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.lmsLives );
 	}
 	if( s_serveroptions.gametype == GT_DOUBLE_D) {
 		Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.ddCaptureTime );
 		Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.ddRespawnDelay );
 	}
-	Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.pmove );
+
+	Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.pure );
 	if( s_serveroptions.multiplayer ) {
 		Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.lan );
 		Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.hostname );
