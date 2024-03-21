@@ -48,6 +48,11 @@ GAME OPTIONS MENU
 #define ID_FORCEMODEL			133
 #define ID_MUZZLEFLASHSTYLE		134
 #define ID_DRAWGUN				135
+#define ID_SHOWBLOOD			136
+#define ID_SHOWGIBS				137
+#define ID_VIEWBOB				138
+#define ID_RAILTRAILTIME		139
+#define ID_KICKSCALE			140
 
 #undef NUM_CROSSHAIRS
 #define	NUM_CROSSHAIRS			99
@@ -68,6 +73,12 @@ typedef struct {
 	menuradiobutton_s	synceveryframe;
 	menuradiobutton_s	forcemodel;
 	menulist_s			muzzleFlashStyle;
+	menuradiobutton_s	showBlood;
+	menuradiobutton_s	showGibs;
+	menuradiobutton_s	viewBob;
+	menufield_s			railTrailTime;
+	menufield_s			kickScale;
+
 	menubitmap_s		back;
 } preferences_t;
 
@@ -76,8 +87,8 @@ static preferences_t s_preferences;
 static const char *drawGun_names[] =
 {
 	"Hidden",
-	"Left",
 	"Right",
+	"Left",
 	"Center",
 	NULL
 };
@@ -110,6 +121,9 @@ static void Preferences_SetMenuItems( void ) {
 	s_preferences.synceveryframe.curvalue	= trap_Cvar_VariableValue( "r_finish" ) != 0;
 	s_preferences.forcemodel.curvalue		= trap_Cvar_VariableValue( "cg_forcemodel" ) != 0;
 	s_preferences.muzzleFlashStyle.curvalue	= trap_Cvar_VariableValue( "cg_muzzleFlashStyle" ) != 0;
+	s_preferences.showBlood.curvalue		= trap_Cvar_VariableValue( "com_blood" ) != 0;
+	s_preferences.showGibs.curvalue			= trap_Cvar_VariableValue( "cg_gibs" ) != 0;
+	s_preferences.viewBob.curvalue			= trap_Cvar_VariableValue( "cg_bob" ) != 0;
 }
 
 static void Preferences_Event( void* ptr, int notification ) {
@@ -154,10 +168,202 @@ static void Preferences_Event( void* ptr, int notification ) {
 		trap_Cvar_SetValue( "cg_muzzleFlashStyle", s_preferences.muzzleFlashStyle.curvalue );
 		break;
 
+	case ID_SHOWBLOOD:
+		trap_Cvar_SetValue( "com_blood", s_preferences.showBlood.curvalue );
+		break;
+
+	case ID_SHOWGIBS:
+		trap_Cvar_SetValue( "cg_gibs", s_preferences.showGibs.curvalue );
+		break;
+
+	case ID_VIEWBOB:
+		trap_Cvar_SetValue( "cg_bob", s_preferences.viewBob.curvalue );
+		break;
+
+	case ID_RAILTRAILTIME:
+		trap_Cvar_Set("cg_railTrailTime", s_preferences.railTrailTime.field.buffer );
+		break;
+
+	case ID_KICKSCALE:
+		trap_Cvar_Set("cg_kickScale", s_preferences.kickScale.field.buffer );
+		break;
+
 	case ID_BACK:
 		UI_PopMenu();
 		break;
 	}
+}
+
+/*
+=================
+Preferences_StatusBar_WeaponHand
+
+Descriptions should have 48 characters or less per line, and there can't be more than two lines.
+=================
+*/
+static void Preferences_StatusBar_WeaponHand( void* ptr ) {
+	switch (s_preferences.drawGun.curvalue) {
+		case 1:
+			UI_DrawString( 320, 440, "Right: The weapon is rendered as carried", UI_CENTER|UI_SMALLFONT, colorWhite );
+			UI_DrawString( 320, 460, "by a right-handed user.", UI_CENTER|UI_SMALLFONT, colorWhite );
+			break;
+		case 2:
+			UI_DrawString( 320, 440, "Left: The weapon is rendered as carried", UI_CENTER|UI_SMALLFONT, colorWhite );
+			UI_DrawString( 320, 460, "by a left-handed user.", UI_CENTER|UI_SMALLFONT, colorWhite );
+			break;
+		case 3:
+			UI_DrawString( 320, 440, "Center: The weapon is rendered at", UI_CENTER|UI_SMALLFONT, colorWhite );
+			UI_DrawString( 320, 460, "the very center of the screen.", UI_CENTER|UI_SMALLFONT, colorWhite );
+			break;
+		default: // case 0
+			UI_DrawString( 320, 440, "Hidden: The weapon carrying", UI_CENTER|UI_SMALLFONT, colorWhite );
+			UI_DrawString( 320, 460, "isn't rendered in the screen.", UI_CENTER|UI_SMALLFONT, colorWhite );
+			break;
+	}
+}
+
+/*
+=================
+Preferences_StatusBar_SimpleItems
+
+Descriptions should have 48 characters or less per line, and there can't be more than two lines.
+=================
+*/
+static void Preferences_StatusBar_SimpleItems( void* ptr ) {
+	UI_DrawString( 320, 440, "Specifies if the icons in the pickup spawning", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "places should be rendered in 2D or 3D.", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
+/*
+=================
+Preferences_StatusBar_MarksOnWalls
+
+Descriptions should have 48 characters or less per line, and there can't be more than two lines.
+=================
+*/
+static void Preferences_StatusBar_MarksOnWalls( void* ptr ) {
+	UI_DrawString( 320, 440, "If set, weapons whose projectiles hit", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "walls will leave a mark on them.", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
+/*
+=================
+Preferences_StatusBar_EjectingBrass
+
+Descriptions should have 48 characters or less per line, and there can't be more than two lines.
+=================
+*/
+static void Preferences_StatusBar_EjectingBrass( void* ptr ) {
+	UI_DrawString( 320, 440, "If set, whenever the Shotgun fires, a shell", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "casing will stay in the floor for a while.", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
+/*
+=================
+Preferences_StatusBar_HighQualitySky
+
+Descriptions should have 48 characters or less per line, and there can't be more than two lines.
+=================
+*/
+static void Preferences_StatusBar_HighQualitySky( void* ptr ) {
+	UI_DrawString( 320, 440, "If set, the sky is rendered at full quality.", UI_CENTER|UI_SMALLFONT, colorWhite );
+	// UI_DrawString( 320, 460, "", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
+/*
+=================
+Preferences_StatusBar_SyncEveryFrame
+
+Descriptions should have 48 characters or less per line, and there can't be more than two lines.
+=================
+*/
+static void Preferences_StatusBar_SyncEveryFrame( void* ptr ) {
+	UI_DrawString( 320, 440, "If set, improves response between", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "the input and the on-screen action.", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
+/*
+=================
+Preferences_StatusBar_ForceModels
+
+Descriptions should have 48 characters or less per line, and there can't be more than two lines.
+=================
+*/
+static void Preferences_StatusBar_ForceModels( void* ptr ) {
+	UI_DrawString( 320, 440, "If set, makes every opponent", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "appear as your own character.", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
+/*
+=================
+Preferences_StatusBar_MuzzleFlashStyle
+
+Descriptions should have 48 characters or less per line, and there can't be more than two lines.
+=================
+*/
+static void Preferences_StatusBar_MuzzleFlashStyle( void* ptr ) {
+	UI_DrawString( 320, 440, "Selects a rendering style for the muzzle flash,", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "a.k.a. the flash a weapon makes when shooting.", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
+/*
+=================
+Preferences_StatusBar_ShowBlood
+
+Descriptions should have 48 characters or less per line, and there can't be more than two lines.
+=================
+*/
+static void Preferences_StatusBar_ShowBlood( void* ptr ) {
+	UI_DrawString( 320, 440, "If set, characters will drop blood when hit,", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "and leave a small chunk when hit hard.", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
+/*
+=================
+Preferences_StatusBar_ShowGibs
+
+Descriptions should have 48 characters or less per line, and there can't be more than two lines.
+=================
+*/
+static void Preferences_StatusBar_ShowGibs( void* ptr ) {
+	UI_DrawString( 320, 440, "If set, characters will explode in a shower", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "of gibs when dealt enough lethal damage.", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
+/*
+=================
+Preferences_StatusBar_ViewBobbing
+
+Descriptions should have 48 characters or less per line, and there can't be more than two lines.
+=================
+*/
+static void Preferences_StatusBar_ViewBobbing( void* ptr ) {
+	UI_DrawString( 320, 440, "If set, the screen will bob when walking", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "or running at a certain rate.", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
+/*
+=================
+Preferences_StatusBar_RailTrailTime
+
+Descriptions should have 48 characters or less per line, and there can't be more than two lines.
+=================
+*/
+static void Preferences_StatusBar_RailTrailTime( void* ptr ) {
+	UI_DrawString( 320, 440, "Specifies the seconds the trail left by a slug", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "after firing the Railgun stays on the screen.", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
+/*
+=================
+Preferences_StatusBar_KickScale
+
+Descriptions should have 48 characters or less per line, and there can't be more than two lines.
+=================
+*/
+static void Preferences_StatusBar_KickScale( void* ptr ) {
+	UI_DrawString( 320, 440, "Specifies how much the screen shakes", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "when your character is hit.", UI_CENTER|UI_SMALLFONT, colorWhite );
 }
 
 static void Preferences_MenuInit( void ) {
@@ -167,6 +373,8 @@ static void Preferences_MenuInit( void ) {
 	UI_SetDefaultCvar("cg_simpleItems","0");
 	UI_SetDefaultCvar("r_fastsky","0");
 	UI_SetDefaultCvar("cg_brassTime","0");
+	UI_SetDefaultCvar("cg_railTrailTime","600");
+	UI_SetDefaultCvar("cg_kickScale","1.0");
 
 	memset( &s_preferences, 0 ,sizeof(preferences_t) );
 
@@ -207,6 +415,7 @@ static void Preferences_MenuInit( void ) {
 	s_preferences.drawGun.generic.x			= PREFERENCES_X_POS;
 	s_preferences.drawGun.generic.y			= y;
 	s_preferences.drawGun.itemnames			= drawGun_names;
+	s_preferences.drawGun.generic.statusbar	= Preferences_StatusBar_WeaponHand;
 
 	y += BIGCHAR_HEIGHT;
 	s_preferences.simpleitems.generic.type		= MTYPE_SPINCONTROL;
@@ -217,6 +426,7 @@ static void Preferences_MenuInit( void ) {
 	s_preferences.simpleitems.generic.x			= PREFERENCES_X_POS;
 	s_preferences.simpleitems.generic.y			= y;
 	s_preferences.simpleitems.itemnames			= simpleItems_names;
+	s_preferences.simpleitems.generic.statusbar	= Preferences_StatusBar_SimpleItems;
 	
 	y += BIGCHAR_HEIGHT;
 	s_preferences.wallmarks.generic.type		= MTYPE_RADIOBUTTON;
@@ -226,6 +436,7 @@ static void Preferences_MenuInit( void ) {
 	s_preferences.wallmarks.generic.id			= ID_WALLMARKS;
 	s_preferences.wallmarks.generic.x			= PREFERENCES_X_POS;
 	s_preferences.wallmarks.generic.y			= y;
+	s_preferences.wallmarks.generic.statusbar	= Preferences_StatusBar_MarksOnWalls;
 
 	y += BIGCHAR_HEIGHT;
 	s_preferences.brass.generic.type		= MTYPE_RADIOBUTTON;
@@ -235,6 +446,7 @@ static void Preferences_MenuInit( void ) {
 	s_preferences.brass.generic.id			= ID_EJECTINGBRASS;
 	s_preferences.brass.generic.x			= PREFERENCES_X_POS;
 	s_preferences.brass.generic.y			= y;
+	s_preferences.brass.generic.statusbar	= Preferences_StatusBar_EjectingBrass;
 
 	y += BIGCHAR_HEIGHT;
 	s_preferences.highqualitysky.generic.type		= MTYPE_RADIOBUTTON;
@@ -244,6 +456,7 @@ static void Preferences_MenuInit( void ) {
 	s_preferences.highqualitysky.generic.id			= ID_HIGHQUALITYSKY;
 	s_preferences.highqualitysky.generic.x			= PREFERENCES_X_POS;
 	s_preferences.highqualitysky.generic.y			= y;
+	s_preferences.highqualitysky.generic.statusbar	= Preferences_StatusBar_HighQualitySky;
 
 	y += BIGCHAR_HEIGHT;
 	s_preferences.synceveryframe.generic.type		= MTYPE_RADIOBUTTON;
@@ -253,6 +466,7 @@ static void Preferences_MenuInit( void ) {
 	s_preferences.synceveryframe.generic.id			= ID_SYNCEVERYFRAME;
 	s_preferences.synceveryframe.generic.x			= PREFERENCES_X_POS;
 	s_preferences.synceveryframe.generic.y			= y;
+	s_preferences.synceveryframe.generic.statusbar	= Preferences_StatusBar_SyncEveryFrame;
 
 	y += BIGCHAR_HEIGHT;
 	s_preferences.forcemodel.generic.type		= MTYPE_RADIOBUTTON;
@@ -262,7 +476,8 @@ static void Preferences_MenuInit( void ) {
 	s_preferences.forcemodel.generic.id			= ID_FORCEMODEL;
 	s_preferences.forcemodel.generic.x			= PREFERENCES_X_POS;
 	s_preferences.forcemodel.generic.y			= y;
-	
+	s_preferences.forcemodel.generic.statusbar	= Preferences_StatusBar_ForceModels;
+
 	y += BIGCHAR_HEIGHT;
 	s_preferences.muzzleFlashStyle.generic.type		= MTYPE_SPINCONTROL;
 	s_preferences.muzzleFlashStyle.generic.name		= "Muzzle Flash Style:";
@@ -272,6 +487,61 @@ static void Preferences_MenuInit( void ) {
 	s_preferences.muzzleFlashStyle.generic.x		= PREFERENCES_X_POS;
 	s_preferences.muzzleFlashStyle.generic.y		= y;
 	s_preferences.muzzleFlashStyle.itemnames		= muzzleFlashStyle_names;
+	s_preferences.muzzleFlashStyle.generic.statusbar	= Preferences_StatusBar_MuzzleFlashStyle;
+
+	y += BIGCHAR_HEIGHT;
+	s_preferences.showBlood.generic.type		= MTYPE_RADIOBUTTON;
+	s_preferences.showBlood.generic.name		= "Enable Blood:";
+	s_preferences.showBlood.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	s_preferences.showBlood.generic.callback	= Preferences_Event;
+	s_preferences.showBlood.generic.id			= ID_SHOWBLOOD;
+	s_preferences.showBlood.generic.x			= PREFERENCES_X_POS;
+	s_preferences.showBlood.generic.y			= y;
+	s_preferences.showBlood.generic.statusbar	= Preferences_StatusBar_ShowBlood;
+
+	y += BIGCHAR_HEIGHT;
+	s_preferences.showGibs.generic.type		= MTYPE_RADIOBUTTON;
+	s_preferences.showGibs.generic.name		= "Enable Gibs:";
+	s_preferences.showGibs.generic.flags	= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	s_preferences.showGibs.generic.callback	= Preferences_Event;
+	s_preferences.showGibs.generic.id		= ID_SHOWGIBS;
+	s_preferences.showGibs.generic.x		= PREFERENCES_X_POS;
+	s_preferences.showGibs.generic.y		= y;
+	s_preferences.showGibs.generic.statusbar	= Preferences_StatusBar_ShowGibs;
+
+	y += BIGCHAR_HEIGHT;
+	s_preferences.viewBob.generic.type		= MTYPE_RADIOBUTTON;
+	s_preferences.viewBob.generic.name		= "View Bobbing:";
+	s_preferences.viewBob.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	s_preferences.viewBob.generic.callback	= Preferences_Event;
+	s_preferences.viewBob.generic.id		= ID_VIEWBOB;
+	s_preferences.viewBob.generic.x			= PREFERENCES_X_POS;
+	s_preferences.viewBob.generic.y			= y;
+	s_preferences.viewBob.generic.statusbar	= Preferences_StatusBar_ViewBobbing;
+
+	y += BIGCHAR_HEIGHT;
+	s_preferences.railTrailTime.generic.type		= MTYPE_FIELD;
+	s_preferences.railTrailTime.generic.name		= "Railgun Slug Trail Time:";
+	s_preferences.railTrailTime.generic.flags		= QMF_SMALLFONT;
+	s_preferences.railTrailTime.generic.id			= ID_RAILTRAILTIME;
+	s_preferences.railTrailTime.generic.x			= 192;
+	s_preferences.railTrailTime.generic.y			= y;
+	s_preferences.railTrailTime.field.widthInChars	= 6;
+	s_preferences.railTrailTime.field.maxchars		= 6;
+	s_preferences.railTrailTime.generic.callback	= Preferences_Event;
+	s_preferences.railTrailTime.generic.statusbar	= Preferences_StatusBar_RailTrailTime;
+
+	y += BIGCHAR_HEIGHT;
+	s_preferences.kickScale.generic.type		= MTYPE_FIELD;
+	s_preferences.kickScale.generic.name		= "Screen Shaking Rate:";
+	s_preferences.kickScale.generic.flags		= QMF_SMALLFONT;
+	s_preferences.kickScale.generic.id			= ID_KICKSCALE;
+	s_preferences.kickScale.generic.x			= 192;
+	s_preferences.kickScale.generic.y			= y;
+	s_preferences.kickScale.field.widthInChars	= 6;
+	s_preferences.kickScale.field.maxchars		= 6;
+	s_preferences.kickScale.generic.callback	= Preferences_Event;
+	s_preferences.kickScale.generic.statusbar	= Preferences_StatusBar_KickScale;
 
 	s_preferences.back.generic.type		= MTYPE_BITMAP;
 	s_preferences.back.generic.name		= ART_BACK0;
@@ -296,6 +566,11 @@ static void Preferences_MenuInit( void ) {
 	Menu_AddItem( &s_preferences.menu, &s_preferences.synceveryframe );
 	Menu_AddItem( &s_preferences.menu, &s_preferences.forcemodel );
 	Menu_AddItem( &s_preferences.menu, &s_preferences.muzzleFlashStyle );
+	Menu_AddItem( &s_preferences.menu, &s_preferences.showBlood );
+	Menu_AddItem( &s_preferences.menu, &s_preferences.showGibs );
+	Menu_AddItem( &s_preferences.menu, &s_preferences.viewBob );
+	Menu_AddItem( &s_preferences.menu, &s_preferences.railTrailTime );
+	Menu_AddItem( &s_preferences.menu, &s_preferences.kickScale );
 
 	Menu_AddItem( &s_preferences.menu, &s_preferences.back );
 
