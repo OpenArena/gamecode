@@ -811,6 +811,9 @@ typedef struct {
 	// Specific for Harvester
 	menuradiobutton_s	harvesterFromBodies;
 
+	// Specific for Overload
+	menufield_s			overloadRespawnDelay;
+
 	// Specific for CTF Elimination (eCTF)
 	menuradiobutton_s	oneway;
 
@@ -982,6 +985,9 @@ static void ServerOptions_Start( void ) {
 
 	// Specific for Harvester
 	int		harvesterFromBodies = s_serveroptions.harvesterFromBodies.curvalue;
+
+	// Specific for Harvester
+	int		overloadRespawnDelay = atoi( s_serveroptions.overloadRespawnDelay.field.buffer );
 
 	// Specific for CTF Elimination (eCTF)
 	int		oneway = s_serveroptions.oneway.curvalue;
@@ -1168,6 +1174,7 @@ static void ServerOptions_Start( void ) {
 	trap_Cvar_SetValue( "g_friendlyfire", friendlyfire );
 	trap_Cvar_SetValue( "elimination_selfdamage", eliminationDamage );
 	trap_Cvar_SetValue( "g_harvesterFromBodies", harvesterFromBodies );
+	trap_Cvar_Set("g_obeliskRespawnDelay", s_serveroptions.overloadRespawnDelay.field.buffer );
 	trap_Cvar_SetValue( "elimination_ctf_oneway", oneway );
 	trap_Cvar_SetValue( "g_lms_mode", lmsMode);
 	trap_Cvar_Set("g_lms_lives", s_serveroptions.lmsLives.field.buffer );
@@ -1614,6 +1621,18 @@ static void ServerOptions_StatusBar_harvesterFromBodies( void* ptr ) {
 
 /*
 =================
+ServerOptions_StatusBar_overloadRespawnDelay
+
+Descriptions should have 48 characters or less per line, and there can't be more than two lines.
+=================
+*/
+static void ServerOptions_StatusBar_overloadRespawnDelay( void* ptr ) {
+	UI_DrawString( 320, 440, "Specifies the amount of time between", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "scoring and the start of the next round.", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
+/*
+=================
 ServerOptions_StatusBar_Oneway
 
 Descriptions should have 48 characters or less per line, and there can't be more than two lines.
@@ -2002,6 +2021,7 @@ static void ServerOptions_SetMenuItems( void ) {
 	Q_strncpyz( s_serveroptions.eliminationRoundTime.field.buffer, UI_Cvar_VariableString( "elimination_roundtime" ), sizeof( s_serveroptions.eliminationRoundTime.field.buffer ) );
 	s_serveroptions.eliminationDamage.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "elimination_selfdamage" ) );
 	s_serveroptions.harvesterFromBodies.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_harvesterFromBodies" ) );
+	Q_strncpyz( s_serveroptions.overloadRespawnDelay.field.buffer, UI_Cvar_VariableString( "g_obeliskRespawnDelay" ), sizeof( s_serveroptions.overloadRespawnDelay.field.buffer ) );
 	s_serveroptions.oneway.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "elimination_ctf_oneway" ) );
 	s_serveroptions.lmsMode.curvalue = Com_Clamp( 0, 3, trap_Cvar_VariableValue("g_lms_mode") );
 	Q_strncpyz( s_serveroptions.lmsLives.field.buffer, UI_Cvar_VariableString( "g_lms_lives" ), sizeof( s_serveroptions.lmsLives.field.buffer ) );
@@ -2256,6 +2276,17 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 		s_serveroptions.harvesterFromBodies.generic.name			= "Skulls From Bodies:";
 		s_serveroptions.harvesterFromBodies.generic.statusbar  = ServerOptions_StatusBar_harvesterFromBodies;
 	}
+	if( s_serveroptions.gametype == GT_OBELISK ) {
+		y += BIGCHAR_HEIGHT+2;
+		s_serveroptions.overloadRespawnDelay.generic.type       = MTYPE_FIELD;
+		s_serveroptions.overloadRespawnDelay.generic.name       = "Time Between Rounds:";
+		s_serveroptions.overloadRespawnDelay.generic.flags      = QMF_SMALLFONT;
+		s_serveroptions.overloadRespawnDelay.generic.x          = OPTIONS_X;
+		s_serveroptions.overloadRespawnDelay.generic.y	        = y;
+		s_serveroptions.overloadRespawnDelay.field.widthInChars = 3;
+		s_serveroptions.overloadRespawnDelay.field.maxchars     = 3;
+		s_serveroptions.overloadRespawnDelay.generic.statusbar  = ServerOptions_StatusBar_overloadRespawnDelay;
+	}
 	if( s_serveroptions.gametype == GT_CTF_ELIMINATION) {
 		y += BIGCHAR_HEIGHT+2;
 		s_serveroptions.oneway.generic.type			= MTYPE_RADIOBUTTON;
@@ -2469,6 +2500,9 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 	}
 	if( s_serveroptions.gametype == GT_HARVESTER) {
 		Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.harvesterFromBodies );
+	}
+	if( s_serveroptions.gametype == GT_OBELISK) {
+		Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.overloadRespawnDelay );
 	}
 	if( s_serveroptions.gametype == GT_CTF_ELIMINATION) {
 		Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.oneway );
