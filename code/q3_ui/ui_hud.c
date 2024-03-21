@@ -58,6 +58,7 @@ GAME OPTIONS MENU
 #define ID_DRAWSPEED			143
 #define ID_DRAWREWARDS			144
 #define ID_DRAW3DICONS			145
+#define ID_CROSSHAIRPULSE		146
 
 typedef struct {
 	menuframework_s		menu;
@@ -68,6 +69,7 @@ typedef struct {
 
 	menulist_s			crosshair;
 	menuradiobutton_s	crosshairHealth;
+	menuradiobutton_s	crosshairPulse;
 
 	//Crosshair colors:
 	menuslider_s		crosshairColorRed;
@@ -138,6 +140,7 @@ static const char *draw3DIcons_names[] =
 static void HUDOptions_SetMenuItems( void ) {
 	hudOptions_s.crosshair.curvalue				= (int)trap_Cvar_VariableValue( "cg_drawCrosshair" ) % NUM_CROSSHAIRS;
 	hudOptions_s.crosshairHealth.curvalue		= trap_Cvar_VariableValue( "cg_crosshairHealth") != 0;
+	hudOptions_s.crosshairPulse.curvalue		= trap_Cvar_VariableValue( "cg_crosshairPulse") != 0;
 	hudOptions_s.crosshairColorRed.curvalue		= trap_Cvar_VariableValue( "cg_crosshairColorRed")*255.0f;
 	hudOptions_s.crosshairColorGreen.curvalue	= trap_Cvar_VariableValue( "cg_crosshairColorGreen")*255.0f;
 	hudOptions_s.crosshairColorBlue.curvalue	= trap_Cvar_VariableValue( "cg_crosshairColorBlue")*255.0f;
@@ -183,6 +186,10 @@ static void HUDOptions_Event( void* ptr, int notification ) {
 			hudOptions_s.crosshairColorGreen.generic.flags     &= ~QMF_INACTIVE;
 			hudOptions_s.crosshairColorBlue.generic.flags      &= ~QMF_INACTIVE;
 		}
+		break;
+
+	case ID_CROSSHAIRPULSE:
+		trap_Cvar_SetValue( "cg_crosshairPulse", ((float)hudOptions_s.crosshairPulse.curvalue)/255.f );
 		break;
 
 	case ID_COLORRED:
@@ -314,6 +321,7 @@ static void HUDOptions_MenuInit( void ) {
 	int				y;
 
 	UI_SetDefaultCvar("cg_crosshairHealth","1");
+	UI_SetDefaultCvar("cg_crosshairPulse","1");
 	UI_SetDefaultCvar("cg_crosshairColorRed","1");
 	UI_SetDefaultCvar("cg_crosshairColorBlue","1");
 	UI_SetDefaultCvar("cg_crosshairColorGreen","1");
@@ -356,7 +364,7 @@ static void HUDOptions_MenuInit( void ) {
 	hudOptions_s.framer.width			= 256;
 	hudOptions_s.framer.height			= 334;
 
-	y = 96;
+	y = 80;
 	hudOptions_s.crosshair.generic.type			= MTYPE_TEXT;
 	hudOptions_s.crosshair.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT|QMF_NODEFAULTINIT|QMF_OWNERDRAW;
 	hudOptions_s.crosshair.generic.x			= HUDOPTIONS_X_POS;
@@ -378,6 +386,15 @@ static void HUDOptions_MenuInit( void ) {
 	hudOptions_s.crosshairHealth.generic.id			= ID_CROSSHAIRHEALTH;
 	hudOptions_s.crosshairHealth.generic.x			= HUDOPTIONS_X_POS;
 	hudOptions_s.crosshairHealth.generic.y			= y;
+
+	y += BIGCHAR_HEIGHT+2;
+	hudOptions_s.crosshairPulse.generic.type		= MTYPE_RADIOBUTTON;
+	hudOptions_s.crosshairPulse.generic.name		= "Crosshair Pickup Pulse:";
+	hudOptions_s.crosshairPulse.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	hudOptions_s.crosshairPulse.generic.callback	= HUDOptions_Event;
+	hudOptions_s.crosshairPulse.generic.id			= ID_CROSSHAIRPULSE;
+	hudOptions_s.crosshairPulse.generic.x			= HUDOPTIONS_X_POS;
+	hudOptions_s.crosshairPulse.generic.y			= y;
 
 	y += BIGCHAR_HEIGHT+2;
 	hudOptions_s.crosshairColorRed.generic.type		= MTYPE_SLIDER;
@@ -556,6 +573,7 @@ static void HUDOptions_MenuInit( void ) {
 
 	Menu_AddItem( &hudOptions_s.menu, &hudOptions_s.crosshair );
 	Menu_AddItem( &hudOptions_s.menu, &hudOptions_s.crosshairHealth );
+	Menu_AddItem( &hudOptions_s.menu, &hudOptions_s.crosshairPulse );
 	Menu_AddItem( &hudOptions_s.menu, &hudOptions_s.crosshairColorRed );
 	Menu_AddItem( &hudOptions_s.menu, &hudOptions_s.crosshairColorGreen );
 	Menu_AddItem( &hudOptions_s.menu, &hudOptions_s.crosshairColorBlue );
