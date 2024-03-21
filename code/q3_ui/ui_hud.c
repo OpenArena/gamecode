@@ -489,7 +489,7 @@ static void HUDOptions_MenuInit( void ) {
 
 	y += BIGCHAR_HEIGHT+2;
 	hudOptions_s.drawAttacker.generic.type		= MTYPE_RADIOBUTTON;
-	hudOptions_s.drawAttacker.generic.name		= "Show Your Assassin:";
+	hudOptions_s.drawAttacker.generic.name		= "Show Last Attacker:";
 	hudOptions_s.drawAttacker.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	hudOptions_s.drawAttacker.generic.callback	= HUDOptions_Event;
 	hudOptions_s.drawAttacker.generic.id		= ID_DRAWATTACKER;
@@ -507,7 +507,7 @@ static void HUDOptions_MenuInit( void ) {
 
 	y += BIGCHAR_HEIGHT+2;
 	hudOptions_s.drawRewards.generic.type		= MTYPE_RADIOBUTTON;
-	hudOptions_s.drawRewards.generic.name		= "Show Medal Earned:";
+	hudOptions_s.drawRewards.generic.name		= "Show Medal(s) Earned:";
 	hudOptions_s.drawRewards.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	hudOptions_s.drawRewards.generic.callback	= HUDOptions_Event;
 	hudOptions_s.drawRewards.generic.id			= ID_DRAWREWARDS;
