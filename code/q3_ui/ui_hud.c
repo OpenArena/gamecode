@@ -48,8 +48,9 @@ GAME OPTIONS MENU
 #define ID_ALWAYSWEAPONBAR		133
 #define ID_WEAPONBARSTYLE		134
 #define ID_IDENTIFYTARGET		135
-#define ID_DRAWFPS				136
-
+#define ID_DRAWTEAMOVERLAY		136
+#define ID_OBITUARYOUTPUT		137
+#define ID_DRAWFPS				138
 
 typedef struct {
 	menuframework_s		menu;
@@ -69,6 +70,8 @@ typedef struct {
 	menuradiobutton_s	alwaysWeaponBar;
 	menulist_s			weaponBarStyle;
 	menuradiobutton_s	identifyTarget;
+	menulist_s			drawTeamOverlay;
+	menulist_s			obituaryOutput;
 
 	menuradiobutton_s	drawFPS;
 
@@ -92,6 +95,25 @@ static const char *weaponBarStyle_names[] =
 	NULL
 };
 
+static const char *teamOverlay_names[] =
+{
+	"off",
+	"upper right",
+	"lower right",
+	"lower left",
+	NULL
+};
+
+static const char *obituaryOutput_names[] =
+{
+	"Disabled",
+	"Only Console Text",
+	"Only HUD Text",
+	"Only HUD Icon",
+	"HUD Icon + Console",
+	NULL
+};
+
 static void HUDOptions_SetMenuItems( void ) {
 	hudOptions_s.crosshair.curvalue				= (int)trap_Cvar_VariableValue( "cg_drawCrosshair" ) % NUM_CROSSHAIRS;
 	hudOptions_s.crosshairHealth.curvalue		= trap_Cvar_VariableValue( "cg_crosshairHealth") != 0;
@@ -102,6 +124,8 @@ static void HUDOptions_SetMenuItems( void ) {
 	hudOptions_s.weaponBarStyle.curvalue		= trap_Cvar_VariableValue( "cg_weaponBarStyle" ) != 0;
 	hudOptions_s.identifyTarget.curvalue		= trap_Cvar_VariableValue( "cg_drawCrosshairNames" ) != 0;
 	hudOptions_s.drawFPS.curvalue				= trap_Cvar_VariableValue( "cg_drawfps") != 0;
+	hudOptions_s.drawTeamOverlay.curvalue		= Com_Clamp( 0, 3, trap_Cvar_VariableValue( "cg_drawTeamOverlay" ) );
+	hudOptions_s.obituaryOutput.curvalue		= trap_Cvar_VariableValue( "cg_obituaryOutput" ) != 0;
 }
 
 static void HUDOptions_Event( void* ptr, int notification ) {
@@ -155,6 +179,14 @@ static void HUDOptions_Event( void* ptr, int notification ) {
 
 	case ID_IDENTIFYTARGET:
 		trap_Cvar_SetValue( "cg_drawCrosshairNames", hudOptions_s.identifyTarget.curvalue );
+		break;
+
+	case ID_DRAWTEAMOVERLAY:
+		trap_Cvar_SetValue( "cg_drawTeamOverlay", hudOptions_s.drawTeamOverlay.curvalue );
+		break;
+
+	case ID_OBITUARYOUTPUT:
+		trap_Cvar_SetValue( "cg_obituaryOutput", hudOptions_s.obituaryOutput.curvalue );
 		break;
 
 	case ID_DRAWFPS:
@@ -352,6 +384,26 @@ static void HUDOptions_MenuInit( void ) {
 	hudOptions_s.identifyTarget.generic.y			= y;
 
 	y += BIGCHAR_HEIGHT+2;
+	hudOptions_s.drawTeamOverlay.generic.type		= MTYPE_SPINCONTROL;
+	hudOptions_s.drawTeamOverlay.generic.name		= "Draw Team Overlay:";
+	hudOptions_s.drawTeamOverlay.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	hudOptions_s.drawTeamOverlay.generic.callback	= HUDOptions_Event;
+	hudOptions_s.drawTeamOverlay.generic.id			= ID_DRAWTEAMOVERLAY;
+	hudOptions_s.drawTeamOverlay.generic.x			= HUDOPTIONS_X_POS;
+	hudOptions_s.drawTeamOverlay.generic.y			= y;
+	hudOptions_s.drawTeamOverlay.itemnames			= teamOverlay_names;
+
+	y += BIGCHAR_HEIGHT+2;
+	hudOptions_s.obituaryOutput.generic.type		= MTYPE_SPINCONTROL;
+	hudOptions_s.obituaryOutput.generic.name		= "Death Messages:";
+	hudOptions_s.obituaryOutput.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	hudOptions_s.obituaryOutput.generic.callback	= HUDOptions_Event;
+	hudOptions_s.obituaryOutput.generic.id			= ID_OBITUARYOUTPUT;
+	hudOptions_s.obituaryOutput.generic.x			= HUDOPTIONS_X_POS;
+	hudOptions_s.obituaryOutput.generic.y			= y;
+	hudOptions_s.obituaryOutput.itemnames			= obituaryOutput_names;
+
+	y += BIGCHAR_HEIGHT+2;
 	hudOptions_s.drawFPS.generic.type		= MTYPE_RADIOBUTTON;
 	hudOptions_s.drawFPS.generic.name		= "Draw FPS:";
 	hudOptions_s.drawFPS.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
@@ -383,6 +435,8 @@ static void HUDOptions_MenuInit( void ) {
 	Menu_AddItem( &hudOptions_s.menu, &hudOptions_s.alwaysWeaponBar );
 	Menu_AddItem( &hudOptions_s.menu, &hudOptions_s.weaponBarStyle );
 	Menu_AddItem( &hudOptions_s.menu, &hudOptions_s.identifyTarget );
+	Menu_AddItem( &hudOptions_s.menu, &hudOptions_s.drawTeamOverlay );
+	Menu_AddItem( &hudOptions_s.menu, &hudOptions_s.obituaryOutput );
 	Menu_AddItem( &hudOptions_s.menu, &hudOptions_s.drawFPS );
 
 	Menu_AddItem( &hudOptions_s.menu, &hudOptions_s.back );

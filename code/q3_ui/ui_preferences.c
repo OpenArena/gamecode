@@ -45,12 +45,8 @@ GAME OPTIONS MENU
 #define ID_WALLMARKS			131
 #define ID_SYNCEVERYFRAME		132
 #define ID_FORCEMODEL			133
-#define ID_DRAWTEAMOVERLAY		134
-#define ID_MUZZLEFLASHSTYLE		135
-#define ID_OBITUARYOUTPUT		136
-#define ID_BACK					137
-#define ID_CHATBEEP				138
-#define ID_TEAMCHATBEEP			139
+#define ID_MUZZLEFLASHSTYLE		134
+#define ID_BACK					135
 
 #undef NUM_CROSSHAIRS
 #define	NUM_CROSSHAIRS			99
@@ -69,24 +65,11 @@ typedef struct {
 	menuradiobutton_s	highqualitysky;
 	menuradiobutton_s	synceveryframe;
 	menuradiobutton_s	forcemodel;
-	menulist_s			drawteamoverlay;
 	menulist_s			muzzleFlashStyle;
-	menulist_s			obituaryOutput;
-	menuradiobutton_s       chatbeep;
-	menuradiobutton_s       teamchatbeep;
 	menubitmap_s		back;
 } preferences_t;
 
 static preferences_t s_preferences;
-
-static const char *teamoverlay_names[] =
-{
-	"off",
-	"upper right",
-	"lower right",
-	"lower left",
-	NULL
-};
 
 static const char *muzzleFlashStyle_names[] =
 {
@@ -100,16 +83,6 @@ static const char *muzzleFlashStyle_names[] =
 	NULL
 };
 
-static const char *obituaryOutput_names[] =
-{
-	"Disabled",
-	"Only Console Text",
-	"Only HUD Text",
-	"Only HUD Icon",
-	"HUD Icon + Console",
-	NULL
-};
-
 static void Preferences_SetMenuItems( void ) {
 	s_preferences.simpleitems.curvalue		= trap_Cvar_VariableValue( "cg_simpleItems" ) != 0;
 	s_preferences.brass.curvalue			= trap_Cvar_VariableValue( "cg_brassTime" ) != 0;
@@ -117,11 +90,7 @@ static void Preferences_SetMenuItems( void ) {
 	s_preferences.highqualitysky.curvalue	= trap_Cvar_VariableValue ( "r_fastsky" ) == 0;
 	s_preferences.synceveryframe.curvalue	= trap_Cvar_VariableValue( "r_finish" ) != 0;
 	s_preferences.forcemodel.curvalue		= trap_Cvar_VariableValue( "cg_forcemodel" ) != 0;
-	s_preferences.drawteamoverlay.curvalue	= Com_Clamp( 0, 3, trap_Cvar_VariableValue( "cg_drawTeamOverlay" ) );
 	s_preferences.muzzleFlashStyle.curvalue	= trap_Cvar_VariableValue( "cg_muzzleFlashStyle" ) != 0;
-	s_preferences.obituaryOutput.curvalue	= trap_Cvar_VariableValue( "cg_obituaryOutput" ) != 0;
-	s_preferences.chatbeep.curvalue         = trap_Cvar_VariableValue( "cg_chatBeep" ) != 0;
-	s_preferences.teamchatbeep.curvalue     = trap_Cvar_VariableValue( "cg_teamChatBeep" ) != 0;
 }
 
 static void Preferences_Event( void* ptr, int notification ) {
@@ -158,24 +127,8 @@ static void Preferences_Event( void* ptr, int notification ) {
 		trap_Cvar_SetValue( "cg_forcemodel", s_preferences.forcemodel.curvalue );
 		break;
 
-	case ID_DRAWTEAMOVERLAY:
-		trap_Cvar_SetValue( "cg_drawTeamOverlay", s_preferences.drawteamoverlay.curvalue );
-		break;
-
 	case ID_MUZZLEFLASHSTYLE:
 		trap_Cvar_SetValue( "cg_muzzleFlashStyle", s_preferences.muzzleFlashStyle.curvalue );
-		break;
-
-	case ID_OBITUARYOUTPUT:
-		trap_Cvar_SetValue( "cg_obituaryOutput", s_preferences.obituaryOutput.curvalue );
-		break;
-
-	case ID_CHATBEEP:
-		trap_Cvar_SetValue( "cg_chatBeep", s_preferences.chatbeep.curvalue );
-		break;
-
-	case ID_TEAMCHATBEEP:
-		trap_Cvar_SetValue( "cg_teamChatBeep", s_preferences.teamchatbeep.curvalue );
 		break;
 
 	case ID_BACK:
@@ -237,16 +190,6 @@ static void Preferences_MenuInit( void ) {
 	Preferences_Menu_AddBoolean(&s_preferences.highqualitysky, &y, ID_HIGHQUALITYSKY, "High Quality Sky:");
 	Preferences_Menu_AddBoolean(&s_preferences.synceveryframe, &y, ID_SYNCEVERYFRAME, "Sync Every Frame:");
 	Preferences_Menu_AddBoolean(&s_preferences.forcemodel, &y, ID_FORCEMODEL, "Force Player Models:");
-	
-	y += BIGCHAR_HEIGHT+2;
-	s_preferences.drawteamoverlay.generic.type     = MTYPE_SPINCONTROL;
-	s_preferences.drawteamoverlay.generic.name	   = "Draw Team Overlay:";
-	s_preferences.drawteamoverlay.generic.flags	   = QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-	s_preferences.drawteamoverlay.generic.callback = Preferences_Event;
-	s_preferences.drawteamoverlay.generic.id       = ID_DRAWTEAMOVERLAY;
-	s_preferences.drawteamoverlay.generic.x	       = PREFERENCES_X_POS;
-	s_preferences.drawteamoverlay.generic.y	       = y;
-	s_preferences.drawteamoverlay.itemnames			= teamoverlay_names;
 
 	y += BIGCHAR_HEIGHT+2;
 	s_preferences.muzzleFlashStyle.generic.type     = MTYPE_SPINCONTROL;
@@ -258,19 +201,6 @@ static void Preferences_MenuInit( void ) {
 	s_preferences.muzzleFlashStyle.generic.y	       = y;
 	s_preferences.muzzleFlashStyle.itemnames			= muzzleFlashStyle_names;
 
-	y += BIGCHAR_HEIGHT+2;
-	s_preferences.obituaryOutput.generic.type     = MTYPE_SPINCONTROL;
-	s_preferences.obituaryOutput.generic.name	   = "Death Messages:";
-	s_preferences.obituaryOutput.generic.flags	   = QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-	s_preferences.obituaryOutput.generic.callback = Preferences_Event;
-	s_preferences.obituaryOutput.generic.id       = ID_OBITUARYOUTPUT;
-	s_preferences.obituaryOutput.generic.x	       = PREFERENCES_X_POS;
-	s_preferences.obituaryOutput.generic.y	       = y;
-	s_preferences.obituaryOutput.itemnames			= obituaryOutput_names;
-
-	Preferences_Menu_AddBoolean(&s_preferences.chatbeep, &y, ID_CHATBEEP, "Beep on Chat:");
-	Preferences_Menu_AddBoolean(&s_preferences.teamchatbeep, &y, ID_TEAMCHATBEEP, "Beep on Team Chat:");
-	
 	s_preferences.back.generic.type	    = MTYPE_BITMAP;
 	s_preferences.back.generic.name     = ART_BACK0;
 	s_preferences.back.generic.flags    = QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS;
@@ -292,11 +222,7 @@ static void Preferences_MenuInit( void ) {
 	Menu_AddItem( &s_preferences.menu, &s_preferences.highqualitysky );
 	Menu_AddItem( &s_preferences.menu, &s_preferences.synceveryframe );
 	Menu_AddItem( &s_preferences.menu, &s_preferences.forcemodel );
-	Menu_AddItem( &s_preferences.menu, &s_preferences.drawteamoverlay );
 	Menu_AddItem( &s_preferences.menu, &s_preferences.muzzleFlashStyle );
-	Menu_AddItem( &s_preferences.menu, &s_preferences.obituaryOutput );
-	Menu_AddItem( &s_preferences.menu, &s_preferences.chatbeep );
-	Menu_AddItem( &s_preferences.menu, &s_preferences.teamchatbeep );
 
 	Menu_AddItem( &s_preferences.menu, &s_preferences.back );
 

@@ -48,6 +48,8 @@ SOUND OPTIONS MENU
 //Sago: Here I do some stuff!
 #define ID_OPENAL			18
 #define ID_BACK				19
+#define ID_CHATBEEP			20
+#define ID_TEAMCHATBEEP		21
 
 
 static const char *quality_items[] = {
@@ -72,6 +74,8 @@ typedef struct {
 	menulist_s			quality;
 //	menuradiobutton_s	a3d;
 	menuradiobutton_s	openal;
+	menuradiobutton_s	chatBeep;
+	menuradiobutton_s	teamChatBeep;
 
 	menubitmap_s		back;
 } soundOptionsInfo_t;
@@ -153,6 +157,14 @@ static void UI_SoundOptionsMenu_Event( void* ptr, int event ) {
 			trap_Cmd_ExecuteText( EXEC_NOW, "s_useopenal 0\n" );
 		}
 		soundOptionsInfo.openal.curvalue = (int)trap_Cvar_VariableValue( "s_useopenal" );
+		break;
+
+	case ID_CHATBEEP:
+		trap_Cvar_SetValue( "cg_chatBeep", soundOptionsInfo.chatBeep.curvalue );
+		break;
+
+	case ID_TEAMCHATBEEP:
+		trap_Cvar_SetValue( "cg_teamChatBeep", soundOptionsInfo.teamChatBeep.curvalue );
 		break;
 
 	case ID_BACK:
@@ -300,6 +312,24 @@ static void UI_SoundOptionsMenu_Init( void ) {
 	soundOptionsInfo.openal.generic.x				= 400;
 	soundOptionsInfo.openal.generic.y				= y;
 
+	y += BIGCHAR_HEIGHT+2;
+	soundOptionsInfo.chatBeep.generic.type		= MTYPE_RADIOBUTTON;
+	soundOptionsInfo.chatBeep.generic.name		= "Beep on Chat:";
+	soundOptionsInfo.chatBeep.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	soundOptionsInfo.chatBeep.generic.callback	= UI_SoundOptionsMenu_Event;
+	soundOptionsInfo.chatBeep.generic.id		= ID_CHATBEEP;
+	soundOptionsInfo.chatBeep.generic.x			= 400;
+	soundOptionsInfo.chatBeep.generic.y			= y;
+
+	y += BIGCHAR_HEIGHT+2;
+	soundOptionsInfo.teamChatBeep.generic.type		= MTYPE_RADIOBUTTON;
+	soundOptionsInfo.teamChatBeep.generic.name		= "Beep on Team Chat:";
+	soundOptionsInfo.teamChatBeep.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	soundOptionsInfo.teamChatBeep.generic.callback	= UI_SoundOptionsMenu_Event;
+	soundOptionsInfo.teamChatBeep.generic.id		= ID_TEAMCHATBEEP;
+	soundOptionsInfo.teamChatBeep.generic.x			= 400;
+	soundOptionsInfo.teamChatBeep.generic.y			= y;
+
 	soundOptionsInfo.back.generic.type			= MTYPE_BITMAP;
 	soundOptionsInfo.back.generic.name			= ART_BACK0;
 	soundOptionsInfo.back.generic.flags			= QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS;
@@ -324,6 +354,8 @@ static void UI_SoundOptionsMenu_Init( void ) {
 	Menu_AddItem( &soundOptionsInfo.menu, ( void * ) &soundOptionsInfo.quality );
 //	Menu_AddItem( &soundOptionsInfo.menu, ( void * ) &soundOptionsInfo.a3d );
 	Menu_AddItem( &soundOptionsInfo.menu, ( void * ) &soundOptionsInfo.openal );
+	Menu_AddItem( &soundOptionsInfo.menu, ( void * ) &soundOptionsInfo.chatBeep );
+	Menu_AddItem( &soundOptionsInfo.menu, ( void * ) &soundOptionsInfo.teamChatBeep );
 	Menu_AddItem( &soundOptionsInfo.menu, ( void * ) &soundOptionsInfo.back );
 
 	soundOptionsInfo.sfxvolume.curvalue = trap_Cvar_VariableValue( "s_volume" ) * 10;
@@ -331,6 +363,8 @@ static void UI_SoundOptionsMenu_Init( void ) {
 	soundOptionsInfo.quality.curvalue = !trap_Cvar_VariableValue( "s_compression" );
 //	soundOptionsInfo.a3d.curvalue = (int)trap_Cvar_VariableValue( "s_usingA3D" );
 	soundOptionsInfo.openal.curvalue = (int)trap_Cvar_VariableValue( "s_useopenal" );
+	soundOptionsInfo.chatBeep.curvalue = (int)trap_Cvar_VariableValue( "cg_chatBeep" );
+	soundOptionsInfo.teamChatBeep.curvalue = (int)trap_Cvar_VariableValue( "cg_teamChatBeep" );
 }
 
 
