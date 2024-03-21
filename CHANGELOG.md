@@ -73,6 +73,10 @@
 
 **Release date:** TBA
 
+* Classic UI: Added "Show Timer" (`cg_drawTimer`), "Show Match Status" (`cg_drawStatus`), "Show Low Ammo Warning" (`cg_drawAmmoWarning`), "Show Last Attacker" (`cg_drawAttacker`), "Show Movement Speed" (`cg_drawSpeed`) and "Show Medal(s) Earned" (`cg_drawRewards`) to H.U.D.
+* Classic UI: Moved "Chat Beep" and "Team Chat Beep" from Game Options to Sound.
+* Classic UI: Moved "Draw FPS" (`cg_drawFPS`) from Video to H.U.D.
+* Classic UI: Moved "Crosshair" (`cg_drawCrosshair`), "Crosshair Shows Health" (`cg_crosshairHealth`), "Crosshair Color Red/Green/Blue" (`cg_crosshairColorRed`, `cg_crosshairColorGreen` and `cg_crosshairColorBlue`), "Always Show Weapon Bar" (`cg_alwaysWeaponBar`), "Weapon Bar Style" (`cg_weaponBarStyle`), "Identify Target" (`cg_drawCrosshairNames`), "Draw Team Overlay" (`cg_drawTeamOverlay`) and "Death Messages" (`cg_obituaryOutput`) from Game Options to H.U.D.
 * Classic UI: New H.U.D. menu, accessible from Setup and its submenus. Contains the options that modify the in-game interface.
 * Classic UI: `cg_obituaryOutput` can now be configured in "Game Options" as "Death Messages".
 * Deletion of `g_runes`. In its place there's a new cvar, `g_classicMode`. Enabling it (via cvar or the Weapon Ruleset "Classic Arena" in Skirmish/Create Server) makes the following replacements:
