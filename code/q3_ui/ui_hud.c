@@ -40,7 +40,12 @@ GAME OPTIONS MENU
 #define HUDOPTIONS_X_POS		360
 
 #define ID_BACK					127
-#define ID_DRAWFPS				128
+#define ID_CROSSHAIR			128
+#define ID_COLORRED				129
+#define ID_COLORGREEN			130
+#define ID_COLORBLUE			131
+#define ID_CROSSHAIRHEALTH		132
+#define ID_DRAWFPS				133
 
 
 typedef struct {
@@ -50,15 +55,30 @@ typedef struct {
 	menubitmap_s		framel;
 	menubitmap_s		framer;
 
+	menulist_s			crosshair;
+	menuradiobutton_s	crosshairHealth;
+
+	//Crosshair colors:
+	menuslider_s		crosshairColorRed;
+	menuslider_s		crosshairColorGreen;
+	menuslider_s		crosshairColorBlue;
+
 	menuradiobutton_s	drawFPS;
 
 	menubitmap_s		back;
+
+	qhandle_t			crosshairShader[NUM_CROSSHAIRS];
 } hudOptions_t;
 
 static hudOptions_t hudOptions_s;
 
 static void HUDOptions_SetMenuItems( void ) {
-	hudOptions_s.drawFPS.curvalue	= trap_Cvar_VariableValue( "cg_drawfps") != 0;
+	hudOptions_s.crosshair.curvalue				= (int)trap_Cvar_VariableValue( "cg_drawCrosshair" ) % NUM_CROSSHAIRS;
+	hudOptions_s.crosshairHealth.curvalue		= trap_Cvar_VariableValue( "cg_crosshairHealth") != 0;
+	hudOptions_s.crosshairColorRed.curvalue		= trap_Cvar_VariableValue( "cg_crosshairColorRed")*255.0f;
+	hudOptions_s.crosshairColorGreen.curvalue	= trap_Cvar_VariableValue( "cg_crosshairColorGreen")*255.0f;
+	hudOptions_s.crosshairColorBlue.curvalue	= trap_Cvar_VariableValue( "cg_crosshairColorBlue")*255.0f;
+	hudOptions_s.drawFPS.curvalue				= trap_Cvar_VariableValue( "cg_drawfps") != 0;
 }
 
 static void HUDOptions_Event( void* ptr, int notification ) {
@@ -67,6 +87,40 @@ static void HUDOptions_Event( void* ptr, int notification ) {
 	}
 
 	switch( ((menucommon_s*)ptr)->id ) {
+	case ID_CROSSHAIR:
+		hudOptions_s.crosshair.curvalue++;
+		if( hudOptions_s.crosshair.curvalue == NUM_CROSSHAIRS || hudOptions_s.crosshairShader[hudOptions_s.crosshair.curvalue]==0 ) {
+			hudOptions_s.crosshair.curvalue = 0;
+		}
+		trap_Cvar_SetValue( "cg_drawCrosshair", hudOptions_s.crosshair.curvalue );
+		break;
+
+	case ID_CROSSHAIRHEALTH:
+		trap_Cvar_SetValue( "cg_crosshairHealth", hudOptions_s.crosshairHealth.curvalue );
+		if(hudOptions_s.crosshairHealth.curvalue) {
+			//If crosshairHealth is on: Don't allow color selection
+			hudOptions_s.crosshairColorRed.generic.flags       |= QMF_INACTIVE;
+			hudOptions_s.crosshairColorGreen.generic.flags     |= QMF_INACTIVE;
+			hudOptions_s.crosshairColorBlue.generic.flags      |= QMF_INACTIVE;
+		} else {
+			//If crosshairHealth is off: Allow color selection
+			hudOptions_s.crosshairColorRed.generic.flags       &= ~QMF_INACTIVE;
+			hudOptions_s.crosshairColorGreen.generic.flags     &= ~QMF_INACTIVE;
+			hudOptions_s.crosshairColorBlue.generic.flags      &= ~QMF_INACTIVE;
+		}
+		break;
+
+	case ID_COLORRED:
+		trap_Cvar_SetValue( "cg_crosshairColorRed", ((float)hudOptions_s.crosshairColorRed.curvalue)/255.f );
+		break;
+
+	case ID_COLORGREEN:
+		trap_Cvar_SetValue( "cg_crosshairColorGreen", ((float)hudOptions_s.crosshairColorGreen.curvalue)/255.f );
+		break;
+
+	case ID_COLORBLUE:
+		trap_Cvar_SetValue( "cg_crosshairColorBlue", ((float)hudOptions_s.crosshairColorBlue.curvalue)/255.f );
+		break;
 
 	case ID_DRAWFPS:
 		trap_Cvar_SetValue( "cg_drawFPS", hudOptions_s.drawFPS.curvalue );
@@ -78,9 +132,68 @@ static void HUDOptions_Event( void* ptr, int notification ) {
 	}
 }
 
+
+/*
+=================
+Crosshair_Draw
+=================
+*/
+static void Crosshair_Draw( void *self ) {
+	menulist_s	*s;
+	float		*color;
+	int			x, y;
+	int			style;
+	qboolean	focus;
+	vec4_t          color4;
+
+	s = (menulist_s *)self;
+	x = s->generic.x;
+	y =	s->generic.y;
+
+	style = UI_SMALLFONT;
+	focus = (s->generic.parent->cursor == s->generic.menuPosition);
+
+	if ( s->generic.flags & QMF_GRAYED ) {
+		color = text_color_disabled;
+	}
+	else if ( focus )
+	{
+		color = text_color_highlight;
+		style |= UI_PULSE;
+	}
+	else if ( s->generic.flags & QMF_BLINK ) {
+		color = text_color_highlight;
+		style |= UI_BLINK;
+	}
+	else {
+		color = text_color_normal;
+	}
+
+	if ( focus ) {
+		// draw cursor
+		UI_FillRect( s->generic.left, s->generic.top, s->generic.right-s->generic.left+1, s->generic.bottom-s->generic.top+1, listbar_color ); 
+		UI_DrawChar( x, y, 13, UI_CENTER|UI_BLINK|UI_SMALLFONT, color);
+	}
+
+	UI_DrawString( x - SMALLCHAR_WIDTH, y, s->generic.name, style|UI_RIGHT, color );
+	if( !s->curvalue ) {
+		return;
+	}
+	color4[0]=((float)hudOptions_s.crosshairColorRed.curvalue)/255.f;
+	color4[1]=((float)hudOptions_s.crosshairColorGreen.curvalue)/255.f;
+	color4[2]=((float)hudOptions_s.crosshairColorBlue.curvalue)/255.f;
+	color4[3]=1.0f;
+	trap_R_SetColor( color4 );
+	UI_DrawHandlePic( x + SMALLCHAR_WIDTH, y - 4, 24, 24, hudOptions_s.crosshairShader[s->curvalue] );
+}
+
 static void HUDOptions_MenuInit( void ) {
 	int				y;
 
+	UI_SetDefaultCvar("cg_crosshairHealth","1");
+	UI_SetDefaultCvar("cg_crosshairColorRed","1");
+	UI_SetDefaultCvar("cg_crosshairColorBlue","1");
+	UI_SetDefaultCvar("cg_crosshairColorGreen","1");
 	UI_SetDefaultCvar("cg_drawFPS","0");
 
 	memset( &hudOptions_s, 0 ,sizeof(hudOptions_t) );
@@ -114,6 +227,68 @@ static void HUDOptions_MenuInit( void ) {
 	hudOptions_s.framer.height			= 334;
 
 	y = 96;
+	hudOptions_s.crosshair.generic.type			= MTYPE_TEXT;
+	hudOptions_s.crosshair.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT|QMF_NODEFAULTINIT|QMF_OWNERDRAW;
+	hudOptions_s.crosshair.generic.x			= HUDOPTIONS_X_POS;
+	hudOptions_s.crosshair.generic.y			= y;
+	hudOptions_s.crosshair.generic.name			= "Crosshair Style:";
+	hudOptions_s.crosshair.generic.callback		= HUDOptions_Event;
+	hudOptions_s.crosshair.generic.ownerdraw	= Crosshair_Draw;
+	hudOptions_s.crosshair.generic.id			= ID_CROSSHAIR;
+	hudOptions_s.crosshair.generic.top			= y - 4;
+	hudOptions_s.crosshair.generic.bottom		= y + 20;
+	hudOptions_s.crosshair.generic.left			= HUDOPTIONS_X_POS - ( ( strlen(hudOptions_s.crosshair.generic.name) + 1 ) * SMALLCHAR_WIDTH );
+	hudOptions_s.crosshair.generic.right		= HUDOPTIONS_X_POS + 48;
+
+	y += BIGCHAR_HEIGHT+2;
+	hudOptions_s.crosshairHealth.generic.type		= MTYPE_RADIOBUTTON;
+	hudOptions_s.crosshairHealth.generic.name		= "Crosshair Shows Health:";
+	hudOptions_s.crosshairHealth.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	hudOptions_s.crosshairHealth.generic.callback	= HUDOptions_Event;
+	hudOptions_s.crosshairHealth.generic.id			= ID_CROSSHAIRHEALTH;
+	hudOptions_s.crosshairHealth.generic.x			= HUDOPTIONS_X_POS;
+	hudOptions_s.crosshairHealth.generic.y			= y;
+
+	y += BIGCHAR_HEIGHT+2;
+	hudOptions_s.crosshairColorRed.generic.type		= MTYPE_SLIDER;
+	hudOptions_s.crosshairColorRed.generic.name		= "Crosshair Color (Red):";
+	hudOptions_s.crosshairColorRed.generic.flags	= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	hudOptions_s.crosshairColorRed.generic.callback	= HUDOptions_Event;
+	hudOptions_s.crosshairColorRed.generic.id		= ID_COLORRED;
+	hudOptions_s.crosshairColorRed.generic.x		= HUDOPTIONS_X_POS;
+	hudOptions_s.crosshairColorRed.generic.y		= y;
+	hudOptions_s.crosshairColorRed.minvalue			= 0.0f;
+	hudOptions_s.crosshairColorRed.maxvalue			= 255.0f;
+
+	y += BIGCHAR_HEIGHT+2;
+	hudOptions_s.crosshairColorGreen.generic.type		= MTYPE_SLIDER;
+	hudOptions_s.crosshairColorGreen.generic.name		= "Crosshair Color (Green):";
+	hudOptions_s.crosshairColorGreen.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	hudOptions_s.crosshairColorGreen.generic.callback	= HUDOptions_Event;
+	hudOptions_s.crosshairColorGreen.generic.id			= ID_COLORGREEN;
+	hudOptions_s.crosshairColorGreen.generic.x			= HUDOPTIONS_X_POS;
+	hudOptions_s.crosshairColorGreen.generic.y			= y;
+	hudOptions_s.crosshairColorGreen.minvalue			= 0.0f;
+	hudOptions_s.crosshairColorGreen.maxvalue			= 255.0f;
+
+	y += BIGCHAR_HEIGHT+2;
+	hudOptions_s.crosshairColorBlue.generic.type		= MTYPE_SLIDER;
+	hudOptions_s.crosshairColorBlue.generic.name		= "Crosshair Color (Blue):";
+	hudOptions_s.crosshairColorBlue.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	hudOptions_s.crosshairColorBlue.generic.callback	= HUDOptions_Event;
+	hudOptions_s.crosshairColorBlue.generic.id			= ID_COLORBLUE;
+	hudOptions_s.crosshairColorBlue.generic.x			= HUDOPTIONS_X_POS;
+	hudOptions_s.crosshairColorBlue.generic.y			= y;
+	hudOptions_s.crosshairColorBlue.minvalue			= 0.0f;
+	hudOptions_s.crosshairColorBlue.maxvalue			= 255.0f;
+
+	if(hudOptions_s.crosshairHealth.curvalue) {
+		hudOptions_s.crosshairColorRed.generic.flags	|= QMF_INACTIVE;
+		hudOptions_s.crosshairColorGreen.generic.flags	|= QMF_INACTIVE;
+		hudOptions_s.crosshairColorBlue.generic.flags	|= QMF_INACTIVE;
+	}
+
+	y += BIGCHAR_HEIGHT+2;
 	hudOptions_s.drawFPS.generic.type		= MTYPE_RADIOBUTTON;
 	hudOptions_s.drawFPS.generic.name		= "Draw FPS:";
 	hudOptions_s.drawFPS.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
@@ -137,6 +312,11 @@ static void HUDOptions_MenuInit( void ) {
 	Menu_AddItem( &hudOptions_s.menu, &hudOptions_s.framel );
 	Menu_AddItem( &hudOptions_s.menu, &hudOptions_s.framer );
 
+	Menu_AddItem( &hudOptions_s.menu, &hudOptions_s.crosshair );
+	Menu_AddItem( &hudOptions_s.menu, &hudOptions_s.crosshairHealth );
+	Menu_AddItem( &hudOptions_s.menu, &hudOptions_s.crosshairColorRed );
+	Menu_AddItem( &hudOptions_s.menu, &hudOptions_s.crosshairColorGreen );
+	Menu_AddItem( &hudOptions_s.menu, &hudOptions_s.crosshairColorBlue );
 	Menu_AddItem( &hudOptions_s.menu, &hudOptions_s.drawFPS );
 
 	Menu_AddItem( &hudOptions_s.menu, &hudOptions_s.back );
@@ -151,10 +331,20 @@ UI_HUDOptionsMenu_Cache
 ===============
 */
 void UI_HUDOptionsMenu_Cache( void ) {
+	int		n;
+
 	trap_R_RegisterShaderNoMip( ART_FRAMEL );
 	trap_R_RegisterShaderNoMip( ART_FRAMER );
 	trap_R_RegisterShaderNoMip( ART_BACK0 );
 	trap_R_RegisterShaderNoMip( ART_BACK1 );
+	for( n = 0; n < NUM_CROSSHAIRS; n++ ) {
+		if (n < 10) {
+			hudOptions_s.crosshairShader[n] = trap_R_RegisterShaderNoMip( va("gfx/2d/crosshair%c", 'a' + n ) );
+		}
+		else {
+			hudOptions_s.crosshairShader[n] = trap_R_RegisterShaderNoMip( va("gfx/2d/crosshair%02d", n - 10) );
+		}
+	}
 }
 
 

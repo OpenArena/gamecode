@@ -39,7 +39,6 @@ GAME OPTIONS MENU
 
 #define PREFERENCES_X_POS		360
 
-#define ID_CROSSHAIR			127
 #define ID_SIMPLEITEMS			128
 #define ID_HIGHQUALITYSKY		129
 #define ID_EJECTINGBRASS		130
@@ -53,12 +52,8 @@ GAME OPTIONS MENU
 #define ID_BACK					138
 #define ID_ALWAYSWEAPONBAR		139
 #define ID_WEAPONBARSTYLE		140
-#define ID_COLORRED				141
-#define ID_COLORGREEN			142
-#define ID_COLORBLUE			143
-#define ID_CROSSHAIRHEALTH		144
-#define ID_CHATBEEP				145
-#define ID_TEAMCHATBEEP			146
+#define ID_CHATBEEP				141
+#define ID_TEAMCHATBEEP			142
 
 #undef NUM_CROSSHAIRS
 #define	NUM_CROSSHAIRS			99
@@ -70,14 +65,6 @@ typedef struct {
 	menutext_s			banner;
 	menubitmap_s		framel;
 	menubitmap_s		framer;
-
-	menulist_s			crosshair;
-	menuradiobutton_s	crosshairHealth;
-
-	//Crosshair colors:
-	menuslider_s            crosshairColorRed;
-	menuslider_s            crosshairColorGreen;
-	menuslider_s            crosshairColorBlue;
 
 	menuradiobutton_s	simpleitems;
 	menuradiobutton_s	alwaysweaponbar;
@@ -94,8 +81,6 @@ typedef struct {
 	menuradiobutton_s       chatbeep;
 	menuradiobutton_s       teamchatbeep;
 	menubitmap_s		back;
-
-	qhandle_t			crosshairShader[NUM_CROSSHAIRS];
 } preferences_t;
 
 static preferences_t s_preferences;
@@ -145,11 +130,6 @@ static const char *weaponBarStyle_names[] =
 };
 
 static void Preferences_SetMenuItems( void ) {
-	s_preferences.crosshair.curvalue		= (int)trap_Cvar_VariableValue( "cg_drawCrosshair" ) % NUM_CROSSHAIRS;
-	s_preferences.crosshairHealth.curvalue          = trap_Cvar_VariableValue( "cg_crosshairHealth") != 0;
-	s_preferences.crosshairColorRed.curvalue        = trap_Cvar_VariableValue( "cg_crosshairColorRed")*255.0f;
-	s_preferences.crosshairColorGreen.curvalue      = trap_Cvar_VariableValue( "cg_crosshairColorGreen")*255.0f;
-	s_preferences.crosshairColorBlue.curvalue       = trap_Cvar_VariableValue( "cg_crosshairColorBlue")*255.0f;
 	s_preferences.simpleitems.curvalue		= trap_Cvar_VariableValue( "cg_simpleItems" ) != 0;
 	s_preferences.alwaysweaponbar.curvalue		= trap_Cvar_VariableValue( "cg_alwaysWeaponBar" ) != 0;
 	s_preferences.weaponBarStyle.curvalue		= trap_Cvar_VariableValue( "cg_weaponBarStyle" ) != 0;
@@ -172,40 +152,6 @@ static void Preferences_Event( void* ptr, int notification ) {
 	}
 
 	switch( ((menucommon_s*)ptr)->id ) {
-	case ID_CROSSHAIR:
-		s_preferences.crosshair.curvalue++;
-		if( s_preferences.crosshair.curvalue == NUM_CROSSHAIRS || s_preferences.crosshairShader[s_preferences.crosshair.curvalue]==0 ) {
-			s_preferences.crosshair.curvalue = 0;
-		}
-		trap_Cvar_SetValue( "cg_drawCrosshair", s_preferences.crosshair.curvalue );
-		break;
-
-	case ID_CROSSHAIRHEALTH:
-		trap_Cvar_SetValue( "cg_crosshairHealth", s_preferences.crosshairHealth.curvalue );
-		if(s_preferences.crosshairHealth.curvalue) {
-			//If crosshairHealth is on: Don't allow color selection
-			s_preferences.crosshairColorRed.generic.flags       |= QMF_INACTIVE;
-			s_preferences.crosshairColorGreen.generic.flags     |= QMF_INACTIVE;
-			s_preferences.crosshairColorBlue.generic.flags      |= QMF_INACTIVE;
-		} else {
-			//If crosshairHealth is off: Allow color selection
-			s_preferences.crosshairColorRed.generic.flags       &= ~QMF_INACTIVE;
-			s_preferences.crosshairColorGreen.generic.flags     &= ~QMF_INACTIVE;
-			s_preferences.crosshairColorBlue.generic.flags      &= ~QMF_INACTIVE;
-		}
-		break;
-
-	case ID_COLORRED:
-		trap_Cvar_SetValue( "cg_crosshairColorRed", ((float)s_preferences.crosshairColorRed.curvalue)/255.f );
-		break;
-
-	case ID_COLORGREEN:
-		trap_Cvar_SetValue( "cg_crosshairColorGreen", ((float)s_preferences.crosshairColorGreen.curvalue)/255.f );
-		break;
-
-	case ID_COLORBLUE:
-		trap_Cvar_SetValue( "cg_crosshairColorBlue", ((float)s_preferences.crosshairColorBlue.curvalue)/255.f );
-		break;
 
 	case ID_SIMPLEITEMS:
 		trap_Cvar_SetValue( "cg_simpleItems", s_preferences.simpleitems.curvalue );
@@ -273,61 +219,6 @@ static void Preferences_Event( void* ptr, int notification ) {
 }
 
 
-/*
-=================
-Crosshair_Draw
-=================
-*/
-static void Crosshair_Draw( void *self ) {
-	menulist_s	*s;
-	float		*color;
-	int			x, y;
-	int			style;
-	qboolean	focus;
-	vec4_t          color4;
-
-	s = (menulist_s *)self;
-	x = s->generic.x;
-	y =	s->generic.y;
-
-	style = UI_SMALLFONT;
-	focus = (s->generic.parent->cursor == s->generic.menuPosition);
-
-	if ( s->generic.flags & QMF_GRAYED ) {
-		color = text_color_disabled;
-	}
-	else if ( focus )
-	{
-		color = text_color_highlight;
-		style |= UI_PULSE;
-	}
-	else if ( s->generic.flags & QMF_BLINK ) {
-		color = text_color_highlight;
-		style |= UI_BLINK;
-	}
-	else {
-		color = text_color_normal;
-	}
-
-	if ( focus ) {
-		// draw cursor
-		UI_FillRect( s->generic.left, s->generic.top, s->generic.right-s->generic.left+1, s->generic.bottom-s->generic.top+1, listbar_color ); 
-		UI_DrawChar( x, y, 13, UI_CENTER|UI_BLINK|UI_SMALLFONT, color);
-	}
-
-	UI_DrawString( x - SMALLCHAR_WIDTH, y, s->generic.name, style|UI_RIGHT, color );
-	if( !s->curvalue ) {
-		return;
-	}
-	color4[0]=((float)s_preferences.crosshairColorRed.curvalue)/255.f;
-	color4[1]=((float)s_preferences.crosshairColorGreen.curvalue)/255.f;
-	color4[2]=((float)s_preferences.crosshairColorBlue.curvalue)/255.f;
-	color4[3]=1.0f;
-	trap_R_SetColor( color4 );
-	UI_DrawHandlePic( x + SMALLCHAR_WIDTH, y - 4, 24, 24, s_preferences.crosshairShader[s->curvalue] );
-}
-
-
 static void Preferences_Menu_AddBoolean (menuradiobutton_s* menutext, int* y, int id, char* text ) { 
 	*y += BIGCHAR_HEIGHT;
 	menutext->generic.type        = MTYPE_RADIOBUTTON;
@@ -341,12 +232,7 @@ static void Preferences_Menu_AddBoolean (menuradiobutton_s* menutext, int* y, in
 
 static void Preferences_MenuInit( void ) {
 	int				y;
-        
-	UI_SetDefaultCvar("cg_crosshairHealth","1");
-	UI_SetDefaultCvar("cg_crosshairColorRed","1");
-	UI_SetDefaultCvar("cg_crosshairColorBlue","1");
-	UI_SetDefaultCvar("cg_crosshairColorGreen","1");
-        
+
 	memset( &s_preferences, 0 ,sizeof(preferences_t) );
 
 	Preferences_Cache();
@@ -378,69 +264,6 @@ static void Preferences_MenuInit( void ) {
 	s_preferences.framer.height  	   = 334;
 
 	y = 96;
-	s_preferences.crosshair.generic.type		= MTYPE_TEXT;
-	s_preferences.crosshair.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT|QMF_NODEFAULTINIT|QMF_OWNERDRAW;
-	s_preferences.crosshair.generic.x			= PREFERENCES_X_POS;
-	s_preferences.crosshair.generic.y			= y;
-	s_preferences.crosshair.generic.name		= "Crosshair Style:";
-	s_preferences.crosshair.generic.callback	= Preferences_Event;
-	s_preferences.crosshair.generic.ownerdraw	= Crosshair_Draw;
-	s_preferences.crosshair.generic.id			= ID_CROSSHAIR;
-	s_preferences.crosshair.generic.top			= y - 4;
-	s_preferences.crosshair.generic.bottom		= y + 20;
-	s_preferences.crosshair.generic.left		= PREFERENCES_X_POS - ( ( strlen(s_preferences.crosshair.generic.name) + 1 ) * SMALLCHAR_WIDTH );
-	s_preferences.crosshair.generic.right		= PREFERENCES_X_POS + 48;
-
-	y += BIGCHAR_HEIGHT+2;
-	s_preferences.crosshairHealth.generic.type        = MTYPE_RADIOBUTTON;
-	s_preferences.crosshairHealth.generic.name	      = "Crosshair Shows Health:";
-	s_preferences.crosshairHealth.generic.flags	      = QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-	s_preferences.crosshairHealth.generic.callback    = Preferences_Event;
-	s_preferences.crosshairHealth.generic.id          = ID_CROSSHAIRHEALTH;
-	s_preferences.crosshairHealth.generic.x	          = PREFERENCES_X_POS;
-	s_preferences.crosshairHealth.generic.y	          = y;
-
-	y += BIGCHAR_HEIGHT+2;
-	s_preferences.crosshairColorRed.generic.type		= MTYPE_SLIDER;
-	s_preferences.crosshairColorRed.generic.name		= "Crosshair Color (Red):";
-	s_preferences.crosshairColorRed.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-	s_preferences.crosshairColorRed.generic.callback	= Preferences_Event;
-	s_preferences.crosshairColorRed.generic.id		= ID_COLORRED;
-	s_preferences.crosshairColorRed.generic.x			= PREFERENCES_X_POS;
-	s_preferences.crosshairColorRed.generic.y			= y;
-	s_preferences.crosshairColorRed.minvalue			= 0.0f;
-	s_preferences.crosshairColorRed.maxvalue			= 255.0f;
-
-	y += BIGCHAR_HEIGHT+2;
-	s_preferences.crosshairColorGreen.generic.type		= MTYPE_SLIDER;
-	s_preferences.crosshairColorGreen.generic.name		= "Crosshair Color (Green):";
-	s_preferences.crosshairColorGreen.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-	s_preferences.crosshairColorGreen.generic.callback	= Preferences_Event;
-	s_preferences.crosshairColorGreen.generic.id		= ID_COLORGREEN;
-	s_preferences.crosshairColorGreen.generic.x			= PREFERENCES_X_POS;
-	s_preferences.crosshairColorGreen.generic.y			= y;
-	s_preferences.crosshairColorGreen.minvalue			= 0.0f;
-	s_preferences.crosshairColorGreen.maxvalue			= 255.0f;
-
-	y += BIGCHAR_HEIGHT+2;
-	s_preferences.crosshairColorBlue.generic.type		= MTYPE_SLIDER;
-	s_preferences.crosshairColorBlue.generic.name		= "Crosshair Color (Blue):";
-	s_preferences.crosshairColorBlue.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-	s_preferences.crosshairColorBlue.generic.callback	= Preferences_Event;
-	s_preferences.crosshairColorBlue.generic.id		= ID_COLORBLUE;
-	s_preferences.crosshairColorBlue.generic.x			= PREFERENCES_X_POS;
-	s_preferences.crosshairColorBlue.generic.y			= y;
-	s_preferences.crosshairColorBlue.minvalue			= 0.0f;
-	s_preferences.crosshairColorBlue.maxvalue			= 255.0f;
-
-
-	if(s_preferences.crosshairHealth.curvalue) {
-		s_preferences.crosshairColorRed.generic.flags       |= QMF_INACTIVE;
-		s_preferences.crosshairColorGreen.generic.flags       |= QMF_INACTIVE;
-		s_preferences.crosshairColorBlue.generic.flags       |= QMF_INACTIVE;
-	}
-
-	y += BIGCHAR_HEIGHT+2;
 	Preferences_Menu_AddBoolean(&s_preferences.simpleitems, &y, ID_SIMPLEITEMS, "2D (Simple) Items:");
 	Preferences_Menu_AddBoolean(&s_preferences.alwaysweaponbar, &y, ID_ALWAYSWEAPONBAR, "Always Show Weapon Bar:");
 	
@@ -509,11 +332,6 @@ static void Preferences_MenuInit( void ) {
 	Menu_AddItem( &s_preferences.menu, &s_preferences.framel );
 	Menu_AddItem( &s_preferences.menu, &s_preferences.framer );
 
-	Menu_AddItem( &s_preferences.menu, &s_preferences.crosshair );
-	Menu_AddItem( &s_preferences.menu, &s_preferences.crosshairHealth );
-	Menu_AddItem( &s_preferences.menu, &s_preferences.crosshairColorRed );
-	Menu_AddItem( &s_preferences.menu, &s_preferences.crosshairColorGreen );
-	Menu_AddItem( &s_preferences.menu, &s_preferences.crosshairColorBlue );
 	Menu_AddItem( &s_preferences.menu, &s_preferences.simpleitems );
 	Menu_AddItem( &s_preferences.menu, &s_preferences.alwaysweaponbar );
 	Menu_AddItem( &s_preferences.menu, &s_preferences.weaponBarStyle );
@@ -547,14 +365,6 @@ void Preferences_Cache( void ) {
 	trap_R_RegisterShaderNoMip( ART_FRAMER );
 	trap_R_RegisterShaderNoMip( ART_BACK0 );
 	trap_R_RegisterShaderNoMip( ART_BACK1 );
-	for( n = 0; n < NUM_CROSSHAIRS; n++ ) {
-		if (n < 10) {
-			s_preferences.crosshairShader[n] = trap_R_RegisterShaderNoMip( va("gfx/2d/crosshair%c", 'a' + n ) );
-		}
-		else {
-			s_preferences.crosshairShader[n] = trap_R_RegisterShaderNoMip( va("gfx/2d/crosshair%02d", n - 10) );
-		}
-	}
 }
 
 
