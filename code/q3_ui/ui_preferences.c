@@ -47,6 +47,7 @@ GAME OPTIONS MENU
 #define ID_SYNCEVERYFRAME		132
 #define ID_FORCEMODEL			133
 #define ID_MUZZLEFLASHSTYLE		134
+#define ID_DRAWGUN				135
 
 #undef NUM_CROSSHAIRS
 #define	NUM_CROSSHAIRS			99
@@ -59,6 +60,7 @@ typedef struct {
 	menubitmap_s		framel;
 	menubitmap_s		framer;
 
+	menulist_s			drawGun;
 	menulist_s			simpleitems;
 	menuradiobutton_s	brass;
 	menuradiobutton_s	wallmarks;
@@ -70,6 +72,15 @@ typedef struct {
 } preferences_t;
 
 static preferences_t s_preferences;
+
+static const char *drawGun_names[] =
+{
+	"Hidden",
+	"Left",
+	"Right",
+	"Center",
+	NULL
+};
 
 static const char *simpleItems_names[] =
 {
@@ -91,10 +102,11 @@ static const char *muzzleFlashStyle_names[] =
 };
 
 static void Preferences_SetMenuItems( void ) {
+	s_preferences.drawGun.curvalue			= trap_Cvar_VariableValue( "cg_drawGun" ) != 0;
 	s_preferences.simpleitems.curvalue		= trap_Cvar_VariableValue( "cg_simpleItems" ) != 0;
 	s_preferences.brass.curvalue			= trap_Cvar_VariableValue( "cg_brassTime" ) != 0;
 	s_preferences.wallmarks.curvalue		= trap_Cvar_VariableValue( "cg_marks" ) != 0;
-	s_preferences.highqualitysky.curvalue	= trap_Cvar_VariableValue ( "r_fastsky" ) == 0;
+	s_preferences.highqualitysky.curvalue	= trap_Cvar_VariableValue( "r_fastsky" ) == 0;
 	s_preferences.synceveryframe.curvalue	= trap_Cvar_VariableValue( "r_finish" ) != 0;
 	s_preferences.forcemodel.curvalue		= trap_Cvar_VariableValue( "cg_forcemodel" ) != 0;
 	s_preferences.muzzleFlashStyle.curvalue	= trap_Cvar_VariableValue( "cg_muzzleFlashStyle" ) != 0;
@@ -106,6 +118,10 @@ static void Preferences_Event( void* ptr, int notification ) {
 	}
 
 	switch( ((menucommon_s*)ptr)->id ) {
+
+	case ID_DRAWGUN:
+		trap_Cvar_SetValue( "cg_drawGun", s_preferences.drawGun.curvalue );
+		break;
 
 	case ID_SIMPLEITEMS:
 		trap_Cvar_SetValue( "cg_simpleItems", s_preferences.simpleitems.curvalue );
@@ -147,6 +163,11 @@ static void Preferences_Event( void* ptr, int notification ) {
 static void Preferences_MenuInit( void ) {
 	int				y;
 
+	UI_SetDefaultCvar("cg_drawGun","1");
+	UI_SetDefaultCvar("cg_simpleItems","0");
+	UI_SetDefaultCvar("r_fastsky","0");
+	UI_SetDefaultCvar("cg_brassTime","0");
+
 	memset( &s_preferences, 0 ,sizeof(preferences_t) );
 
 	Preferences_Cache();
@@ -178,8 +199,18 @@ static void Preferences_MenuInit( void ) {
 	s_preferences.framer.height  	   = 334;
 
 	y = 96;
+	s_preferences.drawGun.generic.type		= MTYPE_SPINCONTROL;
+	s_preferences.drawGun.generic.name		= "Weapon Hand:";
+	s_preferences.drawGun.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	s_preferences.drawGun.generic.callback	= Preferences_Event;
+	s_preferences.drawGun.generic.id		= ID_DRAWGUN;
+	s_preferences.drawGun.generic.x			= PREFERENCES_X_POS;
+	s_preferences.drawGun.generic.y			= y;
+	s_preferences.drawGun.itemnames			= drawGun_names;
+
+	y += BIGCHAR_HEIGHT;
 	s_preferences.simpleitems.generic.type		= MTYPE_SPINCONTROL;
-	s_preferences.simpleitems.generic.name		= "In-game Pickup Rendering:";
+	s_preferences.simpleitems.generic.name		= "In-Game Pickup Rendering:";
 	s_preferences.simpleitems.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	s_preferences.simpleitems.generic.callback	= Preferences_Event;
 	s_preferences.simpleitems.generic.id		= ID_SIMPLEITEMS;
@@ -231,8 +262,8 @@ static void Preferences_MenuInit( void ) {
 	s_preferences.forcemodel.generic.id			= ID_FORCEMODEL;
 	s_preferences.forcemodel.generic.x			= PREFERENCES_X_POS;
 	s_preferences.forcemodel.generic.y			= y;
-
-	y += BIGCHAR_HEIGHT+2;
+	
+	y += BIGCHAR_HEIGHT;
 	s_preferences.muzzleFlashStyle.generic.type		= MTYPE_SPINCONTROL;
 	s_preferences.muzzleFlashStyle.generic.name		= "Muzzle Flash Style:";
 	s_preferences.muzzleFlashStyle.generic.flags	= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
@@ -257,6 +288,7 @@ static void Preferences_MenuInit( void ) {
 	Menu_AddItem( &s_preferences.menu, &s_preferences.framel );
 	Menu_AddItem( &s_preferences.menu, &s_preferences.framer );
 
+	Menu_AddItem( &s_preferences.menu, &s_preferences.drawGun );
 	Menu_AddItem( &s_preferences.menu, &s_preferences.simpleitems );
 	Menu_AddItem( &s_preferences.menu, &s_preferences.wallmarks );
 	Menu_AddItem( &s_preferences.menu, &s_preferences.brass );
