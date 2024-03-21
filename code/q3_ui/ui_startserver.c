@@ -1686,6 +1686,17 @@ static void ServerOptions_StatusBar_ddRespawnDelay( void* ptr ) {
 
 /*
 =================
+ServerOptions_StatusBar_BotSkill
+
+Descriptions should have 48 characters or less per line, and there can't be more than two lines.
+=================
+*/
+static void ServerOptions_StatusBar_BotSkill( void* ptr ) {
+	UI_DrawString( 320, 440, "The base skill level for the AI players (bots).", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
+/*
+=================
 ServerOptions_StatusBar_HostName
 
 Descriptions should have 48 characters or less per line, and there can't be more than two lines.
@@ -1693,18 +1704,6 @@ Descriptions should have 48 characters or less per line, and there can't be more
 */
 static void ServerOptions_StatusBar_HostName( void* ptr ) {
 	UI_DrawString( 320, 440, "The name of your server for server listings.", UI_CENTER|UI_SMALLFONT, colorWhite );
-}
-
-/*
-=================
-ServerOptions_StatusBar_OptimizeForLAN
-
-Descriptions should have 48 characters or less per line, and there can't be more than two lines.
-=================
-*/
-static void ServerOptions_StatusBar_OptimizeForLAN( void* ptr ) {
-	UI_DrawString( 320, 440, "Players connected to this host in a LAN receive", UI_CENTER|UI_SMALLFONT, colorWhite );
-	UI_DrawString( 320, 460, "a more accurate representation of the match.", UI_CENTER|UI_SMALLFONT, colorWhite );
 }
 
 /*
@@ -1717,6 +1716,18 @@ Descriptions should have 48 characters or less per line, and there can't be more
 static void ServerOptions_StatusBar_Pure( void* ptr ) {
 	UI_DrawString( 320, 440, "If set, clients are required to", UI_CENTER|UI_SMALLFONT, colorWhite );
 	UI_DrawString( 320, 460, "have the same .pk3 files as server.", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
+/*
+=================
+ServerOptions_StatusBar_OptimizeForLAN
+
+Descriptions should have 48 characters or less per line, and there can't be more than two lines.
+=================
+*/
+static void ServerOptions_StatusBar_OptimizeForLAN( void* ptr ) {
+	UI_DrawString( 320, 440, "Players connected to this host in a LAN receive", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "a more accurate representation of the match.", UI_CENTER|UI_SMALLFONT, colorWhite );
 }
 
 /*
@@ -2304,6 +2315,7 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 	s_serveroptions.botSkill.generic.y				= y;
 	s_serveroptions.botSkill.itemnames				= botSkill_list;
 	s_serveroptions.botSkill.curvalue				= 1;
+	s_serveroptions.botSkill.generic.statusbar		= ServerOptions_StatusBar_BotSkill;
 
 	y += ( 2 * SMALLCHAR_HEIGHT );
 	s_serveroptions.player0.generic.type			= MTYPE_TEXT;
@@ -2346,6 +2358,17 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 		y += ( SMALLCHAR_HEIGHT + 4 );
 	}
 
+	if( s_serveroptions.multiplayer ) {
+		s_serveroptions.hostname.generic.type       = MTYPE_FIELD;
+		s_serveroptions.hostname.generic.name       = "Host Name:";
+		s_serveroptions.hostname.generic.flags      = QMF_SMALLFONT;
+		s_serveroptions.hostname.generic.x          = 192;
+		s_serveroptions.hostname.generic.y	        = y;
+		s_serveroptions.hostname.field.widthInChars = 12;
+		s_serveroptions.hostname.field.maxchars     = 64;
+		s_serveroptions.hostname.generic.statusbar  = ServerOptions_StatusBar_HostName;
+	}
+	y += BIGCHAR_HEIGHT+2;
 	s_serveroptions.pure.generic.type			= MTYPE_RADIOBUTTON;
 	s_serveroptions.pure.generic.name			= "Pure Server:";
 	s_serveroptions.pure.generic.flags			= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
@@ -2361,16 +2384,6 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 		s_serveroptions.lan.generic.x				= 192;
 		s_serveroptions.lan.generic.y				= y;
 		s_serveroptions.lan.generic.statusbar  = ServerOptions_StatusBar_OptimizeForLAN;
-		
-		y += BIGCHAR_HEIGHT+2;
-		s_serveroptions.hostname.generic.type       = MTYPE_FIELD;
-		s_serveroptions.hostname.generic.name       = "Host Name:";
-		s_serveroptions.hostname.generic.flags      = QMF_SMALLFONT;
-		s_serveroptions.hostname.generic.x          = 192;
-		s_serveroptions.hostname.generic.y	        = y;
-		s_serveroptions.hostname.field.widthInChars = 12;
-		s_serveroptions.hostname.field.maxchars     = 64;
-		s_serveroptions.hostname.generic.statusbar  = ServerOptions_StatusBar_HostName;
 
 		y += BIGCHAR_HEIGHT+2;
 		s_serveroptions.allowServerDownload.generic.type		= MTYPE_RADIOBUTTON;
