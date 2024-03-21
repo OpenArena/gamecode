@@ -321,7 +321,7 @@ static void HUDOptions_MenuInit( void ) {
 	hudOptions_s.banner.generic.type	= MTYPE_BTEXT;
 	hudOptions_s.banner.generic.x		= 320;
 	hudOptions_s.banner.generic.y		= 16;
-	hudOptions_s.banner.string			= "GAME OPTIONS";
+	hudOptions_s.banner.string			= "HEADS-UP DISPLAY (H.U.D.)";
 	hudOptions_s.banner.color			= color_white;
 	hudOptions_s.banner.style			= UI_CENTER;
 
