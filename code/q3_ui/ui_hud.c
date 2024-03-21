@@ -45,7 +45,9 @@ GAME OPTIONS MENU
 #define ID_COLORGREEN			130
 #define ID_COLORBLUE			131
 #define ID_CROSSHAIRHEALTH		132
-#define ID_DRAWFPS				133
+#define ID_ALWAYSWEAPONBAR		133
+#define ID_WEAPONBARSTYLE		134
+#define ID_DRAWFPS				135
 
 
 typedef struct {
