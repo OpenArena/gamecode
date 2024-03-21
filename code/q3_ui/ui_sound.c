@@ -40,9 +40,10 @@ SOUND OPTIONS MENU
 #define ID_DISPLAY			11
 #define ID_SOUND			12
 #define ID_NETWORK			13
-#define ID_EFFECTSVOLUME	14
-#define ID_MUSICVOLUME		15
-#define ID_QUALITY			16
+#define ID_HUD				14
+#define ID_EFFECTSVOLUME	15
+#define ID_MUSICVOLUME		16
+#define ID_QUALITY			17
 //#define ID_A3D				17
 //Sago: Here I do some stuff!
 #define ID_OPENAL			18
@@ -64,6 +65,7 @@ typedef struct {
 	menutext_s			display;
 	menutext_s			sound;
 	menutext_s			network;
+	menutext_s			hud;
 
 	menuslider_s		sfxvolume;
 	menuslider_s		musicvolume;
@@ -104,6 +106,11 @@ static void UI_SoundOptionsMenu_Event( void* ptr, int event ) {
 	case ID_NETWORK:
 		UI_PopMenu();
 		UI_NetworkOptionsMenu();
+		break;
+
+	case ID_HUD:
+		UI_PopMenu();
+		UI_HUDOptionsMenu();
 		break;
 
 	case ID_EFFECTSVOLUME:
@@ -233,6 +240,16 @@ static void UI_SoundOptionsMenu_Init( void ) {
 	soundOptionsInfo.network.style				= UI_RIGHT;
 	soundOptionsInfo.network.color				= color_red;
 
+	soundOptionsInfo.hud.generic.type			= MTYPE_PTEXT;
+	soundOptionsInfo.hud.generic.flags			= QMF_RIGHT_JUSTIFY|QMF_PULSEIFFOCUS;
+	soundOptionsInfo.hud.generic.id				= ID_HUD;
+	soundOptionsInfo.hud.generic.callback		= UI_SoundOptionsMenu_Event;
+	soundOptionsInfo.hud.generic.x				= 216;
+	soundOptionsInfo.hud.generic.y				= 240 + PROP_HEIGHT;
+	soundOptionsInfo.hud.string					= "H.U.D.";
+	soundOptionsInfo.hud.style					= UI_RIGHT;
+	soundOptionsInfo.hud.color					= color_red;
+
 	y = 240 - 1.5 * (BIGCHAR_HEIGHT + 2);
 	soundOptionsInfo.sfxvolume.generic.type		= MTYPE_SLIDER;
 	soundOptionsInfo.sfxvolume.generic.name		= "Effects Volume:";
@@ -301,6 +318,7 @@ static void UI_SoundOptionsMenu_Init( void ) {
 	Menu_AddItem( &soundOptionsInfo.menu, ( void * ) &soundOptionsInfo.display );
 	Menu_AddItem( &soundOptionsInfo.menu, ( void * ) &soundOptionsInfo.sound );
 	Menu_AddItem( &soundOptionsInfo.menu, ( void * ) &soundOptionsInfo.network );
+	Menu_AddItem( &soundOptionsInfo.menu, ( void * ) &soundOptionsInfo.hud );
 	Menu_AddItem( &soundOptionsInfo.menu, ( void * ) &soundOptionsInfo.sfxvolume );
 	Menu_AddItem( &soundOptionsInfo.menu, ( void * ) &soundOptionsInfo.musicvolume );
 	Menu_AddItem( &soundOptionsInfo.menu, ( void * ) &soundOptionsInfo.quality );

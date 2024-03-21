@@ -247,7 +247,8 @@ GRAPHICS OPTIONS MENU
 #define ID_DISPLAY		107
 #define ID_SOUND		108
 #define ID_NETWORK		109
-#define ID_RATIO                110
+#define ID_HUD			110
+#define ID_RATIO		111
 
 typedef struct {
 	menuframework_s	menu;
@@ -260,6 +261,7 @@ typedef struct {
 	menutext_s		display;
 	menutext_s		sound;
 	menutext_s		network;
+	menutext_s		hud;
 
 	menulist_s		list;
         menulist_s              ratio;
@@ -276,7 +278,6 @@ typedef struct {
 	menulist_s  	geometry;
 	menulist_s  	filter;
         menulist_s  	aniso;
-	menulist_s  	drawfps;
 	menutext_s		driverinfo;
 
 	menubitmap_s	apply;
@@ -292,7 +293,6 @@ typedef struct
 	qboolean flares;
 	qboolean bloom;
 	qboolean dynamicLights;
-	qboolean drawfps;
 	int texturebits;
 	int geometry;
 	int filter;
@@ -486,7 +486,6 @@ static void GraphicsOptions_GetInitialVideo( void )
 	s_ivo.flares      = s_graphicsoptions.flares.curvalue;
 	s_ivo.bloom      = s_graphicsoptions.bloom.curvalue;
 	s_ivo.dynamicLights      = s_graphicsoptions.dynamicLights.curvalue;
-	s_ivo.drawfps     = s_graphicsoptions.drawfps.curvalue;
 	s_ivo.geometry    = s_graphicsoptions.geometry.curvalue;
 	s_ivo.filter      = s_graphicsoptions.filter.curvalue;
         s_ivo.aniso      = s_graphicsoptions.aniso.curvalue;
@@ -564,8 +563,6 @@ static void GraphicsOptions_CheckConfig( void )
 			continue;
                 if ( s_ivo_templates[i].dynamicLights != s_graphicsoptions.dynamicLights.curvalue )
 			continue;
-		if ( s_ivo_templates[i].drawfps != s_graphicsoptions.drawfps.curvalue )
-			continue;
 		if ( s_ivo_templates[i].geometry != s_graphicsoptions.geometry.curvalue )
 			continue;
 		if ( s_ivo_templates[i].filter != s_graphicsoptions.filter.curvalue )
@@ -638,10 +635,6 @@ static void GraphicsOptions_UpdateMenuItems( void )
 		s_graphicsoptions.apply.generic.flags &= ~(QMF_HIDDEN|QMF_INACTIVE);
 	}
         if ( s_ivo.dynamicLights != s_graphicsoptions.dynamicLights.curvalue )
-	{
-		s_graphicsoptions.apply.generic.flags &= ~(QMF_HIDDEN|QMF_INACTIVE);
-	}
-	if ( s_ivo.drawfps != s_graphicsoptions.drawfps.curvalue )
 	{
 		s_graphicsoptions.apply.generic.flags &= ~(QMF_HIDDEN|QMF_INACTIVE);
 	}
@@ -728,7 +721,6 @@ static void GraphicsOptions_ApplyChanges( void *unused, int notification )
 	trap_Cvar_SetValue( "r_flares", s_graphicsoptions.flares.curvalue );
 	trap_Cvar_SetValue( "r_bloom", s_graphicsoptions.bloom.curvalue );
 	trap_Cvar_SetValue( "r_dynamicLight", s_graphicsoptions.dynamicLights.curvalue );
-	trap_Cvar_SetValue( "cg_drawFPS", s_graphicsoptions.drawfps.curvalue );
 
 	//r_ext_texture_filter_anisotropic is special
 	if(s_graphicsoptions.aniso.curvalue) {
@@ -810,7 +802,6 @@ static void GraphicsOptions_Event( void* ptr, int event ) {
                 s_graphicsoptions.flares.curvalue      = ivo->flares;
                 s_graphicsoptions.bloom.curvalue      = ivo->bloom;
                 s_graphicsoptions.dynamicLights.curvalue      = ivo->dynamicLights;
-                s_graphicsoptions.drawfps.curvalue      = ivo->drawfps;
 		break;
 
 	case ID_DRIVERINFO:
@@ -837,6 +828,11 @@ static void GraphicsOptions_Event( void* ptr, int event ) {
 	case ID_NETWORK:
 		UI_PopMenu();
 		UI_NetworkOptionsMenu();
+		break;
+
+	case ID_HUD:
+		UI_PopMenu();
+		UI_HUDOptionsMenu();
 		break;
 	}
 }
@@ -910,7 +906,6 @@ static void GraphicsOptions_SetMenuItems( void )
         s_graphicsoptions.flares.curvalue = trap_Cvar_VariableValue("r_flares");
         s_graphicsoptions.bloom.curvalue = trap_Cvar_VariableValue("r_bloom");
         s_graphicsoptions.dynamicLights.curvalue = trap_Cvar_VariableValue("r_dynamicLight");
-        s_graphicsoptions.drawfps.curvalue = trap_Cvar_VariableValue("cg_drawFPS");
         if(trap_Cvar_VariableValue("r_ext_texture_filter_anisotropic")) {
             s_graphicsoptions.aniso.curvalue = trap_Cvar_VariableValue("r_ext_max_anisotropy")/2;
         }
@@ -1115,6 +1110,16 @@ void GraphicsOptions_MenuInit( void )
 	s_graphicsoptions.network.style				= UI_RIGHT;
 	s_graphicsoptions.network.color				= color_red;
 
+	s_graphicsoptions.hud.generic.type			= MTYPE_PTEXT;
+	s_graphicsoptions.hud.generic.flags			= QMF_RIGHT_JUSTIFY|QMF_PULSEIFFOCUS;
+	s_graphicsoptions.hud.generic.id			= ID_HUD;
+	s_graphicsoptions.hud.generic.callback		= GraphicsOptions_Event;
+	s_graphicsoptions.hud.generic.x				= 216;
+	s_graphicsoptions.hud.generic.y				= 240 + PROP_HEIGHT;
+	s_graphicsoptions.hud.string				= "H.U.D";
+	s_graphicsoptions.hud.style					= UI_RIGHT;
+	s_graphicsoptions.hud.color					= color_red;
+
 	y = 240 - 7 * (BIGCHAR_HEIGHT + 2);
 	s_graphicsoptions.list.generic.type     = MTYPE_SPINCONTROL;
 	s_graphicsoptions.list.generic.name     = "Graphics Settings:";
@@ -1211,14 +1216,6 @@ void GraphicsOptions_MenuInit( void )
 	s_graphicsoptions.dynamicLights.itemnames	      = enabled_names;
 	y += BIGCHAR_HEIGHT+2;
 
-	s_graphicsoptions.drawfps.generic.type	  = MTYPE_SPINCONTROL;
-	s_graphicsoptions.drawfps.generic.name	  = "Draw FPS:";
-	s_graphicsoptions.drawfps.generic.flags	  = QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-	s_graphicsoptions.drawfps.generic.x	      = 400;
-	s_graphicsoptions.drawfps.generic.y	      = y;
-	s_graphicsoptions.drawfps.itemnames	      = enabled_names;
-	y += BIGCHAR_HEIGHT+2;
-
 	// references/modifies "r_lodBias" & "subdivisions"
 	s_graphicsoptions.geometry.generic.type  = MTYPE_SPINCONTROL;
 	s_graphicsoptions.geometry.generic.name	 = "Geometric Detail:";
@@ -1305,6 +1302,7 @@ void GraphicsOptions_MenuInit( void )
 	Menu_AddItem( &s_graphicsoptions.menu, ( void * ) &s_graphicsoptions.display );
 	Menu_AddItem( &s_graphicsoptions.menu, ( void * ) &s_graphicsoptions.sound );
 	Menu_AddItem( &s_graphicsoptions.menu, ( void * ) &s_graphicsoptions.network );
+	Menu_AddItem( &s_graphicsoptions.menu, ( void * ) &s_graphicsoptions.hud );
 
 	Menu_AddItem( &s_graphicsoptions.menu, ( void * ) &s_graphicsoptions.list );
 	Menu_AddItem( &s_graphicsoptions.menu, ( void * ) &s_graphicsoptions.driver );
@@ -1316,7 +1314,6 @@ void GraphicsOptions_MenuInit( void )
         Menu_AddItem( &s_graphicsoptions.menu, ( void * ) &s_graphicsoptions.flares );
         Menu_AddItem( &s_graphicsoptions.menu, ( void * ) &s_graphicsoptions.bloom );
         Menu_AddItem( &s_graphicsoptions.menu, ( void * ) &s_graphicsoptions.dynamicLights );
-	Menu_AddItem( &s_graphicsoptions.menu, ( void * ) &s_graphicsoptions.drawfps );
 	Menu_AddItem( &s_graphicsoptions.menu, ( void * ) &s_graphicsoptions.geometry );
 	Menu_AddItem( &s_graphicsoptions.menu, ( void * ) &s_graphicsoptions.tq );
 	Menu_AddItem( &s_graphicsoptions.menu, ( void * ) &s_graphicsoptions.texturebits );

@@ -1229,6 +1229,12 @@ void UI_NetworkOptionsMenu_Cache( void );
 void UI_NetworkOptionsMenu( void );
 
 //
+// ui_hud.c
+//
+void UI_HUDOptionsMenu_Cache( void );
+void UI_HUDOptionsMenu( void );
+
+//
 // ui_gameinfo.c
 //
 typedef enum {

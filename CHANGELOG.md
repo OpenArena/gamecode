@@ -31,6 +31,7 @@
   * `droprune`: Tosses the rune that's been carried on. (Akin to TWCTF/TWCTF II) Needs `g_runes 2` in order to work.
   * `ui_writemappools`: If the arena files are loaded, this command dumps the gamelists so they can be used by g_autonextmap (should be used to generate new gamelists for new versions).
 * Classic UI:
+  * New H.U.D. menu, accessible from Setup and its submenus. Contains the options that modify the in-game interface.
   * Reorganization of the Skirmish/Create Server menus in order to accomodate the newer gametype options.
   * Status bar texts are clearer and there are more explanations for more items.
   * `elimination_selfdamage` can now be set in the UI for Elimination and eCTF matches.
@@ -72,6 +73,7 @@
 
 **Release date:** TBA
 
+* Classic UI: New H.U.D. menu, accessible from Setup and its submenus. Contains the options that modify the in-game interface.
 * Classic UI: `cg_obituaryOutput` can now be configured in "Game Options" as "Death Messages".
 * Deletion of `g_runes`. In its place there's a new cvar, `g_classicMode`. Enabling it (via cvar or the Weapon Ruleset "Classic Arena" in Skirmish/Create Server) makes the following replacements:
   * Nailgun and ammo with Shotgun and Shells.

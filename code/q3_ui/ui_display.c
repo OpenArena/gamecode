@@ -40,9 +40,10 @@ DISPLAY OPTIONS MENU
 #define ID_DISPLAY			11
 #define ID_SOUND			12
 #define ID_NETWORK			13
-#define ID_BRIGHTNESS		14
-#define ID_SCREENSIZE		15
-#define ID_BACK				16
+#define ID_HUD				14
+#define ID_BRIGHTNESS		15
+#define ID_SCREENSIZE		16
+#define ID_BACK				17
 
 
 typedef struct {
@@ -56,6 +57,7 @@ typedef struct {
 	menutext_s		display;
 	menutext_s		sound;
 	menutext_s		network;
+	menutext_s		hud;
 
 	menuslider_s	brightness;
 	menuslider_s	screensize;
@@ -93,6 +95,11 @@ static void UI_DisplayOptionsMenu_Event( void* ptr, int event ) {
 	case ID_NETWORK:
 		UI_PopMenu();
 		UI_NetworkOptionsMenu();
+		break;
+
+	case ID_HUD:
+		UI_PopMenu();
+		UI_HUDOptionsMenu();
 		break;
 
 	case ID_BRIGHTNESS:
@@ -188,6 +195,16 @@ static void UI_DisplayOptionsMenu_Init( void ) {
 	displayOptionsInfo.network.style				= UI_RIGHT;
 	displayOptionsInfo.network.color				= color_red;
 
+	displayOptionsInfo.hud.generic.type			= MTYPE_PTEXT;
+	displayOptionsInfo.hud.generic.flags		= QMF_RIGHT_JUSTIFY|QMF_PULSEIFFOCUS;
+	displayOptionsInfo.hud.generic.id			= ID_HUD;
+	displayOptionsInfo.hud.generic.callback		= UI_DisplayOptionsMenu_Event;
+	displayOptionsInfo.hud.generic.x			= 216;
+	displayOptionsInfo.hud.generic.y			= 240 + PROP_HEIGHT;
+	displayOptionsInfo.hud.string				= "H.U.D.";
+	displayOptionsInfo.hud.style				= UI_RIGHT;
+	displayOptionsInfo.hud.color				= color_red;
+
 	y = 240 - 1 * (BIGCHAR_HEIGHT+2);
 	displayOptionsInfo.brightness.generic.type		= MTYPE_SLIDER;
 	displayOptionsInfo.brightness.generic.name		= "Brightness:";
@@ -231,6 +248,7 @@ static void UI_DisplayOptionsMenu_Init( void ) {
 	Menu_AddItem( &displayOptionsInfo.menu, ( void * ) &displayOptionsInfo.display );
 	Menu_AddItem( &displayOptionsInfo.menu, ( void * ) &displayOptionsInfo.sound );
 	Menu_AddItem( &displayOptionsInfo.menu, ( void * ) &displayOptionsInfo.network );
+	Menu_AddItem( &displayOptionsInfo.menu, ( void * ) &displayOptionsInfo.hud );
 	Menu_AddItem( &displayOptionsInfo.menu, ( void * ) &displayOptionsInfo.brightness );
 	Menu_AddItem( &displayOptionsInfo.menu, ( void * ) &displayOptionsInfo.screensize );
 	Menu_AddItem( &displayOptionsInfo.menu, ( void * ) &displayOptionsInfo.back );

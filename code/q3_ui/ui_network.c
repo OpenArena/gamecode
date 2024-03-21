@@ -40,11 +40,12 @@ NETWORK OPTIONS MENU
 #define ID_DISPLAY			11
 #define ID_SOUND			12
 #define ID_NETWORK			13
-#define ID_RATE				14
-#define ID_ALLOWDOWNLOAD	15
-#define ID_DELAG			16
-#define ID_LAGOMETER		17
-#define ID_BACK				18
+#define ID_HUD				14
+#define ID_RATE				15
+#define ID_ALLOWDOWNLOAD	16
+#define ID_DELAG			17
+#define ID_LAGOMETER		18
+#define ID_BACK				19
 
 
 const char *rate_items[] = {
@@ -67,6 +68,7 @@ typedef struct {
 	menutext_s		display;
 	menutext_s		sound;
 	menutext_s		network;
+	menutext_s		hud;
 
 	menulist_s		rate;
 	menuradiobutton_s	allowdownload;
@@ -106,6 +108,11 @@ static void UI_NetworkOptionsMenu_Event( void* ptr, int event ) {
 		break;
 
 	case ID_NETWORK:
+		break;
+
+	case ID_HUD:
+		UI_PopMenu();
+		UI_HUDOptionsMenu();
 		break;
 
 	case ID_RATE:
@@ -226,6 +233,16 @@ static void UI_NetworkOptionsMenu_Init( void ) {
 	networkOptionsInfo.network.style				= UI_RIGHT;
 	networkOptionsInfo.network.color				= color_red;
 
+	networkOptionsInfo.hud.generic.type				= MTYPE_PTEXT;
+	networkOptionsInfo.hud.generic.flags			= QMF_RIGHT_JUSTIFY|QMF_PULSEIFFOCUS;
+	networkOptionsInfo.hud.generic.id				= ID_HUD;
+	networkOptionsInfo.hud.generic.callback			= UI_NetworkOptionsMenu_Event;
+	networkOptionsInfo.hud.generic.x				= 216;
+	networkOptionsInfo.hud.generic.y				= 240;
+	networkOptionsInfo.hud.string					= "H.U.D.";
+	networkOptionsInfo.hud.style					= UI_RIGHT;
+	networkOptionsInfo.hud.color					= color_red;
+
 	y = 240 - 1 * (BIGCHAR_HEIGHT+2);
 	networkOptionsInfo.rate.generic.type		= MTYPE_SPINCONTROL;
 	networkOptionsInfo.rate.generic.name		= "Network Speed:";
@@ -281,6 +298,7 @@ static void UI_NetworkOptionsMenu_Init( void ) {
 	Menu_AddItem( &networkOptionsInfo.menu, ( void * ) &networkOptionsInfo.display );
 	Menu_AddItem( &networkOptionsInfo.menu, ( void * ) &networkOptionsInfo.sound );
 	Menu_AddItem( &networkOptionsInfo.menu, ( void * ) &networkOptionsInfo.network );
+	Menu_AddItem( &networkOptionsInfo.menu, ( void * ) &networkOptionsInfo.hud );
 	Menu_AddItem( &networkOptionsInfo.menu, ( void * ) &networkOptionsInfo.rate );
 	Menu_AddItem( &networkOptionsInfo.menu, ( void * ) &networkOptionsInfo.allowdownload );
 	Menu_AddItem( &networkOptionsInfo.menu, ( void * ) &networkOptionsInfo.delag );
