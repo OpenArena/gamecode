@@ -57,6 +57,7 @@ GAME OPTIONS MENU
 #define ID_DRAWATTACKER			142
 #define ID_DRAWSPEED			143
 #define ID_DRAWREWARDS			144
+#define ID_DRAW3DICONS			145
 
 typedef struct {
 	menuframework_s		menu;
@@ -73,6 +74,7 @@ typedef struct {
 	menuslider_s		crosshairColorGreen;
 	menuslider_s		crosshairColorBlue;
 
+	menulist_s			draw3DIcons;
 	menuradiobutton_s	alwaysWeaponBar;
 	menulist_s			weaponBarStyle;
 	menuradiobutton_s	identifyTarget;
@@ -126,12 +128,20 @@ static const char *obituaryOutput_names[] =
 	NULL
 };
 
+static const char *draw3DIcons_names[] =
+{
+	"2D",
+	"3D",
+	NULL
+};
+
 static void HUDOptions_SetMenuItems( void ) {
 	hudOptions_s.crosshair.curvalue				= (int)trap_Cvar_VariableValue( "cg_drawCrosshair" ) % NUM_CROSSHAIRS;
 	hudOptions_s.crosshairHealth.curvalue		= trap_Cvar_VariableValue( "cg_crosshairHealth") != 0;
 	hudOptions_s.crosshairColorRed.curvalue		= trap_Cvar_VariableValue( "cg_crosshairColorRed")*255.0f;
 	hudOptions_s.crosshairColorGreen.curvalue	= trap_Cvar_VariableValue( "cg_crosshairColorGreen")*255.0f;
 	hudOptions_s.crosshairColorBlue.curvalue	= trap_Cvar_VariableValue( "cg_crosshairColorBlue")*255.0f;
+	hudOptions_s.draw3DIcons.curvalue			= trap_Cvar_VariableValue( "cg_draw3DIcons") != 0;
 	hudOptions_s.alwaysWeaponBar.curvalue		= trap_Cvar_VariableValue( "cg_alwaysWeaponBar" ) != 0;
 	hudOptions_s.weaponBarStyle.curvalue		= trap_Cvar_VariableValue( "cg_weaponBarStyle" ) != 0;
 	hudOptions_s.identifyTarget.curvalue		= trap_Cvar_VariableValue( "cg_drawCrosshairNames" ) != 0;
@@ -185,6 +195,10 @@ static void HUDOptions_Event( void* ptr, int notification ) {
 
 	case ID_COLORBLUE:
 		trap_Cvar_SetValue( "cg_crosshairColorBlue", ((float)hudOptions_s.crosshairColorBlue.curvalue)/255.f );
+		break;
+
+	case ID_DRAW3DICONS:
+		trap_Cvar_SetValue( "cg_draw3DIcons", hudOptions_s.draw3DIcons.curvalue );
 		break;
 
 	case ID_ALWAYSWEAPONBAR:
@@ -303,6 +317,7 @@ static void HUDOptions_MenuInit( void ) {
 	UI_SetDefaultCvar("cg_crosshairColorRed","1");
 	UI_SetDefaultCvar("cg_crosshairColorBlue","1");
 	UI_SetDefaultCvar("cg_crosshairColorGreen","1");
+	UI_SetDefaultCvar("cg_draw3DIcons","1");
 	UI_SetDefaultCvar("cg_drawFPS","0");
 	UI_SetDefaultCvar("cg_drawTimer","0");
 	UI_SetDefaultCvar("cg_drawStatus","1");
@@ -402,6 +417,16 @@ static void HUDOptions_MenuInit( void ) {
 		hudOptions_s.crosshairColorGreen.generic.flags	|= QMF_INACTIVE;
 		hudOptions_s.crosshairColorBlue.generic.flags	|= QMF_INACTIVE;
 	}
+
+	y += BIGCHAR_HEIGHT+2;
+	hudOptions_s.draw3DIcons.generic.type		= MTYPE_SPINCONTROL;
+	hudOptions_s.draw3DIcons.generic.name		= "Weapon Bar Icon Rendering:";
+	hudOptions_s.draw3DIcons.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	hudOptions_s.draw3DIcons.generic.callback	= HUDOptions_Event;
+	hudOptions_s.draw3DIcons.generic.id			= ID_DRAW3DICONS;
+	hudOptions_s.draw3DIcons.generic.x			= HUDOPTIONS_X_POS;
+	hudOptions_s.draw3DIcons.generic.y			= y;
+	hudOptions_s.draw3DIcons.itemnames			= draw3DIcons_names;
 
 	y += BIGCHAR_HEIGHT+2;
 	hudOptions_s.alwaysWeaponBar.generic.type		= MTYPE_RADIOBUTTON;
@@ -534,6 +559,7 @@ static void HUDOptions_MenuInit( void ) {
 	Menu_AddItem( &hudOptions_s.menu, &hudOptions_s.crosshairColorRed );
 	Menu_AddItem( &hudOptions_s.menu, &hudOptions_s.crosshairColorGreen );
 	Menu_AddItem( &hudOptions_s.menu, &hudOptions_s.crosshairColorBlue );
+	Menu_AddItem( &hudOptions_s.menu, &hudOptions_s.draw3DIcons );
 	Menu_AddItem( &hudOptions_s.menu, &hudOptions_s.alwaysWeaponBar );
 	Menu_AddItem( &hudOptions_s.menu, &hudOptions_s.weaponBarStyle );
 	Menu_AddItem( &hudOptions_s.menu, &hudOptions_s.identifyTarget );
