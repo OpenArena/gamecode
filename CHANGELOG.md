@@ -14,37 +14,31 @@
   * `g_voteGametypes`: Possession is a votable gametype (`13/`).
 * New cvars and values:
   * `g_awardpushing 2`: [Rewards the last attacker who pushed the fragged player into a hazard within 5 seconds, even if the fragged player wasn't airborne.](https://openarena.ws/board/index.php?topic=5289.msg54334#msg54334)
-  * `cg_bob`: If set to 0, it will disable cg_bobUp/cg_bobRoll/cg_bobPitch. **Default: 1.**
-  * `cg_kickScale`: Controls how much the screen shakes when receiving damage. **Default: 1.0.**
-  * `cg_muzzleflashStyle`: Alternative muzzleflash styles for player preference, or "aesthetic," or maybe just less flashing (flashes can also be disabled). **Default: 1.**
+  * `cg_bob`: If set to 0, it will disable `cg_bobUp`/`cg_bobRoll`/`cg_bobPitch`. It has values comprised in the range [0-7], however in Classic Menu you can only set it on/off under "View Bobbing" in Game Options. **Default: 1.**
+  * `cg_kickScale`: Controls how much the screen shakes when receiving damage. It can be configured in Classic UI as "Screen Shaking Rate" in Game Options. **Default: 1.0.**
+  * `cg_muzzleflashStyle`: Alternative muzzleflash styles for player preference, or "aesthetic," or maybe just less flashing (flashes can also be disabled). The available modes can be selected in Classic UI under Game Options as "Muzzle Flash Style". **Default: 1.**
   * `dmflags &4096`: Allows players to move significantly faster underwater. Mostly for demonstration. Could be fun in class based gametypes.
-  * `g_grapple`: Gives Grappling Hook to all players. Replaces `elimination_grapple`. **Default: 0.**
-  * `g_harvesterFromBodies`: In Harvester matches, skulls now spawn from dead bodies (a la [UT3!Greed](https://antifandom.com/unreal/wiki/Greed)) rather than a skull receptacle in the middle of the arena. Allows Harvester matches to take place in maps that don't feature a skull receptacle. **Default: 0.**
-  * `g_ddCaptureTime` and `g_ddRespawnDelay`: New cvars for Double Domination that control the amount of holding time to score and the waiting time before a new round starts. **Default for both: 10.**
-  * `g_weaponArena` and `g_weaponArenaWeapon`: two cvars that replace and extend `g_rockets` in order to be able to use `g_rockets` with every weapon other than rockets.
-  * `elimination_selfdamage` now accepts four options: (Only Enemies), (Enemies and Self), (Enemies and Teammates) and (Enemies, Self and Teammates).
-  * `g_runes` was replaced with `g_classicMode`, a cvar that makes weapon/item replacements when enabled. Runes were locked to CTF, 1FCTF, Harvester and Overload, the only modes where their integration made sense.
+  * `g_grapple`: Gives Grappling Hook to all players. Replaces `elimination_grapple`. It can be enabled in Classic UI in any gamemode in either Skirmish or Create Server as "Grappling Hook". **Default: 0.**
+  * `g_harvesterFromBodies`: In Harvester matches, skulls now spawn from dead bodies (a la [UT3!Greed](https://antifandom.com/unreal/wiki/Greed)) rather than a skull receptacle in the middle of the arena. Allows Harvester matches to take place in maps that don't feature a skull receptacle. It can be enabled in Classic UI in the gamemode in either Skirmish or Create Server as "Skulls From Bodies". **Default: 0.**
+  * `g_ddCaptureTime` and `g_ddRespawnDelay`: New cvars for Double Domination that control the amount of holding time to score and the waiting time before a new round starts. These values can be set in Classic UI in the gamemode as "Holding Time" and "Time Between Rounds". **Default for both: 10.**
+  * `g_weaponArena` and `g_weaponArenaWeapon`: two cvars that replace and extend `g_rockets` in order to be able to use `g_rockets` with every weapon other than rockets. The mode can be activated by selecting the Weapon Ruleset "Single Weapon Arena" in Classic UI under Skirmish or Create Server, and the weapon can be chosen in "SWA Mode Weapon".
+  * `elimination_selfdamage` now accepts four options: (Only Enemies), (Enemies and Self), (Enemies and Teammates) and (Enemies, Self and Teammates). When either Elimination or CTF Elimination is selected as a gamemode in Skirmish or Create Server in Classic UI, you can set who do you want to suffer this kind of damage under "Damage To".
+  * `g_runes` was replaced with `g_classicMode`, a cvar that makes weapon/item replacements when enabled. Runes were locked to CTF, 1FCTF, Harvester and Overload, the only modes where their integration made sense. In Classic UI, in Skirmish and Create Server, it can be enabled by selecting the Weapon Ruleset "Classic Arena".
 * Development mode with new cheat-protected cvars and debugging tools.
-* Shuffle has been reworked by implementing the solution from Aftershock.
 * New commands:
   * `weapbest`: Selects the best weapon.
-  * `droprune`: Tosses the rune that's been carried on. (Akin to TWCTF/TWCTF II) Needs `g_runes 2` in order to work.
+  * `droprune`: Tosses the rune that's been carried on. (Akin to TWCTF/TWCTF II) Needs `g_runes 2` in order to work. It can be bound in Classic UI under Misc as "Free Rune".
   * `ui_writemappools`: If the arena files are loaded, this command dumps the gamelists so they can be used by g_autonextmap (should be used to generate new gamelists for new versions).
+ * `shuffle` has been reworked by implementing the solution from Aftershock.
 * Classic UI:
   * New H.U.D. menu, accessible from Setup and its submenus. Contains the options that modify the in-game interface.
+  * New items for Game Options that replace the items that went to H.U.D.
   * Reorganization of the Skirmish/Create Server menus in order to accomodate the newer gametype options.
   * Status bar texts are clearer and there are more explanations for more items.
-  * `elimination_selfdamage` can now be set in the UI for Elimination and eCTF matches.
-  * `g_grapple` can now be set for all match types.
-  * `g_harvesterFromBodies` can now be set for Harvester matches.
-  * `g_weaponArenaWeapon` can be selectable in Classic UI, but it needs "Single Weapon Arena" to be set before.
-  * `cg_muzzleFlashStyle` can now be chosen in Classic UI under "Game Options".
-  * Separated "Allow Downloads From Servers" and "Allow Downloads To Clients". The former is a player option (`cl_allowDownload 0/1`) and can be set in "Options -> Network" (formerly in "Game Options"), while the latter a server option (`sv_allowDownload 0/1`) and can be set from "Create Server". The option names were changed to reflect these changes.
-  * "Delag Hitscan" was moved from "Game Options" to "Network".
-  * "Dynamic Lights" was moved from "Game Options" to "Video".
-  * `cg_weaponBarStyle` added to "Game Options" as, well, "Weapon Bar Style".
-  * `g_ddCaptureTime` and `g_ddRespawnDelay` were added for Double Domination matches.
-  * `cg_obituaryOutput` can now be configured in "Game Options" as "Death Messages".
+  * Separated "Allow Downloads From Servers" ("Download From Servers") and "Allow Downloads To Clients" ("Clients Can Download"). The former is a player option (`cl_allowDownload 0/1`) and can be set in "Options -> Network" (formerly in "Game Options"), while the latter a server option (`sv_allowDownload 0/1`) and can be set from "Create Server". The option names were changed to reflect these changes.
+  * "Delag Hitscan" was moved from Game Options to Network.
+  * "Dynamic Lights" was moved from Game Options to Video.
+  * "Chat Beep" and "Team Chat Beep" were moved from Game Options to Sound.
   * New option in Skirmish/Create Server, "Weapon Ruleset", allows picking up one of five weapon rulesets: All Weapons (Standard) -default-, Instantgib, Single Weapon Arena, Classic Mode -replaces NG, CG, PL, Kami, Invul and Runes with equivalents- and All Weapons (Elimination).
 * Now it's possible to compile OAX on Mac (thanks EddieBrrrock!)
 * AI enhancements:
@@ -54,9 +48,7 @@
   * CTF Elimination (One-Way mode a.k.a "Attack vs. Defense") proper team formations.
   * TONS of new helper functions designed to make AI handling easier.
 * Elimination/eCTF/LMS: If all humans have been killed in a round, bots will be eliminated one by one.
-* Lots of fixes for Classic UI and backend of UI3.
 * Consistent default score limits across all modules.
-* Added frag message display with icons.
 * Keyboard/Joystick input in MPUI/UI3.
 * "Next round" Elimination countdown is also shown in Double Domination.
 * The game no longer shuts down with _"Couldn't find a spawn point"_ when a spawnpoint is missing.
@@ -67,12 +59,13 @@
 * Server now executes the file `gametype_GAMETYPENUMBER.cfg` (i.e. `gametype_0.cfg` for FFA or `gametype_3.cfg` for TDM) on gametype change.
 * Server now executes `mapscripts/g_MAPNAME.cfg` and `mapscripts/g_MAPNAME_GAMETYPENUMBER.cfg` when changing map. It falls back to `mapscripts/g_default.cfg` and/or `mapscripts/g_default_GAMETYPENUMBER.cfg` (i.e. `g_default_0.cfg` for FFA and `g_default_3.cfg` for TDM) if any or both or the scripts are missing.
 * The background is now stretched on widescreen displays.
-* Tons of other bug fixes.
+* Tons of other bug fixes for MPUI/UI3, Classic UI and the game itself.
 
 ## oaxB53
 
 **Release date:** TBA
 
+* Classic UI: Added "Weapon Hand" (`cg_drawGun`), "Show Blood" (`com_blood`), "Show Gibs" (`cg_gibs`), "View Bobbing" (`cg_bob 0/1`), "Railgun Slug Trail Time" (`cg_railTrailTime`) and "Screen Shaking Rate" (`cg_kickScale`) to the Game Options. Also added statusbar messages for all the page's items.
 * Classic UI: Added "Show Timer" (`cg_drawTimer`), "Show Match Status" (`cg_drawStatus`), "Show Low Ammo Warning" (`cg_drawAmmoWarning`), "Show Last Attacker" (`cg_drawAttacker`), "Show Movement Speed" (`cg_drawSpeed`) and "Show Medal(s) Earned" (`cg_drawRewards`) to H.U.D.
 * Classic UI: Moved "Chat Beep" and "Team Chat Beep" from Game Options to Sound.
 * Classic UI: Moved "Draw FPS" (`cg_drawFPS`) from Video to H.U.D.
