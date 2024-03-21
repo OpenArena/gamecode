@@ -47,7 +47,8 @@ GAME OPTIONS MENU
 #define ID_CROSSHAIRHEALTH		132
 #define ID_ALWAYSWEAPONBAR		133
 #define ID_WEAPONBARSTYLE		134
-#define ID_DRAWFPS				135
+#define ID_IDENTIFYTARGET		135
+#define ID_DRAWFPS				136
 
 
 typedef struct {
@@ -67,6 +68,7 @@ typedef struct {
 
 	menuradiobutton_s	alwaysWeaponBar;
 	menulist_s			weaponBarStyle;
+	menuradiobutton_s	identifyTarget;
 
 	menuradiobutton_s	drawFPS;
 
@@ -98,6 +100,7 @@ static void HUDOptions_SetMenuItems( void ) {
 	hudOptions_s.crosshairColorBlue.curvalue	= trap_Cvar_VariableValue( "cg_crosshairColorBlue")*255.0f;
 	hudOptions_s.alwaysWeaponBar.curvalue		= trap_Cvar_VariableValue( "cg_alwaysWeaponBar" ) != 0;
 	hudOptions_s.weaponBarStyle.curvalue		= trap_Cvar_VariableValue( "cg_weaponBarStyle" ) != 0;
+	hudOptions_s.identifyTarget.curvalue		= trap_Cvar_VariableValue( "cg_drawCrosshairNames" ) != 0;
 	hudOptions_s.drawFPS.curvalue				= trap_Cvar_VariableValue( "cg_drawfps") != 0;
 }
 
@@ -148,6 +151,10 @@ static void HUDOptions_Event( void* ptr, int notification ) {
 
 	case ID_WEAPONBARSTYLE:
 		trap_Cvar_SetValue( "cg_weaponBarStyle", hudOptions_s.weaponBarStyle.curvalue );
+		break;
+
+	case ID_IDENTIFYTARGET:
+		trap_Cvar_SetValue( "cg_drawCrosshairNames", hudOptions_s.identifyTarget.curvalue );
 		break;
 
 	case ID_DRAWFPS:
@@ -336,6 +343,15 @@ static void HUDOptions_MenuInit( void ) {
 	hudOptions_s.weaponBarStyle.itemnames			= weaponBarStyle_names;
 
 	y += BIGCHAR_HEIGHT+2;
+	hudOptions_s.identifyTarget.generic.type		= MTYPE_RADIOBUTTON;
+	hudOptions_s.identifyTarget.generic.name		= "Identify Target:";
+	hudOptions_s.identifyTarget.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	hudOptions_s.identifyTarget.generic.callback	= HUDOptions_Event;
+	hudOptions_s.identifyTarget.generic.id			= ID_IDENTIFYTARGET;
+	hudOptions_s.identifyTarget.generic.x			= HUDOPTIONS_X_POS;
+	hudOptions_s.identifyTarget.generic.y			= y;
+
+	y += BIGCHAR_HEIGHT+2;
 	hudOptions_s.drawFPS.generic.type		= MTYPE_RADIOBUTTON;
 	hudOptions_s.drawFPS.generic.name		= "Draw FPS:";
 	hudOptions_s.drawFPS.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
@@ -366,6 +382,7 @@ static void HUDOptions_MenuInit( void ) {
 	Menu_AddItem( &hudOptions_s.menu, &hudOptions_s.crosshairColorBlue );
 	Menu_AddItem( &hudOptions_s.menu, &hudOptions_s.alwaysWeaponBar );
 	Menu_AddItem( &hudOptions_s.menu, &hudOptions_s.weaponBarStyle );
+	Menu_AddItem( &hudOptions_s.menu, &hudOptions_s.identifyTarget );
 	Menu_AddItem( &hudOptions_s.menu, &hudOptions_s.drawFPS );
 
 	Menu_AddItem( &hudOptions_s.menu, &hudOptions_s.back );

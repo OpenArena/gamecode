@@ -43,15 +43,14 @@ GAME OPTIONS MENU
 #define ID_HIGHQUALITYSKY		129
 #define ID_EJECTINGBRASS		130
 #define ID_WALLMARKS			131
-#define ID_IDENTIFYTARGET		132
-#define ID_SYNCEVERYFRAME		133
-#define ID_FORCEMODEL			134
-#define ID_DRAWTEAMOVERLAY		135
-#define ID_MUZZLEFLASHSTYLE		136
-#define ID_OBITUARYOUTPUT		137
-#define ID_BACK					138
-#define ID_CHATBEEP				139
-#define ID_TEAMCHATBEEP			140
+#define ID_SYNCEVERYFRAME		132
+#define ID_FORCEMODEL			133
+#define ID_DRAWTEAMOVERLAY		134
+#define ID_MUZZLEFLASHSTYLE		135
+#define ID_OBITUARYOUTPUT		136
+#define ID_BACK					137
+#define ID_CHATBEEP				138
+#define ID_TEAMCHATBEEP			139
 
 #undef NUM_CROSSHAIRS
 #define	NUM_CROSSHAIRS			99
@@ -67,7 +66,6 @@ typedef struct {
 	menuradiobutton_s	simpleitems;
 	menuradiobutton_s	brass;
 	menuradiobutton_s	wallmarks;
-	menuradiobutton_s	identifytarget;
 	menuradiobutton_s	highqualitysky;
 	menuradiobutton_s	synceveryframe;
 	menuradiobutton_s	forcemodel;
@@ -116,7 +114,6 @@ static void Preferences_SetMenuItems( void ) {
 	s_preferences.simpleitems.curvalue		= trap_Cvar_VariableValue( "cg_simpleItems" ) != 0;
 	s_preferences.brass.curvalue			= trap_Cvar_VariableValue( "cg_brassTime" ) != 0;
 	s_preferences.wallmarks.curvalue		= trap_Cvar_VariableValue( "cg_marks" ) != 0;
-	s_preferences.identifytarget.curvalue	= trap_Cvar_VariableValue( "cg_drawCrosshairNames" ) != 0;
 	s_preferences.highqualitysky.curvalue	= trap_Cvar_VariableValue ( "r_fastsky" ) == 0;
 	s_preferences.synceveryframe.curvalue	= trap_Cvar_VariableValue( "r_finish" ) != 0;
 	s_preferences.forcemodel.curvalue		= trap_Cvar_VariableValue( "cg_forcemodel" ) != 0;
@@ -152,10 +149,6 @@ static void Preferences_Event( void* ptr, int notification ) {
 	case ID_WALLMARKS:
 		trap_Cvar_SetValue( "cg_marks", s_preferences.wallmarks.curvalue );
 		break;	
-
-	case ID_IDENTIFYTARGET:
-		trap_Cvar_SetValue( "cg_drawCrosshairNames", s_preferences.identifytarget.curvalue );
-		break;
 
 	case ID_SYNCEVERYFRAME:
 		trap_Cvar_SetValue( "r_finish", s_preferences.synceveryframe.curvalue );
@@ -241,7 +234,6 @@ static void Preferences_MenuInit( void ) {
 	
 	Preferences_Menu_AddBoolean(&s_preferences.wallmarks, &y, ID_WALLMARKS, "Marks on Walls:");
 	Preferences_Menu_AddBoolean(&s_preferences.brass, &y, ID_EJECTINGBRASS, "Ejecting Brass:");
-	Preferences_Menu_AddBoolean(&s_preferences.identifytarget, &y, ID_IDENTIFYTARGET, "Identify Target:");
 	Preferences_Menu_AddBoolean(&s_preferences.highqualitysky, &y, ID_HIGHQUALITYSKY, "High Quality Sky:");
 	Preferences_Menu_AddBoolean(&s_preferences.synceveryframe, &y, ID_SYNCEVERYFRAME, "Sync Every Frame:");
 	Preferences_Menu_AddBoolean(&s_preferences.forcemodel, &y, ID_FORCEMODEL, "Force Player Models:");
@@ -297,7 +289,6 @@ static void Preferences_MenuInit( void ) {
 	Menu_AddItem( &s_preferences.menu, &s_preferences.simpleitems );
 	Menu_AddItem( &s_preferences.menu, &s_preferences.wallmarks );
 	Menu_AddItem( &s_preferences.menu, &s_preferences.brass );
-	Menu_AddItem( &s_preferences.menu, &s_preferences.identifytarget );
 	Menu_AddItem( &s_preferences.menu, &s_preferences.highqualitysky );
 	Menu_AddItem( &s_preferences.menu, &s_preferences.synceveryframe );
 	Menu_AddItem( &s_preferences.menu, &s_preferences.forcemodel );
