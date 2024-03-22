@@ -800,6 +800,7 @@ typedef struct {
 	menuradiobutton_s	grapple;
 	menulist_s			weaponMode;
 	menulist_s			weaponArenaWeapon;
+	menulist_s			awardPushing;
 
 	// Team-based options
 	menuradiobutton_s	friendlyfire;
@@ -934,6 +935,13 @@ static const char *pmove_list[] = {
 	NULL
 };
 
+static const char *awardPushing_list[] = {
+	"Pushed Loses A Point",
+	"Pusher Scores A Point",
+	"Last Attacker Scores",
+	NULL
+};
+
 /*
 =================
 BotAlreadySelected
@@ -975,6 +983,7 @@ static void ServerOptions_Start( void ) {
 	int		grapple = s_serveroptions.grapple.curvalue;
 	int		weaponMode = s_serveroptions.weaponMode.curvalue;
 	int		weaponArenaWeapon = s_serveroptions.weaponArenaWeapon.curvalue;
+	int		awardPushing = s_serveroptions.awardPushing.curvalue;
 
 	// Team-based options
 	int		friendlyfire = s_serveroptions.friendlyfire.curvalue;
@@ -1171,6 +1180,7 @@ static void ServerOptions_Start( void ) {
 			break;
 	}
 	trap_Cvar_SetValue( "g_weaponArenaWeapon", weaponArenaWeapon );
+	trap_Cvar_SetValue( "g_awardPushing", awardPushing );
 	trap_Cvar_SetValue( "g_friendlyfire", friendlyfire );
 	trap_Cvar_SetValue( "elimination_selfdamage", eliminationDamage );
 	trap_Cvar_SetValue( "g_harvesterFromBodies", harvesterFromBodies );
@@ -1581,6 +1591,30 @@ Descriptions should have 48 characters or less per line, and there can't be more
 static void ServerOptions_StatusBar_WeaponArenaWeapon( void* ptr ) {
 	UI_DrawString( 320, 440, "In Single Weapon Arena mode, this will", UI_CENTER|UI_SMALLFONT, colorWhite );
 	UI_DrawString( 320, 460, "be the weapon players will spawn with.", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
+/*
+=================
+ServerOptions_StatusBar_AwardPushing
+
+Descriptions should have 48 characters or less per line, and there can't be more than two lines.
+=================
+*/
+static void ServerOptions_StatusBar_AwardPushing( void* ptr ) {
+    switch( ((menulist_s*)ptr)->curvalue ) {
+		case 1:
+			UI_DrawString( 320, 440, "Pusher Scores A Point: If a player dies in a pit", UI_CENTER|UI_SMALLFONT, colorWhite );
+			UI_DrawString( 320, 460, "the void or another hazard, their pusher scores.", UI_CENTER|UI_SMALLFONT, colorWhite );
+			break;
+		case 2:
+			UI_DrawString( 320, 440, "Last Attacker Scores: If a player suicides via", UI_CENTER|UI_SMALLFONT, colorWhite );
+			UI_DrawString( 320, 460, "pit, void or hazard, their last attacker scores.", UI_CENTER|UI_SMALLFONT, colorWhite );
+			break;
+		default: // case 0
+			UI_DrawString( 320, 440, "Pushed Loses A Point: If a player dies in a pit", UI_CENTER|UI_SMALLFONT, colorWhite );
+			UI_DrawString( 320, 460, "the void or another hazard, they lose a point.", UI_CENTER|UI_SMALLFONT, colorWhite );
+			break;
+    }
 }
 
 /*
@@ -2018,6 +2052,7 @@ static void ServerOptions_SetMenuItems( void ) {
 	else
 		s_serveroptions.weaponMode.curvalue = 0;
 	s_serveroptions.weaponArenaWeapon.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_weaponArenaWeapon" ) );
+	s_serveroptions.awardPushing.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_awardPushing" ) );
 	Q_strncpyz( s_serveroptions.eliminationRoundTime.field.buffer, UI_Cvar_VariableString( "elimination_roundtime" ), sizeof( s_serveroptions.eliminationRoundTime.field.buffer ) );
 	s_serveroptions.eliminationDamage.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "elimination_selfdamage" ) );
 	s_serveroptions.harvesterFromBodies.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_harvesterFromBodies" ) );
@@ -2145,7 +2180,13 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 	s_serveroptions.picframe.height  			= 320;
 	s_serveroptions.picframe.focuspic			= GAMESERVER_SELECT;
 
-	y = 268;
+	// eCTF uses A LOT of rules.
+	if(s_serveroptions.gametype == GT_CTF_ELIMINATION) {
+		y = 256;
+	}
+	else {
+		y = 268;
+	}
 	if(UI_GametypeUsesFragLimit(s_serveroptions.gametype)) {
 		s_serveroptions.fraglimit.generic.type       = MTYPE_FIELD;
 		if (s_serveroptions.gametype == GT_HARVESTER || s_serveroptions.gametype == GT_DOMINATION || s_serveroptions.gametype == GT_POSSESSION) {
@@ -2244,7 +2285,16 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 	s_serveroptions.weaponArenaWeapon.generic.x				= OPTIONS_X;
 	s_serveroptions.weaponArenaWeapon.generic.y				= y;
 	s_serveroptions.weaponArenaWeapon.itemnames				= weaponArenaWeapon_list;
-	s_serveroptions.weaponArenaWeapon.generic.statusbar  = ServerOptions_StatusBar_WeaponArenaWeapon;
+	s_serveroptions.weaponArenaWeapon.generic.statusbar		= ServerOptions_StatusBar_WeaponArenaWeapon;
+
+	y += BIGCHAR_HEIGHT+2;
+	s_serveroptions.awardPushing.generic.type			= MTYPE_SPINCONTROL;
+	s_serveroptions.awardPushing.generic.flags			= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	s_serveroptions.awardPushing.generic.name			= "Award Pushing Rule:";
+	s_serveroptions.awardPushing.generic.x				= OPTIONS_X;
+	s_serveroptions.awardPushing.generic.y				= y;
+	s_serveroptions.awardPushing.itemnames				= awardPushing_list;
+	s_serveroptions.awardPushing.generic.statusbar		= ServerOptions_StatusBar_AwardPushing;
 
 	if(UI_IsATeamGametype(s_serveroptions.gametype)) {
 		if(UI_IsARoundBasedGametype(s_serveroptions.gametype)) {
@@ -2490,6 +2540,7 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 	Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.grapple );
 	Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.weaponMode );
 	Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.weaponArenaWeapon );
+	Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.awardPushing );
 	if(UI_IsATeamGametype(s_serveroptions.gametype)) {
 		if (UI_IsARoundBasedGametype(s_serveroptions.gametype)) {
 			Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.eliminationDamage );
