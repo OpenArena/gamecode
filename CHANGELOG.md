@@ -140,7 +140,7 @@
     * `recommendedTeamSize` (Amount of ideal team members in team games)
 * The "You've Been Mined" message, shown whenever you're directly hit by a proxy mine, now begins its combustion countdown instantly.
 * Default score limits are now consistent across all gamemodes.
-* Compatibility fixes to make gamecode buidable under M1 Mac. (Thanks @Bishop-313!)
+* Compatibility fixes to make gamecode buidable under M1 Mac. (Thanks @Bishop-333!)
 * Team Orders now display the proper team orders rather than those of Team Deathmatch for all team-based gamemodes.
 * Challenges now account for TDM wins.
 * Double Domination now displays a "New Round" message.
@@ -287,7 +287,7 @@
   * `recommendedTeamSize` (Amount of ideal team members in team games)
 * The "You've Been Mined" message, shown whenever you're directly hit by a proxy mine, now begins its combustion countdown instantly.
 * Default score limits are now consistent across all gamemodes.
-* Compatibility fixes to make gamecode buidable under M1 Mac. (Thanks @Bishop-313!)
+* Compatibility fixes to make gamecode buidable under M1 Mac. (Thanks @Bishop-333!)
 * Team Orders now display the proper team orders rather than those of Team Deathmatch for all team-based gamemodes.
 * Challenges now account for TDM wins.
 * Double Domination now displays a "New Round" message.
