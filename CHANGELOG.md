@@ -4,337 +4,302 @@
 
 ### Laconic version
 
-**Note:** An ampersand ("&") preceding a value means that the cvar is a bitflag, and you must add said value to the total before using its effect (i.e. if dmflags is 1096 and you want to add the new underwater speed, then dmflags should be 5192 (1096+4096).
+**Note:** An ampersand ("&") preceding a value means that the cvar is a bitflag, and you must add said value to the total before using its effect (i.e. if dmflags is 1096 and you want to add the new underwater speed -`dmflags &4096`-, then dmflags should be 5192 (1096+4096).
 
-* New gametype: Possession:
-  * Can be played on all maps (for now, for testing purposes).
-  * Free-For-All based gametype.
-  * Hold a flag for the longest amount of time in order to win, or reach the holding limit. (Default 120, 2 minutes).
-  * The flag is the white flag from One Flag CTF. It spawns at either the designated spawnpoint (`team_CTF_neutralflag`), a Domination control point (`domination_point`) or a regular spawnpoint (`info_player_deathmatch` or `info_player_start`).
-  * `g_voteGametypes`: Possession is a votable gametype (`13/`).
-* New cvars and values:
-  * `g_awardpushing 2`: [Rewards the last attacker who pushed the fragged player into a hazard within 5 seconds, even if the fragged player wasn't airborne.](https://openarena.ws/board/index.php?topic=5289.msg54334#msg54334)
-  * `cg_bob`: If set to 0, it will disable `cg_bobUp`/`cg_bobRoll`/`cg_bobPitch`. It has values comprised in the range [0-7], however in Classic Menu you can only set it on/off under "View Bobbing" in Game Options. **Default: 1.**
-  * `cg_kickScale`: Controls how much the screen shakes when receiving damage. It can be configured in Classic UI as "Screen Shaking Rate" in Game Options. **Default: 1.0.**
-  * `cg_muzzleflashStyle`: Alternative muzzleflash styles for player preference, or "aesthetic," or maybe just less flashing (flashes can also be disabled). The available modes can be selected in Classic UI under Game Options as "Muzzle Flash Style". **Default: 1.**
-  * `dmflags &4096`: Allows players to move significantly faster underwater. Mostly for demonstration. Could be fun in class based gametypes.
-  * `g_grapple`: Gives Grappling Hook to all players. Replaces `elimination_grapple`. It can be enabled in Classic UI in any gamemode in either Skirmish or Create Server as "Grappling Hook". **Default: 0.**
-  * `g_harvesterFromBodies`: In Harvester matches, skulls now spawn from dead bodies (a la [UT3!Greed](https://antifandom.com/unreal/wiki/Greed)) rather than a skull receptacle in the middle of the arena. Allows Harvester matches to take place in maps that don't feature a skull receptacle. It can be enabled in Classic UI in the gamemode in either Skirmish or Create Server as "Skulls From Bodies". **Default: 0.**
-  * `g_ddCaptureTime` and `g_ddRespawnDelay`: New cvars for Double Domination that control the amount of holding time to score and the waiting time before a new round starts. These values can be set in Classic UI in the gamemode as "Holding Time" and "Time Between Rounds". **Default for both: 10.**
-  * `g_weaponArena` and `g_weaponArenaWeapon`: two cvars that replace and extend `g_rockets` in order to be able to use `g_rockets` with every weapon other than rockets. The mode can be activated by selecting the Weapon Ruleset "Single Weapon Arena" in Classic UI under Skirmish or Create Server, and the weapon can be chosen in "SWA Mode Weapon".
-  * `elimination_selfdamage` now accepts four options: (Only Enemies), (Enemies and Self), (Enemies and Teammates) and (Enemies, Self and Teammates). When either Elimination or CTF Elimination is selected as a gamemode in Skirmish or Create Server in Classic UI, you can set who do you want to suffer this kind of damage under "Damage To".
-  * `g_runes` was replaced with `g_classicMode`, a cvar that makes weapon/item replacements when enabled. Runes were locked to CTF, 1FCTF, Harvester and Overload, the only modes where their integration made sense. In Classic UI, in Skirmish and Create Server, it can be enabled by selecting the Weapon Ruleset "Classic Arena".
-* Development mode with new cheat-protected cvars and debugging tools.
+* New gamemode: Possession:
+  * Players must hold a flag (the white flag from 1FCTF) for X seconds in order to win. Or be the player with the highest amount of carrying time.
+  * Uses `fraglimit` (holding time in seconds, i.e. `fraglimit 120` for 2 minutes, the default time) and `timelimit`.
+  * It can be voted after matches as `/13`. (Credit: @The-Gig)
+* New cvars:
+  * `cg_bob`: Controls how bobbing behaves in-game. It accepts the following values: (Credits: @ldrone (options 0/1) and @leilei (options 2-6))
+    * `cg_bob 0`: Disables it.
+    * `cg_bob 1`: Pitch/Roll/Up Bob.
+    * `cg_bob 2`: Pitch/Up-only Bob.
+    * `cg_bob 3`: Roll/Up-only Bob.
+    * `cg_bob 4`: Up-only Bob.
+    * `cg_bob 6`: "Fake '99" a.k.a. "Sweeny Bob". (We cannot write the actual name because [writing around trademarks](https://tvtropes.org/Main/WritingAroundTrademarks))
+  * `cg_kickScale`: Controls how much the screen shakes when hit. (Credit: @ldrone)
+  * `cg_muzzleFlashStyle`: Controls how the muzzle flash is rendered. (Credit: @leilei)
+  * `cg_obituaryOutput`: Controls how and where the death messages are rendered. (Credit: @ldrone)
+  * `g_classicMode`. It replaces `g_runes` by extending it. In addition to removing the Runes, it also replaces the Nailgun with the Shotgun, the Chaingun with the Machinegun ammo, the Prox Launcher with the Grenade Launcher, the Kamikaze holdable with the Personal Teleporter and the Invulnerability holdable with the Medkit. In Round-based gamemodes, it prevents the Nailgun, Chaingun and Prox Launcher from being added to the player's starting inventory.
+  * `g_ddCaptureTime` and `g_ddRespawnDelay` for Double Domination. Both control the amount of holding time required to score, and the time between the scoring and start of a new round.
+  * `g_grapple`. It replaces `elimination_grapple` by extending it so it works with all gamemodes.
+  * `g_harvesterFromBodies` for Harvester. If enabled, skulls spawn from bodies rather than a central skull generator. Allows Harvester matches to take place in maps without a skull generator. However, the placement of a skull generator is still recommended for those cases where the players commit suicide or are killed via level hazard.
+  * `g_weaponArena` and `g_weaponArenaWeapon`. The former replaces `g_rockets` by extending it so it can be used with any weapon, not just the Rocket Launcher. The latter controls which weapon is spawned by `g_weaponArena`.
+  * `missionpackChecks`. Enables/disables missionpack checkers in both Classic UI and UI3. It's enabled by default for the latter, and disabled for the former.
 * New commands:
-  * `weapbest`: Selects the best weapon.
-  * `droprune`: Tosses the rune that's been carried on. (Akin to TWCTF/TWCTF II) Needs `g_runes 2` in order to work. It can be bound in Classic UI under Misc as "Free Rune".
-  * `ui_writemappools`: If the arena files are loaded, this command dumps the gamelists so they can be used by g_autonextmap (should be used to generate new gamelists for new versions).
- * `shuffle` has been reworked by implementing the solution from Aftershock.
+  * `+acc`. Reveals your weapon accuracy after matches.
+  * `dropRune`. Frees the rune for another teammate to use it.
+  * `ui_writemappools`. Dumps the gamelists so they can be used by `g_autonextmap`, provided the .arena files (and arenas.txt) are loaded first.
+  * `weapbest`. Selects the "best" weapon out of all those that the player carry which have ammo. The cvar controlling this priority is `cg_weaponOrder`; unlike the command, the cvar still needs to be set via console.
+* New _dmflag_: `dmflag &4096`, allows faster underwater movement a la Q2.
+* `bot_minplayers` now work for LMS and Possession.
+* `capturelimit` no longer affects Team Deathmatch.
+* `cg_teamChatsOnly` now only affects team-based gamemodes.
+* `cg_weaponBarStyle` now returns the default weapon bar if its value falls outside its limits.
+* `developer` mode has been extended with several cvars now requiring the mode to be enabled.
+* `elimination_selfDamage` now takes four values: 0 (no damage to self or teammates), 1 (only damage to self), 2 (only damage to teammates a.k.a. Friendly Fire) and 3 (self and teammate damage).
+* New option for `g_awardPushing`: `g_awardPushing 2`. [If a player commits suicide, the last player who attacked them scores a point.](https://openarena.ws/board/index.php?topic=5289.msg54334#msg54334)
+* Spectators can now use the `noclip` cheat code.
+* `shuffle` command has been removed and reimplemented, with the solution present in Aftershock being used here.
 * Classic UI:
-  * New H.U.D. menu, accessible from Setup and its submenus. Contains the options that modify the in-game interface.
-  * New items for Game Options that replace the items that went to H.U.D.
-  * Reorganization of the Skirmish/Create Server menus in order to accomodate the newer gametype options.
-  * Status bar texts are clearer and there are more explanations for more items.
-  * Separated "Allow Downloads From Servers" ("Download From Servers") and "Allow Downloads To Clients" ("Clients Can Download"). The former is a player option (`cl_allowDownload 0/1`) and can be set in "Options -> Network" (formerly in "Game Options"), while the latter a server option (`sv_allowDownload 0/1`) and can be set from "Create Server". The option names were changed to reflect these changes.
-  * "Delag Hitscan" was moved from Game Options to Network.
-  * "Dynamic Lights" was moved from Game Options to Video.
-  * "Chat Beep" and "Team Chat Beep" were moved from Game Options to Sound.
-  * New option in Skirmish/Create Server, "Weapon Ruleset", allows picking up one of five weapon rulesets: All Weapons (Standard) -default-, Instantgib, Single Weapon Arena, Classic Mode -replaces NG, CG, PL, Kami, Invul and Runes with equivalents- and All Weapons (Elimination).
-* Now it's possible to compile OAX on Mac (thanks EddieBrrrock!)
-* AI enhancements:
-  * Holdable (Personal Teleporter/Medkit/Kamikaze/Invulnerability) handling.
-  * Double Domination logic improvements (team formations, voice orders, chat orders...)
-  * Domination logic vast improvements (team formations, voice orders, chat orders...)
-  * CTF Elimination (One-Way mode a.k.a "Attack vs. Defense") proper team formations.
-  * TONS of new helper functions designed to make AI handling easier.
-* Elimination/eCTF/LMS: If all humans have been killed in a round, bots will be eliminated one by one.
-* Consistent default score limits across all modules.
-* Keyboard/Joystick input in MPUI/UI3.
-* "Next round" Elimination countdown is also shown in Double Domination.
-* The game no longer shuts down with _"Couldn't find a spawn point"_ when a spawnpoint is missing.
-* New tool for mappers: `state_targetname` key for `func_door`, [allows the creation of doors for Elimination-based modes that open during the active time of the game](https://openarena.ws/board/index.php?topic=5437.0). In-game demonstration video [here](https://www.youtube.com/watch?v=lHq56Gx058w).
-* New tool for mappers: Support for `.info` files. Some configuration examples can be found [here](https://github.com/NeonKnightOA/nk-oa-assets/blob/master/maps/DM/galmevish/am_galmevish3.info) and [here](https://github.com/NeonKnightOA/nk-oa-assets/blob/master/maps/DM/blitzkrieg/blitzkrieg3.info).
-* New tool for mappers: `info_player_dom_red` and `info_player_dom_blue`, separate spawn points for Domination. These new entities are supported in [the gamepack](https://github.com/NeonKnightOA/oagamepack).
-* Added ability to execute a script when the server is empty.
-* Server now executes the file `gametype_GAMETYPENUMBER.cfg` (i.e. `gametype_0.cfg` for FFA or `gametype_3.cfg` for TDM) on gametype change.
-* Server now executes `mapscripts/g_MAPNAME.cfg` and `mapscripts/g_MAPNAME_GAMETYPENUMBER.cfg` when changing map. It falls back to `mapscripts/g_default.cfg` and/or `mapscripts/g_default_GAMETYPENUMBER.cfg` (i.e. `g_default_0.cfg` for FFA and `g_default_3.cfg` for TDM) if any or both or the scripts are missing.
-* The background is now stretched on widescreen displays.
-* Tons of other bug fixes for MPUI/UI3, Classic UI and the game itself.
+  * Skirmish/Create Server/Game Options/H.U.D.: All options now have small helper texts. (Status bar) Some options will display what each selected option does rather than a general help text.
+  * Skirmish/Create Server:
+    * Server options are now displayed in the left column, while Gametype options are displayed at the right.
+    * New options:
+      * `g_grapple` (_"Grappling Hook"_).
+      * "Weapon Ruleset", allows picking up between the _"All Weapons (Standard)"_, _"Instantgib"_ (`g_instantgib 1`), _"Single Weapon Arena"_ (`g_weaponArena 1`), _"Classic Arena"_ (`g_classicMode 1`) and _"All Weapons (Elimination)"_ (`g_elimination 1`) rulesets for non-Round-based gamemodes, and between _"All Weapons (Elimination)"_, _"Instantgib"_, _"Single Weapon Arena"_ and _"Classic Arena"_ rulesets for Round-based gamemodes.
+      * `g_weaponArenaWeapon` (_"SWA Mode Weapon"_).
+      * `g_awardPushing` (_"Award Pushing Rule"_).
+      * `g_harvesterFromBodies` (_"Skulls From Bodies"_) for Harvester.
+      * `g_obeliskRespawnRate` (_"Time Between Rounds"_) for Overload.
+      * `elimination_roundTime` (_"Round Time Limit"_) for Elimination, eCTF and LMS.
+      * `elimination_selfDamage` (_"Damage To"_) for Elimination and eCTF.
+      * `g_lms_lives` (_"Lives Per Player"_) for LMS.
+    * Transplanted from Network: `sv_allowDownload` (split from "Autodownload" as _"Clients Can Download"_).
+    * "Physics" is now named _"Physics Ruleset"_.
+    * "One-Way Mode" for CTF Elimination (`elimination_ctf_oneway`) is now named _"Attack vs. Defense"_.
+  * New H.U.D. menu, accessible from Setup, controls the elements that are displayed in, well, the HUD, including the crosshair and weapon bar. Among the new options added and not mentioned later in this changelog:
+    * Transplanted from Video: `cg_drawFPS` (_"Draw FPS"_).
+    * Transplanted from Game Options: `cg_drawCrosshair` (_"Crosshair Style"_), `cg_crosshairHealth` (_"Crosshair Shows Health"_), `cg_crosshairColorRed` (_"Crosshair Color (Red)"_), `cg_crosshairColorGreen` (_"Crosshair Color (Green)"_), `cg_crosshairColorBlue` (_"Crosshair Color (Blue)"_), `cg_alwaysWeaponBar` (_"Always Show Weapon Bar"_), `cg_drawCrosshairNames` (_"Show Crosshair Target Name"_ f.k.a. "Identify Target") and `cg_drawTeamOverlay` (_"Show Team Overlay"_).
+    * New options: `cg_crosshairPulse` (_"Crosshair Pickup Pulse"_), `cg_draw3DIcons` (_"Weapon Bar Icon Rendering"_ in _"2D"_ or _"3D"_), `cg_weaponBarStyle` (_"Weapon Bar Style"_), `cg_obituaryOutput` (_"Death Messages"_), `cg_drawTimer` (_"Show Timer"_), `cg_drawStatus` (_"Show Match Status"_), `cg_drawAmmoWarning` (_"Show Low Ammo Warning"_), `cg_drawAttacker` (_"Show Last Attacker"_), `cg_drawSpeed` (_"Show Movement Speed"_) and `cg_drawRewards` (_"Show Medal(s) Earned"_).
+  * Game Options:
+    * Options transplanted to many menus as mentioned above and below.
+    * New options: `cg_drawGun` (_"Weapon Hand"_: _"Hidden"_, _"Left"_, _"Right"_, _"Center"_), `cg_muzzleFlashStyle` (_"Muzzle Flash Style"_), `com_blood` (_"Show Blood"_), `cg_gibs` (_"Show Gibs"_), `cg_bob` (_"View Bobbing"_), `cg_bobModel` (_"Weapon Bobbing"_), `cg_railTrailTime` (_"Railgun Slug Trail Time"_) and `cg_kickScale` (_"Screen Shaking Rate"_).
+    * Renamed "Simple Items" to _"In-Game Pickup Rendering"_ (with 2D and 3D options).
+  * Network:
+    * Transplanted from Game Options: `cl_allowDownload` (_"Download From Servers"_, f.k.a. "Autodownload") and `cg_delag` (_"Delag Hitscan Latency"_ f.k.a. "Unlag Hitscan").
+  * Sound:
+    * Transplanted from Game Options: `cl_chatBeep` (_"Beep on Chat"_) and `cg_teamChatBeep` (_"Beep on Team Chat"_).
+  * Video:
+    * Transplanted from Game Options: `r_dynamicLight` (_"Dynamic Lights"_).
+  * Find Servers:
+    * The tab now remembers the value for _"Hide Private"_.
+  * Controls:
+    * `+acc` (_"Show Accuracy"_ under Misc)
+    * `droprune` (_"Free Rune"_ under Misc)
+    * `weapbest` (_"Select Best Weapon"_ under Shoot)
+* AI improvements:
+  * Grappling Hook handling, they won't use the weapon nor switch to it if they don't have it.
+  * Domination support.
+  * Double Domination support.
+  * Support for CTF Elimination in "One-Way" (a.k.a. "Attack vs. Defense") mode.
+  * Holdable item handling. No support for the cut Portal item, though.
+* New tools for modders in general: gametype checkers for better control on how gametype and options behave.
+  * `CG_IsATeamGametype(int gametype)` (cgame), `G_IsATeamGametype(int gametype)` (game), and `UI_IsATeamGametype(int gametype)` (q3_ui and ui) return true if the gametype is team-based. (For OA, it would be TDM, CTF, 1FCTF, Harvester -HAR-, Overload, Elimination, CTF Elimination -eCTF-, Double Domination -DD- and Domination -DOM-)
+  * `CG_UsesTeamFlags(int gametype)` (cgame), `G_UsesTeamFlags(int gametype)` (game), and `UI_UsesTeamFlags(int gametype)` (q3_ui and ui) return true if the gametype uses the team-colored flags. (For OA, it would be CTF, 1FCTF and eCTF)
+  * `CG_UsesTheWhiteFlag(int gametype)` (cgame), `G_UsesTheWhiteFlag(int gametype)` (game), and `UI_UsesTheWhiteFlag(int gametype)` (q3_ui and ui) return true if the gametype uses the neutral flag. (For OA, it would be 1FCTF and Possession -POS-)
+  * `CG_IsARoundBasedGametype(int gametype)` (cgame), `G_IsARoundBasedGametype(int gametype)` (game), and `UI_IsARoundBasedGametype(int gametype)` (q3_ui and ui) return true if the gametype has a rounds rule. (For OA, it would be Elimination, eCTF and Last Man Standing -LMS-)
+  * `CG_GametypeUsesFragLimit(int gametype)` (cgame), `G_GametypeUsesFragLimit(int gametype)` (game), and `UI_GametypeUsesFragLimit(int gametype)` (q3_ui and ui) return true if the gametype uses frags as a score limit. (For OA, it would be FFA, 1on1, TDM, HAR, DOM and POS)
+  * `CG_GametypeUsesCaptureLimit(int gametype)` (cgame), `CG_GametypeUsesCaptureLimit(int gametype)` (game), and `CG_GametypeUsesCaptureLimit(int gametype)` (q3_ui and ui) return true if the gametype uses captures as a score limit. Done this way in case other score limits are later introduced. (For OA, it would be CTF, 1FCTF, Overload, Elimination, eCTF, LMS and DD)
+  * `G_IsANoPickupsMode()` (game) returns true if the match uses a no-pickup rule. So far, this is used for the "Instantgib", "Single Weapon Arena" and "All Weapons (Elimination-like)" Weapon Rulesets.
+  * `G_GametypeUsesRunes(int gametype)` (game) returns true if the gametype belongs to a short list where Runes can be used.
+* New AI-related tools for modders:
+  * `BotTeamOwnsControlPoint(bot_state_t *bs,int point)` is used for both DD and DOM and returns true if the bot's team controls a Control Point.
+  * `BotAreThereDOMPointsInTheMap()`, used for Domination, returns true if the match contains at least one Control Point (`domination_point`).
+  * `BotIsThereDDPointAInTheMap()` and `BotIsThereDDPointBInTheMap()` return true if the match contain, respectively, the DD control point A (`team_ctf_redflag`) or the DD control point B (`team_ctf_blueflag`).
+  * `BotIsThereABlueFlagInTheMap()`, `BotIsThereARedFlagInTheMap()` and `BotIsThereANeutralFlagInTheMap()` return true if the match contains a red flag (`team_ctf_redflag`), a blue flag (`team_ctf_blueflag`) or a neutral flag (`team_ctf_neutralflag`).
+  * `BotIsThereABlueObeliskInTheMap()`, `BotIsThereARedObeliskInTheMap()` and `BotIsThereANeutralObeliskInTheMap()` return true if the match contains a red obelisk (`team_redobelisk`), a blue obelisk (`team_blueobelisk`) or a neutral obelisk (`team_neutralobelisk`).
+  * `BotIsThereOurFlagInTheMap(bot_state_t *bs)` and `BotIsThereAnEnemyFlagInTheMap(bot_state_t *bs)` return true if, from the bot's own POV, there's their own team's flag or the enemy team's flag in the map.
+  * `BotIsThereOurObeliskInTheMap(bot_state_t *bs)` and `BotIsThereAnEnemyObeliskInTheMap(bot_state_t *bs)` return true if, from the bot's own POV, there's their own team's obelisk or the enemy team's obelisk in the map.
+  * `BotGetDominationPoint(bot_state_t *bs)` returns the actual control point the bot is taking care of. Only used for Domination.
+  * `BotSetDominationPoint(bot_state_t *bs, int controlPoint)` and `BotSetOwnDominationPoint(bot_state_t *bs)` controls the control points the bot is taking care of. In the former case, it looks for a control point the bot's team doesn't own, or operate in a random point, provided the bot's team controls all the points. The latter searches among the control point the bot's team is already controlling, or assigns it a random one in case the bot's team doesn't control any point. Only used for Domination.
+  * `BotMatch_AcknowledgeOrder(bot_state_t *bs, bot_match_t *match, int ltgType, float teamGoalTime)` is the general purpose order handler that replaces many functions with a similar working, some of which even called other functions, directly affecting the function stack.
+  * `BotCanChat(bot_state_t *bs,float seed)` returns true if the bot is able to chat.
+  * `BotCanAndWantsToUseTheGrapple(bot_state_t *bs)` returns true if the bot, well, is in a position to use the Grappling Hook.
+  * `BotCanAndWantsToUseTheTeleporter(bot_state_t *bs)`, `BotCanAndWantsToUseTheMedkit(bot_state_t *bs)`, `BotCanAndWantsToUseTheKamikaze(bot_state_t *bs)` and `BotCanAndWantsToUseTheInvulnerability(bot_state_t *bs)` replace the old "BotBattleUseItems" function. They control in which situations the bots can use the Personal Teleporter, Medkit, Kamikaze and Invulnerability holdables.
+  * `BotIsOnAttackingTeam(bot_state_t *bs)` is used for CTF Elimination in One-Way/Attack vs. Defense mode, and returns true if the bot is on the attacking team.
+  * `BotIsFlagOnOurBase(bot_state_t *bs)` returns true if the bot's team's flag is in their team's base. Used for CTF and eCTF.
+  * `BotIsEnemyFlagOnEnemyBase(bot_state_t *bs)` returns true if the bot's enemy team's flag is in the enemy team's base. Used for CTF and eCTF.
+* New tools for modders for UI3:
+  * `ui_randomIntToCvar(int number)` saves a random integer to a cvar.
+  * `ui_randomStringToCvar(int number)` saves a random string from a list to a cvar.
+  * `ui_randomFloatToCvar(int number)` saves a random floating point number to a cvar.
+* New tools for mappers:
+  * `state_targetname` key for `func_door`, it overrides `targetname` in round-based gametypes. [It allows the creation of doors for Elimination-based modes that open during the active time of the game](https://openarena.ws/board/index.php?topic=5437.0). In-game demonstration video [here](https://www.youtube.com/watch?v=lHq56Gx058w). It's already supported by [the gamepack](https://github.com/NeonKnightOA/oagamepack).
+  * New entities: `info_player_dom_red` and `info_player_dom_blue`. Both act as dedicated spawnpoints for Domination. They are supported by the gamepack too.
+  * Support for `.info` map files (i.e. `maps/oasago2.info`). They are text files containing important data for the maps. Some configuration examples can be found [here](https://github.com/NeonKnightOA/nk-oa-assets/blob/master/maps/DM/galmevish/am_galmevish3.info) and [here](https://github.com/NeonKnightOA/nk-oa-assets/blob/master/maps/DM/blitzkrieg/blitzkrieg3.info). Supported fields:
+    * `author` (Author of the map)
+    * `title` (Map title, i.e. for oasago2 it would display "Sago's Castle")
+    * `description` (Short description of the context/backstory of the map)
+    * `mpBots` (Bots per name to be added to non-team-based games for this map)
+    * `mpBotCount` (Amount of randomly picked bots that should be summoned instead of calling them by name for this map)
+    * `redBots` (Bots per name to be added to the Red team in team-based games for this map)
+    * `redBotCount` (Amount of randomly picked bots that should be added to the Red team in team-based games for this map)
+    * `blueBots` (Bots per name to be added to the Blue team in team-based games for this map)
+    * `blueBotCount` (Amount of randomly picked bots that should be added to the Blue team in team-based games for this map)
+    * `captureLimit` (Limit of captures in general for capture-based gamemodes for this map)
+    * `fragLimit` (Limit of points in general for score-based gamemodes for this map)
+    * `timeLimit` (Time limit in general for this map)
+    * `maxPlayers` (Amount of ideal max players in games in this map)
+    * `minPlayers` (Amount of ideal min players in games in this map)
+    * `maxTeamSize` (Amount of ideal max team members in team games in this map)
+    * `minTeamSize` (Amount of ideal max team members in team games in this map)
+    * `recommendedPlayers` (Amount of ideal players in games in this map)
+    * `recommendedTeamSize` (Amount of ideal team members in team games)
+* The "You've Been Mined" message, shown whenever you're directly hit by a proxy mine, now begins its combustion countdown instantly.
+* Default score limits are now consistent across all gamemodes.
+* Compatibility fixes to make gamecode buidable under M1 Mac. (Thanks @Bishop-313!)
+* Team Orders now display the proper team orders rather than those of Team Deathmatch for all team-based gamemodes.
+* Challenges now account for TDM wins.
+* Double Domination now displays a "New Round" message.
+* Removed some #ifdef that blocked legit AI code out of Classic UI.
+* Bots now use tourney6-like crushers against their enemies, and ONLY their enemies.
+* Score bonus fixes for CTF and 1FCTF.
+* UI3: Now displays a correct aspect in widescreen.
+* UI3: List boxes now support the mouse wheel.
+* Improved keyboard/joystick input in UI3.
+* Vote Ballots are now logged in the console.
+* Compatibility fixes to make gamecode buidable under GNU-Hurd and kFreeBSD (Credit: Cyril Brulebois, Svante Signell and @smcv).
+* Round-based gametypes: Bots are now gradually killed if all human players were fragged.
+* The Proxy Mine short fuse now works only on key objective-based gametypes.
+* With cheats enabled, "Missing Spawnpoints" won't trigger. If cheats are disabled, the message that outputs is more explicit about what's exactly missing.
+* Servers will now execute the file `gametype_GAMETYPENUMBER.cfg` (i.e. `gametype_0.cfg` for FFA or `gametype_3.cfg` for TDM) on gametype change.
+* Servers will now execute `mapscripts/g_MAPNAME.cfg` (i.e. `mapscripts/g_oasago2.cfg` for FFA or `mapscripts/g_oa_minia.cfg` for TDM) and `mapscripts/g_MAPNAME_GAMETYPENUMBER.cfg` (i.e. `mapscripts/g_oasago2_4.cfg` for CTF or `mapscripts/g_oa_minia_11.cfg` for DD) prior to a map change. It falls back to `mapscripts/g_default.cfg` and/or `mapscripts/g_default_GAMETYPENUMBER.cfg` (i.e. `mapscripts/g_default_0.cfg` for FFA or `mapscripts/g_default_3.cfg` for TDM) if any or both or the scripts are missing.
+* Weapon accuracy is now written to the logfile. The stats are written at the end of the game or when a player leaves.
+* The background is now streched on widescreen displays.
+* Many other under-the-hood changes.
 
 ## oaxB53
 
 **Release date:** TBA
 
-* Classic UI: Added "Weapon Hand" (`cg_drawGun`), "Show Blood" (`com_blood`), "Show Gibs" (`cg_gibs`), "View Bobbing" (`cg_bob 0/1`), "Railgun Slug Trail Time" (`cg_railTrailTime`) and "Screen Shaking Rate" (`cg_kickScale`) to the Game Options. Also added statusbar messages for all the page's items.
-* Classic UI: Added "Show Timer" (`cg_drawTimer`), "Show Match Status" (`cg_drawStatus`), "Show Low Ammo Warning" (`cg_drawAmmoWarning`), "Show Last Attacker" (`cg_drawAttacker`), "Show Movement Speed" (`cg_drawSpeed`) and "Show Medal(s) Earned" (`cg_drawRewards`) to H.U.D.
-* Classic UI: Moved "Chat Beep" and "Team Chat Beep" from Game Options to Sound.
-* Classic UI: Moved "Draw FPS" (`cg_drawFPS`) from Video to H.U.D.
-* Classic UI: Moved "Crosshair" (`cg_drawCrosshair`), "Crosshair Shows Health" (`cg_crosshairHealth`), "Crosshair Color Red/Green/Blue" (`cg_crosshairColorRed`, `cg_crosshairColorGreen` and `cg_crosshairColorBlue`), "Always Show Weapon Bar" (`cg_alwaysWeaponBar`), "Weapon Bar Style" (`cg_weaponBarStyle`), "Identify Target" (`cg_drawCrosshairNames`), "Draw Team Overlay" (`cg_drawTeamOverlay`) and "Death Messages" (`cg_obituaryOutput`) from Game Options to H.U.D.
-* Classic UI: New H.U.D. menu, accessible from Setup and its submenus. Contains the options that modify the in-game interface.
-* Classic UI: `cg_obituaryOutput` can now be configured in "Game Options" as "Death Messages".
-* Deletion of `g_runes`. In its place there's a new cvar, `g_classicMode`. Enabling it (via cvar or the Weapon Ruleset "Classic Arena" in Skirmish/Create Server) makes the following replacements:
-  * Nailgun and ammo with Shotgun and Shells.
-  * Chaingun and ammo with Machinegun ammo.
-  * Prox Launcher and ammo with Grenade Launcher and Grenades.
-  * Runes are disabled.
-  * Kamikaze with Personal Teleporter.
-  * Invulnerability with Medkit.
-* Classic UI: `g_ddCaptureTime` and `g_ddRespawnDelay` were added for Double Domination matches.
-* Classic UI: `cg_weaponBarStyle` added to "Game Options" as, well, "Weapon Bar Style".
-* Classic UI: Minor overall fixes.
-* Classic UI: Skirmish/Create Server: Friendly Fire, Optimize for LAN and Host Name gained descriptions.
-* Classic UI: Skirmish/Create Server: Better descriptions for all options.
-* Classic UI: "Unlag Hitscan" was moved from "Game Options" to "Network" and renamed "Delag Hitscan Latency".
-* Classic UI: "Dynamic Lights" was moved from "Game Options" to "Video".
-* Classic UI: "droprune" can be bound in "Controls -> Misc".
-* Classic UI: New "Weapon Rules" option in Skirmish/Create Server, cycles between four rulesets for weapons: **All Weapons (Classic)** (unavailable for Elimination/eCTF/LMS, default for all other modes), **Instantgib**, **Single Weapon Arena** and **All Weapons (Elimination)** (default for Elimination/eCTF/LMS).
-* Classic UI: Separated "Allow Downloads From Servers" and "Allow Downloads To Clients". The former is a player option (`cl_allowDownload 0/1`) and can be set in "Options -> Network", while the latter a server option (`sv_allowDownload 0/1`) and can be set from "Create Server". The option names were changed to reflect these changes.
-* `cg_muzzleFlashStyle` can now be chosen in Classic UI under "Game Options", replaces "Allow Download" which is already present in "Network", anyway.
-* Classic UI: `g_elimination` can now be selected for all non-round-based gamemodes.
-* Classic UI: `g_weaponArena` and `g_weaponArenaWeapon` can be selectable in Classic UI. (Though weaponArenaWeapon won't be grayed if "Weapon Arena = Disabled")
-* CTF Elimination (One-Way Mode) now has special bot logic improvements.
-* Classic UI: Status bar texts for Skirmish/Create Server have been improved.
-* `g_harvesterFromBodies` can now be selected in the Classic Menu.
-* `g_grapple` can now be selected in the Classic Menu.
-* `elimination_selfdamage` can be set in the Classic UI, and is now a bitflag with the following values:
-  * `elimination_damage 0` = Only Enemies.
-  * `elimination_damage 1` = Enemies and self.
-  * `elimination_damage 2` = Enemies and team.
-  * `elimination_damage 3` = Enemies, self and team.
-* Updated Classic UI in order to reflect the scoring changes. The Skirmish and Create Server menus will now display the following in the score field:
-  * FFA, 1on1 and TDM: _"Frag Limit"_.
-  * CTF, 1FCTF, Overload and DD: _"Capture Limit"_.
-  * Harvester, Domination and Possession: _"Score Limit"_.
-  * Elimination, eCTF and LMS: _"Round Limit"_.
-* New helper functions `GametypeUsesFragLimit()` and `GametypeUsesCaptureLimit()`, return true if a gametype uses that scoring system.
-* New helper function `BotTeamOwnsControlPoint()`, used for Double Domination and Domination, returns true if the bot's team owns a control point.
-* Development mode: All debugging cvars now require `developer 1` before they can be used.
-  * New cheat-protected development cvars: `cg_debugOrbit`, `cg_debugAccuracy`, `bot_debugChat`, `bot_debugLTG` and `bot_debugPaths`.
-  * Restored `cg_debugDelag`.
-  * Other cvars that require `developer 1` include `cg_debugAnim`, `cg_debugPosition`, `cg_debugEvents`, `cg_leiDebug`, `g_debugMove`, `g_debugDamage`, `g_debugAlloc`, `ui_debug` (MPUI/UI3) and `ui_leiDebug` (MPUI/UI3).
-* New helper function: `G_IsANoPickupsMode()`, returns true if the mode doesn't allow pickups.
-* New cvars that replace `g_rockets`: `g_weaponArena` and `g_weaponArenaWeapon`.
-  * `g_weaponArena` enables the "Weapon Arena" mode, which is the old g_rockets, but with any other weapon. `g_weaponArena 2` adds the Grappling Hook to the inventory.
-  * `g_weaponArenaWeapon` controls, via specific strings, which weapon it's spawned with its ammo boxes. The weapon cannot be picked up via menu, only (for now) via console. The full string list can be locate [here](https://github.com/OpenArena/gamecode/pull/171).
-* Missionpack/UI3 backend refactors.
-* "You Have Been Mined" message outright displays the counter instead of delaying it.
-* Team status bar fix and cg_drawTeamOverlay fix by EddieBrrrock.
-* New command: droprune. Drops the currently held rune.
-* New cvar value: g_runes &2: Enables the "droprune" command in the server. (By default, g_runes 1, the command is disabled).
-* Reimplementation of shuffle, ported from Aftershock.
-* Unified score limits across all modules. The default limits are now as follows:
-  * Free For All: 20 frags, 0 minutes.
-  * Tournament: 0 frags, 15 minutes.
-  * Single-Player: 10 frags, 0 minutes.
-  * Team Deathmatch: 0 frags, 20 minutes.
-  * Capture the Flag: 8 flags, 30 minutes.
-  * One Flag CTF: 8 flags, 30 minutes.
-  * Overload: 8 obelisk destructions, 30 minutes.
-  * Harvester: 20 skulls, 30 minutes.
-  * Elimination: 8 rounds won, 20 minutes.
-  * CTF Elimination: 8 rounds won, 30 minutes.
-  * Last Man Standing: 20 rounds won, 0 minutes.
-  * Double Domination: 8 rounds won, 30 minutes.
-  * Domination: 500 points, 30 minutes.
-  * Possession: 120 flag-holding seconds (2 minutes), 20 minutes.
-* Fix: Sound bug in cg_playerstate.c where flag taken messages played in non-flag-based gametypes. Also modified a condition in the fraglimit warnings.
-* AI enhancement: Holdable item (Teleporter/Medkit/Kamikaze/Invulnerability) handling improvements.
-* AI enhancement: Double Domination bot logic improved (team formations, voice orders, voice speech support)
-* Regression fix: Obelisk bases are now drawn outside Harvester/Overload.
-* Fix: Now it's possible to compile OAX on Mac (thanks EddieBrrrock!)
-* Fix: Team Orders in Classic UI now shows proper team orders depending on the gametype.
-* AI enhancement: Domination support vastly improved with team formations, basic logic and team orders.
-* AI enhancement: Bots now properly decide if they should use the Grappling Hook or not.
-* Fix: Classic menu now accounts for "Hide Private".
-* Fix: Yourteamcapture.wav is now only played once when it's a personal capture instead of two before (thanks EddieBrrrock!)
-* Fix: cg_weaponBarStyle with value outside of range now displays default weapon bar. Previously it would hide the weapon bar.
-* Removal of #ifdefs which blocked legit AI logic that the main game could benefit from.
-* Fix: Fragment of CG_DrawInformation in cg_info.c was not accounting for TDM.
-* Fix: SendVictoryChallenge() in g_main.c wasn't counting TDM wins.
-* Protect against overflow for the !gametype key
-* Added state_targetname instead of targetname. Of course state_targetname does still overrule targetname in Elimination games but only in Elimination games.
-* It is now possible to bind "Show accuracy" in the menu
-* Move the version number in its own file and update the year
-* Corrected "auther" to "author"
-* Replaced "gnu_printf" with "printf" for clang compatiblity. Also fixed a problem with a boolean having 3 different values
-* Added a WP_NUM_INVALID instead of a -1 for weapon numbers.
-* Fixed a lot of formatting bugs.
-* Added Possession as a gametype to vote for in the old UI
-* Deleted some the remains of the old GO-button on the gametype vote menu
-* Fixed some formatting in the vote menu.
-* Do now allow missing spawnpoints if cheats is on.
-* Lowered the default time needed to hold the flag in Possession from 5 minutes to 2 minutes.
-* Removed SelectRandomFurthestSpawnPoint. It is no longer used. The spawn points became to predictive.
-* Added logging events and Win challangex
-* Added the option to move significantly faster under water using a dmflag. Mostly for demonstration. Could be fun in class based gametypes.
-* Added a more aggressive form of g_awardpushing. Set it to 2 and the fragged player doesn't need to be airborne. Also blowing yourself up with a rocket gives a point to the last attacker too.
-* Added cg_bob variable. If set to 0 it will disable cg_bob[up|roll|pitch].
-* Added cg_kickScale variable.
-* Added the neccecary paramter to missionpack to use the UI3 gui
-* Added frag message display with icons.
-* Added a Train_Blocked callback function.
-  * Removed support for TRAIN_BLOCK_STOPS. It appeared to be broken beyond repair and completly undocumented. Trains now always crush. This might seem aggressive but there are no way logical way to turn them around and the only logical spawnflag was already in use.
-* Changed func_train to work more like func_bob rather than a crusher.
-* The short prox fuse functionalite no longer Applies to Team Deathmatch, Harvester, Elimination, Domination and Double Domination.
-* Added UI3 font support for frag messages.
-* Realigned the images for frag message display.
-* Updated default g_voteGametypes value, adding "13/" (Possession gametype).
-* Short prox mines fuse feat applied to obelisks in Harvester.
-* Start killing bots in Elimination and CTF Elimination if all humans have been eliminated.
-* If all humans are killed start killing the bots in Last Man Standing.
-* Use early return instead of deep nesting in the CheckLMS and CheckElimination functions.
-* Fix failure to build from source on GNU/kFreeBSD
-* Add support for the GNU/Hurd architecture
-* cg_muzzleflashStyle - alternative flash styles for player preference, or "aesthetic," or maybe just less flashing (flashes can also be disabled)
-* Don't make impact explosions for weapons if particles are enabled.
-* All custom Muzzles uses early return
-* Extracted the Q1 muzzle flash from CG_AddPlayerWeapon to make it shorter
-* Print what we are voting about in the console
-* Select best weapon when out of ammo
-* Introduced a CG_GetBestWeapon which returns the best weapon that the player has ammo for. Used after out-of-ammo
-* Keybind labels now have the same color as other labels. Elements where you can rebind the key still have a lighter color.
-* Added weapbest command. Selecting the best weapon. Also made BFG the ultimate weapon
-* Simplified the spawning procedure by registrering all items. This also makes "map_restart" more reliable
-* Ensure that base is always set to something non-zero
-* Rename "g_persistantpowerups" to "g_runes". The variable and the actual command now has the same name.
-* Move check for persistant powerup into Disabled item
-* Checks that now account for LMS and Possession. Required for the SP to work well.
-* More aggressive AI for Possession. Now will actively try to track and combat the flag carrier.
-* Stopped setting com_hunkmegs in the UI. It was a workaround from before it was changed in the engine.
-* Announce changes to pmove_* values. Not that they should be changed during gameplay but still.
-* Added `g_grapple`. Gives Grappling Hook to all players. Also replaces `elimination_grapple`, which has been removed. **Default: 0.**
-* Added `g_harvesterFromBodies`. Allows Harvester mode skulls to spawn where the frag happened instead of at the skull generator in the middle of the map. In case those skulls end up in a "nodrop" zone, they will respawn at the skull generator instead. **Default: 0.**
-* Remove more NO_RESTART from CVARs
-* Leilei changes for the MP UI.
-* Add ui_randomIntToCvar to the missionpack UI. Add randomFloatToCvar command. Add ui_randomStringToCvar.
-* Backport from ioq3: b21a59a "Fix negative glyph index in Team Arena text functions"
-* Backport from ioq3: 5020361 "Fix off-by-one range checks in Team Arena UI". Also readded a commented function that may be useful in a future.
-* Backport from ioq3: 07eb0f6 "Fix possible string buffer overflows in Team Arena UI"
-* Backport from ioq3: f74479a "Fix handling too many characters or aliases in Team Arena UI"
-* Backport from ioq3: 84e792f "Fix (unused) "orders" menu script logic"
-* Backport from ioq3: "Make Window_Paint check if w is NULL before dereference"
-* Backport from ioq3: 9c4b75c "Remove logically dead code from UI_GetServerStatusInfo"
-* Backport from ioq3: c91fe0b "Fix handling too many teams in Team Arena UI"
-* Backport from ioq3: b85935d "Fix glyph width calculation in Text_Paint_Limit"
-* Backport from ioq3: 01bfb15 "UI_BuildFindPlayerList: avoid array underflow"
-* Backport from ioq3: f1a133a "UI_BuildFindPlayerList: make a sizeof() more obviously correct"
-* Big backport from ioq3: d875c1f "Improve keyboard/joystick input in Team Arena UI"
-* Fix incorrect check for possession in cg_newdraw.c.
-* Small fix for function G_InitBots where the minimum for FFA and Team gametypes ended up being the same.
-* Backport from ioq3: f6f2710 "Make server browser default to Internet"
-* Backport from ioq3: 2091a2e "Fix favorite servers player count message in Team Arena UI"
-* Backport from ioq3: 0a19ae0 "Fix levelshot displayed in Team Arena server browser"
-* Backport from ioq3: bd06754 "Fix hitch when opening Team Arena find friend menu"
-* Backport from ioq3: db1198f "Add mouse wheel support to UI list boxes"
-* Extended backport from ioq3: d58234a "Fix 'missing token' in parsers for animations.cfg"
-* Backport from ioq3: 1048073 "Unify checks for missing COM_Parse() token"
-* Backport from ioq3: 21eeaee "Make Team Arena UI aspect correct in widescreen"
-* Backport from ioq3: a33a904 "Fix warning about using abs() with floats"
-* Backport from ioq3: 8192f66 "Don't draw crosshair 0 in Team Arena setup menu"
-* Backport from ioq3: dcf5707 "Don't reload arenas.txt/*.arena files in Team Arena UI"
-* Backport from ioq3: a48dcdf "Fix crash when out of memory in Team Arena's String_Alloc"
-* Backport from ioq3: 11b3bca "Update UI player animation handling to match CGame"
-* Backport from ioq3: 471ea9e "Fix Team Arena server refresh time format"
-* Backport from ioq3: dfb49e7 "Make setting r_stencilbits more consistent in Team Arena UI"
-* Backport from ioq3: "Fix map list in Team Arena start server menu after entering SP menu"
-* Backport from ioq3: 45f8512 "Fix clearing keys for control in Team Arena UI"
-* Backport from ioq3: 10abac8 "Fix duplicate bots displayed in Team Arena ingame add bot menu"
-* Make bot_minplayers work for Possession and LMS too.
-* Backport of ioquake/ioq3#f7c3276
-* Add new Double Domination Cvars Add g_ddCaptureTime which states how many seconds to hold the points to score Add g_ddRespawnDelay which states how many seconds after a capture until we can capture again.
-* Complete application of ioq3: a3c2f77: "Fix Gauntlet barrel axis in UI"
-* Backport from ioq3: af79d2c: "Fix an invalid null deref check in the slider code."
-* Backport from ioq3: f9c202f: "Use correct type for thinktime"
-* Backport from ioq3: 3273df1: "Add missing EV_USE_ITEM15 cases"
-* Backport from ioq3: 424122c "Fix bot's teamleader name field being too short"
-* Backport from ioq3: 5cf45c5: "Don't use dead view angles after stop following a dead player"
-* Backport from ioq3: 4463af8: "When player stops following a player, keep view angles"
-* Backport from ioq3: 70e3d61: "Fix cg.intermissionStarted only being enabled at first intermission"
-* Backport from ioq3: d7f00e2: "Fix Team Arena tauntGauntlet command"
-* Backport from ioq3: daa604a: "Fix parsing bots in arena info with trailing spaces"
-* Backport from ioq3: 5fb49ac: "Clean up CG_DrawProxWarning design"
-* Backport from ioq3: 1897afb: "Fix crosshair drawing not clearing color"
-* Backport from ioq3: 7a39f4a: "Fix attacker icon being default image if attacker left"
-* Backport from ioq3: 2292bf5: "Save bot accompany distance across map change or restart"
-* Backport from ioq3: 08ac364: "Fix CG_WaterLevel() checks for waterlevel 2 and 3"
-* Backport from ioq3: 386a00f: "Fix CGame CG_WaterLevel() comparisons"
-* Backport from ioq3: 604b63f: "Fix cgs.teamVoteString buffer overflow in CG_ConfigStringModified"
-* Backport from ioq3: f4aa39a: "Remove unused define CG_FONT_THRESHOLD"
-* Backport from ioq3: 274fa89: "Fix typo of empty in ai_main.c"
-* Backport from ioq3: 4474297: "Fix bot team order to kill last player it killed"
-* Backport from ioq3: 3c8da8c: "[game/ai_main.c] Use floating-point fabs() for floating-point values"
-* Backport from ioq3: 7297661: "Don't start a vote after vote passed for map change"
-* Backport from ioq3: 4506ebd: "Fix joining team when starting local team play server"
-* Backport from ioq3: 4227d97: "Make Team Arena win logic handle more game types/blue team"
-* Backport from ioq3: 4006358: "Fix spawn/freed entity logic (specifically harvester skulls)"
-* Backport from ioq3: 1066214: "Fix "brought in 1 skulls" Harvester message"
-* Backport from ioq3: 082376e: "Enable tourney scoreboard in Team Arena"
-* Backport from ioq3: c14cb70: "Draw disconnect icon over lagometer in Team Arena too"
-* Backport from ioq3: c96acec: "Fix (unused) check for map restart in CG_TransitionSnapshot"
-* Backport from ioq3: b511b8f: "Fix Coverity warning that endVelocity is uninitialized"
-* Backport from ioq3: 91acf8a: "Don't build score info for bots, they don't parse it"
-* Backport from ioq3: eeb28dc: "Fix score info being dropped by server"
-* Backport from ioq3: 71512bb: "Show client's name in callvote clientkick vote display message"
-* Backport from ioq3: 5b9302a: "Don't start game entity loops at index 1"
-* Backport from ioq3: 74aa426: "Stop caching sv_maxclients in bot code."
-* Backport from ioq3: 6e340f9: "Don't use uninitialized ps from BotAI_GetClientState."
-* Backport from ioq3: a738cb9: "Fix overdraw in CG_DrawRect"
-* Backport from ioq3: 730b917: "Fix comment in BotAIPredictObstacles"
-* Backport from ioq3: 8a6c9d1: "Remove unneeded 'angles' variables/clearing in ai_dmq3.c"
-* Backport from ioq3: c99281a: "Make bots stop attacking player after disconnect"
-* Backport from ioq3: 8956ab4: "Fix notarget cheat"
-* Backport from ioq3: f19efb7: "Fix Team Arena team base models not dropping to floor"
-* Backport from ioq3: 520b100: "Make cg_teamChatsOnly only affect team gametypes"
-* Backport from ioq3: c2ca5e7: "Check for unlimited time power up using INT_MAX"
-* Backport from ioq3: 7b9ccd1: "Have spectator always be in first person"
-* Backport from ioq3: 03336dd: "Allow spectators to use noclip cheat"
-* Backport from ioq3: 007e250: "Split G_AddRandomBot into multiple functions"
-* Backport from ioq3: 23a331c: "Make 'addbot random' command select a random bot info"
-* Backport from ioq3: 5164969: "Fix random bot not looking for bots by funname"
-* Backport from ioq3: d0d1fe1: "Fix bot_minplayers passing delay as team to addbot in non-team gametypes"
-* Backport from ioq3: 7c601da: "Fix not adding random bot when all bot info are in use on team"
-* Backport from ioq3: d8f2ff7: "Check delayed bot's team when counting bots for bot_minplayers"
-* Backport from ioq3: 0999aff: "Fix duplicate (delayed) random bots being choosen"
-* Backport from ioq3: cabc323: "Don't pick duplicate random bots until all bot types are added"
-* Backport from ioq3: b984dd4: "Add range check for bot skill in addbot command"
-* Backport from ioq3: c8db6c5: "Fix score bonus for defending the flag carrier in CTF"
-* Backport from ioq3: 13831f9: "Restore not giving defense score bonus to flag carrier"
-* Backport from ioq3: 5f2e4a0: "Add score bonus for defending the flag carrier in 1 Flag CTF"
-* Backport from ioq3: 3971674: "Silence g_util.c warning about set but not read variable"
-* Backport from ioq3: 0bce546: "Add spawnflags to QUAKED for trigger_multiple"
-* Backport from ioq3: f0b74a2: "Check for all command separators in callTeamVote"
-* Backport from ioq3: 9736e7f: "Fix compiling Cmd_CallTeamVote_f"
-* Backport from ioq3: e793c0c: "Fix crash when pmove_msec is 0"
-* Backport from ioq3: ad1d0e6: "Make bots use crusher on other q3tourney6 maps"
-* Backport from ioq3: "Make bots only use q3tourney6 crusher to kill their enemy"
-* Backport from ioq3: e152761: "Fix team chat box for spectators"
-* Backport from ioq3: 51e9aa2: "Fix hit accuracy stats for lightning gun and shotgun kills"
-* Backport from ioq3: 690c5a4: "Don't send team overlay info to bots"
-* Backport from ioq3: 424e1ac: "Fix invalid model frame developer warnings in Team Arena"
-* Backport from ioq3: c904f6d: "fix a few potential buffer overwrite in Game VM"
-* Backport from ioq3: 0822772: "Fix timelimit causing an infinite map ending loop"
-* Backport from ioq3: 0b6d97f: "Fix negative frag/capturelimit causing an infinite map end loop"
-* Backport from ioq3: 51743bb: "Improvements for dedicated camera followers (team follow1/2)"
-* Backport from ioq3: 60a3112: "Fix console offset while Team Arena voiceMenu is open"
-* Backport from ioq3: 809a776: "Make testgun command without argument disable test gun model"
-* Backport from ioq3: e4208cf: "Improve finding obelisk entitynum for bot AI"
-* Backport from ioq3: 33a899d: "Fix predicting entity origin on rotating mover"
-* Backport from ioq3: 09166ba: "Make Team Arena prevTeamMember command loop around player list"
-* Bonus backport: "Bad counting in parsers for animation.cfg" From this issue: https://github.com/ioquake/ioq3/issues/396
-* Unification of cvars for "developer" mode.
-* Replacement of a "developer" call for the cleaner alternative.
-* Unification of the Missionpack Checks into a single cvar.
-* Fix for picking up flags in gametypes that don't make use of them.
-* Many fixes to the Windows compiling scripts.
-* Solution for only picking up cubes in harvester
-* Stop running prediction in round based games before the round start
-* Fix for item spawn in LMS (#95)
-* Fix: format ‘%f’ expects argument of type ‘double’, but argument 2 has type ‘int’ (#109)
-* Fix: Flag check only for flag-based gametypes. (#110)
-* Fix: Capturelimit is no longer accounted for TDM wherever it's referenced.
-* Fix for slicks surfaces. Now always snaps while touching slick surfaces.
-* "Next round" Elimination countdown is also shown in Double Domination (#105)
-* New fields for .info files
+* New cvars:
+  * `cg_bob`: Controls how bobbing behaves in-game. It accepts the following values: (Credits: @ldrone (options 0/1) and @leilei (options 2-6))
+    * `cg_bob 0`: Disables it.
+    * `cg_bob 1`: Pitch/Roll/Up Bob.
+    * `cg_bob 2`: Pitch/Up-only Bob.
+    * `cg_bob 3`: Roll/Up-only Bob.
+    * `cg_bob 4`: Up-only Bob.
+    * `cg_bob 6`: "Fake '99" a.k.a. "Sweeny Bob". (We cannot write the actual name because [writing around trademarks](https://tvtropes.org/Main/WritingAroundTrademarks))
+  * `cg_kickScale`: Controls how much the screen shakes when hit. (Credit: @ldrone)
+  * `cg_muzzleFlashStyle`: Controls how the muzzle flash is rendered. (Credit: @leilei)
+  * `cg_obituaryOutput`: Controls how and where the death messages are rendered. (Credit: @ldrone)
+  * `g_classicMode`. It replaces `g_runes` by extending it. In addition to removing the Runes, it also replaces the Nailgun with the Shotgun, the Chaingun with the Machinegun ammo, the Prox Launcher with the Grenade Launcher, the Kamikaze holdable with the Personal Teleporter and the Invulnerability holdable with the Medkit. In Round-based gamemodes, it prevents the Nailgun, Chaingun and Prox Launcher from being added to the player's starting inventory.
+  * `g_ddCaptureTime` and `g_ddRespawnDelay` for Double Domination. Both control the amount of holding time required to score, and the time between the scoring and start of a new round.
+  * `g_grapple`. It replaces `elimination_grapple` by extending it so it works with all gamemodes.
+  * `g_harvesterFromBodies` for Harvester. If enabled, skulls spawn from bodies rather than a central skull generator. Allows Harvester matches to take place in maps without a skull generator. However, the placement of a skull generator is still recommended for those cases where the players commit suicide or are killed via level hazard.
+  * `g_weaponArena` and `g_weaponArenaWeapon`. The former replaces `g_rockets` by extending it so it can be used with any weapon, not just the Rocket Launcher. The latter controls which weapon is spawned by `g_weaponArena`.
+  * `missionpackChecks`. Enables/disables missionpack checkers in both Classic UI and UI3. It's enabled by default for the latter, and disabled for the former.
+* New bindings:
+  * `+acc`. Reveals your weapon accuracy after matches.
+  * `dropRune`. Frees the rune for another teammate to use it.
+  * `weapbest`. Selects the "best" weapon out of all those that the player carry which have ammo. The cvar controlling this priority is `cg_weaponOrder`; unlike the command, the cvar still needs to be set via console.
+* New _dmflag_: `dmflag &4096`, allows faster underwater movement a la Q2.
+* `bot_minplayers` now work for LMS and Possession.
+* `capturelimit` no longer affects Team Deathmatch.
+* `cg_teamChatsOnly` now only affects team-based gamemodes.
+* `cg_weaponBarStyle` now returns the default weapon bar if its value falls outside its limits.
+* `developer` mode has been extended with several cvars now requiring the mode to be enabled.
+* `elimination_selfDamage` now takes four values: 0 (no damage to self or teammates), 1 (only damage to self), 2 (only damage to teammates a.k.a. Friendly Fire) and 3 (self and teammate damage).
+* New option for `g_awardPushing`: `g_awardPushing 2`. [If a player commits suicide, the last player who attacked them scores a point.](https://openarena.ws/board/index.php?topic=5289.msg54334#msg54334)
+* Spectators can now use the `noclip` cheat code.
+* `shuffle` command has been removed and reimplemented, with the solution present in Aftershock being used here.
+* Classic UI:
+  * Skirmish/Create Server/Game Options/H.U.D.: All options now have small helper texts. (Status bar) Some options will display what each selected option does rather than a general help text.
+  * Skirmish/Create Server:
+    * Server options are now displayed in the left column, while Gametype options are displayed at the right.
+    * New options:
+      * `g_grapple` (_"Grappling Hook"_).
+      * "Weapon Ruleset", allows picking up between the _"All Weapons (Standard)"_, _"Instantgib"_ (`g_instantgib 1`), _"Single Weapon Arena"_ (`g_weaponArena 1`), _"Classic Arena"_ (`g_classicMode 1`) and _"All Weapons (Elimination)"_ (`g_elimination 1`) rulesets for non-Round-based gamemodes, and between _"All Weapons (Elimination)"_, _"Instantgib"_, _"Single Weapon Arena"_ and _"Classic Arena"_ rulesets for Round-based gamemodes.
+      * `g_weaponArenaWeapon` (_"SWA Mode Weapon"_).
+      * `g_awardPushing` (_"Award Pushing Rule"_).
+      * `g_harvesterFromBodies` (_"Skulls From Bodies"_) for Harvester.
+      * `g_obeliskRespawnRate` (_"Time Between Rounds"_) for Overload.
+      * `elimination_roundTime` (_"Round Time Limit"_) for Elimination, eCTF and LMS.
+      * `elimination_selfDamage` (_"Damage To"_) for Elimination and eCTF.
+      * `g_lms_lives` (_"Lives Per Player"_) for LMS.
+    * Transplanted from Network: `sv_allowDownload` (split from "Autodownload" as _"Clients Can Download"_).
+    * "Physics" is now named _"Physics Ruleset"_.
+    * "One-Way Mode" for CTF Elimination (`elimination_ctf_oneway`) is now named _"Attack vs. Defense"_.
+  * New H.U.D. menu, accessible from Setup, controls the elements that are displayed in, well, the HUD, including the crosshair and weapon bar. Among the new options added and not mentioned later in this changelog:
+    * Transplanted from Video: `cg_drawFPS` (_"Draw FPS"_).
+    * Transplanted from Game Options: `cg_drawCrosshair` (_"Crosshair Style"_), `cg_crosshairHealth` (_"Crosshair Shows Health"_), `cg_crosshairColorRed` (_"Crosshair Color (Red)"_), `cg_crosshairColorGreen` (_"Crosshair Color (Green)"_), `cg_crosshairColorBlue` (_"Crosshair Color (Blue)"_), `cg_alwaysWeaponBar` (_"Always Show Weapon Bar"_), `cg_drawCrosshairNames` (_"Show Crosshair Target Name"_ f.k.a. "Identify Target") and `cg_drawTeamOverlay` (_"Show Team Overlay"_).
+    * New options: `cg_crosshairPulse` (_"Crosshair Pickup Pulse"_), `cg_draw3DIcons` (_"Weapon Bar Icon Rendering"_ in _"2D"_ or _"3D"_), `cg_weaponBarStyle` (_"Weapon Bar Style"_), `cg_obituaryOutput` (_"Death Messages"_), `cg_drawTimer` (_"Show Timer"_), `cg_drawStatus` (_"Show Match Status"_), `cg_drawAmmoWarning` (_"Show Low Ammo Warning"_), `cg_drawAttacker` (_"Show Last Attacker"_), `cg_drawSpeed` (_"Show Movement Speed"_) and `cg_drawRewards` (_"Show Medal(s) Earned"_).
+  * Game Options:
+    * Options transplanted to many menus as mentioned above and below.
+    * New options: `cg_drawGun` (_"Weapon Hand"_: _"Hidden"_, _"Left"_, _"Right"_, _"Center"_), `cg_muzzleFlashStyle` (_"Muzzle Flash Style"_), `com_blood` (_"Show Blood"_), `cg_gibs` (_"Show Gibs"_), `cg_bob` (_"View Bobbing"_), `cg_bobModel` (_"Weapon Bobbing"_), `cg_railTrailTime` (_"Railgun Slug Trail Time"_) and `cg_kickScale` (_"Screen Shaking Rate"_).
+    * Renamed "Simple Items" to _"In-Game Pickup Rendering"_ (with 2D and 3D options).
+  * Network:
+    * Transplanted from Game Options: `cl_allowDownload` (_"Download From Servers"_, f.k.a. "Autodownload") and `cg_delag` (_"Delag Hitscan Latency"_ f.k.a. "Unlag Hitscan").
+  * Sound:
+    * Transplanted from Game Options: `cl_chatBeep` (_"Beep on Chat"_) and `cg_teamChatBeep` (_"Beep on Team Chat"_).
+  * Video:
+    * Transplanted from Game Options: `r_dynamicLight` (_"Dynamic Lights"_).
+  * Find Servers:
+    * The tab now remembers the value for _"Hide Private"_.
+  * Controls:
+    * `+acc` (_"Show Accuracy"_ under Misc)
+    * `droprune` (_"Free Rune"_ under Misc)
+    * `weapbest` (_"Select Best Weapon"_ under Shoot)
+* Possession:
+  * It can now be voted after matches. (Credit: @The-Gig)
+  * Default flag holding time reduced to 120 (2 minutes).
+  * Events and victories are now logged into the Challenges.
+  * Improved AI.
+* AI improvements:
+  * Grappling Hook handling, they won't use the weapon nor switch to it if they don't have it.
+  * Domination support.
+  * Double Domination support.
+  * Support for CTF Elimination in "One-Way" (a.k.a. "Attack vs. Defense") mode.
+  * Holdable item handling. No support for the cut Portal item, though.
+* New tools for modders in general: gametype checkers for better control on how gametype and options behave.
+  * `CG_IsATeamGametype(int gametype)` (cgame), `G_IsATeamGametype(int gametype)` (game), and `UI_IsATeamGametype(int gametype)` (q3_ui and ui) return true if the gametype is team-based. (For OA, it would be TDM, CTF, 1FCTF, Harvester -HAR-, Overload, Elimination, CTF Elimination -eCTF-, Double Domination -DD- and Domination -DOM-)
+  * `CG_UsesTeamFlags(int gametype)` (cgame), `G_UsesTeamFlags(int gametype)` (game), and `UI_UsesTeamFlags(int gametype)` (q3_ui and ui) return true if the gametype uses the team-colored flags. (For OA, it would be CTF, 1FCTF and eCTF)
+  * `CG_UsesTheWhiteFlag(int gametype)` (cgame), `G_UsesTheWhiteFlag(int gametype)` (game), and `UI_UsesTheWhiteFlag(int gametype)` (q3_ui and ui) return true if the gametype uses the neutral flag. (For OA, it would be 1FCTF and Possession -POS-)
+  * `CG_IsARoundBasedGametype(int gametype)` (cgame), `G_IsARoundBasedGametype(int gametype)` (game), and `UI_IsARoundBasedGametype(int gametype)` (q3_ui and ui) return true if the gametype has a rounds rule. (For OA, it would be Elimination, eCTF and Last Man Standing -LMS-)
+  * `CG_GametypeUsesFragLimit(int gametype)` (cgame), `G_GametypeUsesFragLimit(int gametype)` (game), and `UI_GametypeUsesFragLimit(int gametype)` (q3_ui and ui) return true if the gametype uses frags as a score limit. (For OA, it would be FFA, 1on1, TDM, HAR, DOM and POS)
+  * `CG_GametypeUsesCaptureLimit(int gametype)` (cgame), `CG_GametypeUsesCaptureLimit(int gametype)` (game), and `CG_GametypeUsesCaptureLimit(int gametype)` (q3_ui and ui) return true if the gametype uses captures as a score limit. Done this way in case other score limits are later introduced. (For OA, it would be CTF, 1FCTF, Overload, Elimination, eCTF, LMS and DD)
+  * `G_IsANoPickupsMode()` (game) returns true if the match uses a no-pickup rule. So far, this is used for the "Instantgib", "Single Weapon Arena" and "All Weapons (Elimination-like)" Weapon Rulesets.
+  * `G_GametypeUsesRunes(int gametype)` (game) returns true if the gametype belongs to a short list where Runes can be used.
+* New AI-related tools for modders:
+  * `BotTeamOwnsControlPoint(bot_state_t *bs,int point)` is used for both DD and DOM and returns true if the bot's team controls a Control Point.
+  * `BotAreThereDOMPointsInTheMap()`, used for Domination, returns true if the match contains at least one Control Point (`domination_point`).
+  * `BotIsThereDDPointAInTheMap()` and `BotIsThereDDPointBInTheMap()` return true if the match contain, respectively, the DD control point A (`team_ctf_redflag`) or the DD control point B (`team_ctf_blueflag`).
+  * `BotIsThereABlueFlagInTheMap()`, `BotIsThereARedFlagInTheMap()` and `BotIsThereANeutralFlagInTheMap()` return true if the match contains a red flag (`team_ctf_redflag`), a blue flag (`team_ctf_blueflag`) or a neutral flag (`team_ctf_neutralflag`).
+  * `BotIsThereABlueObeliskInTheMap()`, `BotIsThereARedObeliskInTheMap()` and `BotIsThereANeutralObeliskInTheMap()` return true if the match contains a red obelisk (`team_redobelisk`), a blue obelisk (`team_blueobelisk`) or a neutral obelisk (`team_neutralobelisk`).
+  * `BotIsThereOurFlagInTheMap(bot_state_t *bs)` and `BotIsThereAnEnemyFlagInTheMap(bot_state_t *bs)` return true if, from the bot's own POV, there's their own team's flag or the enemy team's flag in the map.
+  * `BotIsThereOurObeliskInTheMap(bot_state_t *bs)` and `BotIsThereAnEnemyObeliskInTheMap(bot_state_t *bs)` return true if, from the bot's own POV, there's their own team's obelisk or the enemy team's obelisk in the map.
+  * `BotGetDominationPoint(bot_state_t *bs)` returns the actual control point the bot is taking care of. Only used for Domination.
+  * `BotSetDominationPoint(bot_state_t *bs, int controlPoint)` and `BotSetOwnDominationPoint(bot_state_t *bs)` controls the control points the bot is taking care of. In the former case, it looks for a control point the bot's team doesn't own, or operate in a random point, provided the bot's team controls all the points. The latter searches among the control point the bot's team is already controlling, or assigns it a random one in case the bot's team doesn't control any point. Only used for Domination.
+  * `BotMatch_AcknowledgeOrder(bot_state_t *bs, bot_match_t *match, int ltgType, float teamGoalTime)` is the general purpose order handler that replaces many functions with a similar working, some of which even called other functions, directly affecting the function stack.
+  * `BotCanChat(bot_state_t *bs,float seed)` returns true if the bot is able to chat.
+  * `BotCanAndWantsToUseTheGrapple(bot_state_t *bs)` returns true if the bot, well, is in a position to use the Grappling Hook.
+  * `BotCanAndWantsToUseTheTeleporter(bot_state_t *bs)`, `BotCanAndWantsToUseTheMedkit(bot_state_t *bs)`, `BotCanAndWantsToUseTheKamikaze(bot_state_t *bs)` and `BotCanAndWantsToUseTheInvulnerability(bot_state_t *bs)` replace the old "BotBattleUseItems" function. They control in which situations the bots can use the Personal Teleporter, Medkit, Kamikaze and Invulnerability holdables.
+  * `BotIsOnAttackingTeam(bot_state_t *bs)` is used for CTF Elimination in One-Way/Attack vs. Defense mode, and returns true if the bot is on the attacking team.
+  * `BotIsFlagOnOurBase(bot_state_t *bs)` returns true if the bot's team's flag is in their team's base. Used for CTF and eCTF.
+  * `BotIsEnemyFlagOnEnemyBase(bot_state_t *bs)` returns true if the bot's enemy team's flag is in the enemy team's base. Used for CTF and eCTF.
+* New tools for modders for UI3:
+  * `ui_randomIntToCvar(int number)` saves a random integer to a cvar.
+  * `ui_randomStringToCvar(int number)` saves a random string from a list to a cvar.
+  * `ui_randomFloatToCvar(int number)` saves a random floating point number to a cvar.
+* New tool for mappers: added `state_targetname` key for `func_door`, it overrides `targetname` in round-based gametypes. [It allows the creation of doors for Elimination-based modes that open during the active time of the game](https://openarena.ws/board/index.php?topic=5437.0). In-game demonstration video [here](https://www.youtube.com/watch?v=lHq56Gx058w).
+* New fields for .info map files:
+  * `title` (Map title, i.e. for oasago2 it would display "Sago's Castle")
+  * `mpBotCount` (Amount of randomly picked bots that should be summoned instead of calling them by name)
+  * `redBots` (Bots to be added to the Red team in team-based games)
+  * `redBotCount` (Amount of randomly picked bots that should be added to the Red team in team-based games)
+  * `blueBots` (Bots to be added to the Blue team in team-based games)
+  * `blueBotCount` (Amount of randomly picked bots that should be added to the Blue team in team-based games)
+  * `recommendedTeamSize` (Amount of ideal team members in team games)
+* The "You've Been Mined" message, shown whenever you're directly hit by a proxy mine, now begins its combustion countdown instantly.
+* Default score limits are now consistent across all gamemodes.
+* Compatibility fixes to make gamecode buidable under M1 Mac. (Thanks @Bishop-313!)
+* Team Orders now display the proper team orders rather than those of Team Deathmatch for all team-based gamemodes.
+* Challenges now account for TDM wins.
+* Double Domination now displays a "New Round" message.
+* Removed some #ifdef that blocked legit AI code out of Classic UI.
+* Bots now use tourney6-like crushers against their enemies, and ONLY their enemies.
+* Score bonus fixes for CTF and 1FCTF.
+* UI3: Now displays a correct aspect in widescreen.
+* UI3: List boxes now support the mouse wheel.
+* Improved keyboard/joystick input in UI3.
+* Vote Ballots are now logged in the console.
+* Compatibility fixes to make gamecode buidable under GNU-Hurd and kFreeBSD (Credit: Cyril Brulebois, Svante Signell and @smcv).
+* Round-based gametypes: Bots are now gradually killed if all human players were fragged.
+* The Proxy Mine short fuse now works only on key objective-based gametypes.
+* With cheats enabled, "Missing Spawnpoints" won't trigger. If cheats are disabled, the message that outputs is more explicit about what's exactly missing.
+* Many other under-the-hood changes.
 
 ## oaxB52
 
