@@ -522,7 +522,7 @@ static void Crosshair_Draw( void *self ) {
 }
 
 static void HUDOptions_MenuInit( void ) {
-	int				y;
+	//int				y;
 
 	UI_SetDefaultCvar("cg_crosshairHealth","1");
 	UI_SetDefaultCvar("cg_crosshairPulse","1");
@@ -577,8 +577,8 @@ static void HUDOptions_MenuInit( void ) {
 	hudOptions_s.crosshair.generic.callback		= HUDOptions_Event;
 	hudOptions_s.crosshair.generic.ownerdraw	= Crosshair_Draw;
 	hudOptions_s.crosshair.generic.id			= ID_CROSSHAIR;
-	hudOptions_s.crosshair.generic.top			= y - 4;
-	hudOptions_s.crosshair.generic.bottom		= y + 20;
+	hudOptions_s.crosshair.generic.top			= 240 - 9 * (BIGCHAR_HEIGHT+2) - 4;
+	hudOptions_s.crosshair.generic.bottom		= 240 - 9 * (BIGCHAR_HEIGHT+2) + 20;
 	hudOptions_s.crosshair.generic.left			= HUDOPTIONS_X_POS - ( ( strlen(hudOptions_s.crosshair.generic.name) + 1 ) * SMALLCHAR_WIDTH );
 	hudOptions_s.crosshair.generic.right		= HUDOPTIONS_X_POS + 48;
 	hudOptions_s.crosshair.generic.statusbar	= HUDOptions_StatusBar_Crosshair;

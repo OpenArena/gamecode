@@ -153,7 +153,7 @@ Every option name must have 22 characters or less.
 ===============
 */
 static void UI_NetworkOptionsMenu_Init( void ) {
-	int		y;
+	//int		y;
 	int		rate;
 
 	memset( &networkOptionsInfo, 0, sizeof(networkOptionsInfo) );
