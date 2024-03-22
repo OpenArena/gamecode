@@ -40,19 +40,20 @@ GAME OPTIONS MENU
 #define PREFERENCES_X_POS		360
 
 #define ID_BACK					127
-#define ID_SIMPLEITEMS			128
-#define ID_HIGHQUALITYSKY		129
+#define ID_DRAWGUN				128
+#define ID_SIMPLEITEMS			129
 #define ID_EJECTINGBRASS		130
 #define ID_WALLMARKS			131
-#define ID_SYNCEVERYFRAME		132
-#define ID_FORCEMODEL			133
-#define ID_MUZZLEFLASHSTYLE		134
-#define ID_DRAWGUN				135
+#define ID_HIGHQUALITYSKY		132
+#define ID_SYNCEVERYFRAME		133
+#define ID_FORCEMODEL			134
+#define ID_MUZZLEFLASHSTYLE		135
 #define ID_SHOWBLOOD			136
 #define ID_SHOWGIBS				137
 #define ID_VIEWBOB				138
-#define ID_RAILTRAILTIME		139
-#define ID_KICKSCALE			140
+#define ID_WEAPONBOB			139
+#define ID_RAILTRAILTIME		140
+#define ID_KICKSCALE			141
 
 #undef NUM_CROSSHAIRS
 #define	NUM_CROSSHAIRS			99
@@ -75,7 +76,8 @@ typedef struct {
 	menulist_s			muzzleFlashStyle;
 	menuradiobutton_s	showBlood;
 	menuradiobutton_s	showGibs;
-	menuradiobutton_s	viewBob;
+	menulist_s			viewBob;
+	menulist_s			weaponBob;
 	menufield_s			railTrailTime;
 	menufield_s			kickScale;
 
@@ -112,7 +114,30 @@ static const char *muzzleFlashStyle_names[] =
 	NULL
 };
 
+static const char *viewBob_names[] =
+{
+	"Off",
+	"Default",
+	"No Roll",
+	"No Pitch",
+	"No Pitch/Roll",
+	"Fake '99",
+	NULL
+};
+
+static const char *weaponBob_names[] =
+{
+	"Normal",
+	"Arc",
+	"Thrust",
+	"Figure 8",
+	"Off",
+	NULL
+};
+
 static void Preferences_SetMenuItems( void ) {
+	int viewBob, weaponBob;
+
 	s_preferences.drawGun.curvalue			= trap_Cvar_VariableValue( "cg_drawGun" ) != 0;
 	s_preferences.simpleitems.curvalue		= trap_Cvar_VariableValue( "cg_simpleItems" ) != 0;
 	s_preferences.brass.curvalue			= trap_Cvar_VariableValue( "cg_brassTime" ) != 0;
@@ -123,7 +148,28 @@ static void Preferences_SetMenuItems( void ) {
 	s_preferences.muzzleFlashStyle.curvalue	= trap_Cvar_VariableValue( "cg_muzzleFlashStyle" ) != 0;
 	s_preferences.showBlood.curvalue		= trap_Cvar_VariableValue( "com_blood" ) != 0;
 	s_preferences.showGibs.curvalue			= trap_Cvar_VariableValue( "cg_gibs" ) != 0;
-	s_preferences.viewBob.curvalue			= trap_Cvar_VariableValue( "cg_bob" ) != 0;
+	// Due to the irregular values used by cg_bob, we have to do things this way.
+	viewBob									= trap_Cvar_VariableValue( "cg_bob" ) != 0;
+	if (viewBob >= 0 && viewBob <= 4) {
+		s_preferences.viewBob.curvalue = viewBob;
+	}
+	else if (viewBob == 6) {
+		s_preferences.viewBob.curvalue = 5;
+	}
+	else { // default value
+		s_preferences.viewBob.curvalue = 0;
+	}
+	// Due to the irregular values used by cg_bobModel, we have to do things this way.
+	weaponBob								= trap_Cvar_VariableValue( "cg_bobModel" ) != 0;
+	if (weaponBob >= 0 && weaponBob <= 3) {
+		s_preferences.weaponBob.curvalue = weaponBob;
+	}
+	else if (weaponBob == -1) {
+		s_preferences.weaponBob.curvalue = 4;
+	}
+	else { // default value
+		s_preferences.weaponBob.curvalue = 0;
+	}
 }
 
 static void Preferences_Event( void* ptr, int notification ) {
@@ -177,7 +223,27 @@ static void Preferences_Event( void* ptr, int notification ) {
 		break;
 
 	case ID_VIEWBOB:
-		trap_Cvar_SetValue( "cg_bob", s_preferences.viewBob.curvalue );
+		if (s_preferences.viewBob.curvalue >= 0 && s_preferences.viewBob.curvalue <= 4) {
+			trap_Cvar_SetValue( "cg_bob", s_preferences.viewBob.curvalue);
+		}
+		else if (s_preferences.viewBob.curvalue == 5) {
+			trap_Cvar_Set( "cg_bob", "6" );
+		}
+		else { // default value
+			trap_Cvar_Set( "cg_bob", "0" );
+		}
+		break;
+
+	case ID_WEAPONBOB:
+		if (s_preferences.viewBob.curvalue >= 0 && s_preferences.viewBob.curvalue <= 3) {
+			trap_Cvar_SetValue( "cg_bobModel", s_preferences.viewBob.curvalue);
+		}
+		else if (s_preferences.viewBob.curvalue == 4) {
+			trap_Cvar_Set( "cg_bobModel", "-1" );
+		}
+		else { // default value
+			trap_Cvar_Set( "cg_bobModel", "0" );
+		}
 		break;
 
 	case ID_RAILTRAILTIME:
@@ -338,8 +404,20 @@ Descriptions should have 48 characters or less per line, and there can't be more
 =================
 */
 static void Preferences_StatusBar_ViewBobbing( void* ptr ) {
-	UI_DrawString( 320, 440, "If set, the screen will bob when walking", UI_CENTER|UI_SMALLFONT, colorWhite );
-	UI_DrawString( 320, 460, "or running at a certain rate.", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 440, "Displays how the screen will bob", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "when the player is running/walking.", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
+/*
+=================
+Preferences_StatusBar_WeaponBobbing
+
+Descriptions should have 48 characters or less per line, and there can't be more than two lines.
+=================
+*/
+static void Preferences_StatusBar_WeaponBobbing( void* ptr ) {
+	UI_DrawString( 320, 440, "Displays how the weapon will bob", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "when the player is running/walking.", UI_CENTER|UI_SMALLFONT, colorWhite );
 }
 
 /*
@@ -375,6 +453,8 @@ static void Preferences_MenuInit( void ) {
 	UI_SetDefaultCvar("cg_brassTime","0");
 	UI_SetDefaultCvar("cg_railTrailTime","600");
 	UI_SetDefaultCvar("cg_kickScale","1.0");
+	UI_SetDefaultCvar("cg_bob","1");
+	UI_SetDefaultCvar("cg_bobModel","0");
 
 	memset( &s_preferences, 0 ,sizeof(preferences_t) );
 
@@ -510,14 +590,26 @@ static void Preferences_MenuInit( void ) {
 	s_preferences.showGibs.generic.statusbar	= Preferences_StatusBar_ShowGibs;
 
 	y += BIGCHAR_HEIGHT;
-	s_preferences.viewBob.generic.type		= MTYPE_RADIOBUTTON;
+	s_preferences.viewBob.generic.type		= MTYPE_SPINCONTROL;
 	s_preferences.viewBob.generic.name		= "View Bobbing:";
 	s_preferences.viewBob.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	s_preferences.viewBob.generic.callback	= Preferences_Event;
 	s_preferences.viewBob.generic.id		= ID_VIEWBOB;
 	s_preferences.viewBob.generic.x			= PREFERENCES_X_POS;
 	s_preferences.viewBob.generic.y			= y;
+	s_preferences.viewBob.itemnames			= viewBob_names;
 	s_preferences.viewBob.generic.statusbar	= Preferences_StatusBar_ViewBobbing;
+
+	y += BIGCHAR_HEIGHT;
+	s_preferences.weaponBob.generic.type		= MTYPE_SPINCONTROL;
+	s_preferences.weaponBob.generic.name		= "Weapon Bobbing:";
+	s_preferences.weaponBob.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	s_preferences.weaponBob.generic.callback	= Preferences_Event;
+	s_preferences.weaponBob.generic.id			= ID_VIEWBOB;
+	s_preferences.weaponBob.generic.x			= PREFERENCES_X_POS;
+	s_preferences.weaponBob.generic.y			= y;
+	s_preferences.weaponBob.itemnames			= weaponBob_names;
+	s_preferences.weaponBob.generic.statusbar	= Preferences_StatusBar_WeaponBobbing;
 
 	y += BIGCHAR_HEIGHT;
 	s_preferences.railTrailTime.generic.type		= MTYPE_FIELD;
@@ -569,6 +661,7 @@ static void Preferences_MenuInit( void ) {
 	Menu_AddItem( &s_preferences.menu, &s_preferences.showBlood );
 	Menu_AddItem( &s_preferences.menu, &s_preferences.showGibs );
 	Menu_AddItem( &s_preferences.menu, &s_preferences.viewBob );
+	Menu_AddItem( &s_preferences.menu, &s_preferences.weaponBob );
 	Menu_AddItem( &s_preferences.menu, &s_preferences.railTrailTime );
 	Menu_AddItem( &s_preferences.menu, &s_preferences.kickScale );
 
@@ -584,8 +677,6 @@ Preferences_Cache
 ===============
 */
 void Preferences_Cache( void ) {
-	int		n;
-
 	trap_R_RegisterShaderNoMip( ART_FRAMEL );
 	trap_R_RegisterShaderNoMip( ART_FRAMER );
 	trap_R_RegisterShaderNoMip( ART_BACK0 );
