@@ -11,7 +11,7 @@
   * Uses `fraglimit` (holding time in seconds, i.e. `fraglimit 120` for 2 minutes, the default time) and `timelimit`.
   * It can be voted after matches as `/13`. (Credit: @The-Gig)
 * New cvars:
-  * `cg_bob`: Controls how bobbing behaves in-game. It accepts the following values: (Credits: @ldrone (options 0/1) and @leilei (options 2-6))
+  * `cg_bob`: Controls how bobbing behaves in-game. It accepts the following values: (Credits: @ldrone (options 0/1) and @leilei- (options 2-6))
     * `cg_bob 0`: Disables it.
     * `cg_bob 1`: Pitch/Roll/Up Bob.
     * `cg_bob 2`: Pitch/Up-only Bob.
@@ -19,7 +19,7 @@
     * `cg_bob 4`: Up-only Bob.
     * `cg_bob 6`: "Fake '99" a.k.a. "Sweeny Bob". (We cannot write the actual name because [writing around trademarks](https://tvtropes.org/Main/WritingAroundTrademarks))
   * `cg_kickScale`: Controls how much the screen shakes when hit. (Credit: @ldrone)
-  * `cg_muzzleFlashStyle`: Controls how the muzzle flash is rendered. (Credit: @leilei)
+  * `cg_muzzleFlashStyle`: Controls how the muzzle flash is rendered. (Credit: @leilei-)
   * `cg_obituaryOutput`: Controls how and where the death messages are rendered. (Credit: @ldrone)
   * `g_classicMode`. It replaces `g_runes` by extending it. In addition to removing the Runes, it also replaces the Nailgun with the Shotgun, the Chaingun with the Machinegun ammo, the Prox Launcher with the Grenade Launcher, the Kamikaze holdable with the Personal Teleporter and the Invulnerability holdable with the Medkit. In Round-based gamemodes, it prevents the Nailgun, Chaingun and Prox Launcher from being added to the player's starting inventory.
   * `g_ddCaptureTime` and `g_ddRespawnDelay` for Double Domination. Both control the amount of holding time required to score, and the time between the scoring and start of a new round.
@@ -166,7 +166,7 @@
 **Release date:** March 22, 2024
 
 * New cvars:
-  * `cg_bob`: Controls how bobbing behaves in-game. It accepts the following values: (Credits: @ldrone (options 0/1) and @leilei (options 2-6))
+  * `cg_bob`: Controls how bobbing behaves in-game. It accepts the following values: (Credits: @ldrone (options 0/1) and @leilei- (options 2-6))
     * `cg_bob 0`: Disables it.
     * `cg_bob 1`: Pitch/Roll/Up Bob.
     * `cg_bob 2`: Pitch/Up-only Bob.
@@ -174,7 +174,7 @@
     * `cg_bob 4`: Up-only Bob.
     * `cg_bob 6`: "Fake '99" a.k.a. "Sweeny Bob". (We cannot write the actual name because [writing around trademarks](https://tvtropes.org/Main/WritingAroundTrademarks))
   * `cg_kickScale`: Controls how much the screen shakes when hit. (Credit: @ldrone)
-  * `cg_muzzleFlashStyle`: Controls how the muzzle flash is rendered. (Credit: @leilei)
+  * `cg_muzzleFlashStyle`: Controls how the muzzle flash is rendered. (Credit: @leilei-)
   * `cg_obituaryOutput`: Controls how and where the death messages are rendered. (Credit: @ldrone)
   * `g_classicMode`. It replaces `g_runes` by extending it. In addition to removing the Runes, it also replaces the Nailgun with the Shotgun, the Chaingun with the Machinegun ammo, the Prox Launcher with the Grenade Launcher, the Kamikaze holdable with the Personal Teleporter and the Invulnerability holdable with the Medkit. In Round-based gamemodes, it prevents the Nailgun, Chaingun and Prox Launcher from being added to the player's starting inventory.
   * `g_ddCaptureTime` and `g_ddRespawnDelay` for Double Domination. Both control the amount of holding time required to score, and the time between the scoring and start of a new round.
