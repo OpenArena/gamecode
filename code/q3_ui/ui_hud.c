@@ -113,10 +113,10 @@ static const char *weaponBarStyle_names[] =
 
 static const char *teamOverlay_names[] =
 {
-	"off",
-	"upper right",
-	"lower right",
-	"lower left",
+	"Off",
+	"Upper Right",
+	"Lower Right",
+	"Lower Left",
 	NULL
 };
 
@@ -262,6 +262,210 @@ static void HUDOptions_Event( void* ptr, int notification ) {
 	}
 }
 
+/*
+=================
+HUDOptions_StatusBar_Crosshair
+
+Descriptions should have 48 characters or less per line, and there can't be more than two lines.
+=================
+*/
+static void HUDOptions_StatusBar_Crosshair( void* ptr ) {
+	UI_DrawString( 320, 440, "Select how the crosshair will look in-game.", UI_CENTER|UI_SMALLFONT, colorWhite );
+	//UI_DrawString( 320, 460, "", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
+/*
+=================
+HUDOptions_StatusBar_CrosshairHealth
+
+Descriptions should have 48 characters or less per line, and there can't be more than two lines.
+=================
+*/
+static void HUDOptions_StatusBar_CrosshairHealth( void* ptr ) {
+	UI_DrawString( 320, 440, "The crosshair coloration depends on your", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "health level. Disables coloring if selected.", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
+/*
+=================
+HUDOptions_StatusBar_CrosshairPulse
+
+Descriptions should have 48 characters or less per line, and there can't be more than two lines.
+=================
+*/
+static void HUDOptions_StatusBar_CrosshairPulse( void* ptr ) {
+	UI_DrawString( 320, 440, "If set, whenever you pick up an item,", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "the crosshair will emit a pulse.", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
+/*
+=================
+HUDOptions_StatusBar_CrosshairColor
+
+Descriptions should have 48 characters or less per line, and there can't be more than two lines.
+=================
+*/
+static void HUDOptions_StatusBar_CrosshairColor( void* ptr ) {
+	UI_DrawString( 320, 440, "Use the sliders to change the color.", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "of the selected crosshair.", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
+/*
+=================
+HUDOptions_StatusBar_Draw3DIcons
+
+Descriptions should have 48 characters or less per line, and there can't be more than two lines.
+=================
+*/
+static void HUDOptions_StatusBar_Draw3DIcons( void* ptr ) {
+	UI_DrawString( 320, 440, "Specifies if the items in the weapon bar", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "will be rendered as 2D icons or 3D models.", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
+/*
+=================
+HUDOptions_StatusBar_AlwaysWeaponBar
+
+Descriptions should have 48 characters or less per line, and there can't be more than two lines.
+=================
+*/
+static void HUDOptions_StatusBar_AlwaysWeaponBar( void* ptr ) {
+	UI_DrawString( 320, 440, "If set, the weapon bar will always", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "be displayed in the in-game HUD.", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
+/*
+=================
+HUDOptions_StatusBar_WeaponBarStyle
+
+Descriptions should have 48 characters or less per line, and there can't be more than two lines.
+=================
+*/
+static void HUDOptions_StatusBar_WeaponBarStyle( void* ptr ) {
+	UI_DrawString( 320, 440, "Specifies how the weapon bar", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "will be displayed in the HUD.", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
+/*
+=================
+HUDOptions_StatusBar_IdentifyTarget
+
+Descriptions should have 48 characters or less per line, and there can't be more than two lines.
+=================
+*/
+static void HUDOptions_StatusBar_IdentifyTarget( void* ptr ) {
+	UI_DrawString( 320, 440, "If set, the HUD will display the nickname", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "of the target behind your crosshair.", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
+/*
+=================
+HUDOptions_StatusBar_DrawTeamOverlay
+
+Descriptions should have 48 characters or less per line, and there can't be more than two lines.
+=================
+*/
+static void HUDOptions_StatusBar_DrawTeamOverlay( void* ptr ) {
+	UI_DrawString( 320, 440, "If set, wherever you decide to draw it, the game", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "will display the status of your team in a corner.", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
+/*
+=================
+HUDOptions_StatusBar_ObituaryOutput
+
+Descriptions should have 48 characters or less per line, and there can't be more than two lines.
+=================
+*/
+static void HUDOptions_StatusBar_ObituaryOutput( void* ptr ) {
+	UI_DrawString( 320, 440, "Specifies how and where will death messages", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "be rendered, and in which format.", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
+/*
+=================
+HUDOptions_StatusBar_DrawFPS
+
+Descriptions should have 48 characters or less per line, and there can't be more than two lines.
+=================
+*/
+static void HUDOptions_StatusBar_DrawFPS( void* ptr ) {
+	UI_DrawString( 320, 440, "If set, draws your actual Frames Per Second", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "(FPS) rate on the top-right corner.", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
+/*
+=================
+HUDOptions_StatusBar_DrawTimer
+
+Descriptions should have 48 characters or less per line, and there can't be more than two lines.
+=================
+*/
+static void HUDOptions_StatusBar_DrawTimer( void* ptr ) {
+	UI_DrawString( 320, 440, "If set, draws the elapsed match", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "time on the top-right corner.", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
+/*
+=================
+HUDOptions_StatusBar_DrawStatus
+
+Descriptions should have 48 characters or less per line, and there can't be more than two lines.
+=================
+*/
+static void HUDOptions_StatusBar_DrawStatus( void* ptr ) {
+	UI_DrawString( 320, 440, "If set, draws the status of the match", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "on the bottom-right corner, next to your bar.", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
+/*
+=================
+HUDOptions_StatusBar_DrawAmmoWarning
+
+Descriptions should have 48 characters or less per line, and there can't be more than two lines.
+=================
+*/
+static void HUDOptions_StatusBar_DrawAmmoWarning( void* ptr ) {
+	UI_DrawString( 320, 440, "If set, a warning ensues whenever you're about", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "to run out of ammo for all of your weapons.", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
+/*
+=================
+HUDOptions_StatusBar_DrawAttacker
+
+Descriptions should have 48 characters or less per line, and there can't be more than two lines.
+=================
+*/
+static void HUDOptions_StatusBar_DrawAttacker( void* ptr ) {
+	UI_DrawString( 320, 440, "If set, draws in the top-right", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "corner who last attacked you.", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
+/*
+=================
+HUDOptions_StatusBar_DrawSpeed
+
+Descriptions should have 48 characters or less per line, and there can't be more than two lines.
+=================
+*/
+static void HUDOptions_StatusBar_DrawSpeed( void* ptr ) {
+	UI_DrawString( 320, 440, "If set, draws in the top-right", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "corner your actual movement speed.", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
+/*
+=================
+HUDOptions_StatusBar_DrawRewards
+
+Descriptions should have 48 characters or less per line, and there can't be more than two lines.
+=================
+*/
+static void HUDOptions_StatusBar_DrawRewards( void* ptr ) {
+	UI_DrawString( 320, 440, "If set, whenever you do something awesome in", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "the game, you'll be rewarded a specific medal.", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
 
 /*
 =================
@@ -377,6 +581,7 @@ static void HUDOptions_MenuInit( void ) {
 	hudOptions_s.crosshair.generic.bottom		= y + 20;
 	hudOptions_s.crosshair.generic.left			= HUDOPTIONS_X_POS - ( ( strlen(hudOptions_s.crosshair.generic.name) + 1 ) * SMALLCHAR_WIDTH );
 	hudOptions_s.crosshair.generic.right		= HUDOPTIONS_X_POS + 48;
+	hudOptions_s.crosshair.generic.statusbar	= HUDOptions_StatusBar_Crosshair;
 
 	y += BIGCHAR_HEIGHT+2;
 	hudOptions_s.crosshairHealth.generic.type		= MTYPE_RADIOBUTTON;
@@ -386,6 +591,7 @@ static void HUDOptions_MenuInit( void ) {
 	hudOptions_s.crosshairHealth.generic.id			= ID_CROSSHAIRHEALTH;
 	hudOptions_s.crosshairHealth.generic.x			= HUDOPTIONS_X_POS;
 	hudOptions_s.crosshairHealth.generic.y			= y;
+	hudOptions_s.crosshairHealth.generic.statusbar	= HUDOptions_StatusBar_CrosshairHealth;
 
 	y += BIGCHAR_HEIGHT+2;
 	hudOptions_s.crosshairPulse.generic.type		= MTYPE_RADIOBUTTON;
@@ -395,17 +601,19 @@ static void HUDOptions_MenuInit( void ) {
 	hudOptions_s.crosshairPulse.generic.id			= ID_CROSSHAIRPULSE;
 	hudOptions_s.crosshairPulse.generic.x			= HUDOPTIONS_X_POS;
 	hudOptions_s.crosshairPulse.generic.y			= y;
+	hudOptions_s.crosshairPulse.generic.statusbar	= HUDOptions_StatusBar_CrosshairPulse;
 
 	y += BIGCHAR_HEIGHT+2;
-	hudOptions_s.crosshairColorRed.generic.type		= MTYPE_SLIDER;
-	hudOptions_s.crosshairColorRed.generic.name		= "Crosshair Color (Red):";
-	hudOptions_s.crosshairColorRed.generic.flags	= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-	hudOptions_s.crosshairColorRed.generic.callback	= HUDOptions_Event;
-	hudOptions_s.crosshairColorRed.generic.id		= ID_COLORRED;
-	hudOptions_s.crosshairColorRed.generic.x		= HUDOPTIONS_X_POS;
-	hudOptions_s.crosshairColorRed.generic.y		= y;
-	hudOptions_s.crosshairColorRed.minvalue			= 0.0f;
-	hudOptions_s.crosshairColorRed.maxvalue			= 255.0f;
+	hudOptions_s.crosshairColorRed.generic.type			= MTYPE_SLIDER;
+	hudOptions_s.crosshairColorRed.generic.name			= "Crosshair Color (Red):";
+	hudOptions_s.crosshairColorRed.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	hudOptions_s.crosshairColorRed.generic.callback		= HUDOptions_Event;
+	hudOptions_s.crosshairColorRed.generic.id			= ID_COLORRED;
+	hudOptions_s.crosshairColorRed.generic.x			= HUDOPTIONS_X_POS;
+	hudOptions_s.crosshairColorRed.generic.y			= y;
+	hudOptions_s.crosshairColorRed.minvalue				= 0.0f;
+	hudOptions_s.crosshairColorRed.maxvalue				= 255.0f;
+	hudOptions_s.crosshairColorRed.generic.statusbar	= HUDOptions_StatusBar_CrosshairColor;
 
 	y += BIGCHAR_HEIGHT+2;
 	hudOptions_s.crosshairColorGreen.generic.type		= MTYPE_SLIDER;
@@ -417,6 +625,7 @@ static void HUDOptions_MenuInit( void ) {
 	hudOptions_s.crosshairColorGreen.generic.y			= y;
 	hudOptions_s.crosshairColorGreen.minvalue			= 0.0f;
 	hudOptions_s.crosshairColorGreen.maxvalue			= 255.0f;
+	hudOptions_s.crosshairColorGreen.generic.statusbar	= HUDOptions_StatusBar_CrosshairColor;
 
 	y += BIGCHAR_HEIGHT+2;
 	hudOptions_s.crosshairColorBlue.generic.type		= MTYPE_SLIDER;
@@ -428,6 +637,7 @@ static void HUDOptions_MenuInit( void ) {
 	hudOptions_s.crosshairColorBlue.generic.y			= y;
 	hudOptions_s.crosshairColorBlue.minvalue			= 0.0f;
 	hudOptions_s.crosshairColorBlue.maxvalue			= 255.0f;
+	hudOptions_s.crosshairColorBlue.generic.statusbar	= HUDOptions_StatusBar_CrosshairColor;
 
 	if(hudOptions_s.crosshairHealth.curvalue) {
 		hudOptions_s.crosshairColorRed.generic.flags	|= QMF_INACTIVE;
@@ -444,6 +654,7 @@ static void HUDOptions_MenuInit( void ) {
 	hudOptions_s.draw3DIcons.generic.x			= HUDOPTIONS_X_POS;
 	hudOptions_s.draw3DIcons.generic.y			= y;
 	hudOptions_s.draw3DIcons.itemnames			= draw3DIcons_names;
+	hudOptions_s.draw3DIcons.generic.statusbar	= HUDOptions_StatusBar_Draw3DIcons;
 
 	y += BIGCHAR_HEIGHT+2;
 	hudOptions_s.alwaysWeaponBar.generic.type		= MTYPE_RADIOBUTTON;
@@ -453,6 +664,7 @@ static void HUDOptions_MenuInit( void ) {
 	hudOptions_s.alwaysWeaponBar.generic.id			= ID_ALWAYSWEAPONBAR;
 	hudOptions_s.alwaysWeaponBar.generic.x			= HUDOPTIONS_X_POS;
 	hudOptions_s.alwaysWeaponBar.generic.y			= y;
+	hudOptions_s.alwaysWeaponBar.generic.statusbar	= HUDOptions_StatusBar_AlwaysWeaponBar;
 	
 	y += BIGCHAR_HEIGHT+2;
 	hudOptions_s.weaponBarStyle.generic.type		= MTYPE_SPINCONTROL;
@@ -463,15 +675,17 @@ static void HUDOptions_MenuInit( void ) {
 	hudOptions_s.weaponBarStyle.generic.x			= HUDOPTIONS_X_POS;
 	hudOptions_s.weaponBarStyle.generic.y			= y;
 	hudOptions_s.weaponBarStyle.itemnames			= weaponBarStyle_names;
+	hudOptions_s.weaponBarStyle.generic.statusbar	= HUDOptions_StatusBar_WeaponBarStyle;
 
 	y += BIGCHAR_HEIGHT+2;
 	hudOptions_s.identifyTarget.generic.type		= MTYPE_RADIOBUTTON;
-	hudOptions_s.identifyTarget.generic.name		= "Show CH Target Name:";
+	hudOptions_s.identifyTarget.generic.name		= "Show Crosshair Target Name:";
 	hudOptions_s.identifyTarget.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	hudOptions_s.identifyTarget.generic.callback	= HUDOptions_Event;
 	hudOptions_s.identifyTarget.generic.id			= ID_IDENTIFYTARGET;
 	hudOptions_s.identifyTarget.generic.x			= HUDOPTIONS_X_POS;
 	hudOptions_s.identifyTarget.generic.y			= y;
+	hudOptions_s.identifyTarget.generic.statusbar	= HUDOptions_StatusBar_IdentifyTarget;
 
 	y += BIGCHAR_HEIGHT+2;
 	hudOptions_s.drawTeamOverlay.generic.type		= MTYPE_SPINCONTROL;
@@ -482,6 +696,7 @@ static void HUDOptions_MenuInit( void ) {
 	hudOptions_s.drawTeamOverlay.generic.x			= HUDOPTIONS_X_POS;
 	hudOptions_s.drawTeamOverlay.generic.y			= y;
 	hudOptions_s.drawTeamOverlay.itemnames			= teamOverlay_names;
+	hudOptions_s.drawTeamOverlay.generic.statusbar	= HUDOptions_StatusBar_DrawTeamOverlay;
 
 	y += BIGCHAR_HEIGHT+2;
 	hudOptions_s.obituaryOutput.generic.type		= MTYPE_SPINCONTROL;
@@ -492,6 +707,7 @@ static void HUDOptions_MenuInit( void ) {
 	hudOptions_s.obituaryOutput.generic.x			= HUDOPTIONS_X_POS;
 	hudOptions_s.obituaryOutput.generic.y			= y;
 	hudOptions_s.obituaryOutput.itemnames			= obituaryOutput_names;
+	hudOptions_s.obituaryOutput.generic.statusbar	= HUDOptions_StatusBar_ObituaryOutput;
 
 	y += BIGCHAR_HEIGHT+2;
 	hudOptions_s.drawFPS.generic.type		= MTYPE_RADIOBUTTON;
@@ -501,15 +717,17 @@ static void HUDOptions_MenuInit( void ) {
 	hudOptions_s.drawFPS.generic.id			= ID_DRAWFPS;
 	hudOptions_s.drawFPS.generic.x			= HUDOPTIONS_X_POS;
 	hudOptions_s.drawFPS.generic.y			= y;
+	hudOptions_s.drawFPS.generic.statusbar	= HUDOptions_StatusBar_DrawFPS;
 
 	y += BIGCHAR_HEIGHT+2;
-	hudOptions_s.drawTimer.generic.type		= MTYPE_RADIOBUTTON;
-	hudOptions_s.drawTimer.generic.name		= "Show Timer:";
-	hudOptions_s.drawTimer.generic.flags	= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-	hudOptions_s.drawTimer.generic.callback	= HUDOptions_Event;
-	hudOptions_s.drawTimer.generic.id		= ID_DRAWTIMER;
-	hudOptions_s.drawTimer.generic.x		= HUDOPTIONS_X_POS;
-	hudOptions_s.drawTimer.generic.y		= y;
+	hudOptions_s.drawTimer.generic.type			= MTYPE_RADIOBUTTON;
+	hudOptions_s.drawTimer.generic.name			= "Show Timer:";
+	hudOptions_s.drawTimer.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	hudOptions_s.drawTimer.generic.callback		= HUDOptions_Event;
+	hudOptions_s.drawTimer.generic.id			= ID_DRAWTIMER;
+	hudOptions_s.drawTimer.generic.x			= HUDOPTIONS_X_POS;
+	hudOptions_s.drawTimer.generic.y			= y;
+	hudOptions_s.drawTimer.generic.statusbar	= HUDOptions_StatusBar_DrawTimer;
 
 	y += BIGCHAR_HEIGHT+2;
 	hudOptions_s.drawStatus.generic.type		= MTYPE_RADIOBUTTON;
@@ -519,6 +737,7 @@ static void HUDOptions_MenuInit( void ) {
 	hudOptions_s.drawStatus.generic.id			= ID_DRAWSTATUS;
 	hudOptions_s.drawStatus.generic.x			= HUDOPTIONS_X_POS;
 	hudOptions_s.drawStatus.generic.y			= y;
+	hudOptions_s.drawStatus.generic.statusbar	= HUDOptions_StatusBar_DrawStatus;
 
 	y += BIGCHAR_HEIGHT+2;
 	hudOptions_s.drawAmmoWarning.generic.type		= MTYPE_RADIOBUTTON;
@@ -528,6 +747,7 @@ static void HUDOptions_MenuInit( void ) {
 	hudOptions_s.drawAmmoWarning.generic.id			= ID_DRAWAMMOWARNING;
 	hudOptions_s.drawAmmoWarning.generic.x			= HUDOPTIONS_X_POS;
 	hudOptions_s.drawAmmoWarning.generic.y			= y;
+	hudOptions_s.drawAmmoWarning.generic.statusbar	= HUDOptions_StatusBar_DrawAmmoWarning;
 
 	y += BIGCHAR_HEIGHT+2;
 	hudOptions_s.drawAttacker.generic.type		= MTYPE_RADIOBUTTON;
@@ -537,15 +757,17 @@ static void HUDOptions_MenuInit( void ) {
 	hudOptions_s.drawAttacker.generic.id		= ID_DRAWATTACKER;
 	hudOptions_s.drawAttacker.generic.x			= HUDOPTIONS_X_POS;
 	hudOptions_s.drawAttacker.generic.y			= y;
+	hudOptions_s.drawAttacker.generic.statusbar	= HUDOptions_StatusBar_DrawAttacker;
 
 	y += BIGCHAR_HEIGHT+2;
-	hudOptions_s.drawSpeed.generic.type		= MTYPE_RADIOBUTTON;
-	hudOptions_s.drawSpeed.generic.name		= "Show Movement Speed:";
-	hudOptions_s.drawSpeed.generic.flags	= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-	hudOptions_s.drawSpeed.generic.callback	= HUDOptions_Event;
-	hudOptions_s.drawSpeed.generic.id		= ID_DRAWSPEED;
-	hudOptions_s.drawSpeed.generic.x		= HUDOPTIONS_X_POS;
-	hudOptions_s.drawSpeed.generic.y		= y;
+	hudOptions_s.drawSpeed.generic.type			= MTYPE_RADIOBUTTON;
+	hudOptions_s.drawSpeed.generic.name			= "Show Movement Speed:";
+	hudOptions_s.drawSpeed.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	hudOptions_s.drawSpeed.generic.callback		= HUDOptions_Event;
+	hudOptions_s.drawSpeed.generic.id			= ID_DRAWSPEED;
+	hudOptions_s.drawSpeed.generic.x			= HUDOPTIONS_X_POS;
+	hudOptions_s.drawSpeed.generic.y			= y;
+	hudOptions_s.drawSpeed.generic.statusbar	= HUDOptions_StatusBar_DrawSpeed;
 
 	y += BIGCHAR_HEIGHT+2;
 	hudOptions_s.drawRewards.generic.type		= MTYPE_RADIOBUTTON;
@@ -555,6 +777,7 @@ static void HUDOptions_MenuInit( void ) {
 	hudOptions_s.drawRewards.generic.id			= ID_DRAWREWARDS;
 	hudOptions_s.drawRewards.generic.x			= HUDOPTIONS_X_POS;
 	hudOptions_s.drawRewards.generic.y			= y;
+	hudOptions_s.drawRewards.generic.statusbar	= HUDOptions_StatusBar_DrawRewards;
 
 	hudOptions_s.back.generic.type		= MTYPE_BITMAP;
 	hudOptions_s.back.generic.name		= ART_BACK0;
