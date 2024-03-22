@@ -62,7 +62,7 @@
   * New H.U.D. menu, accessible from Setup, controls the elements that are displayed in, well, the HUD, including the crosshair and weapon bar. Among the new options added and not mentioned later in this changelog:
     * Transplanted from Video: `cg_drawFPS` (_"Draw FPS"_).
     * Transplanted from Game Options: `cg_drawCrosshair` (_"Crosshair Style"_), `cg_crosshairHealth` (_"Crosshair Shows Health"_), `cg_crosshairColorRed` (_"Crosshair Color (Red)"_), `cg_crosshairColorGreen` (_"Crosshair Color (Green)"_), `cg_crosshairColorBlue` (_"Crosshair Color (Blue)"_), `cg_alwaysWeaponBar` (_"Always Show Weapon Bar"_), `cg_drawCrosshairNames` (_"Show Crosshair Target Name"_ f.k.a. "Identify Target") and `cg_drawTeamOverlay` (_"Show Team Overlay"_).
-    * New options: `cg_crosshairPulse` (_"Crosshair Pickup Pulse"_), `cg_draw3DIcons` (_"Weapon Bar Icon Rendering"_ in _"2D"_ or _"3D"_), `cg_weaponBarStyle` (_"Weapon Bar Style"_), `cg_obituaryOutput` (_"Death Messages"_), `cg_drawTimer` (_"Show Timer"_), `cg_drawStatus` (_"Show Match Status"_), `cg_drawAmmoWarning` (_"Show Low Ammo Warning"_), `cg_drawAttacker` (_"Show Last Attacker"_), `cg_drawSpeed` (_"Show Movement Speed"_) and `cg_drawRewards` (_"Show Medal(s) Earned"_).
+    * New options: `cg_crosshairPulse` (_"Crosshair Pickup Pulse"_), `cg_draw3DIcons` (_"Weapon Bar Icon Rendering"_ in _"2D"_ or _"3D"_), `cg_weaponBarStyle` (_"Weapon Bar Style"_), `cg_obituaryOutput` (_"Death Messages"_), `cg_drawTimer` (_"Show Timer"_), `cg_drawStatus` (_"Show Player Status"_), `cg_drawAmmoWarning` (_"Show Low Ammo Warning"_), `cg_drawAttacker` (_"Show Last Attacker"_), `cg_drawSpeed` (_"Show Movement Speed"_) and `cg_drawRewards` (_"Show Medal(s) Earned"_).
   * Game Options:
     * Options transplanted to many menus as mentioned above and below.
     * New options: `cg_drawGun` (_"Weapon Hand"_: _"Hidden"_, _"Left"_, _"Right"_, _"Center"_), `cg_muzzleFlashStyle` (_"Muzzle Flash Style"_), `com_blood` (_"Show Blood"_), `cg_gibs` (_"Show Gibs"_), `cg_bob` (_"View Bobbing"_), `cg_bobModel` (_"Weapon Bobbing"_), `cg_railTrailTime` (_"Railgun Slug Trail Time"_) and `cg_kickScale` (_"Screen Shaking Rate"_).
@@ -71,6 +71,7 @@
     * Transplanted from Game Options: `cl_allowDownload` (_"Download From Servers"_, f.k.a. "Autodownload") and `cg_delag` (_"Delag Hitscan Latency"_ f.k.a. "Unlag Hitscan").
   * Sound:
     * Transplanted from Game Options: `cl_chatBeep` (_"Beep on Chat"_) and `cg_teamChatBeep` (_"Beep on Team Chat"_).
+    * New option: `cg_hitSound` (_"Enable Hitsound"_).
   * Video:
     * Transplanted from Game Options: `r_dynamicLight` (_"Dynamic Lights"_).
   * Find Servers:
@@ -215,15 +216,17 @@
   * New H.U.D. menu, accessible from Setup, controls the elements that are displayed in, well, the HUD, including the crosshair and weapon bar. Among the new options added and not mentioned later in this changelog:
     * Transplanted from Video: `cg_drawFPS` (_"Draw FPS"_).
     * Transplanted from Game Options: `cg_drawCrosshair` (_"Crosshair Style"_), `cg_crosshairHealth` (_"Crosshair Shows Health"_), `cg_crosshairColorRed` (_"Crosshair Color (Red)"_), `cg_crosshairColorGreen` (_"Crosshair Color (Green)"_), `cg_crosshairColorBlue` (_"Crosshair Color (Blue)"_), `cg_alwaysWeaponBar` (_"Always Show Weapon Bar"_), `cg_drawCrosshairNames` (_"Show Crosshair Target Name"_ f.k.a. "Identify Target") and `cg_drawTeamOverlay` (_"Show Team Overlay"_).
-    * New options: `cg_crosshairPulse` (_"Crosshair Pickup Pulse"_), `cg_draw3DIcons` (_"Weapon Bar Icon Rendering"_ in _"2D"_ or _"3D"_), `cg_weaponBarStyle` (_"Weapon Bar Style"_), `cg_obituaryOutput` (_"Death Messages"_), `cg_drawTimer` (_"Show Timer"_), `cg_drawStatus` (_"Show Match Status"_), `cg_drawAmmoWarning` (_"Show Low Ammo Warning"_), `cg_drawAttacker` (_"Show Last Attacker"_), `cg_drawSpeed` (_"Show Movement Speed"_) and `cg_drawRewards` (_"Show Medal(s) Earned"_).
+    * New options: `cg_crosshairPulse` (_"Crosshair Pickup Pulse"_), `cg_draw3DIcons` (_"Weapon Bar Icon Rendering"_ in _"2D"_ or _"3D"_), `cg_weaponBarStyle` (_"Weapon Bar Style"_), `cg_obituaryOutput` (_"Death Messages"_), `cg_drawTimer` (_"Show Timer"_), `cg_drawStatus` (_"Show Player Status"_), `cg_drawAmmoWarning` (_"Show Low Ammo Warning"_), `cg_drawAttacker` (_"Show Last Attacker"_), `cg_drawSpeed` (_"Show Movement Speed"_) and `cg_drawRewards` (_"Show Medal(s) Earned"_).
   * Game Options:
     * Options transplanted to many menus as mentioned above and below.
+    * Adjusted item positioning.
     * New options: `cg_drawGun` (_"Weapon Hand"_: _"Hidden"_, _"Left"_, _"Right"_, _"Center"_), `cg_muzzleFlashStyle` (_"Muzzle Flash Style"_), `com_blood` (_"Show Blood"_), `cg_gibs` (_"Show Gibs"_), `cg_bob` (_"View Bobbing"_), `cg_bobModel` (_"Weapon Bobbing"_), `cg_railTrailTime` (_"Railgun Slug Trail Time"_) and `cg_kickScale` (_"Screen Shaking Rate"_).
     * Renamed "Simple Items" to _"In-Game Pickup Rendering"_ (with 2D and 3D options).
   * Network:
     * Transplanted from Game Options: `cl_allowDownload` (_"Download From Servers"_, f.k.a. "Autodownload") and `cg_delag` (_"Delag Hitscan Latency"_ f.k.a. "Unlag Hitscan").
   * Sound:
     * Transplanted from Game Options: `cl_chatBeep` (_"Beep on Chat"_) and `cg_teamChatBeep` (_"Beep on Team Chat"_).
+    * New option: `cg_hitSound` (_"Enable Hitsound"_).
   * Video:
     * Transplanted from Game Options: `r_dynamicLight` (_"Dynamic Lights"_).
   * Find Servers:
