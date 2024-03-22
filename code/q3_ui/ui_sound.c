@@ -31,12 +31,12 @@ SOUND OPTIONS MENU
 #include "ui_local.h"
 
 
-#define ART_FRAMEL			"menu/art_blueish/frame2_l"
-#define ART_FRAMER			"menu/art_blueish/frame1_r"
-#define ART_BACK0			"menu/art_blueish/back_0"
-#define ART_BACK1			"menu/art_blueish/back_1"
-#define ART_ACCEPT0			"menu/art_blueish/accept_0"
-#define ART_ACCEPT1			"menu/art_blueish/accept_1"
+#define ART_FRAMEL			"menu/" MENU_ART_DIR "/frame2_l"
+#define ART_FRAMER			"menu/" MENU_ART_DIR "/frame1_r"
+#define ART_BACK0			"menu/" MENU_ART_DIR "/back_0"
+#define ART_BACK1			"menu/" MENU_ART_DIR "/back_1"
+#define ART_ACCEPT0			"menu/" MENU_ART_DIR "/accept_0"
+#define ART_ACCEPT1			"menu/" MENU_ART_DIR "/accept_1"
 
 #define ID_GRAPHICS			10
 #define ID_DISPLAY			11
