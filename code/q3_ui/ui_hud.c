@@ -414,8 +414,8 @@ Descriptions should have 48 characters or less per line, and there can't be more
 =================
 */
 static void HUDOptions_StatusBar_DrawStatus( void* ptr ) {
-	UI_DrawString( 320, 440, "If set, draws the status of the match", UI_CENTER|UI_SMALLFONT, colorWhite );
-	UI_DrawString( 320, 460, "on the bottom-right corner, next to your bar.", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 440, "If set, draws ammo, health and armor status", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "on the bottom of your screen.", UI_CENTER|UI_SMALLFONT, colorWhite );
 }
 
 /*
@@ -731,7 +731,7 @@ static void HUDOptions_MenuInit( void ) {
 
 	//y += BIGCHAR_HEIGHT+2;
 	hudOptions_s.drawStatus.generic.type		= MTYPE_RADIOBUTTON;
-	hudOptions_s.drawStatus.generic.name		= "Show Match Status:";
+	hudOptions_s.drawStatus.generic.name		= "Show Player Status:";
 	hudOptions_s.drawStatus.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	hudOptions_s.drawStatus.generic.callback	= HUDOptions_Event;
 	hudOptions_s.drawStatus.generic.id			= ID_DRAWSTATUS;
