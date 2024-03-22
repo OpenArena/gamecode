@@ -138,11 +138,12 @@ typedef enum {
 #define GAMETYPE_IS_A_TEAM_GAME(gametype) (gametype != GT_FFA && gametype != GT_TOURNAMENT && gametype != GT_SINGLE_PLAYER && gametype != GT_LMS && gametype != GT_POSSESSION)
 #define GAMETYPE_USES_RED_AND_BLUE_FLAG(gametype) (gametype == GT_CTF || gametype == GT_1FCTF || gametype == GT_CTF_ELIMINATION)
 #define GAMETYPE_USES_WHITE_FLAG(gametype) (gametype == GT_1FCTF || gametype == GT_POSSESSION)
-/*
- Returns true for round based games like (CTF)Elimination and LMS
- */
 #define GAMETYPE_IS_ROUND_BASED(gametype) (gametype == GT_ELIMINATION || gametype == GT_CTF_ELIMINATION || gametype == GT_LMS)
-#define GAMETYPE_USES_OBELISKS(gametype) (gametype == GT_HARVESTER || gametype == GT_OBELISK)
+/*
+ Score limits
+ */
+#define GAMETYPE_USES_FRAG_LIMIT(gametype) (gametype == GT_FFA || gametype == GT_TOURNAMENT || gametype == GT_SINGLE_PLAYER || gametype == GT_TEAM || gametype == GT_HARVESTER || gametype == GT_DOMINATION || gametype == GT_POSSESSION)
+#define GAMETYPE_USES_CAPTURE_LIMIT(gametype) (gametype == GT_CTF || gametype == GT_1FCTF || gametype == GT_OBELISK || gametype == GT_ELIMINATION || gametype == GT_CTF_ELIMINATION || gametype == GT_LMS || gametype == GT_DOUBLE_D)
 
 #define GT_FFA_DEFAULT_SCORELIMIT	"20"
 #define GT_FFA_DEFAULT_TIMELIMIT	"0"
@@ -172,6 +173,9 @@ typedef enum {
 #define GT_DOMINATION_DEFAULT_TIMELIMIT	"30"
 #define GT_POSSESSION_DEFAULT_SCORELIMIT	"120"
 #define GT_POSSESSION_DEFAULT_TIMELIMIT	"20"
+
+#define ELIMINATION_DAMAGE_SELF 1
+#define ELIMINATION_DAMAGE_TEAM 2
 
 typedef enum { GENDER_MALE, GENDER_FEMALE, GENDER_NEUTER } gender_t;
 

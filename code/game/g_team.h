@@ -36,6 +36,15 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define CTF_RETURN_FLAG_ASSIST_BONUS		10	// awarded for returning a flag that causes a capture to happen almost immediately
 #define CTF_FRAG_CARRIER_ASSIST_BONUS		10	// award for fragging a flag carrier if a capture happens almost immediately
 
+//For Double Domination:
+#define DD_POINT_DEFENCE_BONUS			10	//Score for fragging someone while either you or target are near a Domination Point
+#define DD_POINT_DEFENCE_CLOSE_BONUS		25	//Score for fragging someone while either you or target are near a Domination Point and have almost scored
+//Following is added togehter:
+#define DD_POINT_CAPTURE			5	//Score for taking a point
+#define DD_POINT_CAPTURE_BREAK			10	//If the enemy was dominating
+#define DD_POINT_CAPTURE_CLOSE			15	//Extra score if the enemy was about to score
+#define DD_AT_POINT_AT_CAPTURE			30	//You was close to a point as capture succeded.	
+
 #else
 
 #define CTF_CAPTURE_BONUS		5		// what you get for capture
@@ -50,21 +59,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define CTF_FLAG_DEFENSE_BONUS				1	// bonus for fraggin someone while either you or your target are near your flag
 #define CTF_RETURN_FLAG_ASSIST_BONUS		1	// awarded for returning a flag that causes a capture to happen almost immediately
 #define CTF_FRAG_CARRIER_ASSIST_BONUS		2	// award for fragging a flag carrier if a capture happens almost immediately
-
-#endif
-
-#ifdef MISSIONPACK
-
-//For Double Domination:
-#define DD_POINT_DEFENCE_BONUS			10	//Score for fragging someone while either you or target are near a Domination Point
-#define DD_POINT_DEFENCE_CLOSE_BONUS		25	//Score for fragging someone while either you or target are near a Domination Point and have almost scored
-//Following is added togehter:
-#define DD_POINT_CAPTURE			5	//Score for taking a point
-#define DD_POINT_CAPTURE_BREAK			10	//If the enemy was dominating
-#define DD_POINT_CAPTURE_CLOSE			15	//Extra score if the enemy was about to score
-#define DD_AT_POINT_AT_CAPTURE			30	//You was close to a point as capture succeded.	
-
-#else
 
 //For Double Domination:
 #define DD_POINT_DEFENCE_BONUS			1	//Score for fragging someone while either you or target are near a Domination Point

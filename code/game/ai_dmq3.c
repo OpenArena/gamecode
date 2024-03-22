@@ -435,13 +435,13 @@ void BotSetTeamStatus(bot_state_t *bs) {
 			teamtask = TEAMTASK_OFFENSE;
 			break;
 		case LTG_HOLDPOINTA:
-			if (BotTeamControlsPoint(bs,level.pointStatusA))
+			if (BotTeamOwnsControlPoint(bs,level.pointStatusA))
 				teamtask = TEAMTASK_DEFENSE;
 			else 
 				teamtask = TEAMTASK_OFFENSE;
 			break;
 		case LTG_HOLDPOINTB:
-			if (BotTeamControlsPoint(bs,level.pointStatusB))
+			if (BotTeamOwnsControlPoint(bs,level.pointStatusB))
 				teamtask = TEAMTASK_DEFENSE;
 			else 
 				teamtask = TEAMTASK_OFFENSE;
@@ -453,7 +453,7 @@ void BotSetTeamStatus(bot_state_t *bs) {
 					BotGetDominationPoint(bs) < level.domination_points_count)) {
 				BotSetDominationPoint(bs,-1);
 			}
-			if (BotTeamControlsPoint(bs,level.pointStatusDom[BotGetDominationPoint(bs)]))
+			if (BotTeamOwnsControlPoint(bs,level.pointStatusDom[BotGetDominationPoint(bs)]))
 				teamtask = TEAMTASK_DEFENSE;
 			else
 				teamtask = TEAMTASK_OFFENSE;
@@ -475,18 +475,12 @@ int BotSetLastOrderedTask(bot_state_t *bs) {
 	if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
 		// don't go back to returning the flag if it's at the base
 		if (bs->lastgoal_ltgtype == LTG_RETURNFLAG) {
-			if (BotTeam(bs) == TEAM_RED) {
-				if (bs->redflagstatus == 0) {
-					bs->lastgoal_ltgtype = 0;
-				}
-			} else {
-				if (bs->blueflagstatus == 0) {
-					bs->lastgoal_ltgtype = 0;
-				}
+			if (BotIsFlagOnOurBase(bs)) {
+				bs->lastgoal_ltgtype = 0;
 			}
 		}
 	}
-
+	
 	if (bs->lastgoal_ltgtype) {
 		bs->decisionmaker = bs->lastgoal_decisionmaker;
 		bs->ordered = qtrue;
@@ -540,7 +534,7 @@ BotCTFSeekGoals
  */
 void BotCTFSeekGoals(bot_state_t *bs) {
 	float rnd, l1, l2;
-	int flagstatus, c;
+	int c;
 	vec3_t dir;
 	aas_entityinfo_t entinfo;
 
@@ -573,11 +567,10 @@ void BotCTFSeekGoals(bot_state_t *bs) {
 			}
 			BotSetUserInfo(bs, "teamtask", va("%d", TEAMTASK_OFFENSE));
 			BotVoiceChat(bs, -1, VOICECHAT_IHAVEFLAG);
-		} else if (bs->rushbaseaway_time > FloatTime()) {
-			if (BotTeam(bs) == TEAM_RED) flagstatus = bs->redflagstatus;
-			else flagstatus = bs->blueflagstatus;
-			//if the flag is back
-			if (flagstatus == 0) {
+		}
+		else if (bs->rushbaseaway_time > FloatTime()) {
+			// if the flag is back
+			if (BotIsFlagOnOurBase(bs)) {
 				bs->rushbaseaway_time = 0;
 			}
 		}
@@ -592,10 +585,8 @@ void BotCTFSeekGoals(bot_state_t *bs) {
 		}
 	}
 	//
-	if (BotTeam(bs) == TEAM_RED) flagstatus = bs->redflagstatus * 2 + bs->blueflagstatus;
-	else flagstatus = bs->blueflagstatus * 2 + bs->redflagstatus;
 	//if our team has the enemy flag and our flag is at the base
-	if (flagstatus == 1) {
+	if (!BotIsEnemyFlagOnEnemyBase(bs) && BotIsFlagOnOurBase(bs)) {
 		//
 		if (bs->owndecision_time < FloatTime()) {
 			//if Not defending the base already
@@ -632,8 +623,9 @@ void BotCTFSeekGoals(bot_state_t *bs) {
 			}
 		}
 		return;
-	}		//if the enemy has our flag
-	else if (flagstatus == 2) {
+	}
+	//if the enemy has our flag
+	else if (!BotIsFlagOnOurBase(bs)) {
 		//
 		if (bs->owndecision_time < FloatTime()) {
 			//if enemy flag carrier is visible
@@ -672,8 +664,9 @@ void BotCTFSeekGoals(bot_state_t *bs) {
 			}
 		}
 		return;
-	}		//if both flags Not at their bases
-	else if (flagstatus == 3) {
+	}
+	//if both flags Not at their bases
+	else if (!BotIsEnemyFlagOnEnemyBase(bs) && !BotIsFlagOnOurBase(bs)) {
 		//
 		if (bs->owndecision_time < FloatTime()) {
 			// if not trying to return the flag and not following the team flag carrier
@@ -778,7 +771,7 @@ void BotCTFSeekGoals(bot_state_t *bs) {
 	}
 	//get the flag or defend the base
 	rnd = random();
-	if (rnd < l1 && ctf_redflag.areanum && ctf_blueflag.areanum) {
+	if (rnd < l1 && BotIsThereARedFlagInTheMap() && BotIsThereABlueFlagInTheMap()) {
 		bs->decisionmaker = bs->client;
 		bs->ordered = qfalse;
 		bs->ltgtype = LTG_GETFLAG;
@@ -787,7 +780,7 @@ void BotCTFSeekGoals(bot_state_t *bs) {
 		//get an alternative route goal towards the enemy base
 		BotGetAlternateRouteGoal(bs, BotOppositeTeam(bs));
 		BotSetTeamStatus(bs);
-	} else if (rnd < l2 && ctf_redflag.areanum && ctf_blueflag.areanum) {
+	} else if (rnd < l2 && BotIsThereARedFlagInTheMap() && BotIsThereABlueFlagInTheMap()) {
 		bs->decisionmaker = bs->client;
 		bs->ordered = qfalse;
 		//
@@ -844,7 +837,7 @@ void BotDomSeekGoals(bot_state_t *bs) {
 	// DD only
 	if (gametype != GT_DOMINATION) return;
 	// if the map has no points, just roam
-	if (level.domination_points_count < 1) {
+	if (!BotAreThereDOMPointsInTheMap()) {
 		bs->ltgtype = LTG_PATROL;
 		BotSetUserInfo(bs, "teamtask", va("%d", TEAMTASK_PATROL));
 		BotSetTeamStatus(bs);
@@ -1220,7 +1213,7 @@ void Bot1FCTFSeekGoals(bot_state_t *bs) {
 		//set the time the bot will stop getting the flag
 		bs->teamgoal_time = FloatTime() + CTF_GETFLAG_TIME;
 		BotSetTeamStatus(bs);
-	} else if (rnd < l2 && ctf_redflag.areanum && ctf_blueflag.areanum) {
+	} else if (rnd < l2 && BotIsThereARedFlagInTheMap() && BotIsThereABlueFlagInTheMap()) {
 		bs->decisionmaker = bs->client;
 		bs->ordered = qfalse;
 		//
@@ -1324,7 +1317,7 @@ void BotObeliskSeekGoals(bot_state_t *bs) {
 	}
 	//get the flag or defend the base
 	rnd = random();
-	if (rnd < l1 && redobelisk.areanum && blueobelisk.areanum) {
+	if (rnd < l1 && BotIsThereARedObeliskInTheMap() && BotIsThereABlueObeliskInTheMap()) {
 		bs->decisionmaker = bs->client;
 		bs->ordered = qfalse;
 		//
@@ -1337,7 +1330,7 @@ void BotObeliskSeekGoals(bot_state_t *bs) {
 		//get an alternate route goal towards the enemy base
 		BotGetAlternateRouteGoal(bs, BotOppositeTeam(bs));
 		BotSetTeamStatus(bs);
-	} else if (rnd < l2 && redobelisk.areanum && blueobelisk.areanum) {
+	} else if (rnd < l2 && BotIsThereARedObeliskInTheMap() && BotIsThereABlueObeliskInTheMap()) {
 		bs->decisionmaker = bs->client;
 		bs->ordered = qfalse;
 		//
@@ -1495,11 +1488,11 @@ void BotHarvesterSeekGoals(bot_state_t *bs) {
 	}
 	//
 	rnd = random();
-	if (rnd < l1 && redobelisk.areanum && blueobelisk.areanum) {
+	if (rnd < l1 && BotIsThereARedObeliskInTheMap() && BotIsThereABlueObeliskInTheMap()) {
 		bs->decisionmaker = bs->client;
 		bs->ordered = qfalse;
 		BotGoHarvest(bs);
-	} else if (rnd < l2 && redobelisk.areanum && blueobelisk.areanum) {
+	} else if (rnd < l2 && BotIsThereARedObeliskInTheMap() && BotIsThereABlueObeliskInTheMap()) {
 		bs->decisionmaker = bs->client;
 		bs->ordered = qfalse;
 		//
@@ -1777,7 +1770,7 @@ void BotChooseWeapon(bot_state_t *bs) {
 		if (g_instantgib.integer)
 			newweaponnum = WP_RAILGUN;
 		else if (g_weaponArena.integer)
-			newweaponnum = G_GetWeaponArena(g_weaponArenaWeapon.string);
+			newweaponnum = G_GetWeaponArenaWeapon(g_weaponArenaWeapon.integer);
 		else
 			newweaponnum = trap_BotChooseBestFightWeapon(bs->ws, bs->inventory);
 		if (bs->weaponnum != newweaponnum) bs->weaponchange_time = FloatTime();
@@ -2593,7 +2586,7 @@ int BotCanAndWantsToRocketJump(bot_state_t *bs) {
 	//if low on rockets
 	if (bs->inventory[INVENTORY_ROCKETS] < 3) return qfalse;
 	//Sago: Special rule - always happy to rocket jump in elimination, eCTF end LMS if
-	if (G_IsARoundBasedGametype(g_gametype.integer) && g_elimination_selfdamage.integer == 0) {
+	if (G_IsARoundBasedGametype(g_gametype.integer) && !(g_elimination_damage.integer & ELIMINATION_DAMAGE_SELF)) {
 		return qtrue;
 	}
 	//never rocket jump with the Quad
@@ -2616,14 +2609,17 @@ BotHasPersistantPowerupAndWeapon
 ==================
  */
 int BotHasPersistantPowerupAndWeapon(bot_state_t *bs) {
+	// If the gamemode doesn't allow Runes
+	if (!G_GametypeUsesRunes(gametype)) {
+		return qfalse;
+	}
 	// if the bot does not have a persistant powerup
-	//Sago - FIXME - This causes problems if there are no persistant powerups
-	/*	if (!bs->inventory[INVENTORY_SCOUT] &&
-			!bs->inventory[INVENTORY_GUARD] &&
-			!bs->inventory[INVENTORY_DOUBLER] &&
-			!bs->inventory[INVENTORY_AMMOREGEN] ) {
-			return qfalse;
-		}*/
+	if ((bs->inventory[INVENTORY_SCOUT] <= 0) &&
+			(bs->inventory[INVENTORY_GUARD] <= 0) &&
+			(bs->inventory[INVENTORY_DOUBLER] <= 0) &&
+			(bs->inventory[INVENTORY_AMMOREGEN] <= 0) ) {
+		return qfalse;
+	}
 	//if the bot is very low on health
 	if (bs->inventory[INVENTORY_HEALTH] < 60) return qfalse;
 	//if the bot is low on health
@@ -5575,23 +5571,24 @@ void BotSetupDeathmatchAI(void) {
 		if (untrap_BotGetLevelItemGoal(-1, "Blue Flag", &ctf_blueflag) < 0)
 			BotAI_Print(PRT_WARNING, "CTF without Blue Flag\n");
 	} else if (gametype == GT_DOUBLE_D) {
-		if (untrap_BotGetLevelItemGoal(-1, "Red Flag", &ctf_redflag) < 0)
+		if (!BotIsThereDDPointAInTheMap())
 			BotAI_Print(PRT_WARNING, "DD without Point A\n");
-		if (untrap_BotGetLevelItemGoal(-1, "Blue Flag", &ctf_blueflag) < 0)
+		if (!BotIsThereDDPointBInTheMap())
 			BotAI_Print(PRT_WARNING, "DD without Point B\n");
 	} else if (gametype == GT_DOMINATION) {
-		ent = untrap_BotGetLevelItemGoal(-1, "Domination point", &dom_points_bot[0]);
-		if (ent < 0)
+		if (!BotAreThereDOMPointsInTheMap())
 			BotAI_Print(PRT_WARNING, "Domination without a single domination point\n");
-		else
+		else {
 			BotSetEntityNumForGoal(&dom_points_bot[0], va("domination_point%i", 0));
-		for (i = 1; i < level.domination_points_count; i++) {
-			//Find next from the privius found entity
-			ent = untrap_BotGetLevelItemGoal(ent, "Domination point", &dom_points_bot[i]);
-			if (ent < 0)
-				BotAI_Print(PRT_WARNING, "Domination point %i not found!\n", i);
-			else
-				BotSetEntityNumForGoal(&dom_points_bot[0], va("domination_point%i", i));
+			ent = untrap_BotGetLevelItemGoal(-1, "Domination point", &dom_points_bot[0]);;
+			for (i = 1; i < level.domination_points_count; i++) {
+				//Find next from the privius found entity
+				ent = untrap_BotGetLevelItemGoal(ent, "Domination point", &dom_points_bot[i]);
+				if (ent < 0)
+					BotAI_Print(PRT_WARNING, "Domination point %i not found!\n", i);
+				else
+					BotSetEntityNumForGoal(&dom_points_bot[0], va("domination_point%i", i));
+			}
 		}
 		//MAX_DOMINATION_POINTS
 	} else if (gametype == GT_1FCTF) {
@@ -5673,11 +5670,11 @@ int BotCanAndWantsToUseTheGrapple(bot_state_t *bs) {
 
 /*
 ==================
-BotTeamControlsPoint
+BotTeamOwnsControlPoint
 Returns true if the bot's team controls the Domination/DD point.
 ==================
 */
-qboolean BotTeamControlsPoint(bot_state_t *bs,int point) {
+qboolean BotTeamOwnsControlPoint(bot_state_t *bs,int point) {
 	// It's true if the bot is in the blue team and the point belongs to the blue team.
 	if(BotTeam(bs) == TEAM_BLUE && point == TEAM_BLUE) {
 		return qtrue;
@@ -5688,3 +5685,202 @@ qboolean BotTeamControlsPoint(bot_state_t *bs,int point) {
 	}
 	return qfalse;
 }
+
+/*
+==================
+BotAreThereDOMPoints
+Returns true if the match has at least one control point present for Domination.
+==================
+*/
+qboolean BotAreThereDOMPointsInTheMap(void) {
+	if (gametype == GT_DOMINATION) {
+		if (level.domination_points_count >= 1) {
+			return qtrue;
+		}
+	}
+	return qfalse;
+}
+
+/*
+==================
+BotIsThereDDPointA
+Returns true if the match has the A point present for Double Domination.
+==================
+*/
+qboolean BotIsThereDDPointAInTheMap(void) {
+	if (gametype == GT_DOUBLE_D && untrap_BotGetLevelItemGoal(-1, "Red Flag", &ctf_redflag) >= 1) {
+			return qtrue;
+	}
+	return qfalse;
+}
+
+/*
+==================
+BotIsThereDDPointB
+Returns true if the match has the B point present for Double Domination.
+==================
+*/
+qboolean BotIsThereDDPointBInTheMap(void) {
+	if (gametype == GT_DOUBLE_D && untrap_BotGetLevelItemGoal(-1, "Red Flag", &ctf_blueflag) >= 1) {
+			return qtrue;
+	}
+	return qfalse;
+}
+
+/*
+==================
+BotIsThereABlueFlag
+Returns true if the match has a blue CTF flag present for flag-based matches.
+==================
+*/
+qboolean BotIsThereABlueFlagInTheMap(void) {
+	if (G_UsesTeamFlags(gametype) && ctf_blueflag.areanum) {
+		return qtrue;
+	}
+	return qfalse;
+}
+
+/*
+==================
+BotIsThereARedFlag
+Returns true if the match has a red CTF flag present for flag-based matches.
+==================
+*/
+qboolean BotIsThereARedFlagInTheMap(void) {
+	if (G_UsesTeamFlags(gametype) && ctf_redflag.areanum) {
+		return qtrue;
+	}
+	return qfalse;
+}
+
+/*
+==================
+BotIsThereANeutralFlag
+Returns true if the match has a white CTF flag present for flag-based matches.
+==================
+*/
+qboolean BotIsThereANeutralFlagInTheMap(void) {
+	if (G_UsesTheWhiteFlag(gametype) && ctf_neutralflag.areanum) {
+		return qtrue;
+	}
+	return qfalse;
+}
+
+/*
+==================
+BotIsThereARedObelisk
+Returns true if the match has a red obelisk present for 1FCTF/Harvester/Overload matches.
+==================
+*/
+qboolean BotIsThereARedObeliskInTheMap(void) {
+	if ((gametype == GT_1FCTF || gametype == GT_HARVESTER ||
+			gametype == GT_OBELISK) && redobelisk.areanum) {
+		return qtrue;
+	}
+	return qfalse;
+}
+
+/*
+==================
+BotIsThereABlueObelisk
+Returns true if the match has a blue obelisk present for 1FCTF/Harvester/Overload matches.
+==================
+*/
+qboolean BotIsThereABlueObeliskInTheMap(void) {
+	if ((gametype == GT_1FCTF || gametype == GT_HARVESTER ||
+			gametype == GT_OBELISK) && blueobelisk.areanum) {
+		return qtrue;
+	}
+	return qfalse;
+}
+
+/*
+==================
+BotIsThereANeutralObelisk
+Returns true if the match has a neutral obelisk present for 1FCTF/Harvester/Possession matches.
+==================
+*/
+qboolean BotIsThereANeutralObeliskInTheMap(void) {
+	if ((gametype == GT_1FCTF || gametype == GT_HARVESTER ||
+			gametype == GT_OBELISK) && neutralobelisk.areanum) {
+		return qtrue;
+	}
+	return qfalse;
+}
+
+/*
+==================
+BotIsThereAFlagInOurBase
+Returns true if the bot finds there's a CTF flag in their base.
+==================
+*/
+qboolean BotIsThereOurFlagInTheMap(bot_state_t *bs) {
+	if (!G_UsesTeamFlags(gametype)) {
+		return qfalse;
+	}
+	if (BotTeam(bs) == TEAM_BLUE && ctf_blueflag.areanum) {
+		return qtrue;
+	}
+	if (BotTeam(bs) == TEAM_RED && ctf_redflag.areanum) {
+		return qtrue;
+	}
+	return qfalse;
+}
+
+/*
+==================
+BotIsThereAFlagInTheEnemyBase
+Returns true if the bot finds there's a CTF flag in the enemy base.
+==================
+*/
+qboolean BotIsThereAnEnemyFlagInTheMap(bot_state_t *bs) {
+	if (!G_UsesTeamFlags(gametype)) {
+		return qfalse;
+	}
+	if (BotTeam(bs) == TEAM_BLUE && ctf_redflag.areanum) {
+		return qtrue;
+	}
+	if (BotTeam(bs) == TEAM_RED && ctf_blueflag.areanum) {
+		return qtrue;
+	}
+	return qfalse;
+}
+
+/*
+==================
+BotIsThereAnObeliskInOurBase
+Returns true if the bot finds there's a CTF flag in their base.
+==================
+*/
+qboolean BotIsThereOurObeliskInTheMap(bot_state_t *bs) {
+	if (!G_UsesTeamFlags(gametype)) {
+		return qfalse;
+	}
+	if (BotTeam(bs) == TEAM_BLUE && blueobelisk.areanum) {
+		return qtrue;
+	}
+	if (BotTeam(bs) == TEAM_RED && redobelisk.areanum) {
+		return qtrue;
+	}
+	return qfalse;
+}
+
+/*
+==================
+BotIsThereAnObeliskInTheEnemyBase
+Returns true if the bot finds there's a CTF flag in the enemy base.
+==================
+*/
+qboolean BotIsThereAnEnemyObeliskInTheMap(bot_state_t *bs) {
+	if (!G_UsesTeamFlags(gametype)) {
+		return qfalse;
+	}
+	if (BotTeam(bs) == TEAM_BLUE && redobelisk.areanum) {
+		return qtrue;
+	}
+	if (BotTeam(bs) == TEAM_RED && blueobelisk.areanum) {
+		return qtrue;
+	}
+	return qfalse;
+}
+

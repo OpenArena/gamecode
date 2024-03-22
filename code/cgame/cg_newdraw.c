@@ -78,11 +78,6 @@ void CG_CheckOrderPending(void)
 			p2 = VOICECHAT_DEFEND;
 			b = "+button8; wait; -button8";
 			break;
-		case TEAMTASK_PATROL:
-			p1 = VOICECHAT_ONPATROL;
-			p2 = VOICECHAT_PATROL;
-			b = "+button9; wait; -button9";
-			break;
 		case TEAMTASK_FOLLOW:
 			p1 = VOICECHAT_ONFOLLOW;
 			p2 = VOICECHAT_FOLLOWME;
@@ -99,6 +94,11 @@ void CG_CheckOrderPending(void)
 		case TEAMTASK_ESCORT:
 			p1 = VOICECHAT_ONFOLLOWCARRIER;
 			p2 = VOICECHAT_FOLLOWFLAGCARRIER;
+			break;
+		default: //TEAMTASK_PATROL
+			p1 = VOICECHAT_ONPATROL;
+			p2 = VOICECHAT_PATROL;
+			b = "+button9; wait; -button9";
 			break;
 		}
 
@@ -1288,7 +1288,7 @@ static void CG_DrawKiller(rectDef_t *rect, float scale, vec4_t color, qhandle_t 
 
 static void CG_DrawCapFragLimit(rectDef_t *rect, float scale, vec4_t color, qhandle_t shader, int textStyle)
 {
-	int limit = (CG_IsATeamGametype(cgs.gametype) && cgs.gametype != GT_TEAM) ? cgs.capturelimit : cgs.fraglimit;
+	int limit = (CG_GametypeUsesCaptureLimit(cgs.gametype)) ? cgs.capturelimit : cgs.fraglimit;
 	CG_Text_Paint(rect->x, rect->y, scale, color, va("%2i", limit),0, 0, textStyle);
 }
 
@@ -2018,7 +2018,7 @@ static void CG_DrawCaptureLimit( rectDef_t *rect, float text_x, float text_y, ve
 	int			value;
 	info = CG_ConfigString( CS_SERVERINFO );
 	value = atoi( Info_ValueForKey( info, "capturelimit" ) );
-	if (CG_IsATeamGametype(cgs.gametype) && cgs.gametype != GT_TEAM)
+	if (CG_GametypeUsesCaptureLimit(cgs.gametype))
 		value = atoi( Info_ValueForKey( info, "capturelimit" ) );
 	else
 		value = atoi( Info_ValueForKey( info, "fraglimit" ) );

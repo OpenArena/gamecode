@@ -1782,23 +1782,7 @@ void ClientSpawn(gentity_t *ent) {
 
 	client->ps.clientNum = index;
 
-	if(!G_IsARoundBasedGametype(g_gametype.integer) && !g_elimination_allgametypes.integer)
-	{
-		client->ps.stats[STAT_WEAPONS] = ( 1 << WP_MACHINEGUN );
-		if ( g_gametype.integer == GT_TEAM ) {
-			client->ps.ammo[WP_MACHINEGUN] = 50;
-		} else {
-			client->ps.ammo[WP_MACHINEGUN] = 100;
-		}
-
-		client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_GAUNTLET );
-		client->ps.ammo[WP_GAUNTLET] = -1;
-		client->ps.ammo[WP_GRAPPLING_HOOK] = -1;
-
-		// health will count down towards max_health
-		ent->health = client->ps.stats[STAT_HEALTH] = client->ps.stats[STAT_MAX_HEALTH] + 25;
-	}
-	else
+	if(G_IsARoundBasedGametype(g_gametype.integer) || g_elimination_allgametypes.integer)
 	{
 		client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_GAUNTLET );
 		client->ps.ammo[WP_GAUNTLET] = -1;
@@ -1835,21 +1819,40 @@ void ClientSpawn(gentity_t *ent) {
 			client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_BFG );
 			client->ps.ammo[WP_BFG] = g_elimination_bfg.integer;
 		}
-		if (g_elimination_nail.integer > 0) {
-			client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_NAILGUN );
-			client->ps.ammo[WP_NAILGUN] = g_elimination_nail.integer;
-		}
-		if (g_elimination_mine.integer > 0) {
-			client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_PROX_LAUNCHER );
-			client->ps.ammo[WP_PROX_LAUNCHER] = g_elimination_mine.integer;
-		}
-		if (g_elimination_chain.integer > 0) {
-			client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_CHAINGUN );
-			client->ps.ammo[WP_CHAINGUN] = g_elimination_chain.integer;
+		// Classic Mode On prevents the TA weapons from being added to the inventory.
+		if (g_classicMode.integer <= 0) {
+			if (g_elimination_nail.integer > 0) {
+				client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_NAILGUN );
+				client->ps.ammo[WP_NAILGUN] = g_elimination_nail.integer;
+			}
+			if (g_elimination_mine.integer > 0) {
+				client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_PROX_LAUNCHER );
+				client->ps.ammo[WP_PROX_LAUNCHER] = g_elimination_mine.integer;
+			}
+			if (g_elimination_chain.integer > 0) {
+				client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_CHAINGUN );
+				client->ps.ammo[WP_CHAINGUN] = g_elimination_chain.integer;
+			}
 		}
 
 		ent->health = client->ps.stats[STAT_ARMOR] = g_elimination_startArmor.integer; //client->ps.stats[STAT_MAX_HEALTH]*2;
 		ent->health = client->ps.stats[STAT_HEALTH] = g_elimination_startHealth.integer; //client->ps.stats[STAT_MAX_HEALTH]*2;	
+	}
+	else
+	{
+		client->ps.stats[STAT_WEAPONS] = ( 1 << WP_MACHINEGUN );
+		if ( g_gametype.integer == GT_TEAM ) {
+			client->ps.ammo[WP_MACHINEGUN] = 50;
+		} else {
+			client->ps.ammo[WP_MACHINEGUN] = 100;
+		}
+
+		client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_GAUNTLET );
+		client->ps.ammo[WP_GAUNTLET] = -1;
+		client->ps.ammo[WP_GRAPPLING_HOOK] = -1;
+
+		// health will count down towards max_health
+		ent->health = client->ps.stats[STAT_HEALTH] = client->ps.stats[STAT_MAX_HEALTH] + 25;
 	}
 
 	if(g_instantgib.integer)
@@ -1863,11 +1866,11 @@ void ClientSpawn(gentity_t *ent) {
 	}
 
 	if (g_weaponArena.integer) {
-		client->ps.stats[STAT_WEAPONS] |= ( 1 << G_GetWeaponArena(g_weaponArenaWeapon.string) );
-		if (G_GetWeaponArena(g_weaponArenaWeapon.string) == WP_GAUNTLET) {
-			client->ps.ammo[G_GetWeaponArena(g_weaponArenaWeapon.string)] = -1;
+		client->ps.stats[STAT_WEAPONS] |= ( 1 << G_GetWeaponArenaWeapon(g_weaponArenaWeapon.integer) );
+		if (G_GetWeaponArenaWeapon(g_weaponArenaWeapon.integer) == WP_GAUNTLET) {
+			client->ps.ammo[G_GetWeaponArenaWeapon(g_weaponArenaWeapon.integer)] = -1;
 		} else {
-			client->ps.ammo[G_GetWeaponArena(g_weaponArenaWeapon.string)] = 999;
+			client->ps.ammo[G_GetWeaponArenaWeapon(g_weaponArenaWeapon.integer)] = 999;
 		}
 	}
 

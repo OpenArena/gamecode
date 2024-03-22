@@ -98,7 +98,33 @@ int BotCanAndWantsToRocketJump(bot_state_t *bs);
 // returns true if the bot has the Grappling Hook and wants to use it
 int BotCanAndWantsToUseTheGrapple(bot_state_t *bs);
 // returns true if the bot's team owns a control point (DD/DOM)
-qboolean BotTeamControlsPoint(bot_state_t *bs,int point);
+qboolean BotTeamOwnsControlPoint(bot_state_t *bs,int point);
+// returns true if there is at least one control point in the map (DOM)
+qboolean BotAreThereDOMPointsInTheMap(void);
+// returns true if there is an A control point in the map (DD)
+qboolean BotIsThereDDPointAInTheMap(void);
+// returns true if there is a B control point in the map (DD)
+qboolean BotIsThereDDPointBInTheMap(void);
+// returns true if there is a blue CTF flag in the map (CTF/eCTF/1FCTF)
+qboolean BotIsThereABlueFlagInTheMap(void);
+// returns true if there is a red CTF flag in the map (CTF/eCTF/1FCTF)
+qboolean BotIsThereARedFlagInTheMap(void);
+// returns true if there is a neutral CTF flag in the map (1FCTF/Possession)
+qboolean BotIsThereANeutralFlagInTheMap(void);
+// returns true if there is a blue obelisk in the map (1FCTF/Harvester/Overload)
+qboolean BotIsThereABlueObeliskInTheMap(void);
+// returns true if there is a red obelisk in the map (1FCTF/Harvester/Overload)
+qboolean BotIsThereARedObeliskInTheMap(void);
+// returns true if there is a neutral obelisk in the map (1FCTF/Harvester)
+qboolean BotIsThereANeutralObeliskInTheMap(void);
+// returns true if there is a CTF flag in the bot's team's base in the map (CTF/eCTF/1FCTF)
+qboolean BotIsThereOurFlagInTheMap(bot_state_t *bs);
+// returns true if there is a CTF flag in the enemy base in the map (CTF/eCTF/1FCTF)
+qboolean BotIsThereAnEnemyFlagInTheMap(bot_state_t *bs);
+// returns true if there is an obelisk in the bot's team's base in the map (Harvester/Obelisk)
+qboolean BotIsThereOurObeliskInTheMap(bot_state_t *bs);
+// returns true if there is an obelisk in the enemy base in the map (Harvester/Obelisk)
+qboolean BotIsThereAnEnemyObeliskInTheMap(bot_state_t *bs);
 // returns true if the bot has a persistant powerup and a weapon
 int BotHasPersistantPowerupAndWeapon(bot_state_t *bs);
 //returns true if the bot wants to and goes camping

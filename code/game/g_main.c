@@ -111,7 +111,7 @@ vmCvar_t g_proxMineTimeout;
 vmCvar_t g_music;
 vmCvar_t g_spawnprotect;
 //Following for elimination:
-vmCvar_t g_elimination_selfdamage;
+vmCvar_t g_elimination_damage;
 vmCvar_t g_elimination_startHealth;
 vmCvar_t g_elimination_startArmor;
 vmCvar_t g_elimination_bfg;
@@ -142,7 +142,6 @@ vmCvar_t g_lms_lives;
 vmCvar_t g_lms_mode;
 vmCvar_t g_elimination_ctf_oneway;
 vmCvar_t g_awardpushing; //The server can decide if players are awarded for pushing people in lave etc.
-vmCvar_t g_runes; //Allow missionpack style persistant powerups?
 vmCvar_t g_catchup; //Favors the week players
 vmCvar_t g_autonextmap; //Autochange map
 vmCvar_t g_mappools; //mappools to be used for autochange
@@ -196,6 +195,7 @@ vmCvar_t g_ddRespawnDelay;
 vmCvar_t g_developer;
 vmCvar_t g_spSkill;
 vmCvar_t g_bot_noChat;
+vmCvar_t g_classicMode;
 
 mapinfo_result_t mapinfo;
 
@@ -317,7 +317,7 @@ static cvarTable_t gameCvarTable[] = {
 	{ &g_music, "g_music", "", 0, 0, qfalse},
 	{ &g_spawnprotect, "g_spawnprotect", "500", CVAR_ARCHIVE, 0, qtrue},
 	//Now for elimination stuff:
-	{ &g_elimination_selfdamage, "elimination_selfdamage", "0", 0, 0, qtrue },
+	{ &g_elimination_damage, "elimination_selfdamage", "0", 0, 0, qtrue },
 	{ &g_elimination_startHealth, "elimination_startHealth", "200", CVAR_ARCHIVE, 0, qtrue },
 	{ &g_elimination_startArmor, "elimination_startArmor", "150", CVAR_ARCHIVE, 0, qtrue },
 	{ &g_elimination_bfg, "elimination_bfg", "0", CVAR_ARCHIVE, 0, qtrue },
@@ -342,14 +342,6 @@ static cvarTable_t gameCvarTable[] = {
 	{ &g_elimination_lockspectator, "elimination_lockspectator", "0", 0, qtrue },
 
 	{ &g_awardpushing, "g_awardpushing", "1", CVAR_ARCHIVE, 0, qtrue },
-
-	//g_persistantpowerups
-#ifdef MISSIONPACK
-	{ &g_runes, "g_runes", "1", CVAR_LATCH, 0, qfalse },
-#else
-	{ &g_runes, "g_runes", "0", CVAR_LATCH|CVAR_ARCHIVE, 0, qfalse },
-#endif
-
 
 	//nexuiz style rocket arena
 	{ &g_weaponArena, "g_weaponArena", "0", CVAR_SERVERINFO | CVAR_LATCH, 0, qfalse },
@@ -414,7 +406,8 @@ static cvarTable_t gameCvarTable[] = {
 	/* Neon_Knight: Developer mode*/
 	{ &g_developer, "developer", "0", CVAR_CHEAT, 0, qtrue},
 	{ &g_spSkill, "g_spSkill", "2", 0, 0, qtrue},
-	{ &g_bot_noChat, "bot_nochat", "0", 0, 0, qtrue}
+	{ &g_bot_noChat, "bot_nochat", "0", 0, 0, qtrue},
+	{ &g_classicMode, "g_classicMode", "0", 0, 0, qtrue}
 
 };
 
@@ -2153,7 +2146,7 @@ void CheckExitRules( void )
 	}
 
 	if ( g_capturelimit.integer ) {
-		if (G_IsATeamGametype(g_gametype.integer) && g_gametype.integer != GT_TEAM) {
+		if (G_GametypeUsesCaptureLimit(g_gametype.integer)) {
 			if ( level.teamScores[TEAM_RED] >= g_capturelimit.integer ) {
 				trap_SendServerCommand( -1, "print \"Red hit the capturelimit.\n\"" );
 				LogExit( "Capturelimit hit." );
@@ -2881,51 +2874,61 @@ qboolean G_IsARoundBasedGametype(int check) {
 }
 /*
 ===================
-G_GetWeaponArena
+G_GametypeUsesFragLimit
 
-Returns the value of a weapon for g_weaponArena.
+Checks if the gametype has a frag-based scoring system.
 ===================
  */
-int G_GetWeaponArena(char* cvarWaString) {
-	if (strcmp(cvarWaString,"mg") || strcmp(cvarWaString,"machinegun") ||
-			strcmp(cvarWaString,"machine gun") || strcmp(cvarWaString,"2"))
-		return WP_MACHINEGUN;
-	if (strcmp(cvarWaString,"sg") || strcmp(cvarWaString,"shotgun") ||
-			strcmp(cvarWaString,"shot gun") || strcmp(cvarWaString,"3"))
-		return WP_SHOTGUN;
-	if (strcmp(cvarWaString,"gl") || strcmp(cvarWaString,"grenade") ||
-			strcmp(cvarWaString,"grenade launcher") || strcmp(cvarWaString,"grenadelauncher") ||
-			strcmp(cvarWaString,"4"))
-		return WP_GRENADE_LAUNCHER;
-	if (strcmp(cvarWaString,"rl") || strcmp(cvarWaString,"rocket") ||
-			strcmp(cvarWaString,"rocket launcher") || strcmp(cvarWaString,"rocketlauncher") ||
-			strcmp(cvarWaString,"5"))
-		return WP_ROCKET_LAUNCHER;
-	if (strcmp(cvarWaString,"lg") || strcmp(cvarWaString,"lightning") ||
-			strcmp(cvarWaString,"lightning gun") || strcmp(cvarWaString,"lightninggun") ||
-			strcmp(cvarWaString,"6"))
-		return WP_LIGHTNING;
-	if (strcmp(cvarWaString,"rg") || strcmp(cvarWaString,"railgun") ||
-			strcmp(cvarWaString,"rail gun") || strcmp(cvarWaString,"7"))
-		return WP_RAILGUN;
-	if (strcmp(cvarWaString,"pg") || strcmp(cvarWaString,"plasma") ||
-			strcmp(cvarWaString,"plasma gun") || strcmp(cvarWaString,"plasmagun") ||
-			strcmp(cvarWaString,"8"))
-		return WP_PLASMAGUN;
-	if (strcmp(cvarWaString,"bfg") || strcmp(cvarWaString,"big fairie gun") ||
-			strcmp(cvarWaString,"big freakin gun") || strcmp(cvarWaString,"9"))
-		return WP_BFG;
-	if (strcmp(cvarWaString,"ng") || strcmp(cvarWaString,"nailgun") ||
-			strcmp(cvarWaString,"nail gun") || strcmp(cvarWaString,"11"))
-		return WP_NAILGUN;
-	if (strcmp(cvarWaString,"pl") || strcmp(cvarWaString,"prox") ||
-			strcmp(cvarWaString,"mines") || strcmp(cvarWaString,"prox launcher") ||
-			strcmp(cvarWaString,"proxlauncher") || strcmp(cvarWaString,"12"))
-		return WP_PROX_LAUNCHER;
-	if (strcmp(cvarWaString,"cg") || strcmp(cvarWaString,"chaingun") ||
-			strcmp(cvarWaString,"chain gun") || strcmp(cvarWaString,"13"))
-		return WP_CHAINGUN;
-	return WP_GAUNTLET;
+qboolean G_GametypeUsesFragLimit(int check) {
+	return GAMETYPE_USES_FRAG_LIMIT(check);
+}
+/*
+===================
+G_GametypeUsesCaptureLimit
+
+Checks if the gametype has a capture-based scoring system.
+===================
+ */
+qboolean G_GametypeUsesCaptureLimit(int check) {
+	return GAMETYPE_USES_CAPTURE_LIMIT(check);
+}
+/*
+===================
+G_GetWeaponArenaWeapon
+
+Returns the value of a weapon for g_weaponArena.
+Weapons are sorted like this instead of actual weapon order because Weapon 1 (Gauntlet)
+is the default option and Weapon 10 (Grappling Hook) is an additional weapon.
+And for menu reasons. (*cough*classicui*cough*)
+===================
+ */
+int G_GetWeaponArenaWeapon(int weapon) {
+	switch (weapon) {
+		case 1: return WP_MACHINEGUN;
+			break;
+		case 2: return WP_SHOTGUN;
+			break;
+		case 3: return WP_GRENADE_LAUNCHER;
+			break;
+		case 4: return WP_ROCKET_LAUNCHER;
+			break;
+		case 5: return WP_LIGHTNING;
+			break;
+		case 6: return WP_RAILGUN;
+			break;
+		case 7: return WP_PLASMAGUN;
+			break;
+		case 8: return WP_BFG;
+			break;
+		case 9: return WP_NAILGUN;
+			break;
+		case 10: return WP_CHAINGUN;
+			break;
+		case 11: return WP_PROX_LAUNCHER;
+			break;
+		default: return WP_GAUNTLET;
+			break;
+	}
 }
 /*
 ===================
@@ -2945,6 +2948,20 @@ qboolean G_IsANoPickupsMode(void) {
 	}
 	// In Elimination mode for non-round-based modes, no pickups
 	if (g_elimination_allgametypes.integer) {
+		return qtrue;
+	}
+	return qfalse;
+}
+/*
+===================
+G_GametypeUsesRunes
+
+Returns true if the match has a "no pickups" rule.
+===================
+ */
+qboolean G_GametypeUsesRunes(int check) {
+	// If it's one of these gamemodes, it's true.
+	if (check == GT_CTF || check == GT_1FCTF || check == GT_HARVESTER ||  check == GT_OBELISK) {
 		return qtrue;
 	}
 	return qfalse;

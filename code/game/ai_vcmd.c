@@ -72,6 +72,8 @@ BotVoiceChat_HoldPointA
 void BotVoiceChat_HoldPointA(bot_state_t *bs, int client, int mode) {
 	//Only valid for Double Domination
 	if (gametype != GT_DOUBLE_D) return;
+	// If the A point isn't present, don't do anything.
+	if (!BotIsThereDDPointAInTheMap()) return;
 
 	bs->decisionmaker = client;
 	bs->ordered = qtrue;
@@ -102,6 +104,8 @@ BotVoiceChat_HoldPointB
 void BotVoiceChat_HoldPointB(bot_state_t *bs, int client, int mode) {
 	//Only valid for Double Domination
 	if (gametype != GT_DOUBLE_D) return;
+	// If the B point isn't present, don't do anything.
+	if (!BotIsThereDDPointBInTheMap()) return;
 
 	bs->decisionmaker = client;
 	bs->ordered = qtrue;
@@ -132,7 +136,7 @@ BotVoiceChat_HoldDOMPoint
 void BotVoiceChat_HoldDOMPoint(bot_state_t *bs, int client, int mode) {
 	//Only valid for Double Domination
 	if (gametype != GT_DOMINATION) return;
-	if (level.domination_points_count < 1) return;
+	if (!BotAreThereDOMPointsInTheMap()) return;
 
 	bs->decisionmaker = client;
 	bs->ordered = qtrue;
@@ -162,15 +166,18 @@ BotVoiceChat_GetFlag
 */
 void BotVoiceChat_GetFlag(bot_state_t *bs, int client, int mode) {
 	//
-	if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
-		if (!ctf_redflag.areanum || !ctf_blueflag.areanum)
+	if (!G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
+		return;
+	}
+	if (G_UsesTeamFlags(gametype)) {
+		if (!BotIsThereABlueFlagInTheMap() || !BotIsThereARedFlagInTheMap())
 			return;
 	}
-	else if (gametype == GT_1FCTF) {
-		if (!ctf_neutralflag.areanum || !ctf_redflag.areanum || !ctf_blueflag.areanum)
+	if (G_UsesTheWhiteFlag(gametype)) {
+		if (!BotIsThereANeutralFlagInTheMap())
 			return;
 	}
-	else {
+	if (gametype == GT_CTF_ELIMINATION && g_elimination_ctf_oneway.integer && !BotIsOnAttackingTeam(bs)) {
 		return;
 	}
 	//
@@ -298,16 +305,16 @@ void BotVoiceChat_Defend(bot_state_t *bs, int client, int mode) {
 	}
 	else if (gametype == GT_DOUBLE_D) {
 		// If the point A is under control, defend it.
-		if (BotTeamControlsPoint(bs,level.pointStatusA)) {
+		if (BotTeamOwnsControlPoint(bs,level.pointStatusA)) {
 			BotVoiceChat_HoldPointA(bs,client,mode);
 		}
 		// If the point B is under control, defend it.
-		else if (BotTeamControlsPoint(bs,level.pointStatusB)) {
+		else if (BotTeamOwnsControlPoint(bs,level.pointStatusB)) {
 			BotVoiceChat_HoldPointB(bs,client,mode);
 		}
 		// If both points are under control, pick one and defend it.
-		else if (BotTeamControlsPoint(bs,level.pointStatusA) &&
-				BotTeamControlsPoint(bs,level.pointStatusB)) {
+		else if (BotTeamOwnsControlPoint(bs,level.pointStatusA) &&
+				BotTeamOwnsControlPoint(bs,level.pointStatusB)) {
 			if (rand() % 10 > 5)
 				BotVoiceChat_HoldPointA(bs,client,mode);
 			else
@@ -318,6 +325,10 @@ void BotVoiceChat_Defend(bot_state_t *bs, int client, int mode) {
 	else if (gametype == GT_DOMINATION) {
 		BotSetDominationPoint(bs,-1);
 		BotVoiceChat_HoldDOMPoint(bs,client,mode);
+		return;
+	}
+	// eCTF in AvD mode only allows defenders to defend.
+	else if (gametype == GT_CTF_ELIMINATION && g_elimination_ctf_oneway.integer && BotIsOnAttackingTeam(bs)) {
 		return;
 	}
 	//
@@ -340,15 +351,6 @@ void BotVoiceChat_Defend(bot_state_t *bs, int client, int mode) {
 	if (bot_developer.integer && bot_debugLTG.integer) {
 		BotPrintTeamGoal(bs);
 	}
-}
-
-/*
-==================
-BotVoiceChat_DefendFlag
-==================
-*/
-void BotVoiceChat_DefendFlag(bot_state_t *bs, int client, int mode) {
-	BotVoiceChat_Defend(bs, client, mode);
 }
 
 /*
@@ -623,7 +625,7 @@ voiceCommand_t voiceCommands[] = {
 	{VOICECHAT_GETFLAG, BotVoiceChat_GetFlag},
 	{VOICECHAT_OFFENSE, BotVoiceChat_Offense },
 	{VOICECHAT_DEFEND, BotVoiceChat_Defend },
-	{VOICECHAT_DEFENDFLAG, BotVoiceChat_DefendFlag },
+	{VOICECHAT_DEFENDFLAG, BotVoiceChat_Defend },
 	{VOICECHAT_PATROL, BotVoiceChat_Patrol },
 	{VOICECHAT_CAMP, BotVoiceChat_Camp },
 	{VOICECHAT_FOLLOWME, BotVoiceChat_FollowMe },

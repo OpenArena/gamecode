@@ -247,7 +247,7 @@ GRAPHICS OPTIONS MENU
 #define ID_DISPLAY		107
 #define ID_SOUND		108
 #define ID_NETWORK		109
-#define ID_RATIO                110
+#define ID_RATIO		110
 
 typedef struct {
 	menuframework_s	menu;
@@ -270,12 +270,12 @@ typedef struct {
 	menulist_s  	lighting;
         menulist_s  	flares;
         menulist_s  	bloom;
+        menulist_s  	dynamicLights;
 	menulist_s  	allow_extensions;
 	menulist_s  	texturebits;
 	menulist_s  	geometry;
 	menulist_s  	filter;
         menulist_s  	aniso;
-	menulist_s  	drawfps;
 	menutext_s		driverinfo;
 
 	menubitmap_s	apply;
@@ -290,7 +290,7 @@ typedef struct
 	int lighting;
 	qboolean flares;
 	qboolean bloom;
-	qboolean drawfps;
+	qboolean dynamicLights;
 	int texturebits;
 	int geometry;
 	int filter;
@@ -483,7 +483,7 @@ static void GraphicsOptions_GetInitialVideo( void )
 	s_ivo.lighting    = s_graphicsoptions.lighting.curvalue;
 	s_ivo.flares      = s_graphicsoptions.flares.curvalue;
 	s_ivo.bloom      = s_graphicsoptions.bloom.curvalue;
-	s_ivo.drawfps     = s_graphicsoptions.drawfps.curvalue;
+	s_ivo.dynamicLights      = s_graphicsoptions.dynamicLights.curvalue;
 	s_ivo.geometry    = s_graphicsoptions.geometry.curvalue;
 	s_ivo.filter      = s_graphicsoptions.filter.curvalue;
         s_ivo.aniso      = s_graphicsoptions.aniso.curvalue;
@@ -559,7 +559,7 @@ static void GraphicsOptions_CheckConfig( void )
 			continue;
                 if ( s_ivo_templates[i].bloom != s_graphicsoptions.bloom.curvalue )
 			continue;
-		if ( s_ivo_templates[i].drawfps != s_graphicsoptions.drawfps.curvalue )
+                if ( s_ivo_templates[i].dynamicLights != s_graphicsoptions.dynamicLights.curvalue )
 			continue;
 		if ( s_ivo_templates[i].geometry != s_graphicsoptions.geometry.curvalue )
 			continue;
@@ -632,7 +632,7 @@ static void GraphicsOptions_UpdateMenuItems( void )
 	{
 		s_graphicsoptions.apply.generic.flags &= ~(QMF_HIDDEN|QMF_INACTIVE);
 	}
-	if ( s_ivo.drawfps != s_graphicsoptions.drawfps.curvalue )
+        if ( s_ivo.dynamicLights != s_graphicsoptions.dynamicLights.curvalue )
 	{
 		s_graphicsoptions.apply.generic.flags &= ~(QMF_HIDDEN|QMF_INACTIVE);
 	}
@@ -718,7 +718,7 @@ static void GraphicsOptions_ApplyChanges( void *unused, int notification )
 	trap_Cvar_SetValue( "cg_autovertex", s_graphicsoptions.lighting.curvalue );
 	trap_Cvar_SetValue( "r_flares", s_graphicsoptions.flares.curvalue );
 	trap_Cvar_SetValue( "r_bloom", s_graphicsoptions.bloom.curvalue );
-	trap_Cvar_SetValue( "cg_drawFPS", s_graphicsoptions.drawfps.curvalue );
+	trap_Cvar_SetValue( "r_dynamicLight", s_graphicsoptions.dynamicLights.curvalue );
 
 	//r_ext_texture_filter_anisotropic is special
 	if(s_graphicsoptions.aniso.curvalue) {
@@ -799,7 +799,7 @@ static void GraphicsOptions_Event( void* ptr, int event ) {
 		s_graphicsoptions.fs.curvalue          = ivo->fullscreen;
                 s_graphicsoptions.flares.curvalue      = ivo->flares;
                 s_graphicsoptions.bloom.curvalue      = ivo->bloom;
-                s_graphicsoptions.drawfps.curvalue      = ivo->drawfps;
+                s_graphicsoptions.dynamicLights.curvalue      = ivo->dynamicLights;
 		break;
 
 	case ID_DRIVERINFO:
@@ -898,7 +898,7 @@ static void GraphicsOptions_SetMenuItems( void )
 	s_graphicsoptions.allow_extensions.curvalue = trap_Cvar_VariableValue("r_allowExtensions");
         s_graphicsoptions.flares.curvalue = trap_Cvar_VariableValue("r_flares");
         s_graphicsoptions.bloom.curvalue = trap_Cvar_VariableValue("r_bloom");
-        s_graphicsoptions.drawfps.curvalue = trap_Cvar_VariableValue("cg_drawFPS");
+        s_graphicsoptions.dynamicLights.curvalue = trap_Cvar_VariableValue("r_dynamicLight");
         if(trap_Cvar_VariableValue("r_ext_texture_filter_anisotropic")) {
             s_graphicsoptions.aniso.curvalue = trap_Cvar_VariableValue("r_ext_max_anisotropy")/2;
         }
@@ -1145,7 +1145,7 @@ void GraphicsOptions_MenuInit( void )
 
 	// references/modifies "r_mode"
 	s_graphicsoptions.mode.generic.type     = MTYPE_SPINCONTROL;
-	s_graphicsoptions.mode.generic.name     = "Resolution:";
+	s_graphicsoptions.mode.generic.name     = "Screen Resolution:";
 	s_graphicsoptions.mode.generic.flags    = QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	s_graphicsoptions.mode.generic.x        = 400;
 	s_graphicsoptions.mode.generic.y        = y;
@@ -1156,7 +1156,7 @@ void GraphicsOptions_MenuInit( void )
 
 	// references/modifies "r_fullscreen"
 	s_graphicsoptions.fs.generic.type     = MTYPE_SPINCONTROL;
-	s_graphicsoptions.fs.generic.name	  = "Fullscreen:";
+	s_graphicsoptions.fs.generic.name	  = "Enable Fullscreen:";
 	s_graphicsoptions.fs.generic.flags	  = QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	s_graphicsoptions.fs.generic.x	      = 400;
 	s_graphicsoptions.fs.generic.y	      = y;
@@ -1165,7 +1165,7 @@ void GraphicsOptions_MenuInit( void )
 
 	// references/modifies "r_vertexLight"
 	s_graphicsoptions.lighting.generic.type  = MTYPE_SPINCONTROL;
-	s_graphicsoptions.lighting.generic.name	 = "Lighting:";
+	s_graphicsoptions.lighting.generic.name	 = "Lighting Mode:";
 	s_graphicsoptions.lighting.generic.flags = QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	s_graphicsoptions.lighting.generic.x	 = 400;
 	s_graphicsoptions.lighting.generic.y	 = y;
@@ -1189,13 +1189,14 @@ void GraphicsOptions_MenuInit( void )
 	s_graphicsoptions.bloom.generic.y	      = y;
 	s_graphicsoptions.bloom.itemnames	      = enabled_names;
 	y += BIGCHAR_HEIGHT+2;
-
-	s_graphicsoptions.drawfps.generic.type	  = MTYPE_SPINCONTROL;
-	s_graphicsoptions.drawfps.generic.name	  = "Draw FPS:";
-	s_graphicsoptions.drawfps.generic.flags	  = QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-	s_graphicsoptions.drawfps.generic.x	      = 400;
-	s_graphicsoptions.drawfps.generic.y	      = y;
-	s_graphicsoptions.drawfps.itemnames	      = enabled_names;
+        
+        // references/modifies "r_dynamicLight"
+	s_graphicsoptions.dynamicLights.generic.type     = MTYPE_SPINCONTROL;
+	s_graphicsoptions.dynamicLights.generic.name	  = "Dynamic Lights:";
+	s_graphicsoptions.dynamicLights.generic.flags	  = QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	s_graphicsoptions.dynamicLights.generic.x	      = 400;
+	s_graphicsoptions.dynamicLights.generic.y	      = y;
+	s_graphicsoptions.dynamicLights.itemnames	      = enabled_names;
 	y += BIGCHAR_HEIGHT+2;
 
 	// references/modifies "r_lodBias" & "subdivisions"
@@ -1294,7 +1295,7 @@ void GraphicsOptions_MenuInit( void )
 	Menu_AddItem( &s_graphicsoptions.menu, ( void * ) &s_graphicsoptions.lighting );
         Menu_AddItem( &s_graphicsoptions.menu, ( void * ) &s_graphicsoptions.flares );
         Menu_AddItem( &s_graphicsoptions.menu, ( void * ) &s_graphicsoptions.bloom );
-	Menu_AddItem( &s_graphicsoptions.menu, ( void * ) &s_graphicsoptions.drawfps );
+        Menu_AddItem( &s_graphicsoptions.menu, ( void * ) &s_graphicsoptions.dynamicLights );
 	Menu_AddItem( &s_graphicsoptions.menu, ( void * ) &s_graphicsoptions.geometry );
 	Menu_AddItem( &s_graphicsoptions.menu, ( void * ) &s_graphicsoptions.tq );
 	Menu_AddItem( &s_graphicsoptions.menu, ( void * ) &s_graphicsoptions.texturebits );

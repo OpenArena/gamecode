@@ -25,7 +25,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 /* Version number printed on the main menu */
 #ifndef OA_VERSION
-#define OA_VERSION "OAX"
+#define OA_VERSION "OAX b53"
 #endif
 
 /* Protocol will be printed if the engine protocol does not match this */

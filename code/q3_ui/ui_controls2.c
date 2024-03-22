@@ -118,6 +118,7 @@ typedef struct
 #define ID_VOIP_TALK		38
 #define ID_ACCURACY		39
 #define ID_WEAPBEST     40
+#define ID_DROPRUNE     41
 
 // all others
 #define ID_FREELOOK		41
@@ -222,6 +223,7 @@ typedef struct
 	menuaction_s		showacc;
 	menulist_s              autoswitch;
 	menuaction_s		useitem;
+	menuaction_s		droprune;
 	playerInfo_t		playerinfo;
 	qboolean			changesmade;
 	menuaction_s		chat;
@@ -265,47 +267,48 @@ static vec4_t controls_binding_color  = {0.58f, 0.70f, 0.81f, 1.00f};
 
 static bind_t g_bindings[] = 
 {
-	{"+scores",     "show scores",      ID_SHOWSCORES,	ANIM_IDLE,		K_TAB,			-1,		-1, -1},
-	{"+button2",    "use item",         ID_USEITEM,		ANIM_IDLE,		K_ENTER,		-1,		-1, -1},
-	{"+speed",      "run / walk",       ID_SPEED,		ANIM_RUN,		K_SHIFT,		-1,		-1,	-1},
-	{"+forward",    "walk forward",     ID_FORWARD,		ANIM_WALK,		K_UPARROW,		-1,		-1, -1},
-	{"+back",       "backpedal",        ID_BACKPEDAL,	ANIM_BACK,		K_DOWNARROW,	-1,		-1, -1},
-	{"+moveleft",   "step left",        ID_MOVELEFT,	ANIM_STEPLEFT,	',',			-1,		-1, -1},
-	{"+moveright",  "step right",       ID_MOVERIGHT,	ANIM_STEPRIGHT,	'.',			-1,		-1, -1},
-	{"+moveup",     "up / jump",        ID_MOVEUP,		ANIM_JUMP,		K_SPACE,		-1,		-1, -1},
-	{"+movedown",   "down / crouch",    ID_MOVEDOWN,	ANIM_CROUCH,	'c',			-1,		-1, -1},
-	{"+left",       "turn left",        ID_LEFT,		ANIM_TURNLEFT,	K_LEFTARROW,	-1,		-1, -1},
-	{"+right",      "turn right",       ID_RIGHT,		ANIM_TURNRIGHT,	K_RIGHTARROW,	-1,		-1, -1},
-	{"+strafe",     "sidestep / turn",  ID_STRAFE,		ANIM_IDLE,		K_ALT,			-1,		-1, -1},
-	{"+lookup",     "look up",          ID_LOOKUP,		ANIM_LOOKUP,	K_PGDN,			-1,		-1, -1},
-	{"+lookdown",   "look down",        ID_LOOKDOWN,	ANIM_LOOKDOWN,	K_DEL,			-1,		-1, -1},
-	{"+mlook",      "mouse look",       ID_MOUSELOOK,	ANIM_IDLE,		'/',			-1,		-1, -1},
-	{"centerview",  "center view",      ID_CENTERVIEW,	ANIM_IDLE,		K_END,			-1,		-1, -1},
-	{"+zoom",       "zoom view",        ID_ZOOMVIEW,	ANIM_IDLE,	-1,	-1,	-1, -1},
-	{"weapon 1",    "gauntlet",         ID_WEAPON1,	ANIM_WEAPON1,	'1',	-1,	-1, -1},
-	{"weapon 2",    "machinegun",       ID_WEAPON2,	ANIM_WEAPON2,	'2',	-1,	-1, -1},
-	{"weapon 3",    "shotgun",          ID_WEAPON3,	ANIM_WEAPON3,	'3',	-1,	-1, -1},
-	{"weapon 4",    "grenade launcher", ID_WEAPON4,	ANIM_WEAPON4,	'4',	-1,	-1, -1},
-	{"weapon 5",    "rocket launcher",  ID_WEAPON5,	ANIM_WEAPON5,	'5',	-1,	-1, -1},
-	{"weapon 6",    "lightning",        ID_WEAPON6,	ANIM_WEAPON6,	'6',	-1,	-1, -1},
-	{"weapon 7",    "railgun",          ID_WEAPON7,	ANIM_WEAPON7,	'7',	-1,	-1, -1},
-	{"weapon 8",    "plasma gun",       ID_WEAPON8,	ANIM_WEAPON8,	'8',	-1,	-1, -1},
-	{"weapon 9",    "BFG",              ID_WEAPON9,	ANIM_WEAPON9,	'9',	-1,	-1, -1},
-	{"weapon 10",   "Grapple",          ID_WEAPON10,	ANIM_WEAPON10,	-1,	-1,	-1, -1},
-	{"weapon 11",   "nailgun",          ID_WEAPON11,	ANIM_WEAPON11,	-1,	-1,	-1, -1},
-	{"weapon 12",   "mine Launcher",    ID_WEAPON12,	ANIM_WEAPON12,	-1,	-1,	-1, -1},
-	{"weapon 13",   "chaingun",         ID_WEAPON13,	ANIM_WEAPON13,	-1,	-1,	-1, -1},
-	{"+attack",     "attack",           ID_ATTACK,	ANIM_ATTACK,	K_CTRL,			-1,		-1, -1},
-	{"weapprev",    "prev weapon",      ID_WEAPPREV,	ANIM_IDLE,		'[',			-1,		-1, -1},
-	{"weapnext",    "next weapon",      ID_WEAPNEXT,	ANIM_IDLE,		']',			-1,		-1, -1},
-	{"+button3",    "gesture",          ID_GESTURE,		ANIM_GESTURE,	K_MOUSE3,		-1,		-1, -1},
-	{"messagemode", "chat",             ID_CHAT,		ANIM_CHAT,		't',			-1,		-1, -1},
-	{"messagemode2","chat - team",      ID_CHAT2,		ANIM_CHAT,		-1,				-1,		-1, -1},
-	{"messagemode3","chat - target",    ID_CHAT3,		ANIM_CHAT,		-1,				-1,		-1, -1},
-	{"messagemode4","chat - attacker",  ID_CHAT4,		ANIM_CHAT,		-1,				-1,		-1, -1},
-	{"+voiprecord", "voice chat",       ID_VOIP_TALK,		ANIM_CHAT,		'q',				-1,		-1, -1},
-	{"+acc",        "show accuracy",    ID_ACCURACY,	ANIM_IDLE,		-1,			-1,		-1, -1},
-	{"weapbest",    "best weapon",      ID_WEAPBEST,	ANIM_IDLE,		-1,			-1,		-1, -1},
+	{"+scores",     "Show Scoreboard",	ID_SHOWSCORES,	ANIM_IDLE,		K_TAB,			-1,		-1, -1},
+	{"+button2",    "Use Item",	ID_USEITEM,		ANIM_IDLE,		K_ENTER,		-1,		-1, -1},
+	{"+speed",      "Run / Walk",	ID_SPEED,		ANIM_RUN,		K_SHIFT,		-1,		-1,	-1},
+	{"+forward",    "Move Forward",	ID_FORWARD,		ANIM_WALK,		K_UPARROW,		-1,		-1, -1},
+	{"+back",       "Move Backwards",	ID_BACKPEDAL,	ANIM_BACK,		K_DOWNARROW,	-1,		-1, -1},
+	{"+moveleft",   "Sidestep Left",	ID_MOVELEFT,	ANIM_STEPLEFT,	',',			-1,		-1, -1},
+	{"+moveright",  "Sidestep Right",	ID_MOVERIGHT,	ANIM_STEPRIGHT,	'.',			-1,		-1, -1},
+	{"+moveup",     "Jump / Swim Up",	ID_MOVEUP,		ANIM_JUMP,		K_SPACE,		-1,		-1, -1},
+	{"+movedown",   "Crouch / Swim Down",	ID_MOVEDOWN,	ANIM_CROUCH,	'c',			-1,		-1, -1},
+	{"+left",       "Turn Left",	ID_LEFT,		ANIM_TURNLEFT,	K_LEFTARROW,	-1,		-1, -1},
+	{"+right",      "Turn Right",	ID_RIGHT,		ANIM_TURNRIGHT,	K_RIGHTARROW,	-1,		-1, -1},
+	{"+strafe",     "Sidestep / Turn",	ID_STRAFE,		ANIM_IDLE,		K_ALT,			-1,		-1, -1},
+	{"+lookup",     "Look Up",	ID_LOOKUP,		ANIM_LOOKUP,	K_PGDN,			-1,		-1, -1},
+	{"+lookdown",   "Look Down",	ID_LOOKDOWN,	ANIM_LOOKDOWN,	K_DEL,			-1,		-1, -1},
+	{"+mlook",      "Mouselook",	ID_MOUSELOOK,	ANIM_IDLE,		'/',			-1,		-1, -1},
+	{"centerview",  "Center View",	ID_CENTERVIEW,	ANIM_IDLE,		K_END,			-1,		-1, -1},
+	{"+zoom",       "Zoom View",	ID_ZOOMVIEW,	ANIM_IDLE,	-1,	-1,	-1, -1},
+	{"weapon 1",    "Gauntlet",	ID_WEAPON1,	ANIM_WEAPON1,	'1',	-1,	-1, -1},
+	{"weapon 2",    "Machinegun",	ID_WEAPON2,	ANIM_WEAPON2,	'2',	-1,	-1, -1},
+	{"weapon 3",    "Shotgun",	ID_WEAPON3,	ANIM_WEAPON3,	'3',	-1,	-1, -1},
+	{"weapon 4",    "Grenade Launcher",	ID_WEAPON4,	ANIM_WEAPON4,	'4',	-1,	-1, -1},
+	{"weapon 5",    "Rocket Launcher",	ID_WEAPON5,	ANIM_WEAPON5,	'5',	-1,	-1, -1},
+	{"weapon 6",    "Lightning Gun",	ID_WEAPON6,	ANIM_WEAPON6,	'6',	-1,	-1, -1},
+	{"weapon 7",    "Railgun",	ID_WEAPON7,	ANIM_WEAPON7,	'7',	-1,	-1, -1},
+	{"weapon 8",    "Plasma Gun",	ID_WEAPON8,	ANIM_WEAPON8,	'8',	-1,	-1, -1},
+	{"weapon 9",    "BFG",	ID_WEAPON9,	ANIM_WEAPON9,	'9',	-1,	-1, -1},
+	{"weapon 10",   "Grappling Hook",	ID_WEAPON10,	ANIM_WEAPON10,	-1,	-1,	-1, -1},
+	{"weapon 11",   "Nailgun",	ID_WEAPON11,	ANIM_WEAPON11,	-1,	-1,	-1, -1},
+	{"weapon 12",   "Prox Launcher",	ID_WEAPON12,	ANIM_WEAPON12,	-1,	-1,	-1, -1},
+	{"weapon 13",   "Chaingun",	ID_WEAPON13,	ANIM_WEAPON13,	-1,	-1,	-1, -1},
+	{"+attack",     "Fire",	ID_ATTACK,	ANIM_ATTACK,	K_CTRL,			-1,		-1, -1},
+	{"weapprev",    "Switch to Previous Weapon",	ID_WEAPPREV,	ANIM_IDLE,		'[',			-1,		-1, -1},
+	{"weapnext",    "Switch to Next Weapon",	ID_WEAPNEXT,	ANIM_IDLE,		']',			-1,		-1, -1},
+	{"+button3",    "Taunt",	ID_GESTURE,		ANIM_GESTURE,	K_MOUSE3,		-1,		-1, -1},
+	{"messagemode", "Chat - General",	ID_CHAT,		ANIM_CHAT,		't',			-1,		-1, -1},
+	{"messagemode2","Chat - Team",	ID_CHAT2,		ANIM_CHAT,		-1,				-1,		-1, -1},
+	{"messagemode3","Chat - Target",	ID_CHAT3,		ANIM_CHAT,		-1,				-1,		-1, -1},
+	{"messagemode4","Chat - Attacker",	ID_CHAT4,		ANIM_CHAT,		-1,				-1,		-1, -1},
+	{"+voiprecord", "Voice Chat",	ID_VOIP_TALK,		ANIM_CHAT,		'q',				-1,		-1, -1},
+	{"+acc",        "Show Accuracy",	ID_ACCURACY,	ANIM_IDLE,		-1,			-1,		-1, -1},
+	{"weapbest",    "Switch to Best Weapon",	ID_WEAPBEST,	ANIM_IDLE,		-1,			-1,		-1, -1},
+	{"droprune",    "Free Rune",	ID_DROPRUNE,	ANIM_IDLE,		-1,			-1,		-1, -1},
 	{(char*)NULL,   (char*)NULL,        0,				0,				-1,				-1,		-1,	-1},
 };
 
@@ -380,6 +383,7 @@ static menucommon_s *g_misc_controls[] = {
 	(menucommon_s *)&s_controls.showscores, 
 	(menucommon_s *)&s_controls.showacc, 
 	(menucommon_s *)&s_controls.useitem,
+	(menucommon_s *)&s_controls.droprune,
 	(menucommon_s *)&s_controls.gesture,
 	(menucommon_s *)&s_controls.chat,
 	(menucommon_s *)&s_controls.chat2,
@@ -1505,7 +1509,7 @@ static void Controls_MenuInit( void )
 	s_controls.freelook.generic.type		= MTYPE_RADIOBUTTON;
 	s_controls.freelook.generic.flags		= QMF_SMALLFONT;
 	s_controls.freelook.generic.x			= SCREEN_WIDTH/2;
-	s_controls.freelook.generic.name		= "free look";
+	s_controls.freelook.generic.name		= "Free Mouselook";
 	s_controls.freelook.generic.id			= ID_FREELOOK;
 	s_controls.freelook.generic.callback	= Controls_MenuEvent;
 	s_controls.freelook.generic.statusbar	= Controls_StatusBar;
@@ -1528,6 +1532,12 @@ static void Controls_MenuInit( void )
 	s_controls.useitem.generic.ownerdraw = Controls_DrawKeyBinding;
 	s_controls.useitem.generic.id        = ID_USEITEM;
 
+	s_controls.droprune.generic.type	     = MTYPE_ACTION;
+	s_controls.droprune.generic.flags     = QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS|QMF_GRAYED|QMF_HIDDEN;
+	s_controls.droprune.generic.callback  = Controls_ActionEvent;
+	s_controls.droprune.generic.ownerdraw = Controls_DrawKeyBinding;
+	s_controls.droprune.generic.id        = ID_DROPRUNE;
+
 	s_controls.showscores.generic.type	    = MTYPE_ACTION;
 	s_controls.showscores.generic.flags     = QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS|QMF_GRAYED|QMF_HIDDEN;
 	s_controls.showscores.generic.callback  = Controls_ActionEvent;
@@ -1544,7 +1554,7 @@ static void Controls_MenuInit( void )
 	s_controls.invertmouse.generic.type      = MTYPE_RADIOBUTTON;
 	s_controls.invertmouse.generic.flags	 = QMF_SMALLFONT;
 	s_controls.invertmouse.generic.x	     = SCREEN_WIDTH/2;
-	s_controls.invertmouse.generic.name	     = "invert mouse";
+	s_controls.invertmouse.generic.name	     = "Invert Mouse";
 	s_controls.invertmouse.generic.id        = ID_INVERTMOUSE;
 	s_controls.invertmouse.generic.callback  = Controls_MenuEvent;
 	s_controls.invertmouse.generic.statusbar = Controls_StatusBar;
@@ -1552,7 +1562,7 @@ static void Controls_MenuInit( void )
 	s_controls.smoothmouse.generic.type      = MTYPE_RADIOBUTTON;
 	s_controls.smoothmouse.generic.flags	 = QMF_SMALLFONT;
 	s_controls.smoothmouse.generic.x	     = SCREEN_WIDTH/2;
-	s_controls.smoothmouse.generic.name	     = "smooth mouse";
+	s_controls.smoothmouse.generic.name	     = "Smooth Mouse";
 	s_controls.smoothmouse.generic.id        = ID_SMOOTHMOUSE;
 	s_controls.smoothmouse.generic.callback  = Controls_MenuEvent;
 	s_controls.smoothmouse.generic.statusbar = Controls_StatusBar;
@@ -1560,7 +1570,7 @@ static void Controls_MenuInit( void )
 	s_controls.alwaysrun.generic.type      = MTYPE_RADIOBUTTON;
 	s_controls.alwaysrun.generic.flags	   = QMF_SMALLFONT;
 	s_controls.alwaysrun.generic.x	       = SCREEN_WIDTH/2;
-	s_controls.alwaysrun.generic.name	   = "always run";
+	s_controls.alwaysrun.generic.name	   = "Always Run";
 	s_controls.alwaysrun.generic.id        = ID_ALWAYSRUN;
 	s_controls.alwaysrun.generic.callback  = Controls_MenuEvent;
 	s_controls.alwaysrun.generic.statusbar = Controls_StatusBar;
@@ -1568,7 +1578,7 @@ static void Controls_MenuInit( void )
 	s_controls.autoswitch.generic.type      = MTYPE_SPINCONTROL;
 	s_controls.autoswitch.generic.flags	    = QMF_SMALLFONT;
 	s_controls.autoswitch.generic.x	        = SCREEN_WIDTH/2;
-	s_controls.autoswitch.generic.name      = "autoswitch weapons";
+	s_controls.autoswitch.generic.name      = "Auto-Switch Weapons";
 	s_controls.autoswitch.generic.id        = ID_AUTOSWITCH;
 	s_controls.autoswitch.generic.callback  = Controls_MenuEvent;
 	s_controls.autoswitch.generic.statusbar = Controls_StatusBar;
@@ -1577,7 +1587,7 @@ static void Controls_MenuInit( void )
 	s_controls.sensitivity.generic.type	     = MTYPE_SLIDER;
 	s_controls.sensitivity.generic.x		 = SCREEN_WIDTH/2;
 	s_controls.sensitivity.generic.flags	 = QMF_SMALLFONT;
-	s_controls.sensitivity.generic.name	     = "mouse speed";
+	s_controls.sensitivity.generic.name	     = "Mouse Speed";
 	s_controls.sensitivity.generic.id 	     = ID_MOUSESPEED;
 	s_controls.sensitivity.generic.callback  = Controls_MenuEvent;
 	s_controls.sensitivity.minvalue		     = 2;
@@ -1623,7 +1633,7 @@ static void Controls_MenuInit( void )
 	s_controls.voip_teamonly.generic.type      = MTYPE_RADIOBUTTON;
 	s_controls.voip_teamonly.generic.flags	    = QMF_SMALLFONT;
 	s_controls.voip_teamonly.generic.x	        = SCREEN_WIDTH/2;
-	s_controls.voip_teamonly.generic.name	    = "teamonly voicechat";
+	s_controls.voip_teamonly.generic.name	    = "Team-Only Voice Chat";
 	s_controls.voip_teamonly.generic.id        = ID_VOIP_TEAMONLY;
 	s_controls.voip_teamonly.generic.callback  = Controls_MenuEvent;
 	s_controls.voip_teamonly.generic.statusbar = Controls_StatusBar;
@@ -1631,7 +1641,7 @@ static void Controls_MenuInit( void )
 	s_controls.joyenable.generic.type      = MTYPE_RADIOBUTTON;
 	s_controls.joyenable.generic.flags	   = QMF_SMALLFONT;
 	s_controls.joyenable.generic.x	       = SCREEN_WIDTH/2;
-	s_controls.joyenable.generic.name	   = "joystick";
+	s_controls.joyenable.generic.name	   = "Enable Joystick";
 	s_controls.joyenable.generic.id        = ID_JOYENABLE;
 	s_controls.joyenable.generic.callback  = Controls_MenuEvent;
 	s_controls.joyenable.generic.statusbar = Controls_StatusBar;
@@ -1639,7 +1649,7 @@ static void Controls_MenuInit( void )
 	s_controls.joythreshold.generic.type	  = MTYPE_SLIDER;
 	s_controls.joythreshold.generic.x		  = SCREEN_WIDTH/2;
 	s_controls.joythreshold.generic.flags	  = QMF_SMALLFONT;
-	s_controls.joythreshold.generic.name	  = "joystick threshold";
+	s_controls.joythreshold.generic.name	  = "Joystick Threshold";
 	s_controls.joythreshold.generic.id 	      = ID_JOYTHRESHOLD;
 	s_controls.joythreshold.generic.callback  = Controls_MenuEvent;
 	s_controls.joythreshold.minvalue		  = 0.05f;
@@ -1711,6 +1721,7 @@ static void Controls_MenuInit( void )
 	Menu_AddItem( &s_controls.menu, &s_controls.showscores );
 	Menu_AddItem( &s_controls.menu, &s_controls.showacc );
 	Menu_AddItem( &s_controls.menu, &s_controls.useitem );
+	Menu_AddItem( &s_controls.menu, &s_controls.droprune );
 	Menu_AddItem( &s_controls.menu, &s_controls.gesture );
 	Menu_AddItem( &s_controls.menu, &s_controls.chat );
 	Menu_AddItem( &s_controls.menu, &s_controls.chat2 );

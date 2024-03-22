@@ -18,6 +18,7 @@ ui_display
 ui_firstconnect
 ui_sound
 ui_network
+ui_hud
 ui_password
 ui_playermodel
 ui_players
