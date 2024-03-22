@@ -163,7 +163,7 @@
 
 ## oaxB53
 
-**Release date:** TBA
+**Release date:** March 22, 2024
 
 * New cvars:
   * `cg_bob`: Controls how bobbing behaves in-game. It accepts the following values: (Credits: @ldrone (options 0/1) and @leilei (options 2-6))
