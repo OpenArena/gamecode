@@ -179,7 +179,7 @@ UI_SoundOptionsMenu_Init
 ===============
 */
 static void UI_SoundOptionsMenu_Init( void ) {
-	int				y;
+	//int				y;
 
 	memset( &soundOptionsInfo, 0, sizeof(soundOptionsInfo) );
 

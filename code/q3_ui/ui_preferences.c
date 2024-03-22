@@ -447,7 +447,7 @@ static void Preferences_StatusBar_KickScale( void* ptr ) {
 }
 
 static void Preferences_MenuInit( void ) {
-	int				y;
+	//int				y;
 
 	UI_SetDefaultCvar("cg_drawGun","1");
 	UI_SetDefaultCvar("cg_simpleItems","0");

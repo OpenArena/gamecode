@@ -995,9 +995,6 @@ static void ServerOptions_Start( void ) {
 	// Specific for Harvester
 	int		harvesterFromBodies = s_serveroptions.harvesterFromBodies.curvalue;
 
-	// Specific for Harvester
-	int		overloadRespawnDelay = atoi( s_serveroptions.overloadRespawnDelay.field.buffer );
-
 	// Specific for CTF Elimination (eCTF)
 	int		oneway = s_serveroptions.oneway.curvalue;
 
