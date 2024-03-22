@@ -40,16 +40,16 @@ SOUND OPTIONS MENU
 #define ID_DISPLAY			11
 #define ID_SOUND			12
 #define ID_NETWORK			13
-#define ID_HUD				14
-#define ID_EFFECTSVOLUME	15
-#define ID_MUSICVOLUME		16
-#define ID_QUALITY			17
+#define ID_EFFECTSVOLUME	14
+#define ID_MUSICVOLUME		15
+#define ID_QUALITY			16
 //#define ID_A3D				17
 //Sago: Here I do some stuff!
-#define ID_OPENAL			18
-#define ID_BACK				19
-#define ID_CHATBEEP			20
-#define ID_TEAMCHATBEEP		21
+#define ID_OPENAL			17
+#define ID_BACK				18
+#define ID_CHATBEEP			19
+#define ID_TEAMCHATBEEP		20
+#define ID_HITSOUND			21
 
 
 static const char *quality_items[] = {
@@ -67,7 +67,6 @@ typedef struct {
 	menutext_s			display;
 	menutext_s			sound;
 	menutext_s			network;
-	menutext_s			hud;
 
 	menuslider_s		sfxvolume;
 	menuslider_s		musicvolume;
@@ -76,6 +75,7 @@ typedef struct {
 	menuradiobutton_s	openal;
 	menuradiobutton_s	chatBeep;
 	menuradiobutton_s	teamChatBeep;
+	menuradiobutton_s	hitSound;
 
 	menubitmap_s		back;
 } soundOptionsInfo_t;
@@ -110,11 +110,6 @@ static void UI_SoundOptionsMenu_Event( void* ptr, int event ) {
 	case ID_NETWORK:
 		UI_PopMenu();
 		UI_NetworkOptionsMenu();
-		break;
-
-	case ID_HUD:
-		UI_PopMenu();
-		UI_HUDOptionsMenu();
 		break;
 
 	case ID_EFFECTSVOLUME:
@@ -165,6 +160,10 @@ static void UI_SoundOptionsMenu_Event( void* ptr, int event ) {
 
 	case ID_TEAMCHATBEEP:
 		trap_Cvar_SetValue( "cg_teamChatBeep", soundOptionsInfo.teamChatBeep.curvalue );
+		break;
+
+	case ID_HITSOUND:
+		trap_Cvar_SetValue( "cg_hitSound", soundOptionsInfo.hitSound.curvalue );
 		break;
 
 	case ID_BACK:
@@ -252,46 +251,36 @@ static void UI_SoundOptionsMenu_Init( void ) {
 	soundOptionsInfo.network.style				= UI_RIGHT;
 	soundOptionsInfo.network.color				= color_red;
 
-	soundOptionsInfo.hud.generic.type			= MTYPE_PTEXT;
-	soundOptionsInfo.hud.generic.flags			= QMF_RIGHT_JUSTIFY|QMF_PULSEIFFOCUS;
-	soundOptionsInfo.hud.generic.id				= ID_HUD;
-	soundOptionsInfo.hud.generic.callback		= UI_SoundOptionsMenu_Event;
-	soundOptionsInfo.hud.generic.x				= 216;
-	soundOptionsInfo.hud.generic.y				= 240 + PROP_HEIGHT;
-	soundOptionsInfo.hud.string					= "H.U.D.";
-	soundOptionsInfo.hud.style					= UI_RIGHT;
-	soundOptionsInfo.hud.color					= color_red;
-
-	y = 240 - 1.5 * (BIGCHAR_HEIGHT + 2);
+	//y = 240 - 3 * (BIGCHAR_HEIGHT + 2);
 	soundOptionsInfo.sfxvolume.generic.type		= MTYPE_SLIDER;
 	soundOptionsInfo.sfxvolume.generic.name		= "Effects Volume:";
 	soundOptionsInfo.sfxvolume.generic.flags	= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	soundOptionsInfo.sfxvolume.generic.callback	= UI_SoundOptionsMenu_Event;
 	soundOptionsInfo.sfxvolume.generic.id		= ID_EFFECTSVOLUME;
 	soundOptionsInfo.sfxvolume.generic.x		= 400;
-	soundOptionsInfo.sfxvolume.generic.y		= y;
+	soundOptionsInfo.sfxvolume.generic.y		= 240 - 3 * (BIGCHAR_HEIGHT + 2);
 	soundOptionsInfo.sfxvolume.minvalue			= 0;
 	soundOptionsInfo.sfxvolume.maxvalue			= 10;
 
-	y += BIGCHAR_HEIGHT+2;
+	//y += BIGCHAR_HEIGHT+2;
 	soundOptionsInfo.musicvolume.generic.type		= MTYPE_SLIDER;
 	soundOptionsInfo.musicvolume.generic.name		= "Music Volume:";
 	soundOptionsInfo.musicvolume.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	soundOptionsInfo.musicvolume.generic.callback	= UI_SoundOptionsMenu_Event;
 	soundOptionsInfo.musicvolume.generic.id			= ID_MUSICVOLUME;
 	soundOptionsInfo.musicvolume.generic.x			= 400;
-	soundOptionsInfo.musicvolume.generic.y			= y;
+	soundOptionsInfo.musicvolume.generic.y			= 240 - 2 * (BIGCHAR_HEIGHT + 2);
 	soundOptionsInfo.musicvolume.minvalue			= 0;
 	soundOptionsInfo.musicvolume.maxvalue			= 10;
 
-	y += BIGCHAR_HEIGHT+2;
+	//y += BIGCHAR_HEIGHT+2;
 	soundOptionsInfo.quality.generic.type		= MTYPE_SPINCONTROL;
 	soundOptionsInfo.quality.generic.name		= "Sound Quality:";
 	soundOptionsInfo.quality.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	soundOptionsInfo.quality.generic.callback	= UI_SoundOptionsMenu_Event;
 	soundOptionsInfo.quality.generic.id			= ID_QUALITY;
 	soundOptionsInfo.quality.generic.x			= 400;
-	soundOptionsInfo.quality.generic.y			= y;
+	soundOptionsInfo.quality.generic.y			= 240 - (BIGCHAR_HEIGHT + 2);
 	soundOptionsInfo.quality.itemnames			= quality_items;
 /*
 	y += BIGCHAR_HEIGHT+2;
@@ -303,32 +292,41 @@ static void UI_SoundOptionsMenu_Init( void ) {
 	soundOptionsInfo.a3d.generic.x				= 400;
 	soundOptionsInfo.a3d.generic.y				= y;
 */
-	y += BIGCHAR_HEIGHT+2;
+	//y += BIGCHAR_HEIGHT+2;
 	soundOptionsInfo.openal.generic.type			= MTYPE_RADIOBUTTON;
 	soundOptionsInfo.openal.generic.name			= "OpenAL:";
 	soundOptionsInfo.openal.generic.flags			= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	soundOptionsInfo.openal.generic.callback		= UI_SoundOptionsMenu_Event;
 	soundOptionsInfo.openal.generic.id				= ID_OPENAL;
 	soundOptionsInfo.openal.generic.x				= 400;
-	soundOptionsInfo.openal.generic.y				= y;
+	soundOptionsInfo.openal.generic.y				= 240;
 
-	y += BIGCHAR_HEIGHT+2;
+	//y += BIGCHAR_HEIGHT+2;
 	soundOptionsInfo.chatBeep.generic.type		= MTYPE_RADIOBUTTON;
 	soundOptionsInfo.chatBeep.generic.name		= "Beep on Chat:";
 	soundOptionsInfo.chatBeep.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	soundOptionsInfo.chatBeep.generic.callback	= UI_SoundOptionsMenu_Event;
 	soundOptionsInfo.chatBeep.generic.id		= ID_CHATBEEP;
 	soundOptionsInfo.chatBeep.generic.x			= 400;
-	soundOptionsInfo.chatBeep.generic.y			= y;
+	soundOptionsInfo.chatBeep.generic.y			= 240 + (BIGCHAR_HEIGHT + 2);
 
-	y += BIGCHAR_HEIGHT+2;
+	//y += BIGCHAR_HEIGHT+2;
 	soundOptionsInfo.teamChatBeep.generic.type		= MTYPE_RADIOBUTTON;
 	soundOptionsInfo.teamChatBeep.generic.name		= "Beep on Team Chat:";
 	soundOptionsInfo.teamChatBeep.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	soundOptionsInfo.teamChatBeep.generic.callback	= UI_SoundOptionsMenu_Event;
 	soundOptionsInfo.teamChatBeep.generic.id		= ID_TEAMCHATBEEP;
 	soundOptionsInfo.teamChatBeep.generic.x			= 400;
-	soundOptionsInfo.teamChatBeep.generic.y			= y;
+	soundOptionsInfo.teamChatBeep.generic.y			= 240 + 2 * (BIGCHAR_HEIGHT + 2);
+
+	//y += BIGCHAR_HEIGHT+2;
+	soundOptionsInfo.hitSound.generic.type		= MTYPE_RADIOBUTTON;
+	soundOptionsInfo.hitSound.generic.name		= "Enable Hitsound:";
+	soundOptionsInfo.hitSound.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	soundOptionsInfo.hitSound.generic.callback	= UI_SoundOptionsMenu_Event;
+	soundOptionsInfo.hitSound.generic.id		= ID_HITSOUND;
+	soundOptionsInfo.hitSound.generic.x			= 400;
+	soundOptionsInfo.hitSound.generic.y			= 240 + 3 * (BIGCHAR_HEIGHT + 2);
 
 	soundOptionsInfo.back.generic.type			= MTYPE_BITMAP;
 	soundOptionsInfo.back.generic.name			= ART_BACK0;
@@ -348,7 +346,6 @@ static void UI_SoundOptionsMenu_Init( void ) {
 	Menu_AddItem( &soundOptionsInfo.menu, ( void * ) &soundOptionsInfo.display );
 	Menu_AddItem( &soundOptionsInfo.menu, ( void * ) &soundOptionsInfo.sound );
 	Menu_AddItem( &soundOptionsInfo.menu, ( void * ) &soundOptionsInfo.network );
-	Menu_AddItem( &soundOptionsInfo.menu, ( void * ) &soundOptionsInfo.hud );
 	Menu_AddItem( &soundOptionsInfo.menu, ( void * ) &soundOptionsInfo.sfxvolume );
 	Menu_AddItem( &soundOptionsInfo.menu, ( void * ) &soundOptionsInfo.musicvolume );
 	Menu_AddItem( &soundOptionsInfo.menu, ( void * ) &soundOptionsInfo.quality );
@@ -356,6 +353,7 @@ static void UI_SoundOptionsMenu_Init( void ) {
 	Menu_AddItem( &soundOptionsInfo.menu, ( void * ) &soundOptionsInfo.openal );
 	Menu_AddItem( &soundOptionsInfo.menu, ( void * ) &soundOptionsInfo.chatBeep );
 	Menu_AddItem( &soundOptionsInfo.menu, ( void * ) &soundOptionsInfo.teamChatBeep );
+	Menu_AddItem( &soundOptionsInfo.menu, ( void * ) &soundOptionsInfo.hitSound );
 	Menu_AddItem( &soundOptionsInfo.menu, ( void * ) &soundOptionsInfo.back );
 
 	soundOptionsInfo.sfxvolume.curvalue = trap_Cvar_VariableValue( "s_volume" ) * 10;
@@ -365,6 +363,7 @@ static void UI_SoundOptionsMenu_Init( void ) {
 	soundOptionsInfo.openal.curvalue = (int)trap_Cvar_VariableValue( "s_useopenal" );
 	soundOptionsInfo.chatBeep.curvalue = (int)trap_Cvar_VariableValue( "cg_chatBeep" );
 	soundOptionsInfo.teamChatBeep.curvalue = (int)trap_Cvar_VariableValue( "cg_teamChatBeep" );
+	soundOptionsInfo.hitSound.curvalue = (int)trap_Cvar_VariableValue( "cg_hitSound" );
 }
 
 

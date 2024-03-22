@@ -37,7 +37,7 @@ GAME OPTIONS MENU
 #define ART_BACK0				"menu/" MENU_ART_DIR "/back_0"
 #define ART_BACK1				"menu/" MENU_ART_DIR "/back_1"
 
-#define HUDOPTIONS_X_POS		360
+#define HUDOPTIONS_X_POS		320
 
 #define ID_BACK					127
 #define ID_CROSSHAIR			128
@@ -414,8 +414,8 @@ Descriptions should have 48 characters or less per line, and there can't be more
 =================
 */
 static void HUDOptions_StatusBar_DrawStatus( void* ptr ) {
-	UI_DrawString( 320, 440, "If set, draws the status of the match", UI_CENTER|UI_SMALLFONT, colorWhite );
-	UI_DrawString( 320, 460, "on the bottom-right corner, next to your bar.", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 440, "If set, draws ammo, health and armor status", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "on the bottom of your screen.", UI_CENTER|UI_SMALLFONT, colorWhite );
 }
 
 /*
@@ -548,7 +548,7 @@ static void HUDOptions_MenuInit( void ) {
 	hudOptions_s.banner.generic.type	= MTYPE_BTEXT;
 	hudOptions_s.banner.generic.x		= 320;
 	hudOptions_s.banner.generic.y		= 16;
-	hudOptions_s.banner.string			= "HEADS-UP DISPLAY (H.U.D.)";
+	hudOptions_s.banner.string			= "HEADS UP DISPLAY";
 	hudOptions_s.banner.color			= color_white;
 	hudOptions_s.banner.style			= UI_CENTER;
 
@@ -568,11 +568,11 @@ static void HUDOptions_MenuInit( void ) {
 	hudOptions_s.framer.width			= 256;
 	hudOptions_s.framer.height			= 334;
 
-	y = 80;
+	//y = 80;
 	hudOptions_s.crosshair.generic.type			= MTYPE_TEXT;
 	hudOptions_s.crosshair.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT|QMF_NODEFAULTINIT|QMF_OWNERDRAW;
 	hudOptions_s.crosshair.generic.x			= HUDOPTIONS_X_POS;
-	hudOptions_s.crosshair.generic.y			= y;
+	hudOptions_s.crosshair.generic.y			= 240 - 9 * (BIGCHAR_HEIGHT+2);
 	hudOptions_s.crosshair.generic.name			= "Crosshair Style:";
 	hudOptions_s.crosshair.generic.callback		= HUDOptions_Event;
 	hudOptions_s.crosshair.generic.ownerdraw	= Crosshair_Draw;
@@ -583,58 +583,58 @@ static void HUDOptions_MenuInit( void ) {
 	hudOptions_s.crosshair.generic.right		= HUDOPTIONS_X_POS + 48;
 	hudOptions_s.crosshair.generic.statusbar	= HUDOptions_StatusBar_Crosshair;
 
-	y += BIGCHAR_HEIGHT+2;
+	//y += BIGCHAR_HEIGHT+2;
 	hudOptions_s.crosshairHealth.generic.type		= MTYPE_RADIOBUTTON;
 	hudOptions_s.crosshairHealth.generic.name		= "Crosshair Shows Health:";
 	hudOptions_s.crosshairHealth.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	hudOptions_s.crosshairHealth.generic.callback	= HUDOptions_Event;
 	hudOptions_s.crosshairHealth.generic.id			= ID_CROSSHAIRHEALTH;
 	hudOptions_s.crosshairHealth.generic.x			= HUDOPTIONS_X_POS;
-	hudOptions_s.crosshairHealth.generic.y			= y;
+	hudOptions_s.crosshairHealth.generic.y			= 240 - 8 * (BIGCHAR_HEIGHT+2);
 	hudOptions_s.crosshairHealth.generic.statusbar	= HUDOptions_StatusBar_CrosshairHealth;
 
-	y += BIGCHAR_HEIGHT+2;
+	//y += BIGCHAR_HEIGHT+2;
 	hudOptions_s.crosshairPulse.generic.type		= MTYPE_RADIOBUTTON;
 	hudOptions_s.crosshairPulse.generic.name		= "Crosshair Pickup Pulse:";
 	hudOptions_s.crosshairPulse.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	hudOptions_s.crosshairPulse.generic.callback	= HUDOptions_Event;
 	hudOptions_s.crosshairPulse.generic.id			= ID_CROSSHAIRPULSE;
 	hudOptions_s.crosshairPulse.generic.x			= HUDOPTIONS_X_POS;
-	hudOptions_s.crosshairPulse.generic.y			= y;
+	hudOptions_s.crosshairPulse.generic.y			= 240 - 7 * (BIGCHAR_HEIGHT+2);
 	hudOptions_s.crosshairPulse.generic.statusbar	= HUDOptions_StatusBar_CrosshairPulse;
 
-	y += BIGCHAR_HEIGHT+2;
+	//y += BIGCHAR_HEIGHT+2;
 	hudOptions_s.crosshairColorRed.generic.type			= MTYPE_SLIDER;
 	hudOptions_s.crosshairColorRed.generic.name			= "Crosshair Color (Red):";
 	hudOptions_s.crosshairColorRed.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	hudOptions_s.crosshairColorRed.generic.callback		= HUDOptions_Event;
 	hudOptions_s.crosshairColorRed.generic.id			= ID_COLORRED;
 	hudOptions_s.crosshairColorRed.generic.x			= HUDOPTIONS_X_POS;
-	hudOptions_s.crosshairColorRed.generic.y			= y;
+	hudOptions_s.crosshairColorRed.generic.y			= 240 - 6 * (BIGCHAR_HEIGHT+2);
 	hudOptions_s.crosshairColorRed.minvalue				= 0.0f;
 	hudOptions_s.crosshairColorRed.maxvalue				= 255.0f;
 	hudOptions_s.crosshairColorRed.generic.statusbar	= HUDOptions_StatusBar_CrosshairColor;
 
-	y += BIGCHAR_HEIGHT+2;
+	//y += BIGCHAR_HEIGHT+2;
 	hudOptions_s.crosshairColorGreen.generic.type		= MTYPE_SLIDER;
 	hudOptions_s.crosshairColorGreen.generic.name		= "Crosshair Color (Green):";
 	hudOptions_s.crosshairColorGreen.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	hudOptions_s.crosshairColorGreen.generic.callback	= HUDOptions_Event;
 	hudOptions_s.crosshairColorGreen.generic.id			= ID_COLORGREEN;
 	hudOptions_s.crosshairColorGreen.generic.x			= HUDOPTIONS_X_POS;
-	hudOptions_s.crosshairColorGreen.generic.y			= y;
+	hudOptions_s.crosshairColorGreen.generic.y			= 240 - 5 * (BIGCHAR_HEIGHT+2);
 	hudOptions_s.crosshairColorGreen.minvalue			= 0.0f;
 	hudOptions_s.crosshairColorGreen.maxvalue			= 255.0f;
 	hudOptions_s.crosshairColorGreen.generic.statusbar	= HUDOptions_StatusBar_CrosshairColor;
 
-	y += BIGCHAR_HEIGHT+2;
+	//y += BIGCHAR_HEIGHT+2;
 	hudOptions_s.crosshairColorBlue.generic.type		= MTYPE_SLIDER;
 	hudOptions_s.crosshairColorBlue.generic.name		= "Crosshair Color (Blue):";
 	hudOptions_s.crosshairColorBlue.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	hudOptions_s.crosshairColorBlue.generic.callback	= HUDOptions_Event;
 	hudOptions_s.crosshairColorBlue.generic.id			= ID_COLORBLUE;
 	hudOptions_s.crosshairColorBlue.generic.x			= HUDOPTIONS_X_POS;
-	hudOptions_s.crosshairColorBlue.generic.y			= y;
+	hudOptions_s.crosshairColorBlue.generic.y			= 240 - 4 * (BIGCHAR_HEIGHT+2);
 	hudOptions_s.crosshairColorBlue.minvalue			= 0.0f;
 	hudOptions_s.crosshairColorBlue.maxvalue			= 255.0f;
 	hudOptions_s.crosshairColorBlue.generic.statusbar	= HUDOptions_StatusBar_CrosshairColor;
@@ -645,138 +645,138 @@ static void HUDOptions_MenuInit( void ) {
 		hudOptions_s.crosshairColorBlue.generic.flags	|= QMF_INACTIVE;
 	}
 
-	y += BIGCHAR_HEIGHT+2;
+	//y += BIGCHAR_HEIGHT+2;
 	hudOptions_s.draw3DIcons.generic.type		= MTYPE_SPINCONTROL;
 	hudOptions_s.draw3DIcons.generic.name		= "Weapon Bar Icon Rendering:";
 	hudOptions_s.draw3DIcons.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	hudOptions_s.draw3DIcons.generic.callback	= HUDOptions_Event;
 	hudOptions_s.draw3DIcons.generic.id			= ID_DRAW3DICONS;
 	hudOptions_s.draw3DIcons.generic.x			= HUDOPTIONS_X_POS;
-	hudOptions_s.draw3DIcons.generic.y			= y;
+	hudOptions_s.draw3DIcons.generic.y			= 240 - 3 * (BIGCHAR_HEIGHT+2);
 	hudOptions_s.draw3DIcons.itemnames			= draw3DIcons_names;
 	hudOptions_s.draw3DIcons.generic.statusbar	= HUDOptions_StatusBar_Draw3DIcons;
 
-	y += BIGCHAR_HEIGHT+2;
+	//y += BIGCHAR_HEIGHT+2;
 	hudOptions_s.alwaysWeaponBar.generic.type		= MTYPE_RADIOBUTTON;
 	hudOptions_s.alwaysWeaponBar.generic.name		= "Always Show Weapon Bar:";
 	hudOptions_s.alwaysWeaponBar.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	hudOptions_s.alwaysWeaponBar.generic.callback	= HUDOptions_Event;
 	hudOptions_s.alwaysWeaponBar.generic.id			= ID_ALWAYSWEAPONBAR;
 	hudOptions_s.alwaysWeaponBar.generic.x			= HUDOPTIONS_X_POS;
-	hudOptions_s.alwaysWeaponBar.generic.y			= y;
+	hudOptions_s.alwaysWeaponBar.generic.y			= 240 - 2 * (BIGCHAR_HEIGHT+2);
 	hudOptions_s.alwaysWeaponBar.generic.statusbar	= HUDOptions_StatusBar_AlwaysWeaponBar;
 	
-	y += BIGCHAR_HEIGHT+2;
+	//y += BIGCHAR_HEIGHT+2;
 	hudOptions_s.weaponBarStyle.generic.type		= MTYPE_SPINCONTROL;
 	hudOptions_s.weaponBarStyle.generic.name		= "Weapon Bar Style:";
 	hudOptions_s.weaponBarStyle.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	hudOptions_s.weaponBarStyle.generic.callback	= HUDOptions_Event;
 	hudOptions_s.weaponBarStyle.generic.id			= ID_WEAPONBARSTYLE;
 	hudOptions_s.weaponBarStyle.generic.x			= HUDOPTIONS_X_POS;
-	hudOptions_s.weaponBarStyle.generic.y			= y;
+	hudOptions_s.weaponBarStyle.generic.y			= 240 - (BIGCHAR_HEIGHT+2);
 	hudOptions_s.weaponBarStyle.itemnames			= weaponBarStyle_names;
 	hudOptions_s.weaponBarStyle.generic.statusbar	= HUDOptions_StatusBar_WeaponBarStyle;
 
-	y += BIGCHAR_HEIGHT+2;
+	//y += BIGCHAR_HEIGHT+2;
 	hudOptions_s.identifyTarget.generic.type		= MTYPE_RADIOBUTTON;
 	hudOptions_s.identifyTarget.generic.name		= "Show Crosshair Target Name:";
 	hudOptions_s.identifyTarget.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	hudOptions_s.identifyTarget.generic.callback	= HUDOptions_Event;
 	hudOptions_s.identifyTarget.generic.id			= ID_IDENTIFYTARGET;
 	hudOptions_s.identifyTarget.generic.x			= HUDOPTIONS_X_POS;
-	hudOptions_s.identifyTarget.generic.y			= y;
+	hudOptions_s.identifyTarget.generic.y			= 240;
 	hudOptions_s.identifyTarget.generic.statusbar	= HUDOptions_StatusBar_IdentifyTarget;
 
-	y += BIGCHAR_HEIGHT+2;
+	//y += BIGCHAR_HEIGHT+2;
 	hudOptions_s.drawTeamOverlay.generic.type		= MTYPE_SPINCONTROL;
 	hudOptions_s.drawTeamOverlay.generic.name		= "Show Team Overlay:";
 	hudOptions_s.drawTeamOverlay.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	hudOptions_s.drawTeamOverlay.generic.callback	= HUDOptions_Event;
 	hudOptions_s.drawTeamOverlay.generic.id			= ID_DRAWTEAMOVERLAY;
 	hudOptions_s.drawTeamOverlay.generic.x			= HUDOPTIONS_X_POS;
-	hudOptions_s.drawTeamOverlay.generic.y			= y;
+	hudOptions_s.drawTeamOverlay.generic.y			= 240 + (BIGCHAR_HEIGHT+2);
 	hudOptions_s.drawTeamOverlay.itemnames			= teamOverlay_names;
 	hudOptions_s.drawTeamOverlay.generic.statusbar	= HUDOptions_StatusBar_DrawTeamOverlay;
 
-	y += BIGCHAR_HEIGHT+2;
+	//y += BIGCHAR_HEIGHT+2;
 	hudOptions_s.obituaryOutput.generic.type		= MTYPE_SPINCONTROL;
 	hudOptions_s.obituaryOutput.generic.name		= "Death Message Output:";
 	hudOptions_s.obituaryOutput.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	hudOptions_s.obituaryOutput.generic.callback	= HUDOptions_Event;
 	hudOptions_s.obituaryOutput.generic.id			= ID_OBITUARYOUTPUT;
 	hudOptions_s.obituaryOutput.generic.x			= HUDOPTIONS_X_POS;
-	hudOptions_s.obituaryOutput.generic.y			= y;
+	hudOptions_s.obituaryOutput.generic.y			= 240 + 2 * (BIGCHAR_HEIGHT+2);
 	hudOptions_s.obituaryOutput.itemnames			= obituaryOutput_names;
 	hudOptions_s.obituaryOutput.generic.statusbar	= HUDOptions_StatusBar_ObituaryOutput;
 
-	y += BIGCHAR_HEIGHT+2;
+	//y += BIGCHAR_HEIGHT+2;
 	hudOptions_s.drawFPS.generic.type		= MTYPE_RADIOBUTTON;
 	hudOptions_s.drawFPS.generic.name		= "Show FPS:";
 	hudOptions_s.drawFPS.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	hudOptions_s.drawFPS.generic.callback	= HUDOptions_Event;
 	hudOptions_s.drawFPS.generic.id			= ID_DRAWFPS;
 	hudOptions_s.drawFPS.generic.x			= HUDOPTIONS_X_POS;
-	hudOptions_s.drawFPS.generic.y			= y;
+	hudOptions_s.drawFPS.generic.y			= 240 + 3 * (BIGCHAR_HEIGHT+2);
 	hudOptions_s.drawFPS.generic.statusbar	= HUDOptions_StatusBar_DrawFPS;
 
-	y += BIGCHAR_HEIGHT+2;
+	//y += BIGCHAR_HEIGHT+2;
 	hudOptions_s.drawTimer.generic.type			= MTYPE_RADIOBUTTON;
 	hudOptions_s.drawTimer.generic.name			= "Show Timer:";
 	hudOptions_s.drawTimer.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	hudOptions_s.drawTimer.generic.callback		= HUDOptions_Event;
 	hudOptions_s.drawTimer.generic.id			= ID_DRAWTIMER;
 	hudOptions_s.drawTimer.generic.x			= HUDOPTIONS_X_POS;
-	hudOptions_s.drawTimer.generic.y			= y;
+	hudOptions_s.drawTimer.generic.y			= 240 + 4 * (BIGCHAR_HEIGHT+2);
 	hudOptions_s.drawTimer.generic.statusbar	= HUDOptions_StatusBar_DrawTimer;
 
-	y += BIGCHAR_HEIGHT+2;
+	//y += BIGCHAR_HEIGHT+2;
 	hudOptions_s.drawStatus.generic.type		= MTYPE_RADIOBUTTON;
-	hudOptions_s.drawStatus.generic.name		= "Show Match Status:";
+	hudOptions_s.drawStatus.generic.name		= "Show Player Status:";
 	hudOptions_s.drawStatus.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	hudOptions_s.drawStatus.generic.callback	= HUDOptions_Event;
 	hudOptions_s.drawStatus.generic.id			= ID_DRAWSTATUS;
 	hudOptions_s.drawStatus.generic.x			= HUDOPTIONS_X_POS;
-	hudOptions_s.drawStatus.generic.y			= y;
+	hudOptions_s.drawStatus.generic.y			= 240 + 5 * (BIGCHAR_HEIGHT+2);
 	hudOptions_s.drawStatus.generic.statusbar	= HUDOptions_StatusBar_DrawStatus;
 
-	y += BIGCHAR_HEIGHT+2;
+	//y += BIGCHAR_HEIGHT+2;
 	hudOptions_s.drawAmmoWarning.generic.type		= MTYPE_RADIOBUTTON;
 	hudOptions_s.drawAmmoWarning.generic.name		= "Show Low Ammo Warning:";
 	hudOptions_s.drawAmmoWarning.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	hudOptions_s.drawAmmoWarning.generic.callback	= HUDOptions_Event;
 	hudOptions_s.drawAmmoWarning.generic.id			= ID_DRAWAMMOWARNING;
 	hudOptions_s.drawAmmoWarning.generic.x			= HUDOPTIONS_X_POS;
-	hudOptions_s.drawAmmoWarning.generic.y			= y;
+	hudOptions_s.drawAmmoWarning.generic.y			= 240 + 6 * (BIGCHAR_HEIGHT+2);
 	hudOptions_s.drawAmmoWarning.generic.statusbar	= HUDOptions_StatusBar_DrawAmmoWarning;
 
-	y += BIGCHAR_HEIGHT+2;
+	//y += BIGCHAR_HEIGHT+2;
 	hudOptions_s.drawAttacker.generic.type		= MTYPE_RADIOBUTTON;
 	hudOptions_s.drawAttacker.generic.name		= "Show Last Attacker:";
 	hudOptions_s.drawAttacker.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	hudOptions_s.drawAttacker.generic.callback	= HUDOptions_Event;
 	hudOptions_s.drawAttacker.generic.id		= ID_DRAWATTACKER;
 	hudOptions_s.drawAttacker.generic.x			= HUDOPTIONS_X_POS;
-	hudOptions_s.drawAttacker.generic.y			= y;
+	hudOptions_s.drawAttacker.generic.y			= 240 + 7 * (BIGCHAR_HEIGHT+2);
 	hudOptions_s.drawAttacker.generic.statusbar	= HUDOptions_StatusBar_DrawAttacker;
 
-	y += BIGCHAR_HEIGHT+2;
+	//y += BIGCHAR_HEIGHT+2;
 	hudOptions_s.drawSpeed.generic.type			= MTYPE_RADIOBUTTON;
 	hudOptions_s.drawSpeed.generic.name			= "Show Movement Speed:";
 	hudOptions_s.drawSpeed.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	hudOptions_s.drawSpeed.generic.callback		= HUDOptions_Event;
 	hudOptions_s.drawSpeed.generic.id			= ID_DRAWSPEED;
 	hudOptions_s.drawSpeed.generic.x			= HUDOPTIONS_X_POS;
-	hudOptions_s.drawSpeed.generic.y			= y;
+	hudOptions_s.drawSpeed.generic.y			= 240 + 8 * (BIGCHAR_HEIGHT+2);
 	hudOptions_s.drawSpeed.generic.statusbar	= HUDOptions_StatusBar_DrawSpeed;
 
-	y += BIGCHAR_HEIGHT+2;
+	//y += BIGCHAR_HEIGHT+2;
 	hudOptions_s.drawRewards.generic.type		= MTYPE_RADIOBUTTON;
 	hudOptions_s.drawRewards.generic.name		= "Show Medal(s) Earned:";
 	hudOptions_s.drawRewards.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	hudOptions_s.drawRewards.generic.callback	= HUDOptions_Event;
 	hudOptions_s.drawRewards.generic.id			= ID_DRAWREWARDS;
 	hudOptions_s.drawRewards.generic.x			= HUDOPTIONS_X_POS;
-	hudOptions_s.drawRewards.generic.y			= y;
+	hudOptions_s.drawRewards.generic.y			= 240 + 9 * (BIGCHAR_HEIGHT+2);
 	hudOptions_s.drawRewards.generic.statusbar	= HUDOptions_StatusBar_DrawRewards;
 
 	hudOptions_s.back.generic.type		= MTYPE_BITMAP;
