@@ -37,7 +37,7 @@ GAME OPTIONS MENU
 #define ART_BACK0				"menu/" MENU_ART_DIR "/back_0"
 #define ART_BACK1				"menu/" MENU_ART_DIR "/back_1"
 
-#define PREFERENCES_X_POS		360
+#define PREFERENCES_X_POS		320
 
 #define ID_BACK					127
 #define ID_DRAWGUN				128
@@ -170,6 +170,8 @@ static void Preferences_SetMenuItems( void ) {
 	else { // default value
 		s_preferences.weaponBob.curvalue = 0;
 	}
+	Q_strncpyz( s_preferences.railTrailTime.field.buffer, UI_Cvar_VariableString( "cg_railTrailTime" ), sizeof( s_preferences.railTrailTime.field.buffer ) );
+	Q_strncpyz( s_preferences.kickScale.field.buffer, UI_Cvar_VariableString( "cg_kickScale" ), sizeof( s_preferences.kickScale.field.buffer ) );
 }
 
 static void Preferences_Event( void* ptr, int notification ) {
@@ -486,150 +488,150 @@ static void Preferences_MenuInit( void ) {
 	s_preferences.framer.width  	   = 256;
 	s_preferences.framer.height  	   = 334;
 
-	y = 96;
+	//y = 128;
 	s_preferences.drawGun.generic.type		= MTYPE_SPINCONTROL;
 	s_preferences.drawGun.generic.name		= "Weapon Hand:";
 	s_preferences.drawGun.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	s_preferences.drawGun.generic.callback	= Preferences_Event;
 	s_preferences.drawGun.generic.id		= ID_DRAWGUN;
 	s_preferences.drawGun.generic.x			= PREFERENCES_X_POS;
-	s_preferences.drawGun.generic.y			= y;
+	s_preferences.drawGun.generic.y			= 240 - 6.5 * (BIGCHAR_HEIGHT+2);
 	s_preferences.drawGun.itemnames			= drawGun_names;
 	s_preferences.drawGun.generic.statusbar	= Preferences_StatusBar_WeaponHand;
 
-	y += BIGCHAR_HEIGHT;
+	//y += BIGCHAR_HEIGHT+2;
 	s_preferences.simpleitems.generic.type		= MTYPE_SPINCONTROL;
 	s_preferences.simpleitems.generic.name		= "In-Game Pickup Rendering:";
 	s_preferences.simpleitems.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	s_preferences.simpleitems.generic.callback	= Preferences_Event;
 	s_preferences.simpleitems.generic.id		= ID_SIMPLEITEMS;
 	s_preferences.simpleitems.generic.x			= PREFERENCES_X_POS;
-	s_preferences.simpleitems.generic.y			= y;
+	s_preferences.simpleitems.generic.y			= 240 - 5.5 * (BIGCHAR_HEIGHT+2);
 	s_preferences.simpleitems.itemnames			= simpleItems_names;
 	s_preferences.simpleitems.generic.statusbar	= Preferences_StatusBar_SimpleItems;
 	
-	y += BIGCHAR_HEIGHT;
+	//y += BIGCHAR_HEIGHT+2;
 	s_preferences.wallmarks.generic.type		= MTYPE_RADIOBUTTON;
 	s_preferences.wallmarks.generic.name		= "Show Marks on Walls:";
 	s_preferences.wallmarks.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	s_preferences.wallmarks.generic.callback	= Preferences_Event;
 	s_preferences.wallmarks.generic.id			= ID_WALLMARKS;
 	s_preferences.wallmarks.generic.x			= PREFERENCES_X_POS;
-	s_preferences.wallmarks.generic.y			= y;
+	s_preferences.wallmarks.generic.y			= 240 - 4.5 * (BIGCHAR_HEIGHT+2);
 	s_preferences.wallmarks.generic.statusbar	= Preferences_StatusBar_MarksOnWalls;
 
-	y += BIGCHAR_HEIGHT;
+	//y += BIGCHAR_HEIGHT+2;
 	s_preferences.brass.generic.type		= MTYPE_RADIOBUTTON;
 	s_preferences.brass.generic.name		= "Show Ejecting Brass:";
 	s_preferences.brass.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	s_preferences.brass.generic.callback	= Preferences_Event;
 	s_preferences.brass.generic.id			= ID_EJECTINGBRASS;
 	s_preferences.brass.generic.x			= PREFERENCES_X_POS;
-	s_preferences.brass.generic.y			= y;
+	s_preferences.brass.generic.y			= 240 - 3.5 * (BIGCHAR_HEIGHT+2);
 	s_preferences.brass.generic.statusbar	= Preferences_StatusBar_EjectingBrass;
 
-	y += BIGCHAR_HEIGHT;
+	//y += BIGCHAR_HEIGHT+2;
 	s_preferences.highqualitysky.generic.type		= MTYPE_RADIOBUTTON;
 	s_preferences.highqualitysky.generic.name		= "Show High Quality Sky:";
 	s_preferences.highqualitysky.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	s_preferences.highqualitysky.generic.callback	= Preferences_Event;
 	s_preferences.highqualitysky.generic.id			= ID_HIGHQUALITYSKY;
 	s_preferences.highqualitysky.generic.x			= PREFERENCES_X_POS;
-	s_preferences.highqualitysky.generic.y			= y;
+	s_preferences.highqualitysky.generic.y			= 240 - 2.5 * (BIGCHAR_HEIGHT+2);
 	s_preferences.highqualitysky.generic.statusbar	= Preferences_StatusBar_HighQualitySky;
 
-	y += BIGCHAR_HEIGHT;
+	//y += BIGCHAR_HEIGHT+2;
 	s_preferences.synceveryframe.generic.type		= MTYPE_RADIOBUTTON;
 	s_preferences.synceveryframe.generic.name		= "Sync Every Frame:";
 	s_preferences.synceveryframe.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	s_preferences.synceveryframe.generic.callback	= Preferences_Event;
 	s_preferences.synceveryframe.generic.id			= ID_SYNCEVERYFRAME;
 	s_preferences.synceveryframe.generic.x			= PREFERENCES_X_POS;
-	s_preferences.synceveryframe.generic.y			= y;
+	s_preferences.synceveryframe.generic.y			= 240 - 1.5 * (BIGCHAR_HEIGHT+2);
 	s_preferences.synceveryframe.generic.statusbar	= Preferences_StatusBar_SyncEveryFrame;
 
-	y += BIGCHAR_HEIGHT;
+	//y += BIGCHAR_HEIGHT+2;
 	s_preferences.forcemodel.generic.type		= MTYPE_RADIOBUTTON;
 	s_preferences.forcemodel.generic.name		= "Force Player Models:";
 	s_preferences.forcemodel.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	s_preferences.forcemodel.generic.callback	= Preferences_Event;
 	s_preferences.forcemodel.generic.id			= ID_FORCEMODEL;
 	s_preferences.forcemodel.generic.x			= PREFERENCES_X_POS;
-	s_preferences.forcemodel.generic.y			= y;
+	s_preferences.forcemodel.generic.y			= 240 - 0.5 * (BIGCHAR_HEIGHT+2);
 	s_preferences.forcemodel.generic.statusbar	= Preferences_StatusBar_ForceModels;
 
-	y += BIGCHAR_HEIGHT;
+	//y += BIGCHAR_HEIGHT+2;
 	s_preferences.muzzleFlashStyle.generic.type		= MTYPE_SPINCONTROL;
 	s_preferences.muzzleFlashStyle.generic.name		= "Muzzle Flash Style:";
 	s_preferences.muzzleFlashStyle.generic.flags	= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	s_preferences.muzzleFlashStyle.generic.callback	= Preferences_Event;
 	s_preferences.muzzleFlashStyle.generic.id		= ID_MUZZLEFLASHSTYLE;
 	s_preferences.muzzleFlashStyle.generic.x		= PREFERENCES_X_POS;
-	s_preferences.muzzleFlashStyle.generic.y		= y;
+	s_preferences.muzzleFlashStyle.generic.y		= 240 + 0.5 * (BIGCHAR_HEIGHT+2);
 	s_preferences.muzzleFlashStyle.itemnames		= muzzleFlashStyle_names;
 	s_preferences.muzzleFlashStyle.generic.statusbar	= Preferences_StatusBar_MuzzleFlashStyle;
 
-	y += BIGCHAR_HEIGHT;
+	//y += BIGCHAR_HEIGHT+2;
 	s_preferences.showBlood.generic.type		= MTYPE_RADIOBUTTON;
 	s_preferences.showBlood.generic.name		= "Enable Blood:";
 	s_preferences.showBlood.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	s_preferences.showBlood.generic.callback	= Preferences_Event;
 	s_preferences.showBlood.generic.id			= ID_SHOWBLOOD;
 	s_preferences.showBlood.generic.x			= PREFERENCES_X_POS;
-	s_preferences.showBlood.generic.y			= y;
+	s_preferences.showBlood.generic.y			= 240 + 1.5 * (BIGCHAR_HEIGHT+2);
 	s_preferences.showBlood.generic.statusbar	= Preferences_StatusBar_ShowBlood;
 
-	y += BIGCHAR_HEIGHT;
+	//y += BIGCHAR_HEIGHT+2;
 	s_preferences.showGibs.generic.type		= MTYPE_RADIOBUTTON;
 	s_preferences.showGibs.generic.name		= "Enable Gibs:";
 	s_preferences.showGibs.generic.flags	= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	s_preferences.showGibs.generic.callback	= Preferences_Event;
 	s_preferences.showGibs.generic.id		= ID_SHOWGIBS;
 	s_preferences.showGibs.generic.x		= PREFERENCES_X_POS;
-	s_preferences.showGibs.generic.y		= y;
+	s_preferences.showGibs.generic.y		= 240 + 2.5 * (BIGCHAR_HEIGHT+2);
 	s_preferences.showGibs.generic.statusbar	= Preferences_StatusBar_ShowGibs;
 
-	y += BIGCHAR_HEIGHT;
+	//y += BIGCHAR_HEIGHT+2;
 	s_preferences.viewBob.generic.type		= MTYPE_SPINCONTROL;
 	s_preferences.viewBob.generic.name		= "View Bobbing:";
 	s_preferences.viewBob.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	s_preferences.viewBob.generic.callback	= Preferences_Event;
 	s_preferences.viewBob.generic.id		= ID_VIEWBOB;
 	s_preferences.viewBob.generic.x			= PREFERENCES_X_POS;
-	s_preferences.viewBob.generic.y			= y;
+	s_preferences.viewBob.generic.y			= 240 + 3.5 * (BIGCHAR_HEIGHT+2);
 	s_preferences.viewBob.itemnames			= viewBob_names;
 	s_preferences.viewBob.generic.statusbar	= Preferences_StatusBar_ViewBobbing;
 
-	y += BIGCHAR_HEIGHT;
+	//y += BIGCHAR_HEIGHT+2;
 	s_preferences.weaponBob.generic.type		= MTYPE_SPINCONTROL;
 	s_preferences.weaponBob.generic.name		= "Weapon Bobbing:";
 	s_preferences.weaponBob.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	s_preferences.weaponBob.generic.callback	= Preferences_Event;
 	s_preferences.weaponBob.generic.id			= ID_VIEWBOB;
 	s_preferences.weaponBob.generic.x			= PREFERENCES_X_POS;
-	s_preferences.weaponBob.generic.y			= y;
+	s_preferences.weaponBob.generic.y			= 240 + 4.5 * (BIGCHAR_HEIGHT+2);
 	s_preferences.weaponBob.itemnames			= weaponBob_names;
 	s_preferences.weaponBob.generic.statusbar	= Preferences_StatusBar_WeaponBobbing;
 
-	y += BIGCHAR_HEIGHT;
+	//y += BIGCHAR_HEIGHT+2;
 	s_preferences.railTrailTime.generic.type		= MTYPE_FIELD;
 	s_preferences.railTrailTime.generic.name		= "Railgun Slug Trail Time:";
 	s_preferences.railTrailTime.generic.flags		= QMF_SMALLFONT;
 	s_preferences.railTrailTime.generic.id			= ID_RAILTRAILTIME;
-	s_preferences.railTrailTime.generic.x			= 192;
-	s_preferences.railTrailTime.generic.y			= y;
+	s_preferences.railTrailTime.generic.x			= PREFERENCES_X_POS;
+	s_preferences.railTrailTime.generic.y			= 240 + 5.5 * (BIGCHAR_HEIGHT+2);
 	s_preferences.railTrailTime.field.widthInChars	= 6;
 	s_preferences.railTrailTime.field.maxchars		= 6;
 	s_preferences.railTrailTime.generic.callback	= Preferences_Event;
 	s_preferences.railTrailTime.generic.statusbar	= Preferences_StatusBar_RailTrailTime;
 
-	y += BIGCHAR_HEIGHT;
+	//y += BIGCHAR_HEIGHT+2;
 	s_preferences.kickScale.generic.type		= MTYPE_FIELD;
 	s_preferences.kickScale.generic.name		= "Screen Shaking Rate:";
 	s_preferences.kickScale.generic.flags		= QMF_SMALLFONT;
 	s_preferences.kickScale.generic.id			= ID_KICKSCALE;
-	s_preferences.kickScale.generic.x			= 192;
-	s_preferences.kickScale.generic.y			= y;
+	s_preferences.kickScale.generic.x			= PREFERENCES_X_POS;
+	s_preferences.kickScale.generic.y			= 240 + 6.5 * (BIGCHAR_HEIGHT+2);
 	s_preferences.kickScale.field.widthInChars	= 6;
 	s_preferences.kickScale.field.maxchars		= 6;
 	s_preferences.kickScale.generic.callback	= Preferences_Event;

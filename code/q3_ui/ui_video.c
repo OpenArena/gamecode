@@ -247,8 +247,7 @@ GRAPHICS OPTIONS MENU
 #define ID_DISPLAY		107
 #define ID_SOUND		108
 #define ID_NETWORK		109
-#define ID_HUD			110
-#define ID_RATIO		111
+#define ID_RATIO		110
 
 typedef struct {
 	menuframework_s	menu;
@@ -261,7 +260,6 @@ typedef struct {
 	menutext_s		display;
 	menutext_s		sound;
 	menutext_s		network;
-	menutext_s		hud;
 
 	menulist_s		list;
         menulist_s              ratio;
@@ -829,11 +827,6 @@ static void GraphicsOptions_Event( void* ptr, int event ) {
 		UI_PopMenu();
 		UI_NetworkOptionsMenu();
 		break;
-
-	case ID_HUD:
-		UI_PopMenu();
-		UI_HUDOptionsMenu();
-		break;
 	}
 }
 
@@ -1110,16 +1103,6 @@ void GraphicsOptions_MenuInit( void )
 	s_graphicsoptions.network.style				= UI_RIGHT;
 	s_graphicsoptions.network.color				= color_red;
 
-	s_graphicsoptions.hud.generic.type			= MTYPE_PTEXT;
-	s_graphicsoptions.hud.generic.flags			= QMF_RIGHT_JUSTIFY|QMF_PULSEIFFOCUS;
-	s_graphicsoptions.hud.generic.id			= ID_HUD;
-	s_graphicsoptions.hud.generic.callback		= GraphicsOptions_Event;
-	s_graphicsoptions.hud.generic.x				= 216;
-	s_graphicsoptions.hud.generic.y				= 240 + PROP_HEIGHT;
-	s_graphicsoptions.hud.string				= "H.U.D";
-	s_graphicsoptions.hud.style					= UI_RIGHT;
-	s_graphicsoptions.hud.color					= color_red;
-
 	y = 240 - 7 * (BIGCHAR_HEIGHT + 2);
 	s_graphicsoptions.list.generic.type     = MTYPE_SPINCONTROL;
 	s_graphicsoptions.list.generic.name     = "Graphics Settings:";
@@ -1302,7 +1285,6 @@ void GraphicsOptions_MenuInit( void )
 	Menu_AddItem( &s_graphicsoptions.menu, ( void * ) &s_graphicsoptions.display );
 	Menu_AddItem( &s_graphicsoptions.menu, ( void * ) &s_graphicsoptions.sound );
 	Menu_AddItem( &s_graphicsoptions.menu, ( void * ) &s_graphicsoptions.network );
-	Menu_AddItem( &s_graphicsoptions.menu, ( void * ) &s_graphicsoptions.hud );
 
 	Menu_AddItem( &s_graphicsoptions.menu, ( void * ) &s_graphicsoptions.list );
 	Menu_AddItem( &s_graphicsoptions.menu, ( void * ) &s_graphicsoptions.driver );

@@ -40,12 +40,11 @@ NETWORK OPTIONS MENU
 #define ID_DISPLAY			11
 #define ID_SOUND			12
 #define ID_NETWORK			13
-#define ID_HUD				14
-#define ID_RATE				15
-#define ID_ALLOWDOWNLOAD	16
-#define ID_DELAG			17
-#define ID_LAGOMETER		18
-#define ID_BACK				19
+#define ID_RATE				14
+#define ID_ALLOWDOWNLOAD	15
+#define ID_DELAG			16
+#define ID_LAGOMETER		17
+#define ID_BACK				18
 
 
 const char *rate_items[] = {
@@ -68,7 +67,6 @@ typedef struct {
 	menutext_s		display;
 	menutext_s		sound;
 	menutext_s		network;
-	menutext_s		hud;
 
 	menulist_s		rate;
 	menuradiobutton_s	allowdownload;
@@ -108,11 +106,6 @@ static void UI_NetworkOptionsMenu_Event( void* ptr, int event ) {
 		break;
 
 	case ID_NETWORK:
-		break;
-
-	case ID_HUD:
-		UI_PopMenu();
-		UI_HUDOptionsMenu();
 		break;
 
 	case ID_RATE:
@@ -233,52 +226,42 @@ static void UI_NetworkOptionsMenu_Init( void ) {
 	networkOptionsInfo.network.style				= UI_RIGHT;
 	networkOptionsInfo.network.color				= color_red;
 
-	networkOptionsInfo.hud.generic.type				= MTYPE_PTEXT;
-	networkOptionsInfo.hud.generic.flags			= QMF_RIGHT_JUSTIFY|QMF_PULSEIFFOCUS;
-	networkOptionsInfo.hud.generic.id				= ID_HUD;
-	networkOptionsInfo.hud.generic.callback			= UI_NetworkOptionsMenu_Event;
-	networkOptionsInfo.hud.generic.x				= 216;
-	networkOptionsInfo.hud.generic.y				= 240;
-	networkOptionsInfo.hud.string					= "H.U.D.";
-	networkOptionsInfo.hud.style					= UI_RIGHT;
-	networkOptionsInfo.hud.color					= color_red;
-
-	y = 240 - 1 * (BIGCHAR_HEIGHT+2);
+	//y = 240 - 1 * (BIGCHAR_HEIGHT+2);
 	networkOptionsInfo.rate.generic.type		= MTYPE_SPINCONTROL;
 	networkOptionsInfo.rate.generic.name		= "Network Speed:";
 	networkOptionsInfo.rate.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	networkOptionsInfo.rate.generic.callback	= UI_NetworkOptionsMenu_Event;
 	networkOptionsInfo.rate.generic.id			= ID_RATE;
 	networkOptionsInfo.rate.generic.x			= 400;
-	networkOptionsInfo.rate.generic.y			= y;
+	networkOptionsInfo.rate.generic.y			= 240 - 1.5 * (BIGCHAR_HEIGHT + 2);
 	networkOptionsInfo.rate.itemnames			= rate_items;
 
-	y += BIGCHAR_HEIGHT+2;
+	//y += BIGCHAR_HEIGHT+2;
 	networkOptionsInfo.allowdownload.generic.type     = MTYPE_RADIOBUTTON;
 	networkOptionsInfo.allowdownload.generic.name	   = "Download From Servers:";
 	networkOptionsInfo.allowdownload.generic.flags	   = QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	networkOptionsInfo.allowdownload.generic.callback = UI_NetworkOptionsMenu_Event;
 	networkOptionsInfo.allowdownload.generic.id       = ID_ALLOWDOWNLOAD;
 	networkOptionsInfo.allowdownload.generic.x	       = 400;
-	networkOptionsInfo.allowdownload.generic.y	       = y;
+	networkOptionsInfo.allowdownload.generic.y	       = 240 - 0.5 * (BIGCHAR_HEIGHT + 2);
 
-	y += BIGCHAR_HEIGHT+2;
+	//y += BIGCHAR_HEIGHT+2;
 	networkOptionsInfo.delag.generic.type     = MTYPE_RADIOBUTTON;
 	networkOptionsInfo.delag.generic.name	   = "Delag Hitscan Latency:";
 	networkOptionsInfo.delag.generic.flags	   = QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	networkOptionsInfo.delag.generic.callback = UI_NetworkOptionsMenu_Event;
 	networkOptionsInfo.delag.generic.id       = ID_DELAG;
 	networkOptionsInfo.delag.generic.x	       = 400;
-	networkOptionsInfo.delag.generic.y	       = y;
+	networkOptionsInfo.delag.generic.y	       = 240 + 0.5 * (BIGCHAR_HEIGHT + 2);
 
-	y += BIGCHAR_HEIGHT+2;
+	//y += BIGCHAR_HEIGHT+2;
 	networkOptionsInfo.lagometer.generic.type     = MTYPE_RADIOBUTTON;
 	networkOptionsInfo.lagometer.generic.name	   = "Lagometer:";
 	networkOptionsInfo.lagometer.generic.flags	   = QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	networkOptionsInfo.lagometer.generic.callback = UI_NetworkOptionsMenu_Event;
 	networkOptionsInfo.lagometer.generic.id       = ID_LAGOMETER;
 	networkOptionsInfo.lagometer.generic.x	       = 400;
-	networkOptionsInfo.lagometer.generic.y	       = y;
+	networkOptionsInfo.lagometer.generic.y	       = 240 + 1.5 * (BIGCHAR_HEIGHT + 2);
 
 	networkOptionsInfo.back.generic.type		= MTYPE_BITMAP;
 	networkOptionsInfo.back.generic.name		= ART_BACK0;
@@ -298,7 +281,6 @@ static void UI_NetworkOptionsMenu_Init( void ) {
 	Menu_AddItem( &networkOptionsInfo.menu, ( void * ) &networkOptionsInfo.display );
 	Menu_AddItem( &networkOptionsInfo.menu, ( void * ) &networkOptionsInfo.sound );
 	Menu_AddItem( &networkOptionsInfo.menu, ( void * ) &networkOptionsInfo.network );
-	Menu_AddItem( &networkOptionsInfo.menu, ( void * ) &networkOptionsInfo.hud );
 	Menu_AddItem( &networkOptionsInfo.menu, ( void * ) &networkOptionsInfo.rate );
 	Menu_AddItem( &networkOptionsInfo.menu, ( void * ) &networkOptionsInfo.allowdownload );
 	Menu_AddItem( &networkOptionsInfo.menu, ( void * ) &networkOptionsInfo.delag );
