@@ -397,7 +397,7 @@ static cvarTable_t cvarTable[] = {// bk001129
 	{ &cg_paused, "cl_paused", "0", CVAR_ROM},
 	{ &cg_blood, "com_blood", "1", CVAR_ARCHIVE},
 	{ &cg_alwaysWeaponBar, "cg_alwaysWeaponBar", "0", CVAR_ARCHIVE}, //Elimination
-	{ &cg_hitsound, "cg_hitsound", "0", CVAR_ARCHIVE},
+	{ &cg_hitsound, "cg_hitsound", "1", CVAR_ARCHIVE},
 	{ &cg_voip_teamonly, "cg_voipTeamOnly", "1", CVAR_ARCHIVE},
 	{ &cg_voteflags, "cg_voteflags", "*", CVAR_ROM},
 	{ &cg_cyclegrapple, "cg_cyclegrapple", "1", CVAR_ARCHIVE},
