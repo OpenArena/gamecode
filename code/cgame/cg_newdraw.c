@@ -1285,11 +1285,14 @@ static void CG_DrawKiller(rectDef_t *rect, float scale, vec4_t color, qhandle_t 
 
 }
 
-
 static void CG_DrawCapFragLimit(rectDef_t *rect, float scale, vec4_t color, qhandle_t shader, int textStyle)
 {
-	int limit = (CG_GametypeUsesCaptureLimit(cgs.gametype)) ? cgs.capturelimit : cgs.fraglimit;
-	CG_Text_Paint(rect->x, rect->y, scale, color, va("%2i", limit),0, 0, textStyle);
+	if (CG_GametypeUsesCaptureLimit(cgs.gametype)) {
+		CG_Text_Paint(rect->x, rect->y, scale, color, va("%2i", cgs.capturelimit),0, 0, textStyle);
+	}
+	else { /* (CG_GametypeUsesFragLimit(cgs.gametype)) */
+		CG_Text_Paint(rect->x, rect->y, scale, color, va("%2i", cgs.fraglimit),0, 0, textStyle);
+	}
 }
 
 static void CG_Draw1stPlace(rectDef_t *rect, float scale, vec4_t color, qhandle_t shader, int textStyle)
@@ -2017,11 +2020,14 @@ static void CG_DrawCaptureLimit( rectDef_t *rect, float text_x, float text_y, ve
 	const char *info;
 	int			value;
 	info = CG_ConfigString( CS_SERVERINFO );
-	value = atoi( Info_ValueForKey( info, "capturelimit" ) );
-	if (CG_GametypeUsesCaptureLimit(cgs.gametype))
+
+	if (CG_GametypeUsesCaptureLimit(cgs.gametype)) {
 		value = atoi( Info_ValueForKey( info, "capturelimit" ) );
-	else
+	}
+	else {  /* (CG_GametypeUsesFragLimit(cgs.gametype)) */
 		value = atoi( Info_ValueForKey( info, "fraglimit" ) );
+	}
+
 	if ( value ) {
 		CG_DrawLoadingString( rect, text_x, text_y, color, scale, align, textStyle, va( "%i", value ));
 	}
