@@ -2049,4 +2049,5 @@ qboolean CG_UsesTheWhiteFlag(int check);	/* Whether the gametype uses the neutra
 qboolean CG_IsARoundBasedGametype(int check);	/* Whether the gametype uses the neutral flag. */
 qboolean CG_GametypeUsesFragLimit(int check);	/* Whether the gametype uses a frag-based scoring system. */
 qboolean CG_GametypeUsesCaptureLimit(int check);	/* Whether the gametype uses a capture-based scoring system. */
+qboolean CG_GametypeUsesRunes(int check);	/* Whether the gametype uses the Runes. */
 /* /Neon_Knight */

@@ -2782,4 +2782,14 @@ Checks if the gametype has a capture-based scoring system.
 qboolean CG_GametypeUsesCaptureLimit(int check) {
 	return GAMETYPE_USES_CAPTURE_LIMIT(check);
 }
+/*
+===================
+CG_GametypeUsesRunes
+
+Checks if the gametype uses Runes.
+===================
+ */
+qboolean CG_GametypeUsesRunes(int check) {
+	return GAMETYPE_USES_RUNES(check);
+}
 /* /Neon_Knight */

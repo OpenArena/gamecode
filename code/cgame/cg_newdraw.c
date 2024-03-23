@@ -891,7 +891,7 @@ static void CG_DrawCTFPowerUp(rectDef_t *rect)
 {
 	int		value;
 
-	if (CG_IsADMBasedGametype(cgs.gametype)) {
+	if (!CG_GametypeUsesRunes(cgs.gametype)) {
 		return;
 	}
 	value = cg.snap->ps.stats[STAT_PERSISTANT_POWERUP];
