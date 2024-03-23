@@ -60,7 +60,7 @@ void CG_SetPrintString(int type, const char *p)
 
 void CG_CheckOrderPending(void)
 {
-	if (!CG_IsATeamGametype(cgs.gametype)) {
+	if (CG_IsAFFAGametype(cgs.gametype)) {
 		return;
 	}
 	if (cgs.orderPending) {
@@ -872,7 +872,7 @@ static void CG_DrawCTFPowerUp(rectDef_t *rect)
 {
 	int		value;
 
-	if (!CG_IsATeamGametype(cgs.gametype)) {
+	if (CG_IsAFFAGametype(cgs.gametype)) {
 		return;
 	}
 	value = cg.snap->ps.stats[STAT_PERSISTANT_POWERUP];
@@ -1120,7 +1120,7 @@ qboolean CG_OwnerDrawVisible(int flags)
 	}
 
 	if (flags & CG_SHOW_ANYNONTEAMGAME) {
-		if(!CG_IsATeamGametype(cgs.gametype)) {
+		if(CG_IsAFFAGametype(cgs.gametype)) {
 			return qtrue;
 		}
 	}
@@ -1309,7 +1309,7 @@ static void CG_Draw2ndPlace(rectDef_t *rect, float scale, vec4_t color, qhandle_
 const char *CG_GetGameStatusText(void)
 {
 	const char *s = "";
-	if (!CG_IsATeamGametype(cgs.gametype)) {
+	if (CG_IsAFFAGametype(cgs.gametype)) {
 		if (cg.snap->ps.persistant[PERS_TEAM] != TEAM_SPECTATOR ) {
 			s = va("%s place with %i",CG_PlaceString( cg.snap->ps.persistant[PERS_RANK] + 1 ),cg.snap->ps.persistant[PERS_SCORE] );
 		}
