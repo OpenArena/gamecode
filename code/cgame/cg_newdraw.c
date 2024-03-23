@@ -60,7 +60,7 @@ void CG_SetPrintString(int type, const char *p)
 
 void CG_CheckOrderPending(void)
 {
-	if (CG_IsADMBasedGametype(cgs.gametype)) {
+	if (CG_IsADMBasedGametype(cgs.gametype) || cgs.gametype == GT_TEAM) {
 		return;
 	}
 	if (cgs.orderPending) {
