@@ -844,31 +844,46 @@ static void CG_HarvesterSkulls(rectDef_t *rect, float scale, vec4_t color, qbool
 
 static void CG_OneFlagStatus(rectDef_t *rect)
 {
+	vec4_t color = {1, 1, 1, 1};
+	int index = 0;
+
+	// This function requires a gametype that works with the proper white flag...
 	if (!CG_UsesTheWhiteFlag(cgs.gametype)) {
 		return;
 	}
-	else {
-		gitem_t *item = BG_FindItemForPowerup( PW_NEUTRALFLAG );
-		if (item) {
-			if( cgs.flagStatus >= 0 && cgs.flagStatus <= 4 ) {
-				vec4_t color = {1, 1, 1, 1};
-				int index = 0;
-				if (cgs.flagStatus == FLAG_TAKEN_RED) {
-					color[1] = color[2] = 0;
-					index = 1;
-				}
-				else if (cgs.flagStatus == FLAG_TAKEN_BLUE) {
-					color[0] = color[1] = 0;
-					index = 1;
-				}
-				else if (cgs.flagStatus == FLAG_DROPPED) {
-					index = 2;
-				}
-				trap_R_SetColor(color);
-				CG_DrawPic( rect->x, rect->y, rect->w, rect->h, cgs.media.flagShaders[index] );
+
+	// And there should be a white flag.
+	if (!BG_FindItemForPowerup( PW_NEUTRALFLAG )) {
+		return;
+	}
+
+	if (CG_IsATeamGametype(cgs.gametype)) {
+		if( cgs.flagStatus >= 0 && cgs.flagStatus <= 4 ) {
+			if (cgs.flagStatus == FLAG_TAKEN_RED) {
+				color[1] = color[2] = 0;
+				index = 1;
+			}
+			else if (cgs.flagStatus == FLAG_TAKEN_BLUE) {
+				color[0] = color[1] = 0;
+				index = 1;
+			}
+			else if (cgs.flagStatus == FLAG_DROPPED) {
+				index = 2;
 			}
 		}
 	}
+	else {
+		if( cgs.flagStatus >= 0 && cgs.flagStatus <= 2 ) {
+			if (cgs.flagStatus == FLAG_TAKEN) {
+				index = 1;
+			}
+			else if (cgs.flagStatus == FLAG_DROPPED) {
+				index = 2;
+			}
+		}
+	}
+	trap_R_SetColor(color);
+	CG_DrawPic( rect->x, rect->y, rect->w, rect->h, cgs.media.flagShaders[index] );
 }
 
 
