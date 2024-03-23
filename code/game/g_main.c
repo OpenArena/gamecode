@@ -2981,10 +2981,6 @@ Returns true if the match has a "no pickups" rule.
 ===================
  */
 qboolean G_GametypeUsesRunes(int check) {
-	// If it's one of these gamemodes, it's true.
-	if (check == GT_CTF || check == GT_1FCTF || check == GT_HARVESTER ||  check == GT_OBELISK) {
-		return qtrue;
-	}
-	return qfalse;
+	return GAMETYPE_USES_RUNES(check);
 }
 /* /Neon_Knight */
