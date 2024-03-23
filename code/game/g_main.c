@@ -407,7 +407,7 @@ static cvarTable_t gameCvarTable[] = {
 	{ &g_developer, "developer", "0", CVAR_CHEAT, 0, qtrue},
 	{ &g_spSkill, "g_spSkill", "2", 0, 0, qtrue},
 	{ &g_bot_noChat, "bot_nochat", "0", 0, 0, qtrue},
-	{ &g_classicMode, "g_classicMode", "0", 0, 0, qtrue}
+	{ &g_classicMode, "g_classicMode", "0", CVAR_SERVERINFO | CVAR_LATCH, 0, qtrue}
 
 };
 
@@ -631,7 +631,7 @@ void G_UpdateCvars( void )
 					VoteParseCustomVotes();
 
 				//Here comes the cvars that must trigger a map_restart
-				if (cv->vmCvar == &g_instantgib || cv->vmCvar == &g_weaponArena  ||  cv->vmCvar == &g_elimination_allgametypes) {
+				if (cv->vmCvar == &g_instantgib || cv->vmCvar == &g_weaponArena || cv->vmCvar == &g_elimination_allgametypes || cv->vmCvar == &g_classicMode) {
 					trap_Cvar_Set("sv_dorestart","1");
 				}
 
