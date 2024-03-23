@@ -1295,12 +1295,12 @@ void CG_EntityEvent(centity_t *cent, vec3_t position) {
 					if (cg.snap->ps.powerups[PW_BLUEFLAG] || cg.snap->ps.powerups[PW_NEUTRALFLAG]) {
 					} else {
 						if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_BLUE) {
-							if (cgs.gametype == GT_1FCTF)
+							if (G_IsATeamGametype(cgs.gametype) && G_UsesTheWhiteFlag(cgs.gametype))
 								CG_AddBufferedSound(cgs.media.yourTeamTookTheFlagSound);
 							else
 								CG_AddBufferedSound(cgs.media.enemyTookYourFlagSound);
 						} else if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_RED) {
-							if (cgs.gametype == GT_1FCTF)
+							if (G_IsATeamGametype(cgs.gametype) && G_UsesTheWhiteFlag(cgs.gametype))
 								CG_AddBufferedSound(cgs.media.enemyTookTheFlagSound);
 							else
 								CG_AddBufferedSound(cgs.media.yourTeamTookEnemyFlagSound);
@@ -1312,12 +1312,12 @@ void CG_EntityEvent(centity_t *cent, vec3_t position) {
 					if (cg.snap->ps.powerups[PW_REDFLAG] || cg.snap->ps.powerups[PW_NEUTRALFLAG]) {
 					} else {
 						if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_RED) {
-							if (cgs.gametype == GT_1FCTF)
+							if (G_IsATeamGametype(cgs.gametype) && G_UsesTheWhiteFlag(cgs.gametype))
 								CG_AddBufferedSound(cgs.media.yourTeamTookTheFlagSound);
 							else
 								CG_AddBufferedSound(cgs.media.enemyTookYourFlagSound);
 						} else if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_BLUE) {
-							if (cgs.gametype == GT_1FCTF)
+							if (G_IsATeamGametype(cgs.gametype) && G_UsesTheWhiteFlag(cgs.gametype))
 								CG_AddBufferedSound(cgs.media.enemyTookTheFlagSound);
 							else
 								CG_AddBufferedSound(cgs.media.yourTeamTookEnemyFlagSound);
