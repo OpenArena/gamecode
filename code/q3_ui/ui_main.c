@@ -338,7 +338,7 @@ UI_IsAFFAGametype
 Checks if the gametype is NOT a team-based game.
 ===================
  */
-qboolean UI_IsAFFAGametype(int check) {
+qboolean UI_IsADMBasedGametype(int check) {
 	return !GAMETYPE_IS_A_TEAM_GAME(check);
 }
 /*

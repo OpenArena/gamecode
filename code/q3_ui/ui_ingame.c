@@ -236,7 +236,7 @@ void InGame_MenuInit( void ) {
 	s_ingame.teamorders.string				= "TEAM ORDERS";
 	s_ingame.teamorders.color				= color_red;
 	s_ingame.teamorders.style				= UI_CENTER|UI_SMALLFONT;
-	if(UI_IsAFFAGametype(gametype)) {
+	if(UI_IsADMBasedGametype(gametype)) {
 		s_ingame.teamorders.generic.flags |= QMF_GRAYED;
 	}
 	else {

@@ -435,7 +435,7 @@ void CG_CheckLocalSounds( playerState_t *ps, playerState_t *ops ) {
 		if ( !cg.warmup ) {
 			// never play lead changes during warmup
 			if ( ps->persistant[PERS_RANK] != ops->persistant[PERS_RANK] ) {
-				if (CG_IsAFFAGametype(cgs.gametype)) {
+				if (CG_IsADMBasedGametype(cgs.gametype)) {
 					if (  ps->persistant[PERS_RANK] == 0 ) {
 						CG_AddBufferedSound(cgs.media.takenLeadSound);
 					} else if ( ps->persistant[PERS_RANK] == RANK_TIED_FLAG && cgs.gametype != GT_POSSESSION ) {
