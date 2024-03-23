@@ -695,30 +695,32 @@ static void CG_DrawBlueFlagName(rectDef_t *rect, float scale, vec4_t color, int 
 
 static void CG_DrawBlueFlagStatus(rectDef_t *rect, qhandle_t shader)
 {
-	if (!CG_UsesTeamFlags(cgs.gametype)) {
-		if (cgs.gametype == GT_HARVESTER) {
-			vec4_t color = {0, 0, 1, 1};
-			trap_R_SetColor(color);
-			CG_DrawPic( rect->x, rect->y, rect->w, rect->h, cgs.media.blueCubeIcon );
-			trap_R_SetColor(NULL);
-		}
+	if (!CG_UsesTeamFlags(cgs.gametype) && (cgs.gametype != GT_HARVESTER)) {
 		return;
 	}
-	if (shader) {
-		CG_DrawPic( rect->x, rect->y, rect->w, rect->h, shader );
+	if (cgs.gametype == GT_HARVESTER) {
+		vec4_t color = {0, 0, 1, 1};
+		trap_R_SetColor(color);
+		CG_DrawPic( rect->x, rect->y, rect->w, rect->h, cgs.media.blueCubeIcon );
+		trap_R_SetColor(NULL);
 	}
 	else {
-		gitem_t *item = BG_FindItemForPowerup( PW_BLUEFLAG );
-		if (item) {
-			vec4_t color = {0, 0, 1, 1};
-			trap_R_SetColor(color);
-			if( cgs.blueflag >= 0 && cgs.blueflag <= 2 ) {
-				CG_DrawPic( rect->x, rect->y, rect->w, rect->h, cgs.media.flagShaders[cgs.blueflag] );
+		if (shader) {
+			CG_DrawPic( rect->x, rect->y, rect->w, rect->h, shader );
+		}
+		else {
+			gitem_t *item = BG_FindItemForPowerup( PW_BLUEFLAG );
+			if (item) {
+				vec4_t color = {0, 0, 1, 1};
+				trap_R_SetColor(color);
+				if( cgs.blueflag >= 0 && cgs.blueflag <= 2 ) {
+					CG_DrawPic( rect->x, rect->y, rect->w, rect->h, cgs.media.flagShaders[cgs.blueflag] );
+				}
+				else {
+					CG_DrawPic( rect->x, rect->y, rect->w, rect->h, cgs.media.flagShaders[0] );
+				}
+				trap_R_SetColor(NULL);
 			}
-			else {
-				CG_DrawPic( rect->x, rect->y, rect->w, rect->h, cgs.media.flagShaders[0] );
-			}
-			trap_R_SetColor(NULL);
 		}
 	}
 }
@@ -750,30 +752,32 @@ static void CG_DrawRedFlagName(rectDef_t *rect, float scale, vec4_t color, int t
 
 static void CG_DrawRedFlagStatus(rectDef_t *rect, qhandle_t shader)
 {
-	if (!CG_UsesTeamFlags(cgs.gametype)) {
-		if (cgs.gametype == GT_HARVESTER) {
+	if (!CG_UsesTeamFlags(cgs.gametype) && cgs.gametype != GT_HARVESTER) {
+		return;
+	}
+	if (cgs.gametype == GT_HARVESTER) {
 			vec4_t color = {1, 0, 0, 1};
 			trap_R_SetColor(color);
 			CG_DrawPic( rect->x, rect->y, rect->w, rect->h, cgs.media.redCubeIcon );
 			trap_R_SetColor(NULL);
-		}
-		return;
-	}
-	if (shader) {
-		CG_DrawPic( rect->x, rect->y, rect->w, rect->h, shader );
 	}
 	else {
-		gitem_t *item = BG_FindItemForPowerup( PW_REDFLAG );
-		if (item) {
-			vec4_t color = {1, 0, 0, 1};
-			trap_R_SetColor(color);
-			if( cgs.redflag >= 0 && cgs.redflag <= 2) {
-				CG_DrawPic( rect->x, rect->y, rect->w, rect->h, cgs.media.flagShaders[cgs.redflag] );
+		if (shader) {
+			CG_DrawPic( rect->x, rect->y, rect->w, rect->h, shader );
+		}
+		else {
+			gitem_t *item = BG_FindItemForPowerup( PW_REDFLAG );
+			if (item) {
+				vec4_t color = {1, 0, 0, 1};
+				trap_R_SetColor(color);
+				if( cgs.redflag >= 0 && cgs.redflag <= 2) {
+					CG_DrawPic( rect->x, rect->y, rect->w, rect->h, cgs.media.flagShaders[cgs.redflag] );
+				}
+				else {
+					CG_DrawPic( rect->x, rect->y, rect->w, rect->h, cgs.media.flagShaders[0] );
+				}
+				trap_R_SetColor(NULL);
 			}
-			else {
-				CG_DrawPic( rect->x, rect->y, rect->w, rect->h, cgs.media.flagShaders[0] );
-			}
-			trap_R_SetColor(NULL);
 		}
 	}
 }
