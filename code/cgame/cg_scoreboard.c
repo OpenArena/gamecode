@@ -324,7 +324,7 @@ qboolean CG_DrawOldScoreboard(void) {
 	}
 
 	// current rank
-	if (!CG_IsATeamGametype(cgs.gametype)) {
+	if (CG_IsAFFAGametype(cgs.gametype)) {
 		if (cg.snap->ps.persistant[PERS_TEAM] != TEAM_SPECTATOR) {
 			s = va("%s place with %i",
 					CG_PlaceString(cg.snap->ps.persistant[PERS_RANK] + 1),

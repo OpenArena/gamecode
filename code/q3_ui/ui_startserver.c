@@ -1247,7 +1247,7 @@ static void ServerOptions_InitPlayerItems( void ) {
 		s_serveroptions.playerType[n].curvalue = v;
 	}
 
-	if(s_serveroptions.multiplayer && !UI_IsATeamGametype(s_serveroptions.gametype)) {
+	if(s_serveroptions.multiplayer && UI_IsAFFAGametype(s_serveroptions.gametype)) {
 		for( n = 8; n < PLAYER_SLOTS; n++ ) {
 			s_serveroptions.playerType[n].curvalue = 2;
 		}
@@ -1301,7 +1301,7 @@ static void ServerOptions_SetPlayerItems( void ) {
 	}
 
 	// teams
-	if(!UI_IsATeamGametype(s_serveroptions.gametype)) {
+	if(UI_IsAFFAGametype(s_serveroptions.gametype)) {
 		return;
 	}
 	for( n = start; n < PLAYER_SLOTS; n++ ) {

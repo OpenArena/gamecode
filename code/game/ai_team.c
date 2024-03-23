@@ -2590,7 +2590,7 @@ void BotTeamAI(bot_state_t *bs) {
 	}
 
 	//
-	if (!G_IsATeamGametype(gametype))
+	if (G_IsAFFAGametype(gametype))
 		return;
 	// make sure we've got a valid team leader
 	if (!BotValidTeamLeader(bs)) {

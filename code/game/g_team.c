@@ -231,7 +231,7 @@ qboolean OnSameTeam( const gentity_t *ent1, const gentity_t *ent2 )
 		return qfalse;
 	}
 
-	if (!G_IsATeamGametype(g_gametype.integer)) {
+	if (G_IsAFFAGametype(g_gametype.integer)) {
 		return qfalse;
 	}
 
@@ -2426,7 +2426,7 @@ void ShuffleTeams(void)
 	int		nextTeam = TEAM_RED;
 	int		count = 0;
 
-	if (!G_IsATeamGametype(g_gametype.integer)) {
+	if (G_IsAFFAGametype(g_gametype.integer)) {
 		return;
 	}
 
