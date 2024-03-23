@@ -161,6 +161,11 @@
 * The background is now streched on widescreen displays.
 * Many other under-the-hood changes.
 
+## oaxB53.2
+
+**Estimated release date:** March 29, 2024
+
+
 ## oaxB53
 
 **Release date:** March 22, 2024
