@@ -2371,7 +2371,7 @@ void CheckTournament( void )
 		int		counts[TEAM_NUM_TEAMS];
 		qboolean	notEnough = qfalse;
 
-		if(G_IsAFFAGametype(g_gametype.integer)) {
+		if(G_IsADMBasedGametype(g_gametype.integer)) {
 			counts[TEAM_BLUE] = TeamCount( -1, TEAM_BLUE );
 			counts[TEAM_RED] = TeamCount( -1, TEAM_RED );
 
@@ -2849,7 +2849,7 @@ G_IsAFFAGametype
 Checks if the gametype is NOT a team-based game.
 ===================
  */
-qboolean G_IsAFFAGametype(int check) {
+qboolean G_IsADMBasedGametype(int check) {
 	return !GAMETYPE_IS_A_TEAM_GAME(check);
 }
 /*

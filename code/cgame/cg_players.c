@@ -989,7 +989,7 @@ static qboolean CG_ScanForExistingClientInfo(clientInfo_t *ci) {
 				&& Q_strequal(ci->headSkinName, match->headSkinName)
 				&& Q_strequal(ci->blueTeam, match->blueTeam)
 				&& Q_strequal(ci->redTeam, match->redTeam)
-				&& (CG_IsAFFAGametype(cgs.gametype) || ci->team == match->team)) {
+				&& (CG_IsADMBasedGametype(cgs.gametype) || ci->team == match->team)) {
 			// this clientinfo is identical, so use it's handles
 
 			ci->deferred = qfalse;

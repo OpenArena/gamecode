@@ -1506,7 +1506,7 @@ void ClientBegin( int clientNum ) {
 	countFree = TeamCount(-1,TEAM_FREE);
 	countRed = TeamCount(-1,TEAM_RED);
 	countBlue = TeamCount(-1,TEAM_BLUE);
-	if(G_IsAFFAGametype(g_gametype.integer))
+	if(G_IsADMBasedGametype(g_gametype.integer))
 	{
 		if(countFree>level.teamSize)
 			level.teamSize=countFree;

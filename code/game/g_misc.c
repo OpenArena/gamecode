@@ -569,7 +569,7 @@ static int countCtfSpawnpoints(void) {
 }
 
 int MinSpawnpointCount(void) {
-	if(G_IsAFFAGametype(g_gametype.integer)) {
+	if(G_IsADMBasedGametype(g_gametype.integer)) {
 		return countFfaSpawnpoints();
 	}
 	if(g_gametype.integer == GT_DOUBLE_D ) {

@@ -3005,7 +3005,7 @@ static qboolean UI_OwnerDrawVisible(int flags)
 		}
 
 		if (flags & UI_SHOW_NOTFFA) {
-			if (UI_IsAFFAGametype(trap_Cvar_VariableValue("g_gametype")) && trap_Cvar_VariableValue("g_gametype") != GT_TOURNAMENT) {
+			if (UI_IsADMBasedGametype(trap_Cvar_VariableValue("g_gametype")) && trap_Cvar_VariableValue("g_gametype") != GT_TOURNAMENT) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_NOTFFA;
@@ -3050,7 +3050,7 @@ static qboolean UI_OwnerDrawVisible(int flags)
 			flags &= ~UI_SHOW_NOTFAVORITESERVERS;
 		}
 		if (flags & UI_SHOW_ANYTEAMGAME) {
-			if (UI_IsAFFAGametype(UI_GetGametype())) {
+			if (UI_IsADMBasedGametype(UI_GetGametype())) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_ANYTEAMGAME;
@@ -3062,7 +3062,7 @@ static qboolean UI_OwnerDrawVisible(int flags)
 			flags &= ~UI_SHOW_ANYNONTEAMGAME;
 		}
 		if (flags & UI_SHOW_NETANYTEAMGAME) {
-			if (UI_IsAFFAGametype(uiInfo.gameTypes[ui_netGameType.integer].gtEnum)) {
+			if (UI_IsADMBasedGametype(uiInfo.gameTypes[ui_netGameType.integer].gtEnum)) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_NETANYTEAMGAME;
@@ -3101,7 +3101,7 @@ static qboolean UI_OwnerDrawVisible(int flags)
 			flags &= ~UI_SHOW_DEMOAVAILABLE;
 		}
 		if (flags & UI_SHOW_ANYTEAMOBJECTIVEGAME) {
-			if (UI_IsAFFAGametype(UI_GetGametype())) {
+			if (UI_IsADMBasedGametype(UI_GetGametype())) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_ANYTEAMOBJECTIVEGAME;
@@ -3113,7 +3113,7 @@ static qboolean UI_OwnerDrawVisible(int flags)
 			flags &= ~UI_SHOW_ANYNONTEAMOBJECTIVEGAME;
 		}
 		if (flags & UI_SHOW_NETANYTEAMOBJECTIVEGAME) {
-			if (UI_IsAFFAGametype(uiInfo.gameTypes[ui_netGameType.integer].gtEnum)) {
+			if (UI_IsADMBasedGametype(uiInfo.gameTypes[ui_netGameType.integer].gtEnum)) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_NETANYTEAMOBJECTIVEGAME;
@@ -3277,7 +3277,7 @@ static qboolean UI_GameType_HandleKey(int flags, float *special, int key)
 		}
 		// end changed RD
 
-		if (UI_IsAFFAGametype(UI_GetGametype())) {
+		if (UI_IsADMBasedGametype(UI_GetGametype())) {
 			trap_Cvar_SetValue( "ui_Q3Model", 1 );
 		}
 		else {
@@ -3320,7 +3320,7 @@ static qboolean UI_GameType_HandleKeyResetMap(int flags, float *special, int key
 		}
 		// end changed RD
 
-		if (UI_IsAFFAGametype(UI_GetGametype())) {
+		if (UI_IsADMBasedGametype(UI_GetGametype())) {
 			trap_Cvar_SetValue( "ui_Q3Model", 1 );
 		}
 		else {
@@ -4080,7 +4080,7 @@ static void UI_StartSkirmish(void)
 		Com_sprintf( buff, sizeof(buff), "addbot %s %f "", %i \n", uiInfo.mapList[ui_currentMap.integer].opponentName, skill, delay);
 		trap_Cmd_ExecuteText( EXEC_APPEND, buff );
 	}
-	else if (UI_IsAFFAGametype(g) && g != GT_TOURNAMENT) { // leilei - parse the opponentname as a list of bots instead like q3_ui's arena parsing
+	else if (UI_IsADMBasedGametype(g) && g != GT_TOURNAMENT) { // leilei - parse the opponentname as a list of bots instead like q3_ui's arena parsing
 		char		*p;
 		char		*bot;
 		const char	*botInfo;
@@ -7840,7 +7840,7 @@ UI_IsAFFAGametype
 Checks if the gametype is NOT a team-based game.
 ===================
  */
-qboolean UI_IsAFFAGametype(int check) {
+qboolean UI_IsADMBasedGametype(int check) {
 	return !GAMETYPE_IS_A_TEAM_GAME(check);
 }
 /*
