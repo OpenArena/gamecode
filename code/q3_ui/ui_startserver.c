@@ -1101,8 +1101,12 @@ static void ServerOptions_Start( void ) {
 		break;
 	}
 
-	trap_Cvar_SetValue ("fraglimit", Com_Clamp( 0, fraglimit, fraglimit ) );
-	trap_Cvar_SetValue ("capturelimit", Com_Clamp( 0, capturelimit, capturelimit ) );
+	if (UI_GametypeUsesFragLimit(s_serveroptions.gametype)) {
+		trap_Cvar_SetValue ("fraglimit", Com_Clamp( 0, fraglimit, fraglimit ) );
+	}
+	else { /* (UI_GametypeUsesCaptureLimit(s_serveroptions.gametype)) */
+		trap_Cvar_SetValue ("capturelimit", Com_Clamp( 0, capturelimit, capturelimit ) );
+	}
 	trap_Cvar_SetValue ("timelimit", Com_Clamp( 0, timelimit, timelimit ) );
 	trap_Cvar_SetValue( "elimination_roundtime", eliminationRoundTime );
 	switch(pmove) {
