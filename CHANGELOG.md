@@ -165,6 +165,8 @@
 
 **Estimated release date:** March 29, 2024
 
+* "You Have Been Mined" message now displays correctly.
+* Fix for bad default for `cg_hitSound` (Credit: @leilei-)
 
 ## oaxB53
 
