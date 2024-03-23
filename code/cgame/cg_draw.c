@@ -3275,10 +3275,13 @@ static void CG_DrawProxWarning( void ) {
 	proxTick = 10 - ((cg.time - proxTime) / 1000);
 
 	if (proxTick > 0) {
-		Com_sprintf(s, sizeof(s), "YOU HAVE BEEN MINED\rINTERNAL COMBUSTION IN: %i", proxTick);
+		Com_sprintf(s, sizeof(s), "YOU HAVE BEEN MINED");
+		w = CG_DrawStrlen( s ) * BIGCHAR_WIDTH;
+		CG_DrawBigStringColor( 320 - w / 2, 64 + BIGCHAR_HEIGHT, s, g_color_table[ColorIndex(COLOR_RED)] );
+		Com_sprintf(s, sizeof(s), "INTERNAL COMBUSTION IN: %i", proxTick);
+		w = CG_DrawStrlen( s ) * BIGCHAR_WIDTH;
+	CG_DrawBigStringColor( 320 - w / 2, 64 + ((2 * BIGCHAR_HEIGHT) + 2), s, g_color_table[ColorIndex(COLOR_RED)] );
 	}
-	w = CG_DrawStrlen( s ) * BIGCHAR_WIDTH;
-	CG_DrawBigStringColor( 320 - w / 2, 64 + BIGCHAR_HEIGHT, s, g_color_table[ColorIndex(COLOR_RED)] );
 }
 
 /*
