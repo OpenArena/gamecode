@@ -165,8 +165,14 @@
 
 **Estimated release date:** March 29, 2024
 
+* DD now displays "X team dominates!" on top of the counter.
+* Timer, Movement Speed and Last Attacker are now rendered on top of the gametype-specific strings.
+* A certain string modification was wrongly applied to 1FCTF when it should have been applied to CTF.
+* `g_classicMode` is now a serverside cvar.
+* Fixes for some bad gametype comparisons that made `capturelimit` affect Classic SP.
 * "You Have Been Mined" message now displays correctly.
 * Fix for bad default for `cg_hitSound` (Credit: @leilei-)
+* Many other changes under the hood.
 
 ## oaxB53
 
