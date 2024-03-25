@@ -1645,7 +1645,6 @@ static float CG_DrawScores(float y) {
 	const char *s;
 	int s1, s2, score;
 	int x, w;
-	int v;
 	vec4_t color;
 	float y1;
 	gitem_t *item;
@@ -1746,20 +1745,8 @@ static float CG_DrawScores(float y) {
 			s = va("^1%3i%% ^4%3i%%", cg.redObeliskHealth, cg.blueObeliskHealth);
 			CG_DrawSmallString(x, y - 28, s, 1.0F);
 		}
-
-		if (CG_GametypeUsesCaptureLimit(cgs.gametype)) {
-			v = cgs.capturelimit;
-		} else {
-			v = cgs.fraglimit;
-		}
-		if (v) {
-			s = va("%2i", v);
-			w = CG_DrawStrlen(s) * BIGCHAR_WIDTH + 8;
-			x -= w;
-			CG_DrawBigString(x + 4, y, s, 1.0F);
-		}
-
-	} else {
+	}
+	else {
 		qboolean spectator;
 
 		x = 640;
@@ -1812,15 +1799,17 @@ static float CG_DrawScores(float y) {
 			}
 			CG_DrawBigString(x + 4, y, s, 1.0F);
 		}
-
-		if (cgs.fraglimit) {
-			s = va("%2i", cgs.fraglimit);
-			w = CG_DrawStrlen(s) * BIGCHAR_WIDTH + 8;
-			x -= w;
-			CG_DrawBigString(x + 4, y, s, 1.0F);
-		}
-
 	}
+
+	if (CG_GametypeUsesFragLimit(cgs.gametype) && cgs.fraglimit) {
+		s = va("%2i", cgs.fraglimit);
+	}
+	else if (CG_GametypeUsesCaptureLimit(cgs.gametype) && cgs.capturelimit) {
+		s = va("%2i", cgs.capturelimit);
+	}
+	w = CG_DrawStrlen(s) * BIGCHAR_WIDTH + 8;
+	x -= w;
+	CG_DrawBigString(x + 4, y, s, 1.0F);
 
 	return y1 - 8;
 }
