@@ -140,7 +140,7 @@
     * `recommendedTeamSize` (Amount of ideal team members in team games)
 * The "You've Been Mined" message, shown whenever you're directly hit by a proxy mine, now begins its combustion countdown instantly.
 * Default score limits are now consistent across all gamemodes.
-* Compatibility fixes to make gamecode buidable under M1 Mac. (Thanks @Bishop-313!)
+* Compatibility fixes to make gamecode buidable under M1 Mac. (Thanks @Bishop-333!)
 * Team Orders now display the proper team orders rather than those of Team Deathmatch for all team-based gamemodes.
 * Challenges now account for TDM wins.
 * Double Domination now displays a "New Round" message.
@@ -167,10 +167,10 @@
 
 * DD now displays "X team dominates!" on top of the counter.
 * Timer, Movement Speed and Last Attacker are now rendered on top of the gametype-specific strings.
-* A certain string modification was wrongly applied to 1FCTF when it should have been applied to CTF.
+* A certain string modification was wrongly applied to 1FCTF when it should have been applied to CTF. (Fixes OpenArena/gamecode#163)
 * `g_classicMode` is now a serverside cvar.
 * Fixes for some bad gametype comparisons that made `capturelimit` affect Classic SP.
-* "You Have Been Mined" message now displays correctly.
+* "You Have Been Mined" message now displays correctly. (Fixes OpenArena/gamecode#266)
 * Fix for bad default for `cg_hitSound` (Credit: @leilei-)
 * Many other changes under the hood.
 
@@ -300,7 +300,7 @@
   * `recommendedTeamSize` (Amount of ideal team members in team games)
 * The "You've Been Mined" message, shown whenever you're directly hit by a proxy mine, now begins its combustion countdown instantly.
 * Default score limits are now consistent across all gamemodes.
-* Compatibility fixes to make gamecode buidable under M1 Mac. (Thanks @Bishop-313!)
+* Compatibility fixes to make gamecode buidable under M1 Mac. (Thanks @Bishop-333!)
 * Team Orders now display the proper team orders rather than those of Team Deathmatch for all team-based gamemodes.
 * Challenges now account for TDM wins.
 * Double Domination now displays a "New Round" message.
