@@ -407,7 +407,7 @@ static cvarTable_t gameCvarTable[] = {
 	{ &g_developer, "developer", "0", CVAR_CHEAT, 0, qtrue},
 	{ &g_spSkill, "g_spSkill", "2", 0, 0, qtrue},
 	{ &g_bot_noChat, "bot_nochat", "0", 0, 0, qtrue},
-	{ &g_classicMode, "g_classicMode", "0", 0, 0, qtrue}
+	{ &g_classicMode, "g_classicMode", "0", CVAR_SERVERINFO | CVAR_LATCH, 0, qtrue}
 
 };
 
@@ -631,7 +631,7 @@ void G_UpdateCvars( void )
 					VoteParseCustomVotes();
 
 				//Here comes the cvars that must trigger a map_restart
-				if (cv->vmCvar == &g_instantgib || cv->vmCvar == &g_weaponArena  ||  cv->vmCvar == &g_elimination_allgametypes) {
+				if (cv->vmCvar == &g_instantgib || cv->vmCvar == &g_weaponArena || cv->vmCvar == &g_elimination_allgametypes || cv->vmCvar == &g_classicMode) {
 					trap_Cvar_Set("sv_dorestart","1");
 				}
 
@@ -755,6 +755,11 @@ void G_InitGame( int levelTime, int randomSeed, int restart )
 	if( g_gametype.integer == GT_SINGLE_PLAYER ) {
 		g_instantgib.integer = 0;
 		g_weaponArena.integer = 0;
+		g_grapple.integer = 0;
+		g_elimination_allgametypes.integer = 0;
+		g_classicMode.integer = 0;
+		g_regen.integer = 0;
+		g_doWarmup.integer = 0;
 		g_vampire.value = 0.0f;
 	}
 
@@ -2099,81 +2104,83 @@ void CheckExitRules( void )
 		return;
 	}
 
-	if ( g_fraglimit.integer < 0 ) {
-		G_Printf( "fraglimit %i is out of range, defaulting to 0\n", g_fraglimit.integer );
-		trap_Cvar_Set( "fraglimit", "0" );
-		trap_Cvar_Update( &g_fraglimit );
-	}
-
-	if ( g_fraglimit.integer ) {
-		if ( G_IsATeamGametype(g_gametype.integer) ) {
-			if ( level.teamScores[TEAM_RED] >= g_fraglimit.integer ) {
-				trap_SendServerCommand( -1, "print \"Red hit the fraglimit.\n\"" );
-				LogExit( "Fraglimit hit." );
-				return;
-			}
-
-			if ( level.teamScores[TEAM_BLUE] >= g_fraglimit.integer ) {
-				trap_SendServerCommand( -1, "print \"Blue hit the fraglimit.\n\"" );
-				LogExit( "Fraglimit hit." );
-				return;
-			}
+	if (G_GametypeUsesFragLimit(g_gametype.integer)) {
+		if ( g_fraglimit.integer < 0 ) {
+			G_Printf( "fraglimit %i is out of range, defaulting to 0\n", g_fraglimit.integer );
+			trap_Cvar_Set( "fraglimit", "0" );
+			trap_Cvar_Update( &g_fraglimit );
 		}
-		else {
-			for ( i=0 ; i< g_maxclients.integer ; i++ ) {
-				cl = level.clients + i;
-				if ( cl->pers.connected != CON_CONNECTED ) {
-					continue;
-				}
-				if ( cl->sess.sessionTeam != TEAM_FREE ) {
-					continue;
-				}
-
-				if ( cl->ps.persistant[PERS_SCORE] >= g_fraglimit.integer ) {
+		if ( g_fraglimit.integer ) {
+			if ( G_IsATeamGametype(g_gametype.integer) ) {
+				if ( level.teamScores[TEAM_RED] >= g_fraglimit.integer ) {
+					trap_SendServerCommand( -1, "print \"Red hit the fraglimit.\n\"" );
 					LogExit( "Fraglimit hit." );
-					trap_SendServerCommand( -1, va("print \"%s" S_COLOR_WHITE " hit the fraglimit.\n\"",
-												   cl->pers.netname ) );
+					return;
+				}
+
+				if ( level.teamScores[TEAM_BLUE] >= g_fraglimit.integer ) {
+					trap_SendServerCommand( -1, "print \"Blue hit the fraglimit.\n\"" );
+					LogExit( "Fraglimit hit." );
 					return;
 				}
 			}
-		}
-	}
+			else {
+				for ( i=0 ; i< g_maxclients.integer ; i++ ) {
+					cl = level.clients + i;
+					if ( cl->pers.connected != CON_CONNECTED ) {
+						continue;
+					}
+					if ( cl->sess.sessionTeam != TEAM_FREE ) {
+						continue;
+					}
 
-	if ( g_capturelimit.integer < 0 ) {
-		G_Printf( "capturelimit %i is out of range, defaulting to 0\n", g_capturelimit.integer );
-		trap_Cvar_Set( "capturelimit", "0" );
-		trap_Cvar_Update( &g_capturelimit );
-	}
-
-	if ( g_capturelimit.integer ) {
-		if (G_GametypeUsesCaptureLimit(g_gametype.integer)) {
-			if ( level.teamScores[TEAM_RED] >= g_capturelimit.integer ) {
-				trap_SendServerCommand( -1, "print \"Red hit the capturelimit.\n\"" );
-				LogExit( "Capturelimit hit." );
-				return;
-			}
-
-			if ( level.teamScores[TEAM_BLUE] >= g_capturelimit.integer ) {
-				trap_SendServerCommand( -1, "print \"Blue hit the capturelimit.\n\"" );
-				LogExit( "Capturelimit hit." );
-				return;
+					if ( cl->ps.persistant[PERS_SCORE] >= g_fraglimit.integer ) {
+						LogExit( "Fraglimit hit." );
+						trap_SendServerCommand( -1, va("print \"%s" S_COLOR_WHITE " hit the fraglimit.\n\"",
+													   cl->pers.netname ) );
+						return;
+					}
+				}
 			}
 		}
-		else {
-			for ( i=0 ; i< g_maxclients.integer ; i++ ) {
-				cl = level.clients + i;
-				if ( cl->pers.connected != CON_CONNECTED ) {
-					continue;
-				}
-				if ( cl->sess.sessionTeam != TEAM_FREE ) {
-					continue;
-				}
+	}
+	else { /* (G_GametypeUsesCaptureLimit(g_gametype.integer)) */
+		if ( g_capturelimit.integer < 0 ) {
+			G_Printf( "capturelimit %i is out of range, defaulting to 0\n", g_capturelimit.integer );
+			trap_Cvar_Set( "capturelimit", "0" );
+			trap_Cvar_Update( &g_capturelimit );
+		}
 
-				if ( cl->ps.persistant[PERS_SCORE] >= g_capturelimit.integer ) {
+		if ( g_capturelimit.integer ) {
+			if (G_GametypeUsesCaptureLimit(g_gametype.integer)) {
+				if ( level.teamScores[TEAM_RED] >= g_capturelimit.integer ) {
+					trap_SendServerCommand( -1, "print \"Red hit the capturelimit.\n\"" );
 					LogExit( "Capturelimit hit." );
-					trap_SendServerCommand( -1, va("print \"%s" S_COLOR_WHITE " hit the capturelimit.\n\"",
-												   cl->pers.netname ) );
 					return;
+				}
+
+				if ( level.teamScores[TEAM_BLUE] >= g_capturelimit.integer ) {
+					trap_SendServerCommand( -1, "print \"Blue hit the capturelimit.\n\"" );
+					LogExit( "Capturelimit hit." );
+					return;
+				}
+			}
+			else {
+				for ( i=0 ; i< g_maxclients.integer ; i++ ) {
+					cl = level.clients + i;
+					if ( cl->pers.connected != CON_CONNECTED ) {
+						continue;
+					}
+					if ( cl->sess.sessionTeam != TEAM_FREE ) {
+						continue;
+					}
+
+					if ( cl->ps.persistant[PERS_SCORE] >= g_capturelimit.integer ) {
+						LogExit( "Capturelimit hit." );
+						trap_SendServerCommand( -1, va("print \"%s" S_COLOR_WHITE " hit the capturelimit.\n\"",
+													   cl->pers.netname ) );
+						return;
+					}
 				}
 			}
 		}
@@ -2371,7 +2378,7 @@ void CheckTournament( void )
 		int		counts[TEAM_NUM_TEAMS];
 		qboolean	notEnough = qfalse;
 
-		if(!G_IsATeamGametype(g_gametype.integer)) {
+		if(G_IsATeamGametype(g_gametype.integer)) {
 			counts[TEAM_BLUE] = TeamCount( -1, TEAM_BLUE );
 			counts[TEAM_RED] = TeamCount( -1, TEAM_RED );
 
@@ -2826,8 +2833,12 @@ void G_RunFrame( int levelTime )
 void MapInfoPrint(mapinfo_result_t *info)
 {
 	G_Printf("Auther: %s\n",info->author);
-	G_Printf("Fraglimit: %i\n",info->fragLimit);
-	G_Printf("Capturelimit: %i\n",info->captureLimit);
+	if (G_GametypeUsesCaptureLimit(g_gametype.integer)) {
+		G_Printf("Capturelimit: %i\n",info->captureLimit);
+	}
+	else { /* (G_GametypeUsesCaptureLimit(g_gametype.integer)) */
+		G_Printf("Fraglimit: %i\n",info->fragLimit);
+	}
 	G_Printf("minTeamSize: %i\n",info->minTeamSize);
 }
 
@@ -2841,6 +2852,16 @@ Checks if the gametype is a team-based game.
  */
 qboolean G_IsATeamGametype(int check) {
 	return GAMETYPE_IS_A_TEAM_GAME(check);
+}
+/*
+===================
+G_IsAFFAGametype
+
+Checks if the gametype is NOT a team-based game.
+===================
+ */
+qboolean G_IsADMBasedGametype(int check) {
+	return !GAMETYPE_IS_A_TEAM_GAME(check);
 }
 /*
 ===================
@@ -2960,10 +2981,6 @@ Returns true if the match has a "no pickups" rule.
 ===================
  */
 qboolean G_GametypeUsesRunes(int check) {
-	// If it's one of these gamemodes, it's true.
-	if (check == GT_CTF || check == GT_1FCTF || check == GT_HARVESTER ||  check == GT_OBELISK) {
-		return qtrue;
-	}
-	return qfalse;
+	return GAMETYPE_USES_RUNES(check);
 }
 /* /Neon_Knight */

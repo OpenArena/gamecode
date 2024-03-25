@@ -1324,6 +1324,7 @@ typedef struct postGameInfo_s {
 
 /* Neon_Knight: Useful check in order to have code consistency. */
 qboolean UI_IsATeamGametype(int check);	/* Whether the gametype is team-based or not.*/
+qboolean UI_IsADMBasedGametype(int check);	/* Whether the gametype is NOT team-based or not.*/
 qboolean UI_UsesTeamFlags(int check);	/* Whether the gametype uses the red and blue flags. */
 qboolean UI_UsesTheWhiteFlag(int check);	/* Whether the gametype uses the neutral flag. */
 qboolean UI_IsARoundBasedGametype(int check);	/* Whether the gametype uses the neutral flag. */

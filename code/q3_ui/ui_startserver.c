@@ -1101,8 +1101,12 @@ static void ServerOptions_Start( void ) {
 		break;
 	}
 
-	trap_Cvar_SetValue ("fraglimit", Com_Clamp( 0, fraglimit, fraglimit ) );
-	trap_Cvar_SetValue ("capturelimit", Com_Clamp( 0, capturelimit, capturelimit ) );
+	if (UI_GametypeUsesFragLimit(s_serveroptions.gametype)) {
+		trap_Cvar_SetValue ("fraglimit", Com_Clamp( 0, fraglimit, fraglimit ) );
+	}
+	else { /* (UI_GametypeUsesCaptureLimit(s_serveroptions.gametype)) */
+		trap_Cvar_SetValue ("capturelimit", Com_Clamp( 0, capturelimit, capturelimit ) );
+	}
 	trap_Cvar_SetValue ("timelimit", Com_Clamp( 0, timelimit, timelimit ) );
 	trap_Cvar_SetValue( "elimination_roundtime", eliminationRoundTime );
 	switch(pmove) {
@@ -1247,7 +1251,7 @@ static void ServerOptions_InitPlayerItems( void ) {
 		s_serveroptions.playerType[n].curvalue = v;
 	}
 
-	if(s_serveroptions.multiplayer && !UI_IsATeamGametype(s_serveroptions.gametype)) {
+	if(s_serveroptions.multiplayer && UI_IsADMBasedGametype(s_serveroptions.gametype)) {
 		for( n = 8; n < PLAYER_SLOTS; n++ ) {
 			s_serveroptions.playerType[n].curvalue = 2;
 		}
@@ -1301,7 +1305,7 @@ static void ServerOptions_SetPlayerItems( void ) {
 	}
 
 	// teams
-	if(!UI_IsATeamGametype(s_serveroptions.gametype)) {
+	if(UI_IsADMBasedGametype(s_serveroptions.gametype)) {
 		return;
 	}
 	for( n = start; n < PLAYER_SLOTS; n++ ) {

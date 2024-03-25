@@ -1223,7 +1223,7 @@ void G_Say( gentity_t *ent, gentity_t *target, int mode, const char *chatText ) 
 		return;
 	}
 
-	if ( !G_IsATeamGametype(g_gametype.integer) && mode == SAY_TEAM ) {
+	if ( G_IsADMBasedGametype(g_gametype.integer) && mode == SAY_TEAM ) {
 		mode = SAY_ALL;
 	}
 
@@ -1394,7 +1394,7 @@ void G_Voice( gentity_t *ent, gentity_t *target, int mode, const char *id, qbool
 	int			j;
 	gentity_t	*other;
 
-	if ( !G_IsATeamGametype(g_gametype.integer) && mode == SAY_TEAM ) {
+	if ( G_IsADMBasedGametype(g_gametype.integer) && mode == SAY_TEAM ) {
 		mode = SAY_ALL;
 	}
 
@@ -1919,7 +1919,7 @@ void Cmd_CallVote_f( gentity_t *ent ) {
 		Com_sprintf( level.voteDisplayString, sizeof( level.voteDisplayString ), "Kick %s?" , level.clients[i].pers.netname );
 	} 
 	else if ( Q_strequal( arg1, "shuffle" ) ) {
-		if(!G_IsATeamGametype(g_gametype.integer)) { //Not a team game
+		if(G_IsADMBasedGametype(g_gametype.integer)) { //Not a team game
 			trap_SendServerCommand( ent-g_entities, "print \"Can only be used in team games.\n\"" );
 			return;
 		}

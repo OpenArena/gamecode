@@ -1118,6 +1118,10 @@ static float CG_DrawDomStatus(float y) {
 	char *s;
 	vec4_t color;
 
+	if (cgs.gametype != GT_DOMINATION) {
+		return y;
+	}
+
 	for (i = 0; i < cgs.domination_points_count; i++) {
 		switch (cgs.domination_points_status[i]) {
 			case TEAM_RED:
@@ -1157,7 +1161,9 @@ static float CG_DrawCountdownTimer(float y) {
 	int cw __attribute__ ((unused));
 	int rst;
 
-
+	if (!CG_IsARoundBasedGametype(cgs.gametype) && (cgs.gametype != GT_DOUBLE_D)) {
+		return y;
+	}
 
 	rst = cgs.roundStartTime;
 
@@ -1575,25 +1581,36 @@ static void CG_DrawUpperRight(stereoFrame_t stereoFrame) {
 
 	y = 0;
 
+	if (cg_drawTimer.integer) {
+		y = CG_DrawTimer(y);
+	}
+	if (cg_drawSpeed.integer) {
+		y = CG_DrawSpeedMeter(y);
+	}
+	if (cg_drawAttacker.integer) {
+		y = CG_DrawAttacker(y);
+	}
+
+	y = CG_DrawFollowMessage(y);
+
 	if (CG_IsATeamGametype(cgs.gametype) && cg_drawTeamOverlay.integer == 1) {
 		y = CG_DrawTeamOverlay(y, qtrue, qtrue);
 	}
 	/* if ( cgs.gametype == GT_DOUBLE_D ) {
 		y = CG_DrawDoubleDominationThings(y);
 	}  */
-	else
 	if (cgs.gametype == GT_LMS && cg.showScores) {
 		y = CG_DrawLMSmode(y);
-	} else
-		if (cgs.gametype == GT_CTF_ELIMINATION) {
+	}
+	if (cgs.gametype == GT_CTF_ELIMINATION) {
 		y = CG_DrawCTFoneway(y);
-	} else
-		if (cgs.gametype == GT_DOMINATION) {
+	}
+	if (cgs.gametype == GT_DOMINATION) {
 		y = CG_DrawDomStatus(y);
-	} else if (cgs.gametype == GT_POSSESSION) {
+	}
+	if (cgs.gametype == GT_POSSESSION) {
 		y = CG_DrawPossessionString(y);
 	}
-
 	if (cg_drawSnapshot.integer) {
 		y = CG_DrawSnapshot(y);
 	}
@@ -1605,19 +1622,6 @@ static void CG_DrawUpperRight(stereoFrame_t stereoFrame) {
 		/*if (cgs.clientinfo[ cg.clientNum ].isDead)
 			y = CG_DrawEliminationDeathMessage( y);*/
 	}
-
-	y = CG_DrawFollowMessage(y);
-
-	if (cg_drawTimer.integer) {
-		y = CG_DrawTimer(y);
-	}
-	if (cg_drawAttacker.integer) {
-		y = CG_DrawAttacker(y);
-	}
-	if (cg_drawSpeed.integer) {
-		y = CG_DrawSpeedMeter(y);
-	}
-
 }
 
 /*
@@ -2548,31 +2552,41 @@ static void CG_DrawCenter1FctfString(void) {
 #ifndef MISSIONPACK
 	float *color;
 	char *line;
-	int status;
 
-	if (cgs.gametype != GT_1FCTF)
+	if (!CG_UsesTheWhiteFlag(cgs.gametype))
 		return;
 
-	status = cgs.flagStatus;
-
 	//Sago: TODO: Find the proper defines instead of hardcoded values.
-	switch (status) {
-		case 2:
-			line = va("Red has the flag!");
-			color = colorRed;
-			break;
-		case 3:
-			line = va("Blue has the flag!");
-			color = colorBlue;
-			break;
-		case 4:
-			line = va("Flag dropped!");
-			color = colorWhite;
-			break;
-		default:
-			return;
-
-	};
+	if (CG_UsesTeamFlags(cgs.gametype)) {
+		switch (cgs.flagStatus) {
+			case FLAG_TAKEN_RED:
+				line = va("Red has the flag!");
+				color = colorRed;
+				break;
+			case FLAG_TAKEN_BLUE:
+				line = va("Blue has the flag!");
+				color = colorBlue;
+				break;
+			case FLAG_DROPPED:
+				line = va("Flag dropped!");
+				color = colorWhite;
+				break;
+			default:
+				return;
+		}
+	}
+	else {
+		switch (cgs.flagStatus) {
+			case FLAG_TAKEN:
+				line = va("The flag has been taken!");
+				break;
+			case FLAG_DROPPED:
+				line = va("The flag has been dropped!");
+				break;
+			default:
+				return;
+		}
+	}
 
 	drawCenterString(line, color);
 
@@ -2588,7 +2602,7 @@ static void CG_DrawCenterDDString(void) {
 #ifndef MISSIONPACK
 	int x, y, w;
 	float *color;
-	char *line;
+	char *line, *line2;
 	int statusA, statusB;
 	int sec;
 	static int lastDDSec = -100;
@@ -2609,10 +2623,12 @@ static void CG_DrawCenterDDString(void) {
 	}
 
 	if (statusA == TEAM_BLUE) {
-		line = va("Blue scores in %i", (cgs.takeAt - cg.time) / 1000 + 1);
+		line = va("Blue team dominates!");
+		line2 = va("Scoring in %i", (cgs.takeAt - cg.time) / 1000 + 1);
 		color = colorBlue;
 	} else if (statusA == TEAM_RED) {
-		line = va("Red scores in %i", (cgs.takeAt - cg.time) / 1000 + 1);
+		line = va("Red team dominates!");
+		line2 = va("Scoring in %i", (cgs.takeAt - cg.time) / 1000 + 1);
 		color = colorRed;
 	} else {
 		lastDDSec = -100;
@@ -2648,18 +2664,38 @@ static void CG_DrawCenterDDString(void) {
 				break;
 		}
 	}
-	lastDDSec = sec;
 
-	y = 100;
+	if(line2) {
+		lastDDSec = sec;
 
+		y = 100 - GIANT_HEIGHT;
 
-	w = cg.centerPrintCharWidth * CG_DrawStrlen(line);
+		w = cg.centerPrintCharWidth * CG_DrawStrlen(line);
 
-	x = (SCREEN_WIDTH - w) / 2;
+		x = (SCREEN_WIDTH - w) / 2;
 
-	CG_DrawStringExt(x, y, line, color, qfalse, qtrue,
-			cg.centerPrintCharWidth, (int) (cg.centerPrintCharWidth * 1.5), 0);
+		CG_DrawStringExt(x, y, line, color, qfalse, qtrue,
+				cg.centerPrintCharWidth, (int) (cg.centerPrintCharWidth * 1.5), 0);
 
+		y = 100;
+
+		w = cg.centerPrintCharWidth * CG_DrawStrlen(line2);
+
+		x = (SCREEN_WIDTH - w) / 2;
+
+		CG_DrawStringExt(x, y, line2, color, qfalse, qtrue,
+				cg.centerPrintCharWidth, (int) (cg.centerPrintCharWidth * 1.5), 0);
+	}
+	else {
+		y = 100;
+
+		w = cg.centerPrintCharWidth * CG_DrawStrlen(line);
+
+		x = (SCREEN_WIDTH - w) / 2;
+
+		CG_DrawStringExt(x, y, line, color, qfalse, qtrue,
+				cg.centerPrintCharWidth, (int) (cg.centerPrintCharWidth * 1.5), 0);
+	}
 #endif
 }
 
@@ -3275,10 +3311,13 @@ static void CG_DrawProxWarning( void ) {
 	proxTick = 10 - ((cg.time - proxTime) / 1000);
 
 	if (proxTick > 0) {
-		Com_sprintf(s, sizeof(s), "YOU HAVE BEEN MINED\rINTERNAL COMBUSTION IN: %i", proxTick);
+		Com_sprintf(s, sizeof(s), "YOU HAVE BEEN MINED");
+		w = CG_DrawStrlen( s ) * BIGCHAR_WIDTH;
+		CG_DrawBigStringColor( 320 - w / 2, 64 + BIGCHAR_HEIGHT, s, g_color_table[ColorIndex(COLOR_RED)] );
+		Com_sprintf(s, sizeof(s), "INTERNAL COMBUSTION IN: %i", proxTick);
+		w = CG_DrawStrlen( s ) * BIGCHAR_WIDTH;
+	CG_DrawBigStringColor( 320 - w / 2, 64 + ((2 * BIGCHAR_HEIGHT) + 2), s, g_color_table[ColorIndex(COLOR_RED)] );
 	}
-	w = CG_DrawStrlen( s ) * BIGCHAR_WIDTH;
-	CG_DrawBigStringColor( 320 - w / 2, 64 + BIGCHAR_HEIGHT, s, g_color_table[ColorIndex(COLOR_RED)] );
 }
 
 /*

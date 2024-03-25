@@ -333,6 +333,16 @@ qboolean UI_IsATeamGametype(int check) {
 }
 /*
 ===================
+UI_IsAFFAGametype
+
+Checks if the gametype is NOT a team-based game.
+===================
+ */
+qboolean UI_IsADMBasedGametype(int check) {
+	return !GAMETYPE_IS_A_TEAM_GAME(check);
+}
+/*
+===================
 UI_UsesTeamFlags
 
 Checks if the gametype makes use of the red and blue flags.

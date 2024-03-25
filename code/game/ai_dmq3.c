@@ -4834,7 +4834,7 @@ void BotCheckConsoleMessages(bot_state_t *bs) {
 					}
 				}					//if at a valid chat position and not chatting already and not in teamplay
 				else if (bs->ainode != AINode_Stand && BotValidChatPosition(bs) &&
-						!G_IsATeamGametype(gametype)) {
+						G_IsADMBasedGametype(gametype)) {
 					chat_reply = trap_Characteristic_BFloat(bs->character, CHARACTERISTIC_CHAT_REPLY, 0, 1);
 					if (random() < 1.5 / (NumBots() + 1) && random() < chat_reply) {
 						//if bot replies with a chat message

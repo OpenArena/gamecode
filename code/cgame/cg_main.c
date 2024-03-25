@@ -397,7 +397,7 @@ static cvarTable_t cvarTable[] = {// bk001129
 	{ &cg_paused, "cl_paused", "0", CVAR_ROM},
 	{ &cg_blood, "com_blood", "1", CVAR_ARCHIVE},
 	{ &cg_alwaysWeaponBar, "cg_alwaysWeaponBar", "0", CVAR_ARCHIVE}, //Elimination
-	{ &cg_hitsound, "cg_hitsound", "0", CVAR_ARCHIVE},
+	{ &cg_hitsound, "cg_hitsound", "1", CVAR_ARCHIVE},
 	{ &cg_voip_teamonly, "cg_voipTeamOnly", "1", CVAR_ARCHIVE},
 	{ &cg_voteflags, "cg_voteflags", "*", CVAR_ROM},
 	{ &cg_cyclegrapple, "cg_cyclegrapple", "1", CVAR_ARCHIVE},
@@ -2724,6 +2724,16 @@ qboolean CG_IsATeamGametype(int gametype) {
 }
 /*
 ===================
+CG_IsAFFAGametype
+
+Checks if the gametype is NOT a team-based game.
+===================
+ */
+qboolean CG_IsADMBasedGametype(int gametype) {
+	return !GAMETYPE_IS_A_TEAM_GAME(gametype);
+}
+/*
+===================
 CG_UsesTeamFlags
 
 Checks if the gametype makes use of the red and blue flags.
@@ -2771,5 +2781,15 @@ Checks if the gametype has a capture-based scoring system.
  */
 qboolean CG_GametypeUsesCaptureLimit(int check) {
 	return GAMETYPE_USES_CAPTURE_LIMIT(check);
+}
+/*
+===================
+CG_GametypeUsesRunes
+
+Checks if the gametype uses Runes.
+===================
+ */
+qboolean CG_GametypeUsesRunes(int check) {
+	return GAMETYPE_USES_RUNES(check);
 }
 /* /Neon_Knight */

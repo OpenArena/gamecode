@@ -378,7 +378,7 @@ static void UI_TeamOrdersMenu_ListEvent( void *ptr, int event )
 	int		selection;
 	char	message[256];
 
-	if (event != QM_ACTIVATED || !UI_IsATeamGametype(teamOrdersMenuInfo.gametype))
+	if (event != QM_ACTIVATED || UI_IsADMBasedGametype(teamOrdersMenuInfo.gametype))
 		return;
 
 	id = ((menulist_s *)ptr)->generic.id;
@@ -585,7 +585,7 @@ void UI_TeamOrdersMenu_f( void )
 	// make sure it's a team game
 	trap_GetConfigString( CS_SERVERINFO, info, sizeof(info) );
 	teamOrdersMenuInfo.gametype = atoi( Info_ValueForKey( info, "g_gametype" ) );
-	if(!UI_IsATeamGametype(teamOrdersMenuInfo.gametype)) {
+	if(UI_IsADMBasedGametype(teamOrdersMenuInfo.gametype)) {
 		return;
 	}
 
