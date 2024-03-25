@@ -35,6 +35,8 @@ SOUND OPTIONS MENU
 #define ART_FRAMER			"menu/" MENU_ART_DIR "/frame1_r"
 #define ART_BACK0			"menu/" MENU_ART_DIR "/back_0"
 #define ART_BACK1			"menu/" MENU_ART_DIR "/back_1"
+#define ART_ACCEPT0			"menu/" MENU_ART_DIR "/accept_0"
+#define ART_ACCEPT1			"menu/" MENU_ART_DIR "/accept_1"
 
 #define ID_GRAPHICS			10
 #define ID_DISPLAY			11
@@ -47,10 +49,10 @@ SOUND OPTIONS MENU
 //Sago: Here I do some stuff!
 #define ID_OPENAL			17
 #define ID_BACK				18
-#define ID_CHATBEEP			19
-#define ID_TEAMCHATBEEP		20
-#define ID_HITSOUND			21
-
+#define ID_APPLY			19
+#define ID_CHATBEEP			20
+#define ID_TEAMCHATBEEP		21
+#define ID_HITSOUND			22
 
 static const char *quality_items[] = {
 	"Low", "High", NULL
@@ -78,9 +80,48 @@ typedef struct {
 	menuradiobutton_s	hitSound;
 
 	menubitmap_s		back;
+	menubitmap_s		apply;
 } soundOptionsInfo_t;
 
+typedef struct {
+	int quality;
+	int openal;
+} InitialSoundOptions_s;
+
+static InitialSoundOptions_s	s_iso;
 static soundOptionsInfo_t	soundOptionsInfo;
+
+
+/*
+=================
+UI_SoundOptions_GetInitialSound
+=================
+*/
+static void UI_SoundOptions_GetInitialSound( void )
+{
+	s_iso.quality = soundOptionsInfo.quality.curvalue;
+	s_iso.openal = soundOptionsInfo.openal.curvalue;
+}
+
+
+/*
+=================
+UI_SoundOptions_UpdateMenuItems
+=================
+*/
+static void UI_SoundOptions_UpdateMenuItems( void )
+{
+	soundOptionsInfo.apply.generic.flags |= QMF_HIDDEN|QMF_INACTIVE;
+
+	if ( s_iso.quality != soundOptionsInfo.quality.curvalue )
+	{
+		soundOptionsInfo.apply.generic.flags &= ~(QMF_HIDDEN|QMF_INACTIVE);
+	}
+	if ( s_iso.openal != soundOptionsInfo.openal.curvalue )
+	{
+		soundOptionsInfo.apply.generic.flags &= ~(QMF_HIDDEN|QMF_INACTIVE);
+	}
+}
 
 
 /*
@@ -129,8 +170,6 @@ static void UI_SoundOptionsMenu_Event( void* ptr, int event ) {
 			trap_Cvar_SetValue( "s_khz", 11 );
 			trap_Cvar_SetValue( "s_compression", 1 );
 		}
-		UI_ForceMenuOff();
-		trap_Cmd_ExecuteText( EXEC_APPEND, "snd_restart\n" );
 		break;
 /*
 	case ID_A3D:
@@ -146,12 +185,11 @@ static void UI_SoundOptionsMenu_Event( void* ptr, int event ) {
 
 	case ID_OPENAL:
 		if( soundOptionsInfo.openal.curvalue ) {
-			trap_Cmd_ExecuteText( EXEC_NOW, "s_useopenal 1\n" );
+			trap_Cvar_SetValue( "s_useopenal", 1 );
 		}
 		else {
-			trap_Cmd_ExecuteText( EXEC_NOW, "s_useopenal 0\n" );
+			trap_Cvar_SetValue( "s_useopenal", 0 );
 		}
-		soundOptionsInfo.openal.curvalue = (int)trap_Cvar_VariableValue( "s_useopenal" );
 		break;
 
 	case ID_CHATBEEP:
@@ -169,7 +207,24 @@ static void UI_SoundOptionsMenu_Event( void* ptr, int event ) {
 	case ID_BACK:
 		UI_PopMenu();
 		break;
+
+	case ID_APPLY:
+		trap_Cmd_ExecuteText( EXEC_APPEND, "snd_restart\n" );
+		break;
 	}
+}
+
+
+/*
+================
+UI_SoundOptions_MenuDraw
+================
+*/
+void UI_SoundOptions_MenuDraw (void)
+{
+	UI_SoundOptions_UpdateMenuItems();
+
+	Menu_Draw( &soundOptionsInfo.menu );
 }
 
 
@@ -186,6 +241,7 @@ static void UI_SoundOptionsMenu_Init( void ) {
 	UI_SoundOptionsMenu_Cache();
 	soundOptionsInfo.menu.wrapAround = qtrue;
 	soundOptionsInfo.menu.fullscreen = qtrue;
+	soundOptionsInfo.menu.draw       = UI_SoundOptions_MenuDraw;
 
 	soundOptionsInfo.banner.generic.type		= MTYPE_BTEXT;
 	soundOptionsInfo.banner.generic.flags		= QMF_CENTER_JUSTIFY;
@@ -339,6 +395,17 @@ static void UI_SoundOptionsMenu_Init( void ) {
 	soundOptionsInfo.back.height				= 64;
 	soundOptionsInfo.back.focuspic				= ART_BACK1;
 
+	soundOptionsInfo.apply.generic.type			= MTYPE_BITMAP;
+	soundOptionsInfo.apply.generic.name			= ART_ACCEPT0;
+	soundOptionsInfo.apply.generic.flags			= QMF_RIGHT_JUSTIFY|QMF_PULSEIFFOCUS|QMF_HIDDEN|QMF_INACTIVE;
+	soundOptionsInfo.apply.generic.callback		= UI_SoundOptionsMenu_Event;
+	soundOptionsInfo.apply.generic.id			= ID_APPLY;
+	soundOptionsInfo.apply.generic.x			= 640;
+	soundOptionsInfo.apply.generic.y			= 480-64;
+	soundOptionsInfo.apply.width				= 128;
+	soundOptionsInfo.apply.height				= 64;
+	soundOptionsInfo.apply.focuspic				= ART_ACCEPT1;
+
 	Menu_AddItem( &soundOptionsInfo.menu, ( void * ) &soundOptionsInfo.banner );
 	Menu_AddItem( &soundOptionsInfo.menu, ( void * ) &soundOptionsInfo.framel );
 	Menu_AddItem( &soundOptionsInfo.menu, ( void * ) &soundOptionsInfo.framer );
@@ -355,6 +422,7 @@ static void UI_SoundOptionsMenu_Init( void ) {
 	Menu_AddItem( &soundOptionsInfo.menu, ( void * ) &soundOptionsInfo.teamChatBeep );
 	Menu_AddItem( &soundOptionsInfo.menu, ( void * ) &soundOptionsInfo.hitSound );
 	Menu_AddItem( &soundOptionsInfo.menu, ( void * ) &soundOptionsInfo.back );
+	Menu_AddItem( &soundOptionsInfo.menu, ( void * ) &soundOptionsInfo.apply );
 
 	soundOptionsInfo.sfxvolume.curvalue = trap_Cvar_VariableValue( "s_volume" ) * 10;
 	soundOptionsInfo.musicvolume.curvalue = trap_Cvar_VariableValue( "s_musicvolume" ) * 10;
@@ -364,6 +432,8 @@ static void UI_SoundOptionsMenu_Init( void ) {
 	soundOptionsInfo.chatBeep.curvalue = (int)trap_Cvar_VariableValue( "cg_chatBeep" );
 	soundOptionsInfo.teamChatBeep.curvalue = (int)trap_Cvar_VariableValue( "cg_teamChatBeep" );
 	soundOptionsInfo.hitSound.curvalue = (int)trap_Cvar_VariableValue( "cg_hitSound" );
+
+	UI_SoundOptions_GetInitialSound();
 }
 
 
@@ -377,6 +447,8 @@ void UI_SoundOptionsMenu_Cache( void ) {
 	trap_R_RegisterShaderNoMip( ART_FRAMER );
 	trap_R_RegisterShaderNoMip( ART_BACK0 );
 	trap_R_RegisterShaderNoMip( ART_BACK1 );
+	trap_R_RegisterShaderNoMip( ART_ACCEPT0 );
+	trap_R_RegisterShaderNoMip( ART_ACCEPT1 );
 }
 
 
