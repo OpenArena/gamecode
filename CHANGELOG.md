@@ -165,7 +165,9 @@
 
 **Estimated release date:** March 29, 2024
 
-* Skirmish/Create Server: For Round-based games, removed duplicate _"All Weapons (Elimination)"_ and shortened to _"All Weapons (Elim.)"_. Also shortened _"All Weapons (Standard)"_ to _"All Weapons (Default)"_.
+* Skirmish/Create Server:
+  * For Weapon Rulesets in Round-based games, removed duplicate _"All Weapons (Elimination)"_ and shortened to _"All Weapons (Elim.)"_. Also shortened _"All Weapons (Standard)"_ to _"All Weapons (Default)"_.
+  * Changed the item descriptions for "Award Pushing".
 * "Apply" button added to the Sound menu. (Credit: @Bishop-333)
 * DD now displays "X team dominates!" on top of the counter.
 * Timer, Movement Speed and Last Attacker are now rendered on top of the gametype-specific strings.
