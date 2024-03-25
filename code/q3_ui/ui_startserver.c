@@ -927,7 +927,7 @@ static const char *weaponModeElimination_list[] = {
 };
 
 static const char *pmove_list[] = {
-	"Framerate dependent",
+	"Framerate Dependant",
 	"Fixed framerate 125Hz",
 	"Fixed framerate 91Hz",
 	"Accurate",
@@ -935,9 +935,9 @@ static const char *pmove_list[] = {
 };
 
 static const char *awardPushing_list[] = {
-	"Pushed Loses A Point",
-	"Pusher Scores A Point",
-	"Last Attacker Scores",
+	"Disabled",
+	"Last Pusher",
+	"Last Attacker",
 	NULL
 };
 
@@ -1644,16 +1644,16 @@ Descriptions should have 48 characters or less per line, and there can't be more
 static void ServerOptions_StatusBar_AwardPushing( void* ptr ) {
     switch( ((menulist_s*)ptr)->curvalue ) {
 		case 1:
-			UI_DrawString( 320, 440, "Pusher Scores A Point: If a player dies in a pit", UI_CENTER|UI_SMALLFONT, colorWhite );
-			UI_DrawString( 320, 460, "the void or another hazard, their pusher scores.", UI_CENTER|UI_SMALLFONT, colorWhite );
+			UI_DrawString( 320, 440, "Last Pusher: If a player is pushed into a level", UI_CENTER|UI_SMALLFONT, colorWhite );
+			UI_DrawString( 320, 460, "hazard and dies, their pusher scores a point.", UI_CENTER|UI_SMALLFONT, colorWhite );
 			break;
 		case 2:
-			UI_DrawString( 320, 440, "Last Attacker Scores: If a player suicides via", UI_CENTER|UI_SMALLFONT, colorWhite );
-			UI_DrawString( 320, 460, "pit, void or hazard, their last attacker scores.", UI_CENTER|UI_SMALLFONT, colorWhite );
+			UI_DrawString( 320, 440, "Last Attacker: If a player suicides or dies", UI_CENTER|UI_SMALLFONT, colorWhite );
+			UI_DrawString( 320, 460, "via level hazard, their last attacker scores.", UI_CENTER|UI_SMALLFONT, colorWhite );
 			break;
 		default: // case 0
-			UI_DrawString( 320, 440, "Pushed Loses A Point: If a player dies in a pit", UI_CENTER|UI_SMALLFONT, colorWhite );
-			UI_DrawString( 320, 460, "the void or another hazard, they lose a point.", UI_CENTER|UI_SMALLFONT, colorWhite );
+			UI_DrawString( 320, 440, "Disabled: If a player dies due to self-damage", UI_CENTER|UI_SMALLFONT, colorWhite );
+			UI_DrawString( 320, 460, "or level hazard, they lose a point.", UI_CENTER|UI_SMALLFONT, colorWhite );
 			break;
     }
 }
