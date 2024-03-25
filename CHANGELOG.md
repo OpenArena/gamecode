@@ -165,6 +165,7 @@
 
 **Estimated release date:** March 29, 2024
 
+* "Apply" button added to the Sound menu. (Credit: @Bishop-333)
 * DD now displays "X team dominates!" on top of the counter.
 * Timer, Movement Speed and Last Attacker are now rendered on top of the gametype-specific strings.
 * A certain string modification was wrongly applied to 1FCTF when it should have been applied to CTF. (Fixes OpenArena/gamecode#163)
