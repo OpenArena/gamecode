@@ -37,7 +37,7 @@
 * `capturelimit` no longer affects Team Deathmatch.
 * `cg_teamChatsOnly` now only affects team-based gamemodes.
 * `cg_weaponBarStyle` now returns the default weapon bar if its value falls outside its limits.
-* `developer` mode has been extended with several cvars now requiring the mode to be enabled.
+* `developer` mode has been extended with several cvars now requiring the mode to be enabled. If a cvar has "debug" in its name, it requires this mode.
 * `elimination_selfDamage` now takes four values: 0 (no damage to self or teammates), 1 (only damage to self), 2 (only damage to teammates a.k.a. Friendly Fire) and 3 (self and teammate damage).
 * New option for `g_awardPushing`: `g_awardPushing 2`. [If a player commits suicide, the last player who attacked them scores a point.](https://openarena.ws/board/index.php?topic=5289.msg54334#msg54334)
 * Spectators can now use the `noclip` cheat code.
@@ -206,6 +206,9 @@
 * `cg_teamChatsOnly` now only affects team-based gamemodes.
 * `cg_weaponBarStyle` now returns the default weapon bar if its value falls outside its limits.
 * `developer` mode has been extended with several cvars now requiring the mode to be enabled.
+  * New cheat-protected development cvars: `cg_debugOrbit`, `cg_debugAccuracy`, `bot_debugChat`, `bot_debugLTG` and `bot_debugPaths`.
+  * Restored `cg_debugDelag`.
+  * Other cvars that require developer 1 include `cg_debugAnim`, `cg_debugPosition`, `cg_debugEvents`, `cg_leiDebug`, `g_debugMove`, `g_debugDamage`, `g_debugAlloc`, `ui_debug` (MPUI/UI3) and `ui_leiDebug` (MPUI/UI3).
 * `elimination_selfDamage` now takes four values: 0 (no damage to self or teammates), 1 (only damage to self), 2 (only damage to teammates a.k.a. Friendly Fire) and 3 (self and teammate damage).
 * New option for `g_awardPushing`: `g_awardPushing 2`. [If a player commits suicide, the last player who attacked them scores a point.](https://openarena.ws/board/index.php?topic=5289.msg54334#msg54334)
 * Spectators can now use the `noclip` cheat code.
