@@ -205,7 +205,7 @@
 * `capturelimit` no longer affects Team Deathmatch.
 * `cg_teamChatsOnly` now only affects team-based gamemodes.
 * `cg_weaponBarStyle` now returns the default weapon bar if its value falls outside its limits.
-* `developer` mode has been extended with several cvars now requiring the mode to be enabled.
+* `developer` mode has been extended with several cvars now requiring the mode to be enabled. All these cvars are also cheat-protected.
   * New cheat-protected development cvars: `cg_debugOrbit`, `cg_debugAccuracy`, `bot_debugChat`, `bot_debugLTG` and `bot_debugPaths`.
   * Restored `cg_debugDelag`.
   * Other cvars that require developer 1 include `cg_debugAnim`, `cg_debugPosition`, `cg_debugEvents`, `cg_leiDebug`, `g_debugMove`, `g_debugDamage`, `g_debugAlloc`, `ui_debug` (MPUI/UI3) and `ui_leiDebug` (MPUI/UI3).
