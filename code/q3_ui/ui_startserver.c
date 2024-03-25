@@ -910,20 +910,19 @@ static const char *weaponArenaWeapon_list[] = {
 };
 
 static const char *weaponMode_list[] = {
-	"All Weapons (Standard)",
+	"All Weapons (Default)",
 	"Instantgib",
 	"Single Weapon Arena",
 	"Classic Arena",
-	"All Weapons (Elimination)",
+	"All Weapons (Elim.)",
 	NULL
 };
 
 static const char *weaponModeElimination_list[] = {
-	"All Weapons (Elimination)",
+	"All Weapons (Elim.)",
 	"Instantgib",
 	"Single Weapon Arena",
 	"Classic Arena",
-	"All Weapons (Elimination)",
 	NULL
 };
 
@@ -1134,51 +1133,76 @@ static void ServerOptions_Start( void ) {
 			break;
 	};
 	trap_Cvar_SetValue( "g_grapple", grapple );
-	switch(weaponMode) {
-		case 1:
-			//Instantgib
-			trap_Cvar_SetValue( "g_instantgib", 1);
-			trap_Cvar_SetValue( "g_weaponArena", 0);
-			trap_Cvar_SetValue( "g_elimination", 0);
-			trap_Cvar_SetValue( "g_classicMode", 0);
-			break;
-		case 2:
-			//Weapon Arena
-			trap_Cvar_SetValue( "g_instantgib", 0);
-			trap_Cvar_SetValue( "g_weaponArena", 1);
-			trap_Cvar_SetValue( "g_elimination", 0);
-			trap_Cvar_SetValue( "g_classicMode", 0);
-			break;
-		case 3:
-			//"Classic" Arena
-			trap_Cvar_SetValue( "g_instantgib", 0);
-			trap_Cvar_SetValue( "g_weaponArena", 0);
-			trap_Cvar_SetValue( "g_elimination", 0);
-			trap_Cvar_SetValue( "g_classicMode", 1);
-			break;
-		case 4:
-			if (UI_IsARoundBasedGametype(s_serveroptions.gametype)) {
+	if (UI_IsARoundBasedGametype(s_serveroptions.gametype)) {
+		switch(weaponMode) {
+			case 1:
+				//Instantgib
+				trap_Cvar_SetValue( "g_instantgib", 1);
+				trap_Cvar_SetValue( "g_weaponArena", 0);
+				trap_Cvar_SetValue( "g_elimination", 0);
+				trap_Cvar_SetValue( "g_classicMode", 0);
+				break;
+			case 2:
+				//Weapon Arena
+				trap_Cvar_SetValue( "g_instantgib", 0);
+				trap_Cvar_SetValue( "g_weaponArena", 1);
+				trap_Cvar_SetValue( "g_elimination", 0);
+				trap_Cvar_SetValue( "g_classicMode", 0);
+				break;
+			case 3:
+				//"Classic" Arena
+				trap_Cvar_SetValue( "g_instantgib", 0);
+				trap_Cvar_SetValue( "g_weaponArena", 0);
+				trap_Cvar_SetValue( "g_elimination", 0);
+				trap_Cvar_SetValue( "g_classicMode", 1);
+				break;
+			default:
 				// Default mode for round-based gametypes.
 				trap_Cvar_SetValue( "g_instantgib", 0);
 				trap_Cvar_SetValue( "g_weaponArena", 0);
 				trap_Cvar_SetValue( "g_elimination", 0);
 				trap_Cvar_SetValue( "g_classicMode", 0);
-			}
-			else {
+				break;
+		}
+	}
+	else {
+		switch(weaponMode) {
+			case 1:
+				//Instantgib
+				trap_Cvar_SetValue( "g_instantgib", 1);
+				trap_Cvar_SetValue( "g_weaponArena", 0);
+				trap_Cvar_SetValue( "g_elimination", 0);
+				trap_Cvar_SetValue( "g_classicMode", 0);
+				break;
+			case 2:
+				//Weapon Arena
+				trap_Cvar_SetValue( "g_instantgib", 0);
+				trap_Cvar_SetValue( "g_weaponArena", 1);
+				trap_Cvar_SetValue( "g_elimination", 0);
+				trap_Cvar_SetValue( "g_classicMode", 0);
+				break;
+			case 3:
+				//"Classic" Arena
+				trap_Cvar_SetValue( "g_instantgib", 0);
+				trap_Cvar_SetValue( "g_weaponArena", 0);
+				trap_Cvar_SetValue( "g_elimination", 0);
+				trap_Cvar_SetValue( "g_classicMode", 1);
+				break;
+			case 4:
 				//Elimination mode.
 				trap_Cvar_SetValue( "g_instantgib", 0);
 				trap_Cvar_SetValue( "g_weaponArena", 0);
 				trap_Cvar_SetValue( "g_elimination", 1);
 				trap_Cvar_SetValue( "g_classicMode", 0);
-			}
-			break;
-		default:
-			//All Weapons Classic.
-			trap_Cvar_SetValue( "g_instantgib", 0);
-			trap_Cvar_SetValue( "g_weaponArena", 0);
-			trap_Cvar_SetValue( "g_elimination", 0);
-			trap_Cvar_SetValue( "g_classicMode", 0);
-			break;
+				break;
+			default:
+				//All Weapons Classic.
+				trap_Cvar_SetValue( "g_instantgib", 0);
+				trap_Cvar_SetValue( "g_weaponArena", 0);
+				trap_Cvar_SetValue( "g_elimination", 0);
+				trap_Cvar_SetValue( "g_classicMode", 0);
+				break;
+		}
 	}
 	trap_Cvar_SetValue( "g_weaponArenaWeapon", weaponArenaWeapon );
 	trap_Cvar_SetValue( "g_awardPushing", awardPushing );
@@ -1552,34 +1576,50 @@ Descriptions should have 48 characters or less per line, and there can't be more
 =================
 */
 static void ServerOptions_StatusBar_WeaponMode( void* ptr ) {
-    switch( ((menulist_s*)ptr)->curvalue ) {
-		case 1:
-			UI_DrawString( 320, 440, "Instantgib: All pickups removed.", UI_CENTER|UI_SMALLFONT, colorWhite );
-			UI_DrawString( 320, 460, "Players spawn with a one-hit-frag Railgun.", UI_CENTER|UI_SMALLFONT, colorWhite );
-			break;
-		case 2:
-			UI_DrawString( 320, 440, "Single Weapon Arena: All pickups removed.", UI_CENTER|UI_SMALLFONT, colorWhite );
-			UI_DrawString( 320, 460, "Players will spawn with a specific weapon.", UI_CENTER|UI_SMALLFONT, colorWhite );
-			break;
-		case 3:
-			UI_DrawString( 320, 440, "Classic Arena: No pickups removed. Replaces some", UI_CENTER|UI_SMALLFONT, colorWhite );
-			UI_DrawString( 320, 460, "weapons and items to match the OG experience.", UI_CENTER|UI_SMALLFONT, colorWhite );
-			break;
-		case 4:
-			UI_DrawString( 320, 440, "All Weapons (Elimination): All pickups removed.", UI_CENTER|UI_SMALLFONT, colorWhite );
-			UI_DrawString( 320, 460, "Players spawn with all weapons and full HP/AP.", UI_CENTER|UI_SMALLFONT, colorWhite );
-			break;
-		default:
-			if (UI_IsARoundBasedGametype(s_serveroptions.gametype)) {
+	if (UI_IsARoundBasedGametype(s_serveroptions.gametype)) {
+		switch( ((menulist_s*)ptr)->curvalue ) {
+			case 1:
+				UI_DrawString( 320, 440, "Instantgib: All pickups removed.", UI_CENTER|UI_SMALLFONT, colorWhite );
+				UI_DrawString( 320, 460, "Players spawn with a one-hit-frag Railgun.", UI_CENTER|UI_SMALLFONT, colorWhite );
+				break;
+			case 2:
+				UI_DrawString( 320, 440, "Single Weapon Arena: All pickups removed.", UI_CENTER|UI_SMALLFONT, colorWhite );
+				UI_DrawString( 320, 460, "Players will spawn with a specific weapon.", UI_CENTER|UI_SMALLFONT, colorWhite );
+				break;
+			case 3:
+				UI_DrawString( 320, 440, "Classic Arena: No pickups removed. Replaces some", UI_CENTER|UI_SMALLFONT, colorWhite );
+				UI_DrawString( 320, 460, "weapons and items to match the OG experience.", UI_CENTER|UI_SMALLFONT, colorWhite );
+				break;
+			default:
 				UI_DrawString( 320, 440, "All Weapons (Elimination): All pickups removed.", UI_CENTER|UI_SMALLFONT, colorWhite );
 				UI_DrawString( 320, 460, "Players spawn with all weapons and full HP/AP.", UI_CENTER|UI_SMALLFONT, colorWhite );
-			}
-			else {
-				UI_DrawString( 320, 440, "All Weapons (Standard): No pickups removed.", UI_CENTER|UI_SMALLFONT, colorWhite );
+				break;
+		}
+	}
+	else {
+		switch( ((menulist_s*)ptr)->curvalue ) {
+			case 1:
+				UI_DrawString( 320, 440, "Instantgib: All pickups removed.", UI_CENTER|UI_SMALLFONT, colorWhite );
+				UI_DrawString( 320, 460, "Players spawn with a one-hit-frag Railgun.", UI_CENTER|UI_SMALLFONT, colorWhite );
+				break;
+			case 2:
+				UI_DrawString( 320, 440, "Single Weapon Arena: All pickups removed.", UI_CENTER|UI_SMALLFONT, colorWhite );
+				UI_DrawString( 320, 460, "Players will spawn with a specific weapon.", UI_CENTER|UI_SMALLFONT, colorWhite );
+				break;
+			case 3:
+				UI_DrawString( 320, 440, "Classic Arena: No pickups removed. Replaces some", UI_CENTER|UI_SMALLFONT, colorWhite );
+				UI_DrawString( 320, 460, "weapons and items to match the OG experience.", UI_CENTER|UI_SMALLFONT, colorWhite );
+				break;
+			case 4:
+				UI_DrawString( 320, 440, "All Weapons (Elimination): All pickups removed.", UI_CENTER|UI_SMALLFONT, colorWhite );
+				UI_DrawString( 320, 460, "Players spawn with all weapons and full HP/AP.", UI_CENTER|UI_SMALLFONT, colorWhite );
+				break;
+			default:
+				UI_DrawString( 320, 440, "All Weapons (Default): No pickups removed.", UI_CENTER|UI_SMALLFONT, colorWhite );
 				UI_DrawString( 320, 460, "Players spawn with Gauntlet and Machinegun.", UI_CENTER|UI_SMALLFONT, colorWhite );
-			}
-			break;
-    }
+				break;
+		}
+	}
 }
 
 /*
@@ -2037,21 +2077,37 @@ static void ServerOptions_SetMenuItems( void ) {
 	s_serveroptions.grapple.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_grapple" ) );
 	// Weapon Rules modes. Only one option can be active at a time.
 	s_serveroptions.weaponMode.curvalue = 0;
-	// Instantgib mode
-	if(trap_Cvar_VariableValue("g_instantgib") != 0 && trap_Cvar_VariableValue("g_weaponArena") == 0 && trap_Cvar_VariableValue("g_elimination") == 0 && trap_Cvar_VariableValue("g_classicMode") == 0)
-		s_serveroptions.weaponMode.curvalue = 1;
-	// Single Weapon mode
-	else if(trap_Cvar_VariableValue("g_instantgib") == 0 && trap_Cvar_VariableValue("g_weaponArena") != 0 && trap_Cvar_VariableValue("g_elimination") == 0 && trap_Cvar_VariableValue("g_classicMode") == 0)
-		s_serveroptions.weaponMode.curvalue = 2;
-	// Classic mode
-	else if(trap_Cvar_VariableValue("g_instantgib") == 0 && trap_Cvar_VariableValue("g_weaponArena") == 0 && trap_Cvar_VariableValue("g_elimination") == 0 && trap_Cvar_VariableValue("g_classicMode") != 0)
-		s_serveroptions.weaponMode.curvalue = 3;
-	// Elimination mode
-	else if(trap_Cvar_VariableValue("g_instantgib") == 0 && trap_Cvar_VariableValue("g_weaponArena") == 0 && trap_Cvar_VariableValue("g_elimination") != 0 && trap_Cvar_VariableValue("g_classicMode") == 0)
-		s_serveroptions.weaponMode.curvalue = 4;
-	// All Weapons mode
-	else
-		s_serveroptions.weaponMode.curvalue = 0;
+	if (UI_IsARoundBasedGametype(s_serveroptions.gametype)) {
+		// Instantgib mode
+		if(trap_Cvar_VariableValue("g_instantgib") != 0 && trap_Cvar_VariableValue("g_weaponArena") == 0 && trap_Cvar_VariableValue("g_classicMode") == 0)
+			s_serveroptions.weaponMode.curvalue = 1;
+		// Single Weapon mode
+		else if(trap_Cvar_VariableValue("g_instantgib") == 0 && trap_Cvar_VariableValue("g_weaponArena") != 0 && trap_Cvar_VariableValue("g_classicMode") == 0)
+			s_serveroptions.weaponMode.curvalue = 2;
+		// Classic mode
+		else if(trap_Cvar_VariableValue("g_instantgib") == 0 && trap_Cvar_VariableValue("g_weaponArena") == 0 && trap_Cvar_VariableValue("g_classicMode") != 0)
+			s_serveroptions.weaponMode.curvalue = 3;
+		// All Weapons Elimination mode
+		else
+			s_serveroptions.weaponMode.curvalue = 0;
+	}
+	else {
+		// Instantgib mode
+		if(trap_Cvar_VariableValue("g_instantgib") != 0 && trap_Cvar_VariableValue("g_weaponArena") == 0 && trap_Cvar_VariableValue("g_elimination") == 0 && trap_Cvar_VariableValue("g_classicMode") == 0)
+			s_serveroptions.weaponMode.curvalue = 1;
+		// Single Weapon mode
+		else if(trap_Cvar_VariableValue("g_instantgib") == 0 && trap_Cvar_VariableValue("g_weaponArena") != 0 && trap_Cvar_VariableValue("g_elimination") == 0 && trap_Cvar_VariableValue("g_classicMode") == 0)
+			s_serveroptions.weaponMode.curvalue = 2;
+		// Classic mode
+		else if(trap_Cvar_VariableValue("g_instantgib") == 0 && trap_Cvar_VariableValue("g_weaponArena") == 0 && trap_Cvar_VariableValue("g_elimination") == 0 && trap_Cvar_VariableValue("g_classicMode") != 0)
+			s_serveroptions.weaponMode.curvalue = 3;
+		// All Weapons Elimination mode
+		else if(trap_Cvar_VariableValue("g_instantgib") == 0 && trap_Cvar_VariableValue("g_weaponArena") == 0 && trap_Cvar_VariableValue("g_elimination") != 0 && trap_Cvar_VariableValue("g_classicMode") == 0)
+			s_serveroptions.weaponMode.curvalue = 4;
+		// All Weapons Standard mode
+		else
+			s_serveroptions.weaponMode.curvalue = 0;
+	}
 	s_serveroptions.weaponArenaWeapon.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_weaponArenaWeapon" ) );
 	s_serveroptions.awardPushing.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_awardPushing" ) );
 	Q_strncpyz( s_serveroptions.eliminationRoundTime.field.buffer, UI_Cvar_VariableString( "elimination_roundtime" ), sizeof( s_serveroptions.eliminationRoundTime.field.buffer ) );
