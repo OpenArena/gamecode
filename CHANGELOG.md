@@ -167,6 +167,7 @@
 
 **Estimated release date:** March 29, 2024
 
+* Flags aren't drawn anymore in Harvester/Overload.
 * New helper function for game: `G_GetAttackingTeam()`, returns the actual team that's in the attacker role in eCTF AvD mode.
 * CTF Elimination, AvD mode (formerly "One-Way mode"): Now both teams will get informed on their role appropriately:
   * If the team is attacking, the players will receive a _"You Are Attacking!"_ message with the fully saturated color of their team.
