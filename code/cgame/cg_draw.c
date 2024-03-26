@@ -1088,16 +1088,40 @@ static float CG_DrawCTFoneway(float y) {
 	if ((cgs.elimflags & EF_ONEWAY) == 0) {
 		return y; //nothing to draw
 	}
-	else if (cgs.attackingTeam == TEAM_BLUE) {
-		memcpy(color, g_color_table[ColorIndex(COLOR_BLUE)], sizeof (color));
-		s = va("Blue team on offence");
+	// Full team colors for offence, tamed for defence
+	if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_BLUE) {
+		if (cgs.attackingTeam == TEAM_BLUE) {
+			memcpy(color, g_color_table[ColorIndex(COLOR_BLUE)], sizeof (color));
+			s = va("You are Attacking!");
+		}
+		else if (cgs.attackingTeam == TEAM_RED) {
+			memcpy(color, g_color_table[ColorIndex(COLOR_CYAN)], sizeof (color));
+			s = va("You are Defending!");
+		}
 	}
-	else if (cgs.attackingTeam == TEAM_RED) {
-		memcpy(color, g_color_table[ColorIndex(COLOR_RED)], sizeof (color));
-		s = va("Red team on offence");
+	else if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_RED) {
+		if (cgs.attackingTeam == TEAM_RED) {
+			memcpy(color, g_color_table[ColorIndex(COLOR_RED)], sizeof (color));
+			s = va("You are Attacking");
+		}
+		else if (cgs.attackingTeam == TEAM_BLUE) {
+			memcpy(color, g_color_table[ColorIndex(COLOR_MAGENTA)], sizeof (color));
+			s = va("You are Defending");
+		}
 	}
 	else {
-		s = va("Unknown team on offence");
+		if (cgs.attackingTeam == TEAM_BLUE) {
+			memcpy(color, g_color_table[ColorIndex(COLOR_BLUE)], sizeof (color));
+			s = va("Blue Team on Offence!");
+		}
+		else if (cgs.attackingTeam == TEAM_RED) {
+			memcpy(color, g_color_table[ColorIndex(COLOR_RED)], sizeof (color));
+			s = va("Red Team on Offence!");
+		}
+		else {
+			memcpy(color, g_color_table[ColorIndex(COLOR_WHITE)], sizeof (color));
+			s = va("No Team on Offence!");
+		}
 	}
 
 
