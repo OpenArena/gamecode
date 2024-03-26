@@ -1047,6 +1047,10 @@ static float CG_DrawLMSmode(float y) {
 	char *s;
 	int w;
 
+	if (cgs.gametype != GT_LMS) {
+		return y;
+	}
+
 	if (cgs.lms_mode == 0) {
 		s = va("LMS: Point/round + OT");
 	}
@@ -1093,40 +1097,50 @@ static float CG_DrawCTFoneway(float y) {
 		if (cgs.attackingTeam == TEAM_BLUE) {
 			memcpy(color, g_color_table[ColorIndex(COLOR_BLUE)], sizeof (color));
 			s = va("You are Attacking!");
+			w = CG_DrawStrlen(s) * SMALLCHAR_WIDTH;
+			CG_DrawSmallStringColor(635 - w, y + 2, s, color);
 		}
 		else if (cgs.attackingTeam == TEAM_RED) {
 			memcpy(color, g_color_table[ColorIndex(COLOR_CYAN)], sizeof (color));
 			s = va("You are Defending!");
+			w = CG_DrawStrlen(s) * SMALLCHAR_WIDTH;
+			CG_DrawSmallStringColor(635 - w, y + 2, s, color);
 		}
 	}
 	else if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_RED) {
 		if (cgs.attackingTeam == TEAM_RED) {
 			memcpy(color, g_color_table[ColorIndex(COLOR_RED)], sizeof (color));
 			s = va("You are Attacking");
+			w = CG_DrawStrlen(s) * SMALLCHAR_WIDTH;
+			CG_DrawSmallStringColor(635 - w, y + 2, s, color);
 		}
 		else if (cgs.attackingTeam == TEAM_BLUE) {
 			memcpy(color, g_color_table[ColorIndex(COLOR_MAGENTA)], sizeof (color));
 			s = va("You are Defending");
+			w = CG_DrawStrlen(s) * SMALLCHAR_WIDTH;
+			CG_DrawSmallStringColor(635 - w, y + 2, s, color);
 		}
 	}
 	else {
 		if (cgs.attackingTeam == TEAM_BLUE) {
 			memcpy(color, g_color_table[ColorIndex(COLOR_BLUE)], sizeof (color));
 			s = va("Blue Team on Offence!");
+			w = CG_DrawStrlen(s) * SMALLCHAR_WIDTH;
+			CG_DrawSmallStringColor(635 - w, y + 2, s, color);
 		}
 		else if (cgs.attackingTeam == TEAM_RED) {
 			memcpy(color, g_color_table[ColorIndex(COLOR_RED)], sizeof (color));
 			s = va("Red Team on Offence!");
+			w = CG_DrawStrlen(s) * SMALLCHAR_WIDTH;
+			CG_DrawSmallStringColor(635 - w, y + 2, s, color);
 		}
 		else {
 			memcpy(color, g_color_table[ColorIndex(COLOR_WHITE)], sizeof (color));
 			s = va("No Team on Offence!");
+			w = CG_DrawStrlen(s) * SMALLCHAR_WIDTH;
+			CG_DrawSmallStringColor(635 - w, y + 2, s, color);
 		}
 	}
-
-
-	w = CG_DrawStrlen(s) * SMALLCHAR_WIDTH;
-	CG_DrawSmallStringColor(635 - w, y + 2, s, color);
 
 	return y + SMALLCHAR_HEIGHT + 4;
 }
@@ -1185,9 +1199,6 @@ static float CG_DrawCountdownTimer(float y) {
 	int cw __attribute__ ((unused));
 	int rst;
 
-	if (!CG_IsARoundBasedGametype(cgs.gametype) && (cgs.gametype != GT_DOUBLE_D)) {
-		return y;
-	}
 
 	rst = cgs.roundStartTime;
 
@@ -1605,18 +1616,6 @@ static void CG_DrawUpperRight(stereoFrame_t stereoFrame) {
 
 	y = 0;
 
-	if (cg_drawTimer.integer) {
-		y = CG_DrawTimer(y);
-	}
-	if (cg_drawSpeed.integer) {
-		y = CG_DrawSpeedMeter(y);
-	}
-	if (cg_drawAttacker.integer) {
-		y = CG_DrawAttacker(y);
-	}
-
-	y = CG_DrawFollowMessage(y);
-
 	if (CG_IsATeamGametype(cgs.gametype) && cg_drawTeamOverlay.integer == 1) {
 		y = CG_DrawTeamOverlay(y, qtrue, qtrue);
 	}
@@ -1646,6 +1645,19 @@ static void CG_DrawUpperRight(stereoFrame_t stereoFrame) {
 		/*if (cgs.clientinfo[ cg.clientNum ].isDead)
 			y = CG_DrawEliminationDeathMessage( y);*/
 	}
+
+	y = CG_DrawFollowMessage(y);
+
+	if (cg_drawTimer.integer) {
+		y = CG_DrawTimer(y);
+	}
+	if (cg_drawAttacker.integer) {
+		y = CG_DrawAttacker(y);
+	}
+	if (cg_drawSpeed.integer) {
+		y = CG_DrawSpeedMeter(y);
+	}
+
 }
 
 /*
@@ -1769,6 +1781,16 @@ static float CG_DrawScores(float y) {
 			s = va("^1%3i%% ^4%3i%%", cg.redObeliskHealth, cg.blueObeliskHealth);
 			CG_DrawSmallString(x, y - 28, s, 1.0F);
 		}
+
+		if (CG_GametypeUsesFragLimit(cgs.gametype) && cgs.fraglimit) {
+			s = va("%2i", cgs.fraglimit);
+		}
+		else /*if (CG_GametypeUsesCaptureLimit(cgs.gametype) && cgs.capturelimit)*/ {
+			s = va("%2i", cgs.capturelimit);
+		}
+		w = CG_DrawStrlen(s) * BIGCHAR_WIDTH + 8;
+		x -= w;
+		CG_DrawBigString(x + 4, y, s, 1.0F);
 	}
 	else {
 		qboolean spectator;
@@ -1823,17 +1845,17 @@ static float CG_DrawScores(float y) {
 			}
 			CG_DrawBigString(x + 4, y, s, 1.0F);
 		}
-	}
 
-	if (CG_GametypeUsesFragLimit(cgs.gametype) && cgs.fraglimit) {
-		s = va("%2i", cgs.fraglimit);
+		if (CG_GametypeUsesFragLimit(cgs.gametype) && cgs.fraglimit) {
+			s = va("%2i", cgs.fraglimit);
+		}
+		else /*if (CG_GametypeUsesCaptureLimit(cgs.gametype) && cgs.capturelimit)*/ {
+			s = va("%2i", cgs.capturelimit);
+		}
+		w = CG_DrawStrlen(s) * BIGCHAR_WIDTH + 8;
+		x -= w;
+		CG_DrawBigString(x + 4, y, s, 1.0F);
 	}
-	else if (CG_GametypeUsesCaptureLimit(cgs.gametype) && cgs.capturelimit) {
-		s = va("%2i", cgs.capturelimit);
-	}
-	w = CG_DrawStrlen(s) * BIGCHAR_WIDTH + 8;
-	x -= w;
-	CG_DrawBigString(x + 4, y, s, 1.0F);
 
 	return y1 - 8;
 }
@@ -2129,8 +2151,6 @@ static void CG_DrawHoldableItem(void) {
 CG_DrawPersistantPowerup
 ===================
  */
-#if 1 // sos001208 - DEAD // sago - ALIVE
-
 static void CG_DrawPersistantPowerup(void) {
 	int value;
 
@@ -2140,7 +2160,6 @@ static void CG_DrawPersistantPowerup(void) {
 		CG_DrawPic(640 - ICON_SIZE, (SCREEN_HEIGHT - ICON_SIZE) / 2 - ICON_SIZE, ICON_SIZE, ICON_SIZE, cg_items[ value ].icon);
 	}
 }
-#endif
 #endif // MISSIONPACK
 
 /*
@@ -2569,40 +2588,50 @@ static void CG_DrawCenter1FctfString(void) {
 	if (!CG_UsesTheWhiteFlag(cgs.gametype))
 		return;
 
-	//Sago: TODO: Find the proper defines instead of hardcoded values.
-	if (CG_UsesTeamFlags(cgs.gametype)) {
+	if (CG_UsesTeamFlags(cgs.gametype)) { // 1FCTF
 		switch (cgs.flagStatus) {
-			case FLAG_TAKEN_RED:
-				line = va("Red has the flag!");
+			case FLAG_TAKEN_RED: {
+				line = va("Red Team has the flag!");
 				color = colorRed;
+				drawCenterString(line, color);
 				break;
-			case FLAG_TAKEN_BLUE:
-				line = va("Blue has the flag!");
+			}
+			case FLAG_TAKEN_BLUE: {
+				line = va("Blue Team has the flag!");
 				color = colorBlue;
+				drawCenterString(line, color);
 				break;
-			case FLAG_DROPPED:
-				line = va("Flag dropped!");
-				color = colorWhite;
-				break;
-			default:
-				return;
-		}
-	}
-	else {
-		switch (cgs.flagStatus) {
-			case FLAG_TAKEN:
-				line = va("The flag has been taken!");
-				break;
-			case FLAG_DROPPED:
+			}
+			case FLAG_DROPPED: {
 				line = va("The flag has been dropped!");
+				color = colorWhite;
+				drawCenterString(line, color);
 				break;
-			default:
+			}
+			default: {
 				return;
+			}
 		}
 	}
-
-	drawCenterString(line, color);
-
+	else { // Possession
+		switch (cgs.flagStatus) {
+			case FLAG_TAKEN: {
+				line = va("The flag has been taken!");
+				color = colorWhite;
+				drawCenterString(line, color);
+				break;
+			}
+			case FLAG_DROPPED: {
+				line = va("The flag has been dropped!");
+				color = colorWhite;
+				drawCenterString(line, color);
+				break;
+			}
+			default: {
+				return;
+			}
+		}
+	}
 #endif
 }
 
@@ -2637,11 +2666,31 @@ static void CG_DrawCenterDDString(void) {
 
 	if (statusA == TEAM_BLUE) {
 		line = va("Blue team dominates!");
+		y = 100 - GIANT_HEIGHT;
+		w = cg.centerPrintCharWidth * CG_DrawStrlen(line);
+		x = (SCREEN_WIDTH - w) / 2;
+		CG_DrawStringExt(x, y, line, color, qfalse, qtrue,
+				cg.centerPrintCharWidth, (int) (cg.centerPrintCharWidth * 1.5), 0);
 		line2 = va("Scoring in %i", (cgs.takeAt - cg.time) / 1000 + 1);
+		y = 100;
+		w = cg.centerPrintCharWidth * CG_DrawStrlen(line2);
+		x = (SCREEN_WIDTH - w) / 2;
+		CG_DrawStringExt(x, y, line2, color, qfalse, qtrue,
+				cg.centerPrintCharWidth, (int) (cg.centerPrintCharWidth * 1.5), 0);
 		color = colorBlue;
 	} else if (statusA == TEAM_RED) {
 		line = va("Red team dominates!");
+		y = 100 - GIANT_HEIGHT;
+		w = cg.centerPrintCharWidth * CG_DrawStrlen(line);
+		x = (SCREEN_WIDTH - w) / 2;
+		CG_DrawStringExt(x, y, line, color, qfalse, qtrue,
+				cg.centerPrintCharWidth, (int) (cg.centerPrintCharWidth * 1.5), 0);
 		line2 = va("Scoring in %i", (cgs.takeAt - cg.time) / 1000 + 1);
+		y = 100;
+		w = cg.centerPrintCharWidth * CG_DrawStrlen(line2);
+		x = (SCREEN_WIDTH - w) / 2;
+		CG_DrawStringExt(x, y, line2, color, qfalse, qtrue,
+				cg.centerPrintCharWidth, (int) (cg.centerPrintCharWidth * 1.5), 0);
 		color = colorRed;
 	} else {
 		lastDDSec = -100;
@@ -2677,38 +2726,7 @@ static void CG_DrawCenterDDString(void) {
 				break;
 		}
 	}
-
-	if(line2) {
-		lastDDSec = sec;
-
-		y = 100 - GIANT_HEIGHT;
-
-		w = cg.centerPrintCharWidth * CG_DrawStrlen(line);
-
-		x = (SCREEN_WIDTH - w) / 2;
-
-		CG_DrawStringExt(x, y, line, color, qfalse, qtrue,
-				cg.centerPrintCharWidth, (int) (cg.centerPrintCharWidth * 1.5), 0);
-
-		y = 100;
-
-		w = cg.centerPrintCharWidth * CG_DrawStrlen(line2);
-
-		x = (SCREEN_WIDTH - w) / 2;
-
-		CG_DrawStringExt(x, y, line2, color, qfalse, qtrue,
-				cg.centerPrintCharWidth, (int) (cg.centerPrintCharWidth * 1.5), 0);
-	}
-	else {
-		y = 100;
-
-		w = cg.centerPrintCharWidth * CG_DrawStrlen(line);
-
-		x = (SCREEN_WIDTH - w) / 2;
-
-		CG_DrawStringExt(x, y, line, color, qfalse, qtrue,
-				cg.centerPrintCharWidth, (int) (cg.centerPrintCharWidth * 1.5), 0);
-	}
+	lastDDSec = sec;
 #endif
 }
 
