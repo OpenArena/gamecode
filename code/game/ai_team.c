@@ -1007,7 +1007,7 @@ Steps to take when the flag is at the defending team's base.
 ==================
 */
 void BotECTFAvDOrders_FlagAtBase(bot_state_t *bs) {
-	int numteammates, defenders, attackers, i;
+	int numteammates, i;
 	int teammates[MAX_CLIENTS];
 	char name[MAX_NETNAME];
 
@@ -1056,7 +1056,7 @@ Steps to take when the flag is NOT at the defending team's base.
 ==================
 */
 void BotECTFAvDOrders_FlagNotAtBase(bot_state_t *bs) {
-	int numteammates, defenders, attackers, i, other;
+	int numteammates, i;
 	int teammates[MAX_CLIENTS];
 	char name[MAX_NETNAME], carriername[MAX_NETNAME];
 
@@ -2730,7 +2730,6 @@ void BotTeamAI(bot_state_t *bs) {
 			break;
 		}
 		case GT_CTF:
-		case GT_CTF_ELIMINATION:
 		{
 			//if the number of team mates changed or the flag status changed
 			//or someone wants to know what to do
@@ -2741,47 +2740,32 @@ void BotTeamAI(bot_state_t *bs) {
 				bs->forceorders = qfalse;
 				lastRoundNumber = level.roundNumber;
 			}
-			// eCTF in One-Way mode requires special strategies
-			if (gametype == GT_CTF_ELIMINATION && g_elimination_ctf_oneway.integer) {
-				//if it's time to give orders
-				if (bs->teamgiveorders_time && bs->teamgiveorders_time < FloatTime() - 3) {
-					if (BotIsEnemyFlagOnEnemyBase(bs)) {
-						BotECTFAvDOrders_FlagAtBase(bs);
-					}
-					else if (!BotIsEnemyFlagOnEnemyBase(bs)) {
-						BotECTFAvDOrders_FlagNotAtBase(bs);
-					}
-					bs->teamgiveorders_time = 0;
+			//if there were no flag captures the last 3 minutes
+			if (bs->lastflagcapture_time < FloatTime() - 240) {
+				bs->lastflagcapture_time = FloatTime();
+				//randomly change the CTF strategy
+				if (random() < 0.4) {
+					bs->ctfstrategy ^= CTFS_AGRESSIVE;
+					bs->teamgiveorders_time = FloatTime();
 				}
 			}
-			else {
-				//if there were no flag captures the last 3 minutes
-				if (bs->lastflagcapture_time < FloatTime() - 240) {
-					bs->lastflagcapture_time = FloatTime();
-					//randomly change the CTF strategy
-					if (random() < 0.4) {
-						bs->ctfstrategy ^= CTFS_AGRESSIVE;
-						bs->teamgiveorders_time = FloatTime();
-					}
+			//if it's time to give orders
+			if (bs->teamgiveorders_time && bs->teamgiveorders_time < FloatTime() - 3) {
+				//
+				if (BotIsFlagOnOurBase(bs) && BotIsEnemyFlagOnEnemyBase(bs)) {
+					BotCTFOrders_BothFlagsAtBase(bs);
 				}
-				//if it's time to give orders
-				if (bs->teamgiveorders_time && bs->teamgiveorders_time < FloatTime() - 3) {
-					//
-					if (BotIsFlagOnOurBase(bs) && BotIsEnemyFlagOnEnemyBase(bs)) {
-						BotCTFOrders_BothFlagsAtBase(bs);
-					}
-					else if (BotIsFlagOnOurBase(bs) && !BotIsEnemyFlagOnEnemyBase(bs)) {
-						BotCTFOrders_EnemyFlagNotAtBase(bs);
-					}
-					else if (!BotIsFlagOnOurBase(bs) && BotIsEnemyFlagOnEnemyBase(bs)) {
-						BotCTFOrders_FlagNotAtBase(bs);
-					}
-					else if (BotIsFlagOnOurBase(bs) && BotIsEnemyFlagOnEnemyBase(bs)) {
-						BotCTFOrders_BothFlagsNotAtBase(bs);
-					}
-					//
-					bs->teamgiveorders_time = 0;
+				else if (BotIsFlagOnOurBase(bs) && !BotIsEnemyFlagOnEnemyBase(bs)) {
+					BotCTFOrders_EnemyFlagNotAtBase(bs);
 				}
+				else if (!BotIsFlagOnOurBase(bs) && BotIsEnemyFlagOnEnemyBase(bs)) {
+					BotCTFOrders_FlagNotAtBase(bs);
+				}
+				else if (BotIsFlagOnOurBase(bs) && BotIsEnemyFlagOnEnemyBase(bs)) {
+					BotCTFOrders_BothFlagsNotAtBase(bs);
+				}
+				//
+				bs->teamgiveorders_time = 0;
 			}
 			break;
 		}
@@ -2874,6 +2858,61 @@ void BotTeamAI(bot_state_t *bs) {
 			}
 			break;
 		}
+		case GT_CTF_ELIMINATION:
+		{
+			//if the number of team mates changed or the flag status changed
+			//or someone wants to know what to do
+			if (bs->numteammates != numteammates || bs->flagstatuschanged || bs->forceorders || lastRoundNumber != level.roundNumber) {
+				bs->teamgiveorders_time = FloatTime();
+				bs->numteammates = numteammates;
+				bs->flagstatuschanged = qfalse;
+				bs->forceorders = qfalse;
+				lastRoundNumber = level.roundNumber;
+			}
+			//if there were no flag captures the last 2 minutes
+			if (bs->lastflagcapture_time < FloatTime() - 120) {
+				bs->lastflagcapture_time = FloatTime();
+				//randomly change the CTF strategy
+				if (random() < 0.4) {
+					bs->ctfstrategy ^= CTFS_AGRESSIVE;
+					bs->teamgiveorders_time = FloatTime();
+				}
+			}
+			// eCTF in One-Way mode requires special strategies
+			if (g_elimination_ctf_oneway.integer) {
+				//if it's time to give orders
+				if (bs->teamgiveorders_time && bs->teamgiveorders_time < FloatTime() - 3) {
+					if (BotIsEnemyFlagOnEnemyBase(bs)) {
+						BotECTFAvDOrders_FlagAtBase(bs);
+					}
+					else if (!BotIsEnemyFlagOnEnemyBase(bs)) {
+						BotECTFAvDOrders_FlagNotAtBase(bs);
+					}
+					bs->teamgiveorders_time = 0;
+				}
+			}
+			else {
+				//if it's time to give orders
+				if (bs->teamgiveorders_time && bs->teamgiveorders_time < FloatTime() - 3) {
+					//
+					if (BotIsFlagOnOurBase(bs) && BotIsEnemyFlagOnEnemyBase(bs)) {
+						BotCTFOrders_BothFlagsAtBase(bs);
+					}
+					else if (BotIsFlagOnOurBase(bs) && !BotIsEnemyFlagOnEnemyBase(bs)) {
+						BotCTFOrders_EnemyFlagNotAtBase(bs);
+					}
+					else if (!BotIsFlagOnOurBase(bs) && BotIsEnemyFlagOnEnemyBase(bs)) {
+						BotCTFOrders_FlagNotAtBase(bs);
+					}
+					else if (BotIsFlagOnOurBase(bs) && BotIsEnemyFlagOnEnemyBase(bs)) {
+						BotCTFOrders_BothFlagsNotAtBase(bs);
+					}
+					//
+					bs->teamgiveorders_time = 0;
+				}
+			}
+			break;
+		}
 		case GT_DOMINATION:
 		{
 			//if the number of team mates changed or the domination point status changed
@@ -2928,10 +2967,7 @@ qboolean BotIsOnAttackingTeam(bot_state_t *bs) {
 	else if ((G_GetAttackingTeam() == TEAM_BLUE) && (BotTeam(bs) == TEAM_BLUE)) {
 		return qtrue;
 	}
-	// In any other case, they defend.
-	else {
-		return qfalse;
-	}
+	return qfalse;
 }
 
 /*
