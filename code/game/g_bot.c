@@ -327,7 +327,7 @@ void G_AddRandomBot( int team ) {
 	if (team == TEAM_RED) teamstr = "red";
 	else if (team == TEAM_BLUE) teamstr = "blue";
 	else teamstr = "free";
-	trap_SendConsoleCommand( EXEC_INSERT, va("addbot random %i %s %i\n", g_spSkill.integer, teamstr, 0) );
+	trap_SendConsoleCommand( EXEC_INSERT, va("addbot random %f %s %i\n", g_spSkill.value, teamstr, 0) );
 }
 
 /*
@@ -893,7 +893,7 @@ static void G_SpawnBots( char *botList, int baseDelay ) {
 
 		// we must add the bot this way, calling G_AddBot directly at this stage
 		// does "Bad Things"
-		trap_SendConsoleCommand( EXEC_INSERT, va("addbot %s %i free %i\n", bot, g_spSkill.integer, delay) );
+		trap_SendConsoleCommand( EXEC_INSERT, va("addbot %s %f free %i\n", bot, g_spSkill.value, delay) );
 
 		delay += BOT_BEGIN_DELAY_INCREMENT;
 	}
