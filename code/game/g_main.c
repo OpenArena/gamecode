@@ -2979,4 +2979,20 @@ Returns true if the match has a "no pickups" rule.
 qboolean G_GametypeUsesRunes(int check) {
 	return GAMETYPE_USES_RUNES(check);
 }
+/*
+===================
+G_GetAttackingTeam
+
+Returns the team that's actually on offense in eCTF AvD matches.
+===================
+ */
+int G_GetAttackingTeam(void) {
+	if ((level.eliminationSides+level.roundNumber)%2 == 0) {
+		return TEAM_RED;
+	}
+	else if ((level.eliminationSides+level.roundNumber)%2 == 1) {
+		return TEAM_BLUE;
+	}
+}
 /* /Neon_Knight */
+

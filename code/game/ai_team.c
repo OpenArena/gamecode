@@ -2848,11 +2848,11 @@ Returns true if the bot is on the attacking team for eCTF AvD matches.
 */
 qboolean BotIsOnAttackingTeam(bot_state_t *bs) {
 	// In even rounds, Red attacks.
-	if (((level.eliminationSides+level.roundNumber)%2 == 0) && (BotTeam(bs) == TEAM_RED)) {
+	if ((G_GetAttackingTeam() == TEAM_RED) && (BotTeam(bs) == TEAM_RED)) {
 		return qtrue;
 	}
 	// In odd rounds, Blue attacks.
-	else if (((level.eliminationSides+level.roundNumber)%2 != 0) && (BotTeam(bs) == TEAM_BLUE)) {
+	else if ((G_GetAttackingTeam() == TEAM_BLUE) && (BotTeam(bs) == TEAM_BLUE)) {
 		return qtrue;
 	}
 	// In any other case, they defend.
