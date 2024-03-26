@@ -1439,4 +1439,5 @@ qboolean G_IsANoPickupsMode(void);	/* Returns true if the match has a "no pickup
 qboolean G_GametypeUsesFragLimit(int check);	/* Whether the gametype uses a frag-based scoring system. */
 qboolean G_GametypeUsesCaptureLimit(int check);	/* Whether the gametype uses a capture-based scoring system. */
 qboolean G_GametypeUsesRunes(int check);	/* Whether the gametype uses the Runes. */
+int G_GetAttackingTeam(void);	/* Returns the team that's currently on offense in eCTF AvD. */
 /* /Neon_Knight */

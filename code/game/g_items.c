@@ -439,9 +439,9 @@ void Touch_Item (gentity_t *ent, gentity_t *other, trace_t *trace)
 		return;
 
 	//Cannot take ctf elimination oneway
-	if(g_gametype.integer == GT_CTF_ELIMINATION && g_elimination_ctf_oneway.integer!=0 && (
-	            (other->client->sess.sessionTeam==TEAM_BLUE && (level.eliminationSides+level.roundNumber)%2 == 0 ) ||
-	            (other->client->sess.sessionTeam==TEAM_RED && (level.eliminationSides+level.roundNumber)%2 != 0 ) ))
+	if(g_gametype.integer == GT_CTF_ELIMINATION && g_elimination_ctf_oneway.integer!=0 &&
+			((other->client->sess.sessionTeam==TEAM_BLUE && G_GetAttackingTeam() == TEAM_RED ) ||
+			(other->client->sess.sessionTeam==TEAM_RED && G_GetAttackingTeam() == TEAM_BLUE )))
 		return;
 
 	if (g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_LMS)

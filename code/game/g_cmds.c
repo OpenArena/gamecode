@@ -250,14 +250,7 @@ AttackingTeamMessage
 ==================
 */
 void AttackingTeamMessage( gentity_t *ent ) {
-	int team;
-	if ( (level.eliminationSides+level.roundNumber)%2 == 0 ) {
-		team = TEAM_RED;
-	}
-	else {
-		team = TEAM_BLUE;
-	}
-	trap_SendServerCommand( ent-g_entities, va("attackingteam %i", team));
+	trap_SendServerCommand( ent-g_entities, va("attackingteam %i", G_GetAttackingTeam()));
 }
 
 /*

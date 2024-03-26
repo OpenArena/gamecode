@@ -636,8 +636,8 @@ void Team_FragBonuses(gentity_t *targ, gentity_t *inflictor, gentity_t *attacker
 	          trap_InPVS(flag->r.currentOrigin, attacker->r.currentOrigin ) ) ) &&
 	        attacker->client->sess.sessionTeam != targ->client->sess.sessionTeam && g_gametype.integer != GT_ELIMINATION &&
 	        (g_gametype.integer != GT_CTF_ELIMINATION || !g_elimination_ctf_oneway.integer ||
-	         ((level.eliminationSides+level.roundNumber)%2 == 0 && attacker->client->sess.sessionTeam == TEAM_BLUE ) ||
-	         ((level.eliminationSides+level.roundNumber)%2 == 1 && attacker->client->sess.sessionTeam == TEAM_RED ) ) ) {
+	         (G_GetAttackingTeam() == TEAM_RED && attacker->client->sess.sessionTeam == TEAM_BLUE ) ||
+	         (G_GetAttackingTeam() == TEAM_BLUE && attacker->client->sess.sessionTeam == TEAM_RED ) ) ) {
 
 		// we defended the base flag
 		AddScore(attacker, targ->r.currentOrigin, CTF_FLAG_DEFENSE_BONUS);
