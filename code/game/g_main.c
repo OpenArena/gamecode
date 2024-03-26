@@ -2993,6 +2993,7 @@ int G_GetAttackingTeam(void) {
 	else if ((level.eliminationSides+level.roundNumber)%2 == 1) {
 		return TEAM_BLUE;
 	}
+	return TEAM_NONE;
 }
 /* /Neon_Knight */
 
