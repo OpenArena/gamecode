@@ -95,6 +95,7 @@
   * `CG_GametypeUsesCaptureLimit(int gametype)` (cgame), `CG_GametypeUsesCaptureLimit(int gametype)` (game), and `CG_GametypeUsesCaptureLimit(int gametype)` (q3_ui and ui) return true if the gametype uses captures as a score limit. Done this way in case other score limits are later introduced. (For OA, it would be CTF, 1FCTF, Overload, Elimination, eCTF, LMS and DD)
   * `G_IsANoPickupsMode()` (game) returns true if the match uses a no-pickup rule. So far, this is used for the "Instantgib", "Single Weapon Arena" and "All Weapons (Elimination-like)" Weapon Rulesets.
   * `G_GametypeUsesRunes(int gametype)` (game) returns true if the gametype belongs to a short list where Runes can be used.
+  * `G_GetAttackingTeam()` (game) returns the team that has the current attacker role for eCTF Attack vs. Defense matches.
 * New AI-related tools for modders:
   * `BotTeamOwnsControlPoint(bot_state_t *bs,int point)` is used for both DD and DOM and returns true if the bot's team controls a Control Point.
   * `BotAreThereDOMPointsInTheMap()`, used for Domination, returns true if the match contains at least one Control Point (`domination_point`).
@@ -138,6 +139,7 @@
     * `minTeamSize` (Amount of ideal max team members in team games in this map)
     * `recommendedPlayers` (Amount of ideal players in games in this map)
     * `recommendedTeamSize` (Amount of ideal team members in team games)
+* CTF Elimination "Attack vs. Defense" mode (formerly "One-Way" mode): Now players on both teams are properly informed of their roles. When a team attacks, the message (_"You Are Attacking!"_) displayed is fully saturated in the team's color (i.e. fully blue for Blue team, fully red for Red team), while when defending the message (_"You Are Defending!"_) is displayed in a lighter color (magenta for the Red team, cyan for the Blue team). The original messages (_"Blue/Red/Unknown Team is on Offence"_) are available for spectators.
 * The "You've Been Mined" message, shown whenever you're directly hit by a proxy mine, now begins its combustion countdown instantly.
 * Default score limits are now consistent across all gamemodes.
 * Compatibility fixes to make gamecode buidable under M1 Mac. (Thanks @Bishop-333!)
@@ -165,10 +167,11 @@
 
 **Estimated release date:** March 29, 2024
 
+* New helper function for game: `G_GetAttackingTeam()`, returns the actual team that's in the attacker role in eCTF AvD mode.
 * CTF Elimination, AvD mode (formerly "One-Way mode"): Now both teams will get informed on their role appropriately:
-  * If the team is attacking, the players will receive a "You Are Attacking!" message with the fully saturated color of their team.
-  * If they're defending instead, they will receive "You Are Defending!" in either Magenta (Red Team) or Cyan (Blue Team) coloring.
-  * The older messages are available for spectators of the match.
+  * If the team is attacking, the players will receive a _"You Are Attacking!"_ message with the fully saturated color of their team.
+  * If they're defending instead, they will receive _"You Are Defending!"_ in either Magenta (Red Team) or Cyan (Blue Team) coloring.
+  * The older messages (_"Blue/Red/Unknown Team is on Offence"_) are available for spectators of the match.
 * Skirmish/Create Server:
   * For Weapon Rulesets in Round-based games, removed duplicate _"All Weapons (Elimination)"_ and shortened to _"All Weapons (Elim.)"_. Also shortened _"All Weapons (Standard)"_ to _"All Weapons (Default)"_.
   * Changed the item descriptions for "Award Pushing".
