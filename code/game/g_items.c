@@ -1008,6 +1008,11 @@ void G_SpawnItem (gentity_t *ent, gitem_t *item)
 		ent->s.eFlags |= EF_NODRAW; //Don't draw the flag models/persistant powerups
 	}
 
+	if( (g_gametype.integer == GT_HARVESTER || g_gametype.integer == GT_OBELISK) &&
+			(strequals(ent->classname, "team_CTF_redflag") || strequals(ent->classname, "team_CTF_blueflag") ) ) {
+		ent->s.eFlags |= EF_NODRAW; // Don't draw the team flags in Harvester/Overload
+	}
+
 	if( !G_UsesTheWhiteFlag(g_gametype.integer) && strequals(ent->classname, "team_CTF_neutralflag")) {
 		ent->s.eFlags |= EF_NODRAW; // Don't draw the flag in CTF_elimination
 	}
