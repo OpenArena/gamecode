@@ -113,9 +113,9 @@
   * `BotIsFlagOnOurBase(bot_state_t *bs)` returns true if the bot's team's flag is in their team's base. Used for CTF and eCTF.
   * `BotIsEnemyFlagOnEnemyBase(bot_state_t *bs)` returns true if the bot's enemy team's flag is in the enemy team's base. Used for CTF and eCTF.
 * New tools for modders for UI3:
-  * `ui_randomIntToCvar(int number)` saves a random integer to a cvar.
-  * `ui_randomStringToCvar(int number)` saves a random string from a list to a cvar.
-  * `ui_randomFloatToCvar(int number)` saves a random floating point number to a cvar.
+  * `ui_randomIntToCvar()` saves a random integer to a cvar.
+  * `ui_randomStringToCvar()` saves a random string from a list to a cvar.
+  * `ui_randomFloatToCvar()` saves a random floating point number to a cvar.
 * New tools for mappers:
   * `state_targetname` key for `func_door`, it overrides `targetname` in round-based gametypes. [It allows the creation of doors for Elimination-based modes that open during the active time of the game](https://openarena.ws/board/index.php?topic=5437.0). In-game demonstration video [here](https://www.youtube.com/watch?v=lHq56Gx058w). It's already supported by [the gamepack](https://github.com/NeonKnightOA/oagamepack).
   * New entities: `info_player_dom_red` and `info_player_dom_blue`. Both act as dedicated spawnpoints for Domination. They are supported by the gamepack too.
