@@ -476,7 +476,7 @@ void G_CheckMinimumPlayers( void ) {
 			}
 		}
 	}
-	else {
+	else if (g_gametype.integer == GT_FFA) {
 		if (minplayers >= g_maxclients.integer) {
 			minplayers = g_maxclients.integer-1;
 		}
@@ -610,7 +610,7 @@ static void G_AddBot( const char *name, float skill, const char *team, int delay
 
 	// set default team
 	if( !team || !*team ) {
-		if( GAMETYPE_IS_A_TEAM_GAME(g_gametype.integer) ) {
+		if( G_IsATeamGametype(g_gametype.integer) ) {
 			if( PickTeam(clientNum) == TEAM_RED) {
 				team = "red";
 			}

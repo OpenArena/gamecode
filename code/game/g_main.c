@@ -1882,10 +1882,7 @@ void LogExit( const char *string )
 		if (g_singlePlayer.integer && !(g_entities[cl - level.clients].r.svFlags & SVF_BOT)) {
 			team = cl->sess.sessionTeam;
 		}
-		if (g_singlePlayer.integer && G_IsATeamGametype(g_gametype.integer) &&
-				(G_UsesTeamFlags(g_gametype.integer) || G_UsesTheWhiteFlag(g_gametype.integer) ||
-				g_gametype.integer == GT_HARVESTER || g_gametype.integer == GT_OBELISK ||
-				g_gametype.integer == GT_DOUBLE_D || g_gametype.integer == GT_DOMINATION)) {
+		if (g_singlePlayer.integer && G_IsADMBasedGametype(g_gametype.integer)) {
 			if (g_entities[cl - level.clients].r.svFlags & SVF_BOT && cl->ps.persistant[PERS_RANK] == 0) {
 				won = qfalse;
 			}
@@ -2017,8 +2014,7 @@ qboolean ScoreIsTied( void )
 	}
 
 	//Sago: In Elimination and Oneway Flag Capture teams must win by two points.
-	if ( (G_IsARoundBasedGametype(g_gametype.integer) && G_IsATeamGametype(g_gametype.integer)) ||
-	        (g_gametype.integer == GT_CTF_ELIMINATION && g_elimination_ctf_oneway.integer)) {
+	if (G_IsARoundBasedGametype(g_gametype.integer) && G_IsATeamGametype(g_gametype.integer)) {
 		return (level.teamScores[TEAM_RED] == level.teamScores[TEAM_BLUE] ||
 		        level.teamScores[TEAM_RED] == level.teamScores[TEAM_BLUE]+1 ||
 		        level.teamScores[TEAM_RED] == level.teamScores[TEAM_BLUE]-1);
@@ -2144,7 +2140,7 @@ void CheckExitRules( void )
 			}
 		}
 	}
-	else { /* (G_GametypeUsesCaptureLimit(g_gametype.integer)) */
+	else if (G_GametypeUsesCaptureLimit(g_gametype.integer)) {
 		if ( g_capturelimit.integer < 0 ) {
 			G_Printf( "capturelimit %i is out of range, defaulting to 0\n", g_capturelimit.integer );
 			trap_Cvar_Set( "capturelimit", "0" );
@@ -2152,7 +2148,7 @@ void CheckExitRules( void )
 		}
 
 		if ( g_capturelimit.integer ) {
-			if (G_GametypeUsesCaptureLimit(g_gametype.integer)) {
+			if (G_IsATeamGametype(g_gametype.integer)) {
 				if ( level.teamScores[TEAM_RED] >= g_capturelimit.integer ) {
 					trap_SendServerCommand( -1, "print \"Red hit the capturelimit.\n\"" );
 					LogExit( "Capturelimit hit." );
