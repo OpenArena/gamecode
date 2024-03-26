@@ -165,6 +165,10 @@
 
 **Estimated release date:** March 29, 2024
 
+* CTF Elimination, AvD mode (formerly "One-Way mode"): Now both teams will get informed on their role appropriately:
+  * If the team is attacking, the players will receive a "You Are Attacking!" message with the fully saturated color of their team.
+  * If they're defending instead, they will receive "You Are Defending!" in either Magenta (Red Team) or Cyan (Blue Team) coloring.
+  * The older messages are available for spectators of the match.
 * Skirmish/Create Server:
   * For Weapon Rulesets in Round-based games, removed duplicate _"All Weapons (Elimination)"_ and shortened to _"All Weapons (Elim.)"_. Also shortened _"All Weapons (Standard)"_ to _"All Weapons (Default)"_.
   * Changed the item descriptions for "Award Pushing".
