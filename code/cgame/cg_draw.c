@@ -2665,6 +2665,7 @@ static void CG_DrawCenterDDString(void) {
 	}
 
 	if (statusA == TEAM_BLUE) {
+		color = colorBlue;
 		line = va("Blue team dominates!");
 		y = 100 - GIANT_HEIGHT;
 		w = cg.centerPrintCharWidth * CG_DrawStrlen(line);
@@ -2677,8 +2678,8 @@ static void CG_DrawCenterDDString(void) {
 		x = (SCREEN_WIDTH - w) / 2;
 		CG_DrawStringExt(x, y, line2, color, qfalse, qtrue,
 				cg.centerPrintCharWidth, (int) (cg.centerPrintCharWidth * 1.5), 0);
-		color = colorBlue;
 	} else if (statusA == TEAM_RED) {
+		color = colorRed;
 		line = va("Red team dominates!");
 		y = 100 - GIANT_HEIGHT;
 		w = cg.centerPrintCharWidth * CG_DrawStrlen(line);
@@ -2691,7 +2692,6 @@ static void CG_DrawCenterDDString(void) {
 		x = (SCREEN_WIDTH - w) / 2;
 		CG_DrawStringExt(x, y, line2, color, qfalse, qtrue,
 				cg.centerPrintCharWidth, (int) (cg.centerPrintCharWidth * 1.5), 0);
-		color = colorRed;
 	} else {
 		lastDDSec = -100;
 		return;
