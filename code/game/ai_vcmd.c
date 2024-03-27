@@ -233,17 +233,16 @@ void BotVoiceChat_Offense(bot_state_t *bs, int client, int mode) {
 		BotRememberLastOrderedTask(bs);
 	}
 	else if (gametype == GT_DOUBLE_D) {
-		if ((BotTeam(bs) == TEAM_RED && level.pointStatusA == TEAM_RED) ||
-				(BotTeam(bs) == TEAM_BLUE && level.pointStatusA == TEAM_BLUE)) {
+		// If the point A is NOT under control, capture it.
+		if (!BotTeamOwnsControlPoint(bs,level.pointStatusA)) {
 			BotVoiceChat_HoldPointA(bs,client,mode);
 		}
-		else if ((BotTeam(bs) == TEAM_RED && level.pointStatusB == TEAM_RED) ||
-				(BotTeam(bs) == TEAM_BLUE && level.pointStatusB == TEAM_BLUE)) {
+		// If the point B is NOT under control, capture it.
+		else if (!BotTeamOwnsControlPoint(bs,level.pointStatusB)) {
 			BotVoiceChat_HoldPointB(bs,client,mode);
 		}
-		else if ((BotTeam(bs) == TEAM_RED && level.pointStatusA == TEAM_RED &&
-				level.pointStatusB == TEAM_RED) || (BotTeam(bs) == TEAM_BLUE &&
-				level.pointStatusA == TEAM_BLUE && level.pointStatusB == TEAM_BLUE)) {
+		// Regardless of which team controls both points, pick one of them and hold onto it.
+		else {
 			if (rand() % 10 > 5)
 				BotVoiceChat_HoldPointA(bs,client,mode);
 			else
@@ -254,6 +253,10 @@ void BotVoiceChat_Offense(bot_state_t *bs, int client, int mode) {
 	else if (gametype == GT_DOMINATION) {
 		BotSetDominationPoint(bs,-1);
 		BotVoiceChat_HoldDOMPoint(bs,client,mode);
+		return;
+	}
+	// eCTF in AvD mode only allows attackers to attack.
+	else if (gametype == GT_CTF_ELIMINATION && g_elimination_ctf_oneway.integer && !BotIsOnAttackingTeam(bs)) {
 		return;
 	}
 	else
@@ -312,9 +315,8 @@ void BotVoiceChat_Defend(bot_state_t *bs, int client, int mode) {
 		else if (BotTeamOwnsControlPoint(bs,level.pointStatusB)) {
 			BotVoiceChat_HoldPointB(bs,client,mode);
 		}
-		// If both points are under control, pick one and defend it.
-		else if (BotTeamOwnsControlPoint(bs,level.pointStatusA) &&
-				BotTeamOwnsControlPoint(bs,level.pointStatusB)) {
+		// Regardless of which team controls both points, pick one of them and defend it.
+		else {
 			if (rand() % 10 > 5)
 				BotVoiceChat_HoldPointA(bs,client,mode);
 			else
