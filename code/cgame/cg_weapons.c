@@ -1694,9 +1694,9 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
 			float	f;
 
 			f = (float)cg.predictedPlayerState.weaponTime / 1500;
-			gun.shaderRGBA[0] = ci->color1[0] * 51;
-			gun.shaderRGBA[1] = ci->color1[1] * 51;
-			gun.shaderRGBA[2] = ci->color1[2] * 51 * ( 1.0 - f );
+			gun.shaderRGBA[0] = ci->color2[0] * 51;
+			gun.shaderRGBA[1] = ci->color2[1] * 51;
+			gun.shaderRGBA[2] = ci->color2[2] * 51 * ( 1.0 - f );
 		} else {
 			gun.shaderRGBA[0] = ci->color1[0] * 255;
 			gun.shaderRGBA[1] = ci->color1[1] * 255;
