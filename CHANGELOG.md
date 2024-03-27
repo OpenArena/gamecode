@@ -139,13 +139,14 @@
     * `minTeamSize` (Amount of ideal max team members in team games in this map)
     * `recommendedPlayers` (Amount of ideal players in games in this map)
     * `recommendedTeamSize` (Amount of ideal team members in team games)
-* CTF Elimination "Attack vs. Defense" mode (formerly "One-Way" mode): Now players on both teams are properly informed of their roles. When a team attacks, the message (_"You Are Attacking!"_) displayed is fully saturated in the team's color (i.e. fully blue for Blue team, fully red for Red team), while when defending the message (_"You Are Defending!"_) is displayed in a lighter color (magenta for the Red team, cyan for the Blue team). The original messages (_"Blue/Red/Unknown Team is on Offence"_) are available for spectators.
-* The "You've Been Mined" message, shown whenever you're directly hit by a proxy mine, now begins its combustion countdown instantly.
+* In-game feedback:
+  * Overload and Double Domination now display a "New Round" message between rounds.
+  * CTF Elimination "Attack vs. Defense" mode (formerly "One-Way" mode): Now players on both teams are properly informed of their roles. When a team attacks, the message (_"You Are Attacking!"_) displayed is fully saturated in the team's color (i.e. fully blue for Blue team, fully red for Red team), while when defending the message (_"You Are Defending!"_) is displayed in a lighter color (magenta for the Red team, cyan for the Blue team). The original messages (_"Blue/Red/Unknown Team is on Offence"_) are available for spectators.
+  * The "You've Been Mined" message, shown whenever you're directly hit by a proxy mine, now begins its combustion countdown instantly.
 * Default score limits are now consistent across all gamemodes.
 * Compatibility fixes to make gamecode buidable under M1 Mac. (Thanks @Bishop-333!)
 * Team Orders now display the proper team orders rather than those of Team Deathmatch for all team-based gamemodes.
 * Challenges now account for TDM wins.
-* Double Domination now displays a "New Round" message.
 * Removed some #ifdef that blocked legit AI code out of Classic UI.
 * Bots now use tourney6-like crushers against their enemies, and ONLY their enemies.
 * Score bonus fixes for CTF and 1FCTF.
@@ -167,6 +168,7 @@
 
 **Estimated release date:** March 29, 2024
 
+* Added "New Round" message for Overload.
 * Flags aren't drawn anymore in Harvester/Overload.
 * New helper function for game: `G_GetAttackingTeam()`, returns the actual team that's in the attacker role in eCTF AvD mode.
 * CTF Elimination, AvD mode (formerly "One-Way mode"): Now both teams will get informed on their role appropriately:
