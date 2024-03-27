@@ -1212,7 +1212,7 @@ static float CG_DrawCountdownTimer(float y) {
 	//msec = cg.time - cgs.levelStartTime;
 	if (cg.time > rst) //We are started
 	{
-		if (cgs.gametype == GT_DOUBLE_D) {
+		if (cgs.gametype == GT_DOUBLE_D || cgs.gametype == GT_OBELISK) {
 			return y;
 		}
 		msec = cgs.roundtime * 1000 - (cg.time - rst);
@@ -1640,7 +1640,7 @@ static void CG_DrawUpperRight(stereoFrame_t stereoFrame) {
 	if (cg_drawFPS.integer && (stereoFrame == STEREO_CENTER || stereoFrame == STEREO_RIGHT)) {
 		y = CG_DrawFPS(y);
 	}
-	if (CG_IsARoundBasedGametype(cgs.gametype) || cgs.gametype == GT_DOUBLE_D) {
+	if (CG_IsARoundBasedGametype(cgs.gametype) || cgs.gametype == GT_DOUBLE_D || cgs.gametype == GT_OBELISK) {
 		y = CG_DrawCountdownTimer(y);
 		/*if (cgs.clientinfo[ cg.clientNum ].isDead)
 			y = CG_DrawEliminationDeathMessage( y);*/
