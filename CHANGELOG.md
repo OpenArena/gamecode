@@ -168,6 +168,8 @@
 
 **Estimated release date:** March 29, 2024
 
+* Suppressed the lots of ".info file not found" messages to Developer mode.
+* The key objective checker now checks for (at least one) Domination points in DOM and for the white flag in POS.
 * Added "New Round" message for Overload.
 * Flags aren't drawn anymore in Harvester/Overload.
 * New helper function for game: `G_GetAttackingTeam()`, returns the actual team that's in the attacker role in eCTF AvD mode.
