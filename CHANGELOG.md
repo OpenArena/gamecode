@@ -168,6 +168,9 @@
 
 **Estimated release date:** March 29, 2024
 
+* New default round time limits for Elimination/eCTF/LMS.
+* Reverted Harvester as a capturelimit gamemode.
+* All default Time Limits set to 15.
 * In classic SP, the console won't complain anymore for missing character announcement lines.
 * Railgun glass now matches the selected beam color. (Credit: @Bishop-333)
 * Suppressed the lots of ".info file not found" messages to Developer mode.
