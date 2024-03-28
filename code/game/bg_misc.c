@@ -1837,7 +1837,7 @@ qboolean MatchesGametype(int gametype, const char* gametypeName) {
 	return mayRead;
 }
 
-void MapInfoGet(const char* mapname, int gametype, mapinfo_result_t *result) {
+void MapInfoGet(const char* mapname, int gametype, mapinfo_result_t *result, qboolean developer) {
 	fileHandle_t file;
 	char buffer[4 * 1024];
 	char keyBuffer[MAX_TOKEN_CHARS];
@@ -1853,7 +1853,9 @@ void MapInfoGet(const char* mapname, int gametype, mapinfo_result_t *result) {
 	trap_FS_FOpenFile(buffer, &file, FS_READ);
 
 	if (!file) {
-		Com_Printf("File %s not found\n", buffer);
+		if (developer) {
+			Com_Printf("File %s not found\n", buffer);
+		}
 		return;
 	}
 

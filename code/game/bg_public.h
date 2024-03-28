@@ -915,7 +915,7 @@ typedef struct mapinfo_result_s {
 } mapinfo_result_t;
 
 qboolean MatchesGametype(int gametype, const char* gametypeName);
-void MapInfoGet(const char* mapname, int gametype, mapinfo_result_t *result);
+void MapInfoGet(const char* mapname, int gametype, mapinfo_result_t *result, qboolean developer);
 
 
 #endif

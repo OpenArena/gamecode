@@ -403,8 +403,12 @@ static void StartServer_GametypeEvent( void* ptr, int event ) {
 	}
 	for( i = 0; i < count; i++ ) {
 		info = UI_GetArenaInfoByNumber( i );
-		MapInfoGet(Info_ValueForKey(info, "map"), gametype_remap[s_startserver.gametype.curvalue], &mapinfo);
-
+		if (ui_developer.integer) {
+			MapInfoGet(Info_ValueForKey(info, "map"), gametype_remap[s_startserver.gametype.curvalue], &mapinfo, qtrue);
+		}
+		else {
+			MapInfoGet(Info_ValueForKey(info, "map"), gametype_remap[s_startserver.gametype.curvalue], &mapinfo, qfalse);
+		}
 		gamebits = GametypeBits( Info_ValueForKey( info, "type") );
 		for ( j=0; j< GT_MAX_GAME_TYPE; ++j) {
 			if (mapinfo.gametypeSupported[j]=='y' || mapinfo.gametypeSupported[j]=='Y') {
@@ -2134,7 +2138,12 @@ static void ServerOptions_SetMenuItems( void ) {
 	Q_strncpyz( s_serveroptions.mapnamebuffer, s_startserver.mapname.string, sizeof (s_serveroptions.mapnamebuffer) );
 	Q_strupr( s_serveroptions.mapnamebuffer );
 	
-	MapInfoGet(s_startserver.mapname.string,s_serveroptions.gametype,&mapinfo);
+	if (ui_developer.integer) {
+		MapInfoGet(s_startserver.mapname.string,s_serveroptions.gametype,&mapinfo, qtrue);
+	}
+	else {
+		MapInfoGet(s_startserver.mapname.string,s_serveroptions.gametype,&mapinfo, qfalse);
+	}
 	
 	// get the player selections initialized
 	ServerOptions_InitPlayerItems();
