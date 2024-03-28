@@ -168,6 +168,7 @@
 
 **Estimated release date:** March 29, 2024
 
+* In classic SP, the console won't complain anymore for missing character announcement lines.
 * Railgun glass now matches the selected beam color. (Credit: @Bishop-333)
 * Suppressed the lots of ".info file not found" messages to Developer mode.
 * The key objective checker now checks for (at least one) Domination points in DOM and for the white flag in POS.
