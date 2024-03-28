@@ -436,9 +436,9 @@ static void PlayerModel_BuildList( void )
 				//	return;
 			}
 
-			if( precache ) {
+			/*if( precache ) {
 				trap_S_RegisterSound( va( "sound/player/announce/%s_wins.wav", skinname), qfalse );
-			}
+			}*/
 		}
 	}	
 
