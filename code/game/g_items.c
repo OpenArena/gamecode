@@ -784,17 +784,19 @@ void G_CheckTeamItems( void )
 			G_Printf( S_COLOR_YELLOW "WARNING: No team_CTF_blueflag in map\n" );
 		}
 	}
-	if( g_gametype.integer == GT_1FCTF ) {
+	if(G_UsesTheWhiteFlag(g_gametype.integer)) {
 		gitem_t	*item;
 
 		// check for all three flags
-		item = BG_FindItem( "Red Flag" );
-		if ( !item || !itemRegistered[ item - bg_itemlist ] ) {
-			G_Printf( S_COLOR_YELLOW "WARNING: No team_CTF_redflag in map\n" );
-		}
-		item = BG_FindItem( "Blue Flag" );
-		if ( !item || !itemRegistered[ item - bg_itemlist ] ) {
-			G_Printf( S_COLOR_YELLOW "WARNING: No team_CTF_blueflag in map\n" );
+		if(G_UsesTeamFlags(g_gametype.integer)){
+			item = BG_FindItem( "Red Flag" );
+			if ( !item || !itemRegistered[ item - bg_itemlist ] ) {
+				G_Printf( S_COLOR_YELLOW "WARNING: No team_CTF_redflag in map\n" );
+			}
+			item = BG_FindItem( "Blue Flag" );
+			if ( !item || !itemRegistered[ item - bg_itemlist ] ) {
+				G_Printf( S_COLOR_YELLOW "WARNING: No team_CTF_blueflag in map\n" );
+			}
 		}
 		item = BG_FindItem( "Neutral Flag" );
 		if ( !item || !itemRegistered[ item - bg_itemlist ] ) {
@@ -839,6 +841,16 @@ void G_CheckTeamItems( void )
 		ent = G_Find( ent, FOFS(classname), "team_neutralobelisk" );
 		if( !ent ) {
 			G_Printf( S_COLOR_YELLOW "WARNING: No team_neutralobelisk in map\n" );
+		}
+	}
+	if ( g_gametype.integer == GT_DOMINATION ) {
+		gentity_t	*ent;
+
+		// check for at least one domination point
+		ent = NULL;
+		ent = G_Find( ent, FOFS(classname), "domination_point" );
+		if( !ent ) {
+			G_Printf( S_COLOR_YELLOW "WARNING: No domination_point in map\n" );
 		}
 	}
 }
