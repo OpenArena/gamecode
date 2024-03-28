@@ -1664,6 +1664,7 @@ sound should only be done on the world model case.
 
 void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent, int team )
 {
+	clientInfo_t	*ci;
 	refEntity_t	gun;
 	refEntity_t	barrel;
 	refEntity_t	flash;
@@ -1673,6 +1674,7 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
 	centity_t	*nonPredictedCent;
 	orientation_t	lerped;
 
+	ci = &cgs.clientinfo[ cent->currentState.clientNum ];
 
 	weaponNum = cent->currentState.weapon;
 
@@ -1692,15 +1694,13 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
 			float	f;
 
 			f = (float)cg.predictedPlayerState.weaponTime / 1500;
-			gun.shaderRGBA[1] = 0;
-			gun.shaderRGBA[0] =
-			    gun.shaderRGBA[2] = 255 * ( 1.0 - f );
-		}
-		else {
-			gun.shaderRGBA[0] = 255;
-			gun.shaderRGBA[1] = 255;
-			gun.shaderRGBA[2] = 255;
-			gun.shaderRGBA[3] = 255;
+			gun.shaderRGBA[0] = ci->color2[0] * 51;
+			gun.shaderRGBA[1] = ci->color2[1] * 51;
+			gun.shaderRGBA[2] = ci->color2[2] * 51 * ( 1.0 - f );
+		} else {
+			gun.shaderRGBA[0] = ci->color1[0] * 255;
+			gun.shaderRGBA[1] = ci->color1[1] * 255;
+			gun.shaderRGBA[2] = ci->color1[2] * 255;
 		}
 	}
 
