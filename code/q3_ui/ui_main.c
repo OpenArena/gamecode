@@ -120,10 +120,13 @@ vmCvar_t ui_harvester_timelimit;
 vmCvar_t ui_harvester_friendly;
 vmCvar_t ui_elimination_scorelimit;
 vmCvar_t ui_elimination_timelimit;
+vmCvar_t ui_elimination_roundtimelimit;
 vmCvar_t ui_ctf_elimination_scorelimit;
 vmCvar_t ui_ctf_elimination_timelimit;
+vmCvar_t ui_ctf_elimination_roundtimelimit;
 vmCvar_t ui_lms_scorelimit;
 vmCvar_t ui_lms_timelimit;
+vmCvar_t ui_lms_roundtimelimit;
 vmCvar_t ui_dd_scorelimit;
 vmCvar_t ui_dd_timelimit;
 vmCvar_t ui_dd_friendly;
@@ -207,12 +210,15 @@ static cvarTable_t cvarTable[] = {
 
 	{ &ui_elimination_scorelimit, "ui_elimination_scorelimit", GT_ELIMINATION_DEFAULT_SCORELIMIT, CVAR_ARCHIVE },
 	{ &ui_elimination_timelimit, "ui_elimination_timelimit", GT_ELIMINATION_DEFAULT_TIMELIMIT, CVAR_ARCHIVE },
+	{ &ui_elimination_roundtimelimit, "ui_elimination_roundtimelimit", GT_ELIMINATION_DEFAULT_ROUNDTIMELIMIT, CVAR_ARCHIVE },
 
 	{ &ui_ctf_elimination_scorelimit, "ui_ctf_elimination_scorelimit", GT_CTF_ELIMINATION_DEFAULT_SCORELIMIT, CVAR_ARCHIVE },
 	{ &ui_ctf_elimination_timelimit, "ui_ctf_elimination_timelimit", GT_CTF_ELIMINATION_DEFAULT_TIMELIMIT, CVAR_ARCHIVE },
+	{ &ui_ctf_elimination_roundtimelimit, "ui_ctf_elimination_roundtimelimit", GT_CTF_ELIMINATION_DEFAULT_ROUNDTIMELIMIT, CVAR_ARCHIVE },
 
 	{ &ui_lms_scorelimit, "ui_lms_scorelimit", GT_LMS_DEFAULT_SCORELIMIT, CVAR_ARCHIVE },
 	{ &ui_lms_timelimit, "ui_lms_timelimit", GT_LMS_DEFAULT_TIMELIMIT, CVAR_ARCHIVE },
+	{ &ui_lms_roundtimelimit, "ui_lms_roundtimelimit", GT_LMS_DEFAULT_ROUNDTIMELIMIT, CVAR_ARCHIVE },
 
 	{ &ui_dd_scorelimit, "ui_dd_scorelimit", GT_DOUBLE_D_DEFAULT_SCORELIMIT, CVAR_ARCHIVE },
 	{ &ui_dd_timelimit, "ui_dd_timelimit", GT_DOUBLE_D_DEFAULT_TIMELIMIT, CVAR_ARCHIVE },
