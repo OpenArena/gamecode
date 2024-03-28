@@ -933,7 +933,12 @@ void G_InitGame( int levelTime, int randomSeed, int restart )
 	}
 	G_CheckGametypeScripts();
 	trap_Cvar_VariableStringBuffer("mapname",mapname,sizeof(mapname));
-	MapInfoGet(mapname,g_gametype.integer,&mapinfo);
+	if (g_developer.integer) {
+		MapInfoGet(mapname,g_gametype.integer,&mapinfo,qtrue);
+	}
+	else {
+		MapInfoGet(mapname,g_gametype.integer,&mapinfo,qfalse);
+	}
 	MapInfoPrint(&mapinfo);
 	if(G_RunScript(va("mapscripts/g_%s.cfg",mapname)))
 		G_RunScript("mapscripts/g_default.cfg");
