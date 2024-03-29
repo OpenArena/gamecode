@@ -2833,14 +2833,37 @@ void G_RunFrame( int levelTime )
 
 void MapInfoPrint(mapinfo_result_t *info)
 {
-	G_Printf("Auther: %s\n",info->author);
-	if (G_GametypeUsesCaptureLimit(g_gametype.integer)) {
-		G_Printf("Capturelimit: %i\n",info->captureLimit);
+	G_Printf("=== MAP INFORMATION ===\n");
+	G_Printf("Title (Longname): %s\n",info->title);
+	G_Printf("Author: %s\n",info->author);
+	G_Printf("Description: %s\n",info->description);
+	if (G_IsATeamGametype(g_gametype.integer) || g_developer.integer) {
+		G_Printf("=== TEAM-BASED INFORMATION ===\n");
+		G_Printf("Per-Team Player Count (Min-Max (Rec)): %i-%i (%i)\n",info->maxTeamSize,info->minTeamSize,info->recommendedTeamSize);
+		G_Printf("Red Team Bots: %s\n",info->redBots);
+		G_Printf("Red Team Bot Count %i\n:",info->redBotCount);
+		G_Printf("Blue Team Bots: %s\n",info->blueBots);
+		G_Printf("Blue Team Bot Count: %i\n",info->blueBotCount);
+		G_Printf("Per-Team Actual Bot Count: %i\n",info->teamBotCount);
 	}
-	else { /* (G_GametypeUsesCaptureLimit(g_gametype.integer)) */
-		G_Printf("Fraglimit: %i\n",info->fragLimit);
+	if (G_IsADMBasedGametype(g_gametype.integer) || g_developer.integer) {
+		G_Printf("=== FFA-BASED INFORMATION ===\n");
+		G_Printf("Player Count (Min-Max (Rec)): %i-%i (%i)\n",info->maxPlayers,info->minPlayers,info->recommendedPlayers);
+		G_Printf("Bots: %s\n",info->mpBots);
+		G_Printf("Bot Count: %i\n",info->mpBotCount);
 	}
-	G_Printf("minTeamSize: %i\n",info->minTeamSize);
+	G_Printf("=== SCORING-BASED INFORMATION ===\n");
+	if (G_GametypeUsesCaptureLimit(g_gametype.integer) || g_developer.integer) {
+		G_Printf("Capture Limit: %i\n",info->captureLimit);
+	}
+	if (G_GametypeUsesCaptureLimit(g_gametype.integer) || g_developer.integer) {
+		G_Printf("Frag Limit: %i\n",info->fragLimit);
+	}
+	G_Printf("Time Limit: %i\n",info->timeLimit);
+	G_Printf("=== OTHER INFORMATION ===\n");
+	G_Printf("Special Status: %s\n",info->special);
+	G_Printf("Times to Beat (Platinum-Gold-Silver-Bronze): %i - %i - %i - %i.\n",info->timeToBeatPlatinum,info->timeToBeatGold,info->timeToBeatSilver,info->timeToBeatBronze);
+	G_Printf("=== END MAP INFORMATION ===\n");
 }
 
 /* Neon_Knight: Useful check in order to have code consistency. */
