@@ -140,7 +140,7 @@
     * `recommendedPlayers` (Amount of ideal players in games in this map)
     * `recommendedTeamSize` (Amount of ideal team members in team games)
 * In-game feedback:
-  * Overload and Double Domination now display a "New Round" message between rounds.
+  * Double Domination now displays a "New Round" message between rounds.
   * CTF Elimination "Attack vs. Defense" mode (formerly "One-Way" mode): Now players on both teams are properly informed of their roles. When a team attacks, the message (_"You Are Attacking!"_) displayed is fully saturated in the team's color (i.e. fully blue for Blue team, fully red for Red team), while when defending the message (_"You Are Defending!"_) is displayed in a lighter color (magenta for the Red team, cyan for the Blue team). The original messages (_"Blue/Red/Unknown Team is on Offence"_) are available for spectators.
   * The "You've Been Mined" message, shown whenever you're directly hit by a proxy mine, now begins its combustion countdown instantly.
 * Default score limits are now consistent across all gamemodes.
@@ -168,6 +168,7 @@
 
 **Estimated release date:** March 29, 2024
 
+* Non-capturelimit modes won't display capturelimit if fraglimit is <= 0.
 * New default round time limits for Elimination/eCTF/LMS.
 * Reverted Harvester as a capturelimit gamemode.
 * All default Time Limits set to 15.
@@ -175,7 +176,6 @@
 * Railgun glass now matches the selected beam color. (Credit: @Bishop-333)
 * Suppressed the lots of ".info file not found" messages to Developer mode.
 * The key objective checker now checks for (at least one) Domination points in DOM and for the white flag in POS.
-* Added "New Round" message for Overload.
 * Flags aren't drawn anymore in Harvester/Overload.
 * New helper function for game: `G_GetAttackingTeam()`, returns the actual team that's in the attacker role in eCTF AvD mode.
 * CTF Elimination, AvD mode (formerly "One-Way mode"): Now both teams will get informed on their role appropriately:
