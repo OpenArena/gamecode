@@ -896,24 +896,30 @@ qboolean	BG_PlayerTouchesItem( playerState_t *ps, entityState_t *item, int atTim
 const char *BG_TeamName( team_t team );
 
 typedef struct mapinfo_result_s {
-	int minPlayers;
-	int maxPlayers;
-	int recommendedPlayers;
-	int minTeamSize;
-	int maxTeamSize;
-	int recommendedTeamSize;
-	int timeLimit;
-	int fragLimit;
-	int captureLimit;
+	char author[64];
+	char title[64];
+	char description[8192];
 	char mpBots[1024];
 	int mpBotCount;
 	char redBots[512];
 	int redBotCount;
 	char blueBots[512];
 	int blueBotCount;
-	char author[64];
-	char title[64];
-	char description[8192];
+	int teamBotCount;
+	int captureLimit;
+	int fragLimit;
+	int timeLimit;
+	int maxPlayers;
+	int maxTeamSize;
+	int minPlayers;
+	int minTeamSize;
+	int recommendedPlayers;
+	int recommendedTeamSize;
+	char special[16];
+	int timeToBeatPlatinum;
+	int timeToBeatGold;
+	int timeToBeatSilver;
+	int timeToBeatBronze;
 	char gametypeSupported[GT_MAX_GAME_TYPE]; //y/n
 } mapinfo_result_t;
 
