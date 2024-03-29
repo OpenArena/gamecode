@@ -301,14 +301,16 @@ void CG_DrawInformation( void ) {
 				UI_CENTER|UI_SMALLFONT|UI_DROPSHADOW, colorWhite );
 			y += PROP_HEIGHT;
 		}
+		return;
 	}
-	else /* (CG_GametypeUsesCaptureLimit(cgs.gametype)) */ {
+	if (CG_GametypeUsesCaptureLimit(cgs.gametype)) {
 		value = atoi( Info_ValueForKey( info, "capturelimit" ) );
 		if ( value ) {
 			UI_DrawProportionalString( 320, y, va( "capturelimit %i", value ),
 				UI_CENTER|UI_SMALLFONT|UI_DROPSHADOW, colorWhite );
 			y += PROP_HEIGHT;
 		}
+		return;
 	}
 }
 
