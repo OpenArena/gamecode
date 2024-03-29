@@ -130,6 +130,7 @@
     * `redBotCount` (Amount of randomly picked bots that should be added to the Red team in team-based games for this map)
     * `blueBots` (Bots per name to be added to the Blue team in team-based games for this map)
     * `blueBotCount` (Amount of randomly picked bots that should be added to the Blue team in team-based games for this map)
+    * `teamBotCount` (Amount of randomly picked up bots that should be added in each team)
     * `captureLimit` (Limit of captures in general for capture-based gamemodes for this map)
     * `fragLimit` (Limit of points in general for score-based gamemodes for this map)
     * `timeLimit` (Time limit in general for this map)
@@ -139,6 +140,8 @@
     * `minTeamSize` (Amount of ideal max team members in team games in this map)
     * `recommendedPlayers` (Amount of ideal players in games in this map)
     * `recommendedTeamSize` (Amount of ideal team members in team games)
+    * `special` (Field meant to be used for SP, specifies the kind of match and the rules that should be applied to it (Training, Instagib, Final...))
+    * `timeToBeatPlatinum`, `timeToBeatGold`, `timeToBeatSilver` and `timeToBeatBronze` (Also meant for SP, specifies the par times for each trophy, with Platinum being the first not to be "earned" and Bronze the last).
 * In-game feedback:
   * Double Domination now displays a "New Round" message between rounds.
   * CTF Elimination "Attack vs. Defense" mode (formerly "One-Way" mode): Now players on both teams are properly informed of their roles. When a team attacks, the message (_"You Are Attacking!"_) displayed is fully saturated in the team's color (i.e. fully blue for Blue team, fully red for Red team), while when defending the message (_"You Are Defending!"_) is displayed in a lighter color (magenta for the Red team, cyan for the Blue team). The original messages (_"Blue/Red/Unknown Team is on Offence"_) are available for spectators.
@@ -168,6 +171,7 @@
 
 **Estimated release date:** April 5, 2024
 
+* New fields for .info files: `teamBotCount`, `special`, `timeToBeatPlatinum`, `timeToBeatGold`, `timeToBeatSilver` and `timeToBeatBronze`.
 * Non-capturelimit modes won't display capturelimit if fraglimit is <= 0.
 * New default round time limits for Elimination/eCTF/LMS.
 * Reverted Harvester as a capturelimit gamemode.
