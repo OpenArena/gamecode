@@ -1782,15 +1782,28 @@ static float CG_DrawScores(float y) {
 			CG_DrawSmallString(x, y - 28, s, 1.0F);
 		}
 
-		if (CG_GametypeUsesFragLimit(cgs.gametype) && cgs.fraglimit) {
-			s = va("%2i", cgs.fraglimit);
+		if (CG_GametypeUsesFragLimit(cgs.gametype)) {
+			if (cgs.fraglimit) {
+				s = va("%2i", cgs.fraglimit);
+			}
+			else {
+				s = va("0");
+			}
+			w = CG_DrawStrlen(s) * BIGCHAR_WIDTH + 8;
+			x -= w;
+			CG_DrawBigString(x + 4, y, s, 1.0F);
 		}
-		else /*if (CG_GametypeUsesCaptureLimit(cgs.gametype) && cgs.capturelimit)*/ {
-			s = va("%2i", cgs.capturelimit);
+		if (CG_GametypeUsesCaptureLimit(cgs.gametype)) {
+			if (cgs.capturelimit) {
+				s = va("%2i", cgs.capturelimit);
+			}
+			else {
+				s = va("0");
+			}
+			w = CG_DrawStrlen(s) * BIGCHAR_WIDTH + 8;
+			x -= w;
+			CG_DrawBigString(x + 4, y, s, 1.0F);
 		}
-		w = CG_DrawStrlen(s) * BIGCHAR_WIDTH + 8;
-		x -= w;
-		CG_DrawBigString(x + 4, y, s, 1.0F);
 	}
 	else {
 		qboolean spectator;
@@ -1846,15 +1859,28 @@ static float CG_DrawScores(float y) {
 			CG_DrawBigString(x + 4, y, s, 1.0F);
 		}
 
-		if (CG_GametypeUsesFragLimit(cgs.gametype) && cgs.fraglimit) {
-			s = va("%2i", cgs.fraglimit);
+		if (CG_GametypeUsesFragLimit(cgs.gametype)) {
+			if (cgs.fraglimit) {
+				s = va("%2i", cgs.fraglimit);
+			}
+			else {
+				s = va("0");
+			}
+			w = CG_DrawStrlen(s) * BIGCHAR_WIDTH + 8;
+			x -= w;
+			CG_DrawBigString(x + 4, y, s, 1.0F);
 		}
-		else /*if (CG_GametypeUsesCaptureLimit(cgs.gametype) && cgs.capturelimit)*/ {
-			s = va("%2i", cgs.capturelimit);
+		if (CG_GametypeUsesCaptureLimit(cgs.gametype)) {
+			if (cgs.capturelimit) {
+				s = va("%2i", cgs.capturelimit);
+			}
+			else {
+				s = va("0");
+			}
+			w = CG_DrawStrlen(s) * BIGCHAR_WIDTH + 8;
+			x -= w;
+			CG_DrawBigString(x + 4, y, s, 1.0F);
 		}
-		w = CG_DrawStrlen(s) * BIGCHAR_WIDTH + 8;
-		x -= w;
-		CG_DrawBigString(x + 4, y, s, 1.0F);
 	}
 
 	return y1 - 8;
