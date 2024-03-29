@@ -166,7 +166,7 @@
 
 ## oaxB53.2
 
-**Estimated release date:** March 29, 2024
+**Estimated release date:** April 5, 2024
 
 * Non-capturelimit modes won't display capturelimit if fraglimit is <= 0.
 * New default round time limits for Elimination/eCTF/LMS.
