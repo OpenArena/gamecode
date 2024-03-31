@@ -447,13 +447,13 @@ static cvarTable_t cvarTable[] = {// bk001129
 	{ &cg_leiEnhancement, "cg_leiEnhancement", "0", CVAR_ARCHIVE}, // LEILEI default off (in case of whiner)
 	{ &cg_leiGoreNoise, "cg_leiGoreNoise", "0", CVAR_ARCHIVE}, // LEILEI 
 	{ &cg_leiBrassNoise, "cg_leiBrassNoise", "0", CVAR_ARCHIVE}, // LEILEI 
-	{ &cg_leiSuperGoreyAwesome, "cg_leiSuperGoreyAwesome", "0", CVAR_ARCHIVE}, // LEILEI 
+	{ &cg_leiSuperGoreyAwesome, "cg_leiSuperGoreyAwesome", "0", CVAR_ARCHIVE}, // LEILEI
 	{ &cg_leiDebug, "cg_leiDebug", "0", CVAR_CHEAT}, // LEILEI 
 	{ &cg_leiChibi, "cg_leiChibi", "0", CVAR_CHEAT}, // LEILEI 
 	{ &cg_leiWidescreen, "cg_leiWidescreen", "1", CVAR_ARCHIVE}, // LEILEI 
 	{ &cg_deathcam, "cg_deathcam", "1", CVAR_ARCHIVE}, // LEILEI 
-	{ &cg_cameramode, "cg_cameramode", "0", CVAR_ARCHIVE}, // LEILEI 
-	{ &cg_cameraEyes, "cg_cameraEyes", "0", CVAR_ARCHIVE}, // LEILEI 
+	{ &cg_cameramode, "cg_cameramode", "0", CVAR_CHEAT}, // LEILEI 
+	{ &cg_cameraEyes, "cg_cameraEyes", "0", CVAR_CHEAT}, // LEILEI 
 	{ &cg_cameraEyes_Fwd, "cg_cameraEyes_Fwd", "3", CVAR_CHEAT}, // LEILEI 
 	{ &cg_cameraEyes_Up, "cg_cameraEyes_Up", "3", CVAR_CHEAT}, // LEILEI 
 
