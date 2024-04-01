@@ -3078,27 +3078,69 @@ Saves the relevant info from .info files into cvars for later use.
 ===================
  */
 void MapInfoSaveIntoCvars(mapinfo_result_t *info) {
-	trap_Cvar_Set("sp_Bots",info->mpBots);
-	g_mapInfoBotCount.integer = info->mpBotCount;
-	trap_Cvar_Set("sp_RedBots",info->redBots);
-	g_mapInfoRedBotCount.integer = info->redBotCount;
-	trap_Cvar_Set("sp_BlueBots",info->blueBots);
-	g_mapInfoBlueBotCount.integer = info->blueBotCount;
-	g_mapInfoTeamBotCount.integer = info->teamBotCount;
-	g_mapInfoCaptureLimit.integer = info->captureLimit;
-	g_mapInfoFragLimit.integer = info->fragLimit;
-	g_mapInfoTimeLimit.integer = info->timeLimit;
-	g_mapInfoMaxPlayers.integer = info->maxPlayers;
-	g_mapInfoMaxTeamSize.integer = info->maxTeamSize;
-	g_mapInfoMinPlayers.integer = info->minPlayers;
-	g_mapInfoMinTeamSize.integer = info->minTeamSize;
-	g_mapInfoRecPlayers.integer = info->recommendedPlayers;
-	g_mapInfoRecTeamSize.integer = info->recommendedTeamSize;
-	trap_Cvar_Set("sp_Special",info->special);
-	g_mapInfoTimeToBeatPlatinum.integer = info->timeToBeatPlatinum;
-	g_mapInfoTimeToBeatGold.integer = info->timeToBeatGold;
-	g_mapInfoTimeToBeatSilver.integer = info->timeToBeatSilver;
-	g_mapInfoTimeToBeatBronze.integer = info->timeToBeatBronze;
+	if (!Q_strequal(info->mpBots, "")) {
+		trap_Cvar_Set("sp_Bots",info->mpBots);
+	}
+	if (info->mpBotCount > 0) {
+		g_mapInfoBotCount.integer = info->mpBotCount;
+	}
+	if (!Q_strequal(info->redBots, "")) {
+		trap_Cvar_Set("sp_RedBots",info->redBots);
+	}
+	if (info->redBotCount > 0) {
+		g_mapInfoRedBotCount.integer = info->redBotCount;
+	}
+	if (!Q_strequal(info->blueBots, "")) {
+		trap_Cvar_Set("sp_BlueBots",info->blueBots);
+	}
+	if (info->blueBotCount > 0) {
+		g_mapInfoBlueBotCount.integer = info->blueBotCount;
+	}
+	if (info->teamBotCount > 0) {
+		g_mapInfoTeamBotCount.integer = info->teamBotCount;
+	}
+	if (info->captureLimit > 0) {
+		g_mapInfoCaptureLimit.integer = info->captureLimit;
+	}
+	if (info->fragLimit > 0) {
+		g_mapInfoFragLimit.integer = info->fragLimit;
+	}
+	if (info->timeLimit > 0) {
+		g_mapInfoTimeLimit.integer = info->timeLimit;
+	}
+	if (info->maxPlayers > 0) {
+		g_mapInfoMaxPlayers.integer = info->maxPlayers;
+	}
+	if (info->maxTeamSize > 0) {
+		g_mapInfoMaxTeamSize.integer = info->maxTeamSize;
+	}
+	if (info->minPlayers > 0) {
+		g_mapInfoMinPlayers.integer = info->minPlayers;
+	}
+	if (info->minTeamSize > 0) {
+		g_mapInfoMinTeamSize.integer = info->minTeamSize;
+	}
+	if (info->recommendedPlayers > 0) {
+		g_mapInfoRecPlayers.integer = info->recommendedPlayers;
+	}
+	if (info->recommendedTeamSize > 0) {
+		g_mapInfoRecTeamSize.integer = info->recommendedTeamSize;
+	}
+	if (!Q_strequal(info->special, "")) {
+		trap_Cvar_Set("sp_Special",info->special);
+	}
+	if (info->timeToBeatPlatinum > 0) {
+		g_mapInfoTimeToBeatPlatinum.integer = info->timeToBeatPlatinum;
+	}
+	if (info->timeToBeatGold > 0) {
+		g_mapInfoTimeToBeatGold.integer = info->timeToBeatGold;
+	}
+	if (info->timeToBeatSilver > 0) {
+		g_mapInfoTimeToBeatSilver.integer = info->timeToBeatSilver;
+	}
+	if (info->timeToBeatBronze > 0) {
+		g_mapInfoTimeToBeatBronze.integer = info->timeToBeatBronze;
+	}
 	return;
 }
 /*
