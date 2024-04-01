@@ -220,8 +220,11 @@ static void UI_LoadArenas( void ) {
 			// check for special single player arenas (training, final)
 			tag = Info_ValueForKey( ui_arenaInfos[n], "special" );
 			if( *tag ) {
-				ui_numSpecialSinglePlayerArenas++;
-				continue;
+				// Only pass over arenas tagged as "training" and "final"
+				if (Q_strequal(tag, "training") || Q_strequal(tag, "final")) {
+					ui_numSpecialSinglePlayerArenas++;
+					continue;
+				}
 			}
 
 			ui_numSinglePlayerArenas++;
@@ -248,8 +251,11 @@ static void UI_LoadArenas( void ) {
 				// check for special single player arenas (training, final)
 				tag = Info_ValueForKey( ui_arenaInfos[n], "special" );
 				if( *tag ) {
-					Info_SetValueForKey( ui_arenaInfos[n], "num", va( "%i", specialNum++ ) );
-					continue;
+					// Only pass over arenas tagged as "training" and "final"
+					if (Q_strequal(tag, "training") || Q_strequal(tag, "final")) {
+						Info_SetValueForKey( ui_arenaInfos[n], "num", va( "%i", specialNum++ ) );
+						continue;
+					}
 				}
 
 				Info_SetValueForKey( ui_arenaInfos[n], "num", va( "%i", singlePlayerNum++ ) );
