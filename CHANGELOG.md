@@ -171,6 +171,7 @@
 
 **Estimated release date:** April 5, 2024
 
+* The fields `fragLimit`, `timeLimit`, `special` and `mpBots` from the .info files now impact directly in Classic SP.
 * New fields for .info files: `teamBotCount`, `special`, `timeToBeatPlatinum`, `timeToBeatGold`, `timeToBeatSilver` and `timeToBeatBronze`.
 * Non-capturelimit modes won't display capturelimit if fraglimit is <= 0.
 * New default round time limits for Elimination/eCTF/LMS.
