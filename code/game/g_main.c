@@ -197,6 +197,28 @@ vmCvar_t g_spSkill;
 vmCvar_t g_bot_noChat;
 vmCvar_t g_classicMode;
 
+vmCvar_t g_mapInfoBotList;
+vmCvar_t g_mapInfoBotCount;
+vmCvar_t g_mapInfoRedBotList;
+vmCvar_t g_mapInfoRedBotCount;
+vmCvar_t g_mapInfoBlueBotList;
+vmCvar_t g_mapInfoBlueBotCount;
+vmCvar_t g_mapInfoTeamBotCount;
+vmCvar_t g_mapInfoCaptureLimit;
+vmCvar_t g_mapInfoFragLimit;
+vmCvar_t g_mapInfoTimeLimit;
+vmCvar_t g_mapInfoMaxPlayers;
+vmCvar_t g_mapInfoMaxTeamSize;
+vmCvar_t g_mapInfoMinPlayers;
+vmCvar_t g_mapInfoMinTeamSize;
+vmCvar_t g_mapInfoRecPlayers;
+vmCvar_t g_mapInfoRecTeamSize;
+vmCvar_t g_mapInfoSpecial;
+vmCvar_t g_mapInfoTimeToBeatPlatinum;
+vmCvar_t g_mapInfoTimeToBeatGold;
+vmCvar_t g_mapInfoTimeToBeatSilver;
+vmCvar_t g_mapInfoTimeToBeatBronze;
+
 mapinfo_result_t mapinfo;
 
 // bk001129 - made static to avoid aliasing
@@ -407,8 +429,29 @@ static cvarTable_t gameCvarTable[] = {
 	{ &g_developer, "developer", "0", CVAR_CHEAT, 0, qtrue},
 	{ &g_spSkill, "g_spSkill", "2", 0, 0, qtrue},
 	{ &g_bot_noChat, "bot_nochat", "0", 0, 0, qtrue},
-	{ &g_classicMode, "g_classicMode", "0", CVAR_SERVERINFO | CVAR_LATCH, 0, qtrue}
-
+	{ &g_classicMode, "g_classicMode", "0", CVAR_SERVERINFO | CVAR_LATCH, 0, qtrue},
+	
+	{ &g_mapInfoBotList, "sp_Bots", "", 0, 0, qtrue},
+	{ &g_mapInfoBotCount, "sp_BotCount", "0", 0, 0, qtrue},
+	{ &g_mapInfoRedBotList, "sp_RedBots", "", 0, 0, qtrue},
+	{ &g_mapInfoRedBotCount, "sp_RedBotCount", "0", 0, 0, qtrue},
+	{ &g_mapInfoBlueBotList, "sp_BlueBots", "", 0, 0, qtrue},
+	{ &g_mapInfoBlueBotCount, "sp_BlueBotCount", "0", 0, 0, qtrue},
+	{ &g_mapInfoTeamBotCount, "sp_TeamBotCount", "0", 0, 0, qtrue},
+	{ &g_mapInfoCaptureLimit, "sp_CaptureLimit", GT_CTF_DEFAULT_SCORELIMIT, 0, 0, qtrue},
+	{ &g_mapInfoFragLimit, "sp_FragLimit", GT_SINGLE_DEFAULT_SCORELIMIT, 0, 0, qtrue},
+	{ &g_mapInfoTimeLimit, "sp_TimeLimit", GT_SINGLE_DEFAULT_TIMELIMIT, 0, 0, qtrue},
+	{ &g_mapInfoMaxPlayers, "sp_MaxPlayers", "0", 0, 0, qtrue},
+	{ &g_mapInfoMaxTeamSize, "sp_MaxTeamSize", "0", 0, 0, qtrue},
+	{ &g_mapInfoMinPlayers, "sp_MinPlayers", "0", 0, 0, qtrue},
+	{ &g_mapInfoMinTeamSize, "sp_MinTeamSize", "0", 0, 0, qtrue},
+	{ &g_mapInfoRecPlayers, "sp_RecPlayers", "0", 0, 0, qtrue},
+	{ &g_mapInfoRecTeamSize, "sp_RecTeamSize", "0", 0, 0, qtrue},
+	{ &g_mapInfoSpecial, "sp_Special", "", 0, 0, qtrue},
+	{ &g_mapInfoTimeToBeatPlatinum, "sp_TimeToBeatPlatinum", "0", 0, 0, qtrue},
+	{ &g_mapInfoTimeToBeatGold, "sp_TimeToBeatGold", "0", 0, 0, qtrue},
+	{ &g_mapInfoTimeToBeatSilver, "sp_TimeToBeatSilver", "0", 0, 0, qtrue},
+	{ &g_mapInfoTimeToBeatBronze, "sp_TimeToBeatBronze", "0", 0, 0, qtrue}
 };
 
 // bk001129 - made static to avoid aliasing
@@ -740,16 +783,28 @@ void G_InitGame( int levelTime, int randomSeed, int restart )
 	int					i;
 	char	mapname[MAX_CVAR_VALUE_STRING];
 
+	trap_Cvar_VariableStringBuffer("mapname",mapname,sizeof(mapname));
+
+	if (g_developer.integer) {
+		MapInfoGet(mapname,g_gametype.integer,&mapinfo,qtrue);
+	}
+	else {
+		MapInfoGet(mapname,g_gametype.integer,&mapinfo,qfalse);
+	}
 
 	G_Printf ("------- Game Initialization -------\n");
 	G_Printf ("gamename: %s\n", GAMEVERSION);
 	G_Printf ("gamedate: %s\n", PRODUCT_DATE);
+	G_Printf ("mapname: %s\n", mapname);
 
 	srand( randomSeed );
 
 	G_RegisterCvars();
 
 	G_UpdateTimestamp();
+
+	MapInfoPrint(&mapinfo);
+	MapInfoSaveIntoCvars(&mapinfo);
 
 	//disable unwanted cvars
 	if( g_gametype.integer == GT_SINGLE_PLAYER ) {
@@ -932,14 +987,6 @@ void G_InitGame( int levelTime, int randomSeed, int restart )
 		trap_Cvar_Set("voteflags",va("%i",voteflags));
 	}
 	G_CheckGametypeScripts();
-	trap_Cvar_VariableStringBuffer("mapname",mapname,sizeof(mapname));
-	if (g_developer.integer) {
-		MapInfoGet(mapname,g_gametype.integer,&mapinfo,qtrue);
-	}
-	else {
-		MapInfoGet(mapname,g_gametype.integer,&mapinfo,qfalse);
-	}
-	MapInfoPrint(&mapinfo);
 	if(G_RunScript(va("mapscripts/g_%s.cfg",mapname)))
 		G_RunScript("mapscripts/g_default.cfg");
 	if(G_RunScript(va("mapscripts/g_%s_%i.cfg",mapname,g_gametype.integer)))
@@ -3022,6 +3069,184 @@ int G_GetAttackingTeam(void) {
 		return TEAM_BLUE;
 	}
 	return TEAM_NONE;
+}
+/*
+===================
+MapInfoSaveIntoCvars
+
+Saves the relevant info from .info files into cvars for later use.
+===================
+ */
+void MapInfoSaveIntoCvars(mapinfo_result_t *info) {
+	trap_Cvar_Set("sp_Bots",info->mpBots);
+	g_mapInfoBotCount.integer = info->mpBotCount;
+	trap_Cvar_Set("sp_RedBots",info->redBots);
+	g_mapInfoRedBotCount.integer = info->redBotCount;
+	trap_Cvar_Set("sp_BlueBots",info->blueBots);
+	g_mapInfoBlueBotCount.integer = info->blueBotCount;
+	g_mapInfoTeamBotCount.integer = info->teamBotCount;
+	g_mapInfoCaptureLimit.integer = info->captureLimit;
+	g_mapInfoFragLimit.integer = info->fragLimit;
+	g_mapInfoTimeLimit.integer = info->timeLimit;
+	g_mapInfoMaxPlayers.integer = info->maxPlayers;
+	g_mapInfoMaxTeamSize.integer = info->maxTeamSize;
+	g_mapInfoMinPlayers.integer = info->minPlayers;
+	g_mapInfoMinTeamSize.integer = info->minTeamSize;
+	g_mapInfoRecPlayers.integer = info->recommendedPlayers;
+	g_mapInfoRecTeamSize.integer = info->recommendedTeamSize;
+	trap_Cvar_Set("sp_Special",info->special);
+	g_mapInfoTimeToBeatPlatinum.integer = info->timeToBeatPlatinum;
+	g_mapInfoTimeToBeatGold.integer = info->timeToBeatGold;
+	g_mapInfoTimeToBeatSilver.integer = info->timeToBeatSilver;
+	g_mapInfoTimeToBeatBronze.integer = info->timeToBeatBronze;
+	return;
+}
+/*
+===================
+G_SetMapFragLimit
+
+Sets the map's frag limit. Saves it in the fraglimit cvar.
+===================
+ */
+void G_SetMapFragLimit (char *mapname) {
+	const char *arenainfo;
+	// If the fraglimit is present in the .info file, use that.
+	if (g_mapInfoFragLimit.integer > 0) {
+		trap_Cvar_Set("fraglimit",va("%i", (int) g_mapInfoFragLimit.integer));
+		return;
+	}
+	// TO-DO: If found, set the fraglimit from gameinfo.txt.
+	// If not, look in the arena files for the fraglimit.
+
+	arenainfo = G_GetArenaInfoByMap(mapname);
+	if ( !arenainfo ) {
+		trap_Cvar_Set("fraglimit",GT_SINGLE_DEFAULT_SCORELIMIT);
+		return;
+	}
+
+	if (atoi(Info_ValueForKey(arenainfo, "fraglimit"))) {
+		trap_Cvar_Set( "fraglimit", Info_ValueForKey(arenainfo, "fraglimit") );
+	}
+	trap_Cvar_Set("fraglimit",GT_SINGLE_DEFAULT_SCORELIMIT);
+	return;
+}
+/*
+===================
+G_SetMapTimeLimit
+
+Sets the map's time limit. Saves it in the timelimit cvar.
+===================
+ */
+void G_SetMapTimeLimit (char *mapname) {
+	const char *arenainfo;
+	// If the timelimit is present in the .info file, use that.
+	if (g_mapInfoTimeLimit.integer > 0) {
+		trap_Cvar_Set("timelimit",va("%i", (int) g_mapInfoTimeLimit.integer));
+		return;
+	}
+	// TO-DO: If found, set the timelimit from gameinfo.txt.
+	// If not, look in the arena files for the timelimit.
+
+	arenainfo = G_GetArenaInfoByMap(mapname);
+	if ( !arenainfo ) {
+		trap_Cvar_Set("timelimit",GT_SINGLE_DEFAULT_TIMELIMIT);
+		return;
+	}
+
+	if (atoi(Info_ValueForKey(arenainfo, "timelimit"))) {
+		trap_Cvar_Set( "timelimit", Info_ValueForKey(arenainfo, "timelimit") );
+	}
+	trap_Cvar_Set("timelimit",GT_SINGLE_DEFAULT_TIMELIMIT);
+	return;
+}
+/*
+===================
+G_SetMapSpecial
+
+Sets the map's special condition. Saves it in a dedicated cvar.
+===================
+ */
+void G_SetMapSpecial (char *mapname) {
+	const char *arenainfo;
+	char *specialMatch = "";
+
+	// If the special condition is present in the .info file, use that.
+	trap_Cvar_VariableStringBuffer("sp_Special", specialMatch, sizeof(specialMatch));
+	// The allowed values for Special. Anything else, we look for arena files.
+	if (Q_strequal(specialMatch, "training")) {
+		G_Printf("Special match found in .info for %s: Tutorial Level.\n",mapname);
+		return;
+	}
+	else if (Q_strequal(specialMatch, "final")) {
+		G_Printf("Special match found in .info for %s: Final Boss level.\n",mapname);
+		return;
+	}
+	else {
+		G_Printf("No special match found in .info for %s. Looking in arena files.\n",mapname);
+	}
+	// If not, look in the arena files for the special condition.
+
+	arenainfo = G_GetArenaInfoByMap(mapname);
+	if ( !arenainfo ) {
+		G_Printf("No arena info found for the map %s. No special match found.\n",mapname);
+		trap_Cvar_Set("sp_Special","");
+		return;
+	}
+	specialMatch = Info_ValueForKey( arenainfo, "special" );
+	// The allowed values for Special. Anything else, we empty the cvar.
+	if (Q_strequal(specialMatch, "training")) {
+		G_Printf("Special match found in arena files for %s: Tutorial Level.\n",mapname);
+	}
+	else if (Q_strequal(specialMatch, "final")) {
+		G_Printf("Special match found in arena files for %s: Final Boss level.\n",mapname);
+	}
+	else {
+		G_Printf("No special match found in arena files for %s. It's a normal match.\n",mapname);
+		trap_Cvar_Set("sp_Special","");
+		return;
+	}
+	trap_Cvar_Set("sp_Special",specialMatch);
+	return;
+}
+/*
+===================
+G_SetMapBots
+
+Sets the map's bot list. Saves it in a dedicated cvar.
+===================
+ */
+void G_SetMapBots (char *mapname) {
+	const char *arenainfo;
+	char *botList = "";
+
+	// If the special condition is present in the .info file, use that.
+	trap_Cvar_VariableStringBuffer("sp_Bots", botList, sizeof(botList));
+	// The allowed values for Special. Anything else, we look for arena files.
+	if (Q_strequal(botList, "")) {
+		G_Printf("Empty bot list in .info for %s. Trying arena files.\n",mapname);
+	}
+	else {
+		G_Printf("Bot list found in .info for %s.\n",mapname);
+		return;
+	}
+	// If not, look in the arena files for the special condition.
+
+	arenainfo = G_GetArenaInfoByMap(mapname);
+	if ( !arenainfo ) {
+		G_Printf("No arena info found for the map %s. No bot list found.\n",mapname);
+		trap_Cvar_Set("sp_Bots","");
+		return;
+	}
+	botList = Info_ValueForKey( arenainfo, "bots" );
+	// The allowed values for Special. Anything else, we empty the cvar.
+	if (Q_strequal(botList, "")) {
+		G_Printf("Empty bot list in arena files for %s.\n",mapname);
+		trap_Cvar_Set("sp_Bots","");
+		return;
+	}
+	G_Printf("Bot list found in arena files for %s.\n",mapname);
+	trap_Cvar_Set("sp_Bots",botList);
+	return;
 }
 /* /Neon_Knight */
 

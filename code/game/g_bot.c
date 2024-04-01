@@ -1009,10 +1009,7 @@ G_InitBots
 ===============
 */
 void G_InitBots( qboolean restart ) {
-	int			fragLimit;
-	int			timeLimit;
-	const char	*arenainfo;
-	char		*strValue;
+	char		*strValue = "";
 	int			basedelay;
 	char		map[MAX_QPATH];
 	char		serverinfo[MAX_INFO_STRING];
@@ -1026,42 +1023,21 @@ void G_InitBots( qboolean restart ) {
 	if( g_gametype.integer == GT_SINGLE_PLAYER ) {
 		trap_GetServerinfo( serverinfo, sizeof(serverinfo) );
 		Q_strncpyz( map, Info_ValueForKey( serverinfo, "mapname" ), sizeof(map) );
-		arenainfo = G_GetArenaInfoByMap( map );
-		if ( !arenainfo ) {
-			return;
-		}
-
-		strValue = Info_ValueForKey( arenainfo, "fraglimit" );
-		fragLimit = atoi( strValue );
-		if ( fragLimit ) {
-			trap_Cvar_Set( "fraglimit", strValue );
-		}
-		else {
-			trap_Cvar_Set( "fraglimit", "0" );
-		}
-
-		strValue = Info_ValueForKey( arenainfo, "timelimit" );
-		timeLimit = atoi( strValue );
-		if ( timeLimit ) {
-			trap_Cvar_Set( "timelimit", strValue );
-		}
-		else {
-			trap_Cvar_Set( "timelimit", "0" );
-		}
-
-		if ( !fragLimit && !timeLimit ) {
-			trap_Cvar_Set( "fraglimit", GT_SINGLE_DEFAULT_SCORELIMIT );
-			trap_Cvar_Set( "timelimit", GT_SINGLE_DEFAULT_TIMELIMIT );
-		}
+		
+		G_SetMapFragLimit(map);
+		G_SetMapTimeLimit(map);
+		G_SetMapSpecial(map);
 
 		basedelay = BOT_BEGIN_DELAY_BASE;
-		strValue = Info_ValueForKey( arenainfo, "special" );
+		trap_Cvar_VariableStringBuffer("sp_Special", strValue, sizeof(strValue));
 		if( Q_strequal( strValue, "training" ) ) {
 			basedelay += 10000;
 		}
 
+		G_SetMapBots(map);
+		trap_Cvar_VariableStringBuffer("sp_Bots", strValue, sizeof(strValue));
 		if( !restart ) {
-			G_SpawnBots( Info_ValueForKey( arenainfo, "bots" ), basedelay );
+			G_SpawnBots( strValue, basedelay );
 		}
 	} else {
 		if(bot_autominplayers.integer) {

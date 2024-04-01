@@ -942,6 +942,7 @@ void Svcmd_AbortPodium_f( void );
 //
 // g_bot.c
 //
+const char *G_GetArenaInfoByMap(const char *map);
 void G_InitBots( qboolean restart );
 char *G_GetBotInfoByNumber( int num );
 char *G_GetBotInfoByName( const char *name );
@@ -1180,6 +1181,28 @@ extern vmCvar_t g_developer;
 extern vmCvar_t g_spSkill;
 extern vmCvar_t g_bot_noChat;
 extern vmCvar_t g_classicMode;
+
+extern vmCvar_t g_mapInfoBotList;
+extern vmCvar_t g_mapInfoBotCount;
+extern vmCvar_t g_mapInfoRedBotList;
+extern vmCvar_t g_mapInfoRedBotCount;
+extern vmCvar_t g_mapInfoBlueBotList;
+extern vmCvar_t g_mapInfoBlueBotCount;
+extern vmCvar_t g_mapInfoTeamBotCount;
+extern vmCvar_t g_mapInfoCaptureLimit;
+extern vmCvar_t g_mapInfoFragLimit;
+extern vmCvar_t g_mapInfoTimeLimit;
+extern vmCvar_t g_mapInfoMaxPlayers;
+extern vmCvar_t g_mapInfoMaxTeamSize;
+extern vmCvar_t g_mapInfoMinPlayers;
+extern vmCvar_t g_mapInfoMinTeamSize;
+extern vmCvar_t g_mapInfoRecPlayers;
+extern vmCvar_t g_mapInfoRecTeamSize;
+extern vmCvar_t g_mapInfoSpecial;
+extern vmCvar_t g_mapInfoTimeToBeatPlatinum;
+extern vmCvar_t g_mapInfoTimeToBeatGold;
+extern vmCvar_t g_mapInfoTimeToBeatSilver;
+extern vmCvar_t g_mapInfoTimeToBeatBronze;
 
 void	trap_Printf( const char *fmt );
 void	trap_Error( const char *fmt ) __attribute__((noreturn));
@@ -1440,4 +1463,9 @@ qboolean G_GametypeUsesFragLimit(int check);	/* Whether the gametype uses a frag
 qboolean G_GametypeUsesCaptureLimit(int check);	/* Whether the gametype uses a capture-based scoring system. */
 qboolean G_GametypeUsesRunes(int check);	/* Whether the gametype uses the Runes. */
 int G_GetAttackingTeam(void);	/* Returns the team that's currently on offense in eCTF AvD. */
+void MapInfoSaveIntoCvars(mapinfo_result_t *info); /* Saves the values from the .info file into cvars for later use.*/
+void G_SetMapFragLimit (char *mapname); /* Sets the fraglimit for the map.*/
+void G_SetMapTimeLimit (char *mapname); /* Sets the timelimit for the map.*/
+void G_SetMapSpecial (char *mapname); /* Sets the special condition for the map.*/
+void G_SetMapBots (char *mapname); /* Sets the bot list for the map.*/
 /* /Neon_Knight */
