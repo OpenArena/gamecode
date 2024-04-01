@@ -808,14 +808,123 @@ void G_InitGame( int levelTime, int randomSeed, int restart )
 
 	//disable unwanted cvars
 	if( g_gametype.integer == GT_SINGLE_PLAYER ) {
+		char *specialMatch = "";
+
+		G_SetMapSpecial(mapname);
+
+		trap_Cvar_VariableStringBuffer("sp_Special", specialMatch, sizeof(specialMatch));
+
+		// Instantgib rule.
 		g_instantgib.integer = 0;
+		if(Q_strequal(specialMatch,"instantGib")) {
+			G_Printf("Instantgib mode enabled.");
+			g_instantgib.integer = 1;
+		}
+		// Single-Weapon rule.
 		g_weaponArena.integer = 0;
+		if (Q_strequal(specialMatch,"singleWeaponGA")) {
+			G_Printf("Single Weapon: Gauntlet mode enabled.");
+			g_weaponArena.integer = 1;
+			g_weaponArenaWeapon.integer = G_GetWeaponArenaWeapon(0);
+		}
+		if (Q_strequal(specialMatch,"singleWeaponMG")) {
+			G_Printf("Single Weapon: Machinegun mode enabled.");
+			g_weaponArena.integer = 1;
+			g_weaponArenaWeapon.integer = G_GetWeaponArenaWeapon(1);
+		}
+		if (Q_strequal(specialMatch,"singleWeaponSG")) {
+			G_Printf("Single Weapon: Shotgun mode enabled.");
+			g_weaponArena.integer = 1;
+			g_weaponArenaWeapon.integer = G_GetWeaponArenaWeapon(2);
+		}
+		if (Q_strequal(specialMatch,"singleWeaponGL")) {
+			G_Printf("Single Weapon: Grenade Launcher mode enabled.");
+			g_weaponArena.integer = 1;
+			g_weaponArenaWeapon.integer = G_GetWeaponArenaWeapon(3);
+		}
+		if (Q_strequal(specialMatch,"singleWeaponRL")) {
+			G_Printf("Single Weapon: Rocket Launcher mode enabled.");
+			g_weaponArena.integer = 1;
+			g_weaponArenaWeapon.integer = G_GetWeaponArenaWeapon(4);
+		}
+		if (Q_strequal(specialMatch,"singleWeaponLG")) {
+			G_Printf("Single Weapon: Lightning Gun mode enabled.");
+			g_weaponArena.integer = 1;
+			g_weaponArenaWeapon.integer = G_GetWeaponArenaWeapon(5);
+		}
+		if (Q_strequal(specialMatch,"singleWeaponRG")) {
+			G_Printf("Single Weapon: Railgun mode enabled.");
+			g_weaponArena.integer = 1;
+			g_weaponArenaWeapon.integer = G_GetWeaponArenaWeapon(6);
+		}
+		if (Q_strequal(specialMatch,"singleWeaponPG")) {
+			G_Printf("Single Weapon: Plasma Gun mode enabled.");
+			g_weaponArena.integer = 1;
+			g_weaponArenaWeapon.integer = G_GetWeaponArenaWeapon(7);
+		}
+		if (Q_strequal(specialMatch,"singleWeaponBFG")) {
+			G_Printf("Single Weapon: BFG mode enabled.");
+			g_weaponArena.integer = 1;
+			g_weaponArenaWeapon.integer = G_GetWeaponArenaWeapon(8);
+		}
+		if (Q_strequal(specialMatch,"singleWeaponNG")) {
+			G_Printf("Single Weapon: Nailgun mode enabled.");
+			g_weaponArena.integer = 1;
+			g_weaponArenaWeapon.integer = G_GetWeaponArenaWeapon(9);
+		}
+		if (Q_strequal(specialMatch,"singleWeaponCG")) {
+			G_Printf("Single Weapon: Chaingun mode enabled.");
+			g_weaponArena.integer = 1;
+			g_weaponArenaWeapon.integer = G_GetWeaponArenaWeapon(10);
+		}
+		if (Q_strequal(specialMatch,"singleWeaponPL")) {
+			G_Printf("Single Weapon: Prox Launcher mode enabled.");
+			g_weaponArena.integer = 1;
+			g_weaponArenaWeapon.integer = G_GetWeaponArenaWeapon(11);
+		}
+		// Grappling Hook rule.
 		g_grapple.integer = 0;
+		if (Q_strequal(specialMatch,"grappleMatch")) {
+			G_Printf("Grappling Hook on Inventory mode enabled.");
+			g_grapple.integer = 1;
+		}
+		// Elimination rule.
 		g_elimination_allgametypes.integer = 0;
+		if (Q_strequal(specialMatch,"eliminationMode")) {
+			G_Printf("Elimination (Fully Loaded) mode enabled.");
+			g_elimination_allgametypes.integer = 1;
+			g_elimination_damage.integer = 1;
+			g_elimination_startHealth.integer = 200;
+			g_elimination_startArmor.integer = 150;
+			g_elimination_bfg.integer = 10;
+			g_elimination_machinegun.integer = 200;
+			g_elimination_shotgun.integer = 200;
+			g_elimination_grenade.integer = 100;
+			g_elimination_rocket.integer = 200;
+			g_elimination_railgun.integer = 50;
+			g_elimination_lightning.integer = 100;
+			g_elimination_plasmagun.integer = 200;
+			g_elimination_chain.integer = 200;
+			g_elimination_mine.integer = 10;
+			g_elimination_nail.integer = 100;
+		}
+		// Classic Mode always disabled.
 		g_classicMode.integer = 0;
+		// Classic Mode rule.
+		g_vampire.value = 0.0f;
+		if (Q_strequal(specialMatch,"vampireMode")) {
+			G_Printf("Vampire mode enabled.");
+			g_vampire.value = 0.5f;
+			g_vampireMaxHealth.integer = 200;
+		}
+		// Low Gravity rule.
+		g_gravity.integer = 800;
+		if (Q_strequal(specialMatch,"lowGravity")) {
+			G_Printf("Low Gravity mode enabled.");
+			g_gravity.integer = 100;
+		}
 		g_regen.integer = 0;
 		g_doWarmup.integer = 0;
-		g_vampire.value = 0.0f;
 	}
 
 	G_ProcessIPBans();
@@ -3219,6 +3328,74 @@ void G_SetMapSpecial (char *mapname) {
 		G_Printf("Special match found in .info for %s: Tutorial Level.\n",mapname);
 		return;
 	}
+	else if (Q_strequal(specialMatch, "instantGib")) {
+		G_Printf("Special match found in .info for %s: Instantgib level.\n",mapname);
+		return;
+	}
+	else if (Q_strequal(specialMatch, "singleWeaponGA")) {
+		G_Printf("Special match found in .info for %s: Single Weapon: Gauntlet level.\n",mapname);
+		return;
+	}
+	else if (Q_strequal(specialMatch, "singleWeaponMG")) {
+		G_Printf("Special match found in .info for %s: Single Weapon: Machinegun level.\n",mapname);
+		return;
+	}
+	else if (Q_strequal(specialMatch, "singleWeaponSG")) {
+		G_Printf("Special match found in .info for %s: Single Weapon: Shotgun level.\n",mapname);
+		return;
+	}
+	else if (Q_strequal(specialMatch, "singleWeaponGL")) {
+		G_Printf("Special match found in .info for %s: Single Weapon: Grenade Launcher level.\n",mapname);
+		return;
+	}
+	else if (Q_strequal(specialMatch, "singleWeaponRL")) {
+		G_Printf("Special match found in .info for %s: Single Weapon: Rocket Launcher level.\n",mapname);
+		return;
+	}
+	else if (Q_strequal(specialMatch, "singleWeaponLG")) {
+		G_Printf("Special match found in .info for %s: Single Weapon: Lightning Gun level.\n",mapname);
+		return;
+	}
+	else if (Q_strequal(specialMatch, "singleWeaponRG")) {
+		G_Printf("Special match found in .info for %s: Single Weapon: Railgun level.\n",mapname);
+		return;
+	}
+	else if (Q_strequal(specialMatch, "singleWeaponPG")) {
+		G_Printf("Special match found in .info for %s: Single Weapon: Plasma Gun level.\n",mapname);
+		return;
+	}
+	else if (Q_strequal(specialMatch, "singleWeaponBFG")) {
+		G_Printf("Special match found in .info for %s: Single Weapon: BFG level.\n",mapname);
+		return;
+	}
+	else if (Q_strequal(specialMatch, "singleWeaponNG")) {
+		G_Printf("Special match found in .info for %s: Single Weapon: Nailgun level.\n",mapname);
+		return;
+	}
+	else if (Q_strequal(specialMatch, "singleWeaponCG")) {
+		G_Printf("Special match found in .info for %s: Single Weapon: Chaingun level.\n",mapname);
+		return;
+	}
+	else if (Q_strequal(specialMatch, "singleWeaponPL")) {
+		G_Printf("Special match found in .info for %s: Single Weapon: Prox Launcher level.\n",mapname);
+		return;
+	}
+	else if (Q_strequal(specialMatch, "grappleMatch")) {
+		G_Printf("Special match found in .info for %s: Grappling Hook rule level.\n",mapname);
+		return;
+	}
+	else if (Q_strequal(specialMatch, "eliminationMode")) {
+		G_Printf("Special match found in .info for %s: Elimination Mode (Fully Loaded) level.\n",mapname);
+		return;
+	}
+	else if (Q_strequal(specialMatch, "vampireMode")) {
+		G_Printf("Special match found in .info for %s: Vampire Mode level.\n",mapname);
+		return;
+	}
+	else if (Q_strequal(specialMatch, "lowGravity")) {
+		G_Printf("Special match found in .info for %s: Low Gravity level.\n",mapname);
+		return;
+	}
 	else if (Q_strequal(specialMatch, "final")) {
 		G_Printf("Special match found in .info for %s: Final Boss level.\n",mapname);
 		return;
@@ -3238,6 +3415,57 @@ void G_SetMapSpecial (char *mapname) {
 	// The allowed values for Special. Anything else, we empty the cvar.
 	if (Q_strequal(specialMatch, "training")) {
 		G_Printf("Special match found in arena files for %s: Tutorial Level.\n",mapname);
+	}
+	else if (Q_strequal(specialMatch, "instantGib")) {
+		G_Printf("Special match found in arena files for %s: Instantgib level.\n",mapname);
+	}
+	else if (Q_strequal(specialMatch, "singleWeaponGA")) {
+		G_Printf("Special match found in arena files for %s: Single Weapon: Gauntlet level.\n",mapname);
+	}
+	else if (Q_strequal(specialMatch, "singleWeaponMG")) {
+		G_Printf("Special match found in arena files for %s: Single Weapon: Machinegun level.\n",mapname);
+	}
+	else if (Q_strequal(specialMatch, "singleWeaponSG")) {
+		G_Printf("Special match found in arena files for %s: Single Weapon: Shotgun level.\n",mapname);
+	}
+	else if (Q_strequal(specialMatch, "singleWeaponGL")) {
+		G_Printf("Special match found in arena files for %s: Single Weapon: Grenade Launcher level.\n",mapname);
+	}
+	else if (Q_strequal(specialMatch, "singleWeaponRL")) {
+		G_Printf("Special match found in arena files for %s: Single Weapon: Rocket Launcher level.\n",mapname);
+	}
+	else if (Q_strequal(specialMatch, "singleWeaponLG")) {
+		G_Printf("Special match found in arena files for %s: Single Weapon: Lightning Gun level.\n",mapname);
+	}
+	else if (Q_strequal(specialMatch, "singleWeaponRG")) {
+		G_Printf("Special match found in arena files for %s: Single Weapon: Railgun level.\n",mapname);
+	}
+	else if (Q_strequal(specialMatch, "singleWeaponPG")) {
+		G_Printf("Special match found in arena files for %s: Single Weapon: Plasma Gun level.\n",mapname);
+	}
+	else if (Q_strequal(specialMatch, "singleWeaponBFG")) {
+		G_Printf("Special match found in arena files for %s: Single Weapon: BFG level.\n",mapname);
+	}
+	else if (Q_strequal(specialMatch, "singleWeaponNG")) {
+		G_Printf("Special match found in arena files for %s: Single Weapon: Nailgun level.\n",mapname);
+	}
+	else if (Q_strequal(specialMatch, "singleWeaponCG")) {
+		G_Printf("Special match found in arena files for %s: Single Weapon: Chaingun level.\n",mapname);
+	}
+	else if (Q_strequal(specialMatch, "singleWeaponPL")) {
+		G_Printf("Special match found in arena files for %s: Single Weapon: Prox Launcher level.\n",mapname);
+	}
+	else if (Q_strequal(specialMatch, "grappleMatch")) {
+		G_Printf("Special match found in arena files for %s: Grappling Hook rule level.\n",mapname);
+	}
+	else if (Q_strequal(specialMatch, "eliminationMode")) {
+		G_Printf("Special match found in arena files for %s: Elimination Mode (Fully Loaded) level.\n",mapname);
+	}
+	else if (Q_strequal(specialMatch, "vampireMode")) {
+		G_Printf("Special match found in arena files for %s: Vampire Mode level.\n",mapname);
+	}
+	else if (Q_strequal(specialMatch, "lowGravity")) {
+		G_Printf("Special match found in arena files for %s: Low Gravity level.\n",mapname);
 	}
 	else if (Q_strequal(specialMatch, "final")) {
 		G_Printf("Special match found in arena files for %s: Final Boss level.\n",mapname);
