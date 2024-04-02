@@ -1009,10 +1009,7 @@ G_InitBots
 ===============
 */
 void G_InitBots( qboolean restart ) {
-	char		*strValue = "";
-	int			basedelay;
-	char		map[MAX_QPATH];
-	char		serverinfo[MAX_INFO_STRING];
+	int		basedelay;
 
 	G_LoadBots();
 	G_LoadArenas();
@@ -1021,23 +1018,14 @@ void G_InitBots( qboolean restart ) {
 	trap_Cvar_Register( &bot_autominplayers, "bot_autominplayers", "0", CVAR_SERVERINFO );
 
 	if( g_gametype.integer == GT_SINGLE_PLAYER ) {
-		trap_GetServerinfo( serverinfo, sizeof(serverinfo) );
-		Q_strncpyz( map, Info_ValueForKey( serverinfo, "mapname" ), sizeof(map) );
-		
-		G_SetMapFragLimit(map);
-		G_SetMapTimeLimit(map);
-		G_SetMapSpecial(map);
-
+		// Special match was already specified in G_InitGame, we just pick the list.
 		basedelay = BOT_BEGIN_DELAY_BASE;
-		trap_Cvar_VariableStringBuffer("sp_Special", strValue, sizeof(strValue));
-		if( Q_strequal( strValue, "training" ) ) {
+		if( Q_strequal( g_mapInfoSpecial.string, "training" ) ) {
 			basedelay += 10000;
 		}
 
-		G_SetMapBots(map);
-		trap_Cvar_VariableStringBuffer("sp_Bots", strValue, sizeof(strValue));
 		if( !restart ) {
-			G_SpawnBots( strValue, basedelay );
+			G_SpawnBots( g_mapInfoBotList.string, basedelay );
 		}
 	} else {
 		if(bot_autominplayers.integer) {

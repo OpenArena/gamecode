@@ -7841,7 +7841,7 @@ Checks if the gametype is NOT a team-based game.
 ===================
  */
 qboolean UI_IsADMBasedGametype(int check) {
-	return !GAMETYPE_IS_A_TEAM_GAME(check);
+	return GAMETYPE_IS_NOT_A_TEAM_GAME(check);
 }
 /*
 ===================
