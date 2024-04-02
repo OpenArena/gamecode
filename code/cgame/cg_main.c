@@ -2730,7 +2730,7 @@ Checks if the gametype is NOT a team-based game.
 ===================
  */
 qboolean CG_IsADMBasedGametype(int gametype) {
-	return !GAMETYPE_IS_A_TEAM_GAME(gametype);
+	return GAMETYPE_IS_NOT_A_TEAM_GAME(gametype);
 }
 /*
 ===================
