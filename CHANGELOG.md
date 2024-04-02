@@ -124,7 +124,7 @@
     * `author` (Author of the map)
     * `title` (Map title, i.e. for oasago2 it would display "Sago's Castle")
     * `description` (Short description of the context/backstory of the map)
-    * `mpBots` (Bots per name to be added to non-team-based games for this map)
+    * `mpBots` (Bots per name to be added to non-team-based games for this map; impacts directly in SP)
     * `mpBotCount` (Amount of randomly picked bots that should be summoned instead of calling them by name for this map)
     * `redBots` (Bots per name to be added to the Red team in team-based games for this map)
     * `redBotCount` (Amount of randomly picked bots that should be added to the Red team in team-based games for this map)
@@ -132,16 +132,34 @@
     * `blueBotCount` (Amount of randomly picked bots that should be added to the Blue team in team-based games for this map)
     * `teamBotCount` (Amount of randomly picked up bots that should be added in each team)
     * `captureLimit` (Limit of captures in general for capture-based gamemodes for this map)
-    * `fragLimit` (Limit of points in general for score-based gamemodes for this map)
-    * `timeLimit` (Time limit in general for this map)
+    * `fragLimit` (Limit of points in general for score-based gamemodes for this map; impacts directly in SP)
+    * `timeLimit` (Time limit in general for this map; impacts directly in SP)
     * `maxPlayers` (Amount of ideal max players in games in this map)
     * `minPlayers` (Amount of ideal min players in games in this map)
     * `maxTeamSize` (Amount of ideal max team members in team games in this map)
     * `minTeamSize` (Amount of ideal max team members in team games in this map)
     * `recommendedPlayers` (Amount of ideal players in games in this map)
     * `recommendedTeamSize` (Amount of ideal team members in team games)
-    * `special` (Field meant to be used for SP, specifies the kind of match and the rules that should be applied to it (Training, Instagib, Final...))
+    * `special` (Field meant to be used for SP, specifies the kind of match and the rules that should be applied to it (Training, Instagib, Final... see below))
     * `timeToBeatPlatinum`, `timeToBeatGold`, `timeToBeatSilver` and `timeToBeatBronze` (Also meant for SP, specifies the par times for each trophy, with Platinum being the first not to be "earned" and Bronze the last).
+* New special matches for Classic SP in addition to `"training"` and `"final"`. These can be specified in either the map's specific .info file (the game will look at this first) the map's .arena file or arenas.txt:
+  * `"special" "instantGib"`: Instagib match.
+  * `"special" "singleWeaponGA"`: Single Weapon: Gauntlet match.
+  * `"special" "singleWeaponMG"`: Single Weapon: Machinegun match.
+  * `"special" "singleWeaponSG"`: Single Weapon: Shotgun match.
+  * `"special" "singleWeaponGL"`: Single Weapon: Grenade Launcher match.
+  * `"special" "singleWeaponRL"`: Single Weapon: Rocket Launcher match.
+  * `"special" "singleWeaponLG"`: Single Weapon: Lightning Gun match.
+  * `"special" "singleWeaponRG"`: Single Weapon: Railgun match.
+  * `"special" "singleWeaponPG"`: Single Weapon: Plasma Gun match.
+  * `"special" "singleWeaponBFG"`: Single Weapon: BFG match.
+  * `"special" "singleWeaponNG"`: Single Weapon: Nailgun match.
+  * `"special" "singleWeaponCG"`: Single Weapon: Chaingun match.
+  * `"special" "singleWeaponPL"`: Single Weapon: Prox Launcher match.
+  * `"special" "grappleMatch"`: Grappling Hook match. (Adds the GH to the (re)spawning inventory).
+  * `"special" "eliminationMode"`: Elimination Mode match. (No pickups, all weapons, full health and armor).
+  * `"special" "vampireMode"`: Vampire Mode match. 50% of all damage dealt becomes health for the player.
+  * `"special" "lowGravity"`: Low Gravity match. (Gravity of the level reduced to 100).
 * In-game feedback:
   * Double Domination now displays a "New Round" message between rounds.
   * CTF Elimination "Attack vs. Defense" mode (formerly "One-Way" mode): Now players on both teams are properly informed of their roles. When a team attacks, the message (_"You Are Attacking!"_) displayed is fully saturated in the team's color (i.e. fully blue for Blue team, fully red for Red team), while when defending the message (_"You Are Defending!"_) is displayed in a lighter color (magenta for the Red team, cyan for the Blue team). The original messages (_"Blue/Red/Unknown Team is on Offence"_) are available for spectators.
@@ -171,6 +189,24 @@
 
 **Estimated release date:** April 5, 2024
 
+* New special matches for Classic SP in addition to `"training"` and `"final"`. These can be specified in either the map's specific .info file (the game will look at this first) the map's .arena file or arenas.txt:
+  * `"special" "instantGib"`: Instagib match.
+  * `"special" "singleWeaponGA"`: Single Weapon: Gauntlet match.
+  * `"special" "singleWeaponMG"`: Single Weapon: Machinegun match.
+  * `"special" "singleWeaponSG"`: Single Weapon: Shotgun match.
+  * `"special" "singleWeaponGL"`: Single Weapon: Grenade Launcher match.
+  * `"special" "singleWeaponRL"`: Single Weapon: Rocket Launcher match.
+  * `"special" "singleWeaponLG"`: Single Weapon: Lightning Gun match.
+  * `"special" "singleWeaponRG"`: Single Weapon: Railgun match.
+  * `"special" "singleWeaponPG"`: Single Weapon: Plasma Gun match.
+  * `"special" "singleWeaponBFG"`: Single Weapon: BFG match.
+  * `"special" "singleWeaponNG"`: Single Weapon: Nailgun match.
+  * `"special" "singleWeaponCG"`: Single Weapon: Chaingun match.
+  * `"special" "singleWeaponPL"`: Single Weapon: Prox Launcher match.
+  * `"special" "grappleMatch"`: Grappling Hook match. (Adds the GH to the (re)spawning inventory).
+  * `"special" "eliminationMode"`: Elimination Mode match. (No pickups, all weapons, full health and armor).
+  * `"special" "vampireMode"`: Vampire Mode match. 50% of all damage dealt becomes health for the player.
+  * `"special" "lowGravity"`: Low Gravity match. (Gravity of the level reduced to 100).
 * The fields `fragLimit`, `timeLimit`, `special` and `mpBots` from the .info files now impact directly in Classic SP.
 * New fields for .info files: `teamBotCount`, `special`, `timeToBeatPlatinum`, `timeToBeatGold`, `timeToBeatSilver` and `timeToBeatBronze`.
 * Non-capturelimit modes won't display capturelimit if fraglimit is <= 0.
