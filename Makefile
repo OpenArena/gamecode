@@ -2526,6 +2526,7 @@ Q3UIOBJ_ = \
   $(B)/$(BASEGAME)/ui/ui_mods.o \
   $(B)/$(BASEGAME)/ui/ui_network.o \
   $(B)/$(BASEGAME)/ui/ui_hud.o \
+  $(B)/$(BASEGAME)/ui/ui_dmflags.o \
   $(B)/$(BASEGAME)/ui/ui_password.o \
   $(B)/$(BASEGAME)/ui/ui_playermodel.o \
   $(B)/$(BASEGAME)/ui/ui_players.o \

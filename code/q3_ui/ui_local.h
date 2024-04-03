@@ -839,6 +839,12 @@ void UI_HUDOptionsMenu_Cache( void );
 void UI_HUDOptionsMenu( void );
 
 //
+// ui_dmflags.c
+//
+void UI_DMflagsOptionsMenu_Cache( void );
+void UI_DMflagsOptionsMenu( void );
+
+//
 // ui_gameinfo.c
 //
 typedef enum {
