@@ -1854,6 +1854,10 @@ void Cmd_CallVote_f( gentity_t *ent ) {
 		Com_sprintf( level.voteDisplayString, sizeof( level.voteDisplayString ), "%s", "Next map?" );
 	} else if ( Q_strequal( arg1, "fraglimit" ) ) {
 		i = atoi(arg2);
+		if(g_autoGameLimits.integer) {
+			trap_SendServerCommand( ent-g_entities, "print \"Cannot set fraglimit while g_autoGameLimits is active.\n\"" );
+			return;
+		}
 		if(!allowedFraglimit(i)) {
 			trap_SendServerCommand( ent-g_entities, "print \"Cannot set fraglimit.\n\"" );
 			return;
@@ -1869,6 +1873,10 @@ void Cmd_CallVote_f( gentity_t *ent ) {
 	} 
 	else if ( Q_strequal( arg1, "timelimit" ) ) {
 		i = atoi(arg2);
+		if(g_autoGameLimits.integer) {
+			trap_SendServerCommand( ent-g_entities, "print \"Cannot set timelimit while g_autoGameLimits is active.\n\"" );
+			return;
+		}
 		if(!allowedTimelimit(i)) {
 			trap_SendServerCommand( ent-g_entities, "print \"Cannot set timelimit.\n\"" );
 			return;

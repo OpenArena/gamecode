@@ -219,6 +219,8 @@ vmCvar_t g_mapInfoTimeToBeatGold;
 vmCvar_t g_mapInfoTimeToBeatSilver;
 vmCvar_t g_mapInfoTimeToBeatBronze;
 
+vmCvar_t g_autoGameLimits;
+
 mapinfo_result_t mapinfo;
 
 // bk001129 - made static to avoid aliasing
@@ -451,7 +453,9 @@ static cvarTable_t gameCvarTable[] = {
 	{ &g_mapInfoTimeToBeatPlatinum, "sp_TimeToBeatPlatinum", "0", 0, 0, qtrue},
 	{ &g_mapInfoTimeToBeatGold, "sp_TimeToBeatGold", "0", 0, 0, qtrue},
 	{ &g_mapInfoTimeToBeatSilver, "sp_TimeToBeatSilver", "0", 0, 0, qtrue},
-	{ &g_mapInfoTimeToBeatBronze, "sp_TimeToBeatBronze", "0", 0, 0, qtrue}
+	{ &g_mapInfoTimeToBeatBronze, "sp_TimeToBeatBronze", "0", 0, 0, qtrue},
+
+	{ &g_autoGameLimits, "g_autoGameLimits", "0", CVAR_ARCHIVE, 0, qtrue}
 };
 
 // bk001129 - made static to avoid aliasing
@@ -807,20 +811,25 @@ void G_InitGame( int levelTime, int randomSeed, int restart )
 
 	MapInfoPrint(&mapinfo);
 	MapInfoSaveIntoCvars(&mapinfo);
+	if ( g_gametype.integer == GT_SINGLE_PLAYER || g_autoGameLimits.integer) {
+		if (G_GametypeUsesFragLimit(g_gametype.integer)) {
+			G_SetMapFragLimit(mapname);
+			G_Printf("^3Content of sp_FragLimit: ^7%i.\n",g_mapInfoFragLimit.integer);
+		}
+		else if (G_GametypeUsesCaptureLimit(g_gametype.integer)) {
+			G_SetMapCaptureLimit(mapname);
+			G_Printf("^3Content of sp_CaptureLimit: ^7%i.\n",g_mapInfoCaptureLimit.integer);
+		}
+		G_SetMapTimeLimit(mapname);
+		G_Printf("^3Content of sp_TimeLimit: ^7%i.\n",g_mapInfoTimeLimit.integer);
+	}
 
 	//disable unwanted cvars
 	if( g_gametype.integer == GT_SINGLE_PLAYER ) {
 		char specialMatch[64];
 
-		G_SetMapFragLimit(mapname);
-		G_SetMapTimeLimit(mapname);
 		G_SetMapSpecial(mapname);
-		G_SetMapBots(mapname);
-
-		G_Printf("^3Content of sp_FragLimit: ^7%i.\n",g_mapInfoFragLimit.integer);
-		G_Printf("^3Content of sp_TimeLimit: ^7%i.\n",g_mapInfoTimeLimit.integer);
 		G_Printf("^3Content of sp_Special: ^7%i.\n",g_mapInfoSpecial.integer);
-		G_Printf("^3Content of sp_Bots: ^7%i.\n",g_mapInfoBotList.integer);
 
 		Q_strncpyz( specialMatch, g_mapInfoSpecial.string, sizeof(specialMatch) );
 
@@ -935,6 +944,9 @@ void G_InitGame( int levelTime, int randomSeed, int restart )
 		}
 		g_regen.integer = 0;
 		g_doWarmup.integer = 0;
+
+		G_SetMapBots(mapname);
+		G_Printf("^3Content of sp_Bots: ^7%i.\n",g_mapInfoBotList.integer);
 	}
 
 	G_ProcessIPBans();
@@ -1110,13 +1122,6 @@ void G_InitGame( int levelTime, int randomSeed, int restart )
 		G_RunScript("mapscripts/g_default.cfg");
 	if(G_RunScript(va("mapscripts/g_%s_%i.cfg",mapname,g_gametype.integer)))
 		G_RunScript(va("mapscripts/g_default_%i.cfg",g_gametype.integer) );
-	
-	if (g_gametype.integer == GT_SINGLE_PLAYER) {
-		G_Printf("^3Content of sp_FragLimit: ^7%i.\n",g_mapInfoFragLimit.integer);
-		G_Printf("^3Content of sp_TimeLimit: ^7%i.\n",g_mapInfoTimeLimit.integer);
-		G_Printf("^3Content of sp_Special: ^7%i.\n",g_mapInfoSpecial.integer);
-		G_Printf("^3Content of sp_Bots: ^7%i.\n",g_mapInfoBotList.integer);
-	}
 }
 
 
@@ -2260,12 +2265,18 @@ void CheckExitRules( void )
 		return;
 	}
 
-	if ( g_timelimit.integer < 0 || g_timelimit.integer > INT_MAX / 60000 ) {
-		G_Printf( "timelimit %i is out of range, defaulting to 0\n", g_timelimit.integer );
-		trap_Cvar_Set( "timelimit", "0" );
+	if (g_autoGameLimits.integer) {
+		G_Printf( "g_autoGameLimits set, timelimit cannot be changed.\n" );
+		trap_Cvar_Set( "timelimit", va("%i",g_mapInfoTimeLimit.integer) );
 		trap_Cvar_Update( &g_timelimit );
 	}
-
+	else {
+		if ( g_timelimit.integer < 0 || g_timelimit.integer > INT_MAX / 60000 ) {
+			G_Printf( "timelimit %i is out of range, defaulting to 0\n", g_timelimit.integer );
+			trap_Cvar_Set( "timelimit", "0" );
+			trap_Cvar_Update( &g_timelimit );
+		}
+	}
 	if ( g_timelimit.integer > 0 && !level.warmupTime ) {
 		if ( (level.time - level.startTime)/60000 >= g_timelimit.integer ) {
 			trap_SendServerCommand( -1, "print \"Timelimit hit.\n\"");
@@ -2279,10 +2290,17 @@ void CheckExitRules( void )
 	}
 
 	if (G_GametypeUsesFragLimit(g_gametype.integer)) {
-		if ( g_fraglimit.integer < 0 ) {
-			G_Printf( "fraglimit %i is out of range, defaulting to 0\n", g_fraglimit.integer );
-			trap_Cvar_Set( "fraglimit", "0" );
+		if (g_autoGameLimits.integer) {
+			G_Printf( "g_autoGameLimits set, fraglimit cannot be changed.\n" );
+			trap_Cvar_Set( "fraglimit", va("%i",g_mapInfoFragLimit.integer) );
 			trap_Cvar_Update( &g_fraglimit );
+		}
+		else {
+			if ( g_fraglimit.integer < 0 ) {
+				G_Printf( "fraglimit %i is out of range, defaulting to 0\n", g_fraglimit.integer );
+				trap_Cvar_Set( "fraglimit", "0" );
+				trap_Cvar_Update( &g_fraglimit );
+			}
 		}
 		if ( g_fraglimit.integer ) {
 			if ( G_IsATeamGametype(g_gametype.integer) ) {
@@ -2319,12 +2337,18 @@ void CheckExitRules( void )
 		}
 	}
 	else if (G_GametypeUsesCaptureLimit(g_gametype.integer)) {
-		if ( g_capturelimit.integer < 0 ) {
-			G_Printf( "capturelimit %i is out of range, defaulting to 0\n", g_capturelimit.integer );
-			trap_Cvar_Set( "capturelimit", "0" );
+		if (g_autoGameLimits.integer) {
+			G_Printf( "g_autoGameLimits set, capturelimit cannot be changed.\n" );
+			trap_Cvar_Set( "capturelimit", va("%i",g_mapInfoCaptureLimit.integer) );
 			trap_Cvar_Update( &g_capturelimit );
 		}
-
+		else {
+			if ( g_capturelimit.integer < 0 ) {
+				G_Printf( "capturelimit %i is out of range, defaulting to 0\n", g_capturelimit.integer );
+				trap_Cvar_Set( "capturelimit", "0" );
+				trap_Cvar_Update( &g_capturelimit );
+			}
+		}
 		if ( g_capturelimit.integer ) {
 			if (G_IsATeamGametype(g_gametype.integer)) {
 				if ( level.teamScores[TEAM_RED] >= g_capturelimit.integer ) {
@@ -3318,22 +3342,66 @@ void G_SetMapFragLimit (char *mapname) {
 	else {
 		G_Printf("^3No fraglimit info found in .info for %s. Looking in arena files.\n",mapname);
 	}
-	// TO-DO: If found, set the timelimit from gameinfo.txt.
-	// If not, look in the arena files for the timelimit.
+	// TO-DO: If found, set the fraglimit from gameinfo.txt.
+	// If not, look in the arena files for the fraglimit.
 
 	arenainfo = G_GetArenaInfoByMap(mapname);
 	if ( !arenainfo ) {
 		G_Printf("^4No arena info found for the map %s. Assigning default value.\n",mapname);
-		g_timelimit.integer = (int) GT_SINGLE_DEFAULT_SCORELIMIT;
+		trap_Cvar_Set("fraglimit", va("%s",GT_SINGLE_DEFAULT_SCORELIMIT));
+		g_mapInfoFragLimit.integer = g_fraglimit.integer;
 		return;
 	}
 
 	if (atoi(Info_ValueForKey(arenainfo, "fraglimit"))) {
-		G_Printf("^2Fraglimit info found in arena file for %s: %i.\n",mapname,Info_ValueForKey(arenainfo, "fraglimit"));
-		g_fraglimit.integer = (int) Info_ValueForKey(arenainfo, "fraglimit");
+		G_Printf("^2Fraglimit info found in arena file for %s: %s.\n",mapname,Info_ValueForKey(arenainfo, "fraglimit"));
+		trap_Cvar_Set("fraglimit", va("%s",Info_ValueForKey(arenainfo, "fraglimit")));
+		g_mapInfoFragLimit.integer = g_fraglimit.integer;
+		return;
 	}
 	G_Printf("^4No fraglimit info found in arena files for %s. Assigning default value.\n",mapname);
-	g_timelimit.integer = (int) GT_SINGLE_DEFAULT_SCORELIMIT;
+	trap_Cvar_Set("fraglimit", va("%s",GT_SINGLE_DEFAULT_SCORELIMIT));
+	g_mapInfoFragLimit.integer = g_fraglimit.integer;
+	return;
+}
+/*
+===================
+G_SetMapCaptureLimit
+
+Sets the map's capture limit. Saves it in the capturelimit cvar.
+===================
+ */
+void G_SetMapCaptureLimit (char *mapname) {
+	const char *arenainfo;
+	// If the capturelimit is present in the .info file, use that.
+	if (g_mapInfoCaptureLimit.integer > 0) {
+		G_Printf("^2Capturelimit info found in .info for %s: %i.\n",mapname,g_mapInfoCaptureLimit.integer);
+		g_capturelimit.integer = g_mapInfoCaptureLimit.integer;
+		return;
+	}
+	else {
+		G_Printf("^3No capturelimit info found in .info for %s. Looking in arena files.\n",mapname);
+	}
+	// TO-DO: If found, set the capturelimit from gameinfo.txt.
+	// If not, look in the arena files for the capturelimit.
+
+	arenainfo = G_GetArenaInfoByMap(mapname);
+	if ( !arenainfo ) {
+		G_Printf("^4No arena info found for the map %s. Assigning default value.\n",mapname);
+		trap_Cvar_Set("capturelimit", va("%s",GT_CTF_DEFAULT_SCORELIMIT));
+		g_mapInfoCaptureLimit.integer = g_capturelimit.integer;
+		return;
+	}
+
+	if (atoi(Info_ValueForKey(arenainfo, "fraglimit"))) {
+		G_Printf("^2Capturelimit info found in arena file for %s: %s.\n",mapname,Info_ValueForKey(arenainfo, "capturelimit"));
+		trap_Cvar_Set("capturelimit", va("%s",Info_ValueForKey(arenainfo, "capturelimit")));
+		g_mapInfoCaptureLimit.integer = g_capturelimit.integer;
+		return;
+	}
+	G_Printf("^4No capturelimit info found in arena files for %s. Assigning default value.\n",mapname);
+	trap_Cvar_Set("capturelimit", va("%s",GT_CTF_DEFAULT_SCORELIMIT));
+	g_mapInfoCaptureLimit.integer = g_capturelimit.integer;
 	return;
 }
 /*
@@ -3360,16 +3428,20 @@ void G_SetMapTimeLimit (char *mapname) {
 	arenainfo = G_GetArenaInfoByMap(mapname);
 	if ( !arenainfo ) {
 		G_Printf("^4No arena info found for the map %s. Assigning default value.\n",mapname);
-		g_timelimit.integer = (int) GT_SINGLE_DEFAULT_TIMELIMIT;
+		trap_Cvar_Set("timelimit", va("%s",GT_SINGLE_DEFAULT_TIMELIMIT));
+		g_mapInfoTimeLimit.integer = g_timelimit.integer;
 		return;
 	}
 
 	if (atoi(Info_ValueForKey(arenainfo, "timelimit"))) {
-		G_Printf("^2Timelimit info found in arena file for %s: %i.\n",mapname,Info_ValueForKey(arenainfo, "timelimit"));
-		g_timelimit.integer = (int) Info_ValueForKey(arenainfo, "timelimit");
+		G_Printf("^2Timelimit info found in arena file for %s: %s.\n",mapname,Info_ValueForKey(arenainfo, "timelimit"));
+		trap_Cvar_Set("timelimit", va("%s",Info_ValueForKey(arenainfo, "timelimit")));
+		g_mapInfoTimeLimit.integer = g_timelimit.integer;
+		return;
 	}
 	G_Printf("^4No timelimit info found in arena files for %s. Assigning default value.\n",mapname);
-	g_timelimit.integer = (int) GT_SINGLE_DEFAULT_TIMELIMIT;
+	trap_Cvar_Set("timelimit", va("%s",GT_SINGLE_DEFAULT_TIMELIMIT));
+	g_mapInfoTimeLimit.integer = g_timelimit.integer;
 	return;
 }
 /*

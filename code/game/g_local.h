@@ -1204,6 +1204,8 @@ extern vmCvar_t g_mapInfoTimeToBeatGold;
 extern vmCvar_t g_mapInfoTimeToBeatSilver;
 extern vmCvar_t g_mapInfoTimeToBeatBronze;
 
+extern vmCvar_t g_autoGameLimits;
+
 void	trap_Printf( const char *fmt );
 void	trap_Error( const char *fmt ) __attribute__((noreturn));
 int		trap_Milliseconds( void );
@@ -1465,6 +1467,7 @@ qboolean G_GametypeUsesRunes(int check);	/* Whether the gametype uses the Runes.
 int G_GetAttackingTeam(void);	/* Returns the team that's currently on offense in eCTF AvD. */
 void MapInfoSaveIntoCvars(mapinfo_result_t *info); /* Saves the values from the .info file into cvars for later use.*/
 void G_SetMapFragLimit (char *mapname); /* Sets the fraglimit for the map.*/
+void G_SetMapCaptureLimit (char *mapname); /* Sets the capturelimit for the map.*/
 void G_SetMapTimeLimit (char *mapname); /* Sets the timelimit for the map.*/
 void G_SetMapSpecial (char *mapname); /* Sets the special condition for the map.*/
 void G_SetMapBots (char *mapname); /* Sets the bot list for the map.*/
