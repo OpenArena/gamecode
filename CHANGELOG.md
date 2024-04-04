@@ -27,6 +27,7 @@
   * `g_harvesterFromBodies` for Harvester. If enabled, skulls spawn from bodies rather than a central skull generator. Allows Harvester matches to take place in maps without a skull generator. However, the placement of a skull generator is still recommended for those cases where the players commit suicide or are killed via level hazard.
   * `g_weaponArena` and `g_weaponArenaWeapon`. The former replaces `g_rockets` by extending it so it can be used with any weapon, not just the Rocket Launcher. The latter controls which weapon is spawned by `g_weaponArena`.
   * `missionpackChecks`. Enables/disables missionpack checkers in both Classic UI and UI3. It's enabled by default for the latter, and disabled for the former.
+  * `g_autoGameLimits`: If set, uses the frag, time and capturelimits set in the .info or .arena files (including `arenas.txt`) rather than user-set values. It's enabled by default for SP. This also allows the usage of `capturelimit` in .arena files.
 * New commands:
   * `+acc`. Reveals your weapon accuracy after matches.
   * `dropRune`. Frees the rune for another teammate to use it.
@@ -189,6 +190,7 @@
 
 **Estimated release date:** April 5, 2024
 
+* New cvar: `g_autoGameLimits`, if set, uses the frag, time and capturelimits set in the .info or .arena files (including `arenas.txt`) rather than user-set values. It's enabled by default for SP. This also allows the usage of `capturelimit` in .arena files.
 * New special matches for Classic SP in addition to `"training"` and `"final"`. These can be specified in either the map's specific .info file (the game will look at this first) the map's .arena file or arenas.txt:
   * `"special" "instantGib"`: Instagib match.
   * `"special" "singleWeaponGA"`: Single Weapon: Gauntlet match.
