@@ -72,6 +72,61 @@ typedef struct {
 
 static dmflagsOptions_t dmflagsOptions_s;
 
+/*
+=================
+DMFlags_StatusBar
+=================
+*/
+static void DMFlags_StatusBar( void *ptr )
+{
+	switch( ((menucommon_s*)ptr)->id ) {
+	case ID_NO_FALLING:
+		UI_DrawString(320, 400, "Players do not take damage when landing from", UI_SMALLFONT|UI_CENTER, colorWhite );
+		UI_DrawString(320, 420, "great heights. Doesn't affect traps.", UI_SMALLFONT|UI_CENTER, colorWhite );
+		break;
+
+	case ID_FIXED_FOV:
+		UI_DrawString(320, 400, "Forces all players Field of View to look like", UI_SMALLFONT|UI_CENTER, colorWhite );
+		UI_DrawString(320, 420, "the default FOV. Zoom FOV is fixed too.", UI_SMALLFONT|UI_CENTER, colorWhite );
+		break;
+
+	case ID_NO_FOOTSTEPS:
+		UI_DrawString(320, 400, "Disables footstep sounds. Jumping, pickups and", UI_SMALLFONT|UI_CENTER, colorWhite );
+		UI_DrawString(320, 420, "weapon sounds can still reveal players presence.", UI_SMALLFONT|UI_CENTER, colorWhite );
+		break;
+
+	case ID_INSTANT_WEAPON_CHANGE:
+		UI_DrawString(320, 400, "Weapon switch takes no time. Weapons still need", UI_SMALLFONT|UI_CENTER, colorWhite );
+		UI_DrawString(320, 420, "to reload before being changed.", UI_SMALLFONT|UI_CENTER, colorWhite );
+		break;
+
+	case ID_NO_BUNNY:
+		UI_DrawString(320, 400, "Limited speed, non-slippy movement. Be careful", UI_SMALLFONT|UI_CENTER, colorWhite );
+		UI_DrawString(320, 420, "on accelerator pads. Some maps may be broken.", UI_SMALLFONT|UI_CENTER, colorWhite );
+		break;
+
+	case ID_INVIS:
+		UI_DrawString(320, 400, "Players with Invisibility powerup are completely", UI_SMALLFONT|UI_CENTER, colorWhite );
+		UI_DrawString(320, 420, "invisible, instead of being almost invisible.", UI_SMALLFONT|UI_CENTER, colorWhite );
+		break;
+
+	case ID_LIGHT_VOTING:
+		UI_DrawString(320, 400, "Makes voting easier to pass.", UI_SMALLFONT|UI_CENTER, colorWhite );
+		UI_DrawString(320, 420, "Abstensions less likely cause vote fail.", UI_SMALLFONT|UI_CENTER, colorWhite );
+		break;
+
+	case ID_NO_SELF_DAMAGE:
+		UI_DrawString(320, 400, "Players get no damage from their own weapons.", UI_SMALLFONT|UI_CENTER, colorWhite );
+		UI_DrawString(320, 420, "Useful for rocket jump, plasma climb, etc.", UI_SMALLFONT|UI_CENTER, colorWhite );
+		break;
+	}
+}
+
+/*
+=================
+DMFlags_DrawBitfield
+=================
+*/
 static void DMFlags_DrawBitfield( void *self ) {
 	menufield_s	*f;
 	float		*color;
@@ -91,6 +146,11 @@ static void DMFlags_DrawBitfield( void *self ) {
 	UI_DrawString( x + 48, y, UI_Cvar_VariableString( "dmflags" ), UI_SMALLFONT|UI_RIGHT, color );
 }
 
+/*
+=================
+DMflagsOptions_Event
+=================
+*/
 static void DMflagsOptions_Event( void* ptr, int notification ) {
 	int	bitfield;
 
@@ -179,6 +239,11 @@ static void DMflagsOptions_Event( void* ptr, int notification ) {
 	}
 }
 
+/*
+=================
+DMflagsOptions_MenuInit
+=================
+*/
 static void DMflagsOptions_MenuInit( void ) {
 	int				bitfield;
 
@@ -221,6 +286,7 @@ static void DMflagsOptions_MenuInit( void ) {
 	dmflagsOptions_s.noFalling.generic.id		= ID_NO_FALLING;
 	dmflagsOptions_s.noFalling.generic.x		= DMFLAGS_X_POS;
 	dmflagsOptions_s.noFalling.generic.y		= 240 - 6.5 * (BIGCHAR_HEIGHT+2);
+	dmflagsOptions_s.noFalling.generic.statusbar	= DMFlags_StatusBar;
 
 	dmflagsOptions_s.fixedFOV.generic.type		= MTYPE_RADIOBUTTON;
 	dmflagsOptions_s.fixedFOV.generic.name		= "Fixed FOV:";
@@ -229,6 +295,7 @@ static void DMflagsOptions_MenuInit( void ) {
 	dmflagsOptions_s.fixedFOV.generic.id		= ID_FIXED_FOV;
 	dmflagsOptions_s.fixedFOV.generic.x		= DMFLAGS_X_POS;
 	dmflagsOptions_s.fixedFOV.generic.y		= 240 - 5.5 * (BIGCHAR_HEIGHT+2);
+	dmflagsOptions_s.fixedFOV.generic.statusbar	= DMFlags_StatusBar;
 
 	dmflagsOptions_s.noFootsteps.generic.type		= MTYPE_RADIOBUTTON;
 	dmflagsOptions_s.noFootsteps.generic.name		= "No Footsteps:";
@@ -237,6 +304,7 @@ static void DMflagsOptions_MenuInit( void ) {
 	dmflagsOptions_s.noFootsteps.generic.id		= ID_NO_FOOTSTEPS;
 	dmflagsOptions_s.noFootsteps.generic.x		= DMFLAGS_X_POS;
 	dmflagsOptions_s.noFootsteps.generic.y		= 240 - 4.5 * (BIGCHAR_HEIGHT+2);
+	dmflagsOptions_s.noFootsteps.generic.statusbar	= DMFlags_StatusBar;
 
 	dmflagsOptions_s.instantWeaponChange.generic.type		= MTYPE_RADIOBUTTON;
 	dmflagsOptions_s.instantWeaponChange.generic.name		= "Instant Weapon Change:";
@@ -245,6 +313,7 @@ static void DMflagsOptions_MenuInit( void ) {
 	dmflagsOptions_s.instantWeaponChange.generic.id		= ID_INSTANT_WEAPON_CHANGE;
 	dmflagsOptions_s.instantWeaponChange.generic.x		= DMFLAGS_X_POS;
 	dmflagsOptions_s.instantWeaponChange.generic.y		= 240 - 3.5 * (BIGCHAR_HEIGHT+2);
+	dmflagsOptions_s.instantWeaponChange.generic.statusbar	= DMFlags_StatusBar;
 
 	dmflagsOptions_s.noBunny.generic.type		= MTYPE_RADIOBUTTON;
 	dmflagsOptions_s.noBunny.generic.name		= "No Strafe Jumping:";
@@ -253,6 +322,7 @@ static void DMflagsOptions_MenuInit( void ) {
 	dmflagsOptions_s.noBunny.generic.id		= ID_NO_BUNNY;
 	dmflagsOptions_s.noBunny.generic.x		= DMFLAGS_X_POS;
 	dmflagsOptions_s.noBunny.generic.y		= 240 - 2.5 * (BIGCHAR_HEIGHT+2);
+	dmflagsOptions_s.noBunny.generic.statusbar	= DMFlags_StatusBar;
 
 	dmflagsOptions_s.invis.generic.type		= MTYPE_RADIOBUTTON;
 	dmflagsOptions_s.invis.generic.name		= "Total Invisibility:";
@@ -261,6 +331,7 @@ static void DMflagsOptions_MenuInit( void ) {
 	dmflagsOptions_s.invis.generic.id		= ID_INVIS;
 	dmflagsOptions_s.invis.generic.x		= DMFLAGS_X_POS;
 	dmflagsOptions_s.invis.generic.y		= 240 - 1.5 * (BIGCHAR_HEIGHT+2);
+	dmflagsOptions_s.invis.generic.statusbar	= DMFlags_StatusBar;
 
 	dmflagsOptions_s.lightVoting.generic.type		= MTYPE_RADIOBUTTON;
 	dmflagsOptions_s.lightVoting.generic.name		= "Light Voting:";
@@ -269,6 +340,7 @@ static void DMflagsOptions_MenuInit( void ) {
 	dmflagsOptions_s.lightVoting.generic.id		= ID_LIGHT_VOTING;
 	dmflagsOptions_s.lightVoting.generic.x		= DMFLAGS_X_POS;
 	dmflagsOptions_s.lightVoting.generic.y		= 240 - 0.5 * (BIGCHAR_HEIGHT+2);
+	dmflagsOptions_s.lightVoting.generic.statusbar	= DMFlags_StatusBar;
 
 	dmflagsOptions_s.noSelfDamage.generic.type		= MTYPE_RADIOBUTTON;
 	dmflagsOptions_s.noSelfDamage.generic.name		= "No Self Damage from Weapons:";
@@ -277,6 +349,7 @@ static void DMflagsOptions_MenuInit( void ) {
 	dmflagsOptions_s.noSelfDamage.generic.id		= ID_NO_SELF_DAMAGE;
 	dmflagsOptions_s.noSelfDamage.generic.x		= DMFLAGS_X_POS;
 	dmflagsOptions_s.noSelfDamage.generic.y		= 240 + 0.5 * (BIGCHAR_HEIGHT+2);
+	dmflagsOptions_s.noSelfDamage.generic.statusbar	= DMFlags_StatusBar;
 
 	dmflagsOptions_s.bitfield.generic.type		= MTYPE_TEXT;
 	dmflagsOptions_s.bitfield.generic.name	= "DMFlags:";
