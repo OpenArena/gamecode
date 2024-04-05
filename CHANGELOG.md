@@ -190,6 +190,7 @@
 
 **Estimated release date:** April 5, 2024
 
+* Fixed: Team Deathmatch wasn't accounted as a team-based gametype.
 * New cvar: `g_autoGameLimits`, if set, uses the frag, time and capturelimits set in the .info or .arena files (including `arenas.txt`) rather than user-set values. It's enabled by default for SP. This also allows the usage of `capturelimit` in .arena files.
 * New special matches for Classic SP in addition to `"training"` and `"final"`. These can be specified in either the map's specific .info file (the game will look at this first) the map's .arena file or arenas.txt:
   * `"special" "instantGib"`: Instagib match.
