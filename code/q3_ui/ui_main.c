@@ -179,9 +179,6 @@ vmCvar_t        ui_browserOnlyHumans;
 vmCvar_t        ui_setupchecked;
 vmCvar_t ui_developer;
 vmCvar_t ui_browserHidePrivate;
-vmCvar_t ui_advOptionsPmove;
-vmCvar_t ui_advOptionsWeaponRuleset;
-vmCvar_t ui_advOptionsElimWeaponRuleset;
 
 // bk001129 - made static to avoid aliasing.
 static cvarTable_t cvarTable[] = {
@@ -279,9 +276,6 @@ static cvarTable_t cvarTable[] = {
 	{ &ui_setupchecked, "ui_setupchecked", "0", CVAR_ARCHIVE },
 	{ &ui_developer, "developer", "0", CVAR_CHEAT },
 	{ &ui_browserHidePrivate, "ui_browserHidePrivate", "1", CVAR_ARCHIVE },
-	{ &ui_advOptionsPmove, "ui_advOptionsPmove", "1", CVAR_ARCHIVE },
-	{ &ui_advOptionsWeaponRuleset, "ui_advOptionsWeaponRuleset", "1", CVAR_ARCHIVE },
-	{ &ui_advOptionsElimWeaponRuleset, "ui_advOptionsElimWeaponRuleset", "1", CVAR_ARCHIVE },
 	{ NULL, "g_localTeamPref", "", 0 }
 };
 
