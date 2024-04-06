@@ -1865,16 +1865,23 @@ void ClientSpawn(gentity_t *ent) {
 		}
 	}
 
+	// Weapon Arena handling: we give the correspondent weapon fully loaded
+	// unless the selected weaponArenaWeapon is the Gauntlet or the Grappling Hook;
+	// in the latter case we give both weapons. Players should always carry a damaging weapon.
 	if (g_weaponArena.integer) {
 		client->ps.stats[STAT_WEAPONS] |= ( 1 << G_GetWeaponArenaWeapon(g_weaponArenaWeapon.integer) );
-		if (G_GetWeaponArenaWeapon(g_weaponArenaWeapon.integer) == WP_GAUNTLET) {
+		if (G_GetWeaponArenaWeapon(g_weaponArenaWeapon.integer) == WP_GAUNTLET ||
+				G_GetWeaponArenaWeapon(g_weaponArenaWeapon.integer) == WP_GRAPPLING_HOOK) {
 			client->ps.ammo[G_GetWeaponArenaWeapon(g_weaponArenaWeapon.integer)] = -1;
 		} else {
 			client->ps.ammo[G_GetWeaponArenaWeapon(g_weaponArenaWeapon.integer)] = 999;
 		}
 	}
 
-	if (g_grapple.integer || (g_weaponArena.integer > 1)) {
+	// With g_grapple, g_weaponArena on and weaponArenaWeapon Grapple or g_weaponArena 2,
+	// we add the Grappling Hook.
+	if (g_grapple.integer || (g_weaponArena.integer > 1) ||
+			((g_weaponArena.integer == 1) && (g_weaponArenaWeapon.integer == WP_GRAPPLING_HOOK))) {
 		client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_GRAPPLING_HOOK );
 	}
 

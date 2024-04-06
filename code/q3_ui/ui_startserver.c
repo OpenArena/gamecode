@@ -901,15 +901,16 @@ static const char *weaponArenaWeapon_list[] = {
 	"Gauntlet",
 	"Machinegun",
 	"Shotgun",
-	"Grenade L.",
-	"Rocket L.",
-	"Lightning",
+	"Grenade Launcher",
+	"Rocket Launcher",
+	"Lightning Gun",
 	"Railgun",
 	"Plasma Gun",
 	"BFG",
+	"Grappling Hook",
 	"Nailgun",
+	"Prox Launcher",
 	"Chaingun",
-	"Prox Mine",
 	NULL
 };
 
@@ -2353,7 +2354,7 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 	y += BIGCHAR_HEIGHT+2;
 	s_serveroptions.weaponArenaWeapon.generic.type			= MTYPE_SPINCONTROL;
 	s_serveroptions.weaponArenaWeapon.generic.flags			= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-	s_serveroptions.weaponArenaWeapon.generic.name			= "SWA Mode Weapon:";
+	s_serveroptions.weaponArenaWeapon.generic.name			= "Weapon Arena Weapon:";
 	s_serveroptions.weaponArenaWeapon.generic.x				= OPTIONS_X;
 	s_serveroptions.weaponArenaWeapon.generic.y				= y;
 	s_serveroptions.weaponArenaWeapon.itemnames				= weaponArenaWeapon_list;

@@ -844,62 +844,62 @@ void G_InitGame( int levelTime, int randomSeed, int restart )
 		if (Q_strequal(specialMatch,"singleWeaponGA")) {
 			G_Printf("^2Single Weapon: Gauntlet mode enabled.\n");
 			g_weaponArena.integer = 1;
-			g_weaponArenaWeapon.integer = G_GetWeaponArenaWeapon(0);
+			trap_Cvar_Set("g_weaponArenaWeapon",va("%i",WP_GAUNTLET));
 		}
 		if (Q_strequal(specialMatch,"singleWeaponMG")) {
 			G_Printf("^2Single Weapon: Machinegun mode enabled.\n");
 			g_weaponArena.integer = 1;
-			g_weaponArenaWeapon.integer = G_GetWeaponArenaWeapon(1);
+			trap_Cvar_Set("g_weaponArenaWeapon",va("%i",WP_MACHINEGUN));
 		}
 		if (Q_strequal(specialMatch,"singleWeaponSG")) {
 			G_Printf("^2Single Weapon: Shotgun mode enabled.\n");
 			g_weaponArena.integer = 1;
-			g_weaponArenaWeapon.integer = G_GetWeaponArenaWeapon(2);
+			trap_Cvar_Set("g_weaponArenaWeapon",va("%i",WP_SHOTGUN));
 		}
 		if (Q_strequal(specialMatch,"singleWeaponGL")) {
 			G_Printf("^2Single Weapon: Grenade Launcher mode enabled.\n");
 			g_weaponArena.integer = 1;
-			g_weaponArenaWeapon.integer = G_GetWeaponArenaWeapon(3);
+			trap_Cvar_Set("g_weaponArenaWeapon",va("%i",WP_GRENADE_LAUNCHER));
 		}
 		if (Q_strequal(specialMatch,"singleWeaponRL")) {
 			G_Printf("^2Single Weapon: Rocket Launcher mode enabled.\n");
 			g_weaponArena.integer = 1;
-			g_weaponArenaWeapon.integer = G_GetWeaponArenaWeapon(4);
+			trap_Cvar_Set("g_weaponArenaWeapon",va("%i",WP_ROCKET_LAUNCHER));
 		}
 		if (Q_strequal(specialMatch,"singleWeaponLG")) {
 			G_Printf("^2Single Weapon: Lightning Gun mode enabled.\n");
 			g_weaponArena.integer = 1;
-			g_weaponArenaWeapon.integer = G_GetWeaponArenaWeapon(5);
+			trap_Cvar_Set("g_weaponArenaWeapon",va("%i",WP_LIGHTNING));
 		}
 		if (Q_strequal(specialMatch,"singleWeaponRG")) {
 			G_Printf("^2Single Weapon: Railgun mode enabled.\n");
 			g_weaponArena.integer = 1;
-			g_weaponArenaWeapon.integer = G_GetWeaponArenaWeapon(6);
+			trap_Cvar_Set("g_weaponArenaWeapon",va("%i",WP_RAILGUN));
 		}
 		if (Q_strequal(specialMatch,"singleWeaponPG")) {
 			G_Printf("^2Single Weapon: Plasma Gun mode enabled.\n");
 			g_weaponArena.integer = 1;
-			g_weaponArenaWeapon.integer = G_GetWeaponArenaWeapon(7);
+			trap_Cvar_Set("g_weaponArenaWeapon",va("%i",WP_PLASMAGUN));
 		}
 		if (Q_strequal(specialMatch,"singleWeaponBFG")) {
 			G_Printf("^2Single Weapon: BFG mode enabled.\n");
 			g_weaponArena.integer = 1;
-			g_weaponArenaWeapon.integer = G_GetWeaponArenaWeapon(8);
+			trap_Cvar_Set("g_weaponArenaWeapon",va("%i",WP_BFG));
 		}
 		if (Q_strequal(specialMatch,"singleWeaponNG")) {
 			G_Printf("^2Single Weapon: Nailgun mode enabled.\n");
 			g_weaponArena.integer = 1;
-			g_weaponArenaWeapon.integer = G_GetWeaponArenaWeapon(9);
+			trap_Cvar_Set("g_weaponArenaWeapon",va("%i",WP_NAILGUN));
 		}
 		if (Q_strequal(specialMatch,"singleWeaponCG")) {
 			G_Printf("^2Single Weapon: Chaingun mode enabled.\n");
 			g_weaponArena.integer = 1;
-			g_weaponArenaWeapon.integer = G_GetWeaponArenaWeapon(10);
+			trap_Cvar_Set("g_weaponArenaWeapon",va("%i",WP_CHAINGUN));
 		}
 		if (Q_strequal(specialMatch,"singleWeaponPL")) {
 			G_Printf("^2Single Weapon: Prox Launcher mode enabled.\n");
 			g_weaponArena.integer = 1;
-			g_weaponArenaWeapon.integer = G_GetWeaponArenaWeapon(11);
+			trap_Cvar_Set("g_weaponArenaWeapon",va("%i",WP_PROX_LAUNCHER));
 		}
 		// Grappling Hook rule.
 		g_grapple.integer = 0;
@@ -3145,32 +3145,11 @@ And for menu reasons. (*cough*classicui*cough*)
 ===================
  */
 int G_GetWeaponArenaWeapon(int weapon) {
-	switch (weapon) {
-		case 1: return WP_MACHINEGUN;
-			break;
-		case 2: return WP_SHOTGUN;
-			break;
-		case 3: return WP_GRENADE_LAUNCHER;
-			break;
-		case 4: return WP_ROCKET_LAUNCHER;
-			break;
-		case 5: return WP_LIGHTNING;
-			break;
-		case 6: return WP_RAILGUN;
-			break;
-		case 7: return WP_PLASMAGUN;
-			break;
-		case 8: return WP_BFG;
-			break;
-		case 9: return WP_NAILGUN;
-			break;
-		case 10: return WP_CHAINGUN;
-			break;
-		case 11: return WP_PROX_LAUNCHER;
-			break;
-		default: return WP_GAUNTLET;
-			break;
+	// If outside the limit, use Gauntlet.
+	if ((weapon <= WP_GAUNTLET) || (weapon > WP_NUM_WEAPONS) || (weapon = WP_GRAPPLING_HOOK)) {
+		return WP_GAUNTLET;
 	}
+	return weapon;
 }
 /*
 ===================
