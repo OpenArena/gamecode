@@ -146,10 +146,10 @@ static void HUDOptions_SetMenuItems( void ) {
 	hudOptions_s.crosshairColorBlue.curvalue	= trap_Cvar_VariableValue( "cg_crosshairColorBlue")*255.0f;
 	hudOptions_s.draw3DIcons.curvalue			= trap_Cvar_VariableValue( "cg_draw3DIcons") != 0;
 	hudOptions_s.alwaysWeaponBar.curvalue		= trap_Cvar_VariableValue( "cg_alwaysWeaponBar" ) != 0;
-	hudOptions_s.weaponBarStyle.curvalue		= trap_Cvar_VariableValue( "cg_weaponBarStyle" ) != 0;
+	hudOptions_s.weaponBarStyle.curvalue		= Com_Clamp( 0, 7, trap_Cvar_VariableValue( "cg_weaponBarStyle" ) );
 	hudOptions_s.identifyTarget.curvalue		= trap_Cvar_VariableValue( "cg_drawCrosshairNames" ) != 0;
 	hudOptions_s.drawTeamOverlay.curvalue		= Com_Clamp( 0, 3, trap_Cvar_VariableValue( "cg_drawTeamOverlay" ) );
-	hudOptions_s.obituaryOutput.curvalue		= trap_Cvar_VariableValue( "cg_obituaryOutput" ) != 0;
+	hudOptions_s.obituaryOutput.curvalue		= Com_Clamp( 0, 4, trap_Cvar_VariableValue( "cg_obituaryOutput" ) );
 	hudOptions_s.drawFPS.curvalue				= trap_Cvar_VariableValue( "cg_drawfps") != 0;
 	hudOptions_s.drawTimer.curvalue				= trap_Cvar_VariableValue( "cg_drawTimer") != 0;
 	hudOptions_s.drawStatus.curvalue			= trap_Cvar_VariableValue( "cg_drawStatus") != 0;
