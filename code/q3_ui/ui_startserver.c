@@ -800,11 +800,6 @@ typedef struct {
 	menufield_s			timelimit;
 	menufield_s			fraglimit;
 	menufield_s			capturelimit;
-	menulist_s			pmove;
-	menuradiobutton_s	grapple;
-	menulist_s			weaponMode;
-	menulist_s			weaponArenaWeapon;
-	menulist_s			awardPushing;
 
 	// Team-based options
 	menuradiobutton_s	friendlyfire;
@@ -812,23 +807,6 @@ typedef struct {
 	// Team-based, Round-based options
 	menufield_s			eliminationRoundTime;
 	menulist_s			eliminationDamage;
-
-	// Specific for Harvester
-	menuradiobutton_s	harvesterFromBodies;
-
-	// Specific for Overload
-	menufield_s			overloadRespawnDelay;
-
-	// Specific for CTF Elimination (eCTF)
-	menuradiobutton_s	oneway;
-
-	// Specific for Last Man Standing
-	menulist_s			lmsMode;
-	menufield_s			lmsLives;
-
-	// Specific for Double Domination
-	menufield_s			ddCaptureTime;
-	menufield_s			ddRespawnDelay;
 
 	// Multiplayer-only options
 	menufield_s			hostname;
@@ -880,68 +858,11 @@ static const char *botSkill_list[] = {
 };
 
 //Elimiantion - LMS mode
-static const char *lmsMode_list[] = {
-	"Round Win + Overtime",
-	"Round Win Only",
-	"Kill + Overtime",
-	"Kill Only",
-	NULL
-};
-
-//Elimiantion - LMS mode
 static const char *eliminationDamage_list[] = {
 	"Only Enemies",
 	"Enemies and Self",
 	"Enemies and Team",
 	"Enemies+Self+Team",
-	NULL
-};
-
-static const char *weaponArenaWeapon_list[] = {
-	"Gauntlet",
-	"Machinegun",
-	"Shotgun",
-	"Grenade L.",
-	"Rocket L.",
-	"Lightning",
-	"Railgun",
-	"Plasma Gun",
-	"BFG",
-	"Nailgun",
-	"Chaingun",
-	"Prox Mine",
-	NULL
-};
-
-static const char *weaponMode_list[] = {
-	"All Weapons (Default)",
-	"Instantgib",
-	"Single Weapon Arena",
-	"Classic Arena",
-	"All Weapons (Elim.)",
-	NULL
-};
-
-static const char *weaponModeElimination_list[] = {
-	"All Weapons (Elim.)",
-	"Instantgib",
-	"Single Weapon Arena",
-	"Classic Arena",
-	NULL
-};
-
-static const char *pmove_list[] = {
-	"Framerate Dependant",
-	"Fixed framerate 125Hz",
-	"Fixed framerate 91Hz",
-	"Accurate",
-	NULL
-};
-
-static const char *awardPushing_list[] = {
-	"Disabled",
-	"Last Pusher",
-	"Last Attacker",
 	NULL
 };
 
@@ -982,11 +903,6 @@ static void ServerOptions_Start( void ) {
 	int		timelimit = atoi( s_serveroptions.timelimit.field.buffer );
 	int		fraglimit = atoi( s_serveroptions.fraglimit.field.buffer );
 	int		capturelimit = atoi( s_serveroptions.capturelimit.field.buffer );
-	int		pmove = s_serveroptions.pmove.curvalue;
-	int		grapple = s_serveroptions.grapple.curvalue;
-	int		weaponMode = s_serveroptions.weaponMode.curvalue;
-	int		weaponArenaWeapon = s_serveroptions.weaponArenaWeapon.curvalue;
-	int		awardPushing = s_serveroptions.awardPushing.curvalue;
 
 	// Team-based options
 	int		friendlyfire = s_serveroptions.friendlyfire.curvalue;
@@ -994,20 +910,6 @@ static void ServerOptions_Start( void ) {
 	// Team-based, Round-based options
 	int		eliminationRoundTime = atoi( s_serveroptions.eliminationRoundTime.field.buffer );
 	int		eliminationDamage = s_serveroptions.eliminationDamage.curvalue;
-
-	// Specific for Harvester
-	int		harvesterFromBodies = s_serveroptions.harvesterFromBodies.curvalue;
-
-	// Specific for CTF Elimination (eCTF)
-	int		oneway = s_serveroptions.oneway.curvalue;
-
-	// Specific for Last Man Standing
-	int		lmsMode = s_serveroptions.lmsMode.curvalue;
-	//int		lmsLives = atoi( s_serveroptions.lmsLives.field.buffer );
-
-	// Specific for Double Domination
-	//int		ddCaptureTime = atoi( s_serveroptions.ddCaptureTime.field.buffer );
-	//int		ddRespawnDelay = atoi( s_serveroptions.ddRespawnDelay.field.buffer );
 
 	// Multiplayer-only options
 	int		maxclients;
@@ -1115,113 +1017,8 @@ static void ServerOptions_Start( void ) {
 	}
 	trap_Cvar_SetValue ("timelimit", Com_Clamp( 0, timelimit, timelimit ) );
 	trap_Cvar_SetValue( "elimination_roundtime", eliminationRoundTime );
-	switch(pmove) {
-		case 1:
-			//Fixed framerate 125 Hz
-			trap_Cvar_SetValue( "pmove_fixed", 1);
-			trap_Cvar_SetValue( "pmove_msec", 8);
-			trap_Cvar_SetValue( "pmove_float", 0);
-			break;
-		case 2:
-			//Fixed framerate 91 Hz
-			trap_Cvar_SetValue( "pmove_fixed", 1);
-			trap_Cvar_SetValue( "pmove_msec", 11);
-			trap_Cvar_SetValue( "pmove_float", 0);
-			break;
-		case 3:
-			//Accurate physics
-			trap_Cvar_SetValue( "pmove_fixed", 0);
-			trap_Cvar_SetValue( "pmove_float", 1);
-			break;
-		default:
-			//Framerate dependent
-			trap_Cvar_SetValue( "pmove_fixed", 0);
-			trap_Cvar_SetValue( "pmove_float", 0);
-			break;
-	};
-	trap_Cvar_SetValue( "g_grapple", grapple );
-	if (UI_IsARoundBasedGametype(s_serveroptions.gametype)) {
-		switch(weaponMode) {
-			case 1:
-				//Instantgib
-				trap_Cvar_SetValue( "g_instantgib", 1);
-				trap_Cvar_SetValue( "g_weaponArena", 0);
-				trap_Cvar_SetValue( "g_elimination", 0);
-				trap_Cvar_SetValue( "g_classicMode", 0);
-				break;
-			case 2:
-				//Weapon Arena
-				trap_Cvar_SetValue( "g_instantgib", 0);
-				trap_Cvar_SetValue( "g_weaponArena", 1);
-				trap_Cvar_SetValue( "g_elimination", 0);
-				trap_Cvar_SetValue( "g_classicMode", 0);
-				break;
-			case 3:
-				//"Classic" Arena
-				trap_Cvar_SetValue( "g_instantgib", 0);
-				trap_Cvar_SetValue( "g_weaponArena", 0);
-				trap_Cvar_SetValue( "g_elimination", 0);
-				trap_Cvar_SetValue( "g_classicMode", 1);
-				break;
-			default:
-				// Default mode for round-based gametypes.
-				trap_Cvar_SetValue( "g_instantgib", 0);
-				trap_Cvar_SetValue( "g_weaponArena", 0);
-				trap_Cvar_SetValue( "g_elimination", 0);
-				trap_Cvar_SetValue( "g_classicMode", 0);
-				break;
-		}
-	}
-	else {
-		switch(weaponMode) {
-			case 1:
-				//Instantgib
-				trap_Cvar_SetValue( "g_instantgib", 1);
-				trap_Cvar_SetValue( "g_weaponArena", 0);
-				trap_Cvar_SetValue( "g_elimination", 0);
-				trap_Cvar_SetValue( "g_classicMode", 0);
-				break;
-			case 2:
-				//Weapon Arena
-				trap_Cvar_SetValue( "g_instantgib", 0);
-				trap_Cvar_SetValue( "g_weaponArena", 1);
-				trap_Cvar_SetValue( "g_elimination", 0);
-				trap_Cvar_SetValue( "g_classicMode", 0);
-				break;
-			case 3:
-				//"Classic" Arena
-				trap_Cvar_SetValue( "g_instantgib", 0);
-				trap_Cvar_SetValue( "g_weaponArena", 0);
-				trap_Cvar_SetValue( "g_elimination", 0);
-				trap_Cvar_SetValue( "g_classicMode", 1);
-				break;
-			case 4:
-				//Elimination mode.
-				trap_Cvar_SetValue( "g_instantgib", 0);
-				trap_Cvar_SetValue( "g_weaponArena", 0);
-				trap_Cvar_SetValue( "g_elimination", 1);
-				trap_Cvar_SetValue( "g_classicMode", 0);
-				break;
-			default:
-				//All Weapons Classic.
-				trap_Cvar_SetValue( "g_instantgib", 0);
-				trap_Cvar_SetValue( "g_weaponArena", 0);
-				trap_Cvar_SetValue( "g_elimination", 0);
-				trap_Cvar_SetValue( "g_classicMode", 0);
-				break;
-		}
-	}
-	trap_Cvar_SetValue( "g_weaponArenaWeapon", weaponArenaWeapon );
-	trap_Cvar_SetValue( "g_awardPushing", awardPushing );
 	trap_Cvar_SetValue( "g_friendlyfire", friendlyfire );
 	trap_Cvar_SetValue( "elimination_selfdamage", eliminationDamage );
-	trap_Cvar_SetValue( "g_harvesterFromBodies", harvesterFromBodies );
-	trap_Cvar_Set("g_obeliskRespawnDelay", s_serveroptions.overloadRespawnDelay.field.buffer );
-	trap_Cvar_SetValue( "elimination_ctf_oneway", oneway );
-	trap_Cvar_SetValue( "g_lms_mode", lmsMode);
-	trap_Cvar_Set("g_lms_lives", s_serveroptions.lmsLives.field.buffer );
-	trap_Cvar_Set("g_ddCaptureTime", s_serveroptions.ddCaptureTime.field.buffer );
-	trap_Cvar_Set("g_ddRespawnDelay", s_serveroptions.ddRespawnDelay.field.buffer );
 	trap_Cvar_Set("sv_hostname", s_serveroptions.hostname.field.buffer );
 	trap_Cvar_SetValue( "sv_maxclients", Com_Clamp( 0, 12, maxclients ) );
 	trap_Cvar_SetValue( "sv_lanForceRate", lan );
@@ -1457,7 +1254,6 @@ static void ServerOptions_StatusBar_TimeLimit( void* ptr ) {
 	}
 }
 
-
 /*
 =================
 ServerOptions_StatusBar_ScoreLimit
@@ -1537,136 +1333,6 @@ static void ServerOptions_StatusBar_eliminationRoundTime( void* ptr ) {
 
 /*
 =================
-ServerOptions_StatusBar_Pmove
-
-Descriptions should have 48 characters or less per line, and there can't be more than two lines.
-=================
-*/
-static void ServerOptions_StatusBar_Pmove( void* ptr ) {
-    switch( ((menulist_s*)ptr)->curvalue ) {
-		case 0:
-			UI_DrawString( 320, 440, "Physics depends on players' framerates", UI_CENTER|UI_SMALLFONT, colorWhite );
-			UI_DrawString( 320, 460, "Not all players are equal", UI_CENTER|UI_SMALLFONT, colorWhite );
-			break;
-		case 1:
-		case 2:
-			UI_DrawString( 320, 440, "Physics are calculated at fixed intervals", UI_CENTER|UI_SMALLFONT, colorWhite );
-			UI_DrawString( 320, 460, "All players are equal", UI_CENTER|UI_SMALLFONT, colorWhite );
-			break;
-		case 3:
-			UI_DrawString( 320, 440, "Physics are calculated exactly", UI_CENTER|UI_SMALLFONT, colorWhite );
-			UI_DrawString( 320, 460, "All players are equal", UI_CENTER|UI_SMALLFONT, colorWhite );
-			break;
-		default:
-			UI_DrawString( 320, 440, "Framerate dependent or not", UI_CENTER|UI_SMALLFONT, colorWhite );
-			break;
-    }
-}
-
-/*
-=================
-ServerOptions_StatusBar_Grapple
-
-Descriptions should have 48 characters or less per line, and there can't be more than two lines.
-=================
-*/
-static void ServerOptions_StatusBar_Grapple( void* ptr ) {
-	UI_DrawString( 320, 440, "Adds the Grappling Hook to", UI_CENTER|UI_SMALLFONT, colorWhite );
-	UI_DrawString( 320, 460, "the players' spawning inventory.", UI_CENTER|UI_SMALLFONT, colorWhite );
-}
-
-/*
-=================
-ServerOptions_StatusBar_WeaponMode
-
-Descriptions should have 48 characters or less per line, and there can't be more than two lines.
-=================
-*/
-static void ServerOptions_StatusBar_WeaponMode( void* ptr ) {
-	if (UI_IsARoundBasedGametype(s_serveroptions.gametype)) {
-		switch( ((menulist_s*)ptr)->curvalue ) {
-			case 1:
-				UI_DrawString( 320, 440, "Instantgib: All pickups removed.", UI_CENTER|UI_SMALLFONT, colorWhite );
-				UI_DrawString( 320, 460, "Players spawn with a one-hit-frag Railgun.", UI_CENTER|UI_SMALLFONT, colorWhite );
-				break;
-			case 2:
-				UI_DrawString( 320, 440, "Single Weapon Arena: All pickups removed.", UI_CENTER|UI_SMALLFONT, colorWhite );
-				UI_DrawString( 320, 460, "Players will spawn with a specific weapon.", UI_CENTER|UI_SMALLFONT, colorWhite );
-				break;
-			case 3:
-				UI_DrawString( 320, 440, "Classic Arena: No pickups removed. Replaces some", UI_CENTER|UI_SMALLFONT, colorWhite );
-				UI_DrawString( 320, 460, "weapons and items to match the OG experience.", UI_CENTER|UI_SMALLFONT, colorWhite );
-				break;
-			default:
-				UI_DrawString( 320, 440, "All Weapons (Elimination): All pickups removed.", UI_CENTER|UI_SMALLFONT, colorWhite );
-				UI_DrawString( 320, 460, "Players spawn with all weapons and full HP/AP.", UI_CENTER|UI_SMALLFONT, colorWhite );
-				break;
-		}
-	}
-	else {
-		switch( ((menulist_s*)ptr)->curvalue ) {
-			case 1:
-				UI_DrawString( 320, 440, "Instantgib: All pickups removed.", UI_CENTER|UI_SMALLFONT, colorWhite );
-				UI_DrawString( 320, 460, "Players spawn with a one-hit-frag Railgun.", UI_CENTER|UI_SMALLFONT, colorWhite );
-				break;
-			case 2:
-				UI_DrawString( 320, 440, "Single Weapon Arena: All pickups removed.", UI_CENTER|UI_SMALLFONT, colorWhite );
-				UI_DrawString( 320, 460, "Players will spawn with a specific weapon.", UI_CENTER|UI_SMALLFONT, colorWhite );
-				break;
-			case 3:
-				UI_DrawString( 320, 440, "Classic Arena: No pickups removed. Replaces some", UI_CENTER|UI_SMALLFONT, colorWhite );
-				UI_DrawString( 320, 460, "weapons and items to match the OG experience.", UI_CENTER|UI_SMALLFONT, colorWhite );
-				break;
-			case 4:
-				UI_DrawString( 320, 440, "All Weapons (Elimination): All pickups removed.", UI_CENTER|UI_SMALLFONT, colorWhite );
-				UI_DrawString( 320, 460, "Players spawn with all weapons and full HP/AP.", UI_CENTER|UI_SMALLFONT, colorWhite );
-				break;
-			default:
-				UI_DrawString( 320, 440, "All Weapons (Default): No pickups removed.", UI_CENTER|UI_SMALLFONT, colorWhite );
-				UI_DrawString( 320, 460, "Players spawn with Gauntlet and Machinegun.", UI_CENTER|UI_SMALLFONT, colorWhite );
-				break;
-		}
-	}
-}
-
-/*
-=================
-ServerOptions_StatusBar_WeaponArenaWeapon
-
-Descriptions should have 48 characters or less per line, and there can't be more than two lines.
-=================
-*/
-static void ServerOptions_StatusBar_WeaponArenaWeapon( void* ptr ) {
-	UI_DrawString( 320, 440, "In Single Weapon Arena mode, this will", UI_CENTER|UI_SMALLFONT, colorWhite );
-	UI_DrawString( 320, 460, "be the weapon players will spawn with.", UI_CENTER|UI_SMALLFONT, colorWhite );
-}
-
-/*
-=================
-ServerOptions_StatusBar_AwardPushing
-
-Descriptions should have 48 characters or less per line, and there can't be more than two lines.
-=================
-*/
-static void ServerOptions_StatusBar_AwardPushing( void* ptr ) {
-    switch( ((menulist_s*)ptr)->curvalue ) {
-		case 1:
-			UI_DrawString( 320, 440, "Last Pusher: If a player is pushed into a level", UI_CENTER|UI_SMALLFONT, colorWhite );
-			UI_DrawString( 320, 460, "hazard and dies, their pusher scores a point.", UI_CENTER|UI_SMALLFONT, colorWhite );
-			break;
-		case 2:
-			UI_DrawString( 320, 440, "Last Attacker: If a player suicides or dies", UI_CENTER|UI_SMALLFONT, colorWhite );
-			UI_DrawString( 320, 460, "via level hazard, their last attacker scores.", UI_CENTER|UI_SMALLFONT, colorWhite );
-			break;
-		default: // case 0
-			UI_DrawString( 320, 440, "Disabled: If a player dies due to self-damage", UI_CENTER|UI_SMALLFONT, colorWhite );
-			UI_DrawString( 320, 460, "or level hazard, they lose a point.", UI_CENTER|UI_SMALLFONT, colorWhite );
-			break;
-    }
-}
-
-/*
-=================
 ServerOptions_StatusBar_FriendlyFire
 
 Descriptions should have 48 characters or less per line, and there can't be more than two lines.
@@ -1687,102 +1353,6 @@ Descriptions should have 48 characters or less per line, and there can't be more
 static void ServerOptions_StatusBar_eliminationDamage( void* ptr ) {
 	UI_DrawString( 320, 440, "Specifies who suffers damage", UI_CENTER|UI_SMALLFONT, colorWhite );
 	UI_DrawString( 320, 460, "from a team player's own weapons.", UI_CENTER|UI_SMALLFONT, colorWhite );
-}
-
-/*
-=================
-ServerOptions_StatusBar_harvesterFromBodies
-
-Descriptions should have 48 characters or less per line, and there can't be more than two lines.
-=================
-*/
-static void ServerOptions_StatusBar_harvesterFromBodies( void* ptr ) {
-	UI_DrawString( 320, 440, "Makes skulls spawn from fragged players", UI_CENTER|UI_SMALLFONT, colorWhite );
-	UI_DrawString( 320, 460, "rather than a central skull generator.", UI_CENTER|UI_SMALLFONT, colorWhite );
-}
-
-/*
-=================
-ServerOptions_StatusBar_overloadRespawnDelay
-
-Descriptions should have 48 characters or less per line, and there can't be more than two lines.
-=================
-*/
-static void ServerOptions_StatusBar_overloadRespawnDelay( void* ptr ) {
-	UI_DrawString( 320, 440, "Specifies the amount of time between", UI_CENTER|UI_SMALLFONT, colorWhite );
-	UI_DrawString( 320, 460, "scoring and the start of the next round.", UI_CENTER|UI_SMALLFONT, colorWhite );
-}
-
-/*
-=================
-ServerOptions_StatusBar_Oneway
-
-Descriptions should have 48 characters or less per line, and there can't be more than two lines.
-=================
-*/
-static void ServerOptions_StatusBar_Oneway( void* ptr ) {
-	UI_DrawString( 320, 440, "Every round, teams switch between attacker and", UI_CENTER|UI_SMALLFONT, colorWhite );
-	UI_DrawString( 320, 460, "defender roles. Only attackers can capture.", UI_CENTER|UI_SMALLFONT, colorWhite );
-}
-
-/*
-=================
-ServerOptions_StatusBar_lmsMode
-
-Descriptions should have 48 characters or less per line, and there can't be more than two lines.
-=================
-*/
-static void ServerOptions_StatusBar_lmsMode( void* ptr ) {
-    switch( ((menulist_s*)ptr)->curvalue ) {
-		case 1:
-			UI_DrawString( 320, 440, "Round Win Only Scoring: All surviving players", UI_CENTER|UI_SMALLFONT, colorWhite );
-			UI_DrawString( 320, 460, "at the end of a round score a point.", UI_CENTER|UI_SMALLFONT, colorWhite );
-			break;
-		case 2:
-			UI_DrawString( 320, 440, "Frag+Overtime Scoring: Every frag earns a point.", UI_CENTER|UI_SMALLFONT, colorWhite );
-			UI_DrawString( 320, 460, "In Overtime, players keep racking up frags.", UI_CENTER|UI_SMALLFONT, colorWhite );
-			break;
-		case 3:
-			UI_DrawString( 320, 440, "Frag-Only Scoring: Only frags earn points.", UI_CENTER|UI_SMALLFONT, colorWhite );
-			UI_DrawString( 320, 460, "It doesn't matter if they survive a round.", UI_CENTER|UI_SMALLFONT, colorWhite );
-			break;
-		default:
-			UI_DrawString( 320, 440, "Round+Overtime: Only the last one alive at round", UI_CENTER|UI_SMALLFONT, colorWhite );
-			UI_DrawString( 320, 460, "end scores. Players are slowly eliminated in OT.", UI_CENTER|UI_SMALLFONT, colorWhite );
-			break;
-    }
-}
-
-/*
-=================
-ServerOptions_StatusBar_lmsLives
-
-Descriptions should have 48 characters or less per line, and there can't be more than two lines.
-=================
-*/
-static void ServerOptions_StatusBar_lmsLives( void* ptr ) {
-	UI_DrawString( 320, 440, "Specifies the amount of lives each player must", UI_CENTER|UI_SMALLFONT, colorWhite );
-	UI_DrawString( 320, 460, "spend before being eliminated from the round.", UI_CENTER|UI_SMALLFONT, colorWhite );
-}
-
-/*
-=================
-ServerOptions_StatusBar_ddCaptureTime
-=================
-*/
-static void ServerOptions_StatusBar_ddCaptureTime( void* ptr ) {
-	UI_DrawString( 320, 440, "Specifies the amount of time both points need", UI_CENTER|UI_SMALLFONT, colorWhite );
-	UI_DrawString( 320, 460, "to be held in order for a team to score a point.", UI_CENTER|UI_SMALLFONT, colorWhite );
-}
-
-/*
-=================
-ServerOptions_StatusBar_ddRespawnDelay
-=================
-*/
-static void ServerOptions_StatusBar_ddRespawnDelay( void* ptr ) {
-	UI_DrawString( 320, 440, "Specifies the amount of time between", UI_CENTER|UI_SMALLFONT, colorWhite );
-	UI_DrawString( 320, 460, "scoring and the start of the next round.", UI_CENTER|UI_SMALLFONT, colorWhite );
 }
 
 /*
@@ -1842,7 +1412,6 @@ static void ServerOptions_StatusBar_AllowServerDownload( void* ptr ) {
 	UI_DrawString( 320, 440, "If set, clients connected to the server will D/L", UI_CENTER|UI_SMALLFONT, colorWhite );
 	UI_DrawString( 320, 460, "custom .pk3, if they activated their D/L option.", UI_CENTER|UI_SMALLFONT, colorWhite );
 }
-
 
 /*
 ===============
@@ -2077,58 +1646,8 @@ static void ServerOptions_SetMenuItems( void ) {
 		break;
 		
 	}
-	s_serveroptions.pmove.curvalue = 0;
-	if(trap_Cvar_VariableValue( "pmove_fixed" ))
-		s_serveroptions.pmove.curvalue = 1;
-	if(trap_Cvar_VariableValue( "pmove_fixed" ) && trap_Cvar_VariableValue( "pmove_msec" )==11)
-		s_serveroptions.pmove.curvalue = 2;
-	if(trap_Cvar_VariableValue( "pmove_float" ))
-		s_serveroptions.pmove.curvalue = 3;
-	s_serveroptions.grapple.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_grapple" ) );
-	// Weapon Rules modes. Only one option can be active at a time.
-	s_serveroptions.weaponMode.curvalue = 0;
-	if (UI_IsARoundBasedGametype(s_serveroptions.gametype)) {
-		// Instantgib mode
-		if(trap_Cvar_VariableValue("g_instantgib") != 0 && trap_Cvar_VariableValue("g_weaponArena") == 0 && trap_Cvar_VariableValue("g_classicMode") == 0)
-			s_serveroptions.weaponMode.curvalue = 1;
-		// Single Weapon mode
-		else if(trap_Cvar_VariableValue("g_instantgib") == 0 && trap_Cvar_VariableValue("g_weaponArena") != 0 && trap_Cvar_VariableValue("g_classicMode") == 0)
-			s_serveroptions.weaponMode.curvalue = 2;
-		// Classic mode
-		else if(trap_Cvar_VariableValue("g_instantgib") == 0 && trap_Cvar_VariableValue("g_weaponArena") == 0 && trap_Cvar_VariableValue("g_classicMode") != 0)
-			s_serveroptions.weaponMode.curvalue = 3;
-		// All Weapons Elimination mode
-		else
-			s_serveroptions.weaponMode.curvalue = 0;
-	}
-	else {
-		// Instantgib mode
-		if(trap_Cvar_VariableValue("g_instantgib") != 0 && trap_Cvar_VariableValue("g_weaponArena") == 0 && trap_Cvar_VariableValue("g_elimination") == 0 && trap_Cvar_VariableValue("g_classicMode") == 0)
-			s_serveroptions.weaponMode.curvalue = 1;
-		// Single Weapon mode
-		else if(trap_Cvar_VariableValue("g_instantgib") == 0 && trap_Cvar_VariableValue("g_weaponArena") != 0 && trap_Cvar_VariableValue("g_elimination") == 0 && trap_Cvar_VariableValue("g_classicMode") == 0)
-			s_serveroptions.weaponMode.curvalue = 2;
-		// Classic mode
-		else if(trap_Cvar_VariableValue("g_instantgib") == 0 && trap_Cvar_VariableValue("g_weaponArena") == 0 && trap_Cvar_VariableValue("g_elimination") == 0 && trap_Cvar_VariableValue("g_classicMode") != 0)
-			s_serveroptions.weaponMode.curvalue = 3;
-		// All Weapons Elimination mode
-		else if(trap_Cvar_VariableValue("g_instantgib") == 0 && trap_Cvar_VariableValue("g_weaponArena") == 0 && trap_Cvar_VariableValue("g_elimination") != 0 && trap_Cvar_VariableValue("g_classicMode") == 0)
-			s_serveroptions.weaponMode.curvalue = 4;
-		// All Weapons Standard mode
-		else
-			s_serveroptions.weaponMode.curvalue = 0;
-	}
-	s_serveroptions.weaponArenaWeapon.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_weaponArenaWeapon" ) );
-	s_serveroptions.awardPushing.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_awardPushing" ) );
 	Q_strncpyz( s_serveroptions.eliminationRoundTime.field.buffer, UI_Cvar_VariableString( "elimination_roundtime" ), sizeof( s_serveroptions.eliminationRoundTime.field.buffer ) );
 	s_serveroptions.eliminationDamage.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "elimination_selfdamage" ) );
-	s_serveroptions.harvesterFromBodies.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_harvesterFromBodies" ) );
-	Q_strncpyz( s_serveroptions.overloadRespawnDelay.field.buffer, UI_Cvar_VariableString( "g_obeliskRespawnDelay" ), sizeof( s_serveroptions.overloadRespawnDelay.field.buffer ) );
-	s_serveroptions.oneway.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "elimination_ctf_oneway" ) );
-	s_serveroptions.lmsMode.curvalue = Com_Clamp( 0, 3, trap_Cvar_VariableValue("g_lms_mode") );
-	Q_strncpyz( s_serveroptions.lmsLives.field.buffer, UI_Cvar_VariableString( "g_lms_lives" ), sizeof( s_serveroptions.lmsLives.field.buffer ) );
-	Q_strncpyz( s_serveroptions.ddCaptureTime.field.buffer, UI_Cvar_VariableString( "g_ddCaptureTime" ), sizeof( s_serveroptions.ddCaptureTime.field.buffer ) );
-	Q_strncpyz( s_serveroptions.ddRespawnDelay.field.buffer, UI_Cvar_VariableString( "g_ddRespawnDelay" ), sizeof( s_serveroptions.ddRespawnDelay.field.buffer ) );
 
 	Q_strncpyz( s_serveroptions.hostname.field.buffer, UI_Cvar_VariableString( "sv_hostname" ), sizeof( s_serveroptions.hostname.field.buffer ) );
 	s_serveroptions.lan.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "sv_lanforcerate" ) );
@@ -2317,57 +1836,6 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 		s_serveroptions.eliminationRoundTime.generic.statusbar  = ServerOptions_StatusBar_eliminationRoundTime;
 	}
 
-	y += BIGCHAR_HEIGHT+2;
-	s_serveroptions.pmove.generic.type			= MTYPE_SPINCONTROL;
-	s_serveroptions.pmove.generic.flags			= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-	s_serveroptions.pmove.generic.name			= "Physics Ruleset:";
-	s_serveroptions.pmove.generic.x				= OPTIONS_X;
-	s_serveroptions.pmove.generic.y				= y;
-	s_serveroptions.pmove.itemnames				= pmove_list;
-	s_serveroptions.pmove.generic.statusbar  = ServerOptions_StatusBar_Pmove;
-
-	y += BIGCHAR_HEIGHT+2;
-	s_serveroptions.grapple.generic.type			= MTYPE_RADIOBUTTON;
-	s_serveroptions.grapple.generic.flags			= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-	s_serveroptions.grapple.generic.x				= OPTIONS_X;
-	s_serveroptions.grapple.generic.y				= y;
-	s_serveroptions.grapple.generic.name			= "Grappling Hook:";
-	s_serveroptions.grapple.generic.statusbar  = ServerOptions_StatusBar_Grapple;
-
-	//Weapon Mode option
-	y += BIGCHAR_HEIGHT+2;
-	s_serveroptions.weaponMode.generic.type			= MTYPE_SPINCONTROL;
-	s_serveroptions.weaponMode.generic.flags			= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-	s_serveroptions.weaponMode.generic.x				= OPTIONS_X;
-	s_serveroptions.weaponMode.generic.y				= y;
-	if (UI_IsARoundBasedGametype(s_serveroptions.gametype)) {
-		s_serveroptions.weaponMode.itemnames				= weaponModeElimination_list;
-	}
-	else {
-		s_serveroptions.weaponMode.itemnames				= weaponMode_list;
-	}
-	s_serveroptions.weaponMode.generic.name			= "Weapons Ruleset:";
-	s_serveroptions.weaponMode.generic.statusbar  = ServerOptions_StatusBar_WeaponMode;
-	
-	//Weapon Arena Weapon list
-	y += BIGCHAR_HEIGHT+2;
-	s_serveroptions.weaponArenaWeapon.generic.type			= MTYPE_SPINCONTROL;
-	s_serveroptions.weaponArenaWeapon.generic.flags			= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-	s_serveroptions.weaponArenaWeapon.generic.name			= "SWA Mode Weapon:";
-	s_serveroptions.weaponArenaWeapon.generic.x				= OPTIONS_X;
-	s_serveroptions.weaponArenaWeapon.generic.y				= y;
-	s_serveroptions.weaponArenaWeapon.itemnames				= weaponArenaWeapon_list;
-	s_serveroptions.weaponArenaWeapon.generic.statusbar		= ServerOptions_StatusBar_WeaponArenaWeapon;
-
-	y += BIGCHAR_HEIGHT+2;
-	s_serveroptions.awardPushing.generic.type			= MTYPE_SPINCONTROL;
-	s_serveroptions.awardPushing.generic.flags			= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-	s_serveroptions.awardPushing.generic.name			= "Award Pushing Rule:";
-	s_serveroptions.awardPushing.generic.x				= OPTIONS_X;
-	s_serveroptions.awardPushing.generic.y				= y;
-	s_serveroptions.awardPushing.itemnames				= awardPushing_list;
-	s_serveroptions.awardPushing.generic.statusbar		= ServerOptions_StatusBar_AwardPushing;
-
 	if(UI_IsATeamGametype(s_serveroptions.gametype)) {
 		if(UI_IsARoundBasedGametype(s_serveroptions.gametype)) {
 			y += BIGCHAR_HEIGHT+2;
@@ -2388,76 +1856,6 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 			s_serveroptions.friendlyfire.generic.name	  = "Friendly Fire:";
 			s_serveroptions.friendlyfire.generic.statusbar  = ServerOptions_StatusBar_FriendlyFire;
 		}
-	}
-	if( s_serveroptions.gametype == GT_HARVESTER) {
-		y += BIGCHAR_HEIGHT+2;
-		s_serveroptions.harvesterFromBodies.generic.type			= MTYPE_RADIOBUTTON;
-		s_serveroptions.harvesterFromBodies.generic.flags			= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-		s_serveroptions.harvesterFromBodies.generic.x				= OPTIONS_X;
-		s_serveroptions.harvesterFromBodies.generic.y				= y;
-		s_serveroptions.harvesterFromBodies.generic.name			= "Skulls From Bodies:";
-		s_serveroptions.harvesterFromBodies.generic.statusbar  = ServerOptions_StatusBar_harvesterFromBodies;
-	}
-	if( s_serveroptions.gametype == GT_OBELISK ) {
-		y += BIGCHAR_HEIGHT+2;
-		s_serveroptions.overloadRespawnDelay.generic.type       = MTYPE_FIELD;
-		s_serveroptions.overloadRespawnDelay.generic.name       = "Time Between Rounds:";
-		s_serveroptions.overloadRespawnDelay.generic.flags      = QMF_SMALLFONT;
-		s_serveroptions.overloadRespawnDelay.generic.x          = OPTIONS_X;
-		s_serveroptions.overloadRespawnDelay.generic.y	        = y;
-		s_serveroptions.overloadRespawnDelay.field.widthInChars = 3;
-		s_serveroptions.overloadRespawnDelay.field.maxchars     = 3;
-		s_serveroptions.overloadRespawnDelay.generic.statusbar  = ServerOptions_StatusBar_overloadRespawnDelay;
-	}
-	if( s_serveroptions.gametype == GT_CTF_ELIMINATION) {
-		y += BIGCHAR_HEIGHT+2;
-		s_serveroptions.oneway.generic.type			= MTYPE_RADIOBUTTON;
-		s_serveroptions.oneway.generic.flags			= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-		s_serveroptions.oneway.generic.x				= OPTIONS_X;
-		s_serveroptions.oneway.generic.y				= y;
-		s_serveroptions.oneway.generic.name			= "Attack vs. Defense:";
-		s_serveroptions.oneway.generic.statusbar  = ServerOptions_StatusBar_Oneway;
-	}
-	if( s_serveroptions.gametype == GT_LMS ) {
-		y += BIGCHAR_HEIGHT+2;
-		s_serveroptions.lmsMode.generic.type			= MTYPE_SPINCONTROL;
-		s_serveroptions.lmsMode.generic.flags			= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-		s_serveroptions.lmsMode.generic.name			= "Scoring Mode:";
-		s_serveroptions.lmsMode.generic.x				=  OPTIONS_X;
-		s_serveroptions.lmsMode.generic.y				= y;
-		s_serveroptions.lmsMode.itemnames				= lmsMode_list;
-		s_serveroptions.lmsMode.generic.statusbar		= ServerOptions_StatusBar_lmsMode;
-
-		y += BIGCHAR_HEIGHT+2;
-		s_serveroptions.lmsLives.generic.type       = MTYPE_FIELD;
-		s_serveroptions.lmsLives.generic.name       = "Lives Per Player:";
-		s_serveroptions.lmsLives.generic.flags      = QMF_SMALLFONT;
-		s_serveroptions.lmsLives.generic.x          = OPTIONS_X;
-		s_serveroptions.lmsLives.generic.y	        = y;
-		s_serveroptions.lmsLives.field.widthInChars = 3;
-		s_serveroptions.lmsLives.field.maxchars     = 3;
-		s_serveroptions.lmsLives.generic.statusbar  = ServerOptions_StatusBar_lmsLives;
-	}
-	if( s_serveroptions.gametype == GT_DOUBLE_D ) {
-		y += BIGCHAR_HEIGHT+2;
-		s_serveroptions.ddCaptureTime.generic.type       = MTYPE_FIELD;
-		s_serveroptions.ddCaptureTime.generic.name       = "Holding Time:";
-		s_serveroptions.ddCaptureTime.generic.flags      = QMF_SMALLFONT;
-		s_serveroptions.ddCaptureTime.generic.x          = OPTIONS_X;
-		s_serveroptions.ddCaptureTime.generic.y	        = y;
-		s_serveroptions.ddCaptureTime.field.widthInChars = 3;
-		s_serveroptions.ddCaptureTime.field.maxchars     = 3;
-		s_serveroptions.ddCaptureTime.generic.statusbar  = ServerOptions_StatusBar_ddCaptureTime;
-
-		y += BIGCHAR_HEIGHT+2;
-		s_serveroptions.ddRespawnDelay.generic.type       = MTYPE_FIELD;
-		s_serveroptions.ddRespawnDelay.generic.name       = "Time Between Rounds:";
-		s_serveroptions.ddRespawnDelay.generic.flags      = QMF_SMALLFONT;
-		s_serveroptions.ddRespawnDelay.generic.x          = OPTIONS_X;
-		s_serveroptions.ddRespawnDelay.generic.y	        = y;
-		s_serveroptions.ddRespawnDelay.field.widthInChars = 3;
-		s_serveroptions.ddRespawnDelay.field.maxchars     = 3;
-		s_serveroptions.ddRespawnDelay.generic.statusbar  = ServerOptions_StatusBar_ddRespawnDelay;
 	}
 
 	y = 80;
@@ -2608,11 +2006,6 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 	if(UI_IsARoundBasedGametype(s_serveroptions.gametype)) {
 		Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.eliminationRoundTime );
 	}
-	Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.pmove );
-	Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.grapple );
-	Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.weaponMode );
-	Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.weaponArenaWeapon );
-	Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.awardPushing );
 	if(UI_IsATeamGametype(s_serveroptions.gametype)) {
 		if (UI_IsARoundBasedGametype(s_serveroptions.gametype)) {
 			Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.eliminationDamage );
@@ -2620,23 +2013,6 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 		else {
 			Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.friendlyfire );
 		}
-	}
-	if( s_serveroptions.gametype == GT_HARVESTER) {
-		Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.harvesterFromBodies );
-	}
-	if( s_serveroptions.gametype == GT_OBELISK) {
-		Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.overloadRespawnDelay );
-	}
-	if( s_serveroptions.gametype == GT_CTF_ELIMINATION) {
-		Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.oneway );
-	}
-	if( s_serveroptions.gametype == GT_LMS) {
-		Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.lmsMode );
-		Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.lmsLives );
-	}
-	if( s_serveroptions.gametype == GT_DOUBLE_D) {
-		Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.ddCaptureTime );
-		Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.ddRespawnDelay );
 	}
 
 	Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.pure );

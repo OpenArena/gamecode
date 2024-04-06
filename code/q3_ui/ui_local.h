@@ -115,6 +115,9 @@ extern vmCvar_t ui_setupchecked;
 extern vmCvar_t ui_browserOnlyHumans;
 extern vmCvar_t ui_developer;
 extern vmCvar_t ui_browserHidePrivate;
+extern vmCvar_t ui_advOptionsPmove;
+extern vmCvar_t ui_advOptionsWeaponRuleset;
+extern vmCvar_t ui_advOptionsElimWeaponRuleset;
 
 //
 // ui_qmenu.c
