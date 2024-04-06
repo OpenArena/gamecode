@@ -46,8 +46,9 @@ SETUP MENU
 #define ID_SYSTEMCONFIG			12
 #define ID_GAME					13
 #define ID_HUD					14
-#define ID_DEFAULTS				15
-#define ID_BACK					16
+#define ID_DMFLAGS				15
+#define ID_DEFAULTS				16
+#define ID_BACK					17
 
 
 typedef struct {
@@ -61,6 +62,7 @@ typedef struct {
 	menutext_s		setupsystem;
 	menutext_s		game;
 	menutext_s		hud;
+	menutext_s		dmflags;
 /*	menutext_s		load;
 	menutext_s		save;*/
 	menutext_s		defaults;
@@ -125,6 +127,10 @@ static void UI_SetupMenu_Event( void *ptr, int event ) {
 
 	case ID_HUD:
 		UI_HUDOptionsMenu();
+		break;
+
+	case ID_DMFLAGS:
+		UI_DMflagsOptionsMenu();
 		break;
 
 /*	case ID_LOAD:
@@ -238,6 +244,17 @@ static void UI_SetupMenu_Init( void ) {
 	setupMenuInfo.hud.color							= color_red;
 	setupMenuInfo.hud.style							= UI_CENTER;
 
+	y += SETUP_MENU_VERTICAL_SPACING;
+	setupMenuInfo.dmflags.generic.type					= MTYPE_PTEXT;
+	setupMenuInfo.dmflags.generic.flags					= QMF_CENTER_JUSTIFY|QMF_PULSEIFFOCUS;
+	setupMenuInfo.dmflags.generic.x						= 320;
+	setupMenuInfo.dmflags.generic.y						= y;
+	setupMenuInfo.dmflags.generic.id					= ID_DMFLAGS;
+	setupMenuInfo.dmflags.generic.callback				= UI_SetupMenu_Event; 
+	setupMenuInfo.dmflags.string						= "DMflags";
+	setupMenuInfo.dmflags.color							= color_red;
+	setupMenuInfo.dmflags.style							= UI_CENTER;
+
 	if( !trap_Cvar_VariableValue( "cl_paused" ) ) {
 /*		y += SETUP_MENU_VERTICAL_SPACING;
 		setupMenuInfo.load.generic.type					= MTYPE_PTEXT;
@@ -292,6 +309,7 @@ static void UI_SetupMenu_Init( void ) {
 	Menu_AddItem( &setupMenuInfo.menu, &setupMenuInfo.setupsystem );
 	Menu_AddItem( &setupMenuInfo.menu, &setupMenuInfo.game );
 	Menu_AddItem( &setupMenuInfo.menu, &setupMenuInfo.hud );
+	Menu_AddItem( &setupMenuInfo.menu, &setupMenuInfo.dmflags );
 /*	Menu_AddItem( &setupMenuInfo.menu, &setupMenuInfo.load );
 	Menu_AddItem( &setupMenuInfo.menu, &setupMenuInfo.save );*/
 	if( !trap_Cvar_VariableValue( "cl_paused" ) ) {

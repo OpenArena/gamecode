@@ -115,6 +115,9 @@ extern vmCvar_t ui_setupchecked;
 extern vmCvar_t ui_browserOnlyHumans;
 extern vmCvar_t ui_developer;
 extern vmCvar_t ui_browserHidePrivate;
+extern vmCvar_t ui_advOptionsPmove;
+extern vmCvar_t ui_advOptionsWeaponRuleset;
+extern vmCvar_t ui_advOptionsElimWeaponRuleset;
 
 //
 // ui_qmenu.c
@@ -837,6 +840,12 @@ void UI_NetworkOptionsMenu( void );
 //
 void UI_HUDOptionsMenu_Cache( void );
 void UI_HUDOptionsMenu( void );
+
+//
+// ui_dmflags.c
+//
+void UI_DMflagsOptionsMenu_Cache( void );
+void UI_DMflagsOptionsMenu( void );
 
 //
 // ui_gameinfo.c
