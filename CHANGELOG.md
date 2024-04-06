@@ -190,6 +190,7 @@
 
 **Release date:** April 7, 2024
 
+* Added Grappling Hook to Weapon Arena. If selected, players start with both the Gauntlet and the Grappling Hook.
 * Fixed: The values of `cg_obituaryOutput` and `cg_weaponBarStyle` weren't properly loaded in Classic UI's HUD menu.
 * Fixed: Team Deathmatch wasn't accounted as a team-based gametype.
 * New cvar: `g_autoGameLimits`, if set, uses the frag, time and capturelimits set in the .info or .arena files (including `arenas.txt`) rather than user-set values. It's enabled by default for SP. This also allows the usage of `capturelimit` in .arena files.
