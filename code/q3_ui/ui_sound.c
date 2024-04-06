@@ -123,6 +123,89 @@ static void UI_SoundOptions_UpdateMenuItems( void )
 	}
 }
 
+/*
+=================
+SoundOptions_StatusBar_EffectsVolume
+
+Descriptions should have 48 characters or less per line, and there can't be more than two lines.
+=================
+*/
+static void SoundOptions_StatusBar_EffectsVolume( void* ptr ) {
+	UI_DrawString( 320, 440, "Use the slider to regulate how loud", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "the in-game sounds will play.", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
+/*
+=================
+SoundOptions_StatusBar_MusicVolume
+
+Descriptions should have 48 characters or less per line, and there can't be more than two lines.
+=================
+*/
+static void SoundOptions_StatusBar_MusicVolume( void* ptr ) {
+	UI_DrawString( 320, 440, "Use the slider to regulate how loud", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "the in-game music will play.", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
+/*
+=================
+SoundOptions_StatusBar_SoundQuality
+
+Descriptions should have 48 characters or less per line, and there can't be more than two lines.
+=================
+*/
+static void SoundOptions_StatusBar_SoundQuality( void* ptr ) {
+	UI_DrawString( 320, 440, "Specifies the overall audio quality.", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "Higher quality requires more resources.", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
+/*
+=================
+SoundOptions_StatusBar_OpenAL
+
+Descriptions should have 48 characters or less per line, and there can't be more than two lines.
+=================
+*/
+static void SoundOptions_StatusBar_OpenAL( void* ptr ) {
+	UI_DrawString( 320, 440, "If set, the game will use OpenAL", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "to play sounds and music.", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
+/*
+=================
+SoundOptions_StatusBar_BeepOnChat
+
+Descriptions should have 48 characters or less per line, and there can't be more than two lines.
+=================
+*/
+static void SoundOptions_StatusBar_BeepOnChat( void* ptr ) {
+	UI_DrawString( 320, 440, "If set, whenever you receive a message from", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "any player in the match, you'll hear a signal.", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
+/*
+=================
+SoundOptions_StatusBar_BeepOnTeamChat
+
+Descriptions should have 48 characters or less per line, and there can't be more than two lines.
+=================
+*/
+static void SoundOptions_StatusBar_BeepOnTeamChat( void* ptr ) {
+	UI_DrawString( 320, 440, "If set, whenever you receive a message", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "from a teammate, you'll hear a signal.", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
+/*
+=================
+SoundOptions_StatusBar_EnableHitsound
+
+Descriptions should have 48 characters or less per line, and there can't be more than two lines.
+=================
+*/
+static void SoundOptions_StatusBar_EnableHitsound( void* ptr ) {
+	UI_DrawString( 320, 440, "If set, a loud sound plays", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "whenever you hit a foe.", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
 
 /*
 =================
@@ -308,15 +391,16 @@ static void UI_SoundOptionsMenu_Init( void ) {
 	soundOptionsInfo.network.color				= color_red;
 
 	//y = 240 - 3 * (BIGCHAR_HEIGHT + 2);
-	soundOptionsInfo.sfxvolume.generic.type		= MTYPE_SLIDER;
-	soundOptionsInfo.sfxvolume.generic.name		= "Effects Volume:";
-	soundOptionsInfo.sfxvolume.generic.flags	= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-	soundOptionsInfo.sfxvolume.generic.callback	= UI_SoundOptionsMenu_Event;
-	soundOptionsInfo.sfxvolume.generic.id		= ID_EFFECTSVOLUME;
-	soundOptionsInfo.sfxvolume.generic.x		= 400;
-	soundOptionsInfo.sfxvolume.generic.y		= 240 - 3 * (BIGCHAR_HEIGHT + 2);
-	soundOptionsInfo.sfxvolume.minvalue			= 0;
-	soundOptionsInfo.sfxvolume.maxvalue			= 10;
+	soundOptionsInfo.sfxvolume.generic.type			= MTYPE_SLIDER;
+	soundOptionsInfo.sfxvolume.generic.name			= "Effects Volume:";
+	soundOptionsInfo.sfxvolume.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	soundOptionsInfo.sfxvolume.generic.callback		= UI_SoundOptionsMenu_Event;
+	soundOptionsInfo.sfxvolume.generic.id			= ID_EFFECTSVOLUME;
+	soundOptionsInfo.sfxvolume.generic.x			= 400;
+	soundOptionsInfo.sfxvolume.generic.y			= 240 - 3 * (BIGCHAR_HEIGHT + 2);
+	soundOptionsInfo.sfxvolume.minvalue				= 0;
+	soundOptionsInfo.sfxvolume.maxvalue				= 10;
+	soundOptionsInfo.sfxvolume.generic.statusbar	= SoundOptions_StatusBar_EffectsVolume;
 
 	//y += BIGCHAR_HEIGHT+2;
 	soundOptionsInfo.musicvolume.generic.type		= MTYPE_SLIDER;
@@ -328,6 +412,7 @@ static void UI_SoundOptionsMenu_Init( void ) {
 	soundOptionsInfo.musicvolume.generic.y			= 240 - 2 * (BIGCHAR_HEIGHT + 2);
 	soundOptionsInfo.musicvolume.minvalue			= 0;
 	soundOptionsInfo.musicvolume.maxvalue			= 10;
+	soundOptionsInfo.musicvolume.generic.statusbar	= SoundOptions_StatusBar_MusicVolume;
 
 	//y += BIGCHAR_HEIGHT+2;
 	soundOptionsInfo.quality.generic.type		= MTYPE_SPINCONTROL;
@@ -338,6 +423,7 @@ static void UI_SoundOptionsMenu_Init( void ) {
 	soundOptionsInfo.quality.generic.x			= 400;
 	soundOptionsInfo.quality.generic.y			= 240 - (BIGCHAR_HEIGHT + 2);
 	soundOptionsInfo.quality.itemnames			= quality_items;
+	soundOptionsInfo.quality.generic.statusbar	= SoundOptions_StatusBar_SoundQuality;
 /*
 	y += BIGCHAR_HEIGHT+2;
 	soundOptionsInfo.a3d.generic.type			= MTYPE_RADIOBUTTON;
@@ -349,13 +435,14 @@ static void UI_SoundOptionsMenu_Init( void ) {
 	soundOptionsInfo.a3d.generic.y				= y;
 */
 	//y += BIGCHAR_HEIGHT+2;
-	soundOptionsInfo.openal.generic.type			= MTYPE_RADIOBUTTON;
-	soundOptionsInfo.openal.generic.name			= "OpenAL:";
-	soundOptionsInfo.openal.generic.flags			= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-	soundOptionsInfo.openal.generic.callback		= UI_SoundOptionsMenu_Event;
-	soundOptionsInfo.openal.generic.id				= ID_OPENAL;
-	soundOptionsInfo.openal.generic.x				= 400;
-	soundOptionsInfo.openal.generic.y				= 240;
+	soundOptionsInfo.openal.generic.type		= MTYPE_RADIOBUTTON;
+	soundOptionsInfo.openal.generic.name		= "OpenAL:";
+	soundOptionsInfo.openal.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	soundOptionsInfo.openal.generic.callback	= UI_SoundOptionsMenu_Event;
+	soundOptionsInfo.openal.generic.id			= ID_OPENAL;
+	soundOptionsInfo.openal.generic.x			= 400;
+	soundOptionsInfo.openal.generic.y			= 240;
+	soundOptionsInfo.openal.generic.statusbar	= SoundOptions_StatusBar_OpenAL;
 
 	//y += BIGCHAR_HEIGHT+2;
 	soundOptionsInfo.chatBeep.generic.type		= MTYPE_RADIOBUTTON;
@@ -365,6 +452,7 @@ static void UI_SoundOptionsMenu_Init( void ) {
 	soundOptionsInfo.chatBeep.generic.id		= ID_CHATBEEP;
 	soundOptionsInfo.chatBeep.generic.x			= 400;
 	soundOptionsInfo.chatBeep.generic.y			= 240 + (BIGCHAR_HEIGHT + 2);
+	soundOptionsInfo.chatBeep.generic.statusbar	= SoundOptions_StatusBar_BeepOnChat;
 
 	//y += BIGCHAR_HEIGHT+2;
 	soundOptionsInfo.teamChatBeep.generic.type		= MTYPE_RADIOBUTTON;
@@ -374,6 +462,7 @@ static void UI_SoundOptionsMenu_Init( void ) {
 	soundOptionsInfo.teamChatBeep.generic.id		= ID_TEAMCHATBEEP;
 	soundOptionsInfo.teamChatBeep.generic.x			= 400;
 	soundOptionsInfo.teamChatBeep.generic.y			= 240 + 2 * (BIGCHAR_HEIGHT + 2);
+	soundOptionsInfo.teamChatBeep.generic.statusbar	= SoundOptions_StatusBar_BeepOnTeamChat;
 
 	//y += BIGCHAR_HEIGHT+2;
 	soundOptionsInfo.hitSound.generic.type		= MTYPE_RADIOBUTTON;
@@ -383,6 +472,7 @@ static void UI_SoundOptionsMenu_Init( void ) {
 	soundOptionsInfo.hitSound.generic.id		= ID_HITSOUND;
 	soundOptionsInfo.hitSound.generic.x			= 400;
 	soundOptionsInfo.hitSound.generic.y			= 240 + 3 * (BIGCHAR_HEIGHT + 2);
+	soundOptionsInfo.hitSound.generic.statusbar	= SoundOptions_StatusBar_EnableHitsound;
 
 	soundOptionsInfo.back.generic.type			= MTYPE_BITMAP;
 	soundOptionsInfo.back.generic.name			= ART_BACK0;
