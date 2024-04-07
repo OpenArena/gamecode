@@ -188,8 +188,12 @@
 
 ## oaxB53.2
 
-**Release date:** April 7, 2024
+**Release date:** April 8, 2024
 
+* Classic UI: "Weapon Arena Weapon" (f.k.a. "SWA Mode Weapon") is now grayed out if the Weapon Ruleset isn't "Single Weapon Arena" nor "Single Weapon + Grapple".
+* Classic UI: The values of "Bot Skill", "Weapons Ruleset" and "Physics Ruleset" are now saved.
+* Classic UI: Added "Single Weapon Arena + Grapple" as a Weapons Ruleset.
+* Classic UI: Added "Obelisk Health" (`g_obeliskHealth`) for Overload matches into the menu.
 * Added Grappling Hook to Weapon Arena. If selected, players start with both the Gauntlet and the Grappling Hook.
 * Fixed: The values of `cg_obituaryOutput` and `cg_weaponBarStyle` weren't properly loaded in Classic UI's HUD menu.
 * Fixed: Team Deathmatch wasn't accounted as a team-based gametype.
