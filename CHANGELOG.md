@@ -188,7 +188,7 @@
 
 ## oaxB54
 
-**Estimated release date:** May 30, 2024
+**Estimated release date:** May 30, 2024 - **Feature deadline:** May 23, 2024
 
 ## oaxB53.2
 
