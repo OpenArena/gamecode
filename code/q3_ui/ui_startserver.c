@@ -817,6 +817,7 @@ typedef struct {
 	menuradiobutton_s	harvesterFromBodies;
 
 	// Specific for Overload
+	menufield_s			overloadObeliskHealth;
 	menufield_s			overloadRespawnDelay;
 
 	// Specific for CTF Elimination (eCTF)
@@ -1004,11 +1005,6 @@ static void ServerOptions_Start( void ) {
 
 	// Specific for Last Man Standing
 	int		lmsMode = s_serveroptions.lmsMode.curvalue;
-	//int		lmsLives = atoi( s_serveroptions.lmsLives.field.buffer );
-
-	// Specific for Double Domination
-	//int		ddCaptureTime = atoi( s_serveroptions.ddCaptureTime.field.buffer );
-	//int		ddRespawnDelay = atoi( s_serveroptions.ddRespawnDelay.field.buffer );
 
 	// Multiplayer-only options
 	int		maxclients;
@@ -1217,6 +1213,7 @@ static void ServerOptions_Start( void ) {
 	trap_Cvar_SetValue( "g_friendlyfire", friendlyfire );
 	trap_Cvar_SetValue( "elimination_selfdamage", eliminationDamage );
 	trap_Cvar_SetValue( "g_harvesterFromBodies", harvesterFromBodies );
+	trap_Cvar_Set("g_obeliskHealth", s_serveroptions.overloadObeliskHealth.field.buffer );
 	trap_Cvar_Set("g_obeliskRespawnDelay", s_serveroptions.overloadRespawnDelay.field.buffer );
 	trap_Cvar_SetValue( "elimination_ctf_oneway", oneway );
 	trap_Cvar_SetValue( "g_lms_mode", lmsMode);
@@ -1704,6 +1701,18 @@ static void ServerOptions_StatusBar_harvesterFromBodies( void* ptr ) {
 
 /*
 =================
+ServerOptions_StatusBar_overloadObeliskHealth
+
+Descriptions should have 48 characters or less per line, and there can't be more than two lines.
+=================
+*/
+static void ServerOptions_StatusBar_overloadObeliskHealth( void* ptr ) {
+	UI_DrawString( 320, 440, "Specifies the amount of damage an obelisk must", UI_CENTER|UI_SMALLFONT, colorWhite );
+	UI_DrawString( 320, 460, "take before it goes down and a team scores.", UI_CENTER|UI_SMALLFONT, colorWhite );
+}
+
+/*
+=================
 ServerOptions_StatusBar_overloadRespawnDelay
 
 Descriptions should have 48 characters or less per line, and there can't be more than two lines.
@@ -2124,6 +2133,7 @@ static void ServerOptions_SetMenuItems( void ) {
 	Q_strncpyz( s_serveroptions.eliminationRoundTime.field.buffer, UI_Cvar_VariableString( "elimination_roundtime" ), sizeof( s_serveroptions.eliminationRoundTime.field.buffer ) );
 	s_serveroptions.eliminationDamage.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "elimination_selfdamage" ) );
 	s_serveroptions.harvesterFromBodies.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_harvesterFromBodies" ) );
+	Q_strncpyz( s_serveroptions.overloadObeliskHealth.field.buffer, UI_Cvar_VariableString( "g_obeliskHealth" ), sizeof( s_serveroptions.overloadObeliskHealth.field.buffer ) );
 	Q_strncpyz( s_serveroptions.overloadRespawnDelay.field.buffer, UI_Cvar_VariableString( "g_obeliskRespawnDelay" ), sizeof( s_serveroptions.overloadRespawnDelay.field.buffer ) );
 	s_serveroptions.oneway.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "elimination_ctf_oneway" ) );
 	s_serveroptions.lmsMode.curvalue = Com_Clamp( 0, 3, trap_Cvar_VariableValue("g_lms_mode") );
@@ -2401,8 +2411,18 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 	}
 	if( s_serveroptions.gametype == GT_OBELISK ) {
 		y += BIGCHAR_HEIGHT+2;
+		s_serveroptions.overloadObeliskHealth.generic.type       = MTYPE_FIELD;
+		s_serveroptions.overloadObeliskHealth.generic.name       = "Obelisk Health:";
+		s_serveroptions.overloadObeliskHealth.generic.flags      = QMF_SMALLFONT;
+		s_serveroptions.overloadObeliskHealth.generic.x          = OPTIONS_X;
+		s_serveroptions.overloadObeliskHealth.generic.y	         = y;
+		s_serveroptions.overloadObeliskHealth.field.widthInChars = 3;
+		s_serveroptions.overloadObeliskHealth.field.maxchars     = 3;
+		s_serveroptions.overloadObeliskHealth.generic.statusbar  = ServerOptions_StatusBar_overloadObeliskHealth;
+
+		y += BIGCHAR_HEIGHT+2;
 		s_serveroptions.overloadRespawnDelay.generic.type       = MTYPE_FIELD;
-		s_serveroptions.overloadRespawnDelay.generic.name       = "Time Between Rounds:";
+		s_serveroptions.overloadRespawnDelay.generic.name       = "Obelisk Regen. Time:";
 		s_serveroptions.overloadRespawnDelay.generic.flags      = QMF_SMALLFONT;
 		s_serveroptions.overloadRespawnDelay.generic.x          = OPTIONS_X;
 		s_serveroptions.overloadRespawnDelay.generic.y	        = y;
@@ -2626,6 +2646,7 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 		Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.harvesterFromBodies );
 	}
 	if( s_serveroptions.gametype == GT_OBELISK) {
+		Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.overloadObeliskHealth );
 		Menu_AddItem( &s_serveroptions.menu, &s_serveroptions.overloadRespawnDelay );
 	}
 	if( s_serveroptions.gametype == GT_CTF_ELIMINATION) {
