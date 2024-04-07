@@ -780,11 +780,27 @@ SERVER OPTIONS MENU *****
 
 #define ID_PLAYER_TYPE			25
 #define ID_MAXCLIENTS			26
-//#define ID_DEDICATED			27
-#define ID_GO					28
-#define ID_BACK					29
+
+#define ID_BOT_SKILL			27
+#define ID_PHYSICS_RULESET		28
+#define ID_WEAPONS_RULESET		29
+
+#define ID_GO					30
+#define ID_BACK					31
 
 #define PLAYER_SLOTS			12
+
+#define PHYSICS_FRAMERATE_DEPENDANT	0
+#define PHYSICS_FRAMERATE_125		1
+#define PHYSICS_FRAMERATE_91		2
+#define PHYSICS_ACCURATE			3
+
+#define WEAPONS_STANDARD			0
+#define WEAPONS_INSTANTGIB			1
+#define WEAPONS_SINGLE_WEAPON		2
+#define WEAPONS_SINGLE_WEAPON_GRAPPLE	3
+#define WEAPONS_CLASSIC_MODE		4
+#define WEAPONS_ELIMINATION			5
 
 
 typedef struct {
@@ -980,13 +996,10 @@ ServerOptions_Start
 static void ServerOptions_Start( void ) {
 
 	// General options for all gametypes
-	int		skill = s_serveroptions.botSkill.curvalue + 1;
 	int		timelimit = atoi( s_serveroptions.timelimit.field.buffer );
 	int		fraglimit = atoi( s_serveroptions.fraglimit.field.buffer );
 	int		capturelimit = atoi( s_serveroptions.capturelimit.field.buffer );
-	int		pmove = s_serveroptions.pmove.curvalue;
 	int		grapple = s_serveroptions.grapple.curvalue;
-	int		weaponMode = s_serveroptions.weaponMode.curvalue;
 	int		weaponArenaWeapon = s_serveroptions.weaponArenaWeapon.curvalue;
 	int		awardPushing = s_serveroptions.awardPushing.curvalue;
 
@@ -1112,102 +1125,7 @@ static void ServerOptions_Start( void ) {
 	}
 	trap_Cvar_SetValue ("timelimit", Com_Clamp( 0, timelimit, timelimit ) );
 	trap_Cvar_SetValue( "elimination_roundtime", eliminationRoundTime );
-	switch(pmove) {
-		case 1:
-			//Fixed framerate 125 Hz
-			trap_Cvar_SetValue( "pmove_fixed", 1);
-			trap_Cvar_SetValue( "pmove_msec", 8);
-			trap_Cvar_SetValue( "pmove_float", 0);
-			break;
-		case 2:
-			//Fixed framerate 91 Hz
-			trap_Cvar_SetValue( "pmove_fixed", 1);
-			trap_Cvar_SetValue( "pmove_msec", 11);
-			trap_Cvar_SetValue( "pmove_float", 0);
-			break;
-		case 3:
-			//Accurate physics
-			trap_Cvar_SetValue( "pmove_fixed", 0);
-			trap_Cvar_SetValue( "pmove_float", 1);
-			break;
-		default:
-			//Framerate dependent
-			trap_Cvar_SetValue( "pmove_fixed", 0);
-			trap_Cvar_SetValue( "pmove_float", 0);
-			break;
-	};
 	trap_Cvar_SetValue( "g_grapple", grapple );
-	if (UI_IsARoundBasedGametype(s_serveroptions.gametype)) {
-		switch(weaponMode) {
-			case 1:
-				//Instantgib
-				trap_Cvar_SetValue( "g_instantgib", 1);
-				trap_Cvar_SetValue( "g_weaponArena", 0);
-				trap_Cvar_SetValue( "g_elimination", 0);
-				trap_Cvar_SetValue( "g_classicMode", 0);
-				break;
-			case 2:
-				//Weapon Arena
-				trap_Cvar_SetValue( "g_instantgib", 0);
-				trap_Cvar_SetValue( "g_weaponArena", 1);
-				trap_Cvar_SetValue( "g_elimination", 0);
-				trap_Cvar_SetValue( "g_classicMode", 0);
-				break;
-			case 3:
-				//"Classic" Arena
-				trap_Cvar_SetValue( "g_instantgib", 0);
-				trap_Cvar_SetValue( "g_weaponArena", 0);
-				trap_Cvar_SetValue( "g_elimination", 0);
-				trap_Cvar_SetValue( "g_classicMode", 1);
-				break;
-			default:
-				// Default mode for round-based gametypes.
-				trap_Cvar_SetValue( "g_instantgib", 0);
-				trap_Cvar_SetValue( "g_weaponArena", 0);
-				trap_Cvar_SetValue( "g_elimination", 0);
-				trap_Cvar_SetValue( "g_classicMode", 0);
-				break;
-		}
-	}
-	else {
-		switch(weaponMode) {
-			case 1:
-				//Instantgib
-				trap_Cvar_SetValue( "g_instantgib", 1);
-				trap_Cvar_SetValue( "g_weaponArena", 0);
-				trap_Cvar_SetValue( "g_elimination", 0);
-				trap_Cvar_SetValue( "g_classicMode", 0);
-				break;
-			case 2:
-				//Weapon Arena
-				trap_Cvar_SetValue( "g_instantgib", 0);
-				trap_Cvar_SetValue( "g_weaponArena", 1);
-				trap_Cvar_SetValue( "g_elimination", 0);
-				trap_Cvar_SetValue( "g_classicMode", 0);
-				break;
-			case 3:
-				//"Classic" Arena
-				trap_Cvar_SetValue( "g_instantgib", 0);
-				trap_Cvar_SetValue( "g_weaponArena", 0);
-				trap_Cvar_SetValue( "g_elimination", 0);
-				trap_Cvar_SetValue( "g_classicMode", 1);
-				break;
-			case 4:
-				//Elimination mode.
-				trap_Cvar_SetValue( "g_instantgib", 0);
-				trap_Cvar_SetValue( "g_weaponArena", 0);
-				trap_Cvar_SetValue( "g_elimination", 1);
-				trap_Cvar_SetValue( "g_classicMode", 0);
-				break;
-			default:
-				//All Weapons Classic.
-				trap_Cvar_SetValue( "g_instantgib", 0);
-				trap_Cvar_SetValue( "g_weaponArena", 0);
-				trap_Cvar_SetValue( "g_elimination", 0);
-				trap_Cvar_SetValue( "g_classicMode", 0);
-				break;
-		}
-	}
 	trap_Cvar_SetValue( "g_weaponArenaWeapon", weaponArenaWeapon );
 	trap_Cvar_SetValue( "g_awardPushing", awardPushing );
 	trap_Cvar_SetValue( "g_friendlyfire", friendlyfire );
@@ -1243,11 +1161,11 @@ static void ServerOptions_Start( void ) {
 			continue;
 		}
 		if(UI_IsATeamGametype(s_serveroptions.gametype)) {
-			Com_sprintf( buf, sizeof(buf), "addbot %s %i %s\n", s_serveroptions.playerNameBuffers[n], skill,
+			Com_sprintf( buf, sizeof(buf), "addbot %s %i %s\n", s_serveroptions.playerNameBuffers[n], s_serveroptions.botSkill.curvalue,
 				playerTeam_list[s_serveroptions.playerTeam[n].curvalue] );
 		}
 		else {
-			Com_sprintf( buf, sizeof(buf), "addbot %s %i\n", s_serveroptions.playerNameBuffers[n], skill );
+			Com_sprintf( buf, sizeof(buf), "addbot %s %i\n", s_serveroptions.playerNameBuffers[n], s_serveroptions.botSkill.curvalue );
 		}
 		trap_Cmd_ExecuteText( EXEC_APPEND, buf );
 	}
@@ -1366,6 +1284,158 @@ static void ServerOptions_Event( void* ptr, int event ) {
 	case ID_MAXCLIENTS:
 		ServerOptions_SetPlayerItems();
 		break;
+
+	case ID_BOT_SKILL: {
+		trap_Cvar_Set("ui_botSkill",va("%i",s_serveroptions.botSkill.curvalue));
+		break;
+	}
+	case ID_PHYSICS_RULESET: {
+		switch(s_serveroptions.pmove.curvalue) {
+			case PHYSICS_FRAMERATE_125: {
+				//Fixed framerate 125 Hz
+				trap_Cvar_SetValue( "pmove_fixed", 1);
+				trap_Cvar_SetValue( "pmove_msec", 8);
+				trap_Cvar_SetValue( "pmove_float", 0);
+				break;
+			}
+			case PHYSICS_FRAMERATE_91: {
+				//Fixed framerate 91 Hz
+				trap_Cvar_SetValue( "pmove_fixed", 1);
+				trap_Cvar_SetValue( "pmove_msec", 11);
+				trap_Cvar_SetValue( "pmove_float", 0);
+				break;
+			}
+			case PHYSICS_ACCURATE: {
+				//Accurate physics
+				trap_Cvar_SetValue( "pmove_fixed", 0);
+				trap_Cvar_SetValue( "pmove_float", 1);
+				break;
+			}
+			case PHYSICS_FRAMERATE_DEPENDANT:
+			default: {
+				//Framerate dependent
+				trap_Cvar_SetValue( "pmove_fixed", 0);
+				trap_Cvar_SetValue( "pmove_float", 0);
+				break;
+			}
+		}
+
+		trap_Cvar_Set("ui_physicsRuleset",va("%i",s_serveroptions.pmove.curvalue));
+		break;
+	}
+	case ID_WEAPONS_RULESET: {
+		if (UI_IsARoundBasedGametype(s_serveroptions.gametype)) {
+			switch(s_serveroptions.weaponMode.curvalue) {
+				case WEAPONS_INSTANTGIB: {
+					//Instantgib
+					trap_Cvar_SetValue( "g_instantgib", 1);
+					trap_Cvar_SetValue( "g_weaponArena", 0);
+					trap_Cvar_SetValue( "g_elimination", 0);
+					trap_Cvar_SetValue( "g_classicMode", 0);
+					s_serveroptions.weaponArenaWeapon.generic.flags |= QMF_GRAYED;
+					break;
+				}
+				case WEAPONS_SINGLE_WEAPON: {
+					//Weapon Arena
+					trap_Cvar_SetValue( "g_instantgib", 0);
+					trap_Cvar_SetValue( "g_weaponArena", 1);
+					trap_Cvar_SetValue( "g_elimination", 0);
+					trap_Cvar_SetValue( "g_classicMode", 0);
+					s_serveroptions.weaponArenaWeapon.generic.flags &= ~(QMF_GRAYED);
+					break;
+				}
+				case WEAPONS_SINGLE_WEAPON_GRAPPLE: {
+					//Weapon Arena + Grapple
+					trap_Cvar_SetValue( "g_instantgib", 0);
+					trap_Cvar_SetValue( "g_weaponArena", 2);
+					trap_Cvar_SetValue( "g_elimination", 0);
+					trap_Cvar_SetValue( "g_classicMode", 0);
+					s_serveroptions.weaponArenaWeapon.generic.flags &= ~(QMF_GRAYED);
+					break;
+				}
+				case WEAPONS_CLASSIC_MODE: {
+					//"Classic" Arena
+					trap_Cvar_SetValue( "g_instantgib", 0);
+					trap_Cvar_SetValue( "g_weaponArena", 0);
+					trap_Cvar_SetValue( "g_elimination", 0);
+					trap_Cvar_SetValue( "g_classicMode", 1);
+					s_serveroptions.weaponArenaWeapon.generic.flags |= QMF_GRAYED;
+					break;
+				}
+				case WEAPONS_STANDARD:
+				default: {
+					// Default mode for round-based gametypes.
+					trap_Cvar_SetValue( "g_instantgib", 0);
+					trap_Cvar_SetValue( "g_weaponArena", 0);
+					trap_Cvar_SetValue( "g_elimination", 0);
+					trap_Cvar_SetValue( "g_classicMode", 0);
+					s_serveroptions.weaponArenaWeapon.generic.flags |= QMF_GRAYED;
+					break;
+				}
+			}
+		}
+		else {
+			switch(s_serveroptions.weaponMode.curvalue) {
+				case WEAPONS_INSTANTGIB: {
+					//Instantgib
+					trap_Cvar_SetValue( "g_instantgib", 1);
+					trap_Cvar_SetValue( "g_weaponArena", 0);
+					trap_Cvar_SetValue( "g_elimination", 0);
+					trap_Cvar_SetValue( "g_classicMode", 0);
+					s_serveroptions.weaponArenaWeapon.generic.flags |= QMF_GRAYED;
+					break;
+				}
+				case WEAPONS_SINGLE_WEAPON: {
+					//Weapon Arena
+					trap_Cvar_SetValue( "g_instantgib", 0);
+					trap_Cvar_SetValue( "g_weaponArena", 1);
+					trap_Cvar_SetValue( "g_elimination", 0);
+					trap_Cvar_SetValue( "g_classicMode", 0);
+					s_serveroptions.weaponArenaWeapon.generic.flags &= ~(QMF_GRAYED);
+					break;
+				}
+				case WEAPONS_SINGLE_WEAPON_GRAPPLE: {
+					//Weapon Arena + Grapple
+					trap_Cvar_SetValue( "g_instantgib", 0);
+					trap_Cvar_SetValue( "g_weaponArena", 2);
+					trap_Cvar_SetValue( "g_elimination", 0);
+					trap_Cvar_SetValue( "g_classicMode", 0);
+					s_serveroptions.weaponArenaWeapon.generic.flags &= ~(QMF_GRAYED);
+					break;
+				}
+				case WEAPONS_CLASSIC_MODE: {
+					//"Classic" Arena
+					trap_Cvar_SetValue( "g_instantgib", 0);
+					trap_Cvar_SetValue( "g_weaponArena", 0);
+					trap_Cvar_SetValue( "g_elimination", 0);
+					trap_Cvar_SetValue( "g_classicMode", 1);
+					s_serveroptions.weaponArenaWeapon.generic.flags |= QMF_GRAYED;
+					break;
+				}
+				case WEAPONS_ELIMINATION: {
+					//Elimination mode.
+					trap_Cvar_SetValue( "g_instantgib", 0);
+					trap_Cvar_SetValue( "g_weaponArena", 0);
+					trap_Cvar_SetValue( "g_elimination", 1);
+					trap_Cvar_SetValue( "g_classicMode", 0);
+					s_serveroptions.weaponArenaWeapon.generic.flags |= QMF_GRAYED;
+					break;
+				}
+				case WEAPONS_STANDARD:
+				default: {
+					//All Weapons Classic.
+					trap_Cvar_SetValue( "g_instantgib", 0);
+					trap_Cvar_SetValue( "g_weaponArena", 0);
+					trap_Cvar_SetValue( "g_elimination", 0);
+					trap_Cvar_SetValue( "g_classicMode", 0);
+					s_serveroptions.weaponArenaWeapon.generic.flags |= QMF_GRAYED;
+					break;
+				}
+			}
+		}
+		trap_Cvar_Set("ui_weaponsRuleset",va("%i",s_serveroptions.weaponMode.curvalue));
+		break;
+	}
 	case ID_GO:
 		if( event != QM_ACTIVATED ) {
 			break;
@@ -2009,6 +2079,7 @@ static void ServerOptions_SetMenuItems( void ) {
 	static char picname[64];
 	const char *info;
 
+	s_serveroptions.botSkill.curvalue = Com_Clamp( 0, 4, trap_Cvar_VariableValue( "ui_botSkill" ) );
 	switch( s_serveroptions.gametype ) {
 	case GT_FFA:
 	default:
@@ -2087,46 +2158,13 @@ static void ServerOptions_SetMenuItems( void ) {
 		break;
 		
 	}
-	s_serveroptions.pmove.curvalue = 0;
-	if(trap_Cvar_VariableValue( "pmove_fixed" ))
-		s_serveroptions.pmove.curvalue = 1;
-	if(trap_Cvar_VariableValue( "pmove_fixed" ) && trap_Cvar_VariableValue( "pmove_msec" )==11)
-		s_serveroptions.pmove.curvalue = 2;
-	if(trap_Cvar_VariableValue( "pmove_float" ))
-		s_serveroptions.pmove.curvalue = 3;
+	s_serveroptions.pmove.curvalue = Com_Clamp( 0, 3, trap_Cvar_VariableValue( "ui_physicsRuleset" ) );
 	s_serveroptions.grapple.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_grapple" ) );
-	// Weapon Rules modes. Only one option can be active at a time.
-	s_serveroptions.weaponMode.curvalue = 0;
+	s_serveroptions.weaponMode.curvalue = Com_Clamp( 0, 5, trap_Cvar_VariableValue( "ui_weaponsRuleset" ) );
 	if (UI_IsARoundBasedGametype(s_serveroptions.gametype)) {
-		// Instantgib mode
-		if(trap_Cvar_VariableValue("g_instantgib") != 0 && trap_Cvar_VariableValue("g_weaponArena") == 0 && trap_Cvar_VariableValue("g_classicMode") == 0)
-			s_serveroptions.weaponMode.curvalue = 1;
-		// Single Weapon mode
-		else if(trap_Cvar_VariableValue("g_instantgib") == 0 && trap_Cvar_VariableValue("g_weaponArena") != 0 && trap_Cvar_VariableValue("g_classicMode") == 0)
-			s_serveroptions.weaponMode.curvalue = 2;
-		// Classic mode
-		else if(trap_Cvar_VariableValue("g_instantgib") == 0 && trap_Cvar_VariableValue("g_weaponArena") == 0 && trap_Cvar_VariableValue("g_classicMode") != 0)
-			s_serveroptions.weaponMode.curvalue = 3;
-		// All Weapons Elimination mode
-		else
-			s_serveroptions.weaponMode.curvalue = 0;
-	}
-	else {
-		// Instantgib mode
-		if(trap_Cvar_VariableValue("g_instantgib") != 0 && trap_Cvar_VariableValue("g_weaponArena") == 0 && trap_Cvar_VariableValue("g_elimination") == 0 && trap_Cvar_VariableValue("g_classicMode") == 0)
-			s_serveroptions.weaponMode.curvalue = 1;
-		// Single Weapon mode
-		else if(trap_Cvar_VariableValue("g_instantgib") == 0 && trap_Cvar_VariableValue("g_weaponArena") != 0 && trap_Cvar_VariableValue("g_elimination") == 0 && trap_Cvar_VariableValue("g_classicMode") == 0)
-			s_serveroptions.weaponMode.curvalue = 2;
-		// Classic mode
-		else if(trap_Cvar_VariableValue("g_instantgib") == 0 && trap_Cvar_VariableValue("g_weaponArena") == 0 && trap_Cvar_VariableValue("g_elimination") == 0 && trap_Cvar_VariableValue("g_classicMode") != 0)
-			s_serveroptions.weaponMode.curvalue = 3;
-		// All Weapons Elimination mode
-		else if(trap_Cvar_VariableValue("g_instantgib") == 0 && trap_Cvar_VariableValue("g_weaponArena") == 0 && trap_Cvar_VariableValue("g_elimination") != 0 && trap_Cvar_VariableValue("g_classicMode") == 0)
-			s_serveroptions.weaponMode.curvalue = 4;
-		// All Weapons Standard mode
-		else
-			s_serveroptions.weaponMode.curvalue = 0;
+		if (s_serveroptions.weaponMode.curvalue == WEAPONS_ELIMINATION) {
+			s_serveroptions.weaponMode.curvalue = WEAPONS_STANDARD;
+		}
 	}
 	s_serveroptions.weaponArenaWeapon.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_weaponArenaWeapon" ) );
 	s_serveroptions.awardPushing.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "g_awardPushing" ) );
@@ -2329,36 +2367,40 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 	}
 
 	y += BIGCHAR_HEIGHT+2;
-	s_serveroptions.pmove.generic.type			= MTYPE_SPINCONTROL;
-	s_serveroptions.pmove.generic.flags			= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-	s_serveroptions.pmove.generic.name			= "Physics Ruleset:";
-	s_serveroptions.pmove.generic.x				= OPTIONS_X;
-	s_serveroptions.pmove.generic.y				= y;
-	s_serveroptions.pmove.itemnames				= pmove_list;
-	s_serveroptions.pmove.generic.statusbar  = ServerOptions_StatusBar_Pmove;
+	s_serveroptions.pmove.generic.type		= MTYPE_SPINCONTROL;
+	s_serveroptions.pmove.generic.name		= "Physics Ruleset:";
+	s_serveroptions.pmove.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	s_serveroptions.pmove.generic.id		= ID_PHYSICS_RULESET;
+	s_serveroptions.pmove.generic.callback	= ServerOptions_Event;
+	s_serveroptions.pmove.generic.x			= OPTIONS_X;
+	s_serveroptions.pmove.generic.y			= y;
+	s_serveroptions.pmove.itemnames			= pmove_list;
+	s_serveroptions.pmove.generic.statusbar	= ServerOptions_StatusBar_Pmove;
 
 	y += BIGCHAR_HEIGHT+2;
-	s_serveroptions.grapple.generic.type			= MTYPE_RADIOBUTTON;
-	s_serveroptions.grapple.generic.flags			= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-	s_serveroptions.grapple.generic.x				= OPTIONS_X;
-	s_serveroptions.grapple.generic.y				= y;
-	s_serveroptions.grapple.generic.name			= "Grappling Hook:";
-	s_serveroptions.grapple.generic.statusbar  = ServerOptions_StatusBar_Grapple;
+	s_serveroptions.grapple.generic.type		= MTYPE_RADIOBUTTON;
+	s_serveroptions.grapple.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	s_serveroptions.grapple.generic.x			= OPTIONS_X;
+	s_serveroptions.grapple.generic.y			= y;
+	s_serveroptions.grapple.generic.name		= "Grappling Hook:";
+	s_serveroptions.grapple.generic.statusbar	= ServerOptions_StatusBar_Grapple;
 
 	//Weapon Mode option
 	y += BIGCHAR_HEIGHT+2;
 	s_serveroptions.weaponMode.generic.type			= MTYPE_SPINCONTROL;
-	s_serveroptions.weaponMode.generic.flags			= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-	s_serveroptions.weaponMode.generic.x				= OPTIONS_X;
-	s_serveroptions.weaponMode.generic.y				= y;
+	s_serveroptions.weaponMode.generic.name			= "Weapons Ruleset:";
+	s_serveroptions.weaponMode.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	s_serveroptions.weaponMode.generic.id			= ID_WEAPONS_RULESET;
+	s_serveroptions.weaponMode.generic.callback		= ServerOptions_Event;
+	s_serveroptions.weaponMode.generic.x			= OPTIONS_X;
+	s_serveroptions.weaponMode.generic.y			= y;
 	if (UI_IsARoundBasedGametype(s_serveroptions.gametype)) {
-		s_serveroptions.weaponMode.itemnames				= weaponModeElimination_list;
+		s_serveroptions.weaponMode.itemnames		= weaponModeElimination_list;
 	}
 	else {
-		s_serveroptions.weaponMode.itemnames				= weaponMode_list;
+		s_serveroptions.weaponMode.itemnames		= weaponMode_list;
 	}
-	s_serveroptions.weaponMode.generic.name			= "Weapons Ruleset:";
-	s_serveroptions.weaponMode.generic.statusbar  = ServerOptions_StatusBar_WeaponMode;
+	s_serveroptions.weaponMode.generic.statusbar	= ServerOptions_StatusBar_WeaponMode;
 	
 	//Weapon Arena Weapon list
 	y += BIGCHAR_HEIGHT+2;
