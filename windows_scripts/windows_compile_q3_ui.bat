@@ -28,6 +28,7 @@ cd windows\build\q3_ui
 %cc%  ../../../code/q3_ui/ui_credits.c
 %cc%  ../../../code/q3_ui/ui_demo2.c
 %cc%  ../../../code/q3_ui/ui_display.c
+%cc%  ../../../code/q3_ui/ui_dmflags.c
 %cc%  ../../../code/q3_ui/ui_firstconnect.c
 %cc%  ../../../code/q3_ui/ui_gameinfo.c
 %cc%  ../../../code/q3_ui/ui_ingame.c
