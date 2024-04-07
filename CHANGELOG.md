@@ -188,16 +188,16 @@
 
 ## oaxB53.2
 
-**Release date:** TBA
+**Release date:** April 7, 2024
 
 * Classic UI: "Weapon Arena Weapon" (f.k.a. "SWA Mode Weapon") is now grayed out if the Weapon Ruleset isn't "Single Weapon Arena" nor "Single Weapon + Grapple".
 * Classic UI: The values of "Bot Skill", "Weapons Ruleset" and "Physics Ruleset" are now saved.
 * Classic UI: Added "Single Weapon Arena + Grapple" as a Weapons Ruleset.
 * Classic UI: Added "Obelisk Health" (`g_obeliskHealth`) for Overload matches into the menu.
 * Added Grappling Hook to Weapon Arena. If selected, players start with both the Gauntlet and the Grappling Hook.
-* Fixed: The values of `cg_obituaryOutput` and `cg_weaponBarStyle` weren't properly loaded in Classic UI's HUD menu.
-* Fixed: Team Deathmatch wasn't accounted as a team-based gametype.
-* New cvar: `g_autoGameLimits`, if set, uses the frag, time and capturelimits set in the .info or .arena files (including `arenas.txt`) rather than user-set values. It's enabled by default for SP. This also allows the usage of `capturelimit` in .arena files.
+* Fixed: The values of `cg_obituaryOutput` and `cg_weaponBarStyle` weren't properly loaded in Classic UI's HUD menu. (Fixes OpenArena/gamecode#328)
+* Fixed: Team Deathmatch wasn't accounted as a team-based gametype. (Fixes OpenArena/gamecode#330)
+* New cvar: `g_autoGameLimits`, if set, uses the frag, time and capturelimits set in the .info or .arena files (including `arenas.txt`) rather than user-set values. It's enabled by default for SP. This also allows the usage of `capturelimit` in .arena files. It isn't selectable on Classic UI yet, though.
 * New special matches for Classic SP in addition to `"training"` and `"final"`. These can be specified in either the map's specific .info file (the game will look at this first) the map's .arena file or arenas.txt:
   * `"special" "instantGib"`: Instagib match.
   * `"special" "singleWeaponGA"`: Single Weapon: Gauntlet match.
@@ -218,13 +218,13 @@
   * `"special" "lowGravity"`: Low Gravity match. (Gravity of the level reduced to 100).
 * The fields `fragLimit`, `timeLimit`, `special` and `mpBots` from the .info files now impact directly in Classic SP.
 * New fields for .info files: `teamBotCount`, `special`, `timeToBeatPlatinum`, `timeToBeatGold`, `timeToBeatSilver` and `timeToBeatBronze`.
-* Non-capturelimit modes won't display capturelimit if fraglimit is <= 0.
+* Non-capturelimit modes won't display capturelimit if fraglimit is <= 0. (Theoretically fixes OpenArena/gamecode#267 and possibly OpenArena/gamecode#327)
 * New default round time limits for Elimination/eCTF/LMS.
 * Reverted Harvester as a capturelimit gamemode.
 * All default Time Limits set to 15.
 * In classic SP, the console won't complain anymore for missing character announcement lines.
 * Railgun glass now matches the selected beam color. (Credit: @Bishop-333)
-* Suppressed the lots of ".info file not found" messages to Developer mode.
+* Suppressed the lots of ".info file not found" messages to Developer mode. (Fixes OpenArena/gamecode#306)
 * The key objective checker now checks for (at least one) Domination points in DOM and for the white flag in POS.
 * Flags aren't drawn anymore in Harvester/Overload.
 * New helper function for game: `G_GetAttackingTeam()`, returns the actual team that's in the attacker role in eCTF AvD mode.
