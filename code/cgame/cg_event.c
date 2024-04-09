@@ -254,7 +254,9 @@ static void CG_Obituary(entityState_t *ent) {
 	if (attacker == cg.snap->ps.clientNum) {
 		char *s;
 
-		if (cgs.gametype == GT_FFA || cgs.gametype == GT_TOURNAMENT) {
+		if (!CG_IsATeamGametype(cgs.gametype) && !CG_UsesTeamFlags(cgs.gametype) &&
+				!CG_UsesTheWhiteFlag(cgs.gametype) && !CG_IsARoundBasedGametype(cgs.gametype) &&
+				cgs.gametype != GT_DOUBLE_D && cgs.gametype != GT_DOMINATION) {
 			s = va("You fragged %s\n%s place with %i", targetName,
 					CG_PlaceString(cg.snap->ps.persistant[PERS_RANK] + 1),
 					cg.snap->ps.persistant[PERS_SCORE]);
@@ -697,7 +699,7 @@ void CG_EntityEvent(centity_t *cent, vec3_t position) {
 	es = &cent->currentState;
 	event = es->event & ~EV_EVENT_BITS;
 
-	if (cg_debugEvents.integer && cg_developer.integer) {
+	if (cg_debugEvents.integer) {
 		CG_Printf("ent:%3i  event:%3i ", es->number, event);
 	}
 
@@ -1262,86 +1264,65 @@ void CG_EntityEvent(centity_t *cent, vec3_t position) {
 			DEBUGNAME("EV_GLOBAL_TEAM_SOUND");
 			switch (es->eventParm) {
 				case GTS_RED_CAPTURE: // CTF: red team captured the blue flag, 1FCTF: red team captured the neutral flag
-					if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_RED) {
+					if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_RED)
 						CG_AddBufferedSound(cgs.media.captureYourTeamSound);
-					}
-					else if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_BLUE) {
+					else
 						CG_AddBufferedSound(cgs.media.captureOpponentSound);
-					}
-					/* else {
-						CG_AddBufferedSound(cgs.media.captureRedTeamBlueFlag); // "The Red Team Captured The Blue Flag"
-					} */
 					break;
 				case GTS_BLUE_CAPTURE: // CTF: blue team captured the red flag, 1FCTF: blue team captured the neutral flag
-					if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_BLUE) {
+					if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_BLUE)
 						CG_AddBufferedSound(cgs.media.captureYourTeamSound);
-					}
-					else if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_RED) {
+					else
 						CG_AddBufferedSound(cgs.media.captureOpponentSound);
-					}
-					/* else {
-						CG_AddBufferedSound(cgs.media.captureBlueTeamRedFlag); // "The Blue Team Captured The Red Flag"
-					} */
 					break;
 				case GTS_RED_RETURN: // CTF: blue flag returned, 1FCTF: never used
-					if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_RED) {
+					if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_RED)
 						CG_AddBufferedSound(cgs.media.returnYourTeamSound);
-					}
-					else if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_BLUE) {
+					else
 						CG_AddBufferedSound(cgs.media.returnOpponentSound);
-					}
+					//
 					CG_AddBufferedSound(cgs.media.blueFlagReturnedSound);
 					break;
 				case GTS_BLUE_RETURN: // CTF red flag returned, 1FCTF: neutral flag returned
-					if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_BLUE) {
+					if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_BLUE)
 						CG_AddBufferedSound(cgs.media.returnYourTeamSound);
-					}
-					else if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_RED) {
+					else
 						CG_AddBufferedSound(cgs.media.returnOpponentSound);
-					}
 					//
 					CG_AddBufferedSound(cgs.media.redFlagReturnedSound);
 					break;
 
 				case GTS_RED_TAKEN: // CTF: red team took blue flag, 1FCTF: blue team took the neutral flag
 					// if this player picked up the flag then a sound is played in CG_CheckLocalSounds
-					if (CG_UsesTeamFlags(cgs.gametype) && !cg.snap->ps.powerups[PW_BLUEFLAG] && !cg.snap->ps.powerups[PW_NEUTRALFLAG]) {
+					if (cg.snap->ps.powerups[PW_BLUEFLAG] || cg.snap->ps.powerups[PW_NEUTRALFLAG]) {
+					} else {
 						if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_BLUE) {
-							if (CG_UsesTheWhiteFlag(cgs.gametype)) {
+							if (cgs.gametype == GT_1FCTF)
 								CG_AddBufferedSound(cgs.media.yourTeamTookTheFlagSound);
-							}
-							else {
+							else
 								CG_AddBufferedSound(cgs.media.enemyTookYourFlagSound);
-							}
-						}
-						else if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_RED) {
-							if (CG_UsesTheWhiteFlag(cgs.gametype)) {
+						} else if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_RED) {
+							if (cgs.gametype == GT_1FCTF)
 								CG_AddBufferedSound(cgs.media.enemyTookTheFlagSound);
-							}
-							else {
+							else
 								CG_AddBufferedSound(cgs.media.yourTeamTookEnemyFlagSound);
-							}
 						}
 					}
 					break;
 				case GTS_BLUE_TAKEN: // CTF: blue team took the red flag, 1FCTF red team took the neutral flag
 					// if this player picked up the flag then a sound is played in CG_CheckLocalSounds
-					if (CG_UsesTeamFlags(cgs.gametype) && !cg.snap->ps.powerups[PW_REDFLAG] && !cg.snap->ps.powerups[PW_NEUTRALFLAG]) {
+					if (cg.snap->ps.powerups[PW_REDFLAG] || cg.snap->ps.powerups[PW_NEUTRALFLAG]) {
+					} else {
 						if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_RED) {
-							if (CG_UsesTheWhiteFlag(cgs.gametype)) {
+							if (cgs.gametype == GT_1FCTF)
 								CG_AddBufferedSound(cgs.media.yourTeamTookTheFlagSound);
-							}
-							else {
+							else
 								CG_AddBufferedSound(cgs.media.enemyTookYourFlagSound);
-							}
-						}
-						else if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_BLUE) {
-							if (CG_UsesTheWhiteFlag(cgs.gametype)) {
+						} else if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_BLUE) {
+							if (cgs.gametype == GT_1FCTF)
 								CG_AddBufferedSound(cgs.media.enemyTookTheFlagSound);
-							}
-							else {
+							else
 								CG_AddBufferedSound(cgs.media.yourTeamTookEnemyFlagSound);
-							}
 						}
 					}
 					break;

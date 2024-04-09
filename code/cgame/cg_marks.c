@@ -148,9 +148,9 @@ void CG_ImpactMark( qhandle_t markShader, const vec3_t origin, const vec3_t dir,
 		CG_Error( "CG_ImpactMark called with <= 0 radius" );
 	}
 
-	/* if ( markTotal >= MAX_MARK_POLYS ) {
-		return;
-	} */
+	//if ( markTotal >= MAX_MARK_POLYS ) {
+	//	return;
+	//}
 
 	// create the texture axis
 	VectorNormalize2( dir, axis[0] );

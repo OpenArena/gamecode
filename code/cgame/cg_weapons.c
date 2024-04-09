@@ -1664,7 +1664,6 @@ sound should only be done on the world model case.
 
 void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent, int team )
 {
-	clientInfo_t	*ci;
 	refEntity_t	gun;
 	refEntity_t	barrel;
 	refEntity_t	flash;
@@ -1674,7 +1673,6 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
 	centity_t	*nonPredictedCent;
 	orientation_t	lerped;
 
-	ci = &cgs.clientinfo[ cent->currentState.clientNum ];
 
 	weaponNum = cent->currentState.weapon;
 
@@ -1694,13 +1692,15 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
 			float	f;
 
 			f = (float)cg.predictedPlayerState.weaponTime / 1500;
-			gun.shaderRGBA[0] = ci->color2[0] * 51;
-			gun.shaderRGBA[1] = ci->color2[1] * 51;
-			gun.shaderRGBA[2] = ci->color2[2] * 51 * ( 1.0 - f );
-		} else {
-			gun.shaderRGBA[0] = ci->color1[0] * 255;
-			gun.shaderRGBA[1] = ci->color1[1] * 255;
-			gun.shaderRGBA[2] = ci->color1[2] * 255;
+			gun.shaderRGBA[1] = 0;
+			gun.shaderRGBA[0] =
+			    gun.shaderRGBA[2] = 255 * ( 1.0 - f );
+		}
+		else {
+			gun.shaderRGBA[0] = 255;
+			gun.shaderRGBA[1] = 255;
+			gun.shaderRGBA[2] = 255;
+			gun.shaderRGBA[3] = 255;
 		}
 	}
 
@@ -2334,7 +2334,7 @@ void CG_DrawWeaponSelect( void )
 /*
 ===============
 CG_DrawWeaponBar0
-Default weapon bar. Lower part of the screen, transparent background. Displays only if a weapon has ammo or not (marked with an X).
+Default weapon bar. Displays only if a weapon has ammo or not (marked with an X).
 ===============
 */
 
@@ -2381,7 +2381,7 @@ void CG_DrawWeaponBar0(int count, int bits)
 /*
 ===============
 CG_DrawWeaponBar1
-Similar to 0, but also displays ammo left for the weapon below it with a bar, which changes from green to yellow to red to disappear.
+Displays ammo left for the weapon below it with a bar.
 ===============
 */
 
@@ -2506,7 +2506,7 @@ void CG_DrawWeaponBar1(int count, int bits)
 ===============
 CG_DrawWeaponBar2
 Displays weapons in the left side of the screen with a number showing remaining ammo.
-Weapons with no ammo have a red-ish background instead of blue-ish.
+Weapons with less than 10 ammo units have a red-ish background.
 ===============
 */
 
@@ -2589,7 +2589,8 @@ void CG_DrawWeaponBar2(int count, int bits, float *color)
 /*
 ===============
 CG_DrawWeaponBar3
-Same as 2, but also displays ammo left at the right of the number as a bar, which changes from green to yellow to red to disappear.
+Same as 2, but displays ammo left at the right of the number as a bar.
+Weapons with less than 10 ammo units have a red-ish background and don't display the bar.
 ===============
 */
 
@@ -2736,7 +2737,7 @@ void CG_DrawWeaponBar3(int count, int bits, float *color)
 /*
 ===============
 CG_DrawWeaponBar4
-Similar to 2, but the background color for each weapon GRADUALLY shifts from blue to red as the ammo quantity decreases.
+Apparently same as 2, even if the code is different. Weird.
 ===============
 */
 
@@ -2850,7 +2851,8 @@ void CG_DrawWeaponBar4(int count, int bits, float *color)
 /*
 ===============
 CG_DrawWeaponBar5
-In the lower part of the screen. Weapons have a number representing ammo and a blue background, which becomes red with 0 ammo.
+Weapons have a blue background and a number representing ammo.
+Less than 10 ammo units have a red-ish background.
 ===============
 */
 
@@ -2930,7 +2932,7 @@ void CG_DrawWeaponBar5(int count, int bits, float *color)
 /*
 ===============
 CG_DrawWeaponBar6
-Similar to 5, but also displays ammo left for the weapon below it with a bar, which changes from green to yellow to red to disappear.
+Same as 5, but also displays a bar, except when there's no ammo.
 ===============
 */
 
@@ -3076,7 +3078,7 @@ void CG_DrawWeaponBar6(int count, int bits, float *color)
 /*
 ===============
 CG_DrawWeaponBar7
-Similar to 5, but the background color for each weapon GRADUALLY shifts from blue to red as the ammo quantity decreases.
+Apparently same as 5, even if the code is different. Weird.
 ===============
 */
 

@@ -247,7 +247,7 @@ GRAPHICS OPTIONS MENU
 #define ID_DISPLAY		107
 #define ID_SOUND		108
 #define ID_NETWORK		109
-#define ID_RATIO		110
+#define ID_RATIO                110
 
 typedef struct {
 	menuframework_s	menu;
@@ -270,12 +270,12 @@ typedef struct {
 	menulist_s  	lighting;
         menulist_s  	flares;
         menulist_s  	bloom;
-        menulist_s  	dynamicLights;
 	menulist_s  	allow_extensions;
 	menulist_s  	texturebits;
 	menulist_s  	geometry;
 	menulist_s  	filter;
         menulist_s  	aniso;
+	menulist_s  	drawfps;
 	menutext_s		driverinfo;
 
 	menubitmap_s	apply;
@@ -290,7 +290,7 @@ typedef struct
 	int lighting;
 	qboolean flares;
 	qboolean bloom;
-	qboolean dynamicLights;
+	qboolean drawfps;
 	int texturebits;
 	int geometry;
 	int filter;
@@ -483,7 +483,7 @@ static void GraphicsOptions_GetInitialVideo( void )
 	s_ivo.lighting    = s_graphicsoptions.lighting.curvalue;
 	s_ivo.flares      = s_graphicsoptions.flares.curvalue;
 	s_ivo.bloom      = s_graphicsoptions.bloom.curvalue;
-	s_ivo.dynamicLights      = s_graphicsoptions.dynamicLights.curvalue;
+	s_ivo.drawfps     = s_graphicsoptions.drawfps.curvalue;
 	s_ivo.geometry    = s_graphicsoptions.geometry.curvalue;
 	s_ivo.filter      = s_graphicsoptions.filter.curvalue;
         s_ivo.aniso      = s_graphicsoptions.aniso.curvalue;
@@ -559,7 +559,7 @@ static void GraphicsOptions_CheckConfig( void )
 			continue;
                 if ( s_ivo_templates[i].bloom != s_graphicsoptions.bloom.curvalue )
 			continue;
-                if ( s_ivo_templates[i].dynamicLights != s_graphicsoptions.dynamicLights.curvalue )
+		if ( s_ivo_templates[i].drawfps != s_graphicsoptions.drawfps.curvalue )
 			continue;
 		if ( s_ivo_templates[i].geometry != s_graphicsoptions.geometry.curvalue )
 			continue;
@@ -632,7 +632,7 @@ static void GraphicsOptions_UpdateMenuItems( void )
 	{
 		s_graphicsoptions.apply.generic.flags &= ~(QMF_HIDDEN|QMF_INACTIVE);
 	}
-        if ( s_ivo.dynamicLights != s_graphicsoptions.dynamicLights.curvalue )
+	if ( s_ivo.drawfps != s_graphicsoptions.drawfps.curvalue )
 	{
 		s_graphicsoptions.apply.generic.flags &= ~(QMF_HIDDEN|QMF_INACTIVE);
 	}
@@ -718,7 +718,7 @@ static void GraphicsOptions_ApplyChanges( void *unused, int notification )
 	trap_Cvar_SetValue( "cg_autovertex", s_graphicsoptions.lighting.curvalue );
 	trap_Cvar_SetValue( "r_flares", s_graphicsoptions.flares.curvalue );
 	trap_Cvar_SetValue( "r_bloom", s_graphicsoptions.bloom.curvalue );
-	trap_Cvar_SetValue( "r_dynamicLight", s_graphicsoptions.dynamicLights.curvalue );
+	trap_Cvar_SetValue( "cg_drawFPS", s_graphicsoptions.drawfps.curvalue );
 
 	//r_ext_texture_filter_anisotropic is special
 	if(s_graphicsoptions.aniso.curvalue) {
@@ -755,186 +755,6 @@ static void GraphicsOptions_ApplyChanges( void *unused, int notification )
 	}
 
 	trap_Cmd_ExecuteText( EXEC_APPEND, "vid_restart\n" );
-}
-
-/*
-=================
-GraphicsOptions_StatusBar_GraphicsSettings
-
-Descriptions should have 48 characters or less per line, and there can't be more than two lines.
-=================
-*/
-static void GraphicsOptions_StatusBar_GraphicsSettings( void* ptr ) {
-	UI_DrawString( 320, 440, "", UI_CENTER|UI_SMALLFONT, colorWhite );
-	UI_DrawString( 320, 460, "", UI_CENTER|UI_SMALLFONT, colorWhite );
-}
-
-/*
-=================
-GraphicsOptions_StatusBar_GLDriver
-
-Descriptions should have 48 characters or less per line, and there can't be more than two lines.
-=================
-*/
-static void GraphicsOptions_StatusBar_GLDriver( void* ptr ) {
-	UI_DrawString( 320, 440, "", UI_CENTER|UI_SMALLFONT, colorWhite );
-	UI_DrawString( 320, 460, "", UI_CENTER|UI_SMALLFONT, colorWhite );
-}
-
-/*
-=================
-GraphicsOptions_StatusBar_GLExtensions
-
-Descriptions should have 48 characters or less per line, and there can't be more than two lines.
-=================
-*/
-static void GraphicsOptions_StatusBar_GLExtensions( void* ptr ) {
-	UI_DrawString( 320, 440, "", UI_CENTER|UI_SMALLFONT, colorWhite );
-	UI_DrawString( 320, 460, "", UI_CENTER|UI_SMALLFONT, colorWhite );
-}
-
-/*
-=================
-GraphicsOptions_StatusBar_AspectRatio
-
-Descriptions should have 48 characters or less per line, and there can't be more than two lines.
-=================
-*/
-static void GraphicsOptions_StatusBar_AspectRatio( void* ptr ) {
-	UI_DrawString( 320, 440, "", UI_CENTER|UI_SMALLFONT, colorWhite );
-	UI_DrawString( 320, 460, "", UI_CENTER|UI_SMALLFONT, colorWhite );
-}
-
-/*
-=================
-GraphicsOptions_StatusBar_ScreenResolution
-
-Descriptions should have 48 characters or less per line, and there can't be more than two lines.
-=================
-*/
-static void GraphicsOptions_StatusBar_ScreenResolution( void* ptr ) {
-	UI_DrawString( 320, 440, "", UI_CENTER|UI_SMALLFONT, colorWhite );
-	UI_DrawString( 320, 460, "", UI_CENTER|UI_SMALLFONT, colorWhite );
-}
-
-/*
-=================
-GraphicsOptions_StatusBar_EnableFullscreen
-
-Descriptions should have 48 characters or less per line, and there can't be more than two lines.
-=================
-*/
-static void GraphicsOptions_StatusBar_EnableFullscreen( void* ptr ) {
-	UI_DrawString( 320, 440, "", UI_CENTER|UI_SMALLFONT, colorWhite );
-	UI_DrawString( 320, 460, "", UI_CENTER|UI_SMALLFONT, colorWhite );
-}
-
-/*
-=================
-GraphicsOptions_StatusBar_LightingMode
-
-Descriptions should have 48 characters or less per line, and there can't be more than two lines.
-=================
-*/
-static void GraphicsOptions_StatusBar_LightingMode( void* ptr ) {
-	UI_DrawString( 320, 440, "", UI_CENTER|UI_SMALLFONT, colorWhite );
-	UI_DrawString( 320, 460, "", UI_CENTER|UI_SMALLFONT, colorWhite );
-}
-
-/*
-=================
-GraphicsOptions_StatusBar_Flares
-
-Descriptions should have 48 characters or less per line, and there can't be more than two lines.
-=================
-*/
-static void GraphicsOptions_StatusBar_Flares( void* ptr ) {
-	UI_DrawString( 320, 440, "", UI_CENTER|UI_SMALLFONT, colorWhite );
-	UI_DrawString( 320, 460, "", UI_CENTER|UI_SMALLFONT, colorWhite );
-}
-
-/*
-=================
-GraphicsOptions_StatusBar_Bloom
-
-Descriptions should have 48 characters or less per line, and there can't be more than two lines.
-=================
-*/
-static void GraphicsOptions_StatusBar_Bloom( void* ptr ) {
-	UI_DrawString( 320, 440, "", UI_CENTER|UI_SMALLFONT, colorWhite );
-	UI_DrawString( 320, 460, "", UI_CENTER|UI_SMALLFONT, colorWhite );
-}
-
-/*
-=================
-GraphicsOptions_StatusBar_DynamicLights
-
-Descriptions should have 48 characters or less per line, and there can't be more than two lines.
-=================
-*/
-static void GraphicsOptions_StatusBar_DynamicLights( void* ptr ) {
-	UI_DrawString( 320, 440, "", UI_CENTER|UI_SMALLFONT, colorWhite );
-	UI_DrawString( 320, 460, "", UI_CENTER|UI_SMALLFONT, colorWhite );
-}
-
-/*
-=================
-GraphicsOptions_StatusBar_GeometricDetail
-
-Descriptions should have 48 characters or less per line, and there can't be more than two lines.
-=================
-*/
-static void GraphicsOptions_StatusBar_GeometricDetail( void* ptr ) {
-	UI_DrawString( 320, 440, "", UI_CENTER|UI_SMALLFONT, colorWhite );
-	UI_DrawString( 320, 460, "", UI_CENTER|UI_SMALLFONT, colorWhite );
-}
-
-/*
-=================
-GraphicsOptions_StatusBar_TextureDetail
-
-Descriptions should have 48 characters or less per line, and there can't be more than two lines.
-=================
-*/
-static void GraphicsOptions_StatusBar_TextureDetail( void* ptr ) {
-	UI_DrawString( 320, 440, "", UI_CENTER|UI_SMALLFONT, colorWhite );
-	UI_DrawString( 320, 460, "", UI_CENTER|UI_SMALLFONT, colorWhite );
-}
-
-/*
-=================
-GraphicsOptions_StatusBar_TextureQuality
-
-Descriptions should have 48 characters or less per line, and there can't be more than two lines.
-=================
-*/
-static void GraphicsOptions_StatusBar_TextureQuality( void* ptr ) {
-	UI_DrawString( 320, 440, "", UI_CENTER|UI_SMALLFONT, colorWhite );
-	UI_DrawString( 320, 460, "", UI_CENTER|UI_SMALLFONT, colorWhite );
-}
-
-/*
-=================
-GraphicsOptions_StatusBar_TextureFilter
-
-Descriptions should have 48 characters or less per line, and there can't be more than two lines.
-=================
-*/
-static void GraphicsOptions_StatusBar_TextureFilter( void* ptr ) {
-	UI_DrawString( 320, 440, "", UI_CENTER|UI_SMALLFONT, colorWhite );
-	UI_DrawString( 320, 460, "", UI_CENTER|UI_SMALLFONT, colorWhite );
-}
-
-/*
-=================
-GraphicsOptions_StatusBar_Anisotropy
-
-Descriptions should have 48 characters or less per line, and there can't be more than two lines.
-=================
-*/
-static void GraphicsOptions_StatusBar_Anisotropy( void* ptr ) {
-	UI_DrawString( 320, 440, "", UI_CENTER|UI_SMALLFONT, colorWhite );
-	UI_DrawString( 320, 460, "", UI_CENTER|UI_SMALLFONT, colorWhite );
 }
 
 /*
@@ -979,7 +799,7 @@ static void GraphicsOptions_Event( void* ptr, int event ) {
 		s_graphicsoptions.fs.curvalue          = ivo->fullscreen;
                 s_graphicsoptions.flares.curvalue      = ivo->flares;
                 s_graphicsoptions.bloom.curvalue      = ivo->bloom;
-                s_graphicsoptions.dynamicLights.curvalue      = ivo->dynamicLights;
+                s_graphicsoptions.drawfps.curvalue      = ivo->drawfps;
 		break;
 
 	case ID_DRIVERINFO:
@@ -1078,7 +898,7 @@ static void GraphicsOptions_SetMenuItems( void )
 	s_graphicsoptions.allow_extensions.curvalue = trap_Cvar_VariableValue("r_allowExtensions");
         s_graphicsoptions.flares.curvalue = trap_Cvar_VariableValue("r_flares");
         s_graphicsoptions.bloom.curvalue = trap_Cvar_VariableValue("r_bloom");
-        s_graphicsoptions.dynamicLights.curvalue = trap_Cvar_VariableValue("r_dynamicLight");
+        s_graphicsoptions.drawfps.curvalue = trap_Cvar_VariableValue("cg_drawFPS");
         if(trap_Cvar_VariableValue("r_ext_texture_filter_anisotropic")) {
             s_graphicsoptions.aniso.curvalue = trap_Cvar_VariableValue("r_ext_max_anisotropy")/2;
         }
@@ -1292,7 +1112,6 @@ void GraphicsOptions_MenuInit( void )
 	s_graphicsoptions.list.generic.callback = GraphicsOptions_Event;
 	s_graphicsoptions.list.generic.id       = ID_LIST;
 	s_graphicsoptions.list.itemnames        = s_graphics_options_names;
-	s_graphicsoptions.list.generic.statusbar	= GraphicsOptions_StatusBar_GraphicsSettings;
 	y += 2 * ( BIGCHAR_HEIGHT + 2 );
 
 	s_graphicsoptions.driver.generic.type  = MTYPE_SPINCONTROL;
@@ -1302,142 +1121,127 @@ void GraphicsOptions_MenuInit( void )
 	s_graphicsoptions.driver.generic.y     = y;
 	s_graphicsoptions.driver.itemnames     = s_driver_names;
 	s_graphicsoptions.driver.curvalue      = (uis.glconfig.driverType == GLDRV_VOODOO);
-	s_graphicsoptions.driver.generic.statusbar	= GraphicsOptions_StatusBar_GLDriver;
 	y += BIGCHAR_HEIGHT+2;
 
 	// references/modifies "r_allowExtensions"
-	s_graphicsoptions.allow_extensions.generic.type			= MTYPE_SPINCONTROL;
-	s_graphicsoptions.allow_extensions.generic.name			= "GL Extensions:";
-	s_graphicsoptions.allow_extensions.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-	s_graphicsoptions.allow_extensions.generic.x			= 400;
-	s_graphicsoptions.allow_extensions.generic.y			= y;
-	s_graphicsoptions.allow_extensions.itemnames			= enabled_names;
-	s_graphicsoptions.allow_extensions.generic.statusbar	= GraphicsOptions_StatusBar_GLExtensions;
+	s_graphicsoptions.allow_extensions.generic.type     = MTYPE_SPINCONTROL;
+	s_graphicsoptions.allow_extensions.generic.name	    = "GL Extensions:";
+	s_graphicsoptions.allow_extensions.generic.flags	= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	s_graphicsoptions.allow_extensions.generic.x	    = 400;
+	s_graphicsoptions.allow_extensions.generic.y	    = y;
+	s_graphicsoptions.allow_extensions.itemnames        = enabled_names;
 	y += BIGCHAR_HEIGHT+2;
 
-	s_graphicsoptions.ratio.generic.type		= MTYPE_SPINCONTROL;
-	s_graphicsoptions.ratio.generic.name		= "Aspect Ratio:";
-	s_graphicsoptions.ratio.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-	s_graphicsoptions.ratio.generic.x			= 400;
-	s_graphicsoptions.ratio.generic.y			= y;
-	s_graphicsoptions.ratio.itemnames			= ratios;
-	s_graphicsoptions.ratio.generic.callback	= GraphicsOptions_Event;
-	s_graphicsoptions.ratio.generic.id			= ID_RATIO;
-	s_graphicsoptions.ratio.generic.statusbar	= GraphicsOptions_StatusBar_AspectRatio;
+        s_graphicsoptions.ratio.generic.type     = MTYPE_SPINCONTROL;
+        s_graphicsoptions.ratio.generic.name     = "Aspect Ratio:";
+        s_graphicsoptions.ratio.generic.flags    = QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+        s_graphicsoptions.ratio.generic.x        = 400;
+        s_graphicsoptions.ratio.generic.y        = y;
+        s_graphicsoptions.ratio.itemnames        = ratios;
+        s_graphicsoptions.ratio.generic.callback = GraphicsOptions_Event;
+        s_graphicsoptions.ratio.generic.id       = ID_RATIO;
         y += BIGCHAR_HEIGHT+2;
 
 
 	// references/modifies "r_mode"
-	s_graphicsoptions.mode.generic.type			= MTYPE_SPINCONTROL;
-	s_graphicsoptions.mode.generic.name			= "Screen Resolution:";
-	s_graphicsoptions.mode.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-	s_graphicsoptions.mode.generic.x			= 400;
-	s_graphicsoptions.mode.generic.y			= y;
-	s_graphicsoptions.mode.itemnames			= resolutions;
-	s_graphicsoptions.mode.generic.callback		= GraphicsOptions_Event;
-	s_graphicsoptions.mode.generic.id			= ID_MODE;
-	s_graphicsoptions.mode.generic.statusbar	= GraphicsOptions_StatusBar_ScreenResolution;
+	s_graphicsoptions.mode.generic.type     = MTYPE_SPINCONTROL;
+	s_graphicsoptions.mode.generic.name     = "Resolution:";
+	s_graphicsoptions.mode.generic.flags    = QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	s_graphicsoptions.mode.generic.x        = 400;
+	s_graphicsoptions.mode.generic.y        = y;
+	s_graphicsoptions.mode.itemnames        = resolutions;
+	s_graphicsoptions.mode.generic.callback = GraphicsOptions_Event;
+	s_graphicsoptions.mode.generic.id       = ID_MODE;
 	y += BIGCHAR_HEIGHT+2;
 
 	// references/modifies "r_fullscreen"
-	s_graphicsoptions.fs.generic.type		= MTYPE_SPINCONTROL;
-	s_graphicsoptions.fs.generic.name		= "Enable Fullscreen:";
-	s_graphicsoptions.fs.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-	s_graphicsoptions.fs.generic.x			= 400;
-	s_graphicsoptions.fs.generic.y			= y;
-	s_graphicsoptions.fs.itemnames			= enabled_names;
-	s_graphicsoptions.fs.generic.statusbar	= GraphicsOptions_StatusBar_EnableFullscreen;
+	s_graphicsoptions.fs.generic.type     = MTYPE_SPINCONTROL;
+	s_graphicsoptions.fs.generic.name	  = "Fullscreen:";
+	s_graphicsoptions.fs.generic.flags	  = QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	s_graphicsoptions.fs.generic.x	      = 400;
+	s_graphicsoptions.fs.generic.y	      = y;
+	s_graphicsoptions.fs.itemnames	      = enabled_names;
 	y += BIGCHAR_HEIGHT+2;
 
 	// references/modifies "r_vertexLight"
-	s_graphicsoptions.lighting.generic.type			= MTYPE_SPINCONTROL;
-	s_graphicsoptions.lighting.generic.name			= "Lighting Mode:";
-	s_graphicsoptions.lighting.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-	s_graphicsoptions.lighting.generic.x			= 400;
-	s_graphicsoptions.lighting.generic.y			= y;
-	s_graphicsoptions.lighting.itemnames			= lighting_names;
-	s_graphicsoptions.lighting.generic.statusbar	= GraphicsOptions_StatusBar_LightingMode;
+	s_graphicsoptions.lighting.generic.type  = MTYPE_SPINCONTROL;
+	s_graphicsoptions.lighting.generic.name	 = "Lighting:";
+	s_graphicsoptions.lighting.generic.flags = QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	s_graphicsoptions.lighting.generic.x	 = 400;
+	s_graphicsoptions.lighting.generic.y	 = y;
+	s_graphicsoptions.lighting.itemnames     = lighting_names;
 	y += BIGCHAR_HEIGHT+2;
         
         // references/modifies "r_flares"
-	s_graphicsoptions.flares.generic.type		= MTYPE_SPINCONTROL;
-	s_graphicsoptions.flares.generic.name		= "Flares:";
-	s_graphicsoptions.flares.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-	s_graphicsoptions.flares.generic.x			= 400;
-	s_graphicsoptions.flares.generic.y			= y;
-	s_graphicsoptions.flares.itemnames			= enabled_names;
-	s_graphicsoptions.flares.generic.statusbar	= GraphicsOptions_StatusBar_Flares;
+	s_graphicsoptions.flares.generic.type     = MTYPE_SPINCONTROL;
+	s_graphicsoptions.flares.generic.name	  = "Flares:";
+	s_graphicsoptions.flares.generic.flags	  = QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	s_graphicsoptions.flares.generic.x	      = 400;
+	s_graphicsoptions.flares.generic.y	      = y;
+	s_graphicsoptions.flares.itemnames	      = enabled_names;
 	y += BIGCHAR_HEIGHT+2;
         
         // references/modifies "r_bloom"
-	s_graphicsoptions.bloom.generic.type		= MTYPE_SPINCONTROL;
-	s_graphicsoptions.bloom.generic.name		= "Bloom:";
-	s_graphicsoptions.bloom.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-	s_graphicsoptions.bloom.generic.x			= 400;
-	s_graphicsoptions.bloom.generic.y			= y;
-	s_graphicsoptions.bloom.itemnames			= enabled_names;
-	s_graphicsoptions.bloom.generic.statusbar	= GraphicsOptions_StatusBar_Bloom;
+	s_graphicsoptions.bloom.generic.type     = MTYPE_SPINCONTROL;
+	s_graphicsoptions.bloom.generic.name	  = "Bloom:";
+	s_graphicsoptions.bloom.generic.flags	  = QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	s_graphicsoptions.bloom.generic.x	      = 400;
+	s_graphicsoptions.bloom.generic.y	      = y;
+	s_graphicsoptions.bloom.itemnames	      = enabled_names;
 	y += BIGCHAR_HEIGHT+2;
-        
-        // references/modifies "r_dynamicLight"
-	s_graphicsoptions.dynamicLights.generic.type		= MTYPE_SPINCONTROL;
-	s_graphicsoptions.dynamicLights.generic.name		= "Dynamic Lights:";
-	s_graphicsoptions.dynamicLights.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-	s_graphicsoptions.dynamicLights.generic.x			= 400;
-	s_graphicsoptions.dynamicLights.generic.y			= y;
-	s_graphicsoptions.dynamicLights.itemnames			= enabled_names;
-	s_graphicsoptions.dynamicLights.generic.statusbar	= GraphicsOptions_StatusBar_DynamicLights;
+
+	s_graphicsoptions.drawfps.generic.type	  = MTYPE_SPINCONTROL;
+	s_graphicsoptions.drawfps.generic.name	  = "Draw FPS:";
+	s_graphicsoptions.drawfps.generic.flags	  = QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	s_graphicsoptions.drawfps.generic.x	      = 400;
+	s_graphicsoptions.drawfps.generic.y	      = y;
+	s_graphicsoptions.drawfps.itemnames	      = enabled_names;
 	y += BIGCHAR_HEIGHT+2;
 
 	// references/modifies "r_lodBias" & "subdivisions"
-	s_graphicsoptions.geometry.generic.type			= MTYPE_SPINCONTROL;
-	s_graphicsoptions.geometry.generic.name			= "Geometric Detail:";
-	s_graphicsoptions.geometry.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-	s_graphicsoptions.geometry.generic.x			= 400;
-	s_graphicsoptions.geometry.generic.y			= y;
-	s_graphicsoptions.geometry.itemnames			= quality_names;
-	s_graphicsoptions.geometry.generic.statusbar	= GraphicsOptions_StatusBar_GeometricDetail;
+	s_graphicsoptions.geometry.generic.type  = MTYPE_SPINCONTROL;
+	s_graphicsoptions.geometry.generic.name	 = "Geometric Detail:";
+	s_graphicsoptions.geometry.generic.flags = QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	s_graphicsoptions.geometry.generic.x	 = 400;
+	s_graphicsoptions.geometry.generic.y	 = y;
+	s_graphicsoptions.geometry.itemnames     = quality_names;
 	y += BIGCHAR_HEIGHT+2;
 
 	// references/modifies "r_picmip"
-	s_graphicsoptions.tq.generic.type		= MTYPE_SLIDER;
-	s_graphicsoptions.tq.generic.name		= "Texture Detail:";
-	s_graphicsoptions.tq.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-	s_graphicsoptions.tq.generic.x			= 400;
-	s_graphicsoptions.tq.generic.y			= y;
-	s_graphicsoptions.tq.minvalue			= 0;
-	s_graphicsoptions.tq.maxvalue			= 3;
-	s_graphicsoptions.tq.generic.callback	= GraphicsOptions_TQEvent;
-	s_graphicsoptions.tq.generic.statusbar	= GraphicsOptions_StatusBar_TextureDetail;
+	s_graphicsoptions.tq.generic.type	= MTYPE_SLIDER;
+	s_graphicsoptions.tq.generic.name	= "Texture Detail:";
+	s_graphicsoptions.tq.generic.flags	= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	s_graphicsoptions.tq.generic.x		= 400;
+	s_graphicsoptions.tq.generic.y		= y;
+	s_graphicsoptions.tq.minvalue       = 0;
+	s_graphicsoptions.tq.maxvalue       = 3;
+	s_graphicsoptions.tq.generic.callback = GraphicsOptions_TQEvent;
 	y += BIGCHAR_HEIGHT+2;
 
 	// references/modifies "r_textureBits"
-	s_graphicsoptions.texturebits.generic.type		= MTYPE_SPINCONTROL;
-	s_graphicsoptions.texturebits.generic.name		= "Texture Quality:";
-	s_graphicsoptions.texturebits.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-	s_graphicsoptions.texturebits.generic.x			= 400;
-	s_graphicsoptions.texturebits.generic.y			= y;
-	s_graphicsoptions.texturebits.itemnames			= tq_names;
-	s_graphicsoptions.texturebits.generic.statusbar	= GraphicsOptions_StatusBar_TextureQuality;
+	s_graphicsoptions.texturebits.generic.type  = MTYPE_SPINCONTROL;
+	s_graphicsoptions.texturebits.generic.name	= "Texture Quality:";
+	s_graphicsoptions.texturebits.generic.flags	= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	s_graphicsoptions.texturebits.generic.x	    = 400;
+	s_graphicsoptions.texturebits.generic.y	    = y;
+	s_graphicsoptions.texturebits.itemnames     = tq_names;
 	y += BIGCHAR_HEIGHT+2;
 
 	// references/modifies "r_textureMode"
-	s_graphicsoptions.filter.generic.type		= MTYPE_SPINCONTROL;
-	s_graphicsoptions.filter.generic.name		= "Texture Filter:";
-	s_graphicsoptions.filter.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-	s_graphicsoptions.filter.generic.x			= 400;
-	s_graphicsoptions.filter.generic.y			= y;
-	s_graphicsoptions.filter.itemnames			= filter_names;
-	s_graphicsoptions.filter.generic.statusbar	= GraphicsOptions_StatusBar_TextureFilter;
+	s_graphicsoptions.filter.generic.type   = MTYPE_SPINCONTROL;
+	s_graphicsoptions.filter.generic.name	= "Texture Filter:";
+	s_graphicsoptions.filter.generic.flags	= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	s_graphicsoptions.filter.generic.x	    = 400;
+	s_graphicsoptions.filter.generic.y	    = y;
+	s_graphicsoptions.filter.itemnames      = filter_names;
 	y += 2+BIGCHAR_HEIGHT;
         
-	s_graphicsoptions.aniso.generic.type		= MTYPE_SPINCONTROL;
-	s_graphicsoptions.aniso.generic.name		= "Anisotropy:";
-	s_graphicsoptions.aniso.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-	s_graphicsoptions.aniso.generic.x			= 400;
-	s_graphicsoptions.aniso.generic.y			= y;
-	s_graphicsoptions.aniso.itemnames			= aniso_names;
-	s_graphicsoptions.filter.generic.statusbar	= GraphicsOptions_StatusBar_Anisotropy;
+        s_graphicsoptions.aniso.generic.type   = MTYPE_SPINCONTROL;
+	s_graphicsoptions.aniso.generic.name	= "Anisotropy:";
+	s_graphicsoptions.aniso.generic.flags	= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
+	s_graphicsoptions.aniso.generic.x	    = 400;
+	s_graphicsoptions.aniso.generic.y	    = y;
+	s_graphicsoptions.aniso.itemnames      = aniso_names;
 	y += 2*BIGCHAR_HEIGHT;
 
 	s_graphicsoptions.driverinfo.generic.type     = MTYPE_PTEXT;
@@ -1490,7 +1294,7 @@ void GraphicsOptions_MenuInit( void )
 	Menu_AddItem( &s_graphicsoptions.menu, ( void * ) &s_graphicsoptions.lighting );
         Menu_AddItem( &s_graphicsoptions.menu, ( void * ) &s_graphicsoptions.flares );
         Menu_AddItem( &s_graphicsoptions.menu, ( void * ) &s_graphicsoptions.bloom );
-        Menu_AddItem( &s_graphicsoptions.menu, ( void * ) &s_graphicsoptions.dynamicLights );
+	Menu_AddItem( &s_graphicsoptions.menu, ( void * ) &s_graphicsoptions.drawfps );
 	Menu_AddItem( &s_graphicsoptions.menu, ( void * ) &s_graphicsoptions.geometry );
 	Menu_AddItem( &s_graphicsoptions.menu, ( void * ) &s_graphicsoptions.tq );
 	Menu_AddItem( &s_graphicsoptions.menu, ( void * ) &s_graphicsoptions.texturebits );

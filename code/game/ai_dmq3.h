@@ -47,10 +47,7 @@ void BotUpdateInventory(bot_state_t *bs);
 //update the inventory during battle
 void BotUpdateBattleInventory(bot_state_t *bs, int enemy);
 //use holdable items during battle
-qboolean BotCanAndWantsToUseTheTeleporter(bot_state_t *bs);
-qboolean BotCanAndWantsToUseTheMedkit(bot_state_t *bs);
-qboolean BotCanAndWantsToUseTheKamikaze(bot_state_t *bs);
-qboolean BotCanAndWantsToUseTheInvulnerability(bot_state_t *bs);
+void BotBattleUseItems(bot_state_t *bs);
 //return true if the bot is dead
 qboolean BotIsDead(bot_state_t *bs);
 //returns true if the bot is in observer mode
@@ -95,36 +92,6 @@ int BotWantsToChase(bot_state_t *bs);
 int BotWantsToHelp(bot_state_t *bs);
 //returns true if the bot can and wants to rocketjump
 int BotCanAndWantsToRocketJump(bot_state_t *bs);
-// returns true if the bot has the Grappling Hook and wants to use it
-int BotCanAndWantsToUseTheGrapple(bot_state_t *bs);
-// returns true if the bot's team owns a control point (DD/DOM)
-qboolean BotTeamOwnsControlPoint(bot_state_t *bs,int point);
-// returns true if there is at least one control point in the map (DOM)
-qboolean BotAreThereDOMPointsInTheMap(void);
-// returns true if there is an A control point in the map (DD)
-qboolean BotIsThereDDPointAInTheMap(void);
-// returns true if there is a B control point in the map (DD)
-qboolean BotIsThereDDPointBInTheMap(void);
-// returns true if there is a blue CTF flag in the map (CTF/eCTF/1FCTF)
-qboolean BotIsThereABlueFlagInTheMap(void);
-// returns true if there is a red CTF flag in the map (CTF/eCTF/1FCTF)
-qboolean BotIsThereARedFlagInTheMap(void);
-// returns true if there is a neutral CTF flag in the map (1FCTF/Possession)
-qboolean BotIsThereANeutralFlagInTheMap(void);
-// returns true if there is a blue obelisk in the map (1FCTF/Harvester/Overload)
-qboolean BotIsThereABlueObeliskInTheMap(void);
-// returns true if there is a red obelisk in the map (1FCTF/Harvester/Overload)
-qboolean BotIsThereARedObeliskInTheMap(void);
-// returns true if there is a neutral obelisk in the map (1FCTF/Harvester)
-qboolean BotIsThereANeutralObeliskInTheMap(void);
-// returns true if there is a CTF flag in the bot's team's base in the map (CTF/eCTF/1FCTF)
-qboolean BotIsThereOurFlagInTheMap(bot_state_t *bs);
-// returns true if there is a CTF flag in the enemy base in the map (CTF/eCTF/1FCTF)
-qboolean BotIsThereAnEnemyFlagInTheMap(bot_state_t *bs);
-// returns true if there is an obelisk in the bot's team's base in the map (Harvester/Obelisk)
-qboolean BotIsThereOurObeliskInTheMap(bot_state_t *bs);
-// returns true if there is an obelisk in the enemy base in the map (Harvester/Obelisk)
-qboolean BotIsThereAnEnemyObeliskInTheMap(bot_state_t *bs);
 // returns true if the bot has a persistant powerup and a weapon
 int BotHasPersistantPowerupAndWeapon(bot_state_t *bs);
 //returns true if the bot wants to and goes camping
@@ -175,10 +142,6 @@ void BotRememberLastOrderedTask(bot_state_t *bs);
 void BotCTFSeekGoals(bot_state_t *bs);
 //set ctf goals (defend base, get enemy flag) during retreat
 void BotCTFRetreatGoals(bot_state_t *bs);
-//set dd goals (take/defend point) during seek
-void BotDDSeekGoals(bot_state_t *bs);
-//set dom goals (take/defend point) during seek
-void BotDomSeekGoals(bot_state_t *bs);
 //
 int Bot1FCTFCarryingFlag(bot_state_t *bs);
 int BotHarvesterCarryingCubes(bot_state_t *bs);
@@ -226,10 +189,6 @@ extern vmCvar_t bot_fastchat;
 extern vmCvar_t bot_nochat;
 extern vmCvar_t bot_testrchat;
 extern vmCvar_t bot_challenge;
-extern vmCvar_t bot_developer;
-extern vmCvar_t bot_debugChat;
-extern vmCvar_t bot_debugLTG;
-extern vmCvar_t bot_debugPaths;
 
 extern bot_goal_t ctf_redflag;
 extern bot_goal_t ctf_blueflag;

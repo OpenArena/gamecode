@@ -130,9 +130,9 @@ static void CG_ParseAccuracy( void ) {
 	for ( i = WP_MACHINEGUN ; i < WP_NUM_WEAPONS ; i++ ) {
 		cg.accuracys[i-WP_MACHINEGUN][0] = atoi( CG_Argv( (i-WP_MACHINEGUN)*2 + 1 ) );
 		cg.accuracys[i-WP_MACHINEGUN][1] = atoi( CG_Argv( (i-WP_MACHINEGUN)*2 + 2 ) );
-		if (cg_developer.integer && cg_debugAccuracy.integer) {
-			CG_Printf("W: %i   shots: %i   Hits: %i\n", i,cg.accuracys[i][0], cg.accuracys[i][1]);
-		}
+#if DEBUG
+		CG_Printf("W: %i   shots: %i   Hits: %i\n", i,cg.accuracys[i][0], cg.accuracys[i][1]);
+#endif
 	}
 
 }
@@ -362,7 +362,7 @@ void CG_ParseServerinfo( void ) {
 	cgs.timelimit = atoi( Info_ValueForKey( info, "timelimit" ) );
 	cgs.maxclients = atoi( Info_ValueForKey( info, "sv_maxclients" ) );
 	cgs.roundtime = atoi( Info_ValueForKey( info, "elimination_roundtime" ) );
-	cgs.nopickup = atoi( Info_ValueForKey( info, "g_weaponArena" ) ) + atoi( Info_ValueForKey( info, "g_instantgib" ) ) + atoi( Info_ValueForKey( info, "g_elimination" ) );
+	cgs.nopickup = atoi( Info_ValueForKey( info, "g_rockets" ) ) + atoi( Info_ValueForKey( info, "g_instantgib" ) ) + atoi( Info_ValueForKey( info, "g_elimination" ) );
 	cgs.lms_mode = atoi( Info_ValueForKey( info, "g_lms_mode" ) );
 	cgs.altExcellent = atoi( Info_ValueForKey( info, "g_altExcellent" ) );
 	mapname = Info_ValueForKey( info, "mapname" );
@@ -400,7 +400,7 @@ static void CG_ParseWarmup( void ) {
 
 	} else if ( warmup > 0 && cg.warmup <= 0 ) {
 #ifdef MISSIONPACK
-		if (CG_IsATeamGametype(cgs.gametype) && cgs.gametype != GT_TEAM) {
+		if (CG_IsATeamGametype(cgs.gametype)) {
 			trap_S_StartLocalSound( cgs.media.countPrepareTeamSound, CHAN_ANNOUNCER );
 		} else
 #endif
@@ -548,7 +548,7 @@ static void CG_ConfigStringModified( void ) {
 		CG_NewClientInfo( num - CS_PLAYERS );
 		CG_BuildSpectatorString();
 	} else if ( num == CS_FLAGSTATUS ) {
-		if((CG_UsesTeamFlags(cgs.gametype) && !CG_UsesTheWhiteFlag(cgs.gametype)) || cgs.gametype == GT_DOUBLE_D) {
+		if((CG_UsesTeamFlags(cgs.gametype) && CG_UsesTheWhiteFlag(cgs.gametype)) || cgs.gametype == GT_DOUBLE_D) {
 			// format is rb where its red/blue, 0 is at base, 1 is taken, 2 is dropped
 			cgs.redflag = str[0] - '0';
 			cgs.blueflag = str[1] - '0';

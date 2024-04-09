@@ -230,7 +230,7 @@ static void PlayerIntroSound( const char *modelAndSkin ) {
 		skin = model;
 	}
 
-	// trap_SendConsoleCommand( EXEC_APPEND, va( "play sound/player/announce/%s.wav\n", skin ) );
+	trap_SendConsoleCommand( EXEC_APPEND, va( "play sound/player/announce/%s.wav\n", skin ) );
 }
 
 /*
@@ -327,7 +327,7 @@ void G_AddRandomBot( int team ) {
 	if (team == TEAM_RED) teamstr = "red";
 	else if (team == TEAM_BLUE) teamstr = "blue";
 	else teamstr = "free";
-	trap_SendConsoleCommand( EXEC_INSERT, va("addbot random %f %s %i\n", g_spSkill.value, teamstr, 0) );
+	trap_SendConsoleCommand( EXEC_INSERT, va("addbot random %i %s %i\n", g_spSkill.integer, teamstr, 0) );
 }
 
 /*
@@ -476,7 +476,7 @@ void G_CheckMinimumPlayers( void ) {
 			}
 		}
 	}
-	else if (g_gametype.integer == GT_FFA) {
+	else {
 		if (minplayers >= g_maxclients.integer) {
 			minplayers = g_maxclients.integer-1;
 		}
@@ -610,7 +610,7 @@ static void G_AddBot( const char *name, float skill, const char *team, int delay
 
 	// set default team
 	if( !team || !*team ) {
-		if( G_IsATeamGametype(g_gametype.integer) ) {
+		if( GAMETYPE_IS_A_TEAM_GAME(g_gametype.integer) ) {
 			if( PickTeam(clientNum) == TEAM_RED) {
 				team = "red";
 			}
@@ -893,7 +893,7 @@ static void G_SpawnBots( char *botList, int baseDelay ) {
 
 		// we must add the bot this way, calling G_AddBot directly at this stage
 		// does "Bad Things"
-		trap_SendConsoleCommand( EXEC_INSERT, va("addbot %s %f free %i\n", bot, g_spSkill.value, delay) );
+		trap_SendConsoleCommand( EXEC_INSERT, va("addbot %s %i free %i\n", bot, g_spSkill.integer, delay) );
 
 		delay += BOT_BEGIN_DELAY_INCREMENT;
 	}
@@ -1009,7 +1009,13 @@ G_InitBots
 ===============
 */
 void G_InitBots( qboolean restart ) {
-	int		basedelay;
+	int			fragLimit;
+	int			timeLimit;
+	const char	*arenainfo;
+	char		*strValue;
+	int			basedelay;
+	char		map[MAX_QPATH];
+	char		serverinfo[MAX_INFO_STRING];
 
 	G_LoadBots();
 	G_LoadArenas();
@@ -1018,14 +1024,44 @@ void G_InitBots( qboolean restart ) {
 	trap_Cvar_Register( &bot_autominplayers, "bot_autominplayers", "0", CVAR_SERVERINFO );
 
 	if( g_gametype.integer == GT_SINGLE_PLAYER ) {
-		// Special match was already specified in G_InitGame, we just pick the list.
+		trap_GetServerinfo( serverinfo, sizeof(serverinfo) );
+		Q_strncpyz( map, Info_ValueForKey( serverinfo, "mapname" ), sizeof(map) );
+		arenainfo = G_GetArenaInfoByMap( map );
+		if ( !arenainfo ) {
+			return;
+		}
+
+		strValue = Info_ValueForKey( arenainfo, "fraglimit" );
+		fragLimit = atoi( strValue );
+		if ( fragLimit ) {
+			trap_Cvar_Set( "fraglimit", strValue );
+		}
+		else {
+			trap_Cvar_Set( "fraglimit", "0" );
+		}
+
+		strValue = Info_ValueForKey( arenainfo, "timelimit" );
+		timeLimit = atoi( strValue );
+		if ( timeLimit ) {
+			trap_Cvar_Set( "timelimit", strValue );
+		}
+		else {
+			trap_Cvar_Set( "timelimit", "0" );
+		}
+
+		if ( !fragLimit && !timeLimit ) {
+			trap_Cvar_Set( "fraglimit", "10" );
+			trap_Cvar_Set( "timelimit", "0" );
+		}
+
 		basedelay = BOT_BEGIN_DELAY_BASE;
-		if( Q_strequal( g_mapInfoSpecial.string, "training" ) ) {
+		strValue = Info_ValueForKey( arenainfo, "special" );
+		if( Q_strequal( strValue, "training" ) ) {
 			basedelay += 10000;
 		}
 
 		if( !restart ) {
-			G_SpawnBots( g_mapInfoBotList.string, basedelay );
+			G_SpawnBots( Info_ValueForKey( arenainfo, "bots" ), basedelay );
 		}
 	} else {
 		if(bot_autominplayers.integer) {

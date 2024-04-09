@@ -167,8 +167,7 @@ FirstConnect_StatusBar_Name
 =================
 */
 static void FirstConnect_StatusBar_Name( void* ptr ) {
-		UI_DrawString( 320, 440, "The name for your digital representation", UI_CENTER|UI_SMALLFONT, colorWhite );
-		UI_DrawString( 320, 460, "in matches. Your nickname, so to say.", UI_CENTER|UI_SMALLFONT, colorWhite );
+		UI_DrawString( 320, 440, "Your nickname", UI_CENTER|UI_SMALLFONT, colorWhite );
 }
 
 /*
@@ -177,7 +176,7 @@ FirstConnect_StatusBar_Rate
 =================
 */
 static void FirstConnect_StatusBar_Rate( void* ptr ) {
-		UI_DrawString( 320, 440, "How fast your network connection speed is.", UI_CENTER|UI_SMALLFONT, colorWhite );
+		UI_DrawString( 320, 440, "Your connection speed", UI_CENTER|UI_SMALLFONT, colorWhite );
 }
 
 /*
@@ -186,7 +185,7 @@ FirstConnect_StatusBar_Delag
 =================
 */
 static void FirstConnect_StatusBar_Delag( void* ptr ) {
-		UI_DrawString( 320, 440, "Enables reliable instant-hit weapons online.", UI_CENTER|UI_SMALLFONT, colorWhite );
+		UI_DrawString( 320, 440, "Reliable Instanthit weapons", UI_CENTER|UI_SMALLFONT, colorWhite );
 }
 
 /*
@@ -195,8 +194,7 @@ FirstConnect_StatusBar_Download
 =================
 */
 static void FirstConnect_StatusBar_Download( void* ptr ) {
-		UI_DrawString( 320, 440, "Automatically downloads missing maps and mods", UI_CENTER|UI_SMALLFONT, colorWhite );
-		UI_DrawString( 320, 460, "from servers. ^1Be careful with what you download!", UI_CENTER|UI_SMALLFONT, colorWhite );
+		UI_DrawString( 320, 440, "Auto download missing maps and mods", UI_CENTER|UI_SMALLFONT, colorWhite );
 }
 
 /*
@@ -254,6 +252,7 @@ static void FirstConnect_Event( void* ptr, int event )
 
                 case ID_ALLOWDOWNLOAD:
                         trap_Cvar_SetValue( "cl_allowDownload", s_firstconnect.allowdownload.curvalue );
+                        trap_Cvar_SetValue( "sv_allowDownload", s_firstconnect.allowdownload.curvalue );
                         break;
 
                 case ID_DELAGHITSCAN:
@@ -371,7 +370,7 @@ void FirstConnect_MenuInit( void )
 
         y+= 4*PROP_HEIGHT;
         s_firstconnect.rate.generic.type		= MTYPE_SPINCONTROL;
-	s_firstconnect.rate.generic.name		= "Network Speed:";
+	s_firstconnect.rate.generic.name		= "Data Rate:";
 	s_firstconnect.rate.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	s_firstconnect.rate.generic.callback	= FirstConnect_Event;
 	s_firstconnect.rate.generic.id			= ID_RATE;
@@ -382,7 +381,7 @@ void FirstConnect_MenuInit( void )
 
         y += BIGCHAR_HEIGHT+2;
 	s_firstconnect.delaghitscan.generic.type     = MTYPE_RADIOBUTTON;
-	s_firstconnect.delaghitscan.generic.name	   = "Compensate Hitscan Latency:";
+	s_firstconnect.delaghitscan.generic.name	   = "Compensate latency:";
 	s_firstconnect.delaghitscan.generic.flags	   = QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	s_firstconnect.delaghitscan.generic.callback = FirstConnect_Event;
 	s_firstconnect.delaghitscan.generic.id       = ID_DELAGHITSCAN;
@@ -392,7 +391,7 @@ void FirstConnect_MenuInit( void )
 
 	y += BIGCHAR_HEIGHT+2;
 	s_firstconnect.allowdownload.generic.type     = MTYPE_RADIOBUTTON;
-	s_firstconnect.allowdownload.generic.name	   = "Download From Servers:";
+	s_firstconnect.allowdownload.generic.name	   = "Automatic Downloading:";
 	s_firstconnect.allowdownload.generic.flags	   = QMF_PULSEIFFOCUS|QMF_SMALLFONT;
 	s_firstconnect.allowdownload.generic.callback = FirstConnect_Event;
 	s_firstconnect.allowdownload.generic.id       = ID_ALLOWDOWNLOAD;

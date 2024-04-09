@@ -647,8 +647,8 @@ void G_GlobalSound( int soundIndex )
 	//Let's avoid the S_FindName error if soundIndex is 0.
 	//Sago: And let's check that the sound index is within the allowed range.
 	if( ( soundIndex <= 0 ) ||  soundIndex >= MAX_SOUNDS ) {
-		if (g_developer.integer) {
-			//Display this message when in code developer mode
+		if (g_developer.integer){
+			//Display this message when debugging
 			G_Printf( "GlobalSound: Error, no soundIndex specified. Check your code!\n" );
 		}
 		return;

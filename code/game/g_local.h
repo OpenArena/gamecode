@@ -272,7 +272,7 @@ typedef struct {
 //unlagged - client options
 	// these correspond with variables in the userinfo string
 	int			delag;
-	int			debugDelag;
+//	int			debugDelag;
 	int			cmdTimeNudge;
 //unlagged - client options
 //unlagged - lag simulation #2
@@ -898,7 +898,6 @@ void G_RunClient( gentity_t *ent );
 qboolean OnSameTeam( const gentity_t *ent1, const gentity_t *ent2 );
 void Team_CheckDroppedItem( const gentity_t *dropped );
 qboolean CheckObeliskAttack( const gentity_t *obelisk, const gentity_t *attacker );
-void ShuffleTeams(void);
 //KK-OAX Added for Command Handling Changes (r24)
 team_t G_TeamFromString( char *str );
 /**
@@ -942,7 +941,6 @@ void Svcmd_AbortPodium_f( void );
 //
 // g_bot.c
 //
-const char *G_GetArenaInfoByMap(const char *map);
 void G_InitBots( qboolean restart );
 char *G_GetBotInfoByNumber( int num );
 char *G_GetBotInfoByName( const char *name );
@@ -1097,7 +1095,7 @@ extern vmCvar_t g_localTeamPref;
 extern vmCvar_t g_music;
 extern vmCvar_t g_spawnprotect;
 //elimination:
-extern vmCvar_t g_elimination_damage;
+extern vmCvar_t g_elimination_selfdamage;
 extern vmCvar_t g_elimination_startHealth;
 extern vmCvar_t g_elimination_startArmor;
 extern vmCvar_t g_elimination_bfg;
@@ -1117,8 +1115,7 @@ extern vmCvar_t g_elimination_mine;
 extern vmCvar_t g_elimination_nail;
 //If lockspectator: 0=no limit, 1 = cannot follow enemy, 2 = must follow friend
 extern vmCvar_t g_elimination_lockspectator;
-extern vmCvar_t g_weaponArena;
-extern vmCvar_t g_weaponArenaWeapon;
+extern vmCvar_t g_rockets;
 //new in elimination Beta2
 extern vmCvar_t g_instantgib;
 extern vmCvar_t g_vampire;
@@ -1129,6 +1126,7 @@ extern vmCvar_t g_lms_lives;
 extern vmCvar_t g_lms_mode; //How do we score: 0 = One Survivor get a point, 1 = same but without overtime, 2 = one point for each player killed (+overtime), 3 = same without overtime
 extern vmCvar_t g_elimination_ctf_oneway;	//Only attack in one direction (level.eliminationSides+level.roundNumber)%2 == 0 red attacks
 extern vmCvar_t g_awardpushing; //The server can decide if players are awarded for pushing people in lave etc.
+extern vmCvar_t g_runes;
 extern vmCvar_t g_catchup; //Favors the week players
 extern vmCvar_t g_autonextmap; //Autochange map
 extern vmCvar_t g_mappools; //mappools to be used for autochange
@@ -1180,31 +1178,6 @@ extern vmCvar_t g_ddRespawnDelay;
 extern vmCvar_t g_developer;
 extern vmCvar_t g_spSkill;
 extern vmCvar_t g_bot_noChat;
-extern vmCvar_t g_classicMode;
-
-extern vmCvar_t g_mapInfoBotList;
-extern vmCvar_t g_mapInfoBotCount;
-extern vmCvar_t g_mapInfoRedBotList;
-extern vmCvar_t g_mapInfoRedBotCount;
-extern vmCvar_t g_mapInfoBlueBotList;
-extern vmCvar_t g_mapInfoBlueBotCount;
-extern vmCvar_t g_mapInfoTeamBotCount;
-extern vmCvar_t g_mapInfoCaptureLimit;
-extern vmCvar_t g_mapInfoFragLimit;
-extern vmCvar_t g_mapInfoTimeLimit;
-extern vmCvar_t g_mapInfoMaxPlayers;
-extern vmCvar_t g_mapInfoMaxTeamSize;
-extern vmCvar_t g_mapInfoMinPlayers;
-extern vmCvar_t g_mapInfoMinTeamSize;
-extern vmCvar_t g_mapInfoRecPlayers;
-extern vmCvar_t g_mapInfoRecTeamSize;
-extern vmCvar_t g_mapInfoSpecial;
-extern vmCvar_t g_mapInfoTimeToBeatPlatinum;
-extern vmCvar_t g_mapInfoTimeToBeatGold;
-extern vmCvar_t g_mapInfoTimeToBeatSilver;
-extern vmCvar_t g_mapInfoTimeToBeatBronze;
-
-extern vmCvar_t g_autoGameLimits;
 
 void	trap_Printf( const char *fmt );
 void	trap_Error( const char *fmt ) __attribute__((noreturn));
@@ -1455,20 +1428,7 @@ void monster_die (gentity_t *self, gentity_t *inflictor, gentity_t *attacker, in
 
 /* Neon_Knight: Useful check in order to have code consistency. */
 qboolean G_IsATeamGametype(int check);	/* Whether the gametype is team-based or not.*/
-qboolean G_IsADMBasedGametype(int check);	/* Whether the gametype is NOT team-based or not.*/
 qboolean G_UsesTeamFlags(int check);	/* Whether the gametype uses the red and blue flags. */
 qboolean G_UsesTheWhiteFlag(int check);	/* Whether the gametype uses the neutral flag. */
 qboolean G_IsARoundBasedGametype(int check);	/* Whether the gametype uses the neutral flag. */
-int G_GetWeaponArenaWeapon(int weapon);	/* Takes a string and returns the value of a weapon. */
-qboolean G_IsANoPickupsMode(void);	/* Returns true if the match has a "no pickups" rule. */
-qboolean G_GametypeUsesFragLimit(int check);	/* Whether the gametype uses a frag-based scoring system. */
-qboolean G_GametypeUsesCaptureLimit(int check);	/* Whether the gametype uses a capture-based scoring system. */
-qboolean G_GametypeUsesRunes(int check);	/* Whether the gametype uses the Runes. */
-int G_GetAttackingTeam(void);	/* Returns the team that's currently on offense in eCTF AvD. */
-void MapInfoSaveIntoCvars(mapinfo_result_t *info); /* Saves the values from the .info file into cvars for later use.*/
-void G_SetMapFragLimit (char *mapname); /* Sets the fraglimit for the map.*/
-void G_SetMapCaptureLimit (char *mapname); /* Sets the capturelimit for the map.*/
-void G_SetMapTimeLimit (char *mapname); /* Sets the timelimit for the map.*/
-void G_SetMapSpecial (char *mapname); /* Sets the special condition for the map.*/
-void G_SetMapBots (char *mapname); /* Sets the bot list for the map.*/
 /* /Neon_Knight */

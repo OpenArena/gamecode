@@ -989,7 +989,7 @@ static qboolean CG_ScanForExistingClientInfo(clientInfo_t *ci) {
 				&& Q_strequal(ci->headSkinName, match->headSkinName)
 				&& Q_strequal(ci->blueTeam, match->blueTeam)
 				&& Q_strequal(ci->redTeam, match->redTeam)
-				&& (CG_IsADMBasedGametype(cgs.gametype) || ci->team == match->team)) {
+				&& (!CG_IsATeamGametype(cgs.gametype) || ci->team == match->team)) {
 			// this clientinfo is identical, so use it's handles
 
 			ci->deferred = qfalse;
@@ -1322,7 +1322,7 @@ static void CG_SetLerpFrameAnimation(clientInfo_t *ci, lerpFrame_t *lf, int newA
 	lf->animation = anim;
 	lf->animationTime = lf->frameTime + anim->initialLerp;
 
-	if (cg_debugAnim.integer && cg_developer.integer) {
+	if (cg_debugAnim.integer) {
 		CG_Printf("Anim: %i\n", newAnimation);
 	}
 }
@@ -1394,7 +1394,7 @@ static void CG_RunLerpFrame(clientInfo_t *ci, lerpFrame_t *lf, int newAnimation,
 		}
 		if (cg.time > lf->frameTime) {
 			lf->frameTime = cg.time;
-			if (cg_debugAnim.integer && cg_developer.integer) {
+			if (cg_debugAnim.integer) {
 				CG_Printf("Clamp lf->frameTime\n");
 			}
 		}
@@ -3099,7 +3099,7 @@ void CG_ResetPlayerEntity(centity_t *cent) {
 
 
 
-	if (cg_debugPosition.integer && cg_developer.integer) {
+	if (cg_debugPosition.integer) {
 		CG_Printf("%i ResetPlayerEntity yaw=%f\n", cent->currentState.number, cent->pe.torso.yawAngle);
 	}
 }

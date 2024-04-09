@@ -415,15 +415,10 @@ void CG_CheckLocalSounds( playerState_t *ps, playerState_t *ops ) {
 	}
 
 	// check for flag pickup
-	if ( CG_UsesTeamFlags(cgs.gametype) ) {
+	if (CG_UsesTeamFlags(cgs.gametype)) {
 		if ((ps->powerups[PW_REDFLAG] != ops->powerups[PW_REDFLAG] && ps->powerups[PW_REDFLAG]) ||
-			(ps->powerups[PW_BLUEFLAG] != ops->powerups[PW_BLUEFLAG] && ps->powerups[PW_BLUEFLAG]) )
-		{
-			trap_S_StartLocalSound( cgs.media.youHaveFlagSound, CHAN_ANNOUNCER );
-		}
-	}
-	if ( CG_UsesTheWhiteFlag(cgs.gametype) ) {
-		if (ps->powerups[PW_NEUTRALFLAG] != ops->powerups[PW_NEUTRALFLAG] && ps->powerups[PW_NEUTRALFLAG])
+			(ps->powerups[PW_BLUEFLAG] != ops->powerups[PW_BLUEFLAG] && ps->powerups[PW_BLUEFLAG]) ||
+			(ps->powerups[PW_NEUTRALFLAG] != ops->powerups[PW_NEUTRALFLAG] && ps->powerups[PW_NEUTRALFLAG]) )
 		{
 			trap_S_StartLocalSound( cgs.media.youHaveFlagSound, CHAN_ANNOUNCER );
 		}
@@ -435,7 +430,7 @@ void CG_CheckLocalSounds( playerState_t *ps, playerState_t *ops ) {
 		if ( !cg.warmup ) {
 			// never play lead changes during warmup
 			if ( ps->persistant[PERS_RANK] != ops->persistant[PERS_RANK] ) {
-				if (CG_IsADMBasedGametype(cgs.gametype)) {
+				if (!CG_IsATeamGametype(cgs.gametype)) {
 					if (  ps->persistant[PERS_RANK] == 0 ) {
 						CG_AddBufferedSound(cgs.media.takenLeadSound);
 					} else if ( ps->persistant[PERS_RANK] == RANK_TIED_FLAG && cgs.gametype != GT_POSSESSION ) {
@@ -468,7 +463,7 @@ void CG_CheckLocalSounds( playerState_t *ps, playerState_t *ops ) {
 	}
 
 	// fraglimit warnings
-	if ( cgs.fraglimit > 0 && CG_GametypeUsesFragLimit(cgs.gametype)) {
+	if (!CG_IsATeamGametype(cgs.gametype)) {
 		highScore = cgs.scores1;
 
 		if (cgs.gametype == GT_TEAM && cgs.scores2 > highScore) {
@@ -488,23 +483,6 @@ void CG_CheckLocalSounds( playerState_t *ps, playerState_t *ops ) {
 			CG_AddBufferedSound(cgs.media.threeFragSound);
 		}
 	}
-	/* // capturelimit warnings
-	else if ( cgs.capturelimit > 0 && CG_GametypeUsesCaptureLimit(cgs.gametype)) {
-		highScore = cgs.scores1;
-
-		if ( !( cg.capturelimitWarnings & 4 ) && highScore == (cgs.capturelimit - 1) ) {
-			cg.capturelimitWarnings |= 1 | 2 | 4;
-			CG_AddBufferedSound(cgs.media.oneCaptureSound);
-		}
-		else if ( cgs.capturelimit > 2 && !( cg.capturelimitWarnings & 2 ) && highScore == (cgs.capturelimit - 2) ) {
-			cg.fraglimitWarnings |= 1 | 2;
-			CG_AddBufferedSound(cgs.media.twoCaptureSound);
-		}
-		else if ( cgs.capturelimit > 3 && !( cg.capturelimitWarnings & 1 ) && highScore == (cgs.capturelimit - 3) ) {
-			cg.fraglimitWarnings |= 1;
-			CG_AddBufferedSound(cgs.media.threeCaptureSound);
-		}
-	}*/
 }
 
 /*

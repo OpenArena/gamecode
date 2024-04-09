@@ -111,7 +111,7 @@ vmCvar_t g_proxMineTimeout;
 vmCvar_t g_music;
 vmCvar_t g_spawnprotect;
 //Following for elimination:
-vmCvar_t g_elimination_damage;
+vmCvar_t g_elimination_selfdamage;
 vmCvar_t g_elimination_startHealth;
 vmCvar_t g_elimination_startArmor;
 vmCvar_t g_elimination_bfg;
@@ -130,8 +130,7 @@ vmCvar_t g_elimination_chain;
 vmCvar_t g_elimination_mine;
 vmCvar_t g_elimination_nail;
 vmCvar_t g_elimination_lockspectator;
-vmCvar_t g_weaponArena;
-vmCvar_t g_weaponArenaWeapon;
+vmCvar_t g_rockets;
 //dmn_clowns suggestions (with my idea of implementing):
 vmCvar_t g_instantgib;
 vmCvar_t g_vampire;
@@ -142,6 +141,7 @@ vmCvar_t g_lms_lives;
 vmCvar_t g_lms_mode;
 vmCvar_t g_elimination_ctf_oneway;
 vmCvar_t g_awardpushing; //The server can decide if players are awarded for pushing people in lave etc.
+vmCvar_t g_runes; //Allow missionpack style persistant powerups?
 vmCvar_t g_catchup; //Favors the week players
 vmCvar_t g_autonextmap; //Autochange map
 vmCvar_t g_mappools; //mappools to be used for autochange
@@ -195,31 +195,6 @@ vmCvar_t g_ddRespawnDelay;
 vmCvar_t g_developer;
 vmCvar_t g_spSkill;
 vmCvar_t g_bot_noChat;
-vmCvar_t g_classicMode;
-
-vmCvar_t g_mapInfoBotList;
-vmCvar_t g_mapInfoBotCount;
-vmCvar_t g_mapInfoRedBotList;
-vmCvar_t g_mapInfoRedBotCount;
-vmCvar_t g_mapInfoBlueBotList;
-vmCvar_t g_mapInfoBlueBotCount;
-vmCvar_t g_mapInfoTeamBotCount;
-vmCvar_t g_mapInfoCaptureLimit;
-vmCvar_t g_mapInfoFragLimit;
-vmCvar_t g_mapInfoTimeLimit;
-vmCvar_t g_mapInfoMaxPlayers;
-vmCvar_t g_mapInfoMaxTeamSize;
-vmCvar_t g_mapInfoMinPlayers;
-vmCvar_t g_mapInfoMinTeamSize;
-vmCvar_t g_mapInfoRecPlayers;
-vmCvar_t g_mapInfoRecTeamSize;
-vmCvar_t g_mapInfoSpecial;
-vmCvar_t g_mapInfoTimeToBeatPlatinum;
-vmCvar_t g_mapInfoTimeToBeatGold;
-vmCvar_t g_mapInfoTimeToBeatSilver;
-vmCvar_t g_mapInfoTimeToBeatBronze;
-
-vmCvar_t g_autoGameLimits;
 
 mapinfo_result_t mapinfo;
 
@@ -244,9 +219,9 @@ static cvarTable_t gameCvarTable[] = {
 	{ &g_videoflags, "videoflags", "7", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qtrue  },
 	{ &g_elimflags, "elimflags", "0", CVAR_SERVERINFO, 0, qfalse  },
 	{ &g_voteflags, "voteflags", "0", CVAR_SERVERINFO, 0, qfalse  },
-	{ &g_fraglimit, "fraglimit", GT_FFA_DEFAULT_SCORELIMIT, CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
-	{ &g_timelimit, "timelimit", GT_FFA_DEFAULT_TIMELIMIT, CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
-	{ &g_capturelimit, "capturelimit", GT_CTF_DEFAULT_SCORELIMIT, CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
+	{ &g_fraglimit, "fraglimit", "20", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
+	{ &g_timelimit, "timelimit", "0", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
+	{ &g_capturelimit, "capturelimit", "8", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
 
 	{ &g_synchronousClients, "g_synchronousClients", "0", CVAR_SYSTEMINFO, 0, qfalse  },
 
@@ -280,9 +255,9 @@ static cvarTable_t gameCvarTable[] = {
 	{ &g_forcerespawn, "g_forcerespawn", "20", 0, 0, qtrue },
 	{ &g_respawntime, "g_respawntime", "0", CVAR_ARCHIVE, 0, qtrue },
 	{ &g_inactivity, "g_inactivity", "0", 0, 0, qtrue },
-	{ &g_debugMove, "g_debugMove", "0", CVAR_CHEAT, 0, qfalse },
-	{ &g_debugDamage, "g_debugDamage", "0", CVAR_CHEAT, 0, qfalse },
-	{ &g_debugAlloc, "g_debugAlloc", "0", CVAR_CHEAT, 0, qfalse },
+	{ &g_debugMove, "g_debugMove", "0", 0, 0, qfalse },
+	{ &g_debugDamage, "g_debugDamage", "0", 0, 0, qfalse },
+	{ &g_debugAlloc, "g_debugAlloc", "0", 0, 0, qfalse },
 	{ &g_motd, "g_motd", "", 0, 0, qfalse },
 	{ &g_motdfile, "g_motdfile", "motd.cfg", 0, 0, qfalse },
 	{ &g_blood, "com_blood", "1", 0, 0, qfalse },
@@ -341,7 +316,7 @@ static cvarTable_t gameCvarTable[] = {
 	{ &g_music, "g_music", "", 0, 0, qfalse},
 	{ &g_spawnprotect, "g_spawnprotect", "500", CVAR_ARCHIVE, 0, qtrue},
 	//Now for elimination stuff:
-	{ &g_elimination_damage, "elimination_selfdamage", "0", 0, 0, qtrue },
+	{ &g_elimination_selfdamage, "elimination_selfdamage", "0", 0, 0, qtrue },
 	{ &g_elimination_startHealth, "elimination_startHealth", "200", CVAR_ARCHIVE, 0, qtrue },
 	{ &g_elimination_startArmor, "elimination_startArmor", "150", CVAR_ARCHIVE, 0, qtrue },
 	{ &g_elimination_bfg, "elimination_bfg", "0", CVAR_ARCHIVE, 0, qtrue },
@@ -367,9 +342,16 @@ static cvarTable_t gameCvarTable[] = {
 
 	{ &g_awardpushing, "g_awardpushing", "1", CVAR_ARCHIVE, 0, qtrue },
 
+	//g_persistantpowerups
+#ifdef MISSIONPACK
+	{ &g_runes, "g_runes", "1", CVAR_LATCH, 0, qfalse },
+#else
+	{ &g_runes, "g_runes", "0", CVAR_LATCH|CVAR_ARCHIVE, 0, qfalse },
+#endif
+
+
 	//nexuiz style rocket arena
-	{ &g_weaponArena, "g_weaponArena", "0", CVAR_SERVERINFO | CVAR_LATCH, 0, qfalse },
-	{ &g_weaponArenaWeapon, "g_weaponArenaWeapon", "0", CVAR_SERVERINFO | CVAR_LATCH, 0, qfalse },
+	{ &g_rockets, "g_rockets", "0", CVAR_SERVERINFO | CVAR_LATCH, 0, qfalse },
 
 	//Instantgib and Vampire thingies
 	{ &g_instantgib, "g_instantgib", "0", CVAR_SERVERINFO | CVAR_LATCH, 0, qfalse },
@@ -430,32 +412,8 @@ static cvarTable_t gameCvarTable[] = {
 	/* Neon_Knight: Developer mode*/
 	{ &g_developer, "developer", "0", CVAR_CHEAT, 0, qtrue},
 	{ &g_spSkill, "g_spSkill", "2", 0, 0, qtrue},
-	{ &g_bot_noChat, "bot_nochat", "0", 0, 0, qtrue},
-	{ &g_classicMode, "g_classicMode", "0", CVAR_SERVERINFO | CVAR_LATCH, 0, qtrue},
-	
-	{ &g_mapInfoBotList, "sp_Bots", "", 0, 0, qtrue},
-	{ &g_mapInfoBotCount, "sp_BotCount", "0", 0, 0, qtrue},
-	{ &g_mapInfoRedBotList, "sp_RedBots", "", 0, 0, qtrue},
-	{ &g_mapInfoRedBotCount, "sp_RedBotCount", "0", 0, 0, qtrue},
-	{ &g_mapInfoBlueBotList, "sp_BlueBots", "", 0, 0, qtrue},
-	{ &g_mapInfoBlueBotCount, "sp_BlueBotCount", "0", 0, 0, qtrue},
-	{ &g_mapInfoTeamBotCount, "sp_TeamBotCount", "0", 0, 0, qtrue},
-	{ &g_mapInfoCaptureLimit, "sp_CaptureLimit", GT_CTF_DEFAULT_SCORELIMIT, 0, 0, qtrue},
-	{ &g_mapInfoFragLimit, "sp_FragLimit", GT_SINGLE_DEFAULT_SCORELIMIT, 0, 0, qtrue},
-	{ &g_mapInfoTimeLimit, "sp_TimeLimit", GT_SINGLE_DEFAULT_TIMELIMIT, 0, 0, qtrue},
-	{ &g_mapInfoMaxPlayers, "sp_MaxPlayers", "0", 0, 0, qtrue},
-	{ &g_mapInfoMaxTeamSize, "sp_MaxTeamSize", "0", 0, 0, qtrue},
-	{ &g_mapInfoMinPlayers, "sp_MinPlayers", "0", 0, 0, qtrue},
-	{ &g_mapInfoMinTeamSize, "sp_MinTeamSize", "0", 0, 0, qtrue},
-	{ &g_mapInfoRecPlayers, "sp_RecPlayers", "0", 0, 0, qtrue},
-	{ &g_mapInfoRecTeamSize, "sp_RecTeamSize", "0", 0, 0, qtrue},
-	{ &g_mapInfoSpecial, "sp_Special", "", 0, 0, qtrue},
-	{ &g_mapInfoTimeToBeatPlatinum, "sp_TimeToBeatPlatinum", "0", 0, 0, qtrue},
-	{ &g_mapInfoTimeToBeatGold, "sp_TimeToBeatGold", "0", 0, 0, qtrue},
-	{ &g_mapInfoTimeToBeatSilver, "sp_TimeToBeatSilver", "0", 0, 0, qtrue},
-	{ &g_mapInfoTimeToBeatBronze, "sp_TimeToBeatBronze", "0", 0, 0, qtrue},
+	{ &g_bot_noChat, "bot_nochat", "0", 0, 0, qtrue}
 
-	{ &g_autoGameLimits, "g_autoGameLimits", "0", CVAR_ARCHIVE, 0, qtrue}
 };
 
 // bk001129 - made static to avoid aliasing
@@ -678,7 +636,7 @@ void G_UpdateCvars( void )
 					VoteParseCustomVotes();
 
 				//Here comes the cvars that must trigger a map_restart
-				if (cv->vmCvar == &g_instantgib || cv->vmCvar == &g_weaponArena || cv->vmCvar == &g_elimination_allgametypes || cv->vmCvar == &g_classicMode) {
+				if (cv->vmCvar == &g_instantgib || cv->vmCvar == &g_rockets  ||  cv->vmCvar == &g_elimination_allgametypes) {
 					trap_Cvar_Set("sv_dorestart","1");
 				}
 
@@ -693,9 +651,6 @@ void G_UpdateCvars( void )
 
 					if( allowedVote("clientkick") )
 						voteflags|=VF_clientkick;
-
-					if( allowedVote("shuffle") )
-						voteflags|=VF_shuffle;
 
 					if( allowedVote("nextmap") )
 						voteflags|=VF_nextmap;
@@ -784,24 +739,13 @@ G_InitGame
 */
 void G_InitGame( int levelTime, int randomSeed, int restart )
 {
-	int		i;
+	int					i;
 	char	mapname[MAX_CVAR_VALUE_STRING];
-	char	serverinfo[MAX_INFO_STRING];
 
-	trap_GetServerinfo( serverinfo, sizeof(serverinfo) );
-	Q_strncpyz( mapname, Info_ValueForKey( serverinfo, "mapname" ), sizeof(mapname) );
-
-	if (g_developer.integer) {
-		MapInfoGet(mapname,g_gametype.integer,&mapinfo,qtrue);
-	}
-	else {
-		MapInfoGet(mapname,g_gametype.integer,&mapinfo,qfalse);
-	}
 
 	G_Printf ("------- Game Initialization -------\n");
 	G_Printf ("gamename: %s\n", GAMEVERSION);
 	G_Printf ("gamedate: %s\n", PRODUCT_DATE);
-	G_Printf ("mapname: %s\n", mapname);
 
 	srand( randomSeed );
 
@@ -809,144 +753,11 @@ void G_InitGame( int levelTime, int randomSeed, int restart )
 
 	G_UpdateTimestamp();
 
-	MapInfoPrint(&mapinfo);
-	MapInfoSaveIntoCvars(&mapinfo);
-	if ( g_gametype.integer == GT_SINGLE_PLAYER || g_autoGameLimits.integer) {
-		if (G_GametypeUsesFragLimit(g_gametype.integer)) {
-			G_SetMapFragLimit(mapname);
-			G_Printf("^3Content of sp_FragLimit: ^7%i.\n",g_mapInfoFragLimit.integer);
-		}
-		else if (G_GametypeUsesCaptureLimit(g_gametype.integer)) {
-			G_SetMapCaptureLimit(mapname);
-			G_Printf("^3Content of sp_CaptureLimit: ^7%i.\n",g_mapInfoCaptureLimit.integer);
-		}
-		G_SetMapTimeLimit(mapname);
-		G_Printf("^3Content of sp_TimeLimit: ^7%i.\n",g_mapInfoTimeLimit.integer);
-	}
-
 	//disable unwanted cvars
 	if( g_gametype.integer == GT_SINGLE_PLAYER ) {
-		char specialMatch[64];
-
-		G_SetMapSpecial(mapname);
-		G_Printf("^3Content of sp_Special: ^7%i.\n",g_mapInfoSpecial.integer);
-
-		Q_strncpyz( specialMatch, g_mapInfoSpecial.string, sizeof(specialMatch) );
-
-		// Instantgib rule.
 		g_instantgib.integer = 0;
-		if(Q_strequal(specialMatch,"instantGib")) {
-			G_Printf("^2Instantgib mode enabled.\n");
-			g_instantgib.integer = 1;
-		}
-		// Single-Weapon rule.
-		g_weaponArena.integer = 0;
-		if (Q_strequal(specialMatch,"singleWeaponGA")) {
-			G_Printf("^2Single Weapon: Gauntlet mode enabled.\n");
-			g_weaponArena.integer = 1;
-			trap_Cvar_Set("g_weaponArenaWeapon",va("%i",WP_GAUNTLET));
-		}
-		if (Q_strequal(specialMatch,"singleWeaponMG")) {
-			G_Printf("^2Single Weapon: Machinegun mode enabled.\n");
-			g_weaponArena.integer = 1;
-			trap_Cvar_Set("g_weaponArenaWeapon",va("%i",WP_MACHINEGUN));
-		}
-		if (Q_strequal(specialMatch,"singleWeaponSG")) {
-			G_Printf("^2Single Weapon: Shotgun mode enabled.\n");
-			g_weaponArena.integer = 1;
-			trap_Cvar_Set("g_weaponArenaWeapon",va("%i",WP_SHOTGUN));
-		}
-		if (Q_strequal(specialMatch,"singleWeaponGL")) {
-			G_Printf("^2Single Weapon: Grenade Launcher mode enabled.\n");
-			g_weaponArena.integer = 1;
-			trap_Cvar_Set("g_weaponArenaWeapon",va("%i",WP_GRENADE_LAUNCHER));
-		}
-		if (Q_strequal(specialMatch,"singleWeaponRL")) {
-			G_Printf("^2Single Weapon: Rocket Launcher mode enabled.\n");
-			g_weaponArena.integer = 1;
-			trap_Cvar_Set("g_weaponArenaWeapon",va("%i",WP_ROCKET_LAUNCHER));
-		}
-		if (Q_strequal(specialMatch,"singleWeaponLG")) {
-			G_Printf("^2Single Weapon: Lightning Gun mode enabled.\n");
-			g_weaponArena.integer = 1;
-			trap_Cvar_Set("g_weaponArenaWeapon",va("%i",WP_LIGHTNING));
-		}
-		if (Q_strequal(specialMatch,"singleWeaponRG")) {
-			G_Printf("^2Single Weapon: Railgun mode enabled.\n");
-			g_weaponArena.integer = 1;
-			trap_Cvar_Set("g_weaponArenaWeapon",va("%i",WP_RAILGUN));
-		}
-		if (Q_strequal(specialMatch,"singleWeaponPG")) {
-			G_Printf("^2Single Weapon: Plasma Gun mode enabled.\n");
-			g_weaponArena.integer = 1;
-			trap_Cvar_Set("g_weaponArenaWeapon",va("%i",WP_PLASMAGUN));
-		}
-		if (Q_strequal(specialMatch,"singleWeaponBFG")) {
-			G_Printf("^2Single Weapon: BFG mode enabled.\n");
-			g_weaponArena.integer = 1;
-			trap_Cvar_Set("g_weaponArenaWeapon",va("%i",WP_BFG));
-		}
-		if (Q_strequal(specialMatch,"singleWeaponNG")) {
-			G_Printf("^2Single Weapon: Nailgun mode enabled.\n");
-			g_weaponArena.integer = 1;
-			trap_Cvar_Set("g_weaponArenaWeapon",va("%i",WP_NAILGUN));
-		}
-		if (Q_strequal(specialMatch,"singleWeaponCG")) {
-			G_Printf("^2Single Weapon: Chaingun mode enabled.\n");
-			g_weaponArena.integer = 1;
-			trap_Cvar_Set("g_weaponArenaWeapon",va("%i",WP_CHAINGUN));
-		}
-		if (Q_strequal(specialMatch,"singleWeaponPL")) {
-			G_Printf("^2Single Weapon: Prox Launcher mode enabled.\n");
-			g_weaponArena.integer = 1;
-			trap_Cvar_Set("g_weaponArenaWeapon",va("%i",WP_PROX_LAUNCHER));
-		}
-		// Grappling Hook rule.
-		g_grapple.integer = 0;
-		if (Q_strequal(specialMatch,"grappleMatch")) {
-			G_Printf("^2Grappling Hook on Inventory mode enabled.\n");
-			g_grapple.integer = 1;
-		}
-		// Elimination rule.
-		g_elimination_allgametypes.integer = 0;
-		if (Q_strequal(specialMatch,"eliminationMode")) {
-			G_Printf("^2Elimination (Fully Loaded) mode enabled.\n");
-			g_elimination_allgametypes.integer = 1;
-			g_elimination_damage.integer = 1;
-			g_elimination_startHealth.integer = 200;
-			g_elimination_startArmor.integer = 150;
-			g_elimination_bfg.integer = 10;
-			g_elimination_machinegun.integer = 200;
-			g_elimination_shotgun.integer = 200;
-			g_elimination_grenade.integer = 100;
-			g_elimination_rocket.integer = 200;
-			g_elimination_railgun.integer = 50;
-			g_elimination_lightning.integer = 100;
-			g_elimination_plasmagun.integer = 200;
-			g_elimination_chain.integer = 200;
-			g_elimination_mine.integer = 10;
-			g_elimination_nail.integer = 100;
-		}
-		// Classic Mode always disabled.
-		g_classicMode.integer = 0;
-		// Classic Mode rule.
+		g_rockets.integer = 0;
 		g_vampire.value = 0.0f;
-		if (Q_strequal(specialMatch,"vampireMode")) {
-			G_Printf("^2Vampire mode enabled.\n");
-			g_vampire.value = 0.5f;
-			g_vampireMaxHealth.integer = 200;
-		}
-		// Low Gravity rule.
-		g_gravity.integer = 800;
-		if (Q_strequal(specialMatch,"lowGravity")) {
-			G_Printf("^2Low Gravity mode enabled.\n");
-			g_gravity.integer = 100;
-		}
-		g_regen.integer = 0;
-		g_doWarmup.integer = 0;
-
-		G_SetMapBots(mapname);
-		G_Printf("^3Content of sp_Bots: ^7%i.\n",g_mapInfoBotList.integer);
 	}
 
 	G_ProcessIPBans();
@@ -962,7 +773,7 @@ void G_InitGame( int levelTime, int randomSeed, int restart )
 
 	level.snd_fry = G_SoundIndex("sound/player/fry.wav");	// FIXME standing in lava / slime
 
-	//if ( g_gametype.integer != GT_SINGLE_PLAYER && g_logfile.string[0] ) {
+	if ( g_gametype.integer != GT_SINGLE_PLAYER && g_logfile.string[0] ) {
 		if ( g_logfileSync.integer ) {
 			trap_FS_FOpenFile( g_logfile.string, &level.logFile, FS_APPEND_SYNC );
 		}
@@ -979,10 +790,10 @@ void G_InitGame( int levelTime, int randomSeed, int restart )
 			G_LogPrintf("InitGame: %s\n", serverinfo );
 			G_LogPrintf("Info: ServerInfo length: %ld of %d\n", strlen(serverinfo), MAX_INFO_STRING );
 		}
-	/*}
+	}
 	else {
 		G_Printf( "Not logging to disk.\n" );
-	}*/
+	}
 
 
 
@@ -1118,6 +929,9 @@ void G_InitGame( int levelTime, int randomSeed, int restart )
 		trap_Cvar_Set("voteflags",va("%i",voteflags));
 	}
 	G_CheckGametypeScripts();
+	trap_Cvar_VariableStringBuffer("mapname",mapname,sizeof(mapname));
+	MapInfoGet(mapname,g_gametype.integer,&mapinfo);
+	MapInfoPrint(&mapinfo);
 	if(G_RunScript(va("mapscripts/g_%s.cfg",mapname)))
 		G_RunScript("mapscripts/g_default.cfg");
 	if(G_RunScript(va("mapscripts/g_%s_%i.cfg",mapname,g_gametype.integer)))
@@ -2065,7 +1879,10 @@ void LogExit( const char *string )
 		if (g_singlePlayer.integer && !(g_entities[cl - level.clients].r.svFlags & SVF_BOT)) {
 			team = cl->sess.sessionTeam;
 		}
-		if (g_singlePlayer.integer && G_IsADMBasedGametype(g_gametype.integer)) {
+		if (g_singlePlayer.integer && G_IsATeamGametype(g_gametype.integer) &&
+				(G_UsesTeamFlags(g_gametype.integer) || G_UsesTheWhiteFlag(g_gametype.integer) ||
+				g_gametype.integer == GT_HARVESTER || g_gametype.integer == GT_OBELISK ||
+				g_gametype.integer == GT_DOUBLE_D || g_gametype.integer == GT_DOMINATION)) {
 			if (g_entities[cl - level.clients].r.svFlags & SVF_BOT && cl->ps.persistant[PERS_RANK] == 0) {
 				won = qfalse;
 			}
@@ -2197,7 +2014,8 @@ qboolean ScoreIsTied( void )
 	}
 
 	//Sago: In Elimination and Oneway Flag Capture teams must win by two points.
-	if (G_IsARoundBasedGametype(g_gametype.integer) && G_IsATeamGametype(g_gametype.integer)) {
+	if ( (G_IsARoundBasedGametype(g_gametype.integer) && G_IsATeamGametype(g_gametype.integer)) ||
+	        (g_gametype.integer == GT_CTF_ELIMINATION && g_elimination_ctf_oneway.integer)) {
 		return (level.teamScores[TEAM_RED] == level.teamScores[TEAM_BLUE] ||
 		        level.teamScores[TEAM_RED] == level.teamScores[TEAM_BLUE]+1 ||
 		        level.teamScores[TEAM_RED] == level.teamScores[TEAM_BLUE]-1);
@@ -2265,18 +2083,12 @@ void CheckExitRules( void )
 		return;
 	}
 
-	if (g_autoGameLimits.integer) {
-		G_Printf( "g_autoGameLimits set, timelimit cannot be changed.\n" );
-		trap_Cvar_Set( "timelimit", va("%i",g_mapInfoTimeLimit.integer) );
+	if ( g_timelimit.integer < 0 || g_timelimit.integer > INT_MAX / 60000 ) {
+		G_Printf( "timelimit %i is out of range, defaulting to 0\n", g_timelimit.integer );
+		trap_Cvar_Set( "timelimit", "0" );
 		trap_Cvar_Update( &g_timelimit );
 	}
-	else {
-		if ( g_timelimit.integer < 0 || g_timelimit.integer > INT_MAX / 60000 ) {
-			G_Printf( "timelimit %i is out of range, defaulting to 0\n", g_timelimit.integer );
-			trap_Cvar_Set( "timelimit", "0" );
-			trap_Cvar_Update( &g_timelimit );
-		}
-	}
+
 	if ( g_timelimit.integer > 0 && !level.warmupTime ) {
 		if ( (level.time - level.startTime)/60000 >= g_timelimit.integer ) {
 			trap_SendServerCommand( -1, "print \"Timelimit hit.\n\"");
@@ -2289,96 +2101,81 @@ void CheckExitRules( void )
 		return;
 	}
 
-	if (G_GametypeUsesFragLimit(g_gametype.integer)) {
-		if (g_autoGameLimits.integer) {
-			G_Printf( "g_autoGameLimits set, fraglimit cannot be changed.\n" );
-			trap_Cvar_Set( "fraglimit", va("%i",g_mapInfoFragLimit.integer) );
-			trap_Cvar_Update( &g_fraglimit );
+	if ( g_fraglimit.integer < 0 ) {
+		G_Printf( "fraglimit %i is out of range, defaulting to 0\n", g_fraglimit.integer );
+		trap_Cvar_Set( "fraglimit", "0" );
+		trap_Cvar_Update( &g_fraglimit );
+	}
+
+	if ( g_fraglimit.integer ) {
+		if ( G_IsATeamGametype(g_gametype.integer) ) {
+			if ( level.teamScores[TEAM_RED] >= g_fraglimit.integer ) {
+				trap_SendServerCommand( -1, "print \"Red hit the fraglimit.\n\"" );
+				LogExit( "Fraglimit hit." );
+				return;
+			}
+
+			if ( level.teamScores[TEAM_BLUE] >= g_fraglimit.integer ) {
+				trap_SendServerCommand( -1, "print \"Blue hit the fraglimit.\n\"" );
+				LogExit( "Fraglimit hit." );
+				return;
+			}
 		}
 		else {
-			if ( g_fraglimit.integer < 0 ) {
-				G_Printf( "fraglimit %i is out of range, defaulting to 0\n", g_fraglimit.integer );
-				trap_Cvar_Set( "fraglimit", "0" );
-				trap_Cvar_Update( &g_fraglimit );
-			}
-		}
-		if ( g_fraglimit.integer ) {
-			if ( G_IsATeamGametype(g_gametype.integer) ) {
-				if ( level.teamScores[TEAM_RED] >= g_fraglimit.integer ) {
-					trap_SendServerCommand( -1, "print \"Red hit the fraglimit.\n\"" );
-					LogExit( "Fraglimit hit." );
-					return;
+			for ( i=0 ; i< g_maxclients.integer ; i++ ) {
+				cl = level.clients + i;
+				if ( cl->pers.connected != CON_CONNECTED ) {
+					continue;
+				}
+				if ( cl->sess.sessionTeam != TEAM_FREE ) {
+					continue;
 				}
 
-				if ( level.teamScores[TEAM_BLUE] >= g_fraglimit.integer ) {
-					trap_SendServerCommand( -1, "print \"Blue hit the fraglimit.\n\"" );
+				if ( cl->ps.persistant[PERS_SCORE] >= g_fraglimit.integer ) {
 					LogExit( "Fraglimit hit." );
+					trap_SendServerCommand( -1, va("print \"%s" S_COLOR_WHITE " hit the fraglimit.\n\"",
+												   cl->pers.netname ) );
 					return;
-				}
-			}
-			else {
-				for ( i=0 ; i< g_maxclients.integer ; i++ ) {
-					cl = level.clients + i;
-					if ( cl->pers.connected != CON_CONNECTED ) {
-						continue;
-					}
-					if ( cl->sess.sessionTeam != TEAM_FREE ) {
-						continue;
-					}
-
-					if ( cl->ps.persistant[PERS_SCORE] >= g_fraglimit.integer ) {
-						LogExit( "Fraglimit hit." );
-						trap_SendServerCommand( -1, va("print \"%s" S_COLOR_WHITE " hit the fraglimit.\n\"",
-													   cl->pers.netname ) );
-						return;
-					}
 				}
 			}
 		}
 	}
-	else if (G_GametypeUsesCaptureLimit(g_gametype.integer)) {
-		if (g_autoGameLimits.integer) {
-			G_Printf( "g_autoGameLimits set, capturelimit cannot be changed.\n" );
-			trap_Cvar_Set( "capturelimit", va("%i",g_mapInfoCaptureLimit.integer) );
-			trap_Cvar_Update( &g_capturelimit );
+
+	if ( g_capturelimit.integer < 0 ) {
+		G_Printf( "capturelimit %i is out of range, defaulting to 0\n", g_capturelimit.integer );
+		trap_Cvar_Set( "capturelimit", "0" );
+		trap_Cvar_Update( &g_capturelimit );
+	}
+
+	if ( g_capturelimit.integer ) {
+		if (G_IsATeamGametype(g_gametype.integer) && g_gametype.integer != GT_TEAM) {
+			if ( level.teamScores[TEAM_RED] >= g_capturelimit.integer ) {
+				trap_SendServerCommand( -1, "print \"Red hit the capturelimit.\n\"" );
+				LogExit( "Capturelimit hit." );
+				return;
+			}
+
+			if ( level.teamScores[TEAM_BLUE] >= g_capturelimit.integer ) {
+				trap_SendServerCommand( -1, "print \"Blue hit the capturelimit.\n\"" );
+				LogExit( "Capturelimit hit." );
+				return;
+			}
 		}
 		else {
-			if ( g_capturelimit.integer < 0 ) {
-				G_Printf( "capturelimit %i is out of range, defaulting to 0\n", g_capturelimit.integer );
-				trap_Cvar_Set( "capturelimit", "0" );
-				trap_Cvar_Update( &g_capturelimit );
-			}
-		}
-		if ( g_capturelimit.integer ) {
-			if (G_IsATeamGametype(g_gametype.integer)) {
-				if ( level.teamScores[TEAM_RED] >= g_capturelimit.integer ) {
-					trap_SendServerCommand( -1, "print \"Red hit the capturelimit.\n\"" );
-					LogExit( "Capturelimit hit." );
-					return;
+			for ( i=0 ; i< g_maxclients.integer ; i++ ) {
+				cl = level.clients + i;
+				if ( cl->pers.connected != CON_CONNECTED ) {
+					continue;
+				}
+				if ( cl->sess.sessionTeam != TEAM_FREE ) {
+					continue;
 				}
 
-				if ( level.teamScores[TEAM_BLUE] >= g_capturelimit.integer ) {
-					trap_SendServerCommand( -1, "print \"Blue hit the capturelimit.\n\"" );
+				if ( cl->ps.persistant[PERS_SCORE] >= g_capturelimit.integer ) {
 					LogExit( "Capturelimit hit." );
+					trap_SendServerCommand( -1, va("print \"%s" S_COLOR_WHITE " hit the capturelimit.\n\"",
+												   cl->pers.netname ) );
 					return;
-				}
-			}
-			else {
-				for ( i=0 ; i< g_maxclients.integer ; i++ ) {
-					cl = level.clients + i;
-					if ( cl->pers.connected != CON_CONNECTED ) {
-						continue;
-					}
-					if ( cl->sess.sessionTeam != TEAM_FREE ) {
-						continue;
-					}
-
-					if ( cl->ps.persistant[PERS_SCORE] >= g_capturelimit.integer ) {
-						LogExit( "Capturelimit hit." );
-						trap_SendServerCommand( -1, va("print \"%s" S_COLOR_WHITE " hit the capturelimit.\n\"",
-													   cl->pers.netname ) );
-						return;
-					}
 				}
 			}
 		}
@@ -2576,7 +2373,7 @@ void CheckTournament( void )
 		int		counts[TEAM_NUM_TEAMS];
 		qboolean	notEnough = qfalse;
 
-		if(G_IsATeamGametype(g_gametype.integer)) {
+		if(!G_IsATeamGametype(g_gametype.integer)) {
 			counts[TEAM_BLUE] = TeamCount( -1, TEAM_BLUE );
 			counts[TEAM_RED] = TeamCount( -1, TEAM_RED );
 
@@ -3030,37 +2827,10 @@ void G_RunFrame( int levelTime )
 
 void MapInfoPrint(mapinfo_result_t *info)
 {
-	G_Printf("=== MAP INFORMATION ===\n");
-	G_Printf("Title (Longname): %s\n",info->title);
-	G_Printf("Author: %s\n",info->author);
-	G_Printf("Description: %s\n",info->description);
-	if (G_IsATeamGametype(g_gametype.integer) || g_developer.integer) {
-		G_Printf("=== TEAM-BASED INFORMATION ===\n");
-		G_Printf("Per-Team Player Count (Min-Max (Rec)): %i-%i (%i)\n",info->maxTeamSize,info->minTeamSize,info->recommendedTeamSize);
-		G_Printf("Red Team Bots: %s\n",info->redBots);
-		G_Printf("Red Team Bot Count %i\n:",info->redBotCount);
-		G_Printf("Blue Team Bots: %s\n",info->blueBots);
-		G_Printf("Blue Team Bot Count: %i\n",info->blueBotCount);
-		G_Printf("Per-Team Actual Bot Count: %i\n",info->teamBotCount);
-	}
-	if (G_IsADMBasedGametype(g_gametype.integer) || g_developer.integer) {
-		G_Printf("=== FFA-BASED INFORMATION ===\n");
-		G_Printf("Player Count (Min-Max (Rec)): %i-%i (%i)\n",info->maxPlayers,info->minPlayers,info->recommendedPlayers);
-		G_Printf("Bots: %s\n",info->mpBots);
-		G_Printf("Bot Count: %i\n",info->mpBotCount);
-	}
-	G_Printf("=== SCORING-BASED INFORMATION ===\n");
-	if (G_GametypeUsesCaptureLimit(g_gametype.integer) || g_developer.integer) {
-		G_Printf("Capture Limit: %i\n",info->captureLimit);
-	}
-	if (G_GametypeUsesCaptureLimit(g_gametype.integer) || g_developer.integer) {
-		G_Printf("Frag Limit: %i\n",info->fragLimit);
-	}
-	G_Printf("Time Limit: %i\n",info->timeLimit);
-	G_Printf("=== OTHER INFORMATION ===\n");
-	G_Printf("Special Status: %s\n",info->special);
-	G_Printf("Times to Beat (Platinum-Gold-Silver-Bronze): %i - %i - %i - %i.\n",info->timeToBeatPlatinum,info->timeToBeatGold,info->timeToBeatSilver,info->timeToBeatBronze);
-	G_Printf("=== END MAP INFORMATION ===\n");
+	G_Printf("Auther: %s\n",info->author);
+	G_Printf("Fraglimit: %i\n",info->fragLimit);
+	G_Printf("Capturelimit: %i\n",info->captureLimit);
+	G_Printf("minTeamSize: %i\n",info->minTeamSize);
 }
 
 /* Neon_Knight: Useful check in order to have code consistency. */
@@ -3073,16 +2843,6 @@ Checks if the gametype is a team-based game.
  */
 qboolean G_IsATeamGametype(int check) {
 	return GAMETYPE_IS_A_TEAM_GAME(check);
-}
-/*
-===================
-G_IsAFFAGametype
-
-Checks if the gametype is NOT a team-based game.
-===================
- */
-qboolean G_IsADMBasedGametype(int check) {
-	return GAMETYPE_IS_NOT_A_TEAM_GAME(check);
 }
 /*
 ===================
@@ -3114,528 +2874,4 @@ Checks if the gametype has a round-based system.
 qboolean G_IsARoundBasedGametype(int check) {
 	return GAMETYPE_IS_ROUND_BASED(check);
 }
-/*
-===================
-G_GametypeUsesFragLimit
-
-Checks if the gametype has a frag-based scoring system.
-===================
- */
-qboolean G_GametypeUsesFragLimit(int check) {
-	return GAMETYPE_USES_FRAG_LIMIT(check);
-}
-/*
-===================
-G_GametypeUsesCaptureLimit
-
-Checks if the gametype has a capture-based scoring system.
-===================
- */
-qboolean G_GametypeUsesCaptureLimit(int check) {
-	return GAMETYPE_USES_CAPTURE_LIMIT(check);
-}
-/*
-===================
-G_GetWeaponArenaWeapon
-
-Returns the value of a weapon for g_weaponArena.
-Weapons are sorted like this instead of actual weapon order because Weapon 1 (Gauntlet)
-is the default option and Weapon 10 (Grappling Hook) is an additional weapon.
-And for menu reasons. (*cough*classicui*cough*)
-===================
- */
-int G_GetWeaponArenaWeapon(int weapon) {
-	// If outside the limit, use Gauntlet.
-	if ((weapon <= WP_GAUNTLET) || (weapon > WP_NUM_WEAPONS) || (weapon = WP_GRAPPLING_HOOK)) {
-		return WP_GAUNTLET;
-	}
-	return weapon;
-}
-/*
-===================
-G_IsANoPickupsMode
-
-Returns true if the match has a "no pickups" rule.
-===================
- */
-qboolean G_IsANoPickupsMode(void) {
-	// In Instagib mode, no pickups
-	if (g_instantgib.integer) {
-		return qtrue;
-	}
-	// In Weapon Arena mode, no pickups
-	if (g_weaponArena.integer) {
-		return qtrue;
-	}
-	// In Elimination mode for non-round-based modes, no pickups
-	if (g_elimination_allgametypes.integer) {
-		return qtrue;
-	}
-	return qfalse;
-}
-/*
-===================
-G_GametypeUsesRunes
-
-Returns true if the match has a "no pickups" rule.
-===================
- */
-qboolean G_GametypeUsesRunes(int check) {
-	return GAMETYPE_USES_RUNES(check);
-}
-/*
-===================
-G_GetAttackingTeam
-
-Returns the team that's actually on offense in eCTF AvD matches.
-===================
- */
-int G_GetAttackingTeam(void) {
-	if ((level.eliminationSides+level.roundNumber)%2 == 0) {
-		return TEAM_RED;
-	}
-	else if ((level.eliminationSides+level.roundNumber)%2 == 1) {
-		return TEAM_BLUE;
-	}
-	return TEAM_NONE;
-}
-/*
-===================
-MapInfoSaveIntoCvars
-
-Saves the relevant info from .info files into cvars for later use.
-===================
- */
-void MapInfoSaveIntoCvars(mapinfo_result_t *info) {
-	char infoFieldContent[512];
-
-	Q_strncpyz( infoFieldContent, info->mpBots, sizeof(infoFieldContent) );
-	G_Printf("^3Value of info->mpBots: ^7%s.\n",info->mpBots);
-	if (!Q_strequal(infoFieldContent, "")) {
-		Q_strncpyz( g_mapInfoBotList.string, info->mpBots, sizeof(g_mapInfoBotList.string) );
-		G_Printf("^3Value of sp_Bots: ^7%s.\n",g_mapInfoBotList.string);
-	}
-	if (info->mpBotCount > 0) {
-		g_mapInfoBotCount.integer = info->mpBotCount;
-		G_Printf("^3Value of info->mpBotCount: ^7%i.\n",g_mapInfoBotCount.integer);
-	}
-	Q_strncpyz( infoFieldContent, info->redBots, sizeof(infoFieldContent) );
-	G_Printf("^3Value of info->redBots: ^7%s.\n",info->redBots);
-	if (!Q_strequal(infoFieldContent, "")) {
-		Q_strncpyz( g_mapInfoRedBotList.string, info->redBots, sizeof(g_mapInfoRedBotList.string) );
-		G_Printf("^3Value of sp_RedBots: ^7%s.\n",g_mapInfoRedBotList.string);
-	}
-	if (info->redBotCount > 0) {
-		g_mapInfoRedBotCount.integer = info->redBotCount;
-		G_Printf("^3Value of info->redBotCount: ^7%i.\n",g_mapInfoRedBotCount.integer);
-	}
-	Q_strncpyz( infoFieldContent, info->blueBots, sizeof(infoFieldContent) );
-	G_Printf("^3Value of info->blueBots: ^7%s.\n",info->blueBots);
-	if (!Q_strequal(infoFieldContent, "")) {
-		Q_strncpyz( g_mapInfoBlueBotList.string, info->blueBots, sizeof(g_mapInfoBlueBotList.string) );
-		G_Printf("^3Value of sp_BlueBots: ^7%s.\n",g_mapInfoBlueBotList.string);
-	}
-	if (info->blueBotCount > 0) {
-		g_mapInfoBlueBotCount.integer = info->blueBotCount;
-		G_Printf("^3Value of info->blueBotCount: ^7%i.\n",g_mapInfoBlueBotCount.integer);
-	}
-	if (info->teamBotCount > 0) {
-		g_mapInfoTeamBotCount.integer = info->teamBotCount;
-		G_Printf("^3Value of info->teamBotCount: ^7%i.\n",g_mapInfoTeamBotCount.integer);
-	}
-	if (info->captureLimit > 0) {
-		g_mapInfoCaptureLimit.integer = info->captureLimit;
-		G_Printf("^3Value of info->captureLimit: ^7%i.\n",g_mapInfoCaptureLimit.integer);
-	}
-	if (info->fragLimit > 0) {
-		g_mapInfoFragLimit.integer = info->fragLimit;
-		G_Printf("^3Value of info->fragLimit: ^7%i.\n",g_mapInfoFragLimit.integer);
-	}
-	if (info->timeLimit > 0) {
-		g_mapInfoTimeLimit.integer = info->timeLimit;
-		G_Printf("^3Value of info->timeLimit: ^7%i.\n",g_mapInfoTimeLimit.integer);
-	}
-	if (info->maxPlayers > 0) {
-		g_mapInfoMaxPlayers.integer = info->maxPlayers;
-		G_Printf("^3Value of info->maxPlayers: ^7%i.\n",g_mapInfoMaxPlayers.integer);
-	}
-	if (info->maxTeamSize > 0) {
-		g_mapInfoMaxTeamSize.integer = info->maxTeamSize;
-		G_Printf("^3Value of info->maxTeamSize: ^7%i.\n",g_mapInfoMaxTeamSize.integer);
-	}
-	if (info->minPlayers > 0) {
-		g_mapInfoMinPlayers.integer = info->minPlayers;
-		G_Printf("^3Value of info->minPlayers: ^7%i.\n",g_mapInfoMinPlayers.integer);
-	}
-	if (info->minTeamSize > 0) {
-		g_mapInfoMinTeamSize.integer = info->minTeamSize;
-		G_Printf("^3Value of info->minTeamSize: ^7%i.\n",g_mapInfoMinTeamSize.integer);
-	}
-	if (info->recommendedPlayers > 0) {
-		g_mapInfoRecPlayers.integer = info->recommendedPlayers;
-		G_Printf("^3Value of info->recommendedPlayers: ^7%i.\n",g_mapInfoRecPlayers.integer);
-	}
-	if (info->recommendedTeamSize > 0) {
-		g_mapInfoRecTeamSize.integer = info->recommendedTeamSize;
-		G_Printf("^3Value of info->recommendedTeamSize: ^7%i.\n",g_mapInfoRecTeamSize.integer);
-	}
-	Q_strncpyz( infoFieldContent, info->special, sizeof(infoFieldContent) );
-	G_Printf("^3Value of info->special: ^7%s.\n",info->special);
-	if (!Q_strequal(infoFieldContent, "")) {
-		Q_strncpyz( g_mapInfoSpecial.string, info->special, sizeof(g_mapInfoSpecial.string) );
-		G_Printf("^3Value of sp_Special: ^7%s.\n",g_mapInfoSpecial.string);
-	}
-	if (info->timeToBeatPlatinum > 0) {
-		g_mapInfoTimeToBeatPlatinum.integer = info->timeToBeatPlatinum;
-		G_Printf("^3Value of info->timeToBeatPlatinum: ^7%i.\n",g_mapInfoTimeToBeatPlatinum.integer);
-	}
-	if (info->timeToBeatGold > 0) {
-		g_mapInfoTimeToBeatGold.integer = info->timeToBeatGold;
-		G_Printf("^3Value of info->timeToBeatGold: ^7%i.\n",g_mapInfoTimeToBeatGold.integer);
-	}
-	if (info->timeToBeatSilver > 0) {
-		g_mapInfoTimeToBeatSilver.integer = info->timeToBeatSilver;
-		G_Printf("^3Value of info->timeToBeatSilver: ^7%i.\n",g_mapInfoTimeToBeatSilver.integer);
-	}
-	if (info->timeToBeatBronze > 0) {
-		g_mapInfoTimeToBeatBronze.integer = info->timeToBeatBronze;
-		G_Printf("^3Value of info->timeToBeatBronze: ^7%i.\n",g_mapInfoTimeToBeatBronze.integer);
-	}
-	return;
-}
-/*
-===================
-G_SetMapFragLimit
-
-Sets the map's frag limit. Saves it in the fraglimit cvar.
-===================
- */
-void G_SetMapFragLimit (char *mapname) {
-	const char *arenainfo;
-	// If the fraglimit is present in the .info file, use that.
-	if (g_mapInfoFragLimit.integer > 0) {
-		G_Printf("^2Fraglimit info found in .info for %s: %i.\n",mapname,g_mapInfoFragLimit.integer);
-		g_fraglimit.integer = g_mapInfoFragLimit.integer;
-		return;
-	}
-	else {
-		G_Printf("^3No fraglimit info found in .info for %s. Looking in arena files.\n",mapname);
-	}
-	// TO-DO: If found, set the fraglimit from gameinfo.txt.
-	// If not, look in the arena files for the fraglimit.
-
-	arenainfo = G_GetArenaInfoByMap(mapname);
-	if ( !arenainfo ) {
-		G_Printf("^4No arena info found for the map %s. Assigning default value.\n",mapname);
-		trap_Cvar_Set("fraglimit", va("%s",GT_SINGLE_DEFAULT_SCORELIMIT));
-		g_mapInfoFragLimit.integer = g_fraglimit.integer;
-		return;
-	}
-
-	if (atoi(Info_ValueForKey(arenainfo, "fraglimit"))) {
-		G_Printf("^2Fraglimit info found in arena file for %s: %s.\n",mapname,Info_ValueForKey(arenainfo, "fraglimit"));
-		trap_Cvar_Set("fraglimit", va("%s",Info_ValueForKey(arenainfo, "fraglimit")));
-		g_mapInfoFragLimit.integer = g_fraglimit.integer;
-		return;
-	}
-	G_Printf("^4No fraglimit info found in arena files for %s. Assigning default value.\n",mapname);
-	trap_Cvar_Set("fraglimit", va("%s",GT_SINGLE_DEFAULT_SCORELIMIT));
-	g_mapInfoFragLimit.integer = g_fraglimit.integer;
-	return;
-}
-/*
-===================
-G_SetMapCaptureLimit
-
-Sets the map's capture limit. Saves it in the capturelimit cvar.
-===================
- */
-void G_SetMapCaptureLimit (char *mapname) {
-	const char *arenainfo;
-	// If the capturelimit is present in the .info file, use that.
-	if (g_mapInfoCaptureLimit.integer > 0) {
-		G_Printf("^2Capturelimit info found in .info for %s: %i.\n",mapname,g_mapInfoCaptureLimit.integer);
-		g_capturelimit.integer = g_mapInfoCaptureLimit.integer;
-		return;
-	}
-	else {
-		G_Printf("^3No capturelimit info found in .info for %s. Looking in arena files.\n",mapname);
-	}
-	// TO-DO: If found, set the capturelimit from gameinfo.txt.
-	// If not, look in the arena files for the capturelimit.
-
-	arenainfo = G_GetArenaInfoByMap(mapname);
-	if ( !arenainfo ) {
-		G_Printf("^4No arena info found for the map %s. Assigning default value.\n",mapname);
-		trap_Cvar_Set("capturelimit", va("%s",GT_CTF_DEFAULT_SCORELIMIT));
-		g_mapInfoCaptureLimit.integer = g_capturelimit.integer;
-		return;
-	}
-
-	if (atoi(Info_ValueForKey(arenainfo, "fraglimit"))) {
-		G_Printf("^2Capturelimit info found in arena file for %s: %s.\n",mapname,Info_ValueForKey(arenainfo, "capturelimit"));
-		trap_Cvar_Set("capturelimit", va("%s",Info_ValueForKey(arenainfo, "capturelimit")));
-		g_mapInfoCaptureLimit.integer = g_capturelimit.integer;
-		return;
-	}
-	G_Printf("^4No capturelimit info found in arena files for %s. Assigning default value.\n",mapname);
-	trap_Cvar_Set("capturelimit", va("%s",GT_CTF_DEFAULT_SCORELIMIT));
-	g_mapInfoCaptureLimit.integer = g_capturelimit.integer;
-	return;
-}
-/*
-===================
-G_SetMapTimeLimit
-
-Sets the map's time limit. Saves it in the timelimit cvar.
-===================
- */
-void G_SetMapTimeLimit (char *mapname) {
-	const char *arenainfo;
-	// If the timelimit is present in the .info file, use that.
-	if (g_mapInfoTimeLimit.integer > 0) {
-		G_Printf("^2Timelimit info found in .info for %s: %i.\n",mapname,g_mapInfoTimeLimit.integer);
-		g_timelimit.integer = g_mapInfoTimeLimit.integer;
-		return;
-	}
-	else {
-		G_Printf("^3No timelimit info found in .info for %s. Looking in arena files.\n",mapname);
-	}
-	// TO-DO: If found, set the timelimit from gameinfo.txt.
-	// If not, look in the arena files for the timelimit.
-
-	arenainfo = G_GetArenaInfoByMap(mapname);
-	if ( !arenainfo ) {
-		G_Printf("^4No arena info found for the map %s. Assigning default value.\n",mapname);
-		trap_Cvar_Set("timelimit", va("%s",GT_SINGLE_DEFAULT_TIMELIMIT));
-		g_mapInfoTimeLimit.integer = g_timelimit.integer;
-		return;
-	}
-
-	if (atoi(Info_ValueForKey(arenainfo, "timelimit"))) {
-		G_Printf("^2Timelimit info found in arena file for %s: %s.\n",mapname,Info_ValueForKey(arenainfo, "timelimit"));
-		trap_Cvar_Set("timelimit", va("%s",Info_ValueForKey(arenainfo, "timelimit")));
-		g_mapInfoTimeLimit.integer = g_timelimit.integer;
-		return;
-	}
-	G_Printf("^4No timelimit info found in arena files for %s. Assigning default value.\n",mapname);
-	trap_Cvar_Set("timelimit", va("%s",GT_SINGLE_DEFAULT_TIMELIMIT));
-	g_mapInfoTimeLimit.integer = g_timelimit.integer;
-	return;
-}
-/*
-===================
-G_SetMapSpecial
-
-Sets the map's special condition. Saves it in a dedicated cvar.
-===================
- */
-void G_SetMapSpecial (char *mapname) {
-	const char *arenainfo;
-	char specialMatch[64];
-
-	// If the special condition is present in the .info file, use that.
-	Q_strncpyz( specialMatch, g_mapInfoSpecial.string, sizeof(specialMatch) );
-	if (!Q_strequal(specialMatch, "")) {
-		G_Printf("^2Special match found in .info for %s: ",mapname);
-	}
-	// The allowed values for Special. Anything else, we look for arena files.
-	if (Q_strequal(specialMatch, "training")) {
-		G_Printf("^7Tutorial Level.\n");
-		return;
-	}
-	else if (Q_strequal(specialMatch, "instantGib")) {
-		G_Printf("^7Instantgib level.\n");
-		return;
-	}
-	else if (Q_strequal(specialMatch, "singleWeaponGA")) {
-		G_Printf("^7Single Weapon: Gauntlet level.\n");
-		return;
-	}
-	else if (Q_strequal(specialMatch, "singleWeaponMG")) {
-		G_Printf("^7Single Weapon: Machinegun level.\n");
-		return;
-	}
-	else if (Q_strequal(specialMatch, "singleWeaponSG")) {
-		G_Printf("^7Single Weapon: Shotgun level.\n");
-		return;
-	}
-	else if (Q_strequal(specialMatch, "singleWeaponGL")) {
-		G_Printf("^7Single Weapon: Grenade Launcher level.\n");
-		return;
-	}
-	else if (Q_strequal(specialMatch, "singleWeaponRL")) {
-		G_Printf("^7Single Weapon: Rocket Launcher level.\n");
-		return;
-	}
-	else if (Q_strequal(specialMatch, "singleWeaponLG")) {
-		G_Printf("^7Single Weapon: Lightning Gun level.\n");
-		return;
-	}
-	else if (Q_strequal(specialMatch, "singleWeaponRG")) {
-		G_Printf("^7Single Weapon: Railgun level.\n");
-		return;
-	}
-	else if (Q_strequal(specialMatch, "singleWeaponPG")) {
-		G_Printf("^7Single Weapon: Plasma Gun level.\n");
-		return;
-	}
-	else if (Q_strequal(specialMatch, "singleWeaponBFG")) {
-		G_Printf("^7Single Weapon: BFG level.\n");
-		return;
-	}
-	else if (Q_strequal(specialMatch, "singleWeaponNG")) {
-		G_Printf("^7Single Weapon: Nailgun level.\n");
-		return;
-	}
-	else if (Q_strequal(specialMatch, "singleWeaponCG")) {
-		G_Printf("^7Single Weapon: Chaingun level.\n");
-		return;
-	}
-	else if (Q_strequal(specialMatch, "singleWeaponPL")) {
-		G_Printf("^7Single Weapon: Prox Launcher level.\n");
-		return;
-	}
-	else if (Q_strequal(specialMatch, "grappleMatch")) {
-		G_Printf("^7Grappling Hook rule level.\n");
-		return;
-	}
-	else if (Q_strequal(specialMatch, "eliminationMode")) {
-		G_Printf("^7Elimination Mode (Fully Loaded) level.\n");
-		return;
-	}
-	else if (Q_strequal(specialMatch, "vampireMode")) {
-		G_Printf("^7Vampire Mode level.\n");
-		return;
-	}
-	else if (Q_strequal(specialMatch, "lowGravity")) {
-		G_Printf("^7Low Gravity level.\n");
-		return;
-	}
-	else if (Q_strequal(specialMatch, "final")) {
-		G_Printf("^7Final Boss level.\n");
-		return;
-	}
-	else {
-		G_Printf("^3No special match found in .info for %s. Looking in arena files.\n",mapname);
-	}
-	// If not, look in the arena files for the special condition.
-
-	arenainfo = G_GetArenaInfoByMap(mapname);
-	if ( !arenainfo ) {
-		G_Printf("^4No arena info found for the map %s. No special match found.\n",mapname);
-		Q_strncpyz( g_mapInfoSpecial.string, "", sizeof(g_mapInfoSpecial.string) );
-		return;
-	}
-	Q_strncpyz( specialMatch, Info_ValueForKey( arenainfo, "special" ), sizeof(specialMatch) );
-	if (!Q_strequal(specialMatch, "")) {
-		G_Printf("^2Special match found in .info for %s: ",mapname);
-	}
-	// The allowed values for Special. Anything else, we empty the cvar.
-	if (Q_strequal(specialMatch, "training")) {
-		G_Printf("^7Tutorial Level.\n");
-	}
-	else if (Q_strequal(specialMatch, "instantGib")) {
-		G_Printf("^7Instantgib level.\n");
-	}
-	else if (Q_strequal(specialMatch, "singleWeaponGA")) {
-		G_Printf("^7Single Weapon: Gauntlet level.\n");
-	}
-	else if (Q_strequal(specialMatch, "singleWeaponMG")) {
-		G_Printf("^7Single Weapon: Machinegun level.\n");
-	}
-	else if (Q_strequal(specialMatch, "singleWeaponSG")) {
-		G_Printf("^7Single Weapon: Shotgun level.\n");
-	}
-	else if (Q_strequal(specialMatch, "singleWeaponGL")) {
-		G_Printf("^7Single Weapon: Grenade Launcher level.\n");
-	}
-	else if (Q_strequal(specialMatch, "singleWeaponRL")) {
-		G_Printf("^7Single Weapon: Rocket Launcher level.\n");
-	}
-	else if (Q_strequal(specialMatch, "singleWeaponLG")) {
-		G_Printf("^7Single Weapon: Lightning Gun level.\n");
-	}
-	else if (Q_strequal(specialMatch, "singleWeaponRG")) {
-		G_Printf("^7Single Weapon: Railgun level.\n");
-	}
-	else if (Q_strequal(specialMatch, "singleWeaponPG")) {
-		G_Printf("^7Single Weapon: Plasma Gun level.\n");
-	}
-	else if (Q_strequal(specialMatch, "singleWeaponBFG")) {
-		G_Printf("^7Single Weapon: BFG level.\n");
-	}
-	else if (Q_strequal(specialMatch, "singleWeaponNG")) {
-		G_Printf("^7Single Weapon: Nailgun level.\n");
-	}
-	else if (Q_strequal(specialMatch, "singleWeaponCG")) {
-		G_Printf("^7Single Weapon: Chaingun level.\n");
-	}
-	else if (Q_strequal(specialMatch, "singleWeaponPL")) {
-		G_Printf("^7Single Weapon: Prox Launcher level.\n");
-	}
-	else if (Q_strequal(specialMatch, "grappleMatch")) {
-		G_Printf("^7Grappling Hook rule level.\n");
-	}
-	else if (Q_strequal(specialMatch, "eliminationMode")) {
-		G_Printf("^7Elimination Mode (Fully Loaded) level.\n");
-	}
-	else if (Q_strequal(specialMatch, "vampireMode")) {
-		G_Printf("^7Vampire Mode level.\n");
-	}
-	else if (Q_strequal(specialMatch, "lowGravity")) {
-		G_Printf("^7Low Gravity level.\n");
-	}
-	else if (Q_strequal(specialMatch, "final")) {
-		G_Printf("^7Final Boss level.\n");
-	}
-	else {
-		G_Printf("^4No special match found in arena files for %s. It's a normal match.\n",mapname);
-		Q_strncpyz( g_mapInfoSpecial.string, "", sizeof(g_mapInfoSpecial.string) );
-		return;
-	}
-	Q_strncpyz( g_mapInfoSpecial.string, specialMatch, sizeof(g_mapInfoSpecial.string) );
-	return;
-}
-/*
-===================
-G_SetMapBots
-
-Sets the map's bot list. Saves it in a dedicated cvar.
-===================
- */
-void G_SetMapBots (char *mapname) {
-	const char *arenainfo;
-	char botList[256];
-
-	// If the bot list is present in the .info file, use that.
-	Q_strncpyz( botList, g_mapInfoBotList.string, sizeof(botList) );
-	// The allowed values for Bots. Anything else, we look for arena files.
-	if (Q_strequal(botList, "")) {
-		G_Printf("^3Empty bot list in .info for %s. Trying arena files.\n",mapname);
-	}
-	else {
-		G_Printf("^2Bot list found in .info for %s: ^7%s.\n",mapname,botList);
-		return;
-	}
-	// If not, look in the arena files for the bot list.
-
-	arenainfo = G_GetArenaInfoByMap(mapname);
-	if ( !arenainfo ) {
-		G_Printf("^4No arena info found for the map %s. No bot list found.\n",mapname);
-		Q_strncpyz( g_mapInfoBotList.string, "", sizeof(g_mapInfoBotList.string) );
-		return;
-	}
-	Q_strncpyz( botList, Info_ValueForKey( arenainfo, "bots" ), sizeof(botList) );
-	// The allowed values for Bots. Anything else, we empty the cvar.
-	if (Q_strequal(botList, "")) {
-		G_Printf("^3Empty bot list in arena files for %s.\n",mapname);
-		Q_strncpyz( g_mapInfoBotList.string, "", sizeof(g_mapInfoBotList.string) );
-		return;
-	}
-	G_Printf("^2Bot list found in arena files for %s: ^7%s.\n",mapname,botList);
-	Q_strncpyz( g_mapInfoBotList.string, botList, sizeof(g_mapInfoBotList.string) );
-	return;
-}
 /* /Neon_Knight */
-

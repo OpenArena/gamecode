@@ -419,11 +419,10 @@ extern sfxHandle_t	MenuField_Key( menufield_s* m, int* key );
 //
 void UI_Report( void );
 void UI_Load( void );
-void UI_LoadMenus(const char *menuFile);
+void UI_LoadMenus(const char *menuFile, qboolean reset);
 void _UI_SetActiveMenu( uiMenuCommand_t menu );
 int UI_AdjustTimeByGame(int time);
-void UI_ShowPostGame(void);
-void UI_ShowPostGameNHS(void);
+void UI_ShowPostGame(qboolean newHigh);
 void UI_ClearScores( void );
 void UI_LoadArenas(void);
 void UI_LoadArenasIntoMapList(void);
@@ -1229,12 +1228,6 @@ void UI_NetworkOptionsMenu_Cache( void );
 void UI_NetworkOptionsMenu( void );
 
 //
-// ui_hud.c
-//
-void UI_HUDOptionsMenu_Cache( void );
-void UI_HUDOptionsMenu( void );
-
-//
 // ui_gameinfo.c
 //
 typedef enum {
@@ -1324,12 +1317,7 @@ typedef struct postGameInfo_s {
 
 /* Neon_Knight: Useful check in order to have code consistency. */
 qboolean UI_IsATeamGametype(int check);	/* Whether the gametype is team-based or not.*/
-qboolean UI_IsADMBasedGametype(int check);	/* Whether the gametype is NOT team-based or not.*/
 qboolean UI_UsesTeamFlags(int check);	/* Whether the gametype uses the red and blue flags. */
 qboolean UI_UsesTheWhiteFlag(int check);	/* Whether the gametype uses the neutral flag. */
 qboolean UI_IsARoundBasedGametype(int check);	/* Whether the gametype uses the neutral flag. */
-qboolean UI_GametypeUsesFragLimit(int check);	/* Whether the gametype uses a frag-based scoring system. */
-qboolean UI_GametypeUsesCaptureLimit(int check);	/* Whether the gametype uses a capture-based scoring system. */
-int UI_GetGametype(void);	/* Returns the current gametype */
-int UI_GetTimeToBeat(int game); /* Returns the time to beat for the current game */
 /* /Neon_Knight */
