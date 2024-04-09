@@ -35,8 +35,5 @@ int BotGetTeamMateTaskPreference(bot_state_t *bs, int teammate);
 void BotSetTeamMateTaskPreference(bot_state_t *bs, int teammate, int preference);
 void BotVoiceChat(bot_state_t *bs, int toclient, char *voicechat);
 void BotVoiceChatOnly(bot_state_t *bs, int toclient, char *voicechat);
-qboolean BotIsOnAttackingTeam(bot_state_t *bs);
-qboolean BotIsFlagOnOurBase(bot_state_t *bs);
-qboolean BotIsEnemyFlagOnEnemyBase(bot_state_t *bs);
 
 

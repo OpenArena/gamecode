@@ -54,22 +54,22 @@ extern vmCvar_t ui_1fctf_friendly;
 extern vmCvar_t ui_overload_capturelimit;
 extern vmCvar_t ui_overload_timelimit;
 extern vmCvar_t ui_overload_friendly;
-extern vmCvar_t ui_harvester_fraglimit;
+extern vmCvar_t ui_harvester_capturelimit;
 extern vmCvar_t ui_harvester_timelimit;
 extern vmCvar_t ui_harvester_friendly;
 extern vmCvar_t ui_elimination_capturelimit;
 extern vmCvar_t ui_elimination_timelimit;
 extern vmCvar_t ui_ctf_elimination_capturelimit;
 extern vmCvar_t ui_ctf_elimination_timelimit;
-extern vmCvar_t ui_lms_capturelimit;
+extern vmCvar_t ui_lms_fraglimit;
 extern vmCvar_t ui_lms_timelimit;
 extern vmCvar_t ui_dd_capturelimit;
 extern vmCvar_t ui_dd_timelimit;
 extern vmCvar_t ui_dd_friendly;
-extern vmCvar_t ui_dom_fraglimit;
+extern vmCvar_t ui_dom_capturelimit;
 extern vmCvar_t ui_dom_timelimit;
 extern vmCvar_t ui_dom_friendly;
-extern vmCvar_t ui_pos_fraglimit;
+extern vmCvar_t ui_pos_scorelimit;
 extern vmCvar_t ui_pos_timelimit;
 extern vmCvar_t ui_arenasFile;
 extern vmCvar_t ui_botsFile;
@@ -91,7 +91,6 @@ extern vmCvar_t ui_brassTime;
 extern vmCvar_t ui_drawCrosshair;
 extern vmCvar_t ui_drawCrosshairNames;
 extern vmCvar_t ui_marks;
-extern vmCvar_t ui_muzzleFlashStyle;
 extern vmCvar_t ui_server1;
 extern vmCvar_t ui_server2;
 extern vmCvar_t ui_server3;
@@ -115,9 +114,6 @@ extern vmCvar_t ui_setupchecked;
 extern vmCvar_t ui_browserOnlyHumans;
 extern vmCvar_t ui_developer;
 extern vmCvar_t ui_browserHidePrivate;
-extern vmCvar_t ui_botSkill;
-extern vmCvar_t ui_physicsRuleset;
-extern vmCvar_t ui_weaponsRuleset;
 
 //
 // ui_qmenu.c
@@ -836,12 +832,6 @@ void UI_NetworkOptionsMenu_Cache( void );
 void UI_NetworkOptionsMenu( void );
 
 //
-// ui_hud.c
-//
-void UI_HUDOptionsMenu_Cache( void );
-void UI_HUDOptionsMenu( void );
-
-//
 // ui_gameinfo.c
 //
 typedef enum {
@@ -912,10 +902,7 @@ void UI_RankStatusMenu( void );
 
 /* Neon_Knight: Useful check in order to have code consistency. */
 qboolean UI_IsATeamGametype(int check);	/* Whether the gametype is team-based or not.*/
-qboolean UI_IsADMBasedGametype(int check);	/* Whether the gametype is NOT team-based or not.*/
 qboolean UI_UsesTeamFlags(int check);	/* Whether the gametype uses the red and blue flags. */
 qboolean UI_UsesTheWhiteFlag(int check);	/* Whether the gametype uses the neutral flag. */
 qboolean UI_IsARoundBasedGametype(int check);	/* Whether the gametype uses the neutral flag. */
-qboolean UI_GametypeUsesFragLimit(int check);	/* Whether the gametype uses a frag-based scoring system. */
-qboolean UI_GametypeUsesCaptureLimit(int check);	/* Whether the gametype uses a capture-based scoring system. */
 /* /Neon_Knight */

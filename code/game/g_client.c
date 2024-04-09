@@ -1,5 +1,5 @@
 /*
-===========================================================================weaponarena
+===========================================================================
 Copyright (C) 1999-2005 Id Software, Inc.
 
 This file is part of Quake III Arena source code.
@@ -1087,15 +1087,13 @@ void ClientUserinfoChanged( int clientNum ) {
 	client->pers.cmdTimeNudge = atoi( s );
 
 	// see if the player wants to debug the backward reconciliation
-	if (g_developer.integer) {
-		s = Info_ValueForKey( userinfo, "cg_debugDelag" );
-		if ( !atoi( s ) ) {
-			client->pers.debugDelag = qfalse;
-		}
-		else {
-			client->pers.debugDelag = qtrue;
-		}
+	/*s = Info_ValueForKey( userinfo, "cg_debugDelag" );
+	if ( !atoi( s ) ) {
+		client->pers.debugDelag = qfalse;
 	}
+	else {
+		client->pers.debugDelag = qtrue;
+	}*/
 
 	// see if the player is simulating incoming latency
 	//s = Info_ValueForKey( userinfo, "cg_latentSnaps" );
@@ -1506,7 +1504,7 @@ void ClientBegin( int clientNum ) {
 	countFree = TeamCount(-1,TEAM_FREE);
 	countRed = TeamCount(-1,TEAM_RED);
 	countBlue = TeamCount(-1,TEAM_BLUE);
-	if(G_IsADMBasedGametype(g_gametype.integer))
+	if(!G_IsATeamGametype(g_gametype.integer))
 	{
 		if(countFree>level.teamSize)
 			level.teamSize=countFree;
@@ -1782,7 +1780,23 @@ void ClientSpawn(gentity_t *ent) {
 
 	client->ps.clientNum = index;
 
-	if(G_IsARoundBasedGametype(g_gametype.integer) || g_elimination_allgametypes.integer)
+	if(!G_IsARoundBasedGametype(g_gametype.integer) && !g_elimination_allgametypes.integer)
+	{
+		client->ps.stats[STAT_WEAPONS] = ( 1 << WP_MACHINEGUN );
+		if ( g_gametype.integer == GT_TEAM ) {
+			client->ps.ammo[WP_MACHINEGUN] = 50;
+		} else {
+			client->ps.ammo[WP_MACHINEGUN] = 100;
+		}
+
+		client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_GAUNTLET );
+		client->ps.ammo[WP_GAUNTLET] = -1;
+		client->ps.ammo[WP_GRAPPLING_HOOK] = -1;
+
+		// health will count down towards max_health
+		ent->health = client->ps.stats[STAT_HEALTH] = client->ps.stats[STAT_MAX_HEALTH] + 25;
+	}
+	else
 	{
 		client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_GAUNTLET );
 		client->ps.ammo[WP_GAUNTLET] = -1;
@@ -1819,40 +1833,21 @@ void ClientSpawn(gentity_t *ent) {
 			client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_BFG );
 			client->ps.ammo[WP_BFG] = g_elimination_bfg.integer;
 		}
-		// Classic Mode On prevents the TA weapons from being added to the inventory.
-		if (g_classicMode.integer <= 0) {
-			if (g_elimination_nail.integer > 0) {
-				client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_NAILGUN );
-				client->ps.ammo[WP_NAILGUN] = g_elimination_nail.integer;
-			}
-			if (g_elimination_mine.integer > 0) {
-				client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_PROX_LAUNCHER );
-				client->ps.ammo[WP_PROX_LAUNCHER] = g_elimination_mine.integer;
-			}
-			if (g_elimination_chain.integer > 0) {
-				client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_CHAINGUN );
-				client->ps.ammo[WP_CHAINGUN] = g_elimination_chain.integer;
-			}
+		if (g_elimination_nail.integer > 0) {
+			client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_NAILGUN );
+			client->ps.ammo[WP_NAILGUN] = g_elimination_nail.integer;
+		}
+		if (g_elimination_mine.integer > 0) {
+			client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_PROX_LAUNCHER );
+			client->ps.ammo[WP_PROX_LAUNCHER] = g_elimination_mine.integer;
+		}
+		if (g_elimination_chain.integer > 0) {
+			client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_CHAINGUN );
+			client->ps.ammo[WP_CHAINGUN] = g_elimination_chain.integer;
 		}
 
 		ent->health = client->ps.stats[STAT_ARMOR] = g_elimination_startArmor.integer; //client->ps.stats[STAT_MAX_HEALTH]*2;
 		ent->health = client->ps.stats[STAT_HEALTH] = g_elimination_startHealth.integer; //client->ps.stats[STAT_MAX_HEALTH]*2;	
-	}
-	else
-	{
-		client->ps.stats[STAT_WEAPONS] = ( 1 << WP_MACHINEGUN );
-		if ( g_gametype.integer == GT_TEAM ) {
-			client->ps.ammo[WP_MACHINEGUN] = 50;
-		} else {
-			client->ps.ammo[WP_MACHINEGUN] = 100;
-		}
-
-		client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_GAUNTLET );
-		client->ps.ammo[WP_GAUNTLET] = -1;
-		client->ps.ammo[WP_GRAPPLING_HOOK] = -1;
-
-		// health will count down towards max_health
-		ent->health = client->ps.stats[STAT_HEALTH] = client->ps.stats[STAT_MAX_HEALTH] + 25;
 	}
 
 	if(g_instantgib.integer)
@@ -1865,23 +1860,12 @@ void ClientSpawn(gentity_t *ent) {
 		}
 	}
 
-	// Weapon Arena handling: we give the correspondent weapon fully loaded
-	// unless the selected weaponArenaWeapon is the Gauntlet or the Grappling Hook;
-	// in the latter case we give both weapons. Players should always carry a damaging weapon.
-	if (g_weaponArena.integer) {
-		client->ps.stats[STAT_WEAPONS] |= ( 1 << G_GetWeaponArenaWeapon(g_weaponArenaWeapon.integer) );
-		if (G_GetWeaponArenaWeapon(g_weaponArenaWeapon.integer) == WP_GAUNTLET ||
-				G_GetWeaponArenaWeapon(g_weaponArenaWeapon.integer) == WP_GRAPPLING_HOOK) {
-			client->ps.ammo[G_GetWeaponArenaWeapon(g_weaponArenaWeapon.integer)] = -1;
-		} else {
-			client->ps.ammo[G_GetWeaponArenaWeapon(g_weaponArenaWeapon.integer)] = 999;
-		}
+	if (g_rockets.integer) {
+		client->ps.stats[STAT_WEAPONS] = ( 1 << WP_ROCKET_LAUNCHER );
+		client->ps.ammo[WP_ROCKET_LAUNCHER] = 999;
 	}
 
-	// With g_grapple, g_weaponArena on and weaponArenaWeapon Grapple or g_weaponArena 2,
-	// we add the Grappling Hook.
-	if (g_grapple.integer || (g_weaponArena.integer > 1) ||
-			((g_weaponArena.integer == 1) && (g_weaponArenaWeapon.integer == WP_GRAPPLING_HOOK))) {
+	if (g_grapple.integer) {
 		client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_GRAPPLING_HOOK );
 	}
 

@@ -130,10 +130,9 @@ void CG_LoadingClient( int clientNum ) {
 	Q_strncpyz( personality, Info_ValueForKey( info, "n" ), sizeof(personality) );
 	Q_CleanStr( personality );
 
-	// We don't use character announcements, so this prevents console spamming.
-	/*if( cgs.gametype == GT_SINGLE_PLAYER ) {
+	if( cgs.gametype == GT_SINGLE_PLAYER ) {
 		trap_S_RegisterSound( va( "sound/player/announce/%s.wav", personality ), qtrue );
-	}*/
+	}
 
 	CG_LoadingString( personality );
 }
@@ -294,23 +293,21 @@ void CG_DrawInformation( void ) {
 	}
 
 	/* Fraglimits are restricted to non-team-based games and Team Deathmatch */
-	if (CG_GametypeUsesFragLimit(cgs.gametype)) {
+	if (!CG_IsATeamGametype(cgs.gametype) || cgs.gametype == GT_TEAM ) {
 		value = atoi( Info_ValueForKey( info, "fraglimit" ) );
 		if ( value ) {
 			UI_DrawProportionalString( 320, y, va( "fraglimit %i", value ),
 				UI_CENTER|UI_SMALLFONT|UI_DROPSHADOW, colorWhite );
 			y += PROP_HEIGHT;
 		}
-		return;
 	}
-	if (CG_GametypeUsesCaptureLimit(cgs.gametype)) {
+	else {
 		value = atoi( Info_ValueForKey( info, "capturelimit" ) );
 		if ( value ) {
 			UI_DrawProportionalString( 320, y, va( "capturelimit %i", value ),
 				UI_CENTER|UI_SMALLFONT|UI_DROPSHADOW, colorWhite );
 			y += PROP_HEIGHT;
 		}
-		return;
 	}
 }
 

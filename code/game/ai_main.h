@@ -30,6 +30,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  *
  *****************************************************************************/
 
+//#define DEBUG
 #define CTF
 
 #define MAX_ITEMS					256
@@ -58,10 +59,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define LTG_MAKELOVE_UNDER			14
 #define LTG_MAKELOVE_ONTOP			15
 //Long term DD goals
-#define LTG_HOLDPOINTA				16	//Take/Defend point A
-#define LTG_HOLDPOINTB				17	//Take/Defend point B
-//Long term DOM goals
-#define LTG_HOLDDOMPOINT			19	//Defend a DOM point
+#define LTG_POINTA				16	//Take/Defend point A
+#define LTG_POINTB				17	//Take/Defend point B
+//Long term DD goals
+#define LTG_DOMROAM                             18      //Go for a non taken point.
+#define LTG_DOMHOLD                             19      //Pick a point and hold it.
 //some goal dedication times
 #define TEAM_HELP_TIME				60	//1 minute teamplay help time
 #define TEAM_ACCOMPANY_TIME			600	//10 minutes teamplay accompany time
@@ -78,10 +80,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define CTF_RETURNFLAG_TIME			180	//3 minutes to return the flag
 #define CTF_ROAM_TIME				60	//1 minute ctf roam time
 //Time for Double Domination tasks
-#define TEAM_HOLDPOINTA_TIME		600
-#define TEAM_HOLDPOINTB_TIME		600
-//Time for Domination tasks
-#define TEAM_HOLDDOMPOINT_TIME		600
+#define DD_POINTA				600
+#define DD_POINTB				600
 //patrol flags
 #define PATROL_LOOP					1
 #define PATROL_REVERSE				2
@@ -97,8 +97,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define PRESENCE_CROUCH				4
 //
 #define MAX_PROXMINES				64
-// time the selected chat takes to type in
-#define BOTCHATTIME					2.0		//(float) trap_BotChatLength(bs->cs) * 30 / cpm;
 
 //check points
 typedef struct bot_waypoint_s
@@ -247,7 +245,6 @@ typedef struct bot_state_s
 	float teamgoal_time;							//time to stop helping team mate
 	float teammatevisible_time;						//last time the team mate was NOT visible
 	int teamtaskpreference;							//team task preference
-	int currentPoint;								//current DD/DOM point the bot cares about
 	// last ordered team goal
 	int lastgoal_decisionmaker;
 	int lastgoal_ltgtype;

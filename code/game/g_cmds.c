@@ -250,7 +250,14 @@ AttackingTeamMessage
 ==================
 */
 void AttackingTeamMessage( gentity_t *ent ) {
-	trap_SendServerCommand( ent-g_entities, va("attackingteam %i", G_GetAttackingTeam()));
+	int team;
+	if ( (level.eliminationSides+level.roundNumber)%2 == 0 ) {
+		team = TEAM_RED;
+	}
+	else {
+		team = TEAM_BLUE;
+	}
+	trap_SendServerCommand( ent-g_entities, va("attackingteam %i", team));
 }
 
 /*
@@ -655,17 +662,7 @@ void Cmd_LevelShot_f( gentity_t *ent ) {
 	trap_SendServerCommand( ent-g_entities, "clientLevelShot" );
 }
 
-void Cmd_DropRune_f( gentity_t *ent ) {
-	if (!ent) {
-		return;
-	}
-	// If not in an allowed gametype, nothing happens.
-	if (!G_GametypeUsesRunes(g_gametype.integer)) {
-		return;
-	}
-	// Toss the rune.
-	TossClientPersistantPowerups(ent);
-}
+
 /*
 ==================
 Cmd_LevelShot_f
@@ -1216,7 +1213,7 @@ void G_Say( gentity_t *ent, gentity_t *target, int mode, const char *chatText ) 
 		return;
 	}
 
-	if ( G_IsADMBasedGametype(g_gametype.integer) && mode == SAY_TEAM ) {
+	if ( !G_IsATeamGametype(g_gametype.integer) && mode == SAY_TEAM ) {
 		mode = SAY_ALL;
 	}
 
@@ -1387,7 +1384,7 @@ void G_Voice( gentity_t *ent, gentity_t *target, int mode, const char *id, qbool
 	int			j;
 	gentity_t	*other;
 
-	if ( G_IsADMBasedGametype(g_gametype.integer) && mode == SAY_TEAM ) {
+	if ( !G_IsATeamGametype(g_gametype.integer) && mode == SAY_TEAM ) {
 		mode = SAY_ALL;
 	}
 
@@ -1854,10 +1851,6 @@ void Cmd_CallVote_f( gentity_t *ent ) {
 		Com_sprintf( level.voteDisplayString, sizeof( level.voteDisplayString ), "%s", "Next map?" );
 	} else if ( Q_strequal( arg1, "fraglimit" ) ) {
 		i = atoi(arg2);
-		if(g_autoGameLimits.integer) {
-			trap_SendServerCommand( ent-g_entities, "print \"Cannot set fraglimit while g_autoGameLimits is active.\n\"" );
-			return;
-		}
 		if(!allowedFraglimit(i)) {
 			trap_SendServerCommand( ent-g_entities, "print \"Cannot set fraglimit.\n\"" );
 			return;
@@ -1873,10 +1866,6 @@ void Cmd_CallVote_f( gentity_t *ent ) {
 	} 
 	else if ( Q_strequal( arg1, "timelimit" ) ) {
 		i = atoi(arg2);
-		if(g_autoGameLimits.integer) {
-			trap_SendServerCommand( ent-g_entities, "print \"Cannot set timelimit while g_autoGameLimits is active.\n\"" );
-			return;
-		}
 		if(!allowedTimelimit(i)) {
 			trap_SendServerCommand( ent-g_entities, "print \"Cannot set timelimit.\n\"" );
 			return;
@@ -1920,7 +1909,7 @@ void Cmd_CallVote_f( gentity_t *ent ) {
 		Com_sprintf( level.voteDisplayString, sizeof( level.voteDisplayString ), "Kick %s?" , level.clients[i].pers.netname );
 	} 
 	else if ( Q_strequal( arg1, "shuffle" ) ) {
-		if(G_IsADMBasedGametype(g_gametype.integer)) { //Not a team game
+		if(!G_IsATeamGametype(g_gametype.integer)) { //Not a team game
 			trap_SendServerCommand( ent-g_entities, "print \"Can only be used in team games.\n\"" );
 			return;
 		}
@@ -2321,11 +2310,8 @@ commands_t cmds[ ] =
 	//KK-OAX
 	{ "freespectator", CMD_NOTEAM, StopFollowing },
 	{ "getmappage", 0, Cmd_GetMappage_f },
-	{ "gc", 0, Cmd_GameCommand_f },
-	
-	/* Neon_Knight: Toss current rune*/
-	{ "droprune", 0, Cmd_DropRune_f },
-	/* /Neon_Knight */
+	{ "gc", 0, Cmd_GameCommand_f }
+
 };
 
 static int numCmds = sizeof( cmds ) / sizeof( cmds[ 0 ] );

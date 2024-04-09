@@ -35,9 +35,3 @@ extern int notleader[MAX_CLIENTS];
 int BotMatchMessage(bot_state_t *bs, char *message);
 void BotPrintTeamGoal(bot_state_t *bs);
 
-// Neon_Knight: Used for DOM point assignment
-int BotGetDominationPoint(bot_state_t *bs);
-void BotSetDominationPoint(bot_state_t *bs, int controlPoint);
-void BotSetOwnDominationPoint(bot_state_t *bs);
-
-void BotMatch_AcknowledgeOrder(bot_state_t *bs, bot_match_t *match, int ltgType, float teamGoalTime);

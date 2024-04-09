@@ -166,12 +166,28 @@ void TeamMain_MenuInit( void ) {
 	gametype = atoi( Info_ValueForKey( info,"g_gametype" ) );
 			      
 	// set initial states
-	if (UI_IsATeamGametype(gametype)) {
-		s_teammain.joingame.string           = "AUTO JOIN GAME";
-	}
-	else {
+	switch( gametype ) {
+	case GT_SINGLE_PLAYER:
+	case GT_FFA:
+	case GT_LMS:
+	case GT_POSSESSION:
+	case GT_TOURNAMENT:
 		s_teammain.joinred.generic.flags  |= QMF_GRAYED;
 		s_teammain.joinblue.generic.flags |= QMF_GRAYED;
+		break;
+
+	default:
+	case GT_TEAM:
+	case GT_CTF:
+	case GT_1FCTF:
+	case GT_OBELISK:
+	case GT_HARVESTER:
+	case GT_ELIMINATION:
+	case GT_CTF_ELIMINATION:
+	case GT_DOUBLE_D:
+	case GT_DOMINATION:
+		s_teammain.joingame.string           = "AUTO JOIN GAME";
+		break;
 	}
 
 	Menu_AddItem( &s_teammain.menu, (void*) &s_teammain.frame );

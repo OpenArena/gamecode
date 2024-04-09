@@ -151,7 +151,7 @@ static void CG_AccUp_f(void) {
 
 #ifdef MISSIONPACK
 extern menuDef_t *menuScoreboard;
-void setMenuCount(int count);
+void Menu_Reset(void); // FIXME: add to right include file
 
 static void CG_LoadHud_f(void) {
 	char buff[1024];
@@ -159,7 +159,7 @@ static void CG_LoadHud_f(void) {
 	memset(buff, 0, sizeof (buff));
 
 	String_Init();
-	setMenuCount(0);
+	Menu_Reset();
 
 	trap_Cvar_VariableStringBuffer("cg_hudFiles", buff, sizeof (buff));
 	hudSet = buff;
@@ -508,8 +508,7 @@ CG_StartOrbit_f
  */
 
 static void CG_StartOrbit_f(void) {
-	// If not in code development mode, exit.
-	if (!cg_developer.integer && !cg_debugOrbit.integer) {
+	if (!cg_developer.integer) {
 		return;
 	}
 	if (cg_cameraOrbit.value != 0) {

@@ -99,38 +99,35 @@ typedef struct {
 	int			cvarFlags;
 } cvarTable_t;
 
-vmCvar_t ui_ffa_scorelimit;
+vmCvar_t ui_ffa_fraglimit;
 vmCvar_t ui_ffa_timelimit;
-vmCvar_t ui_tourney_scorelimit;
+vmCvar_t ui_tourney_fraglimit;
 vmCvar_t ui_tourney_timelimit;
-vmCvar_t ui_team_scorelimit;
+vmCvar_t ui_team_fraglimit;
 vmCvar_t ui_team_timelimit;
 vmCvar_t ui_team_friendly;
-vmCvar_t ui_ctf_scorelimit;
+vmCvar_t ui_ctf_capturelimit;
 vmCvar_t ui_ctf_timelimit;
 vmCvar_t ui_ctf_friendly;
-vmCvar_t ui_1fctf_scorelimit;
+vmCvar_t ui_1fctf_capturelimit;
 vmCvar_t ui_1fctf_timelimit;
 vmCvar_t ui_1fctf_friendly;
-vmCvar_t ui_overload_scorelimit;
+vmCvar_t ui_overload_capturelimit;
 vmCvar_t ui_overload_timelimit;
 vmCvar_t ui_overload_friendly;
-vmCvar_t ui_harvester_scorelimit;
+vmCvar_t ui_harvester_capturelimit;
 vmCvar_t ui_harvester_timelimit;
 vmCvar_t ui_harvester_friendly;
-vmCvar_t ui_elimination_scorelimit;
+vmCvar_t ui_elimination_capturelimit;
 vmCvar_t ui_elimination_timelimit;
-vmCvar_t ui_elimination_roundtimelimit;
-vmCvar_t ui_ctf_elimination_scorelimit;
+vmCvar_t ui_ctf_elimination_capturelimit;
 vmCvar_t ui_ctf_elimination_timelimit;
-vmCvar_t ui_ctf_elimination_roundtimelimit;
-vmCvar_t ui_lms_scorelimit;
+vmCvar_t ui_lms_fraglimit;
 vmCvar_t ui_lms_timelimit;
-vmCvar_t ui_lms_roundtimelimit;
-vmCvar_t ui_dd_scorelimit;
+vmCvar_t ui_dd_capturelimit;
 vmCvar_t ui_dd_timelimit;
 vmCvar_t ui_dd_friendly;
-vmCvar_t ui_dom_scorelimit;
+vmCvar_t ui_dom_capturelimit;
 vmCvar_t ui_dom_timelimit;
 vmCvar_t ui_dom_friendly;
 vmCvar_t ui_pos_scorelimit;
@@ -155,7 +152,6 @@ vmCvar_t ui_brassTime;
 vmCvar_t ui_drawCrosshair;
 vmCvar_t ui_drawCrosshairNames;
 vmCvar_t ui_marks;
-vmCvar_t ui_muzzleFlashStyle;
 vmCvar_t ui_server1;
 vmCvar_t ui_server2;
 vmCvar_t ui_server3;
@@ -179,60 +175,54 @@ vmCvar_t        ui_browserOnlyHumans;
 vmCvar_t        ui_setupchecked;
 vmCvar_t ui_developer;
 vmCvar_t ui_browserHidePrivate;
-vmCvar_t ui_botSkill;
-vmCvar_t ui_physicsRuleset;
-vmCvar_t ui_weaponsRuleset;
 
 // bk001129 - made static to avoid aliasing.
 static cvarTable_t cvarTable[] = {
-	{ &ui_ffa_scorelimit, "ui_ffa_scorelimit", GT_FFA_DEFAULT_SCORELIMIT, CVAR_ARCHIVE },
-	{ &ui_ffa_timelimit, "ui_ffa_timelimit", GT_FFA_DEFAULT_TIMELIMIT, CVAR_ARCHIVE },
+	{ &ui_ffa_fraglimit, "ui_ffa_fraglimit", "20", CVAR_ARCHIVE },
+	{ &ui_ffa_timelimit, "ui_ffa_timelimit", "0", CVAR_ARCHIVE },
 
-	{ &ui_tourney_scorelimit, "ui_tourney_scorelimit", GT_TOURNEY_DEFAULT_SCORELIMIT, CVAR_ARCHIVE },
-	{ &ui_tourney_timelimit, "ui_tourney_timelimit", GT_TOURNEY_DEFAULT_TIMELIMIT, CVAR_ARCHIVE },
+	{ &ui_tourney_fraglimit, "ui_tourney_fraglimit", "0", CVAR_ARCHIVE },
+	{ &ui_tourney_timelimit, "ui_tourney_timelimit", "15", CVAR_ARCHIVE },
 
-	{ &ui_team_scorelimit, "ui_team_scorelimit", GT_TEAM_DEFAULT_SCORELIMIT, CVAR_ARCHIVE },
-	{ &ui_team_timelimit, "ui_team_timelimit", GT_TEAM_DEFAULT_TIMELIMIT, CVAR_ARCHIVE },
+	{ &ui_team_fraglimit, "ui_team_fraglimit", "0", CVAR_ARCHIVE },
+	{ &ui_team_timelimit, "ui_team_timelimit", "20", CVAR_ARCHIVE },
 	{ &ui_team_friendly, "ui_team_friendly",  "1", CVAR_ARCHIVE },
 
-	{ &ui_ctf_scorelimit, "ui_ctf_scorelimit", GT_CTF_DEFAULT_SCORELIMIT, CVAR_ARCHIVE },
-	{ &ui_ctf_timelimit, "ui_ctf_timelimit", GT_CTF_DEFAULT_TIMELIMIT, CVAR_ARCHIVE },
+	{ &ui_ctf_capturelimit, "ui_ctf_capturelimit", "8", CVAR_ARCHIVE },
+	{ &ui_ctf_timelimit, "ui_ctf_timelimit", "30", CVAR_ARCHIVE },
 	{ &ui_ctf_friendly, "ui_ctf_friendly",  "0", CVAR_ARCHIVE },
 
-	{ &ui_1fctf_scorelimit, "ui_1fctf_scorelimit", GT_1FCTF_DEFAULT_SCORELIMIT, CVAR_ARCHIVE },
-	{ &ui_1fctf_timelimit, "ui_1fctf_timelimit", GT_1FCTF_DEFAULT_TIMELIMIT, CVAR_ARCHIVE },
+	{ &ui_1fctf_capturelimit, "ui_1fctf_capturelimit", "8", CVAR_ARCHIVE },
+	{ &ui_1fctf_timelimit, "ui_1fctf_timelimit", "30", CVAR_ARCHIVE },
 	{ &ui_1fctf_friendly, "ui_1fctf_friendly",  "0", CVAR_ARCHIVE },
 
-	{ &ui_overload_scorelimit, "ui_overload_scorelimit", GT_OBELISK_DEFAULT_SCORELIMIT, CVAR_ARCHIVE },
-	{ &ui_overload_timelimit, "ui_overload_timelimit", GT_OBELISK_DEFAULT_TIMELIMIT, CVAR_ARCHIVE },
+	{ &ui_overload_capturelimit, "ui_overload_capturelimit", "8", CVAR_ARCHIVE },
+	{ &ui_overload_timelimit, "ui_overload_timelimit", "30", CVAR_ARCHIVE },
 	{ &ui_overload_friendly, "ui_overload_friendly",  "0", CVAR_ARCHIVE },
 
-	{ &ui_harvester_scorelimit, "ui_harvester_scorelimit", GT_HARVESTER_DEFAULT_SCORELIMIT, CVAR_ARCHIVE },
-	{ &ui_harvester_timelimit, "ui_harvester_timelimit", GT_HARVESTER_DEFAULT_TIMELIMIT, CVAR_ARCHIVE },
+	{ &ui_harvester_capturelimit, "ui_harvester_capturelimit", "20", CVAR_ARCHIVE },
+	{ &ui_harvester_timelimit, "ui_harvester_timelimit", "30", CVAR_ARCHIVE },
 	{ &ui_harvester_friendly, "ui_harvester_friendly",  "0", CVAR_ARCHIVE },
 
-	{ &ui_elimination_scorelimit, "ui_elimination_scorelimit", GT_ELIMINATION_DEFAULT_SCORELIMIT, CVAR_ARCHIVE },
-	{ &ui_elimination_timelimit, "ui_elimination_timelimit", GT_ELIMINATION_DEFAULT_TIMELIMIT, CVAR_ARCHIVE },
-	{ &ui_elimination_roundtimelimit, "ui_elimination_roundtimelimit", GT_ELIMINATION_DEFAULT_ROUNDTIMELIMIT, CVAR_ARCHIVE },
+	{ &ui_elimination_capturelimit, "ui_elimination_capturelimit", "8", CVAR_ARCHIVE },
+	{ &ui_elimination_timelimit, "ui_elimination_timelimit", "20", CVAR_ARCHIVE },
 
-	{ &ui_ctf_elimination_scorelimit, "ui_ctf_elimination_scorelimit", GT_CTF_ELIMINATION_DEFAULT_SCORELIMIT, CVAR_ARCHIVE },
-	{ &ui_ctf_elimination_timelimit, "ui_ctf_elimination_timelimit", GT_CTF_ELIMINATION_DEFAULT_TIMELIMIT, CVAR_ARCHIVE },
-	{ &ui_ctf_elimination_roundtimelimit, "ui_ctf_elimination_roundtimelimit", GT_CTF_ELIMINATION_DEFAULT_ROUNDTIMELIMIT, CVAR_ARCHIVE },
+	{ &ui_ctf_elimination_capturelimit, "ui_ctf_elimination_capturelimit", "8", CVAR_ARCHIVE },
+	{ &ui_ctf_elimination_timelimit, "ui_ctf_elimination_timelimit", "30", CVAR_ARCHIVE },
 
-	{ &ui_lms_scorelimit, "ui_lms_scorelimit", GT_LMS_DEFAULT_SCORELIMIT, CVAR_ARCHIVE },
-	{ &ui_lms_timelimit, "ui_lms_timelimit", GT_LMS_DEFAULT_TIMELIMIT, CVAR_ARCHIVE },
-	{ &ui_lms_roundtimelimit, "ui_lms_roundtimelimit", GT_LMS_DEFAULT_ROUNDTIMELIMIT, CVAR_ARCHIVE },
+	{ &ui_lms_fraglimit, "ui_lms_fraglimit", "20", CVAR_ARCHIVE },
+	{ &ui_lms_timelimit, "ui_lms_timelimit", "0", CVAR_ARCHIVE },
 
-	{ &ui_dd_scorelimit, "ui_dd_scorelimit", GT_DOUBLE_D_DEFAULT_SCORELIMIT, CVAR_ARCHIVE },
-	{ &ui_dd_timelimit, "ui_dd_timelimit", GT_DOUBLE_D_DEFAULT_TIMELIMIT, CVAR_ARCHIVE },
+	{ &ui_dd_capturelimit, "ui_dd_capturelimit", "8", CVAR_ARCHIVE },
+	{ &ui_dd_timelimit, "ui_dd_timelimit", "30", CVAR_ARCHIVE },
 	{ &ui_dd_friendly, "ui_dd_friendly",  "0", CVAR_ARCHIVE },
 
-	{ &ui_dom_scorelimit, "ui_dom_scorelimit", GT_DOMINATION_DEFAULT_SCORELIMIT, CVAR_ARCHIVE },
-	{ &ui_dom_timelimit, "ui_dom_timelimit", GT_DOMINATION_DEFAULT_TIMELIMIT, CVAR_ARCHIVE },
+	{ &ui_dom_capturelimit, "ui_dom_capturelimit", "500", CVAR_ARCHIVE },
+	{ &ui_dom_timelimit, "ui_dom_timelimit", "30", CVAR_ARCHIVE },
 	{ &ui_dom_friendly, "ui_dom_friendly",  "0", CVAR_ARCHIVE },
 
-	{ &ui_pos_scorelimit, "ui_pos_scorelimit", GT_POSSESSION_DEFAULT_SCORELIMIT, CVAR_ARCHIVE },
-	{ &ui_pos_timelimit, "ui_pos_timelimit", GT_POSSESSION_DEFAULT_TIMELIMIT, CVAR_ARCHIVE },
+	{ &ui_pos_scorelimit, "ui_pos_scorelimit", "120", CVAR_ARCHIVE },
+	{ &ui_pos_timelimit, "ui_pos_timelimit", "20", CVAR_ARCHIVE },
 
 	{ &ui_arenasFile, "g_arenasFile", "", CVAR_INIT|CVAR_ROM },
 	{ &ui_botsFile, "g_botsFile", "", CVAR_INIT|CVAR_ROM },
@@ -257,7 +247,6 @@ static cvarTable_t cvarTable[] = {
 	{ &ui_drawCrosshair, "cg_drawCrosshair", "4", CVAR_ARCHIVE },
 	{ &ui_drawCrosshairNames, "cg_drawCrosshairNames", "1", CVAR_ARCHIVE },
 	{ &ui_marks, "cg_marks", "1", CVAR_ARCHIVE },
-	{ &ui_muzzleFlashStyle, "cg_muzzleFlashStyle", "1", CVAR_ARCHIVE },
 
 	{ &ui_server1, "server1", "", CVAR_ARCHIVE },
 	{ &ui_server2, "server2", "", CVAR_ARCHIVE },
@@ -279,9 +268,6 @@ static cvarTable_t cvarTable[] = {
 	{ &ui_setupchecked, "ui_setupchecked", "0", CVAR_ARCHIVE },
 	{ &ui_developer, "developer", "0", CVAR_CHEAT },
 	{ &ui_browserHidePrivate, "ui_browserHidePrivate", "1", CVAR_ARCHIVE },
-	{ &ui_botSkill, "ui_botSkill", "1", CVAR_ARCHIVE },
-	{ &ui_physicsRuleset, "ui_physicsRuleset", "1", CVAR_ARCHIVE },
-	{ &ui_weaponsRuleset, "ui_weaponsRuleset", "1", CVAR_ARCHIVE },
 	{ NULL, "g_localTeamPref", "", 0 }
 };
 
@@ -345,16 +331,6 @@ qboolean UI_IsATeamGametype(int check) {
 }
 /*
 ===================
-UI_IsAFFAGametype
-
-Checks if the gametype is NOT a team-based game.
-===================
- */
-qboolean UI_IsADMBasedGametype(int check) {
-	return GAMETYPE_IS_NOT_A_TEAM_GAME(check);
-}
-/*
-===================
 UI_UsesTeamFlags
 
 Checks if the gametype makes use of the red and blue flags.
@@ -382,25 +358,5 @@ Checks if the gametype has a round-based system.
  */
 qboolean UI_IsARoundBasedGametype(int check) {
 	return GAMETYPE_IS_ROUND_BASED(check);
-}
-/*
-===================
-UI_GametypeUsesFragLimit
-
-Checks if the gametype has a frag-based scoring system.
-===================
- */
-qboolean UI_GametypeUsesFragLimit(int check) {
-	return GAMETYPE_USES_FRAG_LIMIT(check);
-}
-/*
-===================
-UI_GametypeUsesCaptureLimit
-
-Checks if the gametype has a frag-based scoring system.
-===================
- */
-qboolean UI_GametypeUsesCaptureLimit(int check) {
-	return GAMETYPE_USES_CAPTURE_LIMIT(check);
 }
 /* /Neon_Knight */

@@ -237,7 +237,7 @@ vmCvar_t cg_enableQ;
 
 //unlagged - client options
 vmCvar_t cg_delag;
-vmCvar_t cg_debugDelag;
+//vmCvar_t cg_debugDelag;
 //vmCvar_t cg_drawBBox;
 vmCvar_t cg_cmdTimeNudge;
 vmCvar_t sv_fps;
@@ -303,9 +303,6 @@ vmCvar_t cg_missionpackChecks;
 /* /Neon_Knight */
 /* Neon_Knight: Developer mode. */
 vmCvar_t cg_developer;
-// vmCvar_t cg_debugDD;
-vmCvar_t cg_debugOrbit;
-vmCvar_t cg_debugAccuracy;
 /* /Neon_Knight */
 
 typedef struct {
@@ -361,9 +358,9 @@ static cvarTable_t cvarTable[] = {// bk001129
 	{ &cg_kickScale, "cg_kickScale", "1.0", CVAR_ARCHIVE},
 	{ &cg_swingSpeed, "cg_swingSpeed", "0.3", CVAR_CHEAT},
 	{ &cg_animSpeed, "cg_animspeed", "1", CVAR_CHEAT},
-	{ &cg_debugAnim, "cg_debugAnim", "0", CVAR_CHEAT},
-	{ &cg_debugPosition, "cg_debugPosition", "0", CVAR_CHEAT},
-	{ &cg_debugEvents, "cg_debugEvents", "0", CVAR_CHEAT},
+	{ &cg_debugAnim, "cg_debuganim", "0", CVAR_CHEAT},
+	{ &cg_debugPosition, "cg_debugposition", "0", CVAR_CHEAT},
+	{ &cg_debugEvents, "cg_debugevents", "0", CVAR_CHEAT},
 	{ &cg_errorDecay, "cg_errordecay", "100", 0},
 	{ &cg_nopredict, "cg_nopredict", "0", 0},
 	{ &cg_noPlayerAnims, "cg_noplayeranims", "0", CVAR_CHEAT},
@@ -397,7 +394,7 @@ static cvarTable_t cvarTable[] = {// bk001129
 	{ &cg_paused, "cl_paused", "0", CVAR_ROM},
 	{ &cg_blood, "com_blood", "1", CVAR_ARCHIVE},
 	{ &cg_alwaysWeaponBar, "cg_alwaysWeaponBar", "0", CVAR_ARCHIVE}, //Elimination
-	{ &cg_hitsound, "cg_hitsound", "1", CVAR_ARCHIVE},
+	{ &cg_hitsound, "cg_hitsound", "0", CVAR_ARCHIVE},
 	{ &cg_voip_teamonly, "cg_voipTeamOnly", "1", CVAR_ARCHIVE},
 	{ &cg_voteflags, "cg_voteflags", "*", CVAR_ROM},
 	{ &cg_cyclegrapple, "cg_cyclegrapple", "1", CVAR_ARCHIVE},
@@ -447,13 +444,13 @@ static cvarTable_t cvarTable[] = {// bk001129
 	{ &cg_leiEnhancement, "cg_leiEnhancement", "0", CVAR_ARCHIVE}, // LEILEI default off (in case of whiner)
 	{ &cg_leiGoreNoise, "cg_leiGoreNoise", "0", CVAR_ARCHIVE}, // LEILEI 
 	{ &cg_leiBrassNoise, "cg_leiBrassNoise", "0", CVAR_ARCHIVE}, // LEILEI 
-	{ &cg_leiSuperGoreyAwesome, "cg_leiSuperGoreyAwesome", "0", CVAR_ARCHIVE}, // LEILEI
-	{ &cg_leiDebug, "cg_leiDebug", "0", CVAR_CHEAT}, // LEILEI 
+	{ &cg_leiSuperGoreyAwesome, "cg_leiSuperGoreyAwesome", "0", CVAR_ARCHIVE}, // LEILEI 
+	{ &cg_leiDebug, "cg_leiDebug", "0", CVAR_ARCHIVE}, // LEILEI 
 	{ &cg_leiChibi, "cg_leiChibi", "0", CVAR_CHEAT}, // LEILEI 
 	{ &cg_leiWidescreen, "cg_leiWidescreen", "1", CVAR_ARCHIVE}, // LEILEI 
 	{ &cg_deathcam, "cg_deathcam", "1", CVAR_ARCHIVE}, // LEILEI 
-	{ &cg_cameramode, "cg_cameramode", "0", CVAR_CHEAT}, // LEILEI 
-	{ &cg_cameraEyes, "cg_cameraEyes", "0", CVAR_CHEAT}, // LEILEI 
+	{ &cg_cameramode, "cg_cameramode", "0", CVAR_ARCHIVE}, // LEILEI 
+	{ &cg_cameraEyes, "cg_cameraEyes", "0", CVAR_ARCHIVE}, // LEILEI 
 	{ &cg_cameraEyes_Fwd, "cg_cameraEyes_Fwd", "3", CVAR_CHEAT}, // LEILEI 
 	{ &cg_cameraEyes_Up, "cg_cameraEyes_Up", "3", CVAR_CHEAT}, // LEILEI 
 
@@ -464,7 +461,7 @@ static cvarTable_t cvarTable[] = {// bk001129
 	{ &cg_oldPlasma, "cg_oldPlasma", "1", CVAR_ARCHIVE},
 	//unlagged - client options
 	{ &cg_delag, "cg_delag", "1", CVAR_ARCHIVE | CVAR_USERINFO},
-	{ &cg_debugDelag, "cg_debugDelag", "0", CVAR_CHEAT },
+	//	{ &cg_debugDelag, "cg_debugDelag", "0", CVAR_USERINFO | CVAR_CHEAT },
 	//	{ &cg_drawBBox, "cg_drawBBox", "0", CVAR_CHEAT },
 	{ &cg_cmdTimeNudge, "cg_cmdTimeNudge", "0", CVAR_ARCHIVE | CVAR_USERINFO},
 	// this will be automagically copied from the server
@@ -524,10 +521,7 @@ static cvarTable_t cvarTable[] = {// bk001129
 	{ &cg_missionpackChecks, "missionpackChecks", "1", CVAR_ARCHIVE},
 /* /Neon_Knight */
 /* Neon_Knight: Enables MP checks. */
-	{ &cg_developer, "developer", "0", CVAR_CHEAT},
-//	{ &cg_debugDD, "debug_DD", "0", CVAR_CHEAT},
-	{ &cg_debugOrbit, "cg_debugOrbit", "0", CVAR_CHEAT},
-	{ &cg_debugAccuracy, "cg_debugAccuracy", "0", CVAR_CHEAT}
+	{ &cg_developer, "developer", "0", CVAR_CHEAT}
 /* /Neon_Knight */
 };
 
@@ -811,6 +805,7 @@ static void CG_RegisterSounds(void) {
 	// Sago: Makes perfect sense: Load team game stuff if the gametype is a teamgame and not an exception (like GT_LMS)
 	if (CG_IsATeamGametype(cgs.gametype) || cg_buildScript.integer) {
 
+		cgs.media.captureAwardSound = trap_S_RegisterSound("sound/teamplay/flagcapture_yourteam.wav", qtrue);
 		cgs.media.redLeadsSound = trap_S_RegisterSound("sound/feedback/redleads.wav", qtrue);
 		cgs.media.blueLeadsSound = trap_S_RegisterSound("sound/feedback/blueleads.wav", qtrue);
 		cgs.media.teamsTiedSound = trap_S_RegisterSound("sound/feedback/teamstied.wav", qtrue);
@@ -819,32 +814,27 @@ static void CG_RegisterSounds(void) {
 		cgs.media.redScoredSound = trap_S_RegisterSound("sound/teamplay/voc_red_scores.wav", qtrue);
 		cgs.media.blueScoredSound = trap_S_RegisterSound("sound/teamplay/voc_blue_scores.wav", qtrue);
 
-		if (CG_UsesTeamFlags(cgs.gametype) || cg_buildScript.integer) {
-			cgs.media.youHaveFlagSound = trap_S_RegisterSound("sound/teamplay/voc_you_flag.wav", qtrue);
-			cgs.media.captureAwardSound = trap_S_RegisterSound("sound/teamplay/flagcapture_yourteam.wav", qtrue);
+		cgs.media.captureYourTeamSound = trap_S_RegisterSound("sound/teamplay/flagcapture_yourteam.wav", qtrue);
+		cgs.media.captureOpponentSound = trap_S_RegisterSound("sound/teamplay/flagcapture_opponent.wav", qtrue);
 
-			if (CG_UsesTheWhiteFlag(cgs.gametype)) {
-				// FIXME: get a replacement for this sound ?
-				cgs.media.neutralFlagReturnedSound = trap_S_RegisterSound("sound/teamplay/flagreturn_opponent.wav", qtrue);
-				cgs.media.yourTeamTookTheFlagSound = trap_S_RegisterSound("sound/teamplay/voc_team_1flag.wav", qtrue);
-				cgs.media.enemyTookTheFlagSound = trap_S_RegisterSound("sound/teamplay/voc_enemy_1flag.wav", qtrue);
-			}
-			else {
-				cgs.media.redFlagReturnedSound = trap_S_RegisterSound("sound/teamplay/voc_red_returned.wav", qtrue);
-				cgs.media.blueFlagReturnedSound = trap_S_RegisterSound("sound/teamplay/voc_blue_returned.wav", qtrue);
+		cgs.media.returnYourTeamSound = trap_S_RegisterSound("sound/teamplay/flagreturn_yourteam.wav", qtrue);
+		cgs.media.returnOpponentSound = trap_S_RegisterSound("sound/teamplay/flagreturn_opponent.wav", qtrue);
 
-				cgs.media.enemyTookYourFlagSound = trap_S_RegisterSound("sound/teamplay/voc_enemy_flag.wav", qtrue);
-				cgs.media.yourTeamTookEnemyFlagSound = trap_S_RegisterSound("sound/teamplay/voc_team_flag.wav", qtrue);
+		cgs.media.takenYourTeamSound = trap_S_RegisterSound("sound/teamplay/flagtaken_yourteam.wav", qtrue);
+		cgs.media.takenOpponentSound = trap_S_RegisterSound("sound/teamplay/flagtaken_opponent.wav", qtrue);
 
-				cgs.media.captureYourTeamSound = trap_S_RegisterSound("sound/teamplay/flagcapture_yourteam.wav", qtrue);
-				cgs.media.captureOpponentSound = trap_S_RegisterSound("sound/teamplay/flagcapture_opponent.wav", qtrue);
+		if ((CG_UsesTeamFlags(cgs.gametype) && !CG_UsesTheWhiteFlag(cgs.gametype)) || cg_buildScript.integer) {
+			cgs.media.redFlagReturnedSound = trap_S_RegisterSound("sound/teamplay/voc_red_returned.wav", qtrue);
+			cgs.media.blueFlagReturnedSound = trap_S_RegisterSound("sound/teamplay/voc_blue_returned.wav", qtrue);
+			cgs.media.enemyTookYourFlagSound = trap_S_RegisterSound("sound/teamplay/voc_enemy_flag.wav", qtrue);
+			cgs.media.yourTeamTookEnemyFlagSound = trap_S_RegisterSound("sound/teamplay/voc_team_flag.wav", qtrue);
+		}
 
-				cgs.media.returnYourTeamSound = trap_S_RegisterSound("sound/teamplay/flagreturn_yourteam.wav", qtrue);
-				cgs.media.returnOpponentSound = trap_S_RegisterSound("sound/teamplay/flagreturn_opponent.wav", qtrue);
-
-				cgs.media.takenYourTeamSound = trap_S_RegisterSound("sound/teamplay/flagtaken_yourteam.wav", qtrue);
-				cgs.media.takenOpponentSound = trap_S_RegisterSound("sound/teamplay/flagtaken_opponent.wav", qtrue);
-			}
+		if (CG_UsesTheWhiteFlag(cgs.gametype) || cg_buildScript.integer) {
+			// FIXME: get a replacement for this sound ?
+			cgs.media.neutralFlagReturnedSound = trap_S_RegisterSound("sound/teamplay/flagreturn_opponent.wav", qtrue);
+			cgs.media.yourTeamTookTheFlagSound = trap_S_RegisterSound("sound/teamplay/voc_team_1flag.wav", qtrue);
+			cgs.media.enemyTookTheFlagSound = trap_S_RegisterSound("sound/teamplay/voc_enemy_1flag.wav", qtrue);
 		}
 
 		if (cgs.gametype == GT_OBELISK || cg_buildScript.integer) {
@@ -858,7 +848,11 @@ static void CG_RegisterSounds(void) {
 		}
 	}
 
-	cgs.media.holyShitSound = trap_S_RegisterSound("sound/feedback/voc_holyshit.wav", qtrue);
+
+	if (CG_UsesTeamFlags(cgs.gametype) || CG_UsesTheWhiteFlag(cgs.gametype) || cg_buildScript.integer) {
+		cgs.media.youHaveFlagSound = trap_S_RegisterSound("sound/teamplay/voc_you_flag.wav", qtrue);
+		cgs.media.holyShitSound = trap_S_RegisterSound("sound/feedback/voc_holyshit.wav", qtrue);
+	}
 
 	cgs.media.tracerSound = trap_S_RegisterSound("sound/weapons/machinegun/buletby1.wav", qfalse);
 	cgs.media.selectSound = trap_S_RegisterSound("sound/weapons/change.wav", qfalse);
@@ -975,9 +969,9 @@ static void CG_RegisterSounds(void) {
 	Q_strncpyz(items, CG_ConfigString(CS_ITEMS), sizeof (items));
 
 	for (i = 1; i < bg_numItems; i++) {
-		/* if ( items[ i ] == '1' || cg_buildScript.integer ) { */
+		//		if ( items[ i ] == '1' || cg_buildScript.integer ) {
 		CG_RegisterItemSounds(i);
-		/* } */
+		//		}
 	}
 
 	for (i = 1; i < MAX_SOUNDS; i++) {
@@ -1893,15 +1887,15 @@ void CG_ParseMenu(const char *menuFile) {
 			break;
 		}
 
-		/* if ( !Q_strequal( token, "{" ) ) {
-			Com_Printf( "Missing { in menu file\n" );
-			break;
-		} */
+		//if ( !Q_strequal( token, "{" ) ) {
+		//	Com_Printf( "Missing { in menu file\n" );
+		//	break;
+		//}
 
-		/* if ( menuCount == MAX_MENUS ) {
-			Com_Printf( "Too many menus!\n" );
-			break;
-		} */
+		//if ( menuCount == MAX_MENUS ) {
+		//	Com_Printf( "Too many menus!\n" );
+		//	break;
+		//}
 
 		if (token.string[0] == '}') {
 			break;
@@ -1980,7 +1974,7 @@ void CG_LoadMenus(const char *menuFile) {
 
 	COM_Compress(buf);
 
-	setMenuCount(0);
+	Menu_Reset();
 
 	p = buf;
 
@@ -2308,7 +2302,7 @@ void CG_LoadHudMenu(void) {
 
 	Init_Display(&cgDC);
 
-	setMenuCount(0);
+	Menu_Reset();
 
 	trap_Cvar_VariableStringBuffer("cg_hudFiles", buff, sizeof (buff));
 	hudSet = buff;
@@ -2320,12 +2314,12 @@ void CG_LoadHudMenu(void) {
 }
 
 void CG_AssetCache(void) {
-	/* if (Assets.textFont == NULL) {
-		trap_R_RegisterFont("fonts/arial.ttf", 72, &Assets.textFont);
-	}
-	Assets.background = trap_R_RegisterShaderNoMip( ASSET_BACKGROUND );
-	Com_Printf("Menu Size: %i bytes\n", sizeof(Menus));
-	
+	//if (Assets.textFont == NULL) {
+	//  trap_R_RegisterFont("fonts/arial.ttf", 72, &Assets.textFont);
+	//}
+	//Assets.background = trap_R_RegisterShaderNoMip( ASSET_BACKGROUND );
+	//Com_Printf("Menu Size: %i bytes\n", sizeof(Menus));
+	/*
 		cgDC.Assets.gradientBar = trap_R_RegisterShaderNoMip( ASSET_GRADIENTBAR );
 		cgDC.Assets.fxBasePic = trap_R_RegisterShaderNoMip( ART_FX_BASE );
 		cgDC.Assets.fxPic[0] = trap_R_RegisterShaderNoMip( ART_FX_RED );
@@ -2724,16 +2718,6 @@ qboolean CG_IsATeamGametype(int gametype) {
 }
 /*
 ===================
-CG_IsAFFAGametype
-
-Checks if the gametype is NOT a team-based game.
-===================
- */
-qboolean CG_IsADMBasedGametype(int gametype) {
-	return GAMETYPE_IS_NOT_A_TEAM_GAME(gametype);
-}
-/*
-===================
 CG_UsesTeamFlags
 
 Checks if the gametype makes use of the red and blue flags.
@@ -2761,35 +2745,5 @@ Checks if the gametype has a round-based system.
  */
 qboolean CG_IsARoundBasedGametype(int check) {
 	return GAMETYPE_IS_ROUND_BASED(check);
-}
-/*
-===================
-CG_GametypeUsesFragLimit
-
-Checks if the gametype has a frag-based scoring system.
-===================
- */
-qboolean CG_GametypeUsesFragLimit(int check) {
-	return GAMETYPE_USES_FRAG_LIMIT(check);
-}
-/*
-===================
-CG_GametypeUsesCaptureLimit
-
-Checks if the gametype has a capture-based scoring system.
-===================
- */
-qboolean CG_GametypeUsesCaptureLimit(int check) {
-	return GAMETYPE_USES_CAPTURE_LIMIT(check);
-}
-/*
-===================
-CG_GametypeUsesRunes
-
-Checks if the gametype uses Runes.
-===================
- */
-qboolean CG_GametypeUsesRunes(int check) {
-	return GAMETYPE_USES_RUNES(check);
 }
 /* /Neon_Knight */

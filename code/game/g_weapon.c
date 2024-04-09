@@ -1074,7 +1074,7 @@ static void KamikazeRadiusDamage( vec3_t origin, gentity_t *attacker, float dama
 		dir[2] += 24;
 		G_Damage( ent, NULL, attacker, dir, origin, damage, DAMAGE_RADIUS|DAMAGE_NO_TEAM_PROTECTION, MOD_KAMIKAZE );
 		ent->kamikazeTime = level.time + 3000;
-		/* } */
+//		}
 	}
 }
 
@@ -1143,7 +1143,7 @@ static void KamikazeShockWave( vec3_t origin, gentity_t *attacker, float damage,
 			ent->client->ps.velocity[2] = 100;
 		}
 		ent->kamikazeShockTime = level.time + 3000;
-		/* } */
+//		}
 	}
 }
 

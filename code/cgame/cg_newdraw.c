@@ -60,7 +60,7 @@ void CG_SetPrintString(int type, const char *p)
 
 void CG_CheckOrderPending(void)
 {
-	if (CG_IsADMBasedGametype(cgs.gametype) || cgs.gametype == GT_TEAM) {
+	if (!CG_IsATeamGametype(cgs.gametype)) {
 		return;
 	}
 	if (cgs.orderPending) {
@@ -78,6 +78,11 @@ void CG_CheckOrderPending(void)
 			p2 = VOICECHAT_DEFEND;
 			b = "+button8; wait; -button8";
 			break;
+		case TEAMTASK_PATROL:
+			p1 = VOICECHAT_ONPATROL;
+			p2 = VOICECHAT_PATROL;
+			b = "+button9; wait; -button9";
+			break;
 		case TEAMTASK_FOLLOW:
 			p1 = VOICECHAT_ONFOLLOW;
 			p2 = VOICECHAT_FOLLOWME;
@@ -94,11 +99,6 @@ void CG_CheckOrderPending(void)
 		case TEAMTASK_ESCORT:
 			p1 = VOICECHAT_ONFOLLOWCARRIER;
 			p2 = VOICECHAT_FOLLOWFLAGCARRIER;
-			break;
-		default: //TEAMTASK_PATROL
-			p1 = VOICECHAT_ONPATROL;
-			p2 = VOICECHAT_PATROL;
-			b = "+button9; wait; -button9";
 			break;
 		}
 
@@ -695,32 +695,30 @@ static void CG_DrawBlueFlagName(rectDef_t *rect, float scale, vec4_t color, int 
 
 static void CG_DrawBlueFlagStatus(rectDef_t *rect, qhandle_t shader)
 {
-	if (!CG_UsesTeamFlags(cgs.gametype) && (cgs.gametype != GT_HARVESTER)) {
+	if (!CG_UsesTeamFlags(cgs.gametype)) {
+		if (cgs.gametype == GT_HARVESTER) {
+			vec4_t color = {0, 0, 1, 1};
+			trap_R_SetColor(color);
+			CG_DrawPic( rect->x, rect->y, rect->w, rect->h, cgs.media.blueCubeIcon );
+			trap_R_SetColor(NULL);
+		}
 		return;
 	}
-	if (cgs.gametype == GT_HARVESTER) {
-		vec4_t color = {0, 0, 1, 1};
-		trap_R_SetColor(color);
-		CG_DrawPic( rect->x, rect->y, rect->w, rect->h, cgs.media.blueCubeIcon );
-		trap_R_SetColor(NULL);
+	if (shader) {
+		CG_DrawPic( rect->x, rect->y, rect->w, rect->h, shader );
 	}
 	else {
-		if (shader) {
-			CG_DrawPic( rect->x, rect->y, rect->w, rect->h, shader );
-		}
-		else {
-			gitem_t *item = BG_FindItemForPowerup( PW_BLUEFLAG );
-			if (item) {
-				vec4_t color = {0, 0, 1, 1};
-				trap_R_SetColor(color);
-				if( cgs.blueflag >= 0 && cgs.blueflag <= 2 ) {
-					CG_DrawPic( rect->x, rect->y, rect->w, rect->h, cgs.media.flagShaders[cgs.blueflag] );
-				}
-				else {
-					CG_DrawPic( rect->x, rect->y, rect->w, rect->h, cgs.media.flagShaders[0] );
-				}
-				trap_R_SetColor(NULL);
+		gitem_t *item = BG_FindItemForPowerup( PW_BLUEFLAG );
+		if (item) {
+			vec4_t color = {0, 0, 1, 1};
+			trap_R_SetColor(color);
+			if( cgs.blueflag >= 0 && cgs.blueflag <= 2 ) {
+				CG_DrawPic( rect->x, rect->y, rect->w, rect->h, cgs.media.flagShaders[cgs.blueflag] );
 			}
+			else {
+				CG_DrawPic( rect->x, rect->y, rect->w, rect->h, cgs.media.flagShaders[0] );
+			}
+			trap_R_SetColor(NULL);
 		}
 	}
 }
@@ -752,32 +750,30 @@ static void CG_DrawRedFlagName(rectDef_t *rect, float scale, vec4_t color, int t
 
 static void CG_DrawRedFlagStatus(rectDef_t *rect, qhandle_t shader)
 {
-	if (!CG_UsesTeamFlags(cgs.gametype) && cgs.gametype != GT_HARVESTER) {
-		return;
-	}
-	if (cgs.gametype == GT_HARVESTER) {
+	if (!CG_UsesTeamFlags(cgs.gametype)) {
+		if (cgs.gametype == GT_HARVESTER) {
 			vec4_t color = {1, 0, 0, 1};
 			trap_R_SetColor(color);
 			CG_DrawPic( rect->x, rect->y, rect->w, rect->h, cgs.media.redCubeIcon );
 			trap_R_SetColor(NULL);
+		}
+		return;
+	}
+	if (shader) {
+		CG_DrawPic( rect->x, rect->y, rect->w, rect->h, shader );
 	}
 	else {
-		if (shader) {
-			CG_DrawPic( rect->x, rect->y, rect->w, rect->h, shader );
-		}
-		else {
-			gitem_t *item = BG_FindItemForPowerup( PW_REDFLAG );
-			if (item) {
-				vec4_t color = {1, 0, 0, 1};
-				trap_R_SetColor(color);
-				if( cgs.redflag >= 0 && cgs.redflag <= 2) {
-					CG_DrawPic( rect->x, rect->y, rect->w, rect->h, cgs.media.flagShaders[cgs.redflag] );
-				}
-				else {
-					CG_DrawPic( rect->x, rect->y, rect->w, rect->h, cgs.media.flagShaders[0] );
-				}
-				trap_R_SetColor(NULL);
+		gitem_t *item = BG_FindItemForPowerup( PW_REDFLAG );
+		if (item) {
+			vec4_t color = {1, 0, 0, 1};
+			trap_R_SetColor(color);
+			if( cgs.redflag >= 0 && cgs.redflag <= 2) {
+				CG_DrawPic( rect->x, rect->y, rect->w, rect->h, cgs.media.flagShaders[cgs.redflag] );
 			}
+			else {
+				CG_DrawPic( rect->x, rect->y, rect->w, rect->h, cgs.media.flagShaders[0] );
+			}
+			trap_R_SetColor(NULL);
 		}
 	}
 }
@@ -844,46 +840,31 @@ static void CG_HarvesterSkulls(rectDef_t *rect, float scale, vec4_t color, qbool
 
 static void CG_OneFlagStatus(rectDef_t *rect)
 {
-	vec4_t color = {1, 1, 1, 1};
-	int index = 0;
-
-	// This function requires a gametype that works with the proper white flag...
 	if (!CG_UsesTheWhiteFlag(cgs.gametype)) {
 		return;
 	}
-
-	// And there should be a white flag.
-	if (!BG_FindItemForPowerup( PW_NEUTRALFLAG )) {
-		return;
-	}
-
-	if (CG_IsATeamGametype(cgs.gametype)) {
-		if( cgs.flagStatus >= 0 && cgs.flagStatus <= 4 ) {
-			if (cgs.flagStatus == FLAG_TAKEN_RED) {
-				color[1] = color[2] = 0;
-				index = 1;
-			}
-			else if (cgs.flagStatus == FLAG_TAKEN_BLUE) {
-				color[0] = color[1] = 0;
-				index = 1;
-			}
-			else if (cgs.flagStatus == FLAG_DROPPED) {
-				index = 2;
-			}
-		}
-	}
 	else {
-		if( cgs.flagStatus >= 0 && cgs.flagStatus <= 2 ) {
-			if (cgs.flagStatus == FLAG_TAKEN) {
-				index = 1;
-			}
-			else if (cgs.flagStatus == FLAG_DROPPED) {
-				index = 2;
+		gitem_t *item = BG_FindItemForPowerup( PW_NEUTRALFLAG );
+		if (item) {
+			if( cgs.flagStatus >= 0 && cgs.flagStatus <= 4 ) {
+				vec4_t color = {1, 1, 1, 1};
+				int index = 0;
+				if (cgs.flagStatus == FLAG_TAKEN_RED) {
+					color[1] = color[2] = 0;
+					index = 1;
+				}
+				else if (cgs.flagStatus == FLAG_TAKEN_BLUE) {
+					color[0] = color[1] = 0;
+					index = 1;
+				}
+				else if (cgs.flagStatus == FLAG_DROPPED) {
+					index = 2;
+				}
+				trap_R_SetColor(color);
+				CG_DrawPic( rect->x, rect->y, rect->w, rect->h, cgs.media.flagShaders[index] );
 			}
 		}
 	}
-	trap_R_SetColor(color);
-	CG_DrawPic( rect->x, rect->y, rect->w, rect->h, cgs.media.flagShaders[index] );
 }
 
 
@@ -891,7 +872,7 @@ static void CG_DrawCTFPowerUp(rectDef_t *rect)
 {
 	int		value;
 
-	if (!CG_GametypeUsesRunes(cgs.gametype)) {
+	if (!CG_IsATeamGametype(cgs.gametype)) {
 		return;
 	}
 	value = cg.snap->ps.stats[STAT_PERSISTANT_POWERUP];
@@ -1139,7 +1120,7 @@ qboolean CG_OwnerDrawVisible(int flags)
 	}
 
 	if (flags & CG_SHOW_ANYNONTEAMGAME) {
-		if(CG_IsADMBasedGametype(cgs.gametype)) {
+		if(!CG_IsATeamGametype(cgs.gametype)) {
 			return qtrue;
 		}
 	}
@@ -1148,16 +1129,22 @@ qboolean CG_OwnerDrawVisible(int flags)
 		if( cgs.gametype == GT_HARVESTER ) {
 			return qtrue;
 		}
+		else {
+			return qfalse;
+		}
 	}
 
 	if (flags & CG_SHOW_ONEFLAG) {
 		if( cgs.gametype == GT_1FCTF ) {
 			return qtrue;
 		}
+		else {
+			return qfalse;
+		}
 	}
 
 	if (flags & CG_SHOW_CTF) {
-		if( cgs.gametype == GT_CTF ) {
+		if(CG_UsesTeamFlags(cgs.gametype) && !CG_UsesTheWhiteFlag(cgs.gametype)) {
 			return qtrue;
 		}
 	}
@@ -1165,6 +1152,9 @@ qboolean CG_OwnerDrawVisible(int flags)
 	if (flags & CG_SHOW_OBELISK) {
 		if( cgs.gametype == GT_OBELISK ) {
 			return qtrue;
+		}
+		else {
+			return qfalse;
 		}
 	}
 
@@ -1200,56 +1190,6 @@ qboolean CG_OwnerDrawVisible(int flags)
 			return qtrue;
 		}
 	}
-
-	if (flags & CG_SHOW_FREEFORALL) {
-		if( cgs.gametype == GT_FFA ) {
-			return qtrue;
-		}
-	}
-
-	if (flags & CG_SHOW_TEAMDEATHMATCH) {
-		if( cgs.gametype == GT_TEAM ) {
-			return qtrue;
-		}
-	}
-
-	if (flags & CG_SHOW_ELIMINATION) {
-		if( cgs.gametype == GT_ELIMINATION ) {
-			return qtrue;
-		}
-	}
-
-	if (flags & CG_SHOW_CTFELIMINATION) {
-		if( cgs.gametype == GT_CTF_ELIMINATION ) {
-			return qtrue;
-		}
-	}
-
-	if (flags & CG_SHOW_LASTMANSTANDING) {
-		if( cgs.gametype == GT_LMS ) {
-			return qtrue;
-		}
-	}
-
-	if (flags & CG_SHOW_DOUBLEDOMINATION) {
-		if( cgs.gametype == GT_DOUBLE_D ) {
-			return qtrue;
-		}
-	}
-
-	if (flags & CG_SHOW_DOMINATION) {
-		if( cgs.gametype == GT_DOMINATION ) {
-			return qtrue;
-		}
-	}
-
-	if (flags & CG_SHOW_POSSESSION) {
-		if( cgs.gametype == GT_POSSESSION ) {
-			return qtrue;
-		}
-	}
-
-	// End
 	return qfalse;
 }
 
@@ -1304,14 +1244,11 @@ static void CG_DrawKiller(rectDef_t *rect, float scale, vec4_t color, qhandle_t 
 
 }
 
+
 static void CG_DrawCapFragLimit(rectDef_t *rect, float scale, vec4_t color, qhandle_t shader, int textStyle)
 {
-	if (CG_GametypeUsesCaptureLimit(cgs.gametype)) {
-		CG_Text_Paint(rect->x, rect->y, scale, color, va("%2i", cgs.capturelimit),0, 0, textStyle);
-	}
-	else { /* (CG_GametypeUsesFragLimit(cgs.gametype)) */
-		CG_Text_Paint(rect->x, rect->y, scale, color, va("%2i", cgs.fraglimit),0, 0, textStyle);
-	}
+	int limit = (CG_IsATeamGametype(cgs.gametype) && cgs.gametype != GT_TEAM) ? cgs.capturelimit : cgs.fraglimit;
+	CG_Text_Paint(rect->x, rect->y, scale, color, va("%2i", limit),0, 0, textStyle);
 }
 
 static void CG_Draw1stPlace(rectDef_t *rect, float scale, vec4_t color, qhandle_t shader, int textStyle)
@@ -1331,7 +1268,7 @@ static void CG_Draw2ndPlace(rectDef_t *rect, float scale, vec4_t color, qhandle_
 const char *CG_GetGameStatusText(void)
 {
 	const char *s = "";
-	if (CG_IsADMBasedGametype(cgs.gametype)) {
+	if (!CG_IsATeamGametype(cgs.gametype)) {
 		if (cg.snap->ps.persistant[PERS_TEAM] != TEAM_SPECTATOR ) {
 			s = va("%s place with %i",CG_PlaceString( cg.snap->ps.persistant[PERS_RANK] + 1 ),cg.snap->ps.persistant[PERS_SCORE] );
 		}
@@ -2039,14 +1976,11 @@ static void CG_DrawCaptureLimit( rectDef_t *rect, float text_x, float text_y, ve
 	const char *info;
 	int			value;
 	info = CG_ConfigString( CS_SERVERINFO );
-
-	if (CG_GametypeUsesCaptureLimit(cgs.gametype)) {
+	value = atoi( Info_ValueForKey( info, "capturelimit" ) );
+	if (CG_IsATeamGametype(cgs.gametype) && cgs.gametype != GT_TEAM)
 		value = atoi( Info_ValueForKey( info, "capturelimit" ) );
-	}
-	else {  /* (CG_GametypeUsesFragLimit(cgs.gametype)) */
+	else
 		value = atoi( Info_ValueForKey( info, "fraglimit" ) );
-	}
-
 	if ( value ) {
 		CG_DrawLoadingString( rect, text_x, text_y, color, scale, align, textStyle, va( "%i", value ));
 	}
@@ -2065,9 +1999,9 @@ void CG_OwnerDraw(float x, float y, float w, float h, float text_x, float text_y
 		return;
 	}
 
-	/* if (ownerDrawFlags != 0 && !CG_OwnerDrawVisible(ownerDrawFlags)) {
-		return;
-	} */
+	//if (ownerDrawFlags != 0 && !CG_OwnerDrawVisible(ownerDrawFlags)) {
+	//	return;
+	//}
 
 	rect.x = x;
 	rect.y = y;
@@ -2395,11 +2329,11 @@ void CG_KeyEvent(int key, qboolean down)
 		return;
 	}
 
-	/* if (key == trap_Key_GetKey("teamMenu") || !Display_CaptureItem(cgs.cursorX, cgs.cursorY)) {
+	//if (key == trap_Key_GetKey("teamMenu") || !Display_CaptureItem(cgs.cursorX, cgs.cursorY)) {
 	// if we see this then we should always be visible
-		CG_EventHandling(CGAME_EVENT_NONE);
-		trap_Key_SetCatcher(0);
-	} */
+	//  CG_EventHandling(CGAME_EVENT_NONE);
+	//  trap_Key_SetCatcher(0);
+	//}
 
 
 

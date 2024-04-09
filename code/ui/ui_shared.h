@@ -509,6 +509,7 @@ qboolean PC_Int_Parse(int handle, int *i);
 qboolean PC_Rect_Parse(int handle, rectDef_t *r);
 qboolean PC_String_Parse(int handle, const char **out);
 qboolean PC_Script_Parse(int handle, const char **out);
+int Menu_Count(void);
 void Menu_New(int handle);
 void Menu_PaintAll(void);
 // Changed RD
@@ -516,6 +517,7 @@ void Menu_PaintEnd(void);
 qboolean Item_EnableShowViaCvar(itemDef_t *item, int flag);
 // end changed RD
 menuDef_t *Menus_ActivateByName(const char *p);
+void Menu_Reset(void);
 qboolean Menus_AnyFullScreenVisible(void);
 void Menus_Activate(menuDef_t *menu);
 
@@ -539,9 +541,6 @@ void Display_CacheAll(void);
 void *UI_Alloc(int size);
 void UI_InitMemory(void);
 qboolean UI_OutOfMemory(void);
-
-int getMenuCount(void);
-void setMenuCount(int count);
 
 #ifndef BASEOA
 void Controls_GetConfig(void);

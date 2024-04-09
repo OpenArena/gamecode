@@ -135,55 +135,14 @@ typedef enum {
 	
 } gametype_t;
 
-#define GAMETYPE_IS_A_TEAM_GAME(gametype) (gametype == GT_TEAM || gametype == GT_CTF || gametype == GT_1FCTF || gametype == GT_OBELISK || gametype == GT_HARVESTER || gametype == GT_ELIMINATION || gametype == GT_CTF_ELIMINATION || gametype == GT_DOUBLE_D || gametype == GT_DOMINATION)
-#define GAMETYPE_IS_NOT_A_TEAM_GAME(gametype) (gametype == GT_FFA || gametype == GT_TOURNAMENT || gametype == GT_SINGLE_PLAYER || gametype == GT_LMS || gametype == GT_POSSESSION)
+#define GAMETYPE_IS_A_TEAM_GAME(gametype) (gametype != GT_FFA && gametype != GT_TOURNAMENT && gametype != GT_SINGLE_PLAYER && gametype != GT_LMS && gametype != GT_POSSESSION)
 #define GAMETYPE_USES_RED_AND_BLUE_FLAG(gametype) (gametype == GT_CTF || gametype == GT_1FCTF || gametype == GT_CTF_ELIMINATION)
 #define GAMETYPE_USES_WHITE_FLAG(gametype) (gametype == GT_1FCTF || gametype == GT_POSSESSION)
+/*
+ Returns true for round based games like (CTF)Elimination and LMS
+ */
 #define GAMETYPE_IS_ROUND_BASED(gametype) (gametype == GT_ELIMINATION || gametype == GT_CTF_ELIMINATION || gametype == GT_LMS)
-/*
- Score limits
- */
-#define GAMETYPE_USES_FRAG_LIMIT(gametype) (gametype == GT_FFA || gametype == GT_TOURNAMENT || gametype == GT_SINGLE_PLAYER || gametype == GT_TEAM || gametype == GT_DOMINATION || gametype == GT_POSSESSION)
-#define GAMETYPE_USES_CAPTURE_LIMIT(gametype) (gametype == GT_CTF || gametype == GT_1FCTF || gametype == GT_OBELISK || gametype == GT_HARVESTER || gametype == GT_ELIMINATION || gametype == GT_CTF_ELIMINATION || gametype == GT_LMS || gametype == GT_DOUBLE_D)
-/*
- Specific rules
- */
-#define GAMETYPE_USES_RUNES(gametype) (gametype == GT_CTF || gametype == GT_1FCTF || gametype == GT_OBELISK || gametype == GT_HARVESTER)
-
-#define GT_FFA_DEFAULT_SCORELIMIT	"20"
-#define GT_FFA_DEFAULT_TIMELIMIT	"15"
-#define GT_TOURNEY_DEFAULT_SCORELIMIT	"0"
-#define GT_TOURNEY_DEFAULT_TIMELIMIT	"15"
-#define GT_SINGLE_DEFAULT_SCORELIMIT	"10"
-#define GT_SINGLE_DEFAULT_TIMELIMIT	"15"
-#define GT_TEAM_DEFAULT_SCORELIMIT	"0"
-#define GT_TEAM_DEFAULT_TIMELIMIT	"15"
-#define GT_CTF_DEFAULT_SCORELIMIT	"8"
-#define GT_CTF_DEFAULT_TIMELIMIT	"15"
-#define GT_1FCTF_DEFAULT_SCORELIMIT	"8"
-#define GT_1FCTF_DEFAULT_TIMELIMIT	"15"
-#define GT_OBELISK_DEFAULT_SCORELIMIT	"8"
-#define GT_OBELISK_DEFAULT_TIMELIMIT	"15"
-#define GT_HARVESTER_DEFAULT_SCORELIMIT	"20"
-#define GT_HARVESTER_DEFAULT_TIMELIMIT	"15"
-#define GT_ELIMINATION_DEFAULT_SCORELIMIT	"8"
-#define GT_ELIMINATION_DEFAULT_TIMELIMIT	"0"
-#define GT_ELIMINATION_DEFAULT_ROUNDTIMELIMIT	"120"
-#define GT_CTF_ELIMINATION_DEFAULT_SCORELIMIT	"8"
-#define GT_CTF_ELIMINATION_DEFAULT_TIMELIMIT	"0"
-#define GT_CTF_ELIMINATION_DEFAULT_ROUNDTIMELIMIT	"120"
-#define GT_LMS_DEFAULT_SCORELIMIT	"20"
-#define GT_LMS_DEFAULT_TIMELIMIT	"0"
-#define GT_LMS_DEFAULT_ROUNDTIMELIMIT	"120"
-#define GT_DOUBLE_D_DEFAULT_SCORELIMIT	"8"
-#define GT_DOUBLE_D_DEFAULT_TIMELIMIT	"15"
-#define GT_DOMINATION_DEFAULT_SCORELIMIT	"500"
-#define GT_DOMINATION_DEFAULT_TIMELIMIT	"15"
-#define GT_POSSESSION_DEFAULT_SCORELIMIT	"120"
-#define GT_POSSESSION_DEFAULT_TIMELIMIT	"15"
-
-#define ELIMINATION_DAMAGE_SELF 1
-#define ELIMINATION_DAMAGE_TEAM 2
+#define GAMETYPE_USES_OBELISKS(gametype) (gametype == GT_HARVESTER || gametype == GT_OBELISK)
 
 typedef enum { GENDER_MALE, GENDER_FEMALE, GENDER_NEUTER } gender_t;
 
@@ -897,35 +856,29 @@ qboolean	BG_PlayerTouchesItem( playerState_t *ps, entityState_t *item, int atTim
 const char *BG_TeamName( team_t team );
 
 typedef struct mapinfo_result_s {
+	int minPlayers;
+	int maxPlayers;
+	int recommendedPlayers;
+	int minTeamSize;
+	int maxTeamSize;
+	int recommendedTeamSize;
+	int timeLimit;
+	int fragLimit;
+	int captureLimit;
+	char mpBots[1024];
+	int mpBotCount;
+	char redBots[512];
+	int redBotCount;
+	char blueBots[512];
+	int blueBotCount;
 	char author[64];
 	char title[64];
 	char description[8192];
-	char mpBots[512];
-	int mpBotCount;
-	char redBots[256];
-	int redBotCount;
-	char blueBots[256];
-	int blueBotCount;
-	int teamBotCount;
-	int captureLimit;
-	int fragLimit;
-	int timeLimit;
-	int maxPlayers;
-	int maxTeamSize;
-	int minPlayers;
-	int minTeamSize;
-	int recommendedPlayers;
-	int recommendedTeamSize;
-	char special[16];
-	int timeToBeatPlatinum;
-	int timeToBeatGold;
-	int timeToBeatSilver;
-	int timeToBeatBronze;
 	char gametypeSupported[GT_MAX_GAME_TYPE]; //y/n
 } mapinfo_result_t;
 
 qboolean MatchesGametype(int gametype, const char* gametypeName);
-void MapInfoGet(const char* mapname, int gametype, mapinfo_result_t *result, qboolean developer);
+void MapInfoGet(const char* mapname, int gametype, mapinfo_result_t *result);
 
 
 #endif

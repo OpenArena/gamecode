@@ -398,9 +398,9 @@ static void PlayerModel_BuildList( void )
 	int		j;
 	int		dirlen;
 	int		filelen;
-	// qboolean precache;
+	qboolean precache;
 
-	// precache = trap_Cvar_VariableValue("com_buildscript");
+	precache = trap_Cvar_VariableValue("com_buildscript");
 
 	s_playermodel.modelpage = 0;
 	s_playermodel.nummodels = 0;
@@ -436,9 +436,9 @@ static void PlayerModel_BuildList( void )
 				//	return;
 			}
 
-			/*if( precache ) {
+			if( precache ) {
 				trap_S_RegisterSound( va( "sound/player/announce/%s_wins.wav", skinname), qfalse );
-			}*/
+			}
 		}
 	}	
 

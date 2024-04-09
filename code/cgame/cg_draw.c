@@ -543,6 +543,19 @@ static void CG_DrawStatusBarHead(float x) {
 
 /*
 ================
+CG_DrawStatusBarFlag
+
+================
+ */
+#ifndef MISSIONPACK
+
+static void CG_DrawStatusBarFlag(float x, int team) {
+	CG_DrawFlagModel(x, 480 - ICON_SIZE, ICON_SIZE, ICON_SIZE, team, qfalse);
+}
+#endif // MISSIONPACK
+
+/*
+================
 CG_DrawTeamBackground
 
 ================
@@ -621,11 +634,11 @@ static void CG_DrawStatusBar(void) {
 	CG_DrawStatusBarHead(185 + CHAR_WIDTH * 3 + TEXT_ICON_SPACE);
 
 	if (cg.predictedPlayerState.powerups[PW_REDFLAG]) {
-		CG_DrawFlagModel((185 + CHAR_WIDTH * 3 + TEXT_ICON_SPACE + ICON_SIZE), 480 - ICON_SIZE, ICON_SIZE, ICON_SIZE, TEAM_RED, qfalse);
+		CG_DrawStatusBarFlag(185 + CHAR_WIDTH * 3 + TEXT_ICON_SPACE + ICON_SIZE, TEAM_RED);
 	} else if (cg.predictedPlayerState.powerups[PW_BLUEFLAG]) {
-		CG_DrawFlagModel((185 + CHAR_WIDTH * 3 + TEXT_ICON_SPACE + ICON_SIZE), 480 - ICON_SIZE, ICON_SIZE, ICON_SIZE, TEAM_BLUE, qfalse);
+		CG_DrawStatusBarFlag(185 + CHAR_WIDTH * 3 + TEXT_ICON_SPACE + ICON_SIZE, TEAM_BLUE);
 	} else if (cg.predictedPlayerState.powerups[PW_NEUTRALFLAG]) {
-		CG_DrawFlagModel((185 + CHAR_WIDTH * 3 + TEXT_ICON_SPACE + ICON_SIZE), 480 - ICON_SIZE, ICON_SIZE, ICON_SIZE, TEAM_FREE, qfalse);
+		CG_DrawStatusBarFlag(185 + CHAR_WIDTH * 3 + TEXT_ICON_SPACE + ICON_SIZE, TEAM_FREE);
 	}
 
 	if (ps->stats[ STAT_ARMOR ]) {
@@ -988,8 +1001,8 @@ static float CG_DrawDoubleDominationThings( float y ) {
 	statusA = cgs.redflag;
 	statusB = cgs.blueflag;
 
-	// This is only useful in code development mode.
-	if (!cg_developer.integer && !cg_debugDD.integer) {
+	// This is only useful in Developer mode.
+	if(!cg_developer.integer) {
 		return;
 	}
 	
@@ -1047,10 +1060,6 @@ static float CG_DrawLMSmode(float y) {
 	char *s;
 	int w;
 
-	if (cgs.gametype != GT_LMS) {
-		return y;
-	}
-
 	if (cgs.lms_mode == 0) {
 		s = va("LMS: Point/round + OT");
 	}
@@ -1092,55 +1101,21 @@ static float CG_DrawCTFoneway(float y) {
 	if ((cgs.elimflags & EF_ONEWAY) == 0) {
 		return y; //nothing to draw
 	}
-	// Full team colors for offence, tamed for defence
-	if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_BLUE) {
-		if (cgs.attackingTeam == TEAM_BLUE) {
-			memcpy(color, g_color_table[ColorIndex(COLOR_BLUE)], sizeof (color));
-			s = va("You are Attacking!");
-			w = CG_DrawStrlen(s) * SMALLCHAR_WIDTH;
-			CG_DrawSmallStringColor(635 - w, y + 2, s, color);
-		}
-		else if (cgs.attackingTeam == TEAM_RED) {
-			memcpy(color, g_color_table[ColorIndex(COLOR_CYAN)], sizeof (color));
-			s = va("You are Defending!");
-			w = CG_DrawStrlen(s) * SMALLCHAR_WIDTH;
-			CG_DrawSmallStringColor(635 - w, y + 2, s, color);
-		}
+	else if (cgs.attackingTeam == TEAM_BLUE) {
+		memcpy(color, g_color_table[ColorIndex(COLOR_BLUE)], sizeof (color));
+		s = va("Blue team on offence");
 	}
-	else if (cg.snap->ps.persistant[PERS_TEAM] == TEAM_RED) {
-		if (cgs.attackingTeam == TEAM_RED) {
-			memcpy(color, g_color_table[ColorIndex(COLOR_RED)], sizeof (color));
-			s = va("You are Attacking");
-			w = CG_DrawStrlen(s) * SMALLCHAR_WIDTH;
-			CG_DrawSmallStringColor(635 - w, y + 2, s, color);
-		}
-		else if (cgs.attackingTeam == TEAM_BLUE) {
-			memcpy(color, g_color_table[ColorIndex(COLOR_MAGENTA)], sizeof (color));
-			s = va("You are Defending");
-			w = CG_DrawStrlen(s) * SMALLCHAR_WIDTH;
-			CG_DrawSmallStringColor(635 - w, y + 2, s, color);
-		}
+	else if (cgs.attackingTeam == TEAM_RED) {
+		memcpy(color, g_color_table[ColorIndex(COLOR_RED)], sizeof (color));
+		s = va("Red team on offence");
 	}
 	else {
-		if (cgs.attackingTeam == TEAM_BLUE) {
-			memcpy(color, g_color_table[ColorIndex(COLOR_BLUE)], sizeof (color));
-			s = va("Blue Team on Offence!");
-			w = CG_DrawStrlen(s) * SMALLCHAR_WIDTH;
-			CG_DrawSmallStringColor(635 - w, y + 2, s, color);
-		}
-		else if (cgs.attackingTeam == TEAM_RED) {
-			memcpy(color, g_color_table[ColorIndex(COLOR_RED)], sizeof (color));
-			s = va("Red Team on Offence!");
-			w = CG_DrawStrlen(s) * SMALLCHAR_WIDTH;
-			CG_DrawSmallStringColor(635 - w, y + 2, s, color);
-		}
-		else {
-			memcpy(color, g_color_table[ColorIndex(COLOR_WHITE)], sizeof (color));
-			s = va("No Team on Offence!");
-			w = CG_DrawStrlen(s) * SMALLCHAR_WIDTH;
-			CG_DrawSmallStringColor(635 - w, y + 2, s, color);
-		}
+		s = va("Unknown team on offence");
 	}
+
+
+	w = CG_DrawStrlen(s) * SMALLCHAR_WIDTH;
+	CG_DrawSmallStringColor(635 - w, y + 2, s, color);
 
 	return y + SMALLCHAR_HEIGHT + 4;
 }
@@ -1155,10 +1130,6 @@ static float CG_DrawDomStatus(float y) {
 	int i, w;
 	char *s;
 	vec4_t color;
-
-	if (cgs.gametype != GT_DOMINATION) {
-		return y;
-	}
 
 	for (i = 0; i < cgs.domination_points_count; i++) {
 		switch (cgs.domination_points_status[i]) {
@@ -1198,6 +1169,7 @@ static float CG_DrawCountdownTimer(float y) {
 	float scale __attribute__ ((unused));
 	int cw __attribute__ ((unused));
 	int rst;
+
 
 
 	rst = cgs.roundStartTime;
@@ -1619,21 +1591,22 @@ static void CG_DrawUpperRight(stereoFrame_t stereoFrame) {
 	if (CG_IsATeamGametype(cgs.gametype) && cg_drawTeamOverlay.integer == 1) {
 		y = CG_DrawTeamOverlay(y, qtrue, qtrue);
 	}
-	/* if ( cgs.gametype == GT_DOUBLE_D ) {
+	/*if ( cgs.gametype == GT_DOUBLE_D ) {
 		y = CG_DrawDoubleDominationThings(y);
-	}  */
+	} 
+	else*/
 	if (cgs.gametype == GT_LMS && cg.showScores) {
 		y = CG_DrawLMSmode(y);
-	}
-	if (cgs.gametype == GT_CTF_ELIMINATION) {
+	} else
+		if (cgs.gametype == GT_CTF_ELIMINATION) {
 		y = CG_DrawCTFoneway(y);
-	}
-	if (cgs.gametype == GT_DOMINATION) {
+	} else
+		if (cgs.gametype == GT_DOMINATION) {
 		y = CG_DrawDomStatus(y);
-	}
-	if (cgs.gametype == GT_POSSESSION) {
+	} else if (cgs.gametype == GT_POSSESSION) {
 		y = CG_DrawPossessionString(y);
 	}
+
 	if (cg_drawSnapshot.integer) {
 		y = CG_DrawSnapshot(y);
 	}
@@ -1681,6 +1654,7 @@ static float CG_DrawScores(float y) {
 	const char *s;
 	int s1, s2, score;
 	int x, w;
+	int v;
 	vec4_t color;
 	float y1;
 	gitem_t *item;
@@ -1782,30 +1756,19 @@ static float CG_DrawScores(float y) {
 			CG_DrawSmallString(x, y - 28, s, 1.0F);
 		}
 
-		if (CG_GametypeUsesFragLimit(cgs.gametype)) {
-			if (cgs.fraglimit) {
-				s = va("%2i", cgs.fraglimit);
-			}
-			else {
-				s = va("0");
-			}
+		if (CG_IsATeamGametype(cgs.gametype) && cgs.gametype != GT_TEAM) {
+			v = cgs.capturelimit;
+		} else {
+			v = cgs.fraglimit;
+		}
+		if (v) {
+			s = va("%2i", v);
 			w = CG_DrawStrlen(s) * BIGCHAR_WIDTH + 8;
 			x -= w;
 			CG_DrawBigString(x + 4, y, s, 1.0F);
 		}
-		if (CG_GametypeUsesCaptureLimit(cgs.gametype)) {
-			if (cgs.capturelimit) {
-				s = va("%2i", cgs.capturelimit);
-			}
-			else {
-				s = va("0");
-			}
-			w = CG_DrawStrlen(s) * BIGCHAR_WIDTH + 8;
-			x -= w;
-			CG_DrawBigString(x + 4, y, s, 1.0F);
-		}
-	}
-	else {
+
+	} else {
 		qboolean spectator;
 
 		x = 640;
@@ -1859,28 +1822,13 @@ static float CG_DrawScores(float y) {
 			CG_DrawBigString(x + 4, y, s, 1.0F);
 		}
 
-		if (CG_GametypeUsesFragLimit(cgs.gametype)) {
-			if (cgs.fraglimit) {
-				s = va("%2i", cgs.fraglimit);
-			}
-			else {
-				s = va("0");
-			}
+		if (cgs.fraglimit) {
+			s = va("%2i", cgs.fraglimit);
 			w = CG_DrawStrlen(s) * BIGCHAR_WIDTH + 8;
 			x -= w;
 			CG_DrawBigString(x + 4, y, s, 1.0F);
 		}
-		if (CG_GametypeUsesCaptureLimit(cgs.gametype)) {
-			if (cgs.capturelimit) {
-				s = va("%2i", cgs.capturelimit);
-			}
-			else {
-				s = va("0");
-			}
-			w = CG_DrawStrlen(s) * BIGCHAR_WIDTH + 8;
-			x -= w;
-			CG_DrawBigString(x + 4, y, s, 1.0F);
-		}
+
 	}
 
 	return y1 - 8;
@@ -2009,14 +1957,14 @@ CG_DrawLowerRight
 static void CG_DrawLowerRight(void) {
 	float y;
 
-	y = 468 - ICON_SIZE;
+	y = 472 - ICON_SIZE;
 
 	if (CG_IsATeamGametype(cgs.gametype) && cg_drawTeamOverlay.integer == 2) {
 		y = CG_DrawTeamOverlay(y, qtrue, qfalse);
 	}
 
-	y = CG_DrawScores(y + 4);
-	y = CG_DrawPowerups(y + 4);
+	y = CG_DrawScores(y);
+	y = CG_DrawPowerups(y);
 }
 #endif // MISSIONPACK
 
@@ -2064,7 +2012,7 @@ CG_DrawLowerLeft
 static void CG_DrawLowerLeft(void) {
 	float y;
 
-	y = 468 - ICON_SIZE;
+	y = 480 - ICON_SIZE;
 
 	if (CG_IsATeamGametype(cgs.gametype) && cg_drawTeamOverlay.integer == 3) {
 		y = CG_DrawTeamOverlay(y, qfalse, qfalse);
@@ -2177,6 +2125,8 @@ static void CG_DrawHoldableItem(void) {
 CG_DrawPersistantPowerup
 ===================
  */
+#if 1 // sos001208 - DEAD // sago - ALIVE
+
 static void CG_DrawPersistantPowerup(void) {
 	int value;
 
@@ -2186,6 +2136,7 @@ static void CG_DrawPersistantPowerup(void) {
 		CG_DrawPic(640 - ICON_SIZE, (SCREEN_HEIGHT - ICON_SIZE) / 2 - ICON_SIZE, ICON_SIZE, ICON_SIZE, cg_items[ value ].icon);
 	}
 }
+#endif
 #endif // MISSIONPACK
 
 /*
@@ -2610,54 +2561,34 @@ static void CG_DrawCenter1FctfString(void) {
 #ifndef MISSIONPACK
 	float *color;
 	char *line;
+	int status;
 
-	if (!CG_UsesTheWhiteFlag(cgs.gametype))
+	if (cgs.gametype != GT_1FCTF)
 		return;
 
-	if (CG_UsesTeamFlags(cgs.gametype)) { // 1FCTF
-		switch (cgs.flagStatus) {
-			case FLAG_TAKEN_RED: {
-				line = va("Red Team has the flag!");
-				color = colorRed;
-				drawCenterString(line, color);
-				break;
-			}
-			case FLAG_TAKEN_BLUE: {
-				line = va("Blue Team has the flag!");
-				color = colorBlue;
-				drawCenterString(line, color);
-				break;
-			}
-			case FLAG_DROPPED: {
-				line = va("The flag has been dropped!");
-				color = colorWhite;
-				drawCenterString(line, color);
-				break;
-			}
-			default: {
-				return;
-			}
-		}
-	}
-	else { // Possession
-		switch (cgs.flagStatus) {
-			case FLAG_TAKEN: {
-				line = va("The flag has been taken!");
-				color = colorWhite;
-				drawCenterString(line, color);
-				break;
-			}
-			case FLAG_DROPPED: {
-				line = va("The flag has been dropped!");
-				color = colorWhite;
-				drawCenterString(line, color);
-				break;
-			}
-			default: {
-				return;
-			}
-		}
-	}
+	status = cgs.flagStatus;
+
+	//Sago: TODO: Find the proper defines instead of hardcoded values.
+	switch (status) {
+		case 2:
+			line = va("Red has the flag!");
+			color = colorRed;
+			break;
+		case 3:
+			line = va("Blue has the flag!");
+			color = colorBlue;
+			break;
+		case 4:
+			line = va("Flag dropped!");
+			color = colorWhite;
+			break;
+		default:
+			return;
+
+	};
+
+	drawCenterString(line, color);
+
 #endif
 }
 
@@ -2670,7 +2601,7 @@ static void CG_DrawCenterDDString(void) {
 #ifndef MISSIONPACK
 	int x, y, w;
 	float *color;
-	char *line, *line2;
+	char *line;
 	int statusA, statusB;
 	int sec;
 	static int lastDDSec = -100;
@@ -2691,33 +2622,11 @@ static void CG_DrawCenterDDString(void) {
 	}
 
 	if (statusA == TEAM_BLUE) {
+		line = va("Blue scores in %i", (cgs.takeAt - cg.time) / 1000 + 1);
 		color = colorBlue;
-		line = va("Blue team dominates!");
-		y = 100 - GIANT_HEIGHT;
-		w = cg.centerPrintCharWidth * CG_DrawStrlen(line);
-		x = (SCREEN_WIDTH - w) / 2;
-		CG_DrawStringExt(x, y, line, color, qfalse, qtrue,
-				cg.centerPrintCharWidth, (int) (cg.centerPrintCharWidth * 1.5), 0);
-		line2 = va("Scoring in %i", (cgs.takeAt - cg.time) / 1000 + 1);
-		y = 100;
-		w = cg.centerPrintCharWidth * CG_DrawStrlen(line2);
-		x = (SCREEN_WIDTH - w) / 2;
-		CG_DrawStringExt(x, y, line2, color, qfalse, qtrue,
-				cg.centerPrintCharWidth, (int) (cg.centerPrintCharWidth * 1.5), 0);
 	} else if (statusA == TEAM_RED) {
+		line = va("Red scores in %i", (cgs.takeAt - cg.time) / 1000 + 1);
 		color = colorRed;
-		line = va("Red team dominates!");
-		y = 100 - GIANT_HEIGHT;
-		w = cg.centerPrintCharWidth * CG_DrawStrlen(line);
-		x = (SCREEN_WIDTH - w) / 2;
-		CG_DrawStringExt(x, y, line, color, qfalse, qtrue,
-				cg.centerPrintCharWidth, (int) (cg.centerPrintCharWidth * 1.5), 0);
-		line2 = va("Scoring in %i", (cgs.takeAt - cg.time) / 1000 + 1);
-		y = 100;
-		w = cg.centerPrintCharWidth * CG_DrawStrlen(line2);
-		x = (SCREEN_WIDTH - w) / 2;
-		CG_DrawStringExt(x, y, line2, color, qfalse, qtrue,
-				cg.centerPrintCharWidth, (int) (cg.centerPrintCharWidth * 1.5), 0);
 	} else {
 		lastDDSec = -100;
 		return;
@@ -2753,6 +2662,17 @@ static void CG_DrawCenterDDString(void) {
 		}
 	}
 	lastDDSec = sec;
+
+	y = 100;
+
+
+	w = cg.centerPrintCharWidth * CG_DrawStrlen(line);
+
+	x = (SCREEN_WIDTH - w) / 2;
+
+	CG_DrawStringExt(x, y, line, color, qfalse, qtrue,
+			cg.centerPrintCharWidth, (int) (cg.centerPrintCharWidth * 1.5), 0);
+
 #endif
 }
 
@@ -3367,14 +3287,14 @@ static void CG_DrawProxWarning( void ) {
 
 	proxTick = 10 - ((cg.time - proxTime) / 1000);
 
-	if (proxTick > 0) {
-		Com_sprintf(s, sizeof(s), "YOU HAVE BEEN MINED");
-		w = CG_DrawStrlen( s ) * BIGCHAR_WIDTH;
-		CG_DrawBigStringColor( 320 - w / 2, 64 + BIGCHAR_HEIGHT, s, g_color_table[ColorIndex(COLOR_RED)] );
+	if (proxTick > 0 && proxTick <= 5) {
 		Com_sprintf(s, sizeof(s), "INTERNAL COMBUSTION IN: %i", proxTick);
-		w = CG_DrawStrlen( s ) * BIGCHAR_WIDTH;
-	CG_DrawBigStringColor( 320 - w / 2, 64 + ((2 * BIGCHAR_HEIGHT) + 2), s, g_color_table[ColorIndex(COLOR_RED)] );
+	} else {
+		Com_sprintf(s, sizeof(s), "YOU HAVE BEEN MINED");
 	}
+
+	w = CG_DrawStrlen( s ) * BIGCHAR_WIDTH;
+	CG_DrawBigStringColor( 320 - w / 2, 64 + BIGCHAR_HEIGHT, s, g_color_table[ColorIndex(COLOR_RED)] );
 }
 
 /*
