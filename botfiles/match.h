@@ -74,6 +74,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define MSG_HOLDPOINTA					90
 #define MSG_HOLDPOINTB					91
 #define MSG_HOLDDOMPOINT				92		//defend a DOM point
+
+#define MSG_TAKEA					90
+#define MSG_TAKEB					91
+
 //
 #define MSG_ME							100
 #define MSG_EVERYONE					101
