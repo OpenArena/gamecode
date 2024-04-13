@@ -124,6 +124,14 @@ void CG_Text_PaintChar(float x, float y, float width, float height, float scale,
 	trap_R_DrawStretchPic(x, y, w, h, s, t, s2, t2, hShader);
 }
 
+
+void CG_Text_PaintCharNoAdjust(float x, float y, float width, float height, float scale, float s, float t, float s2, float t2, qhandle_t hShader) {
+	float w, h;
+	w = width * scale;
+	h = height * scale;
+	trap_R_DrawStretchPic(x, y, w, h, s, t, s2, t2, hShader);
+}
+
 void CG_Text_Paint(float x, float y, float scale, vec4_t color, const char *text, float adjust, int limit, int style) {
 	int len, count;
 	vec4_t newColor;
@@ -189,6 +197,75 @@ void CG_Text_Paint(float x, float y, float scale, vec4_t color, const char *text
 		trap_R_SetColor(NULL);
 	}
 }
+
+
+
+void CG_Text_Paint_3D(float x, float y, float scale, vec4_t color, const char *text, float adjust, int limit, int style) {
+	int len, count;
+	vec4_t newColor;
+	glyphInfo_t *glyph;
+	float useScale;
+	fontInfo_t *font = &cgDC.Assets.textFont;
+	if (scale <= cg_smallFont.value) {
+		font = &cgDC.Assets.smallFont;
+	} else if (scale > cg_bigFont.value) {
+		font = &cgDC.Assets.bigFont;
+	}
+	useScale = scale * font->glyphScale;
+	if (text) {
+		const char *s = text;
+		trap_R_SetColor(color);
+		memcpy(&newColor[0], &color[0], sizeof (vec4_t));
+		len = strlen(text);
+		if (limit > 0 && len > limit) {
+			len = limit;
+		}
+		count = 0;
+		while (s && *s && count < len) {
+			glyph = &font->glyphs[*s & 255];
+			if (Q_IsColorString(s)) {
+				memcpy(newColor, g_color_table[ColorIndex(*(s + 1))], sizeof ( newColor));
+				newColor[3] = color[3];
+				trap_R_SetColor(newColor);
+				s += 2;
+				continue;
+			} else {
+				float yadj = useScale * glyph->top;
+				if (style == ITEM_TEXTSTYLE_SHADOWED || style == ITEM_TEXTSTYLE_SHADOWEDMORE) {
+					int ofs = style == ITEM_TEXTSTYLE_SHADOWED ? 1 : 2;
+					colorBlack[3] = newColor[3];
+					trap_R_SetColor(colorBlack);
+					CG_Text_PaintCharNoAdjust(x + ofs, y - yadj + ofs,
+							glyph->imageWidth,
+							glyph->imageHeight,
+							useScale,
+							glyph->s,
+							glyph->t,
+							glyph->s2,
+							glyph->t2,
+							glyph->glyph);
+					colorBlack[3] = 1.0;
+					trap_R_SetColor(newColor);
+				}
+				CG_Text_PaintCharNoAdjust(x, y - yadj,
+						glyph->imageWidth,
+						glyph->imageHeight,
+						useScale,
+						glyph->s,
+						glyph->t,
+						glyph->s2,
+						glyph->t2,
+						glyph->glyph);
+				// CG_DrawPic(x, y - yadj, scale * cgDC.Assets.textFont.glyphs[text[i]].imageWidth, scale * cgDC.Assets.textFont.glyphs[text[i]].imageHeight, cgDC.Assets.textFont.glyphs[text[i]].glyph);
+				x += (glyph->xSkip * useScale) + adjust;
+				s++;
+				count++;
+			}
+		}
+		trap_R_SetColor(NULL);
+	}
+}
+
 
 
 #endif
@@ -3474,6 +3551,8 @@ void CG_DrawTimedMenus(void) {
 CG_Draw2D
 =================
  */
+void CG_PlayerSpritesOverWorld(centity_t *cent);
+
 static void CG_Draw2D(stereoFrame_t stereoFrame) {
 #ifdef MISSIONPACK
 	if (cgs.orderPending && cg.time > cgs.orderTime) {
@@ -3546,6 +3625,25 @@ static void CG_Draw2D(stereoFrame_t stereoFrame) {
 
 	CG_DrawLagometer();
 
+	// leilei - draw the player's names 
+#ifdef MISSIONPACK
+	{	
+	int f;
+	centity_t	*cent;
+	vec3_t		angles;
+	vec3_t		origin;
+
+
+
+	for (f=0;f<MAX_CLIENTS;f++){
+		cent = &cg.headent[f];
+		if (cent);
+			CG_PlayerSpritesOverWorld(cent);
+		}	
+	
+	}
+#endif
+
 #ifdef MISSIONPACK
 	if (!cg_paused.integer) {
 		CG_DrawUpperRight(stereoFrame);
@@ -3571,9 +3669,11 @@ static void CG_Draw2D(stereoFrame_t stereoFrame) {
 		CG_DrawCenterDDString();
 		CG_DrawCenter1FctfString();
 		CG_DrawCenterString();
-	}
 
 	cg.accBoardShowing = CG_DrawAccboard();
+}
+
+
 }
 
 /*

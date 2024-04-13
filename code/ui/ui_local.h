@@ -209,7 +209,7 @@ extern vmCvar_t ui_developer;
 #define	MAX_EDIT_LINE			256
 
 #define MAX_MENUDEPTH			8
-#define MAX_MENUITEMS			128	// was 96 - rfactory change
+#define MAX_MENUITEMS			256	// was 96 - rfactory change
 
 #define MTYPE_NULL				0
 #define MTYPE_SLIDER			1	
@@ -776,8 +776,8 @@ typedef struct {
 #define GAMES_CTF			4
 #define MAPS_PER_TIER 3
 #define MAX_TIERS 16
-#define MAX_MODS 64
-#define MAX_DEMOS 256
+#define MAX_MODS 128
+#define MAX_DEMOS 512
 #define MAX_MOVIES 256
 //#define MAX_PLAYERMODELS 256
 #define MAX_PLAYERMODELS 1024

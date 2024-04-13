@@ -2197,6 +2197,94 @@ static void CG_PlayerFloatSprite(centity_t *cent, qhandle_t shader) {
 	trap_R_AddRefEntityToScene(&ent);
 }
 
+
+// leilei - Print their name over their head. Through walls.
+static void CG_FloatName(centity_t *cent) {
+#ifdef MISSIONPACK
+	int rf;
+	int them;
+		clientInfo_t *ci;
+	refEntity_t ent;
+	float textsize;
+	int x, y, w, chaty, vx, vy, sx, sy, tx, ty, nx, ny;
+	int l, h, i;
+	vec4_t color;
+	vec3_t vp;
+	char *start;
+	vec3_t not;
+	trace_t tr;
+
+	float scl = cgs.screenYScale; // OA3 only scales vertically 
+	if (scl<1) scl=1;
+
+	textsize = 0.1875 * scl;	// use the tiny pixel font
+	if (textsize < 0.1875) textsize = 0.1875;
+	if (textsize > 0.4) textsize = 0.4;	// don't allow the huge font
+
+	vp[0] = cent->headpos[0];
+	vp[1] = cent->headpos[1];
+	vp[2] = cent->headpos[2];
+
+	color[3] = 1;
+
+	CG_Trace( &tr, cg.refdef.vieworg, not, not, vp, cg.predictedPlayerState.clientNum, MASK_SOLID );
+	if (tr.fraction < 1) 
+		color[3] = 0.3f; //  fade names through walls
+	// return; // don't do names not in the view.
+
+	VectorCopy(cg.headpos[cent->currentState.clientNum], vp);
+
+	if (!vp[0] && !vp[1] && !vp[2])	
+		return; // ain't working
+
+	color[0] = 0;
+	color[1] = 1;	// green is for friend
+	color[2] = 0;
+
+	vp[2] += 16;
+	trap_R_GetViewPosition( vp );	
+
+	// It's time to print
+	x=vp[0];
+	y=vp[1];
+
+	start = cgs.clientinfo[ cent->currentState.clientNum ].name;
+
+	while (1) {
+			char linebuffer[256];
+	
+			for (l = 0; l < 50; l++) {
+				if (!start[l] || start[l] == '\n') {
+					break;
+				}
+				linebuffer[l] = start[l];
+			}
+			linebuffer[l] = 0;
+	
+			w = CG_Text_Width(linebuffer, 0.25, 0);
+			h = CG_Text_Height(linebuffer, 0.25, 0);
+			vx = x;
+			vy = (cg.refdef.height - y);
+			if (x<1) x=1;
+			if (y<1) y=1;
+			tx = (vx);
+			ty = vy;
+
+			CG_Text_Paint_3D(tx-32, ty, textsize, color, linebuffer, 0, 0, 0);
+			y += h + 6;
+			while (*start && (*start != '\n')) {
+				start++;
+			}
+			if (!*start) {
+				break;
+			}
+			start++;
+		}
+
+#endif
+}
+
+
 /*
 ===============
 CG_PlayerSprites
@@ -2251,11 +2339,27 @@ static void CG_PlayerSprites(centity_t *cent) {
 	if (!(cent->currentState.eFlags & EF_DEAD) &&
 			cg.snap->ps.persistant[PERS_TEAM] == team &&
 			CG_IsATeamGametype(cgs.gametype)) {
-		if (cg_drawFriend.integer) {
+		if (cg_drawFriend.integer == 2){  // leilei - name tags
+			cg.headon[ cent->currentState.clientNum ] = 0;	
+			VectorCopy(cent->headpos,cg.headpos[cent->currentState.clientNum]);
+			cg.headent[ cent->currentState.clientNum ] = *cent;
+			}
+		else if (cg_drawFriend.integer)
 			CG_PlayerFloatSprite(cent, cgs.media.friendShader);
-		}
+		
 		return;
 	}
+}
+
+void CG_PlayerSpritesOverWorld(centity_t *cent) {
+	int team;
+
+	if (!cg.headon[ cent->currentState.clientNum ]){
+		CG_FloatName(cent);
+		cg.headon[ cent->currentState.clientNum ] = 1; // applied directly
+	}
+
+
 }
 
 /*
@@ -2419,40 +2523,84 @@ void CG_AddRefEntityWithPowerups(refEntity_t *ent, entityState_t *state, int tea
 			trap_R_AddRefEntityToScene(ent);
 		}
 	} else {
+		if (cg_alternateShell.integer < 2)	// leilei - skip the shell for the glow
 		trap_R_AddRefEntityToScene(ent);
 		if (!isMissile && (cgs.dmflags & DF_PLAYER_OVERLAY) && !(state->eFlags & EF_DEAD)) {
-			switch (team) {
-				case TEAM_RED:
-					ent->customShader = cgs.media.redOverlay;
-					trap_R_AddRefEntityToScene(ent);
-					break;
-				case TEAM_BLUE:
-					ent->customShader = cgs.media.blueOverlay;
-					trap_R_AddRefEntityToScene(ent);
-					break;
-				default:
-					ent->customShader = cgs.media.neutralOverlay;
-					trap_R_AddRefEntityToScene(ent);
-			}
+				if (cg_alternateShell.integer > 1){
+					ent->glow = 1337;
+					switch (team) {
+						case TEAM_RED:
+							ent->glowcol = 0xF80A85;
+							break;
+						case TEAM_BLUE:
+							ent->glowcol = 0x0585FD;
+							break;
+						default:
+							ent->glowcol = 0xA0A0A0;
+					}
+				}
+				else
+				{
+					switch (team) {
+						case TEAM_RED:
+							ent->customShader = cgs.media.redOverlay;
+							trap_R_AddRefEntityToScene(ent);
+							break;
+						case TEAM_BLUE:
+							ent->customShader = cgs.media.blueOverlay;
+							trap_R_AddRefEntityToScene(ent);
+							break;
+						default:
+							ent->customShader = cgs.media.neutralOverlay;
+							trap_R_AddRefEntityToScene(ent);
+					}
+				}
 		}
 
 		if (state->powerups & (1 << PW_QUAD)) {
+			if (cg_alternateShell.integer > 1){
+				ent->glow = 1338;
+				if (team == TEAM_RED)
+				ent->glowcol = 0xFF3040;
+				else
+				ent->glowcol = 0x0040E2;
+
+			}
+			else
+			{
 			if (team == TEAM_RED)
 				ent->customShader = cgs.media.redQuadShader;
 			else
 				ent->customShader = cgs.media.quadShader;
 			trap_R_AddRefEntityToScene(ent);
+			}
 		}
 		if (state->powerups & (1 << PW_REGEN)) {
 			if (((cg.time / 100) % 10) == 1) {
-				ent->customShader = cgs.media.regenShader;
-				trap_R_AddRefEntityToScene(ent);
+				if (cg_alternateShell.integer > 1){
+					ent->glow = 1337;
+					ent->glowcol = 0xFF6080;
+				}
+				else
+				{
+					ent->customShader = cgs.media.regenShader;
+					trap_R_AddRefEntityToScene(ent);
+				}
 			}
 		}
 		if (state->powerups & (1 << PW_BATTLESUIT)) {
-			ent->customShader = cgs.media.battleSuitShader;
-			trap_R_AddRefEntityToScene(ent);
+				if (cg_alternateShell.integer > 1){
+					ent->glow = 1340;
+					ent->glowcol = 0xE29000;
+				}
+				else
+				{
+					ent->customShader = cgs.media.battleSuitShader;
+					trap_R_AddRefEntityToScene(ent);
+				}
 		}
+		if (cg_alternateShell.integer > 1)	// NOW add the entity for the glow
+		trap_R_AddRefEntityToScene(ent);
 	}
 }
 
@@ -2523,37 +2671,6 @@ void CG_Player(centity_t *cent) {
 	float angle;
 	vec3_t dir, angles;
 	int camereyes = 0;
-	// leilei - chibi hack
-	float chibifactorbody = 0.0f;
-	float chibifactortorso = 0.0f;
-	float chibifactorhead = 0.0f;
-
-	if (cg_leiChibi.integer > 0) {
-		if (cg_leiChibi.integer == 1) {
-			// chibi SD proportion
-			chibifactortorso = 0.0f;
-			chibifactorbody = 0.62f;
-			chibifactorhead = 2.7f;
-		} else if (cg_leiChibi.integer == 2) {
-			// slightly younger proportion
-			chibifactorbody = 0.92f;
-			chibifactortorso = 0.82f;
-			chibifactorhead = 1.30f;
-		} else if (cg_leiChibi.integer == 3) {
-			// slightly more 'real' proportion
-			chibifactorbody = 0.92f;
-			chibifactortorso = 0.97f;
-			chibifactorhead = 0.92f;
-		} else if (cg_leiChibi.integer == 4) {
-			// big torso
-			chibifactorbody = 0.85f;
-			chibifactortorso = 1.3f;
-			chibifactorhead = 0.91f;
-		}
-	} else {
-		chibifactorbody = chibifactortorso = chibifactorhead = 0; // normal scale...
-	}
-
 
 	// the client number is stored in clientNum.  It can't be derived
 	// from the entity number, because a single client may have
@@ -2623,14 +2740,6 @@ void CG_Player(centity_t *cent) {
 	VectorCopy(cent->lerpOrigin, legs.origin);
 
 	VectorCopy(cent->lerpOrigin, legs.lightingOrigin);
-
-	// leilei - chibi mode hack
-	if (chibifactorbody) {
-		VectorScale(legs.axis[0], chibifactorbody, legs.axis[0]);
-		VectorScale(legs.axis[1], chibifactorbody, legs.axis[1]);
-		VectorScale(legs.axis[2], chibifactorbody, legs.axis[2]);
-	}
-
 
 	// leilei - q scale hack
 
@@ -2756,16 +2865,6 @@ void CG_Player(centity_t *cent) {
 	if (cg_cameraEyes.integer) {
 		torso.renderfx &= RF_FIRST_PERSON;
 	}
-
-
-	if (chibifactortorso) {
-		VectorScale(torso.axis[0], chibifactortorso, torso.axis[0]);
-		VectorScale(torso.axis[1], chibifactortorso, torso.axis[1]);
-		VectorScale(torso.axis[2], chibifactortorso, torso.axis[2]);
-	}
-
-
-
 
 
 	CG_AddRefEntityWithPowerups(&torso, &cent->currentState, ci->team, qfalse);
@@ -2983,6 +3082,7 @@ void CG_Player(centity_t *cent) {
 	VectorCopy(cent->lerpOrigin, head.lightingOrigin);
 
 	CG_PositionRotatedEntityOnTag(&head, &torso, ci->torsoModel, "tag_head");
+	VectorCopy(head.origin,cent->headpos); // leilei - copy this position so names/bubbles can work
 
 	// 
 	// add the eyes
@@ -3030,16 +3130,6 @@ void CG_Player(centity_t *cent) {
 
 	head.shadowPlane = shadowPlane;
 	head.renderfx = renderfx;
-
-
-	// leilei - chibi mode hack
-	if (chibifactorhead) {
-		VectorScale(head.axis[0], chibifactorhead, head.axis[0]);
-		VectorScale(head.axis[1], chibifactorhead, head.axis[1]);
-		VectorScale(head.axis[2], chibifactorhead, head.axis[2]);
-	}
-
-
 
 	CG_AddRefEntityWithPowerups(&head, &cent->currentState, ci->team, qfalse);
 

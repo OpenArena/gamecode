@@ -117,6 +117,8 @@ typedef struct {
 	vec3_t		eyepos[2];			// looking from
 	vec3_t		eyelook;			// looking from
 
+	int		glow;
+	int		glowcol;
 
 } refEntity_t;
 

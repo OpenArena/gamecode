@@ -732,6 +732,55 @@ void CG_EntityEvent(centity_t *cent, vec3_t position) {
 						cgs.media.footsteps[ FOOTSTEP_METAL ][rand()&3]);
 			}
 			break;
+		case EV_FOOTSTEP_SNOW:
+			DEBUGNAME("EV_FOOTSTEP_SNOW");
+			if (cg_footsteps.integer) {
+				trap_S_StartSound(NULL, es->number, CHAN_BODY,
+						cgs.media.footsteps[ FOOTSTEP_SNOW ][rand()&3]);
+			}
+			break;
+		case EV_FOOTSTEP_WOOD:
+			DEBUGNAME("EV_FOOTSTEP_WOOD");
+			if (cg_footsteps.integer) {
+				trap_S_StartSound(NULL, es->number, CHAN_BODY,
+						cgs.media.footsteps[ FOOTSTEP_WOOD ][rand()&3]);
+			}
+			break;
+		case EV_FOOTSTEP_SAND:
+			DEBUGNAME("EV_FOOTSTEP_SAND");
+			if (cg_footsteps.integer) {
+				trap_S_StartSound(NULL, es->number, CHAN_BODY,
+						cgs.media.footsteps[ FOOTSTEP_SAND ][rand()&3]);
+			}
+			break;
+		case EV_FOOTSTEP_GRAVEL:
+			DEBUGNAME("EV_FOOTSTEP_GRAVEL");
+			if (cg_footsteps.integer) {
+				trap_S_StartSound(NULL, es->number, CHAN_BODY,
+						cgs.media.footsteps[ FOOTSTEP_GRAVEL ][rand()&3]);
+			}
+			break;
+		case EV_FOOTSTEP_FOILAGE:
+			DEBUGNAME("EV_FOOTSTEP_FOILAGE");
+			if (cg_footsteps.integer) {
+				trap_S_StartSound(NULL, es->number, CHAN_BODY,
+						cgs.media.footsteps[ FOOTSTEP_FOILAGE ][rand()&3]);
+			}
+			break;
+		case EV_FOOTSTEP_ICE:
+			DEBUGNAME("EV_FOOTSTEP_ICE");
+			if (cg_footsteps.integer) {
+				trap_S_StartSound(NULL, es->number, CHAN_BODY,
+						cgs.media.footsteps[ FOOTSTEP_ICE ][rand()&3]);
+			}
+			break;
+		case EV_FOOTSTEP_GLASS:
+			DEBUGNAME("EV_FOOTSTEP_GLASS");
+			if (cg_footsteps.integer) {
+				trap_S_StartSound(NULL, es->number, CHAN_BODY,
+						cgs.media.footsteps[ FOOTSTEP_GLASS ][rand()&3]);
+			}
+			break;
 		case EV_FOOTSPLASH:
 			DEBUGNAME("EV_FOOTSPLASH");
 			if (cg_footsteps.integer) {

@@ -1572,16 +1572,33 @@ static void CG_AddWeaponWithPowerups( refEntity_t *gun, int powerups )
 		}
 	}
 	else {
+		if (cg_alternateShell.integer < 2)	// leilei - skip the shell for the glow
 		trap_R_AddRefEntityToScene( gun );
 
 		if ( powerups & ( 1 << PW_BATTLESUIT ) ) {
-			gun->customShader = cgs.media.battleWeaponShader;
-			trap_R_AddRefEntityToScene( gun );
+				if (cg_alternateShell.integer > 1){
+					gun->glow = 1340;
+					gun->glowcol = 0xE29000;
+				}
+				else
+				{
+					gun->customShader = cgs.media.battleWeaponShader;
+					trap_R_AddRefEntityToScene( gun );
+				}
 		}
 		if ( powerups & ( 1 << PW_QUAD ) ) {
-			gun->customShader = cgs.media.quadWeaponShader;
-			trap_R_AddRefEntityToScene( gun );
+				if (cg_alternateShell.integer > 1){
+					gun->glow = 1338;
+					gun->glowcol = 0x0040E2;
+				}
+				else
+				{
+					gun->customShader = cgs.media.quadWeaponShader;
+					trap_R_AddRefEntityToScene( gun );
+				}
 		}
+		if (cg_alternateShell.integer > 1)	// NOW add the entity for the glow
+		trap_R_AddRefEntityToScene( gun );
 	}
 }
 

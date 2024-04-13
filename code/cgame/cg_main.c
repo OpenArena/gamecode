@@ -135,6 +135,7 @@ vmCvar_t cg_brassTime;
 vmCvar_t cg_viewsize;
 vmCvar_t cg_viewnudge; // leilei
 vmCvar_t cg_muzzleflashStyle;
+vmCvar_t cg_alternateShell;
 vmCvar_t cg_drawGun;
 vmCvar_t cg_gun_frame;
 vmCvar_t cg_gun_x;
@@ -251,7 +252,7 @@ vmCvar_t cl_timeNudge;
 
 //elimination addition
 vmCvar_t cg_alwaysWeaponBar;
-vmCvar_t cg_hitsound;
+vmCvar_t cg_hitSound;
 vmCvar_t cg_voip_teamonly;
 vmCvar_t cg_voteflags;
 vmCvar_t cg_cyclegrapple;
@@ -394,7 +395,7 @@ static cvarTable_t cvarTable[] = {// bk001129
 	{ &cg_paused, "cl_paused", "0", CVAR_ROM},
 	{ &cg_blood, "com_blood", "1", CVAR_ARCHIVE},
 	{ &cg_alwaysWeaponBar, "cg_alwaysWeaponBar", "0", CVAR_ARCHIVE}, //Elimination
-	{ &cg_hitsound, "cg_hitsound", "0", CVAR_ARCHIVE},
+	{ &cg_hitSound, "cg_hitSound", "1", CVAR_ARCHIVE},
 	{ &cg_voip_teamonly, "cg_voipTeamOnly", "1", CVAR_ARCHIVE},
 	{ &cg_voteflags, "cg_voteflags", "*", CVAR_ROM},
 	{ &cg_cyclegrapple, "cg_cyclegrapple", "1", CVAR_ARCHIVE},
@@ -517,6 +518,7 @@ static cvarTable_t cvarTable[] = {// bk001129
 	{&cg_chatBeep, "cg_chatBeep", "1", CVAR_ARCHIVE},
 	{&cg_teamChatBeep, "cg_teamChatBeep", "1", CVAR_ARCHIVE},
 	{ &cg_muzzleflashStyle, "cg_muzzleflashStyle", "1", CVAR_ARCHIVE},
+	{ &cg_alternateShell, "cg_alternateShell", "0", CVAR_ARCHIVE},
 /* Neon_Knight: Enables MP checks. */
 	{ &cg_missionpackChecks, "missionpackChecks", "1", CVAR_ARCHIVE},
 /* /Neon_Knight */
@@ -902,12 +904,7 @@ static void CG_RegisterSounds(void) {
 	cgs.media.talkSound = trap_S_RegisterSound("sound/player/talk.wav", qfalse);
 	cgs.media.landSound = trap_S_RegisterSound("sound/player/land1.wav", qfalse);
 
-	switch (cg_hitsound.integer) {
-
-		case 0:
-		default:
-			cgs.media.hitSound = trap_S_RegisterSound("sound/feedback/hit.wav", qfalse);
-	};
+	cgs.media.hitSound = trap_S_RegisterSound("sound/feedback/hit.wav", qfalse);
 
 #ifdef MISSIONPACK
 	cgs.media.hitSoundHighArmor = trap_S_RegisterSound("sound/feedback/hithi.wav", qfalse);
@@ -963,6 +960,27 @@ static void CG_RegisterSounds(void) {
 
 		Com_sprintf(name, sizeof (name), "sound/player/footsteps/clank%i.wav", i + 1);
 		cgs.media.footsteps[FOOTSTEP_METAL][i] = trap_S_RegisterSound(name, qfalse);
+
+		Com_sprintf(name, sizeof (name), "sound/player/footsteps/sand%i.wav", i + 1);
+		cgs.media.footsteps[FOOTSTEP_SAND][i] = trap_S_RegisterSound(name, qfalse);
+
+		Com_sprintf(name, sizeof (name), "sound/player/footsteps/wood%i.wav", i + 1);
+		cgs.media.footsteps[FOOTSTEP_WOOD][i] = trap_S_RegisterSound(name, qfalse);
+
+		Com_sprintf(name, sizeof (name), "sound/player/footsteps/gravel%i.wav", i + 1);
+		cgs.media.footsteps[FOOTSTEP_GRAVEL][i] = trap_S_RegisterSound(name, qfalse);
+
+		Com_sprintf(name, sizeof (name), "sound/player/footsteps/snow%i.wav", i + 1);
+		cgs.media.footsteps[FOOTSTEP_SNOW][i] = trap_S_RegisterSound(name, qfalse);
+
+		Com_sprintf(name, sizeof (name), "sound/player/footsteps/foilage%i.wav", i + 1);
+		cgs.media.footsteps[FOOTSTEP_FOILAGE][i] = trap_S_RegisterSound(name, qfalse);
+
+		Com_sprintf(name, sizeof (name), "sound/player/footsteps/ice%i.wav", i + 1);
+		cgs.media.footsteps[FOOTSTEP_ICE][i] = trap_S_RegisterSound(name, qfalse);
+
+		Com_sprintf(name, sizeof (name), "sound/player/footsteps/glass%i.wav", i + 1);
+		cgs.media.footsteps[FOOTSTEP_GLASS][i] = trap_S_RegisterSound(name, qfalse);
 	}
 
 	// only register the items that the server says we need
@@ -1028,33 +1046,7 @@ static void CG_RegisterSounds(void) {
 	cgs.media.hgrenb1aSound = trap_S_RegisterSound("sound/weapons/grenade/hgrenb1a.wav", qfalse);
 	cgs.media.hgrenb2aSound = trap_S_RegisterSound("sound/weapons/grenade/hgrenb2a.wav", qfalse);
 
-#ifdef MISSIONPACK
-	trap_S_RegisterSound("sound/player/sergei/death1.wav", qfalse);
-	trap_S_RegisterSound("sound/player/sergei/death2.wav", qfalse);
-	trap_S_RegisterSound("sound/player/sergei/death3.wav", qfalse);
-	trap_S_RegisterSound("sound/player/sergei/jump1.wav", qfalse);
-	trap_S_RegisterSound("sound/player/sergei/pain25_1.wav", qfalse);
-	trap_S_RegisterSound("sound/player/sergei/pain75_1.wav", qfalse);
-	trap_S_RegisterSound("sound/player/sergei/pain100_1.wav", qfalse);
-	trap_S_RegisterSound("sound/player/sergei/falling1.wav", qfalse);
-	trap_S_RegisterSound("sound/player/sergei/gasp.wav", qfalse);
-	trap_S_RegisterSound("sound/player/sergei/drown.wav", qfalse);
-	trap_S_RegisterSound("sound/player/sergei/fall1.wav", qfalse);
-	trap_S_RegisterSound("sound/player/sergei/taunt.wav", qfalse);
 
-	trap_S_RegisterSound("sound/player/kyonshi/death1.wav", qfalse);
-	trap_S_RegisterSound("sound/player/kyonshi/death2.wav", qfalse);
-	trap_S_RegisterSound("sound/player/kyonshi/death3.wav", qfalse);
-	trap_S_RegisterSound("sound/player/kyonshi/jump1.wav", qfalse);
-	trap_S_RegisterSound("sound/player/kyonshi/pain25_1.wav", qfalse);
-	trap_S_RegisterSound("sound/player/kyonshi/pain75_1.wav", qfalse);
-	trap_S_RegisterSound("sound/player/kyonshi/pain100_1.wav", qfalse);
-	trap_S_RegisterSound("sound/player/kyonshi/falling1.wav", qfalse);
-	trap_S_RegisterSound("sound/player/kyonshi/gasp.wav", qfalse);
-	trap_S_RegisterSound("sound/player/kyonshi/drown.wav", qfalse);
-	trap_S_RegisterSound("sound/player/kyonshi/fall1.wav", qfalse);
-	trap_S_RegisterSound("sound/player/kyonshi/taunt.wav", qfalse);
-#endif
 
 }
 

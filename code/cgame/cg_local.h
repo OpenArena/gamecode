@@ -88,15 +88,15 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 // leilei - change these to sorceress for baseoa3 as there is no sarge or sergei
 #define	DEFAULT_MODEL			"sarge"
 #ifdef MISSIONPACK
-#define	DEFAULT_TEAM_MODEL		"sergei"
-#define	DEFAULT_TEAM_HEAD		"*sergei"
+#define	DEFAULT_TEAM_MODEL		"sarge"
+#define	DEFAULT_TEAM_HEAD		"sarge"
 #else
 #define	DEFAULT_TEAM_MODEL		"sarge"
 #define	DEFAULT_TEAM_HEAD		"sarge"
 #endif
 
-#define DEFAULT_REDTEAM_NAME		"Vim supporters"
-#define DEFAULT_BLUETEAM_NAME		"Emacs supporters"
+#define DEFAULT_REDTEAM_NAME		"Red"
+#define DEFAULT_BLUETEAM_NAME		"Blue"
 
 typedef enum {
 	FOOTSTEP_NORMAL,
@@ -106,6 +106,13 @@ typedef enum {
 	FOOTSTEP_ENERGY,
 	FOOTSTEP_METAL,
 	FOOTSTEP_SPLASH,
+	FOOTSTEP_SNOW,
+	FOOTSTEP_WOOD,
+	FOOTSTEP_GRAVEL,
+	FOOTSTEP_SAND,
+	FOOTSTEP_FOILAGE,
+	FOOTSTEP_ICE,
+	FOOTSTEP_GLASS,
 
 	FOOTSTEP_TOTAL
 } footstep_t;
@@ -113,7 +120,11 @@ typedef enum {
 typedef enum {
 	IMPACTSOUND_DEFAULT,
 	IMPACTSOUND_METAL,
-	IMPACTSOUND_FLESH
+	IMPACTSOUND_FLESH,
+	IMPACTSOUND_GLASS,
+	IMPACTSOUND_SAND,
+	IMPACTSOUND_SNOW,
+	IMPACTSOUND_WOOD
 } impactSound_t;
 
 //=================================================
@@ -223,6 +234,7 @@ typedef struct centity_s {
 	int			muztime[5];	
 	int			muzslot;
 	float			muzroll[5];
+	vec3_t			headpos;	// leilei - position of the head model (for bubbles)
 } centity_t;
 
 
@@ -746,6 +758,9 @@ typedef struct {
 #endif
 
 
+	vec3_t		headpos[MAX_CLIENTS]; // head positions of each client
+	centity_t	headent[MAX_CLIENTS]; // head's entity so we know which 
+	int		headon[MAX_CLIENTS];
 } cg_t;
 
 
@@ -1337,6 +1352,7 @@ extern vmCvar_t cg_tracerLength;
 extern vmCvar_t cg_autoswitch;
 extern vmCvar_t cg_ignore;
 extern vmCvar_t cg_simpleItems;
+extern vmCvar_t cg_alternateShell;
 extern vmCvar_t cg_fov;
 extern vmCvar_t cg_zoomFov;
 extern vmCvar_t cg_thirdPersonRange;
@@ -1475,7 +1491,7 @@ extern vmCvar_t cg_teamChatBeep;
 /* Neon_Knight: Toggleable missionpack checks. */
 extern vmCvar_t cg_missionpackChecks;
 /* /Neon_Knight */
-extern vmCvar_t cg_leiChibi;
+
 /* Neon_Knight: Developer mode. */
 extern vmCvar_t cg_developer;
 /* /Neon_Knight */
@@ -1581,8 +1597,11 @@ void CG_DrawFlagModel( float x, float y, float w, float h, int team, qboolean fo
 void CG_DrawTeamBackground( int x, int y, int w, int h, float alpha, int team );
 void CG_OwnerDraw(float x, float y, float w, float h, float text_x, float text_y, int ownerDraw, int ownerDrawFlags, int align, float special, float scale, vec4_t color, qhandle_t shader, int textStyle);
 void CG_Text_Paint(float x, float y, float scale, vec4_t color, const char *text, float adjust, int limit, int style);
+#ifdef MISSIONPACK
+void CG_Text_Paint_3D(float x, float y, float scale, vec4_t color, const char *text, float adjust, int limit, int style);
 int CG_Text_Width(const char *text, float scale, int limit);
 int CG_Text_Height(const char *text, float scale, int limit);
+#endif
 void CG_SelectPrevPlayer( void );
 void CG_SelectNextPlayer( void );
 float CG_GetValue(int ownerDraw);
@@ -1993,6 +2012,7 @@ extern qboolean		initparticles;
 extern int wideAdjustX;
 
 void	trap_R_LFX_ParticleEffect( int effect, const vec3_t origin, const vec3_t velocity ); // leilei - particle effects. this allows to pick an effect, such as..
+void	trap_R_GetViewPosition( vec3_t point );
 
 #define	LFX_SMOKEPUFF		1;
 #define	LFX_BULLETHIT		2;
