@@ -112,7 +112,6 @@ extern vmCvar_t ui_server16;
 extern vmCvar_t ui_setupchecked;
 //new in beta 23:
 extern vmCvar_t ui_browserOnlyHumans;
-extern vmCvar_t ui_developer;
 extern vmCvar_t ui_browserHidePrivate;
 
 //
@@ -899,10 +898,3 @@ void RankStatus_Cache( void );
 void UI_RankStatusMenu( void );
 
 #endif
-
-/* Neon_Knight: Useful check in order to have code consistency. */
-qboolean UI_IsATeamGametype(int check);	/* Whether the gametype is team-based or not.*/
-qboolean UI_UsesTeamFlags(int check);	/* Whether the gametype uses the red and blue flags. */
-qboolean UI_UsesTheWhiteFlag(int check);	/* Whether the gametype uses the neutral flag. */
-qboolean UI_IsARoundBasedGametype(int check);	/* Whether the gametype uses the neutral flag. */
-/* /Neon_Knight */

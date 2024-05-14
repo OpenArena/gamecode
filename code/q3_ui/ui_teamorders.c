@@ -349,7 +349,7 @@ static void UI_TeamOrdersMenu_ListEvent( void *ptr, int event )
 	int		selection;
 	char	message[256];
 
-	if (event != QM_ACTIVATED || !UI_IsATeamGametype(teamOrdersMenuInfo.gametype))
+	if (event != QM_ACTIVATED)
 		return;
 
 	id = ((menulist_s *)ptr)->generic.id;
@@ -357,20 +357,20 @@ static void UI_TeamOrdersMenu_ListEvent( void *ptr, int event )
 
 	if( id == ID_LIST_BOTS ) {
 		teamOrdersMenuInfo.selectedBot = selection;
-		if( UI_UsesTeamFlags(teamOrdersMenuInfo.gametype) && !UI_UsesTheWhiteFlag(teamOrdersMenuInfo.gametype) ) {
+		if( teamOrdersMenuInfo.gametype == GT_CTF || teamOrdersMenuInfo.gametype == GT_CTF_ELIMINATION ) {
 			UI_TeamOrdersMenu_SetList( ID_LIST_CTF_ORDERS );
 		}
-		if( UI_UsesTeamFlags(teamOrdersMenuInfo.gametype) && UI_UsesTheWhiteFlag(teamOrdersMenuInfo.gametype) ) {
+		if( teamOrdersMenuInfo.gametype == GT_1FCTF ) {
 			UI_TeamOrdersMenu_SetList( ID_LIST_CTF1F_ORDERS );
 		}
-		if( teamOrdersMenuInfo.gametype == GT_HARVESTER || teamOrdersMenuInfo.gametype == GT_OBELISK ) {
+		if( teamOrdersMenuInfo.gametype == GT_OBELISK || teamOrdersMenuInfo.gametype == GT_HARVESTER ) {
 			UI_TeamOrdersMenu_SetList( ID_LIST_BASE_ORDERS );
+		}
+		if( teamOrdersMenuInfo.gametype == GT_TEAM || teamOrdersMenuInfo.gametype == GT_ELIMINATION || teamOrdersMenuInfo.gametype == GT_DOMINATION ) {
+			UI_TeamOrdersMenu_SetList( ID_LIST_TEAM_ORDERS );
 		}
 		if( teamOrdersMenuInfo.gametype == GT_DOUBLE_D ) {
 			UI_TeamOrdersMenu_SetList( ID_LIST_DD_ORDERS );
-		}
-		else {
-			UI_TeamOrdersMenu_SetList( ID_LIST_TEAM_ORDERS );
 		}
 
 		return;
@@ -550,7 +550,7 @@ void UI_TeamOrdersMenu_f( void )
 	// make sure it's a team game
 	trap_GetConfigString( CS_SERVERINFO, info, sizeof(info) );
 	teamOrdersMenuInfo.gametype = atoi( Info_ValueForKey( info, "g_gametype" ) );
-	if(!UI_IsATeamGametype(teamOrdersMenuInfo.gametype)) {
+	if( teamOrdersMenuInfo.gametype < GT_TEAM || teamOrdersMenuInfo.gametype == GT_LMS || teamOrdersMenuInfo.gametype == GT_POSSESSION) {
 		return;
 	}
 
