@@ -1286,7 +1286,7 @@ extern int wideAdjustX;
 // new ui 
 
 #define ASSET_BACKGROUND "uiBackground"
-
+void RefreshHexColors( void );
 // for tracking sp game info in Team Arena
 typedef struct postGameInfo_s {
 	int score;
