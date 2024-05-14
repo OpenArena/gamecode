@@ -231,7 +231,7 @@ qboolean OnSameTeam( const gentity_t *ent1, const gentity_t *ent2 )
 		return qfalse;
 	}
 
-	if (!G_IsATeamGametype(g_gametype.integer)) {
+	if ( g_gametype.integer < GT_TEAM || g_ffa_gt==1) {
 		return qfalse;
 	}
 
@@ -277,7 +277,7 @@ void Team_SetFlagStatus( int team, flagStatus_t status )
 	if( modified ) {
 		char st[4];
 
-		if(G_UsesTeamFlags(g_gametype.integer) && !G_UsesTheWhiteFlag(g_gametype.integer)) {
+		if( g_gametype.integer == GT_CTF || g_gametype.integer == GT_CTF_ELIMINATION) {
 			st[0] = ctfFlagStatusRemap[teamgame.redStatus];
 			st[1] = ctfFlagStatusRemap[teamgame.blueStatus];
 			st[2] = 0;
@@ -407,8 +407,7 @@ void Team_FragBonuses(gentity_t *targ, gentity_t *inflictor, gentity_t *attacker
 		enemy_flag_pw = PW_REDFLAG;
 	}
 
-	if (G_UsesTheWhiteFlag(g_gametype.integer)) {
-		flag_pw = PW_NEUTRALFLAG;
+	if (g_gametype.integer == GT_1FCTF || g_gametype.integer == GT_POSSESSION) {
 		enemy_flag_pw = PW_NEUTRALFLAG;
 	}
 
@@ -948,11 +947,11 @@ static void Team_DD_makeB2team( gentity_t *target, int team )
 
 static void Team_ResetFlags( void )
 {
-	if(G_UsesTeamFlags(g_gametype.integer) && !G_UsesTheWhiteFlag(g_gametype.integer)) {
+	if( g_gametype.integer == GT_CTF || g_gametype.integer == GT_CTF_ELIMINATION) {
 		Team_ResetFlag( TEAM_RED );
 		Team_ResetFlag( TEAM_BLUE );
 	}
-	else if(G_UsesTheWhiteFlag(g_gametype.integer)) {
+	else if( g_gametype.integer == GT_1FCTF || g_gametype.integer == GT_POSSESSION ) {
 		Team_ResetFlag( TEAM_FREE );
 	}
 }
@@ -1263,7 +1262,7 @@ int Team_TouchOurFlag( gentity_t *ent, gentity_t *other, int team )
 	gclient_t	*cl = other->client;
 	int			enemy_flag;
 
-	if(G_UsesTheWhiteFlag(g_gametype.integer)) {
+	if( g_gametype.integer == GT_1FCTF || g_gametype.integer == GT_POSSESSION ) {
 		enemy_flag = PW_NEUTRALFLAG;
 	}
 	else {
@@ -2215,8 +2214,10 @@ static void ObeliskPain( gentity_t *self, gentity_t *attacker, int damage )
 	            attacker->client->pers.netname,actualDamage);
 }
 
-// spawn invisible damagable obelisk entity / harvester base trigger.
-static gentity_t *SpawnObelisk( vec3_t origin, vec3_t mins, vec3_t maxs, int team ) {
+static gentity_t *SpawnObelisk( vec3_t origin, int team, int spawnflags)
+{
+	trace_t		tr;
+	vec3_t		dest;
 	gentity_t	*ent;
 
 	ent = G_Spawn();
@@ -2225,8 +2226,8 @@ static gentity_t *SpawnObelisk( vec3_t origin, vec3_t mins, vec3_t maxs, int tea
 	VectorCopy( origin, ent->s.pos.trBase );
 	VectorCopy( origin, ent->r.currentOrigin );
 
-	VectorCopy( mins, ent->r.mins );
-	VectorCopy( maxs, ent->r.maxs );
+	VectorSet( ent->r.mins, -15, -15, 0 );
+	VectorSet( ent->r.maxs, 15, 15, 87 );
 
 	ent->s.eType = ET_GENERAL;
 	ent->flags = FL_NO_KNOCKBACK;
@@ -2245,26 +2246,7 @@ static gentity_t *SpawnObelisk( vec3_t origin, vec3_t mins, vec3_t maxs, int tea
 		ent->touch = ObeliskTouch;
 	}
 
-	G_SetOrigin( ent, ent->s.origin );
-
-	ent->spawnflags = team;
-
-	trap_LinkEntity( ent );
-
-	return ent;
-}
-
-// setup entity for team base model / obelisk model.
-void ObeliskInit( gentity_t *ent ) {
-	trace_t tr;
-	vec3_t dest;
-
-	ent->s.eType = ET_TEAM;
-
-	VectorSet( ent->r.mins, -15, -15, 0 );
-	VectorSet( ent->r.maxs, 15, 15, 87 );
-
-	if ( ent->spawnflags & 1 ) {
+	if ( spawnflags & 1 ) {
 		// suspended
 		G_SetOrigin( ent, ent->s.origin );
 	}
@@ -2289,6 +2271,12 @@ void ObeliskInit( gentity_t *ent ) {
 			G_SetOrigin( ent, tr.endpos );
 		}
 	}
+
+	ent->spawnflags = team;
+
+	trap_LinkEntity( ent );
+
+	return ent;
 }
 
 /*QUAKED team_redobelisk (1 0 0) (-16 -16 0) (16 16 8)
@@ -2297,20 +2285,20 @@ void SP_team_redobelisk( gentity_t *ent )
 {
 	gentity_t *obelisk;
 
-	if (g_gametype.integer != GT_HARVESTER && g_gametype.integer != GT_OBELISK) {
+	if ( g_gametype.integer <= GT_TEAM || g_ffa_gt>0) {
 		G_FreeEntity(ent);
 		return;
 	}
-	ObeliskInit( ent );
+	ent->s.eType = ET_TEAM;
 	if ( g_gametype.integer == GT_OBELISK ) {
-		obelisk = SpawnObelisk( ent->s.origin, ent->r.mins, ent->r.maxs, TEAM_RED );
+		obelisk = SpawnObelisk( ent->s.origin, TEAM_RED, ent->spawnflags );
 		obelisk->activator = ent;
 		// initial obelisk health value
 		ent->s.modelindex2 = 0xff;
 		ent->s.frame = 0;
 	}
 	if ( g_gametype.integer == GT_HARVESTER ) {
-		obelisk = SpawnObelisk( ent->s.origin, ent->r.mins, ent->r.maxs, TEAM_RED );
+		obelisk = SpawnObelisk( ent->s.origin, TEAM_RED, ent->spawnflags );
 		obelisk->activator = ent;
 	}
 	ent->s.modelindex = TEAM_RED;
@@ -2323,20 +2311,20 @@ void SP_team_blueobelisk( gentity_t *ent )
 {
 	gentity_t *obelisk;
 
-	if (g_gametype.integer != GT_HARVESTER && g_gametype.integer != GT_OBELISK) {
+	if ( g_gametype.integer <= GT_TEAM || g_ffa_gt>0) {
 		G_FreeEntity(ent);
 		return;
 	}
-	ObeliskInit( ent );
+	ent->s.eType = ET_TEAM;
 	if ( g_gametype.integer == GT_OBELISK ) {
-		obelisk = SpawnObelisk( ent->s.origin, ent->r.mins, ent->r.maxs, TEAM_BLUE );
+		obelisk = SpawnObelisk( ent->s.origin, TEAM_BLUE, ent->spawnflags );
 		obelisk->activator = ent;
 		// initial obelisk health value
 		ent->s.modelindex2 = 0xff;
 		ent->s.frame = 0;
 	}
 	if ( g_gametype.integer == GT_HARVESTER ) {
-		obelisk = SpawnObelisk( ent->s.origin, ent->r.mins, ent->r.maxs, TEAM_BLUE );
+		obelisk = SpawnObelisk( ent->s.origin, TEAM_BLUE, ent->spawnflags );
 		obelisk->activator = ent;
 	}
 	ent->s.modelindex = TEAM_BLUE;
@@ -2347,13 +2335,15 @@ void SP_team_blueobelisk( gentity_t *ent )
 */
 void SP_team_neutralobelisk( gentity_t *ent )
 {
-	if (g_gametype.integer != GT_HARVESTER) {
+	if ( g_gametype.integer != GT_1FCTF && g_gametype.integer != GT_HARVESTER && g_gametype.integer != GT_POSSESSION ) {
 		G_FreeEntity(ent);
 		return;
 	}
-	ObeliskInit( ent );
-	neutralObelisk = SpawnObelisk( ent->s.origin, ent->r.mins, ent->r.maxs, TEAM_FREE );
-	neutralObelisk->activator = ent;
+	ent->s.eType = ET_TEAM;
+	if ( g_gametype.integer == GT_HARVESTER) {
+		neutralObelisk = SpawnObelisk( ent->s.origin, TEAM_FREE, ent->spawnflags);
+		neutralObelisk->spawnflags = TEAM_FREE;
+	}
 	ent->s.modelindex = TEAM_FREE;
 	trap_LinkEntity(ent);
 }

@@ -269,6 +269,9 @@ static void PC_SourceError(int handle, const char *format, ...) {
 	va_list argptr;
 	static char string[4096];
 
+	// leilei - suppress on non-developer mode because we do a lot of tricks that make errors upset....
+	if (DC->getCVarValue("developer"))
+	{
 	va_start(argptr, format);
 	Q_vsnprintf(string, sizeof (string), format, argptr);
 	va_end(argptr);
@@ -278,6 +281,7 @@ static void PC_SourceError(int handle, const char *format, ...) {
 	trap_PC_SourceFileAndLine(handle, filename, &line);
 
 	Com_Printf(S_COLOR_RED "ERROR: %s, line %d: %s\n", filename, line, string);
+	}
 }
 
 /*
@@ -4408,6 +4412,13 @@ void Item_Model_Paint(itemDef_t *item) {
 	ent.renderfx = RF_LIGHTING_ORIGIN | RF_NOSHADOW;
 	VectorCopy(ent.origin, ent.oldorigin);
 
+	// leilei - colorable models
+	if (item->window.flags & WINDOW_FORECOLORSET) {
+		ent.shaderRGBA[0] = item->window.foreColor[0] * 255;
+		ent.shaderRGBA[1] = item->window.foreColor[1] * 255;
+		ent.shaderRGBA[2] = item->window.foreColor[2] * 255;
+
+	}
 	DC->addRefEntityToScene(&ent);
 
 	// changed RD
@@ -4951,6 +4962,7 @@ qboolean Menus_AnyFullScreenVisible(void) {
 	return qfalse;
 }
 
+void RefreshHexColors ( void );
 menuDef_t *Menus_ActivateByName(const char *p) {
 	int i;
 	menuDef_t *m = NULL;
@@ -5696,6 +5708,12 @@ qboolean ItemParse_textstyle(itemDef_t *item, int handle) {
 }
 
 
+qboolean ItemParse_bitflag(itemDef_t *item, int handle) {
+	if (!PC_Int_Parse(handle, &item->bitflag)) {
+		return qfalse;
+	}
+	return qtrue;
+}
 // Changed RD
 
 qboolean ItemParse_boxcolor(itemDef_t *item, int handle) {
@@ -5766,14 +5784,16 @@ static char *Both_Cvar_VariableString( const char *var_name ) {
 	return buffer;
 }
 
-#define MAX_HEXCOLORS 8
+#define MAX_HEXCOLORS 16
 vec4_t hexcol[MAX_HEXCOLORS];
 
 void UpdateHexColors ( void ){
 	// Parse ui_colors to update our vectors from the hex values in the cvar	
 	const char *token;
 	int col[MAX_HEXCOLORS];
-	int i;
+	int i, j, k;
+	menuDef_t *menu;
+	
 	char *thecolors = Both_Cvar_VariableString("ui_colors");
 
 	for (i=0;i<MAX_HEXCOLORS;i++)
@@ -5784,13 +5804,32 @@ void UpdateHexColors ( void ){
 		hexcol[i][1] = (float)((col[i] >> 8 ) & 0xFF) / 255;
 		hexcol[i][2] = (float)(col[i] & 0xFF) / 255;
 	}
+
+
+	
 }
+
+
+void ItemRefresh_hexcolor(itemDef_t *item) {
+	int i;
+	int j;
+	float f;
+	int hecks[MAX_HEXCOLORS];
+	UpdateHexColors();
+	for (j = 0; j < 3; j++) { // ignore alpha
+		item->window.backColor[j] 	= hexcol[item->window.choshex[0]][j];
+		item->window.foreColor[j] 	= hexcol[item->window.choshex[1]][j];
+		item->window.outlineColor[j] 	= hexcol[item->window.choshex[2]][j];
+		item->window.borderColor[j] 	= hexcol[item->window.choshex[3]][j];
+	}
+}
+
 
 qboolean ItemParse_hexcolor(itemDef_t *item, int handle) {
 	int i;
 	int j;
 	float f;
-	int hecks[4];
+	int hecks[MAX_HEXCOLORS];
 
 	UpdateHexColors();	// TODO: Move to a uiscript command so scheme changes
 				// can update everything
@@ -5812,26 +5851,51 @@ qboolean ItemParse_hexcolor(itemDef_t *item, int handle) {
 	//
 	//
 
-	for (i = 0; i < 4; i++) {
+	for (i = 0; i < 3; i++) {
 		if (!PC_Float_Parse(handle, &f)) {
 			return qfalse;
 		}
 		hecks[i] = (int)f;
-	}	
+	}
+	
+	item->window.choshex[0] = hecks[0];
+	item->window.choshex[1] = hecks[1];
+	item->window.choshex[2] = hecks[2];
+	item->window.choshex[3] = hecks[3];
+	item->window.flags |= WINDOW_HEXCOLORSET;
 
-
-	for (i = 0; i < 4; i++) {
-		for (j = 0; j < 3; j++) { // ignore alpha
-			item->window.backColor[j] 	= hexcol[hecks[0]][j];
-			item->window.foreColor[j] 	= hexcol[hecks[1]][j];
-			item->window.outlineColor[j] 	= hexcol[hecks[2]][j];
-			item->window.borderColor[j] 	= hexcol[hecks[3]][j];
-		}
-		
+	for (j = 0; j < 3; j++) { // ignore alpha
+		item->window.backColor[j] 	= hexcol[hecks[0]][j];
+		item->window.foreColor[j] 	= hexcol[hecks[1]][j];
+		item->window.outlineColor[j] 	= hexcol[hecks[2]][j];
+		item->window.borderColor[j] 	= hexcol[hecks[3]][j];
 	}
 
 	return qtrue;
 }
+
+void RefreshHexColors ( void ){
+	// Parse ui_colors to update our vectors from the hex values in the cvar	
+	const char *token;
+	int col[MAX_HEXCOLORS];
+	int i, j, k;
+	menuDef_t *menu;
+
+	// Now go through all of the menu options and check their hex colors and change them all
+	for (i = 0; i < Menu_Count(); i++) {
+		menu = &Menus[i];
+		if (menu != NULL) {
+			for (j = 0; j < menu->itemCount; j++) {
+				if (menu->items[j]->window.flags & WINDOW_HEXCOLORSET) {
+					ItemRefresh_hexcolor(menu->items[j]);
+					}
+			}
+		}
+	}
+
+	
+}
+
 
 qboolean ItemParse_bordercolor(itemDef_t *item, int handle) {
 	int i;
@@ -6361,6 +6425,7 @@ keywordHash_t itemParseKeywords[] = {
 	{"cinematic", ItemParse_cinematic, NULL},
 	{"doubleclick", ItemParse_doubleClick, NULL},
 	{"hexcolor", ItemParse_hexcolor, NULL},
+	{"bitflag", ItemParse_bitflag, NULL},
 	{NULL, 0, NULL}
 };
 

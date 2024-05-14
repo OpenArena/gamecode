@@ -188,7 +188,7 @@ int BotAI_GetEntityState( int entityNum, entityState_t *state ) {
 	memset( state, 0, sizeof(entityState_t) );
 	if (!ent->inuse) return qfalse;
 	if (!ent->r.linked) return qfalse;
-	if ( !(G_IsARoundBasedGametype(g_gametype.integer) ||g_instantgib.integer || g_rockets.integer || g_elimination_allgametypes.integer)
+	if ( !(g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_LMS ||g_instantgib.integer || g_rockets.integer || g_elimination_allgametypes.integer || g_gametype.integer==GT_CTF_ELIMINATION)
 	       && (ent->r.svFlags & SVF_NOCLIENT) ) {
 		return qfalse;
 	}
@@ -292,7 +292,7 @@ void BotReportStatus(bot_state_t *bs) {
 	}
 
 	strcpy(flagstatus, "  ");
-	if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
+	if (gametype == GT_CTF || gametype == GT_CTF_ELIMINATION) {
 		if (BotCTFCarryingFlag(bs)) {
 			if (BotTeam(bs) == TEAM_RED) strcpy(flagstatus, S_COLOR_RED"F ");
 			else strcpy(flagstatus, S_COLOR_BLUE"F ");
@@ -454,12 +454,12 @@ void BotSetInfoConfigString(bot_state_t *bs) {
 	}
 
 	strcpy(carrying, "  ");
-	if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
+	if (gametype == GT_CTF || gametype == GT_CTF_ELIMINATION) {
 		if (BotCTFCarryingFlag(bs)) {
 			strcpy(carrying, "F ");
 		}
 	}
-	else if (G_UsesTheWhiteFlag(gametype)) {
+	else if (gametype == GT_1FCTF || gametype == GT_POSSESSION) {
 		if (Bot1FCTFCarryingFlag(bs)) {
 			strcpy(carrying, "F ");
 		}
@@ -1216,7 +1216,7 @@ int BotAISetupClient(int client, struct bot_settings_s *settings, qboolean resta
 	}
 	bs = botstates[client];
 
-	if (bs->inuse) {
+	if (bs && bs->inuse) {
 		BotAI_Print(PRT_FATAL, "BotAISetupClient: client %d already setup\n", client);
 		return qfalse;
 	}
@@ -1526,7 +1526,7 @@ int BotAIStartFrame(int time) {
 				trap_BotLibUpdateEntity(i, NULL);
 				continue;
 			}
-			if ( !(G_IsARoundBasedGametype(g_gametype.integer) ||g_instantgib.integer || g_rockets.integer || g_elimination_allgametypes.integer)
+			if ( !(g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_LMS ||g_instantgib.integer || g_rockets.integer || g_elimination_allgametypes.integer || g_gametype.integer==GT_CTF_ELIMINATION)
 				   && ent->r.svFlags & SVF_NOCLIENT) {
 				trap_BotLibUpdateEntity(i, NULL);
 				continue;

@@ -136,6 +136,7 @@ typedef enum {
 } gametype_t;
 
 #define GAMETYPE_IS_A_TEAM_GAME(gametype) (gametype != GT_FFA && gametype != GT_TOURNAMENT && gametype != GT_SINGLE_PLAYER && gametype != GT_LMS && gametype != GT_POSSESSION)
+#define GAMETYPE_USES_KEY_OBJECTIVES(gametype) (gametype != GT_FFA && gametype != GT_TOURNAMENT && gametype != GT_SINGLE_PLAYER && gametype != GT_TEAM && gametype != GT_LMS && gametype != GT_POSSESSION)
 #define GAMETYPE_USES_RED_AND_BLUE_FLAG(gametype) (gametype == GT_CTF || gametype == GT_1FCTF || gametype == GT_CTF_ELIMINATION)
 #define GAMETYPE_USES_WHITE_FLAG(gametype) (gametype == GT_1FCTF || gametype == GT_POSSESSION)
 /*
@@ -502,7 +503,20 @@ typedef enum {
 	EV_TAUNT_FOLLOWME,
 	EV_TAUNT_GETFLAG,
 	EV_TAUNT_GUARDBASE,
-	EV_TAUNT_PATROL
+	EV_TAUNT_PATROL,
+
+		// leilei - footsteps
+	EV_FOOTSTEP_SNOW,
+	EV_FOOTSTEP_WOOD,
+	EV_FOOTSTEP_SAND,
+	EV_FOOTSTEP_GRAVEL,
+	EV_FOOTSTEP_FOILAGE,
+	EV_FOOTSTEP_ICE,
+	EV_FOOTSTEP_GLASS,
+	EV_BULLET_HIT_WOOD,
+	EV_BULLET_HIT_SAND,
+	EV_BULLET_HIT_SNOW,
+	EV_BULLET_HIT_GLASS
 
 } entity_event_t;
 

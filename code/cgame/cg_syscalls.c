@@ -399,6 +399,10 @@ void	trap_R_LFX_ParticleEffect( int effect, const vec3_t origin, const vec3_t ve
 	syscall( CG_R_LFX_PARTICLEEFFECT, effect, origin, velocity );
 }
 
+// leilei - get viewmatrix from value
+void	trap_R_GetViewPosition( vec3_t point ) {
+	 syscall( CG_R_VIEWPOSITION, point );
+}
 
 // this returns a handle.  arg0 is the name in the format "idlogo.roq", set arg1 to NULL, alteredstates to qfalse (do not alter gamestate)
 int trap_CIN_PlayCinematic( const char *arg0, int xpos, int ypos, int width, int height, int bits) {

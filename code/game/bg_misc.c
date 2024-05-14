@@ -1288,9 +1288,6 @@ qboolean BG_CanItemBeGrabbed(int gametype, const entityState_t *ent, const playe
 					}
 				}
 			}
-			/* Neon_Knight: For some reason, this doesn't work:
-			if (G_IsARoundBasedGametype(gametype) && G_IsATeamGametype(gametype)) {
-			*/
 			if (gametype == GT_CTF || gametype == GT_CTF_ELIMINATION) {
 				// ent->modelindex2 is non-zero on items if they are dropped
 				// we need to know this because we can pick up our dropped flag (and return it)
@@ -1327,8 +1324,7 @@ qboolean BG_CanItemBeGrabbed(int gametype, const entityState_t *ent, const playe
 			}
 
 			if (gametype == GT_HARVESTER) {
-				if ( strequals(item->classname, "item_redcube") || strequals(item->classname, "item_bluecube") )
-					return qtrue;
+				return qtrue;
 			}
 			return qfalse;
 
@@ -1539,7 +1535,18 @@ char *eventnames[] = {
 
 	"EV_DEBUG_LINE",
 	"EV_STOPLOOPINGSOUND",
-	"EV_TAUNT"
+	"EV_TAUNT",
+	"EV_FOOTSTEP_WOOD",
+	"EV_FOOTSTEP_SNOW",
+	"EV_FOOTSTEP_SAND",
+	"EV_FOOTSTEP_GRAVEL",
+	"EV_FOOTSTEP_FOILAGE",
+	"EV_FOOTSTEP_ICE",
+	"EV_FOOTSTEP_GLASS",
+	"EV_BULLET_HIT_WOOD",
+	"EV_BULLET_HIT_SAND",
+	"EV_BULLET_HIT_SNOW",
+	"EV_BULLET_HIT_GLASS"
 
 };
 

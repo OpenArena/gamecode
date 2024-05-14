@@ -147,9 +147,6 @@ extern vmCvar_t ui_serverStatusTimeOut;
 extern vmCvar_t ui_humansonly;
 extern vmCvar_t ui_introPlayed;
 extern vmCvar_t ui_colors;
-/* Neon_Knight: Additional missionpack check */
-extern vmCvar_t ui_missionpackChecks;
-/* /Neon_Knight */
 extern vmCvar_t ui_findPlayer;
 extern vmCvar_t ui_Q3Model;
 extern vmCvar_t ui_hudFiles;
@@ -209,7 +206,7 @@ extern vmCvar_t ui_developer;
 #define	MAX_EDIT_LINE			256
 
 #define MAX_MENUDEPTH			8
-#define MAX_MENUITEMS			128	// was 96 - rfactory change
+#define MAX_MENUITEMS			256	// was 96 - rfactory change
 
 #define MTYPE_NULL				0
 #define MTYPE_SLIDER			1	
@@ -425,7 +422,6 @@ int UI_AdjustTimeByGame(int time);
 void UI_ShowPostGame(qboolean newHigh);
 void UI_ClearScores( void );
 void UI_LoadArenas(void);
-void UI_LoadArenasIntoMapList(void);
 // rfactory change
 // Changed RD
 qboolean SP_LoadGame(char *load_game, char *loadmap);
@@ -776,8 +772,8 @@ typedef struct {
 #define GAMES_CTF			4
 #define MAPS_PER_TIER 3
 #define MAX_TIERS 16
-#define MAX_MODS 64
-#define MAX_DEMOS 256
+#define MAX_MODS 128
+#define MAX_DEMOS 512
 #define MAX_MOVIES 256
 //#define MAX_PLAYERMODELS 256
 #define MAX_PLAYERMODELS 1024
@@ -1290,7 +1286,7 @@ extern int wideAdjustX;
 // new ui 
 
 #define ASSET_BACKGROUND "uiBackground"
-
+void RefreshHexColors( void );
 // for tracking sp game info in Team Arena
 typedef struct postGameInfo_s {
 	int score;
@@ -1315,9 +1311,3 @@ typedef struct postGameInfo_s {
 
 #endif
 
-/* Neon_Knight: Useful check in order to have code consistency. */
-qboolean UI_IsATeamGametype(int check);	/* Whether the gametype is team-based or not.*/
-qboolean UI_UsesTeamFlags(int check);	/* Whether the gametype uses the red and blue flags. */
-qboolean UI_UsesTheWhiteFlag(int check);	/* Whether the gametype uses the neutral flag. */
-qboolean UI_IsARoundBasedGametype(int check);	/* Whether the gametype uses the neutral flag. */
-/* /Neon_Knight */

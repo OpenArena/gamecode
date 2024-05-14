@@ -173,7 +173,7 @@ vmCvar_t ui_server16;
 vmCvar_t        ui_browserOnlyHumans;
 //new in beta 37:
 vmCvar_t        ui_setupchecked;
-vmCvar_t ui_developer;
+
 vmCvar_t ui_browserHidePrivate;
 
 // bk001129 - made static to avoid aliasing.
@@ -237,7 +237,7 @@ static cvarTable_t cvarTable[] = {
 
 	{ &ui_spSelection, "ui_spSelection", "", CVAR_ROM },
 
-	{ &ui_browserMaster, "ui_browserMaster", "1", CVAR_ARCHIVE },
+	{ &ui_browserMaster, "ui_browserMaster", "0", CVAR_ARCHIVE },
 	{ &ui_browserGameType, "ui_browserGameType", "0", CVAR_ARCHIVE },
 	{ &ui_browserSortKey, "ui_browserSortKey", "4", CVAR_ARCHIVE },
 	{ &ui_browserShowFull, "ui_browserShowFull", "1", CVAR_ARCHIVE },
@@ -266,7 +266,6 @@ static cvarTable_t cvarTable[] = {
 	{ &ui_server16, "server16", "", CVAR_ARCHIVE },
 	{ &ui_browserOnlyHumans, "ui_browserOnlyHumans", "0", CVAR_ARCHIVE },
 	{ &ui_setupchecked, "ui_setupchecked", "0", CVAR_ARCHIVE },
-	{ &ui_developer, "developer", "0", CVAR_CHEAT },
 	{ &ui_browserHidePrivate, "ui_browserHidePrivate", "1", CVAR_ARCHIVE },
 	{ NULL, "g_localTeamPref", "", 0 }
 };
@@ -317,46 +316,3 @@ void UI_SetDefaultCvar(const char* cvar, const char* value) {
 		trap_Cvar_Set(cvar,value);
 	}
 }
-
-/* Neon_Knight: Useful check in order to have code consistency. */
-/*
-===================
-UI_IsATeamGametype
-
-Checks if the gametype is a team-based game.
-===================
- */
-qboolean UI_IsATeamGametype(int check) {
-	return GAMETYPE_IS_A_TEAM_GAME(check);
-}
-/*
-===================
-UI_UsesTeamFlags
-
-Checks if the gametype makes use of the red and blue flags.
-===================
- */
-qboolean UI_UsesTeamFlags(int check) {
-	return GAMETYPE_USES_RED_AND_BLUE_FLAG(check);
-}
-/*
-===================
-UI_UsesTheWhiteFlag
-
-Checks if the gametype makes use of the neutral flag.
-===================
- */
-qboolean UI_UsesTheWhiteFlag(int check) {
-	return GAMETYPE_USES_WHITE_FLAG(check);
-}
-/*
-===================
-UI_IsARoundBasedGametype
-
-Checks if the gametype has a round-based system.
-===================
- */
-qboolean UI_IsARoundBasedGametype(int check) {
-	return GAMETYPE_IS_ROUND_BASED(check);
-}
-/* /Neon_Knight */

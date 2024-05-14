@@ -393,7 +393,7 @@ static void CG_DenyOrder_f(void) {
 }
 
 static void CG_TaskOffense_f(void) {
-	if (CG_UsesTeamFlags(cgs.gametype)) {
+	if (cgs.gametype == GT_CTF || cgs.gametype == GT_CTF_ELIMINATION || cgs.gametype == GT_1FCTF) {
 		trap_SendConsoleCommand(va("cmd vsay_team %s\n", VOICECHAT_ONGETFLAG));
 	} else {
 		trap_SendConsoleCommand(va("cmd vsay_team %s\n", VOICECHAT_ONOFFENSE));
@@ -508,7 +508,10 @@ CG_StartOrbit_f
  */
 
 static void CG_StartOrbit_f(void) {
-	if (!cg_developer.integer) {
+	char var[MAX_TOKEN_CHARS];
+
+	trap_Cvar_VariableStringBuffer("developer", var, sizeof ( var));
+	if (!atoi(var)) {
 		return;
 	}
 	if (cg_cameraOrbit.value != 0) {

@@ -323,11 +323,13 @@ G_AddRandomBot
 */
 void G_AddRandomBot( int team ) {
 	char	*teamstr;
+	float	skill;
 
+	skill = trap_Cvar_VariableValue( "g_spSkill" );
 	if (team == TEAM_RED) teamstr = "red";
 	else if (team == TEAM_BLUE) teamstr = "blue";
 	else teamstr = "free";
-	trap_SendConsoleCommand( EXEC_INSERT, va("addbot random %i %s %i\n", g_spSkill.integer, teamstr, 0) );
+	trap_SendConsoleCommand( EXEC_INSERT, va("addbot random %f %s %i\n", skill, teamstr, 0) );
 }
 
 /*
@@ -436,7 +438,7 @@ void G_CheckMinimumPlayers( void ) {
 		return; //If no AAS then don't even try
 	}
 
-	if (G_IsATeamGametype(g_gametype.integer)) {
+	if (g_gametype.integer >= GT_TEAM && g_ffa_gt!=1) {
 		if (minplayers >= g_maxclients.integer / 2) {
 			minplayers = (g_maxclients.integer / 2) -1;
 		}
@@ -854,6 +856,7 @@ G_SpawnBots
 static void G_SpawnBots( char *botList, int baseDelay ) {
 	char		*bot;
 	char		*p;
+	float		skill;
 	int			delay;
 	char		bots[MAX_INFO_VALUE];
 
@@ -861,11 +864,14 @@ static void G_SpawnBots( char *botList, int baseDelay ) {
 	podium2 = NULL;
 	podium3 = NULL;
 
-	if( g_spSkill.integer < 1 ) {
-		g_spSkill.integer = 1;
+	skill = trap_Cvar_VariableValue( "g_spSkill" );
+	if( skill < 1 ) {
+		trap_Cvar_Set( "g_spSkill", "1" );
+		skill = 1;
 	}
-	else if ( g_spSkill.integer > 5 ) {
-		g_spSkill.integer = 5;
+	else if ( skill > 5 ) {
+		trap_Cvar_Set( "g_spSkill", "5" );
+		skill = 5;
 	}
 
 	Q_strncpyz( bots, botList, sizeof(bots) );
@@ -873,7 +879,7 @@ static void G_SpawnBots( char *botList, int baseDelay ) {
 	delay = baseDelay;
 	while( *p ) {
 		//skip spaces
-		while( *p == ' ' ) {
+		while( *p && *p == ' ' ) {
 			p++;
 		}
 		if( !*p ) {
@@ -893,7 +899,7 @@ static void G_SpawnBots( char *botList, int baseDelay ) {
 
 		// we must add the bot this way, calling G_AddBot directly at this stage
 		// does "Bad Things"
-		trap_SendConsoleCommand( EXEC_INSERT, va("addbot %s %i free %i\n", bot, g_spSkill.integer, delay) );
+		trap_SendConsoleCommand( EXEC_INSERT, va("addbot %s %f free %i\n", bot, skill, delay) );
 
 		delay += BOT_BEGIN_DELAY_INCREMENT;
 	}
@@ -1064,20 +1070,18 @@ void G_InitBots( qboolean restart ) {
 			G_SpawnBots( Info_ValueForKey( arenainfo, "bots" ), basedelay );
 		}
 	} else {
-		if(bot_autominplayers.integer) {
-			//Set bot_minplayers
-			if(g_gametype.integer == GT_TOURNAMENT) {
-				trap_Cvar_Set("bot_minplayers","2"); //Always 2 for Tourney
-			} else {
-				basedelay = MinSpawnpointCount()/2;
-				if(basedelay < 3 && !(G_IsATeamGametype(g_gametype.integer))) {
-					basedelay = 3; //Minimum 3 for FFA
-				}
-				if(basedelay < 2 && G_IsATeamGametype(g_gametype.integer)) {
-					basedelay = 2; //Minimum 2 for TEAM
-				}
-				trap_Cvar_Set("bot_minplayers",va("%i",basedelay) );
-			}
+	    if(bot_autominplayers.integer) {
+		//Set bot_minplayers
+		if(g_gametype.integer == GT_TOURNAMENT) {
+		    trap_Cvar_Set("bot_minplayers","2"); //Always 2 for Tourney
+		} else {
+			basedelay = MinSpawnpointCount()/2;
+			if(basedelay < 3 && (g_gametype.integer < GT_TEAM || g_ffa_gt) )
+			    basedelay = 3; //Minimum 3 for FFA
+			if(basedelay < 2 && !(g_gametype.integer < GT_TEAM || g_ffa_gt) )
+			    basedelay = 2; //Minimum 2 for TEAM
+			trap_Cvar_Set("bot_minplayers",va("%i",basedelay) );
 		}
+	    }
 	}
 }

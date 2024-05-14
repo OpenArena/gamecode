@@ -136,12 +136,14 @@ vmCvar_t g_instantgib;
 vmCvar_t g_vampire;
 vmCvar_t g_vampireMaxHealth;
 //Regen
-vmCvar_t g_regen;
-vmCvar_t g_lms_lives;
-vmCvar_t g_lms_mode;
-vmCvar_t g_elimination_ctf_oneway;
-vmCvar_t g_awardpushing; //The server can decide if players are awarded for pushing people in lave etc.
+vmCvar_t	g_regen;
+int	g_ffa_gt; //Are this a FFA gametype even if gametype is high?
+vmCvar_t	g_lms_lives;
+vmCvar_t	g_lms_mode;
+vmCvar_t	g_elimination_ctf_oneway;
+vmCvar_t        g_awardpushing; //The server can decide if players are awarded for pushing people in lave etc.
 vmCvar_t g_runes; //Allow missionpack style persistant powerups?
+
 vmCvar_t g_catchup; //Favors the week players
 vmCvar_t g_autonextmap; //Autochange map
 vmCvar_t g_mappools; //mappools to be used for autochange
@@ -193,8 +195,6 @@ vmCvar_t g_harvesterFromBodies;
 vmCvar_t g_ddCaptureTime;
 vmCvar_t g_ddRespawnDelay;
 vmCvar_t g_developer;
-vmCvar_t g_spSkill;
-vmCvar_t g_bot_noChat;
 
 mapinfo_result_t mapinfo;
 
@@ -361,8 +361,6 @@ static cvarTable_t gameCvarTable[] = {
 	{ &g_lms_lives, "g_lms_lives", "1", 0, 0, qtrue },
 	{ &g_lms_mode, "g_lms_mode", "0", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qtrue },
 
-	{ &g_catchup, "g_catchup", "0", CVAR_ARCHIVE, 0, qtrue},
-
 	{ &g_autonextmap, "g_autonextmap", "0", CVAR_ARCHIVE, 0, qfalse},
 	{
 		&g_mappools, "g_mappools", "0\\maps_dm.cfg\\1\\maps_tourney.cfg\\3\\maps_tdm.cfg\\4\\maps_ctf.cfg\\5\\maps_oneflag.cfg\\6\\maps_obelisk.cfg\
@@ -410,9 +408,7 @@ static cvarTable_t gameCvarTable[] = {
 	{ &g_ddCaptureTime, "g_ddCaptureTime", "10", CVAR_ARCHIVE, 0, qtrue},
 	{ &g_ddRespawnDelay, "g_ddRespawnDelay", "10", CVAR_ARCHIVE, 0, qtrue},
 	/* Neon_Knight: Developer mode*/
-	{ &g_developer, "developer", "0", CVAR_CHEAT, 0, qtrue},
-	{ &g_spSkill, "g_spSkill", "2", 0, 0, qtrue},
-	{ &g_bot_noChat, "bot_nochat", "0", 0, 0, qtrue}
+	{ &g_developer, "developer", "0", CVAR_CHEAT, 0, qtrue}
 
 };
 
@@ -599,6 +595,14 @@ void G_RegisterCvars( void )
 	if ( g_gametype.integer < 0 || g_gametype.integer >= GT_MAX_GAME_TYPE ) {
 		G_Printf( "g_gametype %i is out of range, defaulting to 0\n", g_gametype.integer );
 		trap_Cvar_Set( "g_gametype", "0" );
+	}
+
+	//set FFA status for high gametypes:
+	if ( g_gametype.integer == GT_LMS || g_gametype.integer == GT_POSSESSION ) {
+		g_ffa_gt = 1;	//Last Man standig is a FFA gametype
+	}
+	else {
+		g_ffa_gt = 0;	//If >GT_CTF use bases
 	}
 
 	level.warmupModificationCount = g_warmup.modificationCount;
@@ -846,9 +850,8 @@ void G_InitGame( int levelTime, int randomSeed, int restart )
 	G_FindTeams();
 
 	// make sure we have flags for CTF, etc
-	if (G_UsesTeamFlags(g_gametype.integer) || G_UsesTheWhiteFlag(g_gametype.integer) ||
-			g_gametype.integer == GT_HARVESTER || g_gametype.integer == GT_OBELISK ||
-			g_gametype.integer == GT_DOUBLE_D || g_gametype.integer == GT_DOMINATION) {
+	if ( g_gametype.integer == GT_POSSESSION ||
+	        (g_gametype.integer >= GT_TEAM && g_ffa_gt!=1) ) {
 		G_CheckTeamItems();
 	}
 
@@ -1199,7 +1202,7 @@ int QDECL SortRanks( const void *a, const void *b )
 	}
 
 	//In elimination and CTF elimination, sort dead players last
-	if(G_UsesTeamFlags(g_gametype.integer) && !G_UsesTheWhiteFlag(g_gametype.integer)
+	if((g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_CTF_ELIMINATION)
 	        && level.roundNumber==level.roundNumberStarted && (ca->isEliminated != cb->isEliminated)) {
 		if( ca->isEliminated )
 			return 1;
@@ -1282,7 +1285,7 @@ void CalculateRanks( void )
 	       sizeof(level.sortedClients[0]), SortRanks );
 
 	// set the rank value for all clients that are connected and not spectators
-	if (G_IsATeamGametype(g_gametype.integer)) {
+	if ( g_gametype.integer >= GT_TEAM && g_ffa_gt!=1) {
 		// in team games, rank is just the order of the teams, 0=red, 1=blue, 2=tied
 		for ( i = 0;  i < level.numConnectedClients; i++ ) {
 			cl = &level.clients[ level.sortedClients[i] ];
@@ -1321,7 +1324,7 @@ void CalculateRanks( void )
 	}
 
 	// set the CS_SCORES1/2 configstrings, which will be visible to everyone
-	if (G_IsATeamGametype(g_gametype.integer)) {
+	if ( g_gametype.integer >= GT_TEAM && g_ffa_gt!=1) {
 		trap_SetConfigstring( CS_SCORES1, va("%i", level.teamScores[TEAM_RED] ) );
 		trap_SetConfigstring( CS_SCORES2, va("%i", level.teamScores[TEAM_BLUE] ) );
 	}
@@ -1409,9 +1412,6 @@ static void SendVictoryChallenge( void )
 	case GT_FFA:
 		award = GAMETYPES_FFA_WINS;
 		break;
-	case GT_TEAM:
-		award = GAMETYPES_TDM_WINS;
-		break;
 	case GT_TOURNAMENT:
 		award = GAMETYPES_TOURNEY_WINS;
 		break;
@@ -1448,7 +1448,7 @@ static void SendVictoryChallenge( void )
 	default:
 		return;
 	};
-	if (G_IsATeamGametype(g_gametype.integer)) {
+	if ( g_gametype.integer!=GT_FFA && g_gametype.integer!=GT_TOURNAMENT && g_gametype.integer!=GT_LMS && g_gametype.integer!=GT_POSSESSION ) {
 		//Team games
 		for ( i = 0 ; i < level.maxclients ; i++ ) {
 			cl = &level.clients[i];
@@ -1855,7 +1855,7 @@ void LogExit( const char *string )
 		numSorted = 32;
 	}
 
-	if (G_IsATeamGametype(g_gametype.integer)) {
+	if ( g_gametype.integer >= GT_TEAM && g_ffa_gt!=1) {
 		G_LogPrintf( "red:%i  blue:%i\n",
 		             level.teamScores[TEAM_RED], level.teamScores[TEAM_BLUE] );
 	}
@@ -1876,13 +1876,7 @@ void LogExit( const char *string )
 
 		G_LogPrintf( "score: %i  ping: %i  client: %i %s\n", cl->ps.persistant[PERS_SCORE], ping, level.sortedClients[i],	cl->pers.netname );
 #ifdef MISSIONPACK
-		if (g_singlePlayer.integer && !(g_entities[cl - level.clients].r.svFlags & SVF_BOT)) {
-			team = cl->sess.sessionTeam;
-		}
-		if (g_singlePlayer.integer && G_IsATeamGametype(g_gametype.integer) &&
-				(G_UsesTeamFlags(g_gametype.integer) || G_UsesTheWhiteFlag(g_gametype.integer) ||
-				g_gametype.integer == GT_HARVESTER || g_gametype.integer == GT_OBELISK ||
-				g_gametype.integer == GT_DOUBLE_D || g_gametype.integer == GT_DOMINATION)) {
+		if (g_singlePlayer.integer && g_gametype.integer == GT_TOURNAMENT) {
 			if (g_entities[cl - level.clients].r.svFlags & SVF_BOT && cl->ps.persistant[PERS_RANK] == 0) {
 				won = qfalse;
 			}
@@ -1892,14 +1886,10 @@ void LogExit( const char *string )
 	}
 
 #ifdef MISSIONPACK
- 	if (g_singlePlayer.integer) {
-		if (G_IsATeamGametype(g_gametype.integer)) {
-			if (team == TEAM_BLUE) {
-				won = level.teamScores[TEAM_BLUE] > level.teamScores[TEAM_RED];
-			} else {
-				won = level.teamScores[TEAM_RED] > level.teamScores[TEAM_BLUE];
-			}
- 		}
+	if (g_singlePlayer.integer) {
+		if (g_gametype.integer >= GT_CTF && g_ffa_gt==0) {
+			won = level.teamScores[TEAM_RED] > level.teamScores[TEAM_BLUE];
+		}
 		trap_SendConsoleCommand( EXEC_APPEND, (won) ? "spWin\n" : "spLose\n" );
 	}
 #endif
@@ -2014,14 +2004,14 @@ qboolean ScoreIsTied( void )
 	}
 
 	//Sago: In Elimination and Oneway Flag Capture teams must win by two points.
-	if ( (G_IsARoundBasedGametype(g_gametype.integer) && G_IsATeamGametype(g_gametype.integer)) ||
+	if ( g_gametype.integer == GT_ELIMINATION ||
 	        (g_gametype.integer == GT_CTF_ELIMINATION && g_elimination_ctf_oneway.integer)) {
 		return (level.teamScores[TEAM_RED] == level.teamScores[TEAM_BLUE] ||
 		        level.teamScores[TEAM_RED] == level.teamScores[TEAM_BLUE]+1 ||
 		        level.teamScores[TEAM_RED] == level.teamScores[TEAM_BLUE]-1);
 	}
 
-	if (G_IsATeamGametype(g_gametype.integer)) {
+	if ( g_gametype.integer >= GT_TEAM && g_ffa_gt!=1) {
 		return level.teamScores[TEAM_RED] == level.teamScores[TEAM_BLUE];
 	}
 
@@ -2083,12 +2073,6 @@ void CheckExitRules( void )
 		return;
 	}
 
-	if ( g_timelimit.integer < 0 || g_timelimit.integer > INT_MAX / 60000 ) {
-		G_Printf( "timelimit %i is out of range, defaulting to 0\n", g_timelimit.integer );
-		trap_Cvar_Set( "timelimit", "0" );
-		trap_Cvar_Update( &g_timelimit );
-	}
-
 	if ( g_timelimit.integer > 0 && !level.warmupTime ) {
 		if ( (level.time - level.startTime)/60000 >= g_timelimit.integer ) {
 			trap_SendServerCommand( -1, "print \"Timelimit hit.\n\"");
@@ -2101,83 +2085,49 @@ void CheckExitRules( void )
 		return;
 	}
 
-	if ( g_fraglimit.integer < 0 ) {
-		G_Printf( "fraglimit %i is out of range, defaulting to 0\n", g_fraglimit.integer );
-		trap_Cvar_Set( "fraglimit", "0" );
-		trap_Cvar_Update( &g_fraglimit );
-	}
+	if ( (g_gametype.integer < GT_CTF || g_ffa_gt>0 ) && g_fraglimit.integer ) {
+		if ( level.teamScores[TEAM_RED] >= g_fraglimit.integer ) {
+			trap_SendServerCommand( -1, "print \"Red hit the fraglimit.\n\"" );
+			LogExit( "Fraglimit hit." );
+			return;
+		}
 
-	if ( g_fraglimit.integer ) {
-		if ( G_IsATeamGametype(g_gametype.integer) ) {
-			if ( level.teamScores[TEAM_RED] >= g_fraglimit.integer ) {
-				trap_SendServerCommand( -1, "print \"Red hit the fraglimit.\n\"" );
+		if ( level.teamScores[TEAM_BLUE] >= g_fraglimit.integer ) {
+			trap_SendServerCommand( -1, "print \"Blue hit the fraglimit.\n\"" );
+			LogExit( "Fraglimit hit." );
+			return;
+		}
+
+		for ( i=0 ; i< g_maxclients.integer ; i++ ) {
+			cl = level.clients + i;
+			if ( cl->pers.connected != CON_CONNECTED ) {
+				continue;
+			}
+			if ( cl->sess.sessionTeam != TEAM_FREE ) {
+				continue;
+			}
+
+			if ( cl->ps.persistant[PERS_SCORE] >= g_fraglimit.integer ) {
 				LogExit( "Fraglimit hit." );
+				trap_SendServerCommand( -1, va("print \"%s" S_COLOR_WHITE " hit the fraglimit.\n\"",
+				                               cl->pers.netname ) );
 				return;
-			}
-
-			if ( level.teamScores[TEAM_BLUE] >= g_fraglimit.integer ) {
-				trap_SendServerCommand( -1, "print \"Blue hit the fraglimit.\n\"" );
-				LogExit( "Fraglimit hit." );
-				return;
-			}
-		}
-		else {
-			for ( i=0 ; i< g_maxclients.integer ; i++ ) {
-				cl = level.clients + i;
-				if ( cl->pers.connected != CON_CONNECTED ) {
-					continue;
-				}
-				if ( cl->sess.sessionTeam != TEAM_FREE ) {
-					continue;
-				}
-
-				if ( cl->ps.persistant[PERS_SCORE] >= g_fraglimit.integer ) {
-					LogExit( "Fraglimit hit." );
-					trap_SendServerCommand( -1, va("print \"%s" S_COLOR_WHITE " hit the fraglimit.\n\"",
-												   cl->pers.netname ) );
-					return;
-				}
 			}
 		}
 	}
 
-	if ( g_capturelimit.integer < 0 ) {
-		G_Printf( "capturelimit %i is out of range, defaulting to 0\n", g_capturelimit.integer );
-		trap_Cvar_Set( "capturelimit", "0" );
-		trap_Cvar_Update( &g_capturelimit );
-	}
+	if ( (g_gametype.integer >= GT_CTF && !g_ffa_gt) && g_capturelimit.integer ) {
 
-	if ( g_capturelimit.integer ) {
-		if (G_IsATeamGametype(g_gametype.integer) && g_gametype.integer != GT_TEAM) {
-			if ( level.teamScores[TEAM_RED] >= g_capturelimit.integer ) {
-				trap_SendServerCommand( -1, "print \"Red hit the capturelimit.\n\"" );
-				LogExit( "Capturelimit hit." );
-				return;
-			}
-
-			if ( level.teamScores[TEAM_BLUE] >= g_capturelimit.integer ) {
-				trap_SendServerCommand( -1, "print \"Blue hit the capturelimit.\n\"" );
-				LogExit( "Capturelimit hit." );
-				return;
-			}
+		if ( level.teamScores[TEAM_RED] >= g_capturelimit.integer ) {
+			trap_SendServerCommand( -1, "print \"Red hit the capturelimit.\n\"" );
+			LogExit( "Capturelimit hit." );
+			return;
 		}
-		else {
-			for ( i=0 ; i< g_maxclients.integer ; i++ ) {
-				cl = level.clients + i;
-				if ( cl->pers.connected != CON_CONNECTED ) {
-					continue;
-				}
-				if ( cl->sess.sessionTeam != TEAM_FREE ) {
-					continue;
-				}
 
-				if ( cl->ps.persistant[PERS_SCORE] >= g_capturelimit.integer ) {
-					LogExit( "Capturelimit hit." );
-					trap_SendServerCommand( -1, va("print \"%s" S_COLOR_WHITE " hit the capturelimit.\n\"",
-												   cl->pers.netname ) );
-					return;
-				}
-			}
+		if ( level.teamScores[TEAM_BLUE] >= g_capturelimit.integer ) {
+			trap_SendServerCommand( -1, "print \"Blue hit the capturelimit.\n\"" );
+			LogExit( "Capturelimit hit." );
+			return;
 		}
 	}
 }
@@ -2250,6 +2200,7 @@ void CheckDoubleDomination( void )
 	}
 
 	if((level.pointStatusA == TEAM_NONE || level.pointStatusB == TEAM_NONE) && level.time>level.roundStartTime) {
+		trap_SendServerCommand( -1, "print \"A new round has started\n\"");
 		Team_SpawnDoubleDominationPoints();
 		SendScoreboardMessageToAllClients();
 	}
@@ -2373,7 +2324,7 @@ void CheckTournament( void )
 		int		counts[TEAM_NUM_TEAMS];
 		qboolean	notEnough = qfalse;
 
-		if(!G_IsATeamGametype(g_gametype.integer)) {
+		if ( g_gametype.integer > GT_TEAM && !g_ffa_gt ) {
 			counts[TEAM_BLUE] = TeamCount( -1, TEAM_BLUE );
 			counts[TEAM_RED] = TeamCount( -1, TEAM_RED );
 
@@ -2649,7 +2600,7 @@ void G_RunFrame( int levelTime )
 	// get any cvar changes
 	G_UpdateCvars();
 
-	if( (G_IsARoundBasedGametype(g_gametype.integer) && G_IsATeamGametype(g_gametype.integer)) && !(g_elimflags.integer & EF_NO_FREESPEC) && g_elimination_lockspectator.integer>1)
+	if( (g_gametype.integer==GT_ELIMINATION || g_gametype.integer==GT_CTF_ELIMINATION) && !(g_elimflags.integer & EF_NO_FREESPEC) && g_elimination_lockspectator.integer>1)
 		trap_Cvar_Set("elimflags",va("%i",g_elimflags.integer|EF_NO_FREESPEC));
 	else if( (g_elimflags.integer & EF_NO_FREESPEC) && g_elimination_lockspectator.integer<2)
 		trap_Cvar_Set("elimflags",va("%i",g_elimflags.integer&(~EF_NO_FREESPEC) ) );
@@ -2833,45 +2784,3 @@ void MapInfoPrint(mapinfo_result_t *info)
 	G_Printf("minTeamSize: %i\n",info->minTeamSize);
 }
 
-/* Neon_Knight: Useful check in order to have code consistency. */
-/*
-===================
-G_IsATeamGametype
-
-Checks if the gametype is a team-based game.
-===================
- */
-qboolean G_IsATeamGametype(int check) {
-	return GAMETYPE_IS_A_TEAM_GAME(check);
-}
-/*
-===================
-G_UsesTeamFlags
-
-Checks if the gametype makes use of the red and blue flags.
-===================
- */
-qboolean G_UsesTeamFlags(int check) {
-	return GAMETYPE_USES_RED_AND_BLUE_FLAG(check);
-}
-/*
-===================
-G_UsesTheWhiteFlag
-
-Checks if the gametype makes use of the neutral flag.
-===================
- */
-qboolean G_UsesTheWhiteFlag(int check) {
-	return GAMETYPE_USES_WHITE_FLAG(check);
-}
-/*
-===================
-G_IsARoundBasedGametype
-
-Checks if the gametype has a round-based system.
-===================
- */
-qboolean G_IsARoundBasedGametype(int check) {
-	return GAMETYPE_IS_ROUND_BASED(check);
-}
-/* /Neon_Knight */

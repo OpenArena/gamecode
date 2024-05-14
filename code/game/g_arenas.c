@@ -84,7 +84,7 @@ void UpdateTournamentInfo( void ) {
 		}
 #ifdef MISSIONPACK
 		won = qfalse;
-		if (G_IsATeamGametype(g_gametype.integer)) {
+		if (g_gametype.integer >= GT_CTF && g_ffa_gt==0) {
 			score1 = level.teamScores[TEAM_RED];
 			score2 = level.teamScores[TEAM_BLUE];
 			if (level.clients[playerClientNum].sess.sessionTeam	== TEAM_RED) {

@@ -124,6 +124,14 @@ void CG_Text_PaintChar(float x, float y, float width, float height, float scale,
 	trap_R_DrawStretchPic(x, y, w, h, s, t, s2, t2, hShader);
 }
 
+
+void CG_Text_PaintCharNoAdjust(float x, float y, float width, float height, float scale, float s, float t, float s2, float t2, qhandle_t hShader) {
+	float w, h;
+	w = width * scale;
+	h = height * scale;
+	trap_R_DrawStretchPic(x, y, w, h, s, t, s2, t2, hShader);
+}
+
 void CG_Text_Paint(float x, float y, float scale, vec4_t color, const char *text, float adjust, int limit, int style) {
 	int len, count;
 	vec4_t newColor;
@@ -189,6 +197,75 @@ void CG_Text_Paint(float x, float y, float scale, vec4_t color, const char *text
 		trap_R_SetColor(NULL);
 	}
 }
+
+
+
+void CG_Text_Paint_3D(float x, float y, float scale, vec4_t color, const char *text, float adjust, int limit, int style) {
+	int len, count;
+	vec4_t newColor;
+	glyphInfo_t *glyph;
+	float useScale;
+	fontInfo_t *font = &cgDC.Assets.textFont;
+	if (scale <= cg_smallFont.value) {
+		font = &cgDC.Assets.smallFont;
+	} else if (scale > cg_bigFont.value) {
+		font = &cgDC.Assets.bigFont;
+	}
+	useScale = scale * font->glyphScale;
+	if (text) {
+		const char *s = text;
+		trap_R_SetColor(color);
+		memcpy(&newColor[0], &color[0], sizeof (vec4_t));
+		len = strlen(text);
+		if (limit > 0 && len > limit) {
+			len = limit;
+		}
+		count = 0;
+		while (s && *s && count < len) {
+			glyph = &font->glyphs[*s & 255];
+			if (Q_IsColorString(s)) {
+				memcpy(newColor, g_color_table[ColorIndex(*(s + 1))], sizeof ( newColor));
+				newColor[3] = color[3];
+				trap_R_SetColor(newColor);
+				s += 2;
+				continue;
+			} else {
+				float yadj = useScale * glyph->top;
+				if (style == ITEM_TEXTSTYLE_SHADOWED || style == ITEM_TEXTSTYLE_SHADOWEDMORE) {
+					int ofs = style == ITEM_TEXTSTYLE_SHADOWED ? 1 : 2;
+					colorBlack[3] = newColor[3];
+					trap_R_SetColor(colorBlack);
+					CG_Text_PaintCharNoAdjust(x + ofs, y - yadj + ofs,
+							glyph->imageWidth,
+							glyph->imageHeight,
+							useScale,
+							glyph->s,
+							glyph->t,
+							glyph->s2,
+							glyph->t2,
+							glyph->glyph);
+					colorBlack[3] = 1.0;
+					trap_R_SetColor(newColor);
+				}
+				CG_Text_PaintCharNoAdjust(x, y - yadj,
+						glyph->imageWidth,
+						glyph->imageHeight,
+						useScale,
+						glyph->s,
+						glyph->t,
+						glyph->s2,
+						glyph->t2,
+						glyph->glyph);
+				// CG_DrawPic(x, y - yadj, scale * cgDC.Assets.textFont.glyphs[text[i]].imageWidth, scale * cgDC.Assets.textFont.glyphs[text[i]].imageHeight, cgDC.Assets.textFont.glyphs[text[i]].glyph);
+				x += (glyph->xSkip * useScale) + adjust;
+				s++;
+				count++;
+			}
+		}
+		trap_R_SetColor(NULL);
+	}
+}
+
 
 
 #endif
@@ -1184,9 +1261,6 @@ static float CG_DrawCountdownTimer(float y) {
 	//msec = cg.time - cgs.levelStartTime;
 	if (cg.time > rst) //We are started
 	{
-		if (cgs.gametype == GT_DOUBLE_D) {
-			return y;
-		}
 		msec = cgs.roundtime * 1000 - (cg.time - rst);
 		if (msec <= 30 * 1000 - 1) //<= 30 seconds
 			memcpy(color, g_color_table[ColorIndex(COLOR_YELLOW)], sizeof (color));
@@ -1449,7 +1523,7 @@ static float CG_DrawFollowMessage(float y) {
 	char *s;
 	int w;
 
-	if (!(cg.snap->ps.pm_flags & PMF_FOLLOW) || ((cgs.elimflags & EF_NO_FREESPEC) && CG_IsARoundBasedGametype(cgs.gametype) && CG_IsATeamGametype(cgs.gametype))) {
+	if (!(cg.snap->ps.pm_flags & PMF_FOLLOW) || ((cgs.elimflags & EF_NO_FREESPEC) && (cgs.gametype == GT_ELIMINATION || cgs.gametype == GT_CTF_ELIMINATION))) {
 		return y;
 	}
 
@@ -1588,7 +1662,7 @@ static void CG_DrawUpperRight(stereoFrame_t stereoFrame) {
 
 	y = 0;
 
-	if (CG_IsATeamGametype(cgs.gametype) && cg_drawTeamOverlay.integer == 1) {
+	if (cgs.gametype >= GT_TEAM && cgs.ffa_gt != 1 && cg_drawTeamOverlay.integer == 1) {
 		y = CG_DrawTeamOverlay(y, qtrue, qtrue);
 	}
 	/*if ( cgs.gametype == GT_DOUBLE_D ) {
@@ -1613,7 +1687,7 @@ static void CG_DrawUpperRight(stereoFrame_t stereoFrame) {
 	if (cg_drawFPS.integer && (stereoFrame == STEREO_CENTER || stereoFrame == STEREO_RIGHT)) {
 		y = CG_DrawFPS(y);
 	}
-	if (CG_IsARoundBasedGametype(cgs.gametype) || cgs.gametype == GT_DOUBLE_D) {
+	if (cgs.gametype == GT_ELIMINATION || cgs.gametype == GT_CTF_ELIMINATION || cgs.gametype == GT_LMS) {
 		y = CG_DrawCountdownTimer(y);
 		/*if (cgs.clientinfo[ cg.clientNum ].isDead)
 			y = CG_DrawEliminationDeathMessage( y);*/
@@ -1671,7 +1745,7 @@ static float CG_DrawScores(float y) {
 	y1 = y;
 
 	// draw from the right side to left
-	if (CG_IsATeamGametype(cgs.gametype)) {
+	if (cgs.gametype >= GT_TEAM && cgs.ffa_gt != 1) {
 		x = 640;
 		color[0] = 0.0f;
 		color[1] = 0.0f;
@@ -1686,7 +1760,7 @@ static float CG_DrawScores(float y) {
 		}
 		CG_DrawBigString(x + 4, y, s, 1.0F);
 
-		if (CG_UsesTeamFlags(cgs.gametype) && !CG_UsesTheWhiteFlag(cgs.gametype)) {
+		if (cgs.gametype == GT_CTF || cgs.gametype == GT_CTF_ELIMINATION) {
 			// Display flag status
 			item = BG_FindItemForPowerup(PW_BLUEFLAG);
 
@@ -1720,7 +1794,7 @@ static float CG_DrawScores(float y) {
 		}
 		CG_DrawBigString(x + 4, y, s, 1.0F);
 
-		if (CG_UsesTeamFlags(cgs.gametype) && !CG_UsesTheWhiteFlag(cgs.gametype)) {
+		if (cgs.gametype == GT_CTF || cgs.gametype == GT_CTF_ELIMINATION) {
 			// Display flag status
 			item = BG_FindItemForPowerup(PW_REDFLAG);
 
@@ -1756,7 +1830,9 @@ static float CG_DrawScores(float y) {
 			CG_DrawSmallString(x, y - 28, s, 1.0F);
 		}
 
-		if (CG_IsATeamGametype(cgs.gametype) && cgs.gametype != GT_TEAM) {
+
+
+		if (cgs.gametype >= GT_CTF && cgs.ffa_gt == 0) {
 			v = cgs.capturelimit;
 		} else {
 			v = cgs.fraglimit;
@@ -1959,7 +2035,7 @@ static void CG_DrawLowerRight(void) {
 
 	y = 472 - ICON_SIZE;
 
-	if (CG_IsATeamGametype(cgs.gametype) && cg_drawTeamOverlay.integer == 2) {
+	if (cgs.gametype >= GT_TEAM && cgs.ffa_gt != 1 && cg_drawTeamOverlay.integer == 2) {
 		y = CG_DrawTeamOverlay(y, qtrue, qfalse);
 	}
 
@@ -2014,7 +2090,7 @@ static void CG_DrawLowerLeft(void) {
 
 	y = 480 - ICON_SIZE;
 
-	if (CG_IsATeamGametype(cgs.gametype) && cg_drawTeamOverlay.integer == 3) {
+	if (cgs.gametype >= GT_TEAM && cgs.ffa_gt != 1 && cg_drawTeamOverlay.integer == 3) {
 		y = CG_DrawTeamOverlay(y, qfalse, qfalse);
 	}
 
@@ -2987,7 +3063,7 @@ static void CG_DrawSpectator(void) {
 	CG_DrawBigString(320 - 9 * 8, 440, "SPECTATOR", 1.0F);
 	if (cgs.gametype == GT_TOURNAMENT) {
 		CG_DrawBigString(320 - 15 * 8, 460, "waiting to play", 1.0F);
-	} else if (CG_IsATeamGametype(cgs.gametype)) {
+	} else if (cgs.gametype >= GT_TEAM && cgs.ffa_gt != 1) {
 		CG_DrawBigString(320 - 39 * 8, 460, "press ESC and use the JOIN menu to play", 1.0F);
 	}
 }
@@ -3102,7 +3178,7 @@ static qboolean CG_DrawScoreboard(void) {
 
 
 	if (menuScoreboard == NULL) {
-		if (CG_IsATeamGametype(cgs.gametype)) {
+		if (cgs.gametype >= GT_TEAM && cgs.ffa_gt != 1) {
 			menuScoreboard = Menus_FindByName("teamscore_menu");
 		} else {
 			menuScoreboard = Menus_FindByName("score_menu");
@@ -3126,7 +3202,7 @@ static qboolean CG_DrawScoreboard(void) {
 #else
 	char *s;
 	int w;
-	if (cg.respawnTime && cg.snap->ps.persistant[PERS_TEAM] != TEAM_SPECTATOR && (!CG_IsARoundBasedGametype(cgs.gametype))) {
+	if (cg.respawnTime && cg.snap->ps.persistant[PERS_TEAM] != TEAM_SPECTATOR && (cgs.gametype < GT_ELIMINATION || cgs.gametype > GT_LMS)) {
 		if (cg.respawnTime > cg.time) {
 			s = va("Respawn in: %2.2f", ((double) cg.respawnTime - (double) cg.time) / 1000.0);
 			w = CG_DrawStrlen(s) * SMALLCHAR_WIDTH;
@@ -3474,6 +3550,8 @@ void CG_DrawTimedMenus(void) {
 CG_Draw2D
 =================
  */
+void CG_PlayerSpritesOverWorld(centity_t *cent);
+
 static void CG_Draw2D(stereoFrame_t stereoFrame) {
 #ifdef MISSIONPACK
 	if (cgs.orderPending && cg.time > cgs.orderTime) {
@@ -3534,17 +3612,37 @@ static void CG_Draw2D(stereoFrame_t stereoFrame) {
 
 			CG_DrawReward();
 		}
-	}
+
+		if (cgs.gametype >= GT_TEAM && cgs.ffa_gt != 1) {
 #ifndef MISSIONPACK
-	if (CG_IsATeamGametype(cgs.gametype)) {
-		CG_DrawTeamInfo();
-	}
+			CG_DrawTeamInfo();
 #endif
+		}
+	}
 
 	CG_DrawVote();
 	CG_DrawTeamVote();
 
 	CG_DrawLagometer();
+
+	// leilei - draw the player's names 
+#ifdef MISSIONPACK
+	{	
+	int f;
+	centity_t	*cent;
+	vec3_t		angles;
+	vec3_t		origin;
+
+
+
+	for (f=0;f<MAX_CLIENTS;f++){
+		cent = &cg.headent[f];
+		if (cent);
+			CG_PlayerSpritesOverWorld(cent);
+		}	
+	
+	}
+#endif
 
 #ifdef MISSIONPACK
 	if (!cg_paused.integer) {
@@ -3571,9 +3669,11 @@ static void CG_Draw2D(stereoFrame_t stereoFrame) {
 		CG_DrawCenterDDString();
 		CG_DrawCenter1FctfString();
 		CG_DrawCenterString();
-	}
 
 	cg.accBoardShowing = CG_DrawAccboard();
+}
+
+
 }
 
 /*

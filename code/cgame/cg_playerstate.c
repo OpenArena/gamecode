@@ -337,7 +337,7 @@ void CG_CheckLocalSounds( playerState_t *ps, playerState_t *ops ) {
 	// reward sounds
 	reward = qfalse;
 	if (ps->persistant[PERS_CAPTURES] != ops->persistant[PERS_CAPTURES]) {
-		pushReward(0, cgs.media.medalCapture, ps->persistant[PERS_CAPTURES]);
+		pushReward(cgs.media.captureAwardSound, cgs.media.medalCapture, ps->persistant[PERS_CAPTURES]);
 		reward = qtrue;
 		//Com_Printf("capture\n");
 	}
@@ -415,7 +415,7 @@ void CG_CheckLocalSounds( playerState_t *ps, playerState_t *ops ) {
 	}
 
 	// check for flag pickup
-	if (CG_UsesTeamFlags(cgs.gametype)) {
+	if ( cgs.gametype > GT_TEAM ) {
 		if ((ps->powerups[PW_REDFLAG] != ops->powerups[PW_REDFLAG] && ps->powerups[PW_REDFLAG]) ||
 			(ps->powerups[PW_BLUEFLAG] != ops->powerups[PW_BLUEFLAG] && ps->powerups[PW_BLUEFLAG]) ||
 			(ps->powerups[PW_NEUTRALFLAG] != ops->powerups[PW_NEUTRALFLAG] && ps->powerups[PW_NEUTRALFLAG]) )
@@ -430,7 +430,7 @@ void CG_CheckLocalSounds( playerState_t *ps, playerState_t *ops ) {
 		if ( !cg.warmup ) {
 			// never play lead changes during warmup
 			if ( ps->persistant[PERS_RANK] != ops->persistant[PERS_RANK] ) {
-				if (!CG_IsATeamGametype(cgs.gametype)) {
+				if ( cgs.gametype < GT_TEAM || cgs.ffa_gt==1) {
 					if (  ps->persistant[PERS_RANK] == 0 ) {
 						CG_AddBufferedSound(cgs.media.takenLeadSound);
 					} else if ( ps->persistant[PERS_RANK] == RANK_TIED_FLAG && cgs.gametype != GT_POSSESSION ) {
@@ -463,7 +463,7 @@ void CG_CheckLocalSounds( playerState_t *ps, playerState_t *ops ) {
 	}
 
 	// fraglimit warnings
-	if (!CG_IsATeamGametype(cgs.gametype)) {
+	if ( cgs.fraglimit > 0 && cgs.gametype < GT_CTF) {
 		highScore = cgs.scores1;
 
 		if (cgs.gametype == GT_TEAM && cgs.scores2 > highScore) {

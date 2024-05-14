@@ -78,3 +78,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define	SURF_ALPHASHADOW		0x10000	// do per-pixel light shadow casting in q3map
 #define	SURF_NODLIGHT			0x20000	// don't dlight even if solid (solid lava, skies)
 #define SURF_DUST				0x40000 // leave a dust trail when walking on this surface
+// leilei - new surfaceflags
+#define SURF_SNOW			0x80000 
+#define SURF_WOOD			0x100000 
+#define SURF_SAND			0x200000 
+#define SURF_GRAVEL			0x400000  
+#define SURF_ICE			0x800000 
+#define SURF_GLASS			0x1000000 
+#define SURF_LEAVES			0x2000000 

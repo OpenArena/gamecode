@@ -1596,7 +1596,7 @@ static void UI_DrawTeamMember(rectDef_t *rect, float scale, vec4_t color, qboole
 	else {
 		value -= 2;
 
-		if (UI_IsATeamGametype(ui_actualNetGameType.integer)) {
+		if (ui_actualNetGameType.integer >= GT_TEAM && ui_actualNetGameType.integer != GT_LMS && ui_actualNetGameType.integer != GT_POSSESSION ) {
 			if (value >= uiInfo.characterCount) {
 				value = 0;
 			}
@@ -1686,7 +1686,8 @@ static void UI_DrawMapCinematic(rectDef_t *rect, float scale, vec4_t color, qboo
 		}
 		if (uiInfo.mapList[map].cinematic >= 0) {
 			trap_CIN_RunCinematic(uiInfo.mapList[map].cinematic);
-			UI_DrawCinematic(uiInfo.mapList[map].cinematic, rect->x, rect->y, rect->w, rect->h);
+			trap_CIN_SetExtents(uiInfo.mapList[map].cinematic, rect->x, rect->y, rect->w, rect->h);
+			trap_CIN_DrawCinematic(uiInfo.mapList[map].cinematic);
 		}
 		else {
 			uiInfo.mapList[map].cinematic = -2;
@@ -1711,16 +1712,10 @@ static void UI_DrawPlayerModel(rectDef_t *rect)
 	vec3_t	viewangles;
 	vec3_t	moveangles;
 
-	/* Neon_Knight: First pass the MP checker. */
-	if(ui_missionpackChecks.integer != 0) {
-		Q_strncpyz(model, UI_Cvar_VariableString("team_model"), sizeof(model));
-		Q_strncpyz(head, UI_Cvar_VariableString("team_headmodel"), sizeof(head));
-	}
-	else {
-		Q_strncpyz(model, UI_Cvar_VariableString("model"), sizeof(model));
-		Q_strncpyz(head, UI_Cvar_VariableString("headmodel"), sizeof(head));
-	}
 	if (trap_Cvar_VariableValue("ui_Q3Model")) {
+		// leilei - and do the team too
+		strcpy(model, UI_Cvar_VariableString("team_model"));
+		strcpy(head, UI_Cvar_VariableString("team_headmodel"));
 		if (!q3Model) {
 			q3Model = qtrue;
 			updateModel = qtrue;
@@ -1728,7 +1723,10 @@ static void UI_DrawPlayerModel(rectDef_t *rect)
 		team[0] = '\0';
 	}
 	else {
-		Q_strncpyz(team, UI_Cvar_VariableString("ui_teamName"), sizeof(team));
+
+		strcpy(team, UI_Cvar_VariableString("ui_teamName"));
+		strcpy(model, UI_Cvar_VariableString("team_model"));
+		strcpy(head, UI_Cvar_VariableString("team_headmodel"));
 		if (q3Model) {
 			q3Model = qfalse;
 			updateModel = qtrue;
@@ -1759,16 +1757,9 @@ static void UI_DrawPlayerModel2(rectDef_t *rect)
 	vec3_t	viewangles;
 	vec3_t	moveangles;
 
-	/* Neon_Knight: First pass the MP checker. */
-	if(ui_missionpackChecks.integer != 0) {
-		Q_strncpyz(model, UI_Cvar_VariableString("team_model"), sizeof(model));
-		Q_strncpyz(head, UI_Cvar_VariableString("team_headmodel"), sizeof(head));
-	}
-	else {
-		Q_strncpyz(model, UI_Cvar_VariableString("model"), sizeof(model));
-		Q_strncpyz(head, UI_Cvar_VariableString("headmodel"), sizeof(head));
-	}
 	if (trap_Cvar_VariableValue("ui_Q3Model")) {
+		strcpy(model, UI_Cvar_VariableString("model"));
+		strcpy(head, UI_Cvar_VariableString("headmodel"));
 		if (!q3Model) {
 			q3Model = qtrue;
 			updateModel = qtrue;
@@ -1776,7 +1767,10 @@ static void UI_DrawPlayerModel2(rectDef_t *rect)
 		team[0] = '\0';
 	}
 	else {
-		Q_strncpyz(team, UI_Cvar_VariableString("ui_teamName"), sizeof(team));
+
+		strcpy(team, UI_Cvar_VariableString("ui_teamName"));
+		strcpy(model, UI_Cvar_VariableString("team_model"));
+		strcpy(head, UI_Cvar_VariableString("team_headmodel"));
 		if (q3Model) {
 			q3Model = qfalse;
 			updateModel = qtrue;
@@ -1977,7 +1971,7 @@ static const char *UI_AIFromName(const char *name)
 			return uiInfo.aliasList[j].ai;
 		}
 	}
-	return "sergei";
+	return "sarge";
 }
 
 #ifndef MISSIONPACK // bk001206
@@ -2025,7 +2019,7 @@ static const char *UI_OpponentLeaderModel(void)
 			return uiInfo.characterList[i].base;
 		}
 	}
-	return "sergei";
+	return "sarge";
 }
 #endif
 
@@ -2411,11 +2405,17 @@ static void UI_DrawBotName(rectDef_t *rect, float scale, vec4_t color, int textS
 {
 	int value = uiInfo.botIndex;
 	int game = trap_Cvar_VariableValue("g_gametype");
-	const char *text;
-	if (UI_IsATeamGametype(game)) {
+	const char *text = "";
+	if (game >= GT_TEAM && game != GT_LMS && game != GT_POSSESSION) {
+		if (value >= uiInfo.characterCount) {
+			value = 0;
+		}
 		text = uiInfo.characterList[value].name;
 	}
 	else {
+		if (value >= UI_GetNumBots()) {
+			value = 0;
+		}
 		text = UI_GetBotNameByNumber(value);
 	}
 	Text_Paint(rect->x, rect->y, scale, color, text, 0, 0, textStyle);
@@ -2861,14 +2861,14 @@ static qboolean UI_OwnerDrawVisible(int flags)
 	while (flags) {
 
 		if (flags & UI_SHOW_FFA) {
-			if (UI_IsATeamGametype(trap_Cvar_VariableValue("g_gametype")) || trap_Cvar_VariableValue("g_gametype") == GT_TOURNAMENT) {
+			if (trap_Cvar_VariableValue("g_gametype") != GT_FFA || trap_Cvar_VariableValue("g_gametype") != GT_LMS || trap_Cvar_VariableValue("g_gametype") != GT_POSSESSION ) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_FFA;
 		}
 
 		if (flags & UI_SHOW_NOTFFA) {
-			if (!UI_IsATeamGametype(trap_Cvar_VariableValue("g_gametype")) && trap_Cvar_VariableValue("g_gametype") != GT_TOURNAMENT) {
+			if (trap_Cvar_VariableValue("g_gametype") == GT_FFA || trap_Cvar_VariableValue("g_gametype") == GT_LMS || trap_Cvar_VariableValue("g_gametype") == GT_POSSESSION ) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_NOTFFA;
@@ -2913,25 +2913,25 @@ static qboolean UI_OwnerDrawVisible(int flags)
 			flags &= ~UI_SHOW_NOTFAVORITESERVERS;
 		}
 		if (flags & UI_SHOW_ANYTEAMGAME) {
-			if (!UI_IsATeamGametype(uiInfo.gameTypes[ui_gameType.integer].gtEnum)) {
+			if (uiInfo.gameTypes[ui_gameType.integer].gtEnum <= GT_TEAM || uiInfo.gameTypes[ui_gameType.integer].gtEnum == GT_LMS || uiInfo.gameTypes[ui_gameType.integer].gtEnum == GT_POSSESSION ) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_ANYTEAMGAME;
 		}
 		if (flags & UI_SHOW_ANYNONTEAMGAME) {
-			if (UI_IsATeamGametype(uiInfo.gameTypes[ui_gameType.integer].gtEnum)) {
+			if (uiInfo.gameTypes[ui_gameType.integer].gtEnum > GT_TEAM && uiInfo.gameTypes[ui_gameType.integer].gtEnum != GT_LMS && uiInfo.gameTypes[ui_gameType.integer].gtEnum != GT_POSSESSION ) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_ANYNONTEAMGAME;
 		}
 		if (flags & UI_SHOW_NETANYTEAMGAME) {
-			if (!UI_IsATeamGametype(uiInfo.gameTypes[ui_netGameType.integer].gtEnum)) {
+			if (uiInfo.gameTypes[ui_netGameType.integer].gtEnum <= GT_TEAM || uiInfo.gameTypes[ui_gameType.integer].gtEnum == GT_LMS || uiInfo.gameTypes[ui_gameType.integer].gtEnum == GT_POSSESSION ) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_NETANYTEAMGAME;
 		}
 		if (flags & UI_SHOW_NETANYNONTEAMGAME) {
-			if (UI_IsATeamGametype(uiInfo.gameTypes[ui_netGameType.integer].gtEnum)) {
+			if (uiInfo.gameTypes[ui_netGameType.integer].gtEnum > GT_TEAM && uiInfo.gameTypes[ui_gameType.integer].gtEnum != GT_LMS && uiInfo.gameTypes[ui_gameType.integer].gtEnum != GT_POSSESSION ) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_NETANYNONTEAMGAME;
@@ -2962,78 +2962,6 @@ static qboolean UI_OwnerDrawVisible(int flags)
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_DEMOAVAILABLE;
-		}
-		if (flags & UI_SHOW_ANYTEAMOBJECTIVEGAME) {
-			if (!UI_IsATeamGametype(uiInfo.gameTypes[ui_gameType.integer].gtEnum)) {
-				vis = qfalse;
-			}
-			flags &= ~UI_SHOW_ANYTEAMOBJECTIVEGAME;
-		}
-		if (flags & UI_SHOW_ANYNONTEAMOBJECTIVEGAME) {
-			if (UI_IsATeamGametype(uiInfo.gameTypes[ui_gameType.integer].gtEnum)) {
-				vis = qfalse;
-			}
-			flags &= ~UI_SHOW_ANYNONTEAMOBJECTIVEGAME;
-		}
-		if (flags & UI_SHOW_NETANYTEAMOBJECTIVEGAME) {
-			if (!UI_IsATeamGametype(uiInfo.gameTypes[ui_netGameType.integer].gtEnum)) {
-				vis = qfalse;
-			}
-			flags &= ~UI_SHOW_NETANYTEAMOBJECTIVEGAME;
-		}
-		if (flags & UI_SHOW_NETANYNONTEAMOBJECTIVEGAME) {
-			if (UI_IsATeamGametype(uiInfo.gameTypes[ui_netGameType.integer].gtEnum)) {
-				vis = qfalse;
-			}
-			flags &= ~UI_SHOW_NETANYNONTEAMOBJECTIVEGAME;
-		}
-		if (flags & UI_SHOW_ANYROUNDGAME) {
-			if (!UI_IsARoundBasedGametype(uiInfo.gameTypes[ui_gameType.integer].gtEnum)) {
-				vis = qfalse;
-			}
-			flags &= ~UI_SHOW_ANYROUNDGAME;
-		}
-		if (flags & UI_SHOW_ANYNONROUNDGAME) {
-			if (UI_IsARoundBasedGametype(uiInfo.gameTypes[ui_gameType.integer].gtEnum)) {
-				vis = qfalse;
-			}
-			flags &= ~UI_SHOW_ANYNONROUNDGAME;
-		}
-		if (flags & UI_SHOW_NETANYROUNDGAME) {
-			if (!UI_IsARoundBasedGametype(uiInfo.gameTypes[ui_netGameType.integer].gtEnum)) {
-				vis = qfalse;
-			}
-			flags &= ~UI_SHOW_NETANYROUNDGAME;
-		}
-		if (flags & UI_SHOW_NETANYNONROUNDGAME) {
-			if (UI_IsARoundBasedGametype(uiInfo.gameTypes[ui_netGameType.integer].gtEnum)) {
-				vis = qfalse;
-			}
-			flags &= ~UI_SHOW_NETANYNONROUNDGAME;
-		}
-		if (flags & UI_SHOW_ANYTEAMROUNDGAME) {
-			if (!(UI_IsARoundBasedGametype(uiInfo.gameTypes[ui_gameType.integer].gtEnum) && UI_IsATeamGametype(uiInfo.gameTypes[ui_gameType.integer].gtEnum))) {
-				vis = qfalse;
-			}
-			flags &= ~UI_SHOW_ANYTEAMROUNDGAME;
-		}
-		if (flags & UI_SHOW_ANYNONTEAMROUNDGAME) {
-			if (UI_IsARoundBasedGametype(uiInfo.gameTypes[ui_gameType.integer].gtEnum) && UI_IsATeamGametype(uiInfo.gameTypes[ui_gameType.integer].gtEnum)) {
-				vis = qfalse;
-			}
-			flags &= ~UI_SHOW_ANYNONTEAMROUNDGAME;
-		}
-		if (flags & UI_SHOW_NETANYTEAMROUNDGAME) {
-			if (!(UI_IsARoundBasedGametype(uiInfo.gameTypes[ui_netGameType.integer].gtEnum) && UI_IsATeamGametype(uiInfo.gameTypes[ui_gameType.integer].gtEnum))) {
-				vis = qfalse;
-			}
-			flags &= ~UI_SHOW_NETANYTEAMROUNDGAME;
-		}
-		if (flags & UI_SHOW_NETANYNONTEAMROUNDGAME) {
-			if (UI_IsARoundBasedGametype(uiInfo.gameTypes[ui_netGameType.integer].gtEnum) && UI_IsATeamGametype(uiInfo.gameTypes[ui_gameType.integer].gtEnum)) {
-				vis = qfalse;
-			}
-			flags &= ~UI_SHOW_NETANYNONTEAMROUNDGAME;
 		}
 		else {
 			flags = 0;
@@ -3140,14 +3068,14 @@ static qboolean UI_GameType_HandleKey(int flags, float *special, int key, qboole
 		}
 		// end changed RD
 
-		if (!UI_IsATeamGametype(uiInfo.gameTypes[ui_gameType.integer].gtEnum)) {
-			trap_Cvar_SetValue( "ui_Q3Model", 1 );
+		if (uiInfo.gameTypes[ui_gameType.integer].gtEnum == GT_TOURNAMENT) {
+			trap_Cvar_Set("ui_Q3Model", "1");
 		}
 		else {
-			trap_Cvar_SetValue( "ui_Q3Model", 0 );
+			trap_Cvar_Set("ui_Q3Model", "0");
 		}
 
-		trap_Cvar_SetValue("ui_gameType", ui_gameType.integer);
+		trap_Cvar_Set("ui_gameType", va("%d", ui_gameType.integer));
 		UI_SetCapFragLimits(qtrue);
 		UI_LoadBestScores(uiInfo.mapList[ui_currentMap.integer].mapLoadName, uiInfo.gameTypes[ui_gameType.integer].gtEnum);
 		if (resetMap && oldCount != UI_MapCountByGameType(qtrue)) {
@@ -3252,9 +3180,13 @@ static qboolean UI_TeamMember_HandleKey(int flags, float *special, int key, qboo
 		char *cvar = va(blue ? "ui_blueteam%i" : "ui_redteam%i", num);
 		int value = trap_Cvar_VariableValue(cvar);
 
-		value += select;
-
-		if (UI_IsATeamGametype(ui_actualNetGameType.integer)) {
+		if (key == K_MOUSE2) {
+			value--;
+		}
+		else {
+			value++;
+		}
+		if (ui_actualNetGameType.integer >= GT_TEAM && ui_actualNetGameType.integer != GT_LMS && ui_actualNetGameType.integer != GT_POSSESSION) {
 			if (value >= uiInfo.characterCount + 2) {
 				value = 0;
 			}
@@ -3340,7 +3272,7 @@ static qboolean UI_BotName_HandleKey(int flags, float *special, int key)
 
 		value += select;
 
-		if (UI_IsATeamGametype(game)) {
+		if (game >= GT_TEAM && game != GT_LMS && game != GT_POSSESSION) {
 			if (value >= uiInfo.characterCount) {
 				value = 0;
 			}
@@ -3552,49 +3484,7 @@ void UI_ServersSort(int column, qboolean force)
 	qsort( &uiInfo.serverStatus.displayServers[0], uiInfo.serverStatus.numDisplayServers, sizeof(int), UI_ServersQsortCompare);
 	
 	// update displayed levelshot
-	UI_FeederSelection( FEEDER_SERVERS, uiInfo.serverStatus.currentServer );
 }
-
-/* Neon_Knight: Readding this here. May be useful in a future. */
-/*
-static void UI_StartSinglePlayer(void) {
-	int i,j, k, skill;
-	char buff[1024];
-	i = trap_Cvar_VariableValue( "ui_currentTier" );
-  if (i < 0 || i >= tierCount) {
-    i = 0;
-  }
-	j = trap_Cvar_VariableValue("ui_currentMap");
-	if (j < 0 || j >= MAPS_PER_TIER) {
-		j = 0;
-	}
-
- 	trap_Cvar_SetValue( "singleplayer", 1 );
- 	trap_Cvar_SetValue( "g_gametype", Com_Clamp( 0, GT_MAX_GAME_TYPE-1, tierList[i].gameTypes[j] ) );
-	trap_Cmd_ExecuteText( EXEC_APPEND, va( "wait ; wait ; map %s\n", tierList[i].maps[j] ) );
-	skill = trap_Cvar_VariableValue( "g_spSkill" );
-
-	if (j == MAPS_PER_TIER-1) {
-		k = UI_TeamIndexFromName(UI_Cvar_VariableString("ui_opponentName"));
-		Com_sprintf( buff, sizeof(buff), "wait ; addbot %s %i %s 250 %s\n", UI_AIFromName(teamList[k].teamMembers[0]), skill, "", teamList[k].teamMembers[0]);
-	} else {
-		k = UI_TeamIndexFromName(UI_Cvar_VariableString("ui_opponentName"));
-		for (i = 0; i < PLAYERS_PER_TEAM; i++) {
-			Com_sprintf( buff, sizeof(buff), "wait ; addbot %s %i %s 250 %s\n", UI_AIFromName(teamList[k].teamMembers[i]), skill, "Blue", teamList[k].teamMembers[i]);
-			trap_Cmd_ExecuteText( EXEC_APPEND, buff );
-		}
-
-		k = UI_TeamIndexFromName(UI_Cvar_VariableString("ui_teamName"));
-		for (i = 1; i < PLAYERS_PER_TEAM; i++) {
-			Com_sprintf( buff, sizeof(buff), "wait ; addbot %s %i %s 250 %s\n", UI_AIFromName(teamList[k].teamMembers[i]), skill, "Red", teamList[k].teamMembers[i]);
-			trap_Cmd_ExecuteText( EXEC_APPEND, buff );
-		}
-		trap_Cmd_ExecuteText( EXEC_APPEND, "wait 5; team Red\n" );
-	}
-	
-
-}
-*/
 
 
 /*
@@ -3772,9 +3662,6 @@ static void UI_StartSkirmish(qboolean next, char *name)
 	trap_Cvar_Set("ui_saveCaptureLimit", va("%i", temp));
 	temp = trap_Cvar_VariableValue( "fraglimit" );
 	trap_Cvar_Set("ui_saveFragLimit", va("%i", temp));
-	/* Neon_Knight: Since the SP uses custom time limits, pass it as well. */
-	temp = trap_Cvar_VariableValue( "timelimit" );
-	trap_Cvar_Set("ui_saveTimeLimit", va("%i", temp));
 
 	UI_SetCapFragLimits(qfalse);
 
@@ -3782,38 +3669,14 @@ static void UI_StartSkirmish(qboolean next, char *name)
 	trap_Cvar_Set("ui_drawTimer", va("%i", temp));
 	temp = trap_Cvar_VariableValue( "g_doWarmup" );
 	trap_Cvar_Set("ui_doWarmup", va("%i", temp));
-	/* Neon_Knight: Since the SP uses bot_minplayers, pass it as well. */
-	temp = trap_Cvar_VariableValue( "bot_minPlayers" );
-	trap_Cvar_Set("ui_minPlayers", va("%i", temp));
+	temp = trap_Cvar_VariableValue( "g_friendlyFire" );
+	trap_Cvar_Set("ui_friendlyFire", va("%i", temp));
 	temp = trap_Cvar_VariableValue( "sv_maxClients" );
 	trap_Cvar_Set("ui_maxClients", va("%i", temp));
 	temp = trap_Cvar_VariableValue( "g_warmup" );
 	trap_Cvar_Set("ui_Warmup", va("%i", temp));
 	temp = trap_Cvar_VariableValue( "sv_pure" );
 	trap_Cvar_Set("ui_pure", va("%i", temp));
-	/* Neon_Knight: Since the SP uses game options, pass them as well. */
-	temp = trap_Cvar_VariableValue( "g_friendlyFire" );
-	trap_Cvar_Set("ui_friendlyFire", va("%i", temp));
-	temp = trap_Cvar_VariableValue( "g_vampire" );
-	trap_Cvar_Set("ui_vampire", va("%i", temp));
-	temp = trap_Cvar_VariableValue( "g_lms_lives" );
-	trap_Cvar_Set("ui_lmsLives", va("%i", temp));
-	temp = trap_Cvar_VariableValue( "g_ddCaptureTime" );
-	trap_Cvar_Set("ui_ddCaptureTime", va("%i", temp));
-	temp = trap_Cvar_VariableValue( "g_ddRespawnDelay" );
-	trap_Cvar_Set("ui_ddRespawnDelay", va("%i", temp));
-	temp = trap_Cvar_VariableValue( "g_obeliskHealth" );
-	trap_Cvar_Set("ui_obeliskHealth", va("%i", temp));
-	temp = trap_Cvar_VariableValue( "g_rockets" );
-	trap_Cvar_Set("ui_rockets", va("%i", temp));
-	temp = trap_Cvar_VariableValue( "g_gravityModifier" );
-	trap_Cvar_Set("ui_gravityModifier", va("%i", temp));
-	temp = trap_Cvar_VariableValue( "elimination_ctf_oneway" );
-	trap_Cvar_Set("ui_eCTFOneWayMode", va("%i", temp));
-	temp = trap_Cvar_VariableValue( "g_instantgib" );
-	trap_Cvar_Set("ui_instaGib", va("%i", temp));
-	temp = trap_Cvar_VariableValue( "g_harvesterFromBodies" );
-	trap_Cvar_Set("ui_harvesterFromBodies", va("%i", temp));
 
 	trap_Cvar_Set("cg_cameraOrbit", "0");
 	trap_Cvar_Set("cg_thirdPerson", "0");
@@ -3821,8 +3684,7 @@ static void UI_StartSkirmish(qboolean next, char *name)
 	trap_Cvar_Set("g_doWarmup", "1");
 	trap_Cvar_Set("g_warmup", "15");
 	trap_Cvar_Set("sv_pure", "0");
-	/* Neon_Knight: This interferes. Commenting. */
-	/* trap_Cvar_Set("g_friendlyFire", "0"); */
+	trap_Cvar_Set("g_friendlyFire", "0");
 	trap_Cvar_Set("g_redTeam", UI_Cvar_VariableString("ui_teamName"));
 	trap_Cvar_Set("g_blueTeam", UI_Cvar_VariableString("ui_opponentName"));
 
@@ -3838,7 +3700,7 @@ static void UI_StartSkirmish(qboolean next, char *name)
 		Com_sprintf( buff, sizeof(buff), "addbot %s %f "", %i \n", uiInfo.mapList[ui_currentMap.integer].opponentName, skill, delay);
 		trap_Cmd_ExecuteText( EXEC_APPEND, buff );
 	}
-	else if (!UI_IsATeamGametype(g) && g != GT_TOURNAMENT) { // leilei - parse the opponentname as a list of bots instead like q3_ui's arena parsing
+	else if (g == GT_FFA || g == GT_LMS || g == GT_POSSESSION) { // leilei - parse the opponentname as a list of bots instead like q3_ui's arena parsing
 		char		*p;
 		char		*bot;
 		const char	*botInfo;
@@ -3889,32 +3751,21 @@ static void UI_StartSkirmish(qboolean next, char *name)
 	}
 	else {
 		temp = uiInfo.mapList[ui_currentMap.integer].teamMembers * 2;
-		/* Neon_Knight: Missionpack checks, if != 0, enables this. */
-		if(ui_missionpackChecks.integer) {
-			trap_Cvar_Set("sv_maxClients", va("%i", temp));
-			for (i =0; i < uiInfo.mapList[ui_currentMap.integer].teamMembers; i++) {
-				Com_sprintf( buff, sizeof(buff), "addbot %s %f %s %i %s\n", UI_AIFromName(uiInfo.teamList[k].teamMembers[i]), skill, (g == GT_FFA) ? "" : "Blue", delay, uiInfo.teamList[k].teamMembers[i]);
-				trap_Cmd_ExecuteText( EXEC_APPEND, buff );
-				delay += 500;
-			}
-			k = UI_TeamIndexFromName(UI_Cvar_VariableString("ui_teamName"));
-			for (i =0; i < uiInfo.mapList[ui_currentMap.integer].teamMembers-1; i++) {
-				Com_sprintf( buff, sizeof(buff), "addbot %s %f %s %i %s\n", UI_AIFromName(uiInfo.teamList[k].teamMembers[i]), skill, (g == GT_FFA) ? "" : "Red", delay, uiInfo.teamList[k].teamMembers[i]);
-				trap_Cmd_ExecuteText( EXEC_APPEND, buff );
-				delay += 500;
-			}
-		}
-		else {
-			trap_Cvar_Set("sv_maxClients", va("%i", temp+2));
-			trap_Cvar_Set("bot_minplayers", va("%i", temp));
-			trap_Cvar_Set("skill", va("%f", skill));
-			Com_sprintf( buff, sizeof(buff), "wait ;\n");
+		trap_Cvar_Set("sv_maxClients", va("%d", temp));
+		for (i =0; i < uiInfo.mapList[ui_currentMap.integer].teamMembers; i++) {
+			Com_sprintf( buff, sizeof(buff), "addbot %s %f %s %i %s\n", UI_AIFromName(uiInfo.teamList[k].teamMembers[i]), skill, (g == GT_FFA) ? "" : "Blue", delay, uiInfo.teamList[k].teamMembers[i]);
 			trap_Cmd_ExecuteText( EXEC_APPEND, buff );
+			delay += 500;
 		}
-		/* /Neon_Knight */
+		k = UI_TeamIndexFromName(UI_Cvar_VariableString("ui_teamName"));
+		for (i =0; i < uiInfo.mapList[ui_currentMap.integer].teamMembers-1; i++) {
+			Com_sprintf( buff, sizeof(buff), "addbot %s %f %s %i %s\n", UI_AIFromName(uiInfo.teamList[k].teamMembers[i]), skill, (g == GT_FFA) ? "" : "Red", delay, uiInfo.teamList[k].teamMembers[i]);
+			trap_Cmd_ExecuteText( EXEC_APPEND, buff );
+			delay += 500;
+		}
 	}
-	if (UI_IsATeamGametype(g)) {
-		trap_Cvar_Set( "g_localTeamPref", "Red" );
+	if (g >= GT_TEAM ) {
+		trap_Cmd_ExecuteText( EXEC_APPEND, "wait 5; team Red\n" );
 	}
 }
 
@@ -4127,7 +3978,7 @@ static void UI_RunMenuScript(char **args)
 			for (i = 0; i < PLAYERS_PER_TEAM; i++) {
 				int bot = trap_Cvar_VariableValue( va("ui_blueteam%i", i+1));
 				if (bot > 1) {
-					if (UI_IsATeamGametype(ui_actualNetGameType.integer)) {
+					if (ui_actualNetGameType.integer >= GT_TEAM && ui_actualNetGameType.integer != GT_LMS && ui_actualNetGameType.integer != GT_POSSESSION ) {
 						Com_sprintf( buff, sizeof(buff), "addbot %s %f %s\n", uiInfo.characterList[bot-2].name, skill, "Blue");
 					}
 					else {
@@ -4137,7 +3988,7 @@ static void UI_RunMenuScript(char **args)
 				}
 				bot = trap_Cvar_VariableValue( va("ui_redteam%i", i+1));
 				if (bot > 1) {
-					if (UI_IsATeamGametype(ui_actualNetGameType.integer)) {
+					if (ui_actualNetGameType.integer >= GT_TEAM && ui_actualNetGameType.integer != GT_LMS && ui_actualNetGameType.integer != GT_POSSESSION ) {
 						Com_sprintf( buff, sizeof(buff), "addbot %s %f %s\n", uiInfo.characterList[bot-2].name, skill, "Red");
 					}
 					else {
@@ -4222,7 +4073,7 @@ static void UI_RunMenuScript(char **args)
 			}
 		}
 		else if (Q_strequal(name, "loadArenas") ) {
-			UI_LoadArenasIntoMapList();
+			UI_LoadArenas();
 			UI_MapCountByGameType(qfalse);
 			Menu_SetFeederSelection(NULL, FEEDER_ALLMAPS, 0, "createserver");
 		}
@@ -4257,6 +4108,9 @@ static void UI_RunMenuScript(char **args)
 		}
 		else if (Q_strequal(name, "resetScores") ) {
 			UI_ClearScores();
+		}
+		else if (Q_stricmp(name, "updateColors") == 0) {
+			RefreshHexColors();
 		}
 		else if (Q_stricmp(name, "RefreshServers") == 0) {
 			UI_StartServerRefresh(qtrue);
@@ -4470,13 +4324,11 @@ static void UI_RunMenuScript(char **args)
 			}
 		}
 		else if (Q_strequal(name, "addBot") ) {
-			/* Neon_Knight: Missionpack checks, if != 0, enables this. */
-			if (ui_missionpackChecks.integer) {
-				if (UI_IsATeamGametype(trap_Cvar_VariableValue("g_gametype"))) {
-					trap_Cmd_ExecuteText( EXEC_APPEND, va("addbot %s %i %s\n", UI_GetBotNameByNumber(uiInfo.botIndex), uiInfo.skillIndex+1, (uiInfo.redBlue == 0) ? "Red" : "Blue") );
-					}
-			} else {
+			if (trap_Cvar_VariableValue("g_gametype") >= GT_TEAM || GT_LMS || GT_POSSESSION ) {
 				trap_Cmd_ExecuteText( EXEC_APPEND, va("addbot %s %i %s\n", uiInfo.characterList[uiInfo.botIndex].name, uiInfo.skillIndex+1, (uiInfo.redBlue == 0) ? "Red" : "Blue") );
+			}
+			else {
+				trap_Cmd_ExecuteText( EXEC_APPEND, va("addbot %s %i %s\n", UI_GetBotNameByNumber(uiInfo.botIndex), uiInfo.skillIndex+1, (uiInfo.redBlue == 0) ? "Red" : "Blue") );
 			}
 			// Changed RD
 		}
@@ -5647,6 +5499,8 @@ static void UI_FeederSelection(float feederID, int index)
 	}
 	else if (feederID == FEEDER_Q3HEADS) {
 		if (index >= 0 && index < uiInfo.q3HeadCount) {
+			trap_Cvar_Set( "team_model", uiInfo.q3HeadNames[index]);
+			trap_Cvar_Set( "team_headmodel", uiInfo.q3HeadNames[index]);
 			trap_Cvar_Set( "model", uiInfo.q3HeadNames[index]);
 			trap_Cvar_Set( "headmodel", uiInfo.q3HeadNames[index]);
 			updateModel = qtrue;
@@ -5654,6 +5508,8 @@ static void UI_FeederSelection(float feederID, int index)
 	}
 	else if (feederID == FEEDER_Q3HEADS_FULL) {
 		if (index >= 0 && index < uiInfo.q3HeadCount2) {
+			trap_Cvar_Set( "team_model", uiInfo.q3HeadNames[index]);
+			trap_Cvar_Set( "team_headmodel", uiInfo.q3HeadNames[index]);
 			trap_Cvar_Set( "model", uiInfo.q3HeadNames2[index]);
 			trap_Cvar_Set( "headmodel", uiInfo.q3HeadNames2[index]);
 			updateModel = qtrue;
@@ -5833,10 +5689,10 @@ static qboolean Character_Parse(char **p)
 			uiInfo.characterList[uiInfo.characterCount].imageName = String_Alloc(va("models/players/heads/%s/icon_default.tga", uiInfo.characterList[uiInfo.characterCount].name));
 
 			if (tempStr && Q_strequal(tempStr, "female")) {
-				uiInfo.characterList[uiInfo.characterCount].base = String_Alloc(va("kyonshi"));
+				uiInfo.characterList[uiInfo.characterCount].base = String_Alloc(va("sarge"));
 			}
 			else if (tempStr && Q_strequal(tempStr, "male")) {
-				uiInfo.characterList[uiInfo.characterCount].base = String_Alloc(va("sergei"));
+				uiInfo.characterList[uiInfo.characterCount].base = String_Alloc(va("sarge"));
 			}
 			else {
 				uiInfo.characterList[uiInfo.characterCount].base = String_Alloc(va("%s",tempStr));
@@ -7160,7 +7016,7 @@ vmCvar_t gameover; // ai script
 vmCvar_t ui_introPlayed;
 vmCvar_t ui_colors;
 vmCvar_t ui_humansonly;
-vmCvar_t ui_missionpackChecks;
+
 vmCvar_t ui_new;
 vmCvar_t ui_leidebug;
 vmCvar_t ui_debug;
@@ -7280,7 +7136,7 @@ static cvarTable_t		cvarTable[] = {
 	{ &ui_blueteam3, "ui_blueteam3", "0", CVAR_ARCHIVE },
 	{ &ui_blueteam4, "ui_blueteam4", "0", CVAR_ARCHIVE },
 	{ &ui_blueteam5, "ui_blueteam5", "0", CVAR_ARCHIVE },
-	{ &ui_netSource, "ui_netSource", "1", CVAR_ARCHIVE },
+	{ &ui_netSource, "ui_netSource", "0", CVAR_ARCHIVE },
 	{ &ui_menuFiles, "ui_menuFiles", "ui/menus.txt", CVAR_ARCHIVE },
 	{ &ui_currentTier, "ui_currentTier", "0", CVAR_ARCHIVE },
 	{ &ui_currentMap, "ui_currentMap", "0", CVAR_ARCHIVE },
@@ -7344,7 +7200,6 @@ static cvarTable_t		cvarTable[] = {
 	{ &gameover, "gameover", "0", CVAR_INIT}, // ai script
 // end changed RD
 	{ &ui_introPlayed, "ui_introPlayed", "0", CVAR_INIT },
-	{ &ui_missionpackChecks, "missionpackChecks", "1", CVAR_INIT },
 // leilei
 	{ &ui_colors, "ui_colors", "0x1e3072 0x7286d0 0x1fd1b2 0x606060", CVAR_ARCHIVE},
 	{ &ui_developer, "developer", "0", CVAR_CHEAT },
@@ -7526,46 +7381,3 @@ static void UI_StartServerRefresh(qboolean full)
 	}
 }
 
-/* Neon_Knight: Useful check in order to have code consistency. */
-/*
-===================
-UI_IsATeamGametype
-
-Checks if the gametype is a team-based game.
-(UI_IsATeamGame(check,qtrue))
-===================
- */
-qboolean UI_IsATeamGametype(int check) {
-	return GAMETYPE_IS_A_TEAM_GAME(check);
-}
-/*
-===================
-UI_UsesTeamFlags
-
-Checks if the gametype makes use of the red and blue flags.
-===================
- */
-qboolean UI_UsesTeamFlags(int check) {
-	return GAMETYPE_USES_RED_AND_BLUE_FLAG(check);
-}
-/*
-===================
-UI_UsesTheWhiteFlag
-
-Checks if the gametype makes use of the neutral flag.
-===================
- */
-qboolean UI_UsesTheWhiteFlag(int check) {
-	return GAMETYPE_USES_WHITE_FLAG(check);
-}
-/*
-===================
-UI_IsARoundBasedGametype
-
-Checks if the gametype has a round-based system.
-===================
- */
-qboolean UI_IsARoundBasedGametype(int check) {
-	return GAMETYPE_IS_ROUND_BASED(check);
-}
-/* /Neon_Knight */

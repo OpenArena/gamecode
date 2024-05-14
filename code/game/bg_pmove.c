@@ -940,6 +940,28 @@ static int PM_FootstepForSurface( void )
 	if ( pml.groundTrace.surfaceFlags & SURF_METALSTEPS ) {
 		return EV_FOOTSTEP_METAL;
 	}
+	// leilei - additional footsteps
+	if ( pml.groundTrace.surfaceFlags & SURF_SNOW ) {
+		return EV_FOOTSTEP_SNOW;
+	}
+	if ( pml.groundTrace.surfaceFlags & SURF_WOOD ) {
+		return EV_FOOTSTEP_WOOD;
+	}
+	if ( pml.groundTrace.surfaceFlags & SURF_SAND ) {
+		return EV_FOOTSTEP_SAND;
+	}
+	if ( pml.groundTrace.surfaceFlags & SURF_GRAVEL ) {
+		return EV_FOOTSTEP_GRAVEL;
+	}
+	if ( pml.groundTrace.surfaceFlags & SURF_LEAVES ) {
+		return EV_FOOTSTEP_FOILAGE;
+	}
+	if ( pml.groundTrace.surfaceFlags & SURF_ICE ) {
+		return EV_FOOTSTEP_ICE;
+	}
+	if ( pml.groundTrace.surfaceFlags & SURF_GLASS ) {
+		return EV_FOOTSTEP_GLASS;
+	}
 	return EV_FOOTSTEP;
 }
 

@@ -2041,11 +2041,11 @@ qboolean UI_RegisterClientModelname( playerInfo_t *pi, const char *modelSkinName
 	// load the animations
 	Com_sprintf( filename, sizeof( filename ), "models/players/%s/animation.cfg", modelName );
 	if ( !UI_ParseAnimationFile( filename, pi ) ) {
-		Com_sprintf( filename, sizeof( filename ), "models/players/characters/%s/animation.cfg", modelName );
-		if ( !UI_ParseAnimationFile( filename, pi ) ) {
+//		Com_sprintf( filename, sizeof( filename ), "models/players/characters/%s/animation.cfg", modelName );
+//		if ( !UI_ParseAnimationFile( filename, pi ) ) {
 			Com_Printf( "Failed to load animation file %s\n", filename );
-			return qfalse;
-		}
+//			return qfalse;
+//		}
 	}
 
 	// load eyes
