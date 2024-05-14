@@ -79,7 +79,7 @@ static void CG_ParseScores( void ) {
 	cgs.roundStartTime = atoi( CG_Argv( 4 ) );
 
 	//Update thing in lower-right corner
-	if(CG_IsARoundBasedGametype(cgs.gametype) && CG_IsATeamGametype(cgs.gametype))
+	if(cgs.gametype == GT_ELIMINATION || cgs.gametype == GT_CTF_ELIMINATION)
 	{
 		cgs.scores1 = cg.teamScores[0];
 		cgs.scores2 = cg.teamScores[1];
@@ -145,7 +145,7 @@ CG_ParseElimination
 =================
 */
 static void CG_ParseElimination( void ) {
-	if(CG_IsARoundBasedGametype(cgs.gametype) && CG_IsATeamGametype(cgs.gametype))
+	if(cgs.gametype == GT_ELIMINATION || cgs.gametype == GT_CTF_ELIMINATION)
 	{
 		cgs.scores1 = atoi( CG_Argv( 1 ) );
 		cgs.scores2 = atoi( CG_Argv( 2 ) );
@@ -352,6 +352,12 @@ void CG_ParseServerinfo( void ) {
 
 	info = CG_ConfigString( CS_SERVERINFO );
 	cgs.gametype = atoi( Info_ValueForKey( info, "g_gametype" ) );
+	//By default do as normal:
+	cgs.ffa_gt = 0;
+	//See if ffa gametype
+	if (cgs.gametype == GT_LMS || cgs.gametype == GT_POSSESSION) {	
+		cgs.ffa_gt = 1;
+	}
 	trap_Cvar_Set("g_gametype", va("%i", cgs.gametype));
 	cgs.dmflags = atoi( Info_ValueForKey( info, "dmflags" ) );
 	cgs.videoflags = atoi( Info_ValueForKey( info, "videoflags" ) );
@@ -400,7 +406,7 @@ static void CG_ParseWarmup( void ) {
 
 	} else if ( warmup > 0 && cg.warmup <= 0 ) {
 #ifdef MISSIONPACK
-		if (CG_IsATeamGametype(cgs.gametype)) {
+		if (cgs.gametype >= GT_CTF && cgs.gametype < GT_MAX_GAME_TYPE && !cgs.ffa_gt) {
 			trap_S_StartLocalSound( cgs.media.countPrepareTeamSound, CHAN_ANNOUNCER );
 		} else
 #endif
@@ -425,13 +431,13 @@ void CG_SetConfigValues( void ) {
 	cgs.scores1 = atoi( CG_ConfigString( CS_SCORES1 ) );
 	cgs.scores2 = atoi( CG_ConfigString( CS_SCORES2 ) );
 	cgs.levelStartTime = atoi( CG_ConfigString( CS_LEVEL_START_TIME ) );
-	if((CG_UsesTeamFlags(cgs.gametype) && !CG_UsesTheWhiteFlag(cgs.gametype)) || cgs.gametype == GT_DOUBLE_D) {
+	if( cgs.gametype == GT_CTF || cgs.gametype == GT_CTF_ELIMINATION || cgs.gametype == GT_DOUBLE_D) {
 		s = CG_ConfigString( CS_FLAGSTATUS );
 		cgs.redflag = s[0] - '0';
 		cgs.blueflag = s[1] - '0';
 	}
 //#ifdef MISSIONPACK
-	else if( CG_UsesTheWhiteFlag(cgs.gametype) ) {
+	else if( cgs.gametype == GT_1FCTF || cgs.gametype == GT_POSSESSION ) {
 		s = CG_ConfigString( CS_FLAGSTATUS );
 		cgs.flagStatus = s[0] - '0';
 	}
@@ -548,12 +554,13 @@ static void CG_ConfigStringModified( void ) {
 		CG_NewClientInfo( num - CS_PLAYERS );
 		CG_BuildSpectatorString();
 	} else if ( num == CS_FLAGSTATUS ) {
-		if((CG_UsesTeamFlags(cgs.gametype) && CG_UsesTheWhiteFlag(cgs.gametype)) || cgs.gametype == GT_DOUBLE_D) {
+		if( cgs.gametype == GT_CTF || cgs.gametype == GT_CTF_ELIMINATION || cgs.gametype == GT_DOUBLE_D) {
 			// format is rb where its red/blue, 0 is at base, 1 is taken, 2 is dropped
 			cgs.redflag = str[0] - '0';
 			cgs.blueflag = str[1] - '0';
 		}
-		else if( CG_UsesTheWhiteFlag(cgs.gametype) ) {
+
+		else if( cgs.gametype == GT_1FCTF || cgs.gametype == GT_POSSESSION ) {
 			cgs.flagStatus = str[0] - '0';
 		}
 	}
@@ -1106,10 +1113,6 @@ void CG_VoiceChatLocal( int mode, qboolean voiceOnly, int clientNum, int color, 
 		return;
 	}
 
-	if ( mode == SAY_ALL && CG_IsATeamGametype(cgs.gametype) && cg_teamChatsOnly.integer ) {
-		return;
-	}
-
 	if ( clientNum < 0 || clientNum >= MAX_CLIENTS ) {
 		clientNum = 0;
 	}
@@ -1120,18 +1123,23 @@ void CG_VoiceChatLocal( int mode, qboolean voiceOnly, int clientNum, int color, 
 	voiceChatList = CG_VoiceChatListForClient( clientNum );
 
 	if ( CG_GetVoiceChat( voiceChatList, cmd, &snd, &chat ) ) {
-		vchat.clientNum = clientNum;
-		vchat.snd = snd;
-		vchat.voiceOnly = voiceOnly;
-		Q_strncpyz(vchat.cmd, cmd, sizeof(vchat.cmd));
-		if ( mode == SAY_TELL ) {
-			Com_sprintf(vchat.message, sizeof(vchat.message), "[%s]: %c%c%s", ci->name, Q_COLOR_ESCAPE, color, chat);
-		} else if ( mode == SAY_TEAM ) {
-			Com_sprintf(vchat.message, sizeof(vchat.message), "(%s): %c%c%s", ci->name, Q_COLOR_ESCAPE, color, chat);
-		} else {
-			Com_sprintf(vchat.message, sizeof(vchat.message), "%s: %c%c%s", ci->name, Q_COLOR_ESCAPE, color, chat);
+		//
+		if ( mode == SAY_TEAM || !cg_teamChatsOnly.integer ) {
+			vchat.clientNum = clientNum;
+			vchat.snd = snd;
+			vchat.voiceOnly = voiceOnly;
+			Q_strncpyz(vchat.cmd, cmd, sizeof(vchat.cmd));
+			if ( mode == SAY_TELL ) {
+				Com_sprintf(vchat.message, sizeof(vchat.message), "[%s]: %c%c%s", ci->name, Q_COLOR_ESCAPE, color, chat);
+			}
+			else if ( mode == SAY_TEAM ) {
+				Com_sprintf(vchat.message, sizeof(vchat.message), "(%s): %c%c%s", ci->name, Q_COLOR_ESCAPE, color, chat);
+			}
+			else {
+				Com_sprintf(vchat.message, sizeof(vchat.message), "%s: %c%c%s", ci->name, Q_COLOR_ESCAPE, color, chat);
+			}
+			CG_AddBufferedVoiceChat(&vchat);
 		}
-		CG_AddBufferedVoiceChat(&vchat);
 	}
 #endif
 }
@@ -1225,16 +1233,14 @@ static void CG_ServerCommand( void ) {
 	}
 
 	if ( strequals( cmd, "chat" ) ) {
-		if ( CG_IsATeamGametype(cgs.gametype) && cg_teamChatsOnly.integer ) {
-			return;
+		if ( !cg_teamChatsOnly.integer ) {
+			if( cg_chatBeep.integer ) {
+				trap_S_StartLocalSound( cgs.media.talkSound, CHAN_LOCAL_SOUND );
+			}
+			Q_strncpyz( text, CG_Argv(1), MAX_SAY_TEXT );
+			CG_RemoveChatEscapeChar( text );
+			CG_Printf( "%s\n", text );
 		}
-		if( cg_chatBeep.integer ) {
-			trap_S_StartLocalSound( cgs.media.talkSound, CHAN_LOCAL_SOUND );
-		}
-		trap_S_StartLocalSound( cgs.media.talkSound, CHAN_LOCAL_SOUND );
-		Q_strncpyz( text, CG_Argv(1), MAX_SAY_TEXT );
-		CG_RemoveChatEscapeChar( text );
-		CG_Printf( "%s\n", text );
 		return;
 	}
 

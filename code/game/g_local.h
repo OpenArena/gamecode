@@ -1121,13 +1121,19 @@ extern vmCvar_t g_instantgib;
 extern vmCvar_t g_vampire;
 extern vmCvar_t g_vampireMaxHealth;
 //new in elimination Beta3
-extern vmCvar_t g_regen;
-extern vmCvar_t g_lms_lives;
-extern vmCvar_t g_lms_mode; //How do we score: 0 = One Survivor get a point, 1 = same but without overtime, 2 = one point for each player killed (+overtime), 3 = same without overtime
-extern vmCvar_t g_elimination_ctf_oneway;	//Only attack in one direction (level.eliminationSides+level.roundNumber)%2 == 0 red attacks
-extern vmCvar_t g_awardpushing; //The server can decide if players are awarded for pushing people in lave etc.
+extern vmCvar_t		g_regen;
+//Free for all gametype
+extern int		g_ffa_gt; //0 = TEAM GAME, 1 = FFA, 2 = TEAM GAME without bases
+
+extern vmCvar_t		g_lms_lives;
+
+extern vmCvar_t		g_lms_mode; //How do we score: 0 = One Survivor get a point, 1 = same but without overtime, 2 = one point for each player killed (+overtime), 3 = same without overtime
+
+extern vmCvar_t		g_elimination_ctf_oneway;	//Only attack in one direction (level.eliminationSides+level.roundNumber)%2 == 0 red attacks
+
+
+extern vmCvar_t        g_catchup; //Favors the week players
 extern vmCvar_t g_runes;
-extern vmCvar_t g_catchup; //Favors the week players
 extern vmCvar_t g_autonextmap; //Autochange map
 extern vmCvar_t g_mappools; //mappools to be used for autochange
 extern vmCvar_t g_voteNames;
@@ -1176,8 +1182,7 @@ extern vmCvar_t g_harvesterFromBodies;
 extern vmCvar_t g_ddCaptureTime;
 extern vmCvar_t g_ddRespawnDelay;
 extern vmCvar_t g_developer;
-extern vmCvar_t g_spSkill;
-extern vmCvar_t g_bot_noChat;
+extern vmCvar_t g_awardpushing;
 
 void	trap_Printf( const char *fmt );
 void	trap_Error( const char *fmt ) __attribute__((noreturn));
@@ -1426,9 +1431,4 @@ void MapInfoPrint(mapinfo_result_t *info);
 
 void monster_die (gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int damage, int mod);
 
-/* Neon_Knight: Useful check in order to have code consistency. */
-qboolean G_IsATeamGametype(int check);	/* Whether the gametype is team-based or not.*/
-qboolean G_UsesTeamFlags(int check);	/* Whether the gametype uses the red and blue flags. */
-qboolean G_UsesTheWhiteFlag(int check);	/* Whether the gametype uses the neutral flag. */
-qboolean G_IsARoundBasedGametype(int check);	/* Whether the gametype uses the neutral flag. */
-/* /Neon_Knight */
+

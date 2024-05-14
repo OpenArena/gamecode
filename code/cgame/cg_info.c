@@ -292,8 +292,7 @@ void CG_DrawInformation( void ) {
 		y += PROP_HEIGHT;
 	}
 
-	/* Fraglimits are restricted to non-team-based games and Team Deathmatch */
-	if (!CG_IsATeamGametype(cgs.gametype) || cgs.gametype == GT_TEAM ) {
+	if (cgs.gametype < GT_CTF || cgs.ffa_gt>0) {
 		value = atoi( Info_ValueForKey( info, "fraglimit" ) );
 		if ( value ) {
 			UI_DrawProportionalString( 320, y, va( "fraglimit %i", value ),
@@ -301,7 +300,8 @@ void CG_DrawInformation( void ) {
 			y += PROP_HEIGHT;
 		}
 	}
-	else {
+
+	if (cgs.gametype >= GT_CTF && cgs.ffa_gt == 0) {
 		value = atoi( Info_ValueForKey( info, "capturelimit" ) );
 		if ( value ) {
 			UI_DrawProportionalString( 320, y, va( "capturelimit %i", value ),

@@ -147,9 +147,6 @@ extern vmCvar_t ui_serverStatusTimeOut;
 extern vmCvar_t ui_humansonly;
 extern vmCvar_t ui_introPlayed;
 extern vmCvar_t ui_colors;
-/* Neon_Knight: Additional missionpack check */
-extern vmCvar_t ui_missionpackChecks;
-/* /Neon_Knight */
 extern vmCvar_t ui_findPlayer;
 extern vmCvar_t ui_Q3Model;
 extern vmCvar_t ui_hudFiles;
@@ -425,7 +422,6 @@ int UI_AdjustTimeByGame(int time);
 void UI_ShowPostGame(qboolean newHigh);
 void UI_ClearScores( void );
 void UI_LoadArenas(void);
-void UI_LoadArenasIntoMapList(void);
 // rfactory change
 // Changed RD
 qboolean SP_LoadGame(char *load_game, char *loadmap);
@@ -1315,9 +1311,3 @@ typedef struct postGameInfo_s {
 
 #endif
 
-/* Neon_Knight: Useful check in order to have code consistency. */
-qboolean UI_IsATeamGametype(int check);	/* Whether the gametype is team-based or not.*/
-qboolean UI_UsesTeamFlags(int check);	/* Whether the gametype uses the red and blue flags. */
-qboolean UI_UsesTheWhiteFlag(int check);	/* Whether the gametype uses the neutral flag. */
-qboolean UI_IsARoundBasedGametype(int check);	/* Whether the gametype uses the neutral flag. */
-/* /Neon_Knight */

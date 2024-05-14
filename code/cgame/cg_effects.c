@@ -573,6 +573,7 @@ void CG_Bleed( vec3_t origin, int entityNum ) {
 	ex->refEntity.rotation = rand() % 360;
 	ex->refEntity.radius = 24;
 
+	ex->refEntity.shaderTime = ex->startTime / 1000.0f;	// leilei-  fix the blood animation 
 	ex->refEntity.customShader = cgs.media.bloodExplosionShader;
 
 	// don't show player's own blood in view

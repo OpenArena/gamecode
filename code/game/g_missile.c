@@ -142,7 +142,7 @@ void ProximityMine_Trigger( gentity_t *trigger, gentity_t *other, trace_t *trace
 	}
 
 
-	if (G_IsATeamGametype(g_gametype.integer)) {
+	if ( g_gametype.integer >= GT_TEAM && g_ffa_gt!=1) {
 		// don't trigger same team mines
 		if (trigger->parent->s.generic1 == other->client->sess.sessionTeam) {
 			return;
@@ -178,20 +178,22 @@ static void ProximityMine_Activate( gentity_t *ent )
 	qboolean        nearFlag = qfalse;
 
 	// find the flag
-	if (G_UsesTeamFlags(g_gametype.integer)) {
-		switch (ent->s.generic1) {
-			case TEAM_RED:
-				c = "team_CTF_redflag";
-				break;
-			case TEAM_BLUE:
-				c = "team_CTF_blueflag";
-				break;
-			default:
-				c = NULL;
-		}
+	switch (ent->s.generic1) {
+	case TEAM_RED:
+		c = "team_CTF_redflag";
+		break;
+	case TEAM_BLUE:
+		c = "team_CTF_blueflag";
+		break;
+	default:
+		c = NULL;
 	}
-
-	if (g_gametype.integer == GT_HARVESTER || g_gametype.integer == GT_OBELISK) {
+	
+	if (g_gametype.integer == GT_TEAM || g_gametype.integer == GT_DOMINATION || g_gametype.integer == GT_ELIMINATION || g_gametype.integer == GT_DOUBLE_D) {
+		c = NULL;
+	}
+	
+	if (g_gametype.integer == GT_OBELISK || g_gametype.integer == GT_HARVESTER) {
 		switch (ent->s.generic1) {
 		case TEAM_RED:
 			c = "team_redobelisk";

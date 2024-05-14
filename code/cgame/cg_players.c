@@ -466,7 +466,7 @@ static qboolean CG_FindClientModelFile(char *filename, int length, clientInfo_t 
 	char *team, *charactersFolder;
 	int i;
 
-	if (CG_IsATeamGametype(cgs.gametype)) {
+	if (cgs.gametype >= GT_TEAM && cgs.ffa_gt != 1) {
 		switch (ci->team) {
 			case TEAM_BLUE:
 			{
@@ -495,7 +495,7 @@ static qboolean CG_FindClientModelFile(char *filename, int length, clientInfo_t 
 			if (CG_FileExists(filename)) {
 				return qtrue;
 			}
-			if (CG_IsATeamGametype(cgs.gametype)) {
+			if (cgs.gametype >= GT_TEAM && cgs.ffa_gt != 1) {
 				if (i == 0 && teamName && *teamName) {
 					//								"models/players/characters/sergei/stroggs/lower_red.skin"
 					Com_sprintf(filename, length, "models/players/%s%s/%s%s_%s.%s", charactersFolder, modelName, teamName, base, team, ext);
@@ -538,7 +538,7 @@ static qboolean CG_FindClientHeadFile(char *filename, int length, clientInfo_t *
 	char *team, *headsFolder;
 	int i;
 
-	if (CG_IsATeamGametype(cgs.gametype)) {
+	if (cgs.gametype >= GT_TEAM && cgs.ffa_gt != 1) {
 		switch (ci->team) {
 			case TEAM_BLUE:
 			{
@@ -571,7 +571,7 @@ static qboolean CG_FindClientHeadFile(char *filename, int length, clientInfo_t *
 			if (CG_FileExists(filename)) {
 				return qtrue;
 			}
-			if (CG_IsATeamGametype(cgs.gametype)) {
+			if (cgs.gametype >= GT_TEAM && cgs.ffa_gt != 1) {
 				if (i == 0 && teamName && *teamName) {
 					Com_sprintf(filename, length, "models/players/%s%s/%s%s_%s.%s", headsFolder, headModelName, teamName, base, team, ext);
 				} else {
@@ -857,7 +857,7 @@ static void CG_LoadClientInfo(int clientNum, clientInfo_t *ci) {
 
 	teamname[0] = 0;
 #ifdef MISSIONPACK
-	if (CG_IsATeamGametype(cgs.gametype)) {
+	if (cgs.gametype >= GT_TEAM && cgs.ffa_gt != 1) {
 		if (ci->team == TEAM_BLUE) {
 			Q_strncpyz(teamname, cg_blueTeamName.string, sizeof (teamname));
 		} else {
@@ -875,20 +875,16 @@ static void CG_LoadClientInfo(int clientNum, clientInfo_t *ci) {
 		}
 
 		// fall back to default team name
-		if (CG_IsATeamGametype(cgs.gametype)) {
+		if (cgs.gametype >= GT_TEAM && cgs.ffa_gt != 1) {
 			// keep skin name
 			if (ci->team == TEAM_BLUE) {
 				Q_strncpyz(teamname, DEFAULT_BLUETEAM_NAME, sizeof (teamname));
 			} else {
 				Q_strncpyz(teamname, DEFAULT_REDTEAM_NAME, sizeof (teamname));
 			}
-			/* Neon_Knight: Missionpack checks, if != 0, enables this. */
-			if (cg_missionpackChecks.integer != 0) {
-				if (!CG_RegisterClientModelname(ci, DEFAULT_TEAM_MODEL, ci->skinName, DEFAULT_TEAM_HEAD, ci->skinName, teamname)) {
-					CG_Error("DEFAULT_TEAM_MODEL / skin (%s/%s) failed to register", DEFAULT_TEAM_MODEL, ci->skinName);
-				}
+			if (!CG_RegisterClientModelname(ci, DEFAULT_TEAM_MODEL, ci->skinName, DEFAULT_TEAM_HEAD, ci->skinName, teamname)) {
+				CG_Error("DEFAULT_TEAM_MODEL / skin (%s/%s) failed to register", DEFAULT_TEAM_MODEL, ci->skinName);
 			}
-			/* /Neon_Knight */
 		} else {
 			if (!CG_RegisterClientModelname(ci, DEFAULT_MODEL, "default", DEFAULT_MODEL, "default", teamname)) {
 				CG_Error("DEFAULT_MODEL (%s) failed to register", DEFAULT_MODEL);
@@ -908,7 +904,7 @@ static void CG_LoadClientInfo(int clientNum, clientInfo_t *ci) {
 
 	// sounds
 	dir = ci->modelName;
-	fallback = (CG_IsATeamGametype(cgs.gametype)) ? DEFAULT_TEAM_MODEL : DEFAULT_MODEL;
+	fallback = (cgs.gametype >= GT_TEAM && cgs.ffa_gt != 1) ? DEFAULT_TEAM_MODEL : DEFAULT_MODEL;
 
 	for (i = 0; i < MAX_CUSTOM_SOUNDS; i++) {
 		s = cg_customSoundNames[i];
@@ -920,13 +916,9 @@ static void CG_LoadClientInfo(int clientNum, clientInfo_t *ci) {
 		if (modelloaded) {
 			ci->sounds[i] = trap_S_RegisterSound(va("sound/player/%s/%s", dir, s + 1), qfalse);
 		}
-		/* Neon_Knight: Missionpack checks, if != 0, enables this. */
-		if (cg_missionpackChecks.integer) {
-			if (!ci->sounds[i]) {
-				ci->sounds[i] = trap_S_RegisterSound(va("sound/player/%s/%s", fallback, s + 1), qfalse);
-			}
+		if (!ci->sounds[i]) {
+			ci->sounds[i] = trap_S_RegisterSound(va("sound/player/%s/%s", fallback, s + 1), qfalse);
 		}
-		/* /Neon_Knight */
 	}
 
 	ci->deferred = qfalse;
@@ -989,7 +981,7 @@ static qboolean CG_ScanForExistingClientInfo(clientInfo_t *ci) {
 				&& Q_strequal(ci->headSkinName, match->headSkinName)
 				&& Q_strequal(ci->blueTeam, match->blueTeam)
 				&& Q_strequal(ci->redTeam, match->redTeam)
-				&& (!CG_IsATeamGametype(cgs.gametype) || ci->team == match->team)) {
+				&& (cgs.gametype < GT_TEAM || cgs.ffa_gt == 1 || ci->team == match->team)) {
 			// this clientinfo is identical, so use it's handles
 
 			ci->deferred = qfalse;
@@ -1025,7 +1017,7 @@ static void CG_SetDeferredClientInfo(int clientNum, clientInfo_t *ci) {
 		}
 		if (!Q_strequal(ci->skinName, match->skinName) ||
 				!Q_strequal(ci->modelName, match->modelName) ||
-				(CG_IsATeamGametype(cgs.gametype) && ci->team != match->team)) {
+				(cgs.gametype >= GT_TEAM && cgs.ffa_gt != 1 && ci->team != match->team)) {
 			continue;
 		}
 		// just load the real info cause it uses the same models and skins
@@ -1034,14 +1026,14 @@ static void CG_SetDeferredClientInfo(int clientNum, clientInfo_t *ci) {
 	}
 
 	// if we are in teamplay, only grab a model if the skin is correct
-	if (CG_IsATeamGametype(cgs.gametype)) {
+	if (cgs.gametype >= GT_TEAM && cgs.ffa_gt != 1) {
 		for (i = 0; i < cgs.maxclients; i++) {
 			match = &cgs.clientinfo[ i ];
 			if (!match->infoValid || match->deferred) {
 				continue;
 			}
 			if (!Q_strequal(ci->skinName, match->skinName) ||
-					(CG_IsATeamGametype(cgs.gametype) && ci->team != match->team)) {
+					(cgs.gametype >= GT_TEAM && cgs.ffa_gt != 1 && ci->team != match->team)) {
 				continue;
 			}
 			ci->deferred = qtrue;
@@ -1151,12 +1143,9 @@ void CG_NewClientInfo(int clientNum) {
 		char modelStr[MAX_QPATH];
 		char *skin;
 
-		/* Neon_Knight: Missionpack checks, if != 0, enables this. */
-		if (cg_missionpackChecks.integer) {
-			if (CG_IsATeamGametype(cgs.gametype)) {
-				Q_strncpyz(newInfo.modelName, DEFAULT_TEAM_MODEL, sizeof ( newInfo.modelName));
-				Q_strncpyz(newInfo.skinName, "default", sizeof ( newInfo.skinName));
-			}
+		if (cgs.gametype >= GT_TEAM && cgs.ffa_gt != 1) {
+			Q_strncpyz(newInfo.modelName, DEFAULT_TEAM_MODEL, sizeof ( newInfo.modelName));
+			Q_strncpyz(newInfo.skinName, "default", sizeof ( newInfo.skinName));
 		} else {
 			trap_Cvar_VariableStringBuffer("model", modelStr, sizeof ( modelStr));
 			if ((skin = strchr(modelStr, '/')) == NULL) {
@@ -1168,8 +1157,8 @@ void CG_NewClientInfo(int clientNum) {
 			Q_strncpyz(newInfo.skinName, skin, sizeof ( newInfo.skinName));
 			Q_strncpyz(newInfo.modelName, modelStr, sizeof ( newInfo.modelName));
 		}
-		/* /Neon_Knight */
-		if (CG_IsATeamGametype(cgs.gametype)) {
+
+		if (cgs.gametype >= GT_TEAM && cgs.ffa_gt != 1) {
 			// keep skin name
 			slash = strchr(v, '/');
 			if (slash) {
@@ -1198,12 +1187,9 @@ void CG_NewClientInfo(int clientNum) {
 		char modelStr[MAX_QPATH];
 		char *skin;
 
-		/* Neon_Knight: Missionpack checks, if != 0, enables this. */
-		if (cg_missionpackChecks.integer) {
-			if (CG_IsATeamGametype(cgs.gametype)) {
-				Q_strncpyz(newInfo.headModelName, DEFAULT_TEAM_MODEL, sizeof ( newInfo.headModelName));
-				Q_strncpyz(newInfo.headSkinName, "default", sizeof ( newInfo.headSkinName));
-			}
+		if (cgs.gametype >= GT_TEAM && cgs.ffa_gt != 1) {
+			Q_strncpyz(newInfo.headModelName, DEFAULT_TEAM_MODEL, sizeof ( newInfo.headModelName));
+			Q_strncpyz(newInfo.headSkinName, "default", sizeof ( newInfo.headSkinName));
 		} else {
 			trap_Cvar_VariableStringBuffer("headmodel", modelStr, sizeof ( modelStr));
 			if ((skin = strchr(modelStr, '/')) == NULL) {
@@ -1215,9 +1201,8 @@ void CG_NewClientInfo(int clientNum) {
 			Q_strncpyz(newInfo.headSkinName, skin, sizeof ( newInfo.headSkinName));
 			Q_strncpyz(newInfo.headModelName, modelStr, sizeof ( newInfo.headModelName));
 		}
-		/* /Neon_Knight */
 
-		if (CG_IsATeamGametype(cgs.gametype)) {
+		if (cgs.gametype >= GT_TEAM && cgs.ffa_gt != 1) {
 			// keep skin name
 			slash = strchr(v, '/');
 			if (slash) {
@@ -1753,6 +1738,12 @@ static void CG_PlayerAngles(centity_t *cent, vec3_t legs[3], vec3_t torso[3], ve
 		if (ci->fixedlegs) {
 			legsAngles[YAW] = torsoAngles[YAW];
 			legsAngles[PITCH] = 0.0f;
+			legsAngles[ROLL] = 0.0f;
+		}
+
+		// leilei - don't lean for our new strafe animations
+		if ((cent->currentState.legsAnim & ~ANIM_TOGGLEBIT) == LEGS_STRAFE_LEFT || (cent->currentState.legsAnim & ~ANIM_TOGGLEBIT) == LEGS_STRAFE_RIGHT) {
+			legsAngles[YAW] = torsoAngles[YAW];
 			legsAngles[ROLL] = 0.0f;
 		}
 
@@ -2338,7 +2329,7 @@ static void CG_PlayerSprites(centity_t *cent) {
 	team = cgs.clientinfo[ cent->currentState.clientNum ].team;
 	if (!(cent->currentState.eFlags & EF_DEAD) &&
 			cg.snap->ps.persistant[PERS_TEAM] == team &&
-			CG_IsATeamGametype(cgs.gametype)) {
+			cgs.gametype >= GT_TEAM && cgs.ffa_gt != 1) {
 		if (cg_drawFriend.integer == 2){  // leilei - name tags
 			cg.headon[ cent->currentState.clientNum ] = 0;	
 			VectorCopy(cent->headpos,cg.headpos[cent->currentState.clientNum]);

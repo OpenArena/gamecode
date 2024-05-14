@@ -1212,6 +1212,9 @@ typedef struct {
 
 	int				levelStartTime;
 
+//Forced FFA
+	int			ffa_gt;
+
 //Elimination
 	int				roundStartTime;	
 	int				roundtime;
@@ -1481,20 +1484,16 @@ extern vmCvar_t cg_ch12;
 extern vmCvar_t cg_ch12size;
 extern vmCvar_t cg_ch13;
 extern vmCvar_t cg_ch13size;
-extern vmCvar_t cg_crosshairColorRed;
-extern vmCvar_t cg_crosshairColorGreen;
-extern vmCvar_t cg_crosshairColorBlue;
-extern vmCvar_t cg_weaponBarStyle;
-extern vmCvar_t cg_weaponOrder;
-extern vmCvar_t cg_chatBeep;
-extern vmCvar_t cg_teamChatBeep;
-/* Neon_Knight: Toggleable missionpack checks. */
-extern vmCvar_t cg_missionpackChecks;
-/* /Neon_Knight */
 
-/* Neon_Knight: Developer mode. */
-extern vmCvar_t cg_developer;
-/* /Neon_Knight */
+extern	vmCvar_t                cg_crosshairColorRed;
+extern	vmCvar_t                cg_crosshairColorGreen;
+extern	vmCvar_t                cg_crosshairColorBlue;
+
+extern vmCvar_t			cg_weaponBarStyle;
+
+extern vmCvar_t                 cg_weaponOrder;
+extern vmCvar_t			cg_chatBeep;
+extern vmCvar_t			cg_teamChatBeep;
 
 //unlagged - cg_unlagged.c
 void CG_PredictWeaponEffects( centity_t *cent );
@@ -2056,11 +2055,3 @@ void	trap_R_GetViewPosition( vec3_t point );
 #define LFX_FLASHPROX		70;
 #define LFX_FLASHVULCAN		71;
 
-// LEILEI ENHANCEMENT
-
-/* Neon_Knight: Useful check in order to have code consistency. */
-qboolean CG_IsATeamGametype(int check);	/* Whether the gametype is team-based or not.*/
-qboolean CG_UsesTeamFlags(int check);	/* Whether the gametype uses the red and blue flags. */
-qboolean CG_UsesTheWhiteFlag(int check);	/* Whether the gametype uses the neutral flag. */
-qboolean CG_IsARoundBasedGametype(int check);	/* Whether the gametype uses the neutral flag. */
-/* /Neon_Knight */

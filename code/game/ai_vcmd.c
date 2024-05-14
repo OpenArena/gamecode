@@ -71,7 +71,7 @@ BotVoiceChat_GetFlag
 */
 void BotVoiceChat_GetFlag(bot_state_t *bs, int client, int mode) {
 	//
-	if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
+	if (gametype == GT_CTF || gametype == GT_CTF_ELIMINATION) {
 		if (!ctf_redflag.areanum || !ctf_blueflag.areanum)
 			return;
 	}
@@ -93,7 +93,7 @@ void BotVoiceChat_GetFlag(bot_state_t *bs, int client, int mode) {
 	//set the team goal time
 	bs->teamgoal_time = FloatTime() + CTF_GETFLAG_TIME;
 	// get an alternate route in ctf
-	if (G_UsesTeamFlags(gametype) && !G_UsesTheWhiteFlag(gametype)) {
+	if (gametype == GT_CTF || gametype == GT_CTF_ELIMINATION) {
 		//get an alternative route goal towards the enemy base
 		BotGetAlternateRouteGoal(bs, BotOppositeTeam(bs));
 	}
@@ -112,7 +112,7 @@ BotVoiceChat_Offense
 ==================
 */
 void BotVoiceChat_Offense(bot_state_t *bs, int client, int mode) {
-	if (G_UsesTeamFlags(gametype)) {
+	if ( gametype == GT_CTF || gametype == GT_CTF_ELIMINATION || gametype == GT_1FCTF ) {
 		BotVoiceChat_GetFlag(bs, client, mode);
 		return;
 	}
@@ -162,7 +162,7 @@ BotVoiceChat_Defend
 ==================
 */
 void BotVoiceChat_Defend(bot_state_t *bs, int client, int mode) {
-	if (gametype == GT_HARVESTER || gametype == GT_OBELISK) {
+	if ( gametype == GT_OBELISK || gametype == GT_HARVESTER) {
 		//
 		switch(BotTeam(bs)) {
 			case TEAM_RED: memcpy(&bs->teamgoal, &redobelisk, sizeof(bot_goal_t)); break;
@@ -171,7 +171,7 @@ void BotVoiceChat_Defend(bot_state_t *bs, int client, int mode) {
 		}
 	}
 	else
-		if (G_UsesTeamFlags(gametype)) {
+		if (gametype == GT_CTF || gametype == GT_CTF_ELIMINATION || gametype == GT_1FCTF ) {
                     //
                     switch(BotTeam(bs)) {
 			case TEAM_RED: memcpy(&bs->teamgoal, &ctf_redflag, sizeof(bot_goal_t)); break;
@@ -368,7 +368,7 @@ BotVoiceChat_ReturnFlag
 */
 void BotVoiceChat_ReturnFlag(bot_state_t *bs, int client, int mode) {
 	//if not in CTF mode
-	if (!G_UsesTeamFlags(gametype)) {
+	if ( gametype != GT_CTF && gametype != GT_CTF_ELIMINATION && gametype != GT_1FCTF ) {
 		return;
 	}
 	//
@@ -419,7 +419,7 @@ BotVoiceChat_WhoIsLeader
 void BotVoiceChat_WhoIsLeader(bot_state_t *bs, int client, int mode) {
 	char netname[MAX_MESSAGE_SIZE];
 
-	if (!G_IsATeamGametype(gametype)) return;
+	if (!TeamPlayIsOn()) return;
 
 	ClientName(bs->client, netname, sizeof(netname));
 	//if this bot IS the team leader
@@ -497,7 +497,7 @@ int BotVoiceChatCommand(bot_state_t *bs, int mode, char *voiceChat) {
 	int i, clientNum;
 	char *ptr, buf[MAX_MESSAGE_SIZE], *cmd;
 
-	if (!G_IsATeamGametype(gametype)) {
+	if (!TeamPlayIsOn()) {
 		return qfalse;
 	}
 
