@@ -855,8 +855,7 @@ void CG_RegisterWeapon( int weaponNum )
 		weaponInfo->ammoModel = trap_R_RegisterModel( ammo->world_model[0] );
 	}
 
-	Q_strncpyz( path, item->world_model[0], MAX_QPATH );
-	COM_StripExtension(path, path, sizeof(path));
+	COM_StripExtension(item->world_model[0], path, sizeof(path));
 	Q_strcat( path, sizeof(path), "_flash.md3" );
 	weaponInfo->flashModel = trap_R_RegisterModel( path );
 
@@ -866,39 +865,32 @@ void CG_RegisterWeapon( int weaponNum )
 
 	// leilei - additional flash styles
 
-	Q_strncpyz( path, item->world_model[0], MAX_QPATH );
-	COM_StripExtension(path, path, sizeof(path));
+	COM_StripExtension(item->world_model[0], path, sizeof(path));
 	Q_strcat( path, sizeof(path), "_flash1.md3" );
 	weaponInfo->flashModel_type1 = trap_R_RegisterModel( path );
 
-	Q_strncpyz( path, item->world_model[0], MAX_QPATH );
-	COM_StripExtension(path, path, sizeof(path));
+	COM_StripExtension(item->world_model[0], path, sizeof(path));
 	Q_strcat( path, sizeof(path), "_flash2.md3" );
 	weaponInfo->flashModel_type2 = trap_R_RegisterModel( path );
 
-	Q_strncpyz( path, item->world_model[0], MAX_QPATH );
-	COM_StripExtension(path, path, sizeof(path));
+	COM_StripExtension(item->world_model[0], path, sizeof(path));
 	Q_strcat( path, sizeof(path), "_flash2a.md3" );
 	weaponInfo->flashModel_type2a = trap_R_RegisterModel( path );
 
-	Q_strncpyz( path, item->world_model[0], MAX_QPATH );
-	COM_StripExtension(path, path, sizeof(path));
+	COM_StripExtension(item->world_model[0], path, sizeof(path));
 	Q_strcat( path, sizeof(path), "_flash3.md3" );
 	weaponInfo->flashModel_type3 = trap_R_RegisterModel( path );
 
-	Q_strncpyz( path, item->world_model[0], MAX_QPATH );
-	COM_StripExtension(path, path, sizeof(path));
+	COM_StripExtension(item->world_model[0], path, sizeof(path));
 	Q_strcat( path, sizeof(path), "_flash4.md3" );
 	weaponInfo->flashModel_type4 = trap_R_RegisterModel( path );
 
-	Q_strncpyz( path, item->world_model[0], MAX_QPATH );
-	COM_StripExtension(path, path, sizeof(path));
+	COM_StripExtension(item->world_model[0], path, sizeof(path));
 	Q_strcat( path, sizeof(path), "_flash5.md3" );
 	weaponInfo->flashModel_type5 = trap_R_RegisterModel( path );
 
 
-	Q_strncpyz( path, item->world_model[0], MAX_QPATH );
-	COM_StripExtension(path, path, sizeof(path));
+	COM_StripExtension(item->world_model[0], path, sizeof(path));
 	Q_strcat( path, sizeof(path), "_flash5a.md3" );
 	weaponInfo->flashModel_type5a = trap_R_RegisterModel( path );
 
@@ -917,13 +909,11 @@ void CG_RegisterWeapon( int weaponNum )
 	if (!weaponInfo->flashModel_type5) weaponInfo->flashModel_type5 = trap_R_RegisterModel( "models/muzzle/flash5.md3" ); 
 	if (!weaponInfo->flashModel_type5a) weaponInfo->flashModel_type5a = trap_R_RegisterModel( "models/muzzle/flash5a.md3" ); 
 
-	Q_strncpyz( path, item->world_model[0], MAX_QPATH );
-	COM_StripExtension(path, path, sizeof(path));
+	COM_StripExtension(item->world_model[0], path, sizeof(path));
 	Q_strcat( path, sizeof(path), "_barrel.md3" );
 	weaponInfo->barrelModel = trap_R_RegisterModel( path );
 
-	Q_strncpyz( path, item->world_model[0], MAX_QPATH );
-	COM_StripExtension(path, path, sizeof(path));
+	COM_StripExtension(item->world_model[0], path, sizeof(path));
 	Q_strcat( path, sizeof(path), "_hand.md3" );
 	weaponInfo->handsModel = trap_R_RegisterModel( path );
 
