@@ -1,0 +1,15 @@
+cmake_minimum_required(VERSION 3.21)
+project(OpenArenaGamecode LANGUAGES C CXX)
+
+# Macro to add a subdirectory if it exists (show cleaner messages)
+macro(maybe_add_subdirectory dir)
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${dir}/CMakeLists.txt")
+        add_subdirectory(${dir})
+    else()
+        message(STATUS "Skipping ${dir}: not found")
+    endif()
+endmacro()
+
+maybe_add_subdirectory(code/game)
+maybe_add_subdirectory(code/cgame)
+maybe_add_subdirectory(code/ui)

@@ -4,3 +4,5 @@ Makefile.local
 *~
 nbproject
 windows
+gamesrc/build/
+vm/
